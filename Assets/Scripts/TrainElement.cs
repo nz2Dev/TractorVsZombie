@@ -1,17 +1,22 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [SelectionBase]
+// This should be called TrainPlatform, and be responsible for movement/following only
 public class TrainElement : MonoBehaviour {
     
-    public TrainElement head;
+    [SerializeField]
+    private TrainElement head;
     
     private TrainElement _tail;
+    private bool _attachedToGroup;
 
     public TrainElement Head => head;
     public TrainElement Tail => _tail;
     public bool IsLeader => Head == null;
+    public bool IsInGroup => _attachedToGroup;
     
     private void Start() {
         if (head != null) {
@@ -32,13 +37,17 @@ public class TrainElement : MonoBehaviour {
     private void AttachHead(TrainElement trainElement) {
         head = trainElement;
         head.OnStartBeingHeadTo(this);
+        _attachedToGroup = true;
     }
 
     private void OnStartBeingHeadTo(TrainElement element) {
+        _attachedToGroup = true;
         _tail = element;
     }
 
     public void DetachFromGroup() {
+        _attachedToGroup = false;
+        
         if (head != null) {
             head.OnTailIsGoingToDetach();
         }
@@ -63,12 +72,16 @@ public class TrainElement : MonoBehaviour {
     }
 
     private void Update() {
+        if (!_attachedToGroup) {
+            return;
+        }
+        
         if (head == null) {
             var horizontal = Input.GetAxisRaw("Horizontal");
             var vertical = Input.GetAxisRaw("Vertical");
             Turn(horizontal, vertical);
         }
-
+        
         Vector3 transformVector;
         if (head != null) {
             transformVector = head.transform.TransformPoint(Vector3.back);

@@ -1,4 +1,4 @@
-﻿public static class TrailElementsUtils {
+﻿public static class TrainElementsUtils {
 
     public static TrainElement FindLastTail(TrainElement trainElement) {
         var lastCheckedElement = trainElement;
