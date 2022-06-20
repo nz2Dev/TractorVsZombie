@@ -1064,7 +1064,7 @@ MonoBehaviour:
   powerUpMask:
     serializedVersion: 2
     m_Bits: 64
-  generationInterval: 4
+  generationInterval: 1
   boundsStart: {x: -4, y: -4}
   boundsEnd: {x: 6, y: 6}
 --- !u!4 &2135476438

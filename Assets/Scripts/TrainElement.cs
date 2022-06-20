@@ -11,6 +11,7 @@ public class TrainElement : MonoBehaviour {
 
     public TrainElement Head => head;
     public TrainElement Tail => _tail;
+    public bool IsLeader => Head == null;
     
     private void Start() {
         if (head != null) {
@@ -19,6 +20,11 @@ public class TrainElement : MonoBehaviour {
     }
 
     public void PickUpHead(TrainElement newTrainElement) {
+        if (!IsLeader) {
+            Debug.LogError($"Not a leader {name} tries to pick up a head");
+            return;
+        }
+        
         newTrainElement.transform.rotation = transform.rotation;
         AttachHead(newTrainElement);
     }
