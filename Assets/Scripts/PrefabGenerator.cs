@@ -1,12 +1,11 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using Random = System.Random;
 
-public class PowerUpGenerator : MonoBehaviour {
+public class PrefabGenerator : MonoBehaviour {
 
-    public GameObject powerUpPrefab;
-    public LayerMask powerUpMask;
+    public GameObject prefab;
+    public LayerMask collisionMask;
     public int generationInterval = 4;
 
     public Vector2 boundsStart;
@@ -18,7 +17,7 @@ public class PowerUpGenerator : MonoBehaviour {
         while (true) {
             yield return new WaitForSeconds(generationInterval);
             if (isActiveAndEnabled) {
-                GenerateNextPowerUp();
+                GenerateNextPrefab();
             }
         }
     }
@@ -35,7 +34,7 @@ public class PowerUpGenerator : MonoBehaviour {
             var vertical = _random.Next((int)boundsStart.y, (int)boundsEnd.y);
             var position = new Vector3(horizontal, 0, vertical);
 
-            if (!Physics.CheckSphere(position, 0.5f, powerUpMask)) {
+            if (!Physics.CheckSphere(position, 0.5f, collisionMask)) {
                 positionResult = position;
                 generated = true;
                 break;
@@ -45,9 +44,9 @@ public class PowerUpGenerator : MonoBehaviour {
         return generated;
     }
 
-    public void GenerateNextPowerUp() {
+    public void GenerateNextPrefab() {
         if (GenerateNextPosition(out var position)) {
-            Instantiate(powerUpPrefab, position, Quaternion.identity);
+            Instantiate(prefab, position, Quaternion.identity);
         }
     }
 }
