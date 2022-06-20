@@ -15,11 +15,11 @@ public class Enemy : MonoBehaviour {
         _chaser = GetComponent<Chaser>();
         _chaser.OnTargetClose += () => {
             Debug.Log("OnTarget Close");
-            StartCoroutine(Attack());
+            StartCoroutine(nameof(Attack));
         };
         _chaser.OnTargetFar += () => {
             Debug.Log("OnTarget Far");
-            StopCoroutine(Attack());
+            StopCoroutine(nameof(Attack));
         };
     }
 

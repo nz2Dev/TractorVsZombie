@@ -537,7 +537,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   stopDistance: 1
-  resumeDistance: 1.5
+  resumeDistance: 1.1
 --- !u!114 &4086040372518489266
 MonoBehaviour:
   m_ObjectHideFlags: 0

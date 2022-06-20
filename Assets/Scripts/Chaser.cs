@@ -5,7 +5,7 @@ public class Chaser : MonoBehaviour {
     [SerializeField] private GameObject target;
 
     [SerializeField] private float stopDistance = 1;
-    [SerializeField] private float resumeDistance = 1.5f;
+    [SerializeField] private float resumeDistance = 1.1f;
 
     private bool _chasing;
 
