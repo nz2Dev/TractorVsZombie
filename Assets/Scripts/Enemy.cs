@@ -10,8 +10,10 @@ public class Enemy : MonoBehaviour {
     private int damage = 55;
     
     private Chaser _chaser;
+    private Animator _animator;
 
     private void Awake() {
+        _animator = GetComponentInChildren<Animator>();
         _chaser = GetComponent<Chaser>();
         _chaser.OnTargetClose += () => {
             Debug.Log("OnTarget Close");
@@ -59,6 +61,7 @@ public class Enemy : MonoBehaviour {
             }
             
             trainHealth.TakeDamage(damage);
+            _animator.SetTrigger("Attack");
 
             yield return new WaitForSeconds(1);
         }
