@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour {
     
-    private TrainHealth _health;
+    private Health _health;
     private Image _healthBarImage;
 
     private void Awake() {
@@ -14,7 +14,7 @@ public class HealthBar : MonoBehaviour {
         DetachCurrentHealth();
     }
 
-    public void AttachHealth(TrainHealth newHealth) {
+    public void AttachHealth(Health newHealth) {
         DetachCurrentHealth();
         if (newHealth == null) {
             return;
@@ -30,7 +30,7 @@ public class HealthBar : MonoBehaviour {
         }
     }
 
-    private void OnHealthChanged(TrainHealth changedHealth) {
-        _healthBarImage.fillAmount = changedHealth.HealthAmount;
+    private void OnHealthChanged(Health changedHealth) {
+        _healthBarImage.fillAmount = changedHealth.Amount;
     }
 }

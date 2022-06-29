@@ -9,13 +9,13 @@ public class Damager : MonoBehaviour {
     public int intervalTime = 1;
 
     private IEnumerator Start() {
-        var targetHealth = targetElement.GetComponent<TrainHealth>();
+        var targetHealth = targetElement.GetComponent<Health>();
         if (targetHealth == null) {
             Debug.LogError($"targetElement has no health component, was: {targetElement.name}");
             yield break;
         }
 
-        while (targetHealth.Health > 0) {
+        while (targetHealth.Value > 0) {
             yield return new WaitForSeconds(intervalTime);
             targetHealth.TakeDamage(damagePerIteration);
         }

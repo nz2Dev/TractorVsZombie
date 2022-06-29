@@ -48,13 +48,13 @@ public class Destructor : MonoBehaviour {
     }
 
     private void Damage(TrainElement element) {
-        var targetHealth = element.GetComponent<TrainHealth>();
+        var targetHealth = element.GetComponent<Health>();
         if (targetHealth == null) {
             Debug.LogWarning($"targetElement has no health component, was: {element.name}");
             return;
         }
 
-        if (targetHealth.Health > 0) {
+        if (targetHealth.Value > 0) {
             targetHealth.TakeDamage(damagePerInterval);
         }
     }

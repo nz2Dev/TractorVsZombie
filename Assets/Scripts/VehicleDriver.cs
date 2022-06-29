@@ -61,7 +61,7 @@ public class VehicleDriver : MonoBehaviour {
         var arrivalSteeringWeightRemapped = Utils.Remap(clampedDistance, 0, 5, 1.5f, arrivalSteeringWeight);
         
         var arrivalForce = CalculateArrivalSteeringForce(targetPosition);
-        Debug.DrawLine(vehiclePosition, vehiclePosition + arrivalForce, Color.red);
+        //Debug.DrawLine(vehiclePosition, vehiclePosition + arrivalForce, Color.red);
         _vehicle.ApplyForce(arrivalForce * arrivalSteeringWeightRemapped); // * 1.5f
         
         var casted = Physics.SphereCastAll(vehiclePosition, 2, Vector3.up, 10, vehicleLayerMask);
@@ -71,7 +71,7 @@ public class VehicleDriver : MonoBehaviour {
             .ToArray();
         
         if (CalculateSeparationSteeringForce(neighbors, out var separationForce)) {
-            Debug.DrawLine(vehiclePosition, vehiclePosition + separationForce, Color.blue);
+            //Debug.DrawLine(vehiclePosition, vehiclePosition + separationForce, Color.blue);
             _vehicle.ApplyForce(separationForce * separationWeightRemapped); // * 1f
         }
     }

@@ -16,7 +16,7 @@ public class TrainElementStatusBar : MonoBehaviour {
     }
 
     private void Start() {
-        var trainHealth = _trainElement.GetComponent<TrainHealth>();
+        var trainHealth = _trainElement.GetComponent<Health>();
         if (trainHealth != null) {
             _healthBar.AttachHealth(trainHealth);    
         }

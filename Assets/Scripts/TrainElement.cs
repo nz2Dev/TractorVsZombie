@@ -17,7 +17,18 @@ public class TrainElement : MonoBehaviour {
     public TrainElement Tail => _tail;
     public bool IsLeader => Head == null;
     public bool IsInGroup => _attachedToGroup;
-    
+
+    private void Awake() {
+        var health = GetComponent<Health>();
+        if (health != null) {
+            health.OnHealthChanged += comp => {
+                if (comp.IsZero) {
+                    OnDestroyTrailElement();
+                }
+            };
+        }
+    }
+
     private void Start() {
         if (head != null) {
             AttachHead(head);    
@@ -132,6 +143,23 @@ public class TrainElement : MonoBehaviour {
         _turning = false;
     }
 
+    private void OnDestroyTrailElement() {
+        DetachFromGroup();
+        StartCoroutine(DestructionRoutine());
+    }
+
+    private IEnumerator DestructionRoutine() {
+        float time = 0;
+        var expansion = new Vector3(1, 0, 1);
+        while (time < 1f) {
+            time += Time.deltaTime;
+            transform.localScale = Vector3.one + expansion * time;
+            yield return new WaitForEndOfFrame();
+        }
+
+        Destroy(gameObject);
+    }
+    
     private void OnDrawGizmos() {
         Vector3 transformVector;
         if (head != null) {

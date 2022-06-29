@@ -1,14 +1,11 @@
-using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(VehicleDriver))]
 public class Enemy : MonoBehaviour {
+    [SerializeField] private int damage = 55;
 
-    [SerializeField]
-    private int damage = 55;
-    
     private VehicleDriver _vehicleDriver;
     private Animator _animator;
 
@@ -23,12 +20,21 @@ public class Enemy : MonoBehaviour {
             Debug.Log("OnTarget Far");
             StopCoroutine(nameof(Attack));
         };
+
+        var health = GetComponent<Health>();
+        if (health != null) {
+            health.OnHealthChanged += comp => {
+                if (comp.IsZero) {
+                    StartCoroutine(Death());
+                }
+            };
+        }
     }
 
     private IEnumerator Start() {
         while (true) {
             yield return new WaitForSeconds(0.5f);
-            
+
             var elements = FindObjectsOfType<TrainElement>();
             var position = transform.position;
             var shortest = elements.Aggregate((shortest, next) => {
@@ -43,7 +49,7 @@ public class Enemy : MonoBehaviour {
                     return shortest;
                 }
             });
-            
+
             _vehicleDriver.SetTarget(shortest.gameObject);
         }
     }
@@ -53,18 +59,24 @@ public class Enemy : MonoBehaviour {
             if (_vehicleDriver.Target == null) {
                 break;
             }
-            
-            var trainHealth = _vehicleDriver.Target.GetComponent<TrainHealth>();
+
+            var trainHealth = _vehicleDriver.Target.GetComponent<Health>();
             if (trainHealth == null) {
                 Debug.LogWarning("Can't deal damage to train element without health");
                 break;
             }
-            
+
             trainHealth.TakeDamage(damage);
             _animator.SetTrigger("Attack");
 
             yield return new WaitForSeconds(1);
         }
-        
     }
+
+    private IEnumerator Death() {
+        _animator.SetTrigger("Death");
+        yield return new WaitForSeconds(1);
+        Destroy(gameObject);
+    }
+    
 }
