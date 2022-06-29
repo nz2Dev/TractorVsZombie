@@ -364,7 +364,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireInterval: 0.1
   turelAlignmentMultiplier: 10
-  turelDamage: 40
+  turelDamage: 10
+  targetSearchInterval: 0.5
+  firePushMultiplier: 0.1
 --- !u!1 &6317408704968325160
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +380,7 @@ GameObject:
   - component: {fileID: 1407486370275349597}
   - component: {fileID: 1969960126108217831}
   m_Layer: 0
-  m_Name: Cylinder (1)
+  m_Name: LeftGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -477,7 +479,7 @@ GameObject:
   - component: {fileID: 9200763764173287522}
   - component: {fileID: 7857308413252005357}
   m_Layer: 0
-  m_Name: Cylinder (2)
+  m_Name: RightGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

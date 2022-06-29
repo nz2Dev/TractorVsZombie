@@ -11,7 +11,12 @@ public class EnemyStatusBar : MonoBehaviour {
         
         var trainHealth = enemy.GetComponent<Health>();
         if (trainHealth != null) {
-            healthBar.AttachHealth(trainHealth);    
+            healthBar.AttachHealth(trainHealth);
+            trainHealth.OnHealthChanged += health => {
+                if (health.IsZero) {
+                    gameObject.SetActive(false);
+                }
+            };
         }
 
         var main = Camera.main;

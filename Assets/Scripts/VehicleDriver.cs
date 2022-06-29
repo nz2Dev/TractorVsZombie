@@ -28,6 +28,7 @@ public class VehicleDriver : MonoBehaviour {
     }
 
     public void SetTarget(GameObject newTarget) {
+        _vehicle.enabled = newTarget != null;
         target = newTarget;
     }
 
@@ -44,11 +45,13 @@ public class VehicleDriver : MonoBehaviour {
 
         if (_chasing && targetClose) {
             _chasing = false;
+            _vehicle.enabled = false;
             OnTargetClose?.Invoke();
         }
         
         if (!_chasing && targetFar) {
             _chasing = true;
+            _vehicle.enabled = true;
             OnTargetFar?.Invoke();
         }
         

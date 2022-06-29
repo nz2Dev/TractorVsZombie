@@ -9,6 +9,8 @@ public class Turel : MonoBehaviour {
     [SerializeField] private float fireInterval = 2f;
     [SerializeField] private float turelAlignmentMultiplier = 2f;
     [SerializeField] private int turelDamage = 40;
+    [SerializeField] private float targetSearchInterval = 0.25f;
+    [SerializeField] private float firePushMultiplier = 0.5f;
     
     private Animator _animator;
 
@@ -20,12 +22,17 @@ public class Turel : MonoBehaviour {
 
     private IEnumerator Start() {
         while (true) {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(targetSearchInterval);
 
             var enemies = FindObjectsOfType<Enemy>();
             var position = transform.position;
             var shortest = enemies.Aggregate((shortest, next) => {
                 if (shortest == null) {
+                    return next;
+                }
+
+                var shortestHealth = shortest.GetComponent<Health>();
+                if (shortestHealth != null && shortestHealth.IsZero) {
                     return next;
                 }
 
@@ -46,7 +53,7 @@ public class Turel : MonoBehaviour {
             return;
         }
 
-        StartCoroutine(nameof(Fire));
+        StopCoroutine(nameof(Fire));
         _currentTarget = enemy;
         StartCoroutine(nameof(Fire));
     }
@@ -73,10 +80,16 @@ public class Turel : MonoBehaviour {
             }
 
             _animator.SetTrigger("Fire");
+            _currentTarget.transform.position += Vector3.ProjectOnPlane(transform.forward, Vector3.up) * firePushMultiplier;
+            
             Debug.DrawLine(transform.position, _currentTarget.transform.position, Color.red, 1f);
             var targetHealth = _currentTarget.GetComponent<Health>();
             if (targetHealth != null) {
                 targetHealth.TakeDamage(turelDamage);
+                if (targetHealth.IsZero) {
+                    _currentTarget = null;
+                    break;
+                }
             }
             
             yield return new WaitForSeconds(fireInterval);

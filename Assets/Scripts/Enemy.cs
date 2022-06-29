@@ -31,7 +31,11 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    private IEnumerator Start() {
+    private void Start() {
+        StartCoroutine(nameof(SearchTarget));
+    }
+
+    private IEnumerator SearchTarget() {
         while (true) {
             yield return new WaitForSeconds(0.5f);
 
@@ -75,7 +79,12 @@ public class Enemy : MonoBehaviour {
 
     private IEnumerator Death() {
         _animator.SetTrigger("Death");
+        
+        StopCoroutine(nameof(SearchTarget));
+        _vehicleDriver.SetTarget(null);
+        
         yield return new WaitForSeconds(1);
+        
         Destroy(gameObject);
     }
     
