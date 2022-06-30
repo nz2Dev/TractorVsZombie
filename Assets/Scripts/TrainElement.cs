@@ -121,10 +121,6 @@ public class TrainElement : MonoBehaviour {
         }
         
         forwardVector.Normalize();
-        var turnDot = Vector3.Dot(forwardVector, transform.forward);
-        if (turnDot < -0.1f) {
-            return;
-        }
 
         var inputRotation = Quaternion.LookRotation(forwardVector, Vector3.up);
         StartCoroutine(TurnRoutine(transform.rotation, inputRotation, Time.time, 0.4f));
@@ -160,16 +156,4 @@ public class TrainElement : MonoBehaviour {
         Destroy(gameObject);
     }
     
-    private void OnDrawGizmos() {
-        Vector3 transformVector;
-        if (head != null) {
-            transformVector = head.transform.TransformPoint(Vector3.back);
-        }
-        else {
-            transformVector = transform.TransformPoint(Vector3.forward);
-        }
-
-        var position = transformVector;
-        Gizmos.DrawWireSphere(position, 0.2f);
-    }
 }
