@@ -6,25 +6,29 @@ using UnityEngine;
 public class VehicleDriver : MonoBehaviour {
     
     [SerializeField] private GameObject target;
-
-    [SerializeField] private float stopDistance = 0.1f;
-    [SerializeField] private float resumeDistance = 0.3f;
+    [SerializeField] private Path followingPath;
+    
     [SerializeField] private float slowingDistance = 1.5f;
     [SerializeField] private LayerMask vehicleLayerMask;
     
-    [SerializeField] [Range(1.5f, 3f)]private float arrivalSteeringWeight = 1.5f;
-    [SerializeField] [Range(1f, 3f)] private float separationSteeringWeight = 1f;
+    [SerializeField] [Range(0, 3f)] private float arrivalSteeringWeight = 1f;
+    [SerializeField] [Range(0, 3f)] private float separationSteeringWeight = 1f;
+    [SerializeField] [Range(0, 3f)] private float pathFollowingSteeringWeight = 1f;
     
     private Vehicle _vehicle;
-    private bool _chasing;
 
     public GameObject Target => target;
 
-    public event Action OnTargetClose;
-    public event Action OnTargetFar;
-
     private void Awake() {
         _vehicle = GetComponent<Vehicle>();
+    }
+
+    public void Stop() {
+        _vehicle.enabled = false;
+    }
+
+    public void Resume() {
+        _vehicle.enabled = true;
     }
 
     public void SetTarget(GameObject newTarget) {
@@ -33,39 +37,21 @@ public class VehicleDriver : MonoBehaviour {
     }
 
     private void Update() {
-        if (target == null) {
+        if (!_vehicle.enabled) {
             return;
         }
 
         var vehiclePosition = _vehicle.transform.position;
+        
+        // var clampedDistance = Mathf.Clamp(distance, 0, 5);
+        // var separationWeightRemapped = Utils.Remap(5 - clampedDistance, 0, 5, 1, separationSteeringWeight);
+        // var arrivalSteeringWeightRemapped = Utils.Remap(clampedDistance, 0, 5, 1.5f, arrivalSteeringWeight);
+        
         var targetPosition = target.transform.position;
-        var distance = Vector3.Distance(targetPosition, vehiclePosition);
-        var targetClose = distance < stopDistance;
-        var targetFar = distance > resumeDistance;
-
-        if (_chasing && targetClose) {
-            _chasing = false;
-            _vehicle.enabled = false;
-            OnTargetClose?.Invoke();
-        }
-        
-        if (!_chasing && targetFar) {
-            _chasing = true;
-            _vehicle.enabled = true;
-            OnTargetFar?.Invoke();
-        }
-        
-        if (!_chasing) {
-            return;
-        }
-
-        var clampedDistance = Mathf.Clamp(distance, 0, 5);
-        var separationWeightRemapped = Utils.Remap(5 - clampedDistance, 0, 5, 1, separationSteeringWeight);
-        var arrivalSteeringWeightRemapped = Utils.Remap(clampedDistance, 0, 5, 1.5f, arrivalSteeringWeight);
-        
         var arrivalForce = CalculateArrivalSteeringForce(targetPosition);
         //Debug.DrawLine(vehiclePosition, vehiclePosition + arrivalForce, Color.red);
-        _vehicle.ApplyForce(arrivalForce * arrivalSteeringWeightRemapped); // * 1.5f
+        Debug.DrawLine(_vehicle.transform.position, _vehicle.transform.position + arrivalForce, Color.blue, 0.1f);
+        _vehicle.ApplyForce(arrivalForce * arrivalSteeringWeight); // * 1.5f
         
         var casted = Physics.SphereCastAll(vehiclePosition, 2, Vector3.up, 10, vehicleLayerMask);
         var neighbors = casted
@@ -75,8 +61,29 @@ public class VehicleDriver : MonoBehaviour {
         
         if (CalculateSeparationSteeringForce(neighbors, out var separationForce)) {
             //Debug.DrawLine(vehiclePosition, vehiclePosition + separationForce, Color.blue);
-            _vehicle.ApplyForce(separationForce * separationWeightRemapped); // * 1f
+            _vehicle.ApplyForce(separationForce * separationSteeringWeight); // * 1f
         }
+
+        if (CalculatePathFollowingSteeringForce(followingPath, out var steeringForce)) {
+            Debug.DrawLine(_vehicle.transform.position, _vehicle.transform.position + steeringForce, Color.red, 0.1f);
+            _vehicle.ApplyForce(steeringForce * pathFollowingSteeringWeight);
+        }
+    }
+
+    private bool CalculatePathFollowingSteeringForce(Path path, out Vector3 steeringForce) {
+        if (path == null) {
+            steeringForce = default;
+            return false;
+        }
+
+        var futurePosition = _vehicle.PredictPosition(1);
+        if (path.FindClosestNormalPoint(futurePosition, out var pointOnPath)) {
+            steeringForce = CalculateSeekSteeringForce(pointOnPath);
+            return true;    
+        }
+
+        steeringForce = default;
+        return false;
     }
     
     private bool CalculateSeparationSteeringForce(GameObject[] neighbors, out Vector3 desireVelocity) {

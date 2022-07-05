@@ -11,8 +11,12 @@ class Vehicle : MonoBehaviour {
     public Vector3 Velocity => _velocity;
     public float MaxSpeed => maxSpeed;
 
+    public Vector3 PredictPosition(float futureTimeAmount) {
+        return transform.position + _velocity * futureTimeAmount;
+    }
+    
     public void ApplyForce(Vector3 force) {
-        _steeringForce += force;
+        _steeringForce += Vector3.ClampMagnitude(force, maxForce) * Time.deltaTime;
     }
 
     private void Update() {

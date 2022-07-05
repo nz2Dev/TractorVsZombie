@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -5,22 +6,17 @@ using UnityEngine;
 [RequireComponent(typeof(VehicleDriver))]
 public class Enemy : MonoBehaviour {
     [SerializeField] private int damage = 55;
+    [SerializeField] private float stopDistance = 0.1f;
+    [SerializeField] private float resumeDistance = 0.3f;
 
+    private bool _chasing;
     private VehicleDriver _vehicleDriver;
     private Animator _animator;
 
     private void Awake() {
         _animator = GetComponentInChildren<Animator>();
         _vehicleDriver = GetComponent<VehicleDriver>();
-        _vehicleDriver.OnTargetClose += () => {
-            Debug.Log("OnTarget Close");
-            StartCoroutine(nameof(Attack));
-        };
-        _vehicleDriver.OnTargetFar += () => {
-            Debug.Log("OnTarget Far");
-            StopCoroutine(nameof(Attack));
-        };
-
+        
         var health = GetComponent<Health>();
         if (health != null) {
             health.OnHealthChanged += comp => {
@@ -33,6 +29,28 @@ public class Enemy : MonoBehaviour {
 
     private void Start() {
         StartCoroutine(nameof(SearchTarget));
+    }
+
+    private void Update() {
+        var vehiclePosition = _vehicleDriver.transform.position;
+        var targetPosition = _vehicleDriver.Target.transform.position;
+        var distance = Vector3.Distance(targetPosition, vehiclePosition);
+        var targetClose = distance < stopDistance;
+        var targetFar = distance > resumeDistance;
+
+        if (_chasing && targetClose) {
+            _chasing = false;
+            _vehicleDriver.Stop();
+            Debug.Log("OnTarget Close");
+            StartCoroutine(nameof(Attack));
+        }
+        
+        if (!_chasing && targetFar) {
+            _chasing = true;
+            _vehicleDriver.Resume();
+            Debug.Log("OnTarget Far");
+            StopCoroutine(nameof(Attack));
+        }
     }
 
     private IEnumerator SearchTarget() {
