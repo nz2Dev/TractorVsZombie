@@ -243,6 +243,10 @@ PrefabInstance:
       propertyPath: resumeDistance
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 6485445670296535482, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: maxForce
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
 --- !u!43 &765653049
@@ -479,6 +483,10 @@ PrefabInstance:
     - target: {fileID: 3917813954627595586, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: resumeDistance
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485445670296535482, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: maxForce
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
@@ -1199,6 +1207,10 @@ PrefabInstance:
       propertyPath: resumeDistance
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 6485445670296535482, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: maxForce
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
 --- !u!1001 &3798512513054041535
@@ -1260,6 +1272,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 3798512511749880323, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3798512513069735030, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1271,6 +1287,10 @@ PrefabInstance:
     - target: {fileID: 3917813954627595586, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: resumeDistance
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485445670296535482, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: maxForce
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}

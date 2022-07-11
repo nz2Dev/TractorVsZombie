@@ -16,15 +16,12 @@ class Vehicle : MonoBehaviour {
     }
     
     public void ApplyForce(Vector3 force) {
-        _steeringForce += Vector3.ClampMagnitude(force, maxForce) * Time.deltaTime;
+        _steeringForce += force;
     }
 
     private void Update() {
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
-        var acceleration = _steeringForce / mass;
-        _steeringForce = Vector3.zero;
-
-        _velocity += acceleration;
+        _velocity += (_steeringForce / mass);
         _velocity = Vector3.ClampMagnitude(_velocity, maxSpeed);
 
         var thisTransform = transform;
