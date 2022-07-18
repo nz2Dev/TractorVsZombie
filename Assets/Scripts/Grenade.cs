@@ -2,19 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Explosion : MonoBehaviour {
+public class Grenade : MonoBehaviour {
     [SerializeField] private float effectRadius = 5;
     [SerializeField] private float effectForce = 15;
     [SerializeField] float effectUpwardModifier = 1;
     [SerializeField] private ForceMode effectForceMode = ForceMode.Impulse;
 
+    public float EffectRadius => effectRadius;
+
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Perform();
+            Explode();
         }
     }
 
-    public void Perform() {
+    public void Explode() {
         var affectedCollisions = Physics.SphereCastAll(transform.position, effectRadius, Vector3.up);
         foreach (var collision in affectedCollisions) {
             var affectedRigidbody = collision.rigidbody;
@@ -28,6 +30,7 @@ public class Explosion : MonoBehaviour {
                 );
             }
         }
-    }
 
+        Destroy(gameObject);
+    }
 }
