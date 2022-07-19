@@ -8,6 +8,8 @@ public class Grenade : MonoBehaviour {
     [SerializeField] float effectUpwardModifier = 1;
     [SerializeField] private ForceMode effectForceMode = ForceMode.Impulse;
     [SerializeField] private int damage = 50;
+    [SerializeField] private GameObject explosionParticlesPrefab;
+    [SerializeField] private float explosionLifetime;
 
     public float EffectRadius => effectRadius;
 
@@ -18,6 +20,9 @@ public class Grenade : MonoBehaviour {
     }
 
     public void Explode() {
+        var explosionParticles = Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
+        DestructionTimer.StartOn(explosionParticles, explosionLifetime);
+
         var affectedCollisions = Physics.SphereCastAll(transform.position, effectRadius, Vector3.up);
         foreach (var collision in affectedCollisions) {
             var affectedRigidbody = collision.rigidbody;
