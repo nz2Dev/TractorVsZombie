@@ -1,8 +1,7 @@
 ﻿public static class Utils {
-        
-    public static float Remap(float value, float startA, float startB, float endA, float endB) {
-        var t = (value - startA) / startB;
-        return endA + (endB - endA) * t;
-    }
     
+    public static float Map(float value, float startA, float stopA, float startB, float stopB) {
+        return startB + (stopB - startB) * ((value - startA) / (stopA - startA));
+    }
+
 }

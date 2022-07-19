@@ -7,6 +7,7 @@ public class Grenade : MonoBehaviour {
     [SerializeField] private float effectForce = 15;
     [SerializeField] float effectUpwardModifier = 1;
     [SerializeField] private ForceMode effectForceMode = ForceMode.Impulse;
+    [SerializeField] private int damage = 50;
 
     public float EffectRadius => effectRadius;
 
@@ -28,6 +29,14 @@ public class Grenade : MonoBehaviour {
                     effectUpwardModifier,
                     effectForceMode
                 );
+
+                var health = affectedRigidbody.GetComponent<Health>();
+                var train = affectedRigidbody.GetComponent<TrainElement>();
+                if (health != null && train == null) {
+                    var distanceFromEpicentr = Vector3.Distance(affectedRigidbody.transform.position, transform.position);
+                    var damageDumping = (int) Utils.Map(distanceFromEpicentr, 0, effectRadius, 0, damage);
+                    health.TakeDamage(damage - damageDumping);
+                }
             }
         }
 

@@ -110,7 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: deb40197c9e58e14a92f58a115271651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectRadius: 5
+  effectRadius: 4
   effectForce: 15
   effectUpwardModifier: 1
   effectForceMode: 1
+  damage: 160
