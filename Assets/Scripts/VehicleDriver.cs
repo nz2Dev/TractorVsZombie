@@ -50,7 +50,7 @@ public class VehicleDriver : MonoBehaviour {
         var targetPosition = target.transform.position;
         var arrivalForce = CalculateArrivalSteeringForce(targetPosition);
         //Debug.DrawLine(vehiclePosition, vehiclePosition + arrivalForce, Color.red);
-        Debug.DrawLine(_vehicle.transform.position, _vehicle.transform.position + arrivalForce, Color.blue, 0.1f);
+        //Debug.DrawLine(_vehicle.transform.position, _vehicle.transform.position + arrivalForce, Color.blue, 0.1f);
         _vehicle.ApplyForce(arrivalForce * arrivalSteeringWeight); // * 1.5f
         
         var casted = Physics.SphereCastAll(vehiclePosition, 2, Vector3.up, 10, vehicleLayerMask);
@@ -65,7 +65,7 @@ public class VehicleDriver : MonoBehaviour {
         }
 
         if (CalculatePathFollowingSteeringForce(followingPath, out var steeringForce)) {
-            Debug.DrawLine(_vehicle.transform.position, _vehicle.transform.position + steeringForce, Color.red, 0.1f);
+            //Debug.DrawLine(_vehicle.transform.position, _vehicle.transform.position + steeringForce, Color.red, 0.1f);
             _vehicle.ApplyForce(steeringForce * pathFollowingSteeringWeight);
         }
     }

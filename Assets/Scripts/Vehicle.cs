@@ -32,7 +32,7 @@ class Vehicle : MonoBehaviour {
         }
     }
 
-    private void OnDrawGizmos() {
+    private void OnDrawGizmosSelected() {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, transform.position + _velocity);
     }

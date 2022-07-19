@@ -67,7 +67,7 @@ public class Turel : MonoBehaviour {
             var targetAlignment = 0f;
             while (targetAlignment < 0.99f) {
                 var turelToTarget = (_currentTarget.transform.position - transform.position).normalized;
-                Debug.DrawLine(transform.position, _currentTarget.transform.position, Color.blue);
+                //Debug.DrawLine(transform.position, _currentTarget.transform.position, Color.blue);
 
                 targetAlignment = Vector3.Dot(transform.forward, turelToTarget);
                 var lookRotation = Quaternion.LookRotation(turelToTarget, Vector3.up);
@@ -82,7 +82,7 @@ public class Turel : MonoBehaviour {
             _animator.SetTrigger("Fire");
             _currentTarget.transform.position += Vector3.ProjectOnPlane(transform.forward, Vector3.up) * firePushMultiplier;
             
-            Debug.DrawLine(transform.position, _currentTarget.transform.position, Color.red, 1f);
+            //Debug.DrawLine(transform.position, _currentTarget.transform.position, Color.red, 1f);
             var targetHealth = _currentTarget.GetComponent<Health>();
             if (targetHealth != null) {
                 targetHealth.TakeDamage(turelDamage);
