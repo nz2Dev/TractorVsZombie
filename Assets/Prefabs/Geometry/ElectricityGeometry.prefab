@@ -301,7 +301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3260634498104812028}
   m_Layer: 6
-  m_Name: DefenceGeometry
+  m_Name: ElectricityGeometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

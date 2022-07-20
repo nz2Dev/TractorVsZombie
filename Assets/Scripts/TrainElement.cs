@@ -45,7 +45,7 @@ public class TrainElement : MonoBehaviour {
         AttachHead(newTrainElement);
     }
     
-    private void AttachHead(TrainElement trainElement) {
+    public void AttachHead(TrainElement trainElement) {
         head = trainElement;
         head.OnStartBeingHeadTo(this);
         _attachedToGroup = true;

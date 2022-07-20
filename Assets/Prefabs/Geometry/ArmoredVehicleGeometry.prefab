@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5014051772660383157}
   - component: {fileID: 6403022668817076568}
   m_Layer: 0
-  m_Name: VehicleBaseGeometry
+  m_Name: ArmoredVehicleGeometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -688,7 +688,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c22777d6e868e4f2fb421913386b154e, type: 2}
+  - {fileID: 2100000, guid: e5fd9c3da824a054c9704581987222f9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

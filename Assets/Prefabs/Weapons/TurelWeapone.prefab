@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2654248855733922238
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 862040529981551417, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 939071052286196109, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+    - target: {fileID: 4693316024599918519, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+    - target: {fileID: 5482413543016712812, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_Name
+      value: TurelWeapone
+      objectReference: {fileID: 0}
+    - target: {fileID: 6669601402146558823, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+    - target: {fileID: 7002966189412195762, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+--- !u!1 &7548238947085493202 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5482413543016712812, guid: bef8e15ddf21b8744ab2a521c7bb98a9, type: 3}
+  m_PrefabInstance: {fileID: 2654248855733922238}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2533143345217996513
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7548238947085493202}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4c7be0fc7ecb3b146bdfebd337180ec1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &5557435883477789899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7548238947085493202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dcb56a16c027034abc25c81e987c82c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireInterval: 0.1
+  turelAlignmentMultiplier: 10
+  turelDamage: 10
+  targetSearchInterval: 0.5
+  firePushMultiplier: 0.1

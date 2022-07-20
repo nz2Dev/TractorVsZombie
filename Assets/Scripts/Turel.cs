@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[SelectionBase]
 public class Turel : MonoBehaviour {
     
     [SerializeField] private float fireInterval = 2f;
