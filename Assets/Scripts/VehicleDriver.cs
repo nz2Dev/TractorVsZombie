@@ -21,6 +21,7 @@ public class VehicleDriver : MonoBehaviour {
 
     private void Awake() {
         _vehicle = GetComponent<Vehicle>();
+        SetTarget(target);
     }
 
     public void Stop() {
@@ -37,7 +38,7 @@ public class VehicleDriver : MonoBehaviour {
     }
 
     private void Update() {
-        if (!_vehicle.enabled) {
+        if (target == null) {
             return;
         }
 
