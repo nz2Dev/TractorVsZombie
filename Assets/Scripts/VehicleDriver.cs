@@ -2,12 +2,10 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class VehicleDriver : MonoBehaviour {
     
     [SerializeField] private GameObject target;
     [SerializeField] private Path followingPath;
-    
     [SerializeField] private float slowingDistance = 1.5f;
     [SerializeField] private LayerMask vehicleLayerMask;
     
@@ -52,7 +50,7 @@ public class VehicleDriver : MonoBehaviour {
         var arrivalForce = CalculateArrivalSteeringForce(targetPosition);
         //Debug.DrawLine(vehiclePosition, vehiclePosition + arrivalForce, Color.red);
         //Debug.DrawLine(_vehicle.transform.position, _vehicle.transform.position + arrivalForce, Color.blue, 0.1f);
-        _vehicle.ApplyForce(arrivalForce * arrivalSteeringWeight); // * 1.5f
+        _vehicle.ApplyForce(arrivalForce * arrivalSteeringWeight, "Arrival", Color.black); // * 1.5f
         
         var casted = Physics.SphereCastAll(vehiclePosition, 2, Vector3.up, 10, vehicleLayerMask);
         var neighbors = casted

@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
+[SelectionBase]
 class Vehicle : MonoBehaviour {
     [SerializeField] private float maxForce = 1;
     [SerializeField] private float maxSpeed = 1;
@@ -10,30 +13,89 @@ class Vehicle : MonoBehaviour {
 
     public Vector3 Velocity => _velocity;
     public float MaxSpeed => maxSpeed;
+    public float MaxForce => maxForce;
 
     public Vector3 PredictPosition(float futureTimeAmount) {
         return transform.position + _velocity * futureTimeAmount;
     }
+
+    struct ForceDebugInfo {
+        public string source;
+        public Vector3 force;
+        public Color color;
+    }
+
+    private Dictionary<string, ForceDebugInfo> debugInfoList = new Dictionary<string, ForceDebugInfo>();
+    private List<ForceDebugInfo> appliedInfo = new List<ForceDebugInfo>();
+    private Vector3 velocityDeltaFrameDebug;
+    private Vector3 velocityBeforeChangeFrameDebug;
     
-    public void ApplyForce(Vector3 force) {
+    public void ApplyForce(Vector3 force, string source = null, Color color = default) {
+        // Debug.DrawLine(
+        //     transform.position + _velocity + _steeringForce + Vector3.up * _steeringForce.magnitude,
+        //     transform.position + _velocity + _steeringForce + force + Vector3.up * _steeringForce.magnitude,
+        //     color
+        // );
         _steeringForce += force;
+
+        if (source == null) {
+            source = "Unknown" + debugInfoList.Count;
+        }
+
+        debugInfoList[source] = new ForceDebugInfo {
+            source = source,
+            force = force,
+            color = color
+        };
     }
 
     private void Update() {
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
-        _velocity += (_steeringForce / mass);
+        var steeringForceOverMass = (_steeringForce / mass);
+        velocityDeltaFrameDebug = steeringForceOverMass;
+        _steeringForce = Vector3.zero;
+
+        appliedInfo.Clear();
+        appliedInfo.AddRange(debugInfoList.Values);
+        debugInfoList.Clear();
+    
+        velocityBeforeChangeFrameDebug = _velocity;
+        _velocity += steeringForceOverMass;
         _velocity = Vector3.ClampMagnitude(_velocity, maxSpeed);
 
         var thisTransform = transform;
         var newPosition = thisTransform.position + _velocity * Time.deltaTime;
         if (newPosition.magnitude > 0) {
-            thisTransform.LookAt(newPosition);
+            thisTransform.rotation = Quaternion.LookRotation(_velocity, Vector3.up);
             thisTransform.position = newPosition;
         }
     }
 
     private void OnDrawGizmosSelected() {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, transform.position + _velocity);
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(transform.position, transform.position + velocityBeforeChangeFrameDebug);
+        Handles.DrawWireDisc(transform.position, Vector3.up, maxSpeed);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position + velocityBeforeChangeFrameDebug, transform.position + velocityBeforeChangeFrameDebug + velocityDeltaFrameDebug);
+        Handles.DrawWireDisc(transform.position + velocityBeforeChangeFrameDebug, Vector3.up, maxForce);
+
+        int heightStack = 0;
+        Vector3 horizontalForceStack = Vector3.zero;
+        float segmentHeight = 0.1f;
+        foreach (var info in appliedInfo) {
+            Vector3 upVector = Vector3.up * segmentHeight * heightStack;
+            var segmentStartPosition = transform.position + velocityBeforeChangeFrameDebug + upVector + horizontalForceStack;
+            var segmentEndPosition = segmentStartPosition + info.force;
+
+            Handles.color = info.color;
+            var labelStyle = new GUIStyle();
+            labelStyle.normal.textColor = info.color;
+            Handles.Label(segmentStartPosition, info.source, labelStyle);
+            Handles.DrawLine(segmentStartPosition, segmentEndPosition);
+            Handles.DrawSolidDisc(segmentStartPosition, Vector3.up, 0.01f);
+
+            horizontalForceStack += info.force;
+            heightStack += 1;
+        }
     }
 }
