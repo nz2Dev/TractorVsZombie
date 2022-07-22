@@ -27,7 +27,7 @@ class Vehicle : MonoBehaviour {
 
     private Dictionary<string, ForceDebugInfo> debugInfoList = new Dictionary<string, ForceDebugInfo>();
     private List<ForceDebugInfo> appliedInfo = new List<ForceDebugInfo>();
-    private Vector3 velocityDeltaFrameDebug;
+    private Vector3 steeringDeltaFrameDebug;
     private Vector3 velocityBeforeChangeFrameDebug;
     
     public void ApplyForce(Vector3 force, string source = null, Color color = default) {
@@ -52,7 +52,7 @@ class Vehicle : MonoBehaviour {
     private void Update() {
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
         var steeringForceOverMass = (_steeringForce / mass);
-        velocityDeltaFrameDebug = steeringForceOverMass;
+        steeringDeltaFrameDebug = steeringForceOverMass;
         _steeringForce = Vector3.zero;
 
         appliedInfo.Clear();
@@ -74,12 +74,18 @@ class Vehicle : MonoBehaviour {
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.white;
         Gizmos.DrawLine(transform.position, transform.position + velocityBeforeChangeFrameDebug);
+        Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, Vector3.up, maxSpeed);
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position + velocityBeforeChangeFrameDebug, transform.position + velocityBeforeChangeFrameDebug + velocityDeltaFrameDebug);
-        Handles.DrawWireDisc(transform.position + velocityBeforeChangeFrameDebug, Vector3.up, maxForce);
+        Handles.DrawSolidDisc(transform.position, Vector3.up, 0.01f);
+        Handles.Label(transform.position, "V: " + _velocity.magnitude.ToString("F2"));
+        Gizmos.color = Color.black;
+        Gizmos.DrawLine(transform.position + velocityBeforeChangeFrameDebug + Vector3.down * 0.05f, transform.position + velocityBeforeChangeFrameDebug + steeringDeltaFrameDebug + Vector3.down * 0.05f);
+        Handles.color = Color.black;
+        Handles.DrawWireDisc(transform.position + velocityBeforeChangeFrameDebug + Vector3.down * 0.05f, Vector3.up, maxForce);
+        Handles.DrawSolidDisc(transform.position + velocityBeforeChangeFrameDebug + Vector3.down * 0.05f, Vector3.up, 0.01f);
+        Handles.Label(transform.position + velocityBeforeChangeFrameDebug + steeringDeltaFrameDebug + Vector3.down * 0.05f, "S: " + steeringDeltaFrameDebug.magnitude.ToString("F2"));
 
-        int heightStack = 0;
+        int heightStack = 1;
         Vector3 horizontalForceStack = Vector3.zero;
         float segmentHeight = 0.1f;
         foreach (var info in appliedInfo) {

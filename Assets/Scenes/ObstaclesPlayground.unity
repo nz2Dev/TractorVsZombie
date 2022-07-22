@@ -588,7 +588,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1306
+  m_Name: pb_Mesh-37398
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -772,14 +772,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 903856243}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.2588194, z: -0, w: 0.9659258}
+  m_LocalPosition: {x: -0.12, y: 0, z: -1.13}
   m_LocalScale: {x: 2, y: 1, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1663637463}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 30, z: 0}
 --- !u!65 &903856245
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1080,15 +1080,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3798512512465498461}
-  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -3.43, y: 0, z: -0.85}
+  m_LocalRotation: {x: -0, y: 0.55836576, z: -0, w: 0.8295949}
+  m_LocalPosition: {x: -3.99, y: 0, z: -1.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3798512513293637419}
   m_Father: {fileID: 1663637463}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 67.886, z: 0}
 --- !u!1 &3798512512465498461
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,10 +1098,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3798512512465498460}
+  - component: {fileID: 7399487264545872316}
   - component: {fileID: 6485445670928206564}
   - component: {fileID: 3917813955480708636}
   - component: {fileID: 7399487264545872317}
-  - component: {fileID: 7399487264545872316}
   m_Layer: 0
   m_Name: CrowdCharacter
   m_TagString: Untagged
@@ -1210,7 +1210,7 @@ MonoBehaviour:
   vehicleLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  arrivalSteeringWeight: 0.2
+  arrivalSteeringWeight: 0.01
   separationSteeringWeight: 1
   pathFollowingSteeringWeight: 1
 --- !u!114 &6485445670928206564
@@ -1225,7 +1225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 258884298202490895be726a94c3d0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxForce: 0.05
+  maxForce: 0.01
   maxSpeed: 1
   mass: 1
 --- !u!54 &7399487264545872316
@@ -1256,8 +1256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4eb1119a0e2da1d4db74cf1933982c57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkDistance: 3
+  checkDistance: 1.5
+  sphereRadius: 0.5
   wallsLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  forceWeight: 10
+  forceWeight: 5
