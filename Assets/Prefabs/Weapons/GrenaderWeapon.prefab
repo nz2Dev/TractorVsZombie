@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8693052007482853932
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5474049
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.5496147
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.28658444
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9580551
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447524, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286528284447525, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_Name
+      value: GrenaderWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 2617286529044171900, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+--- !u!1 &6697297420797892873 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2617286528284447525, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+  m_PrefabInstance: {fileID: 8693052007482853932}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5853319651322914627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6697297420797892873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59032d51c0f164a4b9099a0ac070423c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  fireHeight: 5
+  launcherChildGameObject: {fileID: 6697297421865838877}
+  detonateDistance: 0.3
+  grenadePrefab: {fileID: 5814709301179252190, guid: 662b94beb3b63a049b06c402bbce790d, type: 3}
+  flyCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 3.7596922
+      outSlope: 3.7596922
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.045037888
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.99999595
+      inSlope: 0.002976321
+      outSlope: 0.002976321
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.16045058
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -3.1127636
+      outSlope: -3.1127636
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.055603623
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &6697297421865838877 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2617286529352000305, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}
+  m_PrefabInstance: {fileID: 8693052007482853932}
+  m_PrefabAsset: {fileID: 0}
