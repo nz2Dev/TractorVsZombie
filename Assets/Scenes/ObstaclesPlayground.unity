@@ -1102,6 +1102,7 @@ GameObject:
   - component: {fileID: 6485445670928206564}
   - component: {fileID: 3917813955480708636}
   - component: {fileID: 7399487264545872317}
+  - component: {fileID: 7399487264545872318}
   m_Layer: 0
   m_Name: CrowdCharacter
   m_TagString: Untagged
@@ -1204,15 +1205,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f2d52ed3a974844e876f691857bd42a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1776103160}
-  followingPath: {fileID: 0}
-  slowingDistance: 1.5
-  vehicleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  arrivalSteeringWeight: 0.01
-  separationSteeringWeight: 1
-  pathFollowingSteeringWeight: 1
 --- !u!114 &6485445670928206564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1253,7 +1245,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3798512512465498461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb1119a0e2da1d4db74cf1933982c57, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d830f62aaf849c42995632628b79087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   checkDistance: 1.5
@@ -1262,3 +1254,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   forceWeight: 5
+--- !u!114 &7399487264545872318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3798512512465498461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0f7e702732bcec46af77bf3f33ab256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1776103160}
+  slowingDistance: 1.5
+  steeringWeight: 0.1

@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [SelectionBase]
-class Vehicle : MonoBehaviour {
+public class Vehicle : MonoBehaviour {
     [SerializeField] private float maxForce = 1;
     [SerializeField] private float maxSpeed = 1;
     [SerializeField] private float mass = 1;

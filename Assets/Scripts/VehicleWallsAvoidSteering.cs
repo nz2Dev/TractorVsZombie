@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Vehicle))]
-public class VehicleWallsAvoider : MonoBehaviour {
+public class VehicleWallsAvoidSteering : MonoBehaviour {
 
     [SerializeField] private float checkDistance = 3;
     [SerializeField] private float sphereRadius = 0.5f;

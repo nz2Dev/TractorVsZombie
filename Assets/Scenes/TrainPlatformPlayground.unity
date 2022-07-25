@@ -1320,15 +1320,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f2d52ed3a974844e876f691857bd42a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 785820172}
-  followingPath: {fileID: 0}
-  slowingDistance: 1.5
-  vehicleLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  arrivalSteeringWeight: 1.5
-  separationSteeringWeight: 1
-  pathFollowingSteeringWeight: 1
 --- !u!114 &506826529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2206,15 +2197,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f2d52ed3a974844e876f691857bd42a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  followingPath: {fileID: 0}
-  slowingDistance: 1.5
-  vehicleLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  arrivalSteeringWeight: 1.5
-  separationSteeringWeight: 1
-  pathFollowingSteeringWeight: 1
 --- !u!114 &785820174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5104,6 +5086,8 @@ GameObject:
   - component: {fileID: 1593953535}
   - component: {fileID: 1593953534}
   - component: {fileID: 1593953533}
+  - component: {fileID: 1593953537}
+  - component: {fileID: 1593953536}
   m_Layer: 0
   m_Name: VehicleDriver
   m_TagString: Untagged
@@ -5123,15 +5107,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f2d52ed3a974844e876f691857bd42a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 606594777}
-  followingPath: {fileID: 2049026658}
-  slowingDistance: 1.5
-  vehicleLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  arrivalSteeringWeight: 1
-  separationSteeringWeight: 0
-  pathFollowingSteeringWeight: 0
 --- !u!114 &1593953534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5164,6 +5139,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: -30, z: 0}
+--- !u!114 &1593953536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593953532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0f7e702732bcec46af77bf3f33ab256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 606594777}
+  slowingDistance: 1.5
+  steeringWeight: 1
+--- !u!114 &1593953537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593953532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed97182b6ef7804fbcd8b67e220a2ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followingPath: {fileID: 2049026658}
+  pathFollowingSteeringWeight: 1
 --- !u!1 &1633047254
 GameObject:
   m_ObjectHideFlags: 0
@@ -6392,15 +6396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f2d52ed3a974844e876f691857bd42a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 506826527}
-  followingPath: {fileID: 0}
-  slowingDistance: 1.5
-  vehicleLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  arrivalSteeringWeight: 1.5
-  separationSteeringWeight: 1
-  pathFollowingSteeringWeight: 1
 --- !u!114 &2130813947
 MonoBehaviour:
   m_ObjectHideFlags: 0

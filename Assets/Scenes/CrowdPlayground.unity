@@ -179,6 +179,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 839852058377420313, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1454857339}
     - target: {fileID: 3798512511749880322, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -242,6 +246,10 @@ PrefabInstance:
     - target: {fileID: 3917813954627595586, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: resumeDistance
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299015627138961710, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: vehicleLayerMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 6485445670296535482, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: maxForce
@@ -420,6 +428,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 839852058377420313, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1454857339}
     - target: {fileID: 3798512511749880322, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -483,6 +495,10 @@ PrefabInstance:
     - target: {fileID: 3917813954627595586, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: resumeDistance
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299015627138961710, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: vehicleLayerMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 6485445670296535482, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: maxForce
@@ -1143,6 +1159,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 839852058377420313, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1454857339}
     - target: {fileID: 3798512511749880322, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -1207,6 +1227,10 @@ PrefabInstance:
       propertyPath: resumeDistance
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 5299015627138961710, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: vehicleLayerMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 6485445670296535482, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: maxForce
       value: 2
@@ -1220,6 +1244,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 839852058377420313, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1454857339}
     - target: {fileID: 3798512511749880322, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -1287,6 +1315,10 @@ PrefabInstance:
     - target: {fileID: 3917813954627595586, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: resumeDistance
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299015627138961710, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
+      propertyPath: vehicleLayerMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 6485445670296535482, guid: f3b3b5909c4e91847b3499849f8c7732, type: 3}
       propertyPath: maxForce
