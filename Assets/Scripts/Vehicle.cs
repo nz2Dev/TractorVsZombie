@@ -5,14 +5,15 @@ using UnityEngine;
 [SelectionBase]
 public class Vehicle : MonoBehaviour {
     [SerializeField] private float maxForce = 1;
-    [SerializeField] private float maxSpeed = 1;
+    [SerializeField] private float maxSpeedRaw = 1;
     [SerializeField] private float mass = 1;
 
     private Vector3 _velocity;
     private Vector3 _steeringForce;
+    [SerializeField] private float maxSpeedMultiplier = 1;
 
     public Vector3 Velocity => _velocity;
-    public float MaxSpeed => maxSpeed;
+    public float MaxSpeed => maxSpeedRaw * maxSpeedMultiplier;
     public float MaxForce => maxForce;
 
     public Vector3 PredictPosition(float futureTimeAmount) {
@@ -49,6 +50,10 @@ public class Vehicle : MonoBehaviour {
         };
     }
 
+    public void ChangeMaxSpeedMultiplier(float multiplier) {
+        maxSpeedMultiplier = multiplier;
+    }
+
     private void Update() {
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
         var steeringForceOverMass = (_steeringForce / mass);
@@ -61,7 +66,7 @@ public class Vehicle : MonoBehaviour {
     
         velocityBeforeChangeFrameDebug = _velocity;
         _velocity += steeringForceOverMass;
-        _velocity = Vector3.ClampMagnitude(_velocity, maxSpeed);
+        _velocity = Vector3.ClampMagnitude(_velocity, MaxSpeed);
 
         var thisTransform = transform;
         var newPosition = thisTransform.position + _velocity * Time.deltaTime;
@@ -75,7 +80,7 @@ public class Vehicle : MonoBehaviour {
         Gizmos.color = Color.white;
         Gizmos.DrawLine(transform.position, transform.position + velocityBeforeChangeFrameDebug);
         Handles.color = Color.white;
-        Handles.DrawWireDisc(transform.position, Vector3.up, maxSpeed);
+        Handles.DrawWireDisc(transform.position, Vector3.up, maxSpeedRaw);
         Handles.DrawSolidDisc(transform.position, Vector3.up, 0.01f);
         Handles.Label(transform.position, "V: " + _velocity.magnitude.ToString("F2"));
         Gizmos.color = Color.black;
