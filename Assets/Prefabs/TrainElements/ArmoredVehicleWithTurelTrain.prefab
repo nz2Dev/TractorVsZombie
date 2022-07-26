@@ -30,6 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6637541810464185641}
   - {fileID: 7123050611975787676}
   - {fileID: 6946871002782692527}
   m_Father: {fileID: 0}
@@ -61,6 +62,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max: 100
+--- !u!1 &2713382367787783098
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6637541810464185641}
+  - component: {fileID: 6856269555626325806}
+  m_Layer: 6
+  m_Name: ObstacleCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6637541810464185641
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2713382367787783098}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 1, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 622631781886126943}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6856269555626325806
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2713382367787783098}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.5, z: 1}
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!1001 &4914391393489583018
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -264,7 +310,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 161159133330534584, guid: b3e8ac661557e694abdaf413dcdf5bf6, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 161159133330534584, guid: b3e8ac661557e694abdaf413dcdf5bf6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -344,7 +390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 551620965710459047, guid: 596fcf47350c1084f833f0faa7528b90, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 551620965710459047, guid: 596fcf47350c1084f833f0faa7528b90, type: 3}
       propertyPath: m_AnchorMax.x

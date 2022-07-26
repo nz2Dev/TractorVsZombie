@@ -34,9 +34,11 @@ public class VehicleWallsAvoidSteering : MonoBehaviour {
 
         var walls = Physics.OverlapSphere(transform.position, checkDistance, wallsLayerMask);
         foreach (var wall in walls) {
-            var awayNormal = (transform.position - wall.ClosestPoint(transform.position)).normalized;
-            var dotForwardToNormal = Vector3.Dot(awayNormal, transform.forward);
-            var desiredVelocity = transform.forward + awayNormal * 2 * Mathf.Abs(dotForwardToNormal);
+            var awayVector = (transform.position - wall.ClosestPoint(transform.position));
+            awayVector = Vector3.ProjectOnPlane(awayVector, Vector3.up).normalized;
+            Vector3 flatForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+            var dotForwardToNormal = Vector3.Dot(awayVector, flatForward);
+            var desiredVelocity = flatForward + awayVector * 2 * Mathf.Abs(dotForwardToNormal);
             var steerAway = desiredVelocity - _vehicle.Velocity;
             _vehicle.ApplyForce(steerAway, "SteerAway-" + wall.name, Color.yellow);
         }
