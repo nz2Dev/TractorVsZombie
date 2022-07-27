@@ -54,7 +54,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5803359716655068938}
+  - component: {fileID: 822244363252597629}
   - component: {fileID: 5803359716630140375}
+  - component: {fileID: 729566236737453670}
   m_Layer: 0
   m_Name: TractorVehicleTrainHead
   m_TagString: Untagged
@@ -80,6 +82,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &822244363252597629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803359716655068939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258884298202490895be726a94c3d0ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxForce: 0.01
+  maxSpeedRaw: 1
+  mass: 1
+  maxSpeedMultiplier: 1
 --- !u!114 &5803359716630140375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,6 +111,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 0}
+--- !u!114 &729566236737453670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803359716655068939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 743cf0e8ab106d94a9eddadb5d50bdc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnBaseOffset: 0.5
+  lookaheadDistance: 1
 --- !u!1 &5803359718010007256
 GameObject:
   m_ObjectHideFlags: 0
