@@ -21,7 +21,7 @@ public class VehicleSeparationSteering : MonoBehaviour {
             .ToArray();
 
         if (CalculateSeparationSteeringForce(neighbors, out var separationForce)) {
-            _vehicle.ApplyForce(separationForce * separationSteeringWeight); // * 1f
+            _vehicle.ApplyForce(separationForce * separationSteeringWeight, "separation", Color.magenta); // * 1f
         }
     }
 

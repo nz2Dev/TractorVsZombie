@@ -7,6 +7,7 @@ public class Tractor : MonoBehaviour {
     [SerializeField] private float acceleratedSpeedMultiplier = 2;
     [SerializeField] private float explosionRadius = 1;
     [SerializeField] private float upwardsModifier = 1;
+    [SerializeField] private int ramDamage = 30;
     
     private Vehicle _vehicle;
     private bool _accelerated;
@@ -42,5 +43,9 @@ public class Tractor : MonoBehaviour {
         }
         
         other.attachedRigidbody.AddExplosionForce(forceMultiplier, transform.position, explosionRadius, upwardsModifier, forceMode);
+        var health = other.attachedRigidbody.GetComponent<Health>();
+        if (health != null) {
+            health.TakeDamage(ramDamage);
+        }
     }
 }

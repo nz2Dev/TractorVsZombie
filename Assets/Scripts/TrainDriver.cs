@@ -13,6 +13,11 @@ public class TrainDriver : MonoBehaviour {
     }
 
     private void Update() {
+        if (Input.GetKey(KeyCode.Q)) {
+            BreakVehicle();
+            return;
+        }
+
         var horizontalAxis = Input.GetAxisRaw("Horizontal");
         var verticalAxis = Input.GetAxisRaw("Vertical");
 
@@ -24,6 +29,10 @@ public class TrainDriver : MonoBehaviour {
         if (_turnDirection != default) {
             SteerAtSnapDirection(_turnDirection);
         }
+    }
+
+    private void BreakVehicle() {
+        _vehicle.ApplyForce(-_vehicle.Velocity, "Break", Color.black);
     }
 
     private void SteerRelativeToCamera(Vector3 inputVector) {

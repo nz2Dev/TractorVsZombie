@@ -7,6 +7,7 @@ public class Vehicle : MonoBehaviour {
     [SerializeField] private float maxForce = 1;
     [SerializeField] private float maxSpeedRaw = 1;
     [SerializeField] private float mass = 1;
+    [SerializeField] private float minMoveVelocity = 0.1f;
 
     private Vector3 _velocity;
     private Vector3 _steeringForce;
@@ -35,7 +36,7 @@ public class Vehicle : MonoBehaviour {
     private List<ForceDebugInfo> appliedInfo = new List<ForceDebugInfo>();
     private Vector3 steeringDeltaFrameDebug;
     private Vector3 velocityBeforeChangeFrameDebug;
-    
+
     public void ApplyForce(Vector3 force, string source = null, Color color = default) {
         // Debug.DrawLine(
         //     transform.position + _velocity + _steeringForce + Vector3.up * _steeringForce.magnitude,
@@ -77,6 +78,10 @@ public class Vehicle : MonoBehaviour {
         _velocity += steeringForceOverMass;
         _velocity = Vector3.ClampMagnitude(_velocity, MaxSpeed);
 
+        if (_velocity.magnitude < minMoveVelocity) {
+            return;
+        }
+        
         var thisTransform = transform;
         var newPosition = thisTransform.position + _velocity * Time.deltaTime;
         if (newPosition.magnitude > 0) {
