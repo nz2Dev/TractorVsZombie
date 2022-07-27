@@ -94,9 +94,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 258884298202490895be726a94c3d0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxForce: 0.01
-  maxSpeedRaw: 1
-  mass: 1
+  maxForce: 1
+  maxSpeedRaw: 1.15
+  mass: 0.3
   maxSpeedMultiplier: 1
 --- !u!114 &5803359716630140375
 MonoBehaviour:

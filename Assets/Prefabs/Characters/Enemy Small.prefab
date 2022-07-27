@@ -199,9 +199,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 258884298202490895be726a94c3d0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxForce: 0.01
-  maxSpeed: 1
-  mass: 1
+  maxForce: 1
+  maxSpeedRaw: 1.05
+  mass: 0.2
+  maxSpeedMultiplier: 1
 --- !u!54 &798371832
 Rigidbody:
   m_ObjectHideFlags: 0

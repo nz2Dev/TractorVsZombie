@@ -56,7 +56,7 @@ public class Vehicle : MonoBehaviour {
 
     private void Update() {
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
-        var steeringForceOverMass = (_steeringForce / mass);
+        var steeringForceOverMass = (_steeringForce / mass) * Time.deltaTime;
         steeringDeltaFrameDebug = steeringForceOverMass;
         _steeringForce = Vector3.zero;
 
