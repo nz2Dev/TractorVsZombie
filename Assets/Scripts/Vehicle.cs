@@ -11,10 +11,15 @@ public class Vehicle : MonoBehaviour {
     private Vector3 _velocity;
     private Vector3 _steeringForce;
     [SerializeField] private float maxSpeedMultiplier = 1;
+    private PhysicStability physicStability;
 
     public Vector3 Velocity => _velocity;
     public float MaxSpeed => maxSpeedRaw * maxSpeedMultiplier;
     public float MaxForce => maxForce;
+
+    private void Awake() {
+        physicStability = GetComponent<PhysicStability>();
+    }
 
     public Vector3 PredictPosition(float futureTimeAmount) {
         return transform.position + _velocity * futureTimeAmount;
@@ -55,6 +60,10 @@ public class Vehicle : MonoBehaviour {
     }
 
     private void Update() {
+        if (physicStability != null && !physicStability.IsStable) {
+            return;
+        }
+
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
         var steeringForceOverMass = (_steeringForce / mass) * Time.deltaTime;
         steeringDeltaFrameDebug = steeringForceOverMass;

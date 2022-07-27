@@ -24,13 +24,6 @@ public class TrainDriver : MonoBehaviour {
         if (_turnDirection != default) {
             SteerAtSnapDirection(_turnDirection);
         }
-
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            _vehicle.ChangeMaxSpeedMultiplier(2);
-        }
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            _vehicle.ChangeMaxSpeedMultiplier(1);
-        }
     }
 
     private void SteerRelativeToCamera(Vector3 inputVector) {

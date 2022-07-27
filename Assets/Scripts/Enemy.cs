@@ -41,14 +41,12 @@ public class Enemy : MonoBehaviour {
         if (_chasing && targetClose) {
             _chasing = false;
             _vehicleDriver.Stop();
-            Debug.Log("OnTarget Close");
             StartCoroutine(nameof(Attack));
         }
         
         if (!_chasing && targetFar) {
             _chasing = true;
             _vehicleDriver.Resume();
-            Debug.Log("OnTarget Far");
             StopCoroutine(nameof(Attack));
         }
     }

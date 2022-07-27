@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 3551301714901246883}
   - component: {fileID: 7286900268881458246}
   - component: {fileID: 6622410485043112943}
+  - component: {fileID: 2565431310803779272}
   m_Layer: 6
   m_Name: Enemy Small
   m_TagString: Obstacles
@@ -281,6 +282,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   forceWeight: 1
+--- !u!114 &2565431310803779272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077604122354342710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4176430bcf321545901ac4703b06baa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5879844898236395764
 PrefabInstance:
   m_ObjectHideFlags: 0
