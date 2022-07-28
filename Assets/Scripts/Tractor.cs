@@ -8,6 +8,7 @@ public class Tractor : MonoBehaviour {
     [SerializeField] private float explosionRadius = 1;
     [SerializeField] private float upwardsModifier = 1;
     [SerializeField] private int ramDamage = 30;
+    [SerializeField] private float explosionPositionSideOffset = 1;
     
     private Vehicle _vehicle;
     private bool _accelerated;
@@ -27,7 +28,7 @@ public class Tractor : MonoBehaviour {
         }
     }
 
-    private void OnTriggerEnter(Collider other) {
+    private void OnTriggerStay(Collider other) {
         if (!_accelerated) {
             Debug.Log("Not accelerated");
             return;
@@ -39,10 +40,18 @@ public class Tractor : MonoBehaviour {
         Debug.Log("Kicking " + other.attachedRigidbody.name);
         var stability = other.attachedRigidbody.GetComponent<PhysicStability>();
         if (stability != null) {
+            if (!stability.IsStable) {
+                return;
+            }
             stability.Destabilize();
         }
+
+        var tractorToTarget = other.attachedRigidbody.transform.position - transform.position;
+        var sideNormal = Vector3.Cross(tractorToTarget.normalized, Vector3.up);
+        var sideSign = Random.Range(-1, 1);
+        var explosionPosition = transform.position + sideNormal * explosionPositionSideOffset * sideSign;
+        other.attachedRigidbody.AddExplosionForce(forceMultiplier, explosionPosition, explosionRadius, upwardsModifier, forceMode);
         
-        other.attachedRigidbody.AddExplosionForce(forceMultiplier, transform.position, explosionRadius, upwardsModifier, forceMode);
         var health = other.attachedRigidbody.GetComponent<Health>();
         if (health != null) {
             health.TakeDamage(ramDamage);

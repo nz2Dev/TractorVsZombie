@@ -145,6 +145,7 @@ MonoBehaviour:
   maxForce: 1
   maxSpeedRaw: 1.15
   mass: 0.3
+  minMoveVelocity: 0.1
   maxSpeedMultiplier: 1
 --- !u!114 &5803359716630140375
 MonoBehaviour:
@@ -204,9 +205,10 @@ MonoBehaviour:
   forceMode: 1
   forceMultiplier: 15
   acceleratedSpeedMultiplier: 3
-  useExplosiveForce: 1
   explosionRadius: 5
   upwardsModifier: 2
+  ramDamage: 30
+  explosionPositionSideOffset: 2
 --- !u!1 &5803359718010007256
 GameObject:
   m_ObjectHideFlags: 0

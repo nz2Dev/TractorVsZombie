@@ -23,9 +23,9 @@ public class PhysicStability : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.name == "Ground") {
-            ChangeStability(true);
-        }
+        //if (other.gameObject.name == "Ground") {
+        ChangeStability(true);
+        //}
     }
 
 }
