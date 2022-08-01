@@ -1,4 +1,6 @@
-﻿public static class TrainElementsUtils {
+﻿using System;
+
+public static class TrainElementsUtils {
 
     public static TrainElement FindLastTail(TrainElement trainElement) {
         var lastCheckedElement = trainElement;
@@ -10,4 +12,7 @@
         return lastCheckedElement;
     }
 
+    public static TrainElement FindNextElement(TrainElement head) {
+        return head.Tail;
+    }
 }

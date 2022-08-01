@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class FaceToFaceConstraint : MonoBehaviour {
 
     public Transform faceObject;
     
     private void LateUpdate() {
-        transform.LookAt(transform.position + faceObject.forward);    
+        if (faceObject != null) {
+            transform.LookAt(transform.position + faceObject.forward);    
+        }
     }
 }

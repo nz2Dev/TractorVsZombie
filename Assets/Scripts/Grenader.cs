@@ -6,31 +6,16 @@ using UnityEngine;
 
 [SelectionBase]
 public class Grenader : MonoBehaviour {
-    [SerializeField] private LayerMask groundLayerMask;
     [SerializeField] private float fireHeight = 5;
     [SerializeField] private Transform launcherChildGameObject;
     [SerializeField] private float detonateDistance = 0.3f;
     [SerializeField] private GameObject grenadePrefab;
     [SerializeField] private AnimationCurve flyCurve;
 
-    private void Update() {
-        if (Input.GetMouseButton(0)) {
-            var camera = Camera.main;
-            var clickRay = camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(clickRay, out var hitInfo, float.MaxValue, groundLayerMask)) {
-                Aim(hitInfo.point);
-            }
-        }
-
-        if (Input.GetMouseButtonUp(0)) {
-            FireLastAimPoint();
-        }
-    }
-
     private Vector3 lastAimPoint;
     private Grenade loadedGrenade;
 
-    private void Aim(Vector3 point) {
+    public void Aim(Vector3 point) {
         Vector3 launcherPosition = launcherChildGameObject.transform.position;
         if (loadedGrenade == null) {
             var greandeObject = Instantiate(grenadePrefab, launcherPosition, Quaternion.identity);
@@ -48,7 +33,7 @@ public class Grenader : MonoBehaviour {
         launcherChildGameObject.transform.LookAt(launcherAimPoint, Vector3.up);
     }
 
-    private void FireLastAimPoint() {
+    public void FireLastAimPoint() {
         if (lastAimPoint == default) {
             Debug.Log("Has not been aimed");
             return;

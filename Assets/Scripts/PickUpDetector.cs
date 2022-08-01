@@ -25,7 +25,6 @@ public class PickUpDetector : MonoBehaviour {
     }
 
     private IEnumerator ActivationRoutine(PickUpActivator activator) {
-        var tailElement = TrainElementsUtils.FindLastTail(activator.TrainElement);
         var newTailObject = Instantiate(pickUpPrefab, geometryTransform.position, geometryTransform.rotation);
         Destroy(geometryTransform.gameObject);
         foreach (var trigger in triggers) {
@@ -33,6 +32,7 @@ public class PickUpDetector : MonoBehaviour {
         }
 
         yield return new WaitForSeconds(activationWaitTime);
+        var tailElement = TrainElementsUtils.FindLastTail(activator.TrainElement);
         newTailObject.GetComponent<TrainElement>().AttachHead(tailElement);
 
         Destroy(gameObject);

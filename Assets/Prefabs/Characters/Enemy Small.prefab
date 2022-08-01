@@ -203,6 +203,7 @@ MonoBehaviour:
   maxForce: 1
   maxSpeedRaw: 1.05
   mass: 0.2
+  minMoveVelocity: 0.1
   maxSpeedMultiplier: 1
 --- !u!54 &798371832
 Rigidbody:
@@ -263,7 +264,7 @@ MonoBehaviour:
   vehicleLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  separationSteeringWeight: 1.57
+  separationSteeringWeight: 1
 --- !u!114 &6622410485043112943
 MonoBehaviour:
   m_ObjectHideFlags: 0
