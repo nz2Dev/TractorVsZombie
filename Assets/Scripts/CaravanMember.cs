@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [SelectionBase]
+[ExecuteInEditMode]
 public class CaravanMember : MonoBehaviour {
     
     [SerializeField]
@@ -17,7 +18,7 @@ public class CaravanMember : MonoBehaviour {
     public bool IsLeader => Head == null;
     public bool IsInGroup => _attachedToGroup;
 
-    private void Start() {
+    private void OnEnable() {
         if (head != null) {
             AttachHead(head);    
         }
