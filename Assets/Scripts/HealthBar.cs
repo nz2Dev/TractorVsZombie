@@ -2,12 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour {
-    
-    private Health _health;
-    private Image _healthBarImage;
+    [SerializeField] private Image fillImage;
+    [SerializeField] private Health health;
 
     private void Awake() {
-        _healthBarImage = GetComponent<Image>();
+        if (health != null) {
+            AttachHealth(health);
+        }
     }
 
     private void OnDestroy() {
@@ -20,17 +21,17 @@ public class HealthBar : MonoBehaviour {
             return;
         }
         
-        _health = newHealth;
-        _health.OnHealthChanged += OnHealthChanged;
+        health = newHealth;
+        health.OnHealthChanged += OnHealthChanged;
     }
 
     private void DetachCurrentHealth() {
-        if (_health != null) {
-            _health.OnHealthChanged -= OnHealthChanged;
+        if (health != null) {
+            health.OnHealthChanged -= OnHealthChanged;
         }
     }
 
     private void OnHealthChanged(Health changedHealth) {
-        _healthBarImage.fillAmount = changedHealth.Amount;
+        fillImage.fillAmount = changedHealth.Amount;
     }
 }
