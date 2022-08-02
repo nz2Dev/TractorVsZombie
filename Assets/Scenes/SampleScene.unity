@@ -13453,7 +13453,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9205527, y: 1}
+    m_SensorSize: {x: 2.1592233, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -34199,7 +34199,7 @@ PrefabInstance:
       objectReference: {fileID: 1755531357}
     - target: {fileID: 5388887250471005901, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_VersionIndex
-      value: 3956
+      value: 3968
       objectReference: {fileID: 0}
     - target: {fileID: 5388887251224409729, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_Mesh
@@ -34207,7 +34207,7 @@ PrefabInstance:
       objectReference: {fileID: 921743482}
     - target: {fileID: 5388887251224409729, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_VersionIndex
-      value: 3959
+      value: 3971
       objectReference: {fileID: 0}
     - target: {fileID: 5388887251327266199, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_Mesh
@@ -34215,7 +34215,7 @@ PrefabInstance:
       objectReference: {fileID: 418431569}
     - target: {fileID: 5388887251327266199, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_VersionIndex
-      value: 3959
+      value: 3971
       objectReference: {fileID: 0}
     - target: {fileID: 5388887252111638173, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_Mesh
@@ -34223,7 +34223,7 @@ PrefabInstance:
       objectReference: {fileID: 77766771}
     - target: {fileID: 5388887252111638173, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_VersionIndex
-      value: 3962
+      value: 3974
       objectReference: {fileID: 0}
     - target: {fileID: 5803359716655068938, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_RootOrder
@@ -34279,7 +34279,7 @@ PrefabInstance:
       objectReference: {fileID: 642850810}
     - target: {fileID: 5803359717522481857, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_VersionIndex
-      value: 5176
+      value: 5188
       objectReference: {fileID: 0}
     - target: {fileID: 5803359717522481868, guid: 0bfead3704fe10441b64c1e4f0d84b72, type: 3}
       propertyPath: m_Mesh

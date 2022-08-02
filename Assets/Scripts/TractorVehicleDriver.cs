@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TrainDriver : MonoBehaviour {
+public class TractorVehicleDriver : MonoBehaviour {
 
     [SerializeField][Range(0, 1f)] private float turnBaseOffset;
     [SerializeField] private float lookaheadDistance = 1;

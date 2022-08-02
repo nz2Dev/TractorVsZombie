@@ -3,7 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class TrainAnimationDriver : MonoBehaviour {
+public class TractorCurvesDriver : MonoBehaviour {
     [SerializeField] private AnimationCurve curveTurnX;
     [SerializeField] private AnimationCurve curveTurnY;
     [SerializeField] private AnimationCurve curveTurnRotation;
