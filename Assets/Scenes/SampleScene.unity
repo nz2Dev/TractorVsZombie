@@ -13113,7 +13113,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.0586011, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -22501,6 +22501,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4671370314226758056, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4747506900241001429, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -22735,7 +22739,7 @@ PrefabInstance:
       objectReference: {fileID: 1937534707}
     - target: {fileID: 5141255782455115676, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_VersionIndex
-      value: 4805
+      value: 4934
       objectReference: {fileID: 0}
     - target: {fileID: 5141255782524170919, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_Mesh
@@ -22743,7 +22747,7 @@ PrefabInstance:
       objectReference: {fileID: 1368051287}
     - target: {fileID: 5141255782524170919, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_VersionIndex
-      value: 4808
+      value: 4937
       objectReference: {fileID: 0}
     - target: {fileID: 5141255783823085658, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_Mesh
@@ -22751,7 +22755,7 @@ PrefabInstance:
       objectReference: {fileID: 327900168}
     - target: {fileID: 5141255783823085658, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_VersionIndex
-      value: 4802
+      value: 4931
       objectReference: {fileID: 0}
     - target: {fileID: 5141255784401408633, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_Mesh
@@ -22759,7 +22763,7 @@ PrefabInstance:
       objectReference: {fileID: 1641188962}
     - target: {fileID: 5141255784401408633, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_VersionIndex
-      value: 4805
+      value: 4934
       objectReference: {fileID: 0}
     - target: {fileID: 5258073639333273272, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_AnchorMax.y
@@ -22811,7 +22815,7 @@ PrefabInstance:
       objectReference: {fileID: 343199832}
     - target: {fileID: 5392977979336231728, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_VersionIndex
-      value: 6694
+      value: 6823
       objectReference: {fileID: 0}
     - target: {fileID: 5439154137382014783, guid: 16db9842e53f4ed4c9cafe978baf91a8, type: 3}
       propertyPath: m_AnchorMax.y
@@ -39735,9 +39739,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tractor: {fileID: 1710820511}
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!43 &2017867528
 Mesh:
   m_ObjectHideFlags: 0

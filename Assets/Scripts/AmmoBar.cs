@@ -8,6 +8,8 @@ public class AmmoBar : MonoBehaviour {
     [SerializeField] private Ammo ammo;
     [SerializeField] private Color loadedColor;
     [SerializeField] private Color emptyColor;
+    [SerializeField] private NotificationBar notificationBar;
+    [SerializeField] private float notificationDuration = 1f;
 
     private HorizontalLayoutGroup _layoutGroup;
     private PrototypePopulator _layoutElementsPopulator;
@@ -17,12 +19,14 @@ public class AmmoBar : MonoBehaviour {
         _layoutElementsPopulator = GetComponentInChildren<PrototypePopulator>();
         if (ammo != null) {
             ammo.OnAmmoStateChanged += OnAmmoChanged;
+            ammo.OnNoRequestedAmmo += OnShowNoAmmo;
         }
     }
 
     private void OnDestroy() {
         if (ammo != null) {
             ammo.OnAmmoStateChanged -= OnAmmoChanged;
+            ammo.OnNoRequestedAmmo -= OnShowNoAmmo;
         }
     }
 
@@ -36,6 +40,10 @@ public class AmmoBar : MonoBehaviour {
             var elementImage = elementGO.GetComponent<Image>();
             elementImage.color = ammoSlotLoaded ? loadedColor : emptyColor;
         }
+    }
+
+    private void OnShowNoAmmo() {
+        notificationBar.Show("No ammo!", notificationDuration);
     }
 
 }

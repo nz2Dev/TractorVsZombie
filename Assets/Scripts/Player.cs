@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
     [SerializeField] private Tractor tractor;
-    [SerializeField] private LayerMask groundLayerMask;
 
     private TrainElement _selection;
 
@@ -14,19 +13,9 @@ public class Player : MonoBehaviour {
         }
 
         if (_selection != null) {
-            var selectedGrenader = _selection.GetComponentInChildren<Grenader>();
-            if (selectedGrenader != null) {
-                if (Input.GetMouseButton(0)) {
-                    var camera = Camera.main;
-                    var clickRay = camera.ScreenPointToRay(Input.mousePosition);
-                    if (Physics.Raycast(clickRay, out var hitInfo, float.MaxValue, groundLayerMask)) {
-                        selectedGrenader.Aim(hitInfo.point);
-                    }
-                }
-
-                if (Input.GetMouseButtonUp(0)) {
-                    selectedGrenader.FireLastAimPoint();
-                }
+            var selectedGrenaderController = _selection.GetComponentInChildren<GrenaderController>();
+            if (selectedGrenaderController != null) {
+                selectedGrenaderController.UpdateControl();
             } 
         }
     }

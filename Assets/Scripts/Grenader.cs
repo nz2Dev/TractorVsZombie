@@ -15,6 +15,8 @@ public class Grenader : MonoBehaviour {
     private Vector3 lastAimPoint;
     private Grenade loadedGrenade;
 
+    public bool IsAimed => lastAimPoint != default;
+
     public void Aim(Vector3 point) {
         Vector3 launcherPosition = launcherChildGameObject.transform.position;
         if (loadedGrenade == null) {
