@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class TrainElementSelection : MonoBehaviour {
     [SerializeField] private Tractor tractor;
 
     private TrainElement _selection;
