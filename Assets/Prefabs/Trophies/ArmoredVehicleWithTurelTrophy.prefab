@@ -10,10 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 622631781886126943}
   - component: {fileID: 6982450422812962637}
+  - component: {fileID: 461297289502980386}
   - component: {fileID: 6313506816348589076}
   - component: {fileID: 6555064517946232270}
+  - component: {fileID: 4370639281176475948}
   m_Layer: 0
-  m_Name: ArmoredVehicleWithTurelTrain
+  m_Name: ArmoredVehicleWithTurelTrophy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,10 +49,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 622631781886126942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6619e30522429904e93944a6c5793412, type: 3}
+  m_Script: {fileID: 11500000, guid: 4464af627b158134d9b81f5bc888b94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 0}
+--- !u!114 &461297289502980386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622631781886126942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 166984d6ba46be44793d182c61eb7ad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6313506816348589076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,6 +91,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionRenderer: {fileID: 7139105448580659136}
+--- !u!114 &4370639281176475948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622631781886126942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb212d037ae48d24084775aafb9619e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2573392132198535519
 GameObject:
   m_ObjectHideFlags: 0

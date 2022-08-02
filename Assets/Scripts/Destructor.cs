@@ -3,7 +3,7 @@ using UnityEngine;
 
 [SelectionBase]
 public class Destructor : MonoBehaviour {
-    public TrainElement selectedElement;
+    public CaravanMember selectedElement;
     public bool automatic = false;
     public int intervalSeconds = 4;
     public int damagePerInterval = 45;
@@ -14,7 +14,7 @@ public class Destructor : MonoBehaviour {
     }
 
     private IEnumerator DestructionRoutine() {
-        TrainElement targetTrainElement;
+        CaravanMember targetTrainElement;
         do {
             yield return new WaitForSeconds(intervalSeconds);
 
@@ -22,7 +22,7 @@ public class Destructor : MonoBehaviour {
                 targetTrainElement = selectedElement;
                 selectedElement = null;
             } else if (automatic) {
-                targetTrainElement = TrainElementsUtils.FindLastTail(FindObjectOfType<TrainElement>());
+                targetTrainElement = CaravanMembersUtils.FindLastTail(FindObjectOfType<CaravanMember>());
             } else {
                 targetTrainElement = null;
             }
@@ -42,12 +42,12 @@ public class Destructor : MonoBehaviour {
         Debug.Log("Game Over");
     }
 
-    private void DestroyManuallyByRemoving(TrainElement element) {
+    private void DestroyManuallyByRemoving(CaravanMember element) {
         element.DetachFromGroup();
         Destroy(element.gameObject);
     }
 
-    private void Damage(TrainElement element) {
+    private void Damage(CaravanMember element) {
         var targetHealth = element.GetComponent<Health>();
         if (targetHealth == null) {
             Debug.LogWarning($"targetElement has no health component, was: {element.name}");

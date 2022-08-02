@@ -1,8 +1,8 @@
 ﻿using System;
 
-public static class TrainElementsUtils {
+public static class CaravanMembersUtils {
 
-    public static TrainElement FindLastTail(TrainElement trainElement) {
+    public static CaravanMember FindLastTail(CaravanMember trainElement) {
         var lastCheckedElement = trainElement;
         
         while (lastCheckedElement.Tail != null) {
@@ -12,7 +12,7 @@ public static class TrainElementsUtils {
         return lastCheckedElement;
     }
 
-    public static TrainElement FindNextElement(TrainElement head) {
+    public static CaravanMember FindNextMember(CaravanMember head) {
         return head.Tail;
     }
 }

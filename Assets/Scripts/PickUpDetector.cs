@@ -32,8 +32,8 @@ public class PickUpDetector : MonoBehaviour {
         }
 
         yield return new WaitForSeconds(activationWaitTime);
-        var tailElement = TrainElementsUtils.FindLastTail(activator.TrainElement);
-        newTailObject.GetComponent<TrainElement>().AttachHead(tailElement);
+        var tailElement = CaravanMembersUtils.FindLastTail(activator.TrainElement);
+        newTailObject.GetComponent<CaravanMember>().AttachHead(tailElement);
 
         Destroy(gameObject);
     }

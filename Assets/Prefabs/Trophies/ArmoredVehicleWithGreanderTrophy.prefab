@@ -10,12 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 7214194478199180491}
   - component: {fileID: 1454030952795263772}
+  - component: {fileID: 6803750101629979736}
   - component: {fileID: 3054470022215871006}
   - component: {fileID: 7998266899549892017}
   - component: {fileID: 8465468602964046783}
   - component: {fileID: 1415726107148111379}
+  - component: {fileID: 2811239483233964353}
   m_Layer: 0
-  m_Name: ArmoredVehicleWithGreanderTrain
+  m_Name: ArmoredVehicleWithGreanderTrophy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,10 +51,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1403228660060985515}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6619e30522429904e93944a6c5793412, type: 3}
+  m_Script: {fileID: 11500000, guid: 4464af627b158134d9b81f5bc888b94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 0}
+--- !u!114 &6803750101629979736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403228660060985515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 166984d6ba46be44793d182c61eb7ad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3054470022215871006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +124,18 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &2811239483233964353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403228660060985515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb212d037ae48d24084775aafb9619e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4196536427497265154
 GameObject:
   m_ObjectHideFlags: 0

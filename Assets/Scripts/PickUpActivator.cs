@@ -5,11 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class PickUpActivator : MonoBehaviour {
     
-    private TrainElement _trainElementParent;
-    public TrainElement TrainElement => _trainElementParent;
+    private CaravanMember _trainElementParent;
+    public CaravanMember TrainElement => _trainElementParent;
     
     private void Awake() {
-        _trainElementParent = GetComponentInParent<TrainElement>();
+        _trainElementParent = GetComponentInParent<CaravanMember>();
         if (_trainElementParent == null) {
             Debug.LogError("PickupActivator could not find TrainElement in parents");
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Damager : MonoBehaviour {
 
-    public TrainElement targetElement;
+    public CaravanMember targetElement;
     public int damagePerIteration = 45;
     public int intervalTime = 1;
 

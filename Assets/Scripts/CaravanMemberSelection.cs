@@ -1,15 +1,16 @@
 using System;
 using UnityEngine;
 
-public class TrainElementSelection : MonoBehaviour {
+[SelectionBase]
+public class CaravanMemberSelection : MonoBehaviour {
     [SerializeField] private Tractor tractor;
 
-    private TrainElement _selection;
+    private CaravanMember _selection;
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.E)) {
-            var head = _selection != null ? _selection : tractor.GetComponent<TrainElement>();
-            SelectTrainElement(TrainElementsUtils.FindNextElement(head));
+            var head = _selection != null ? _selection : tractor.GetComponent<CaravanMember>();
+            SelectTrainElement(CaravanMembersUtils.FindNextMember(head));
         }
 
         if (_selection != null) {
@@ -20,7 +21,7 @@ public class TrainElementSelection : MonoBehaviour {
         }
     }
 
-    private void SelectTrainElement(TrainElement trainElement) {
+    private void SelectTrainElement(CaravanMember trainElement) {
         if (_selection != null) {
             var unselectedSelectable = _selection.GetComponent<Selectable>();
             if (unselectedSelectable != null) {

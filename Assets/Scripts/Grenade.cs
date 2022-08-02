@@ -36,7 +36,7 @@ public class Grenade : MonoBehaviour {
                 );
 
                 var health = affectedRigidbody.GetComponent<Health>();
-                var train = affectedRigidbody.GetComponent<TrainElement>();
+                var train = affectedRigidbody.GetComponent<CaravanMember>();
                 if (health != null && train == null) {
                     var distanceFromEpicentr = Vector3.Distance(affectedRigidbody.transform.position, transform.position);
                     var damageDumping = (int) Utils.Map(distanceFromEpicentr, 0, effectRadius, 0, damage);

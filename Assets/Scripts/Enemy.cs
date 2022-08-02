@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour {
         while (true) {
             yield return new WaitForSeconds(0.5f);
 
-            var elements = FindObjectsOfType<TrainElement>();
+            var elements = FindObjectsOfType<CaravanMember>();
             var position = transform.position;
             var shortest = elements.Aggregate((shortest, next) => {
                 if (shortest == null) {
