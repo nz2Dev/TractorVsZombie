@@ -15,9 +15,6 @@ public class AmmoBar : MonoBehaviour {
     private void Awake() {
         _layoutGroup = GetComponentInChildren<HorizontalLayoutGroup>();
         _layoutElementsPopulator = GetComponentInChildren<PrototypePopulator>();
-    }
-
-    private void Start() {
         if (ammo != null) {
             ammo.OnAmmoStateChanged += OnAmmoChanged;
         }

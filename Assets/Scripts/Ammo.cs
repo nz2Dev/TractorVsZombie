@@ -15,6 +15,7 @@ public class Ammo : MonoBehaviour {
 
     private void Start() {
         _ammoCount = initAmmo;
+        OnAmmoStateChanged?.Invoke(this);
     }
 
     public bool TakeAmmo() {
