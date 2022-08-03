@@ -7,9 +7,9 @@ using UnityEngine;
 public class VehicleWallsAvoidSteering : MonoBehaviour {
 
     [SerializeField] private float checkDistance = 3;
-    [SerializeField] private float sphereRadius = 0.5f;
+    //[SerializeField] private float sphereRadius = 0.5f;
     [SerializeField] private LayerMask wallsLayerMask;
-    [SerializeField] private float forceWeight = 1f;
+    //[SerializeField] private float forceWeight = 1f;
     private Vehicle _vehicle;
 
     private void Awake() {

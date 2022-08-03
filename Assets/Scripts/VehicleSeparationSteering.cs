@@ -33,7 +33,7 @@ public class VehicleSeparationSteering : MonoBehaviour {
 
         var accumulativeFleeForce = Vector3.zero;
         var vehiclePosition = _vehicle.transform.position;
-        var maxDistance = 3;
+        //var maxDistance = 3;
 
         foreach (var neighbor in neighbors) {
             var neighborFlee = _vehicle.CalculateFleeSteeringForce(neighbor.transform.position);

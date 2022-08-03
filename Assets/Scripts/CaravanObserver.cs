@@ -11,7 +11,7 @@ public class CaravanObserver : MonoBehaviour {
     [SerializeField] private CaravanMember head;
 
     private CaravanMember _lastTail;
-    private CaravanMember[] _countedMembers;
+    private CaravanMember[] _countedMembers = new CaravanMember[0];
 
     public IEnumerable<CaravanMember> CountedMembers => _countedMembers;
 
@@ -36,6 +36,7 @@ public class CaravanObserver : MonoBehaviour {
             member.OnChanged -= OnMemberStateChanged;
             member.OnDetachment -= OnMemberDetached;
         }
+        _countedMembers = Array.Empty<CaravanMember>();
     }
 
     private void OnMemberStateChanged() {

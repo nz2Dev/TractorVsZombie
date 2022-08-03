@@ -4,10 +4,10 @@ using System.Linq;
 
 public static class CaravanMembersUtils {
 
-    public static CaravanMember FindLastTail(CaravanMember trainElement) {
-        var lastCheckedElement = trainElement;
+    public static CaravanMember FindLastTail(CaravanMember head) {
+        var lastCheckedElement = head;
         
-        while (lastCheckedElement.Tail != null) {
+        while (lastCheckedElement.Tail != null && lastCheckedElement.Tail != head) {
             lastCheckedElement = lastCheckedElement.Tail;
         }
 
@@ -18,7 +18,7 @@ public static class CaravanMembersUtils {
         var lastCheckedElement = head;
         yield return head;
 
-        while (lastCheckedElement.Tail != null) {
+        while (lastCheckedElement.Tail != null && lastCheckedElement.Tail != head) {
             yield return lastCheckedElement.Tail;
             lastCheckedElement = lastCheckedElement.Tail;
         }
