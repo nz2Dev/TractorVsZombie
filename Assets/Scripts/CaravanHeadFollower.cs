@@ -17,7 +17,9 @@ public class CaravanHeadFollower : MonoBehaviour {
         var forwardVector = (headConnectPoint - position).normalized;
 
         transform.position = Vector3.Lerp(position, headConnectPoint, Time.deltaTime);
-        transform.rotation = Quaternion.LookRotation(forwardVector, Vector3.up);
+        if (forwardVector.magnitude > 0) {
+            transform.rotation = Quaternion.LookRotation(forwardVector, Vector3.up);
+        }
     }
 
 }

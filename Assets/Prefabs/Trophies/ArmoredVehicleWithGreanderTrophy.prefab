@@ -92,8 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59ed97f6a9ac424fb31881ded7108ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAmmo: 0
-  initAmmo: 0
+  maxAmmo: 5
+  initAmmo: 5
 --- !u!114 &8465468602964046783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,6 +344,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4251192969450049214}
     m_Modifications:
+    - target: {fileID: 5014054015503714680, guid: 0c1f966162ae8c54a852ace38c380639, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5014054015503714680, guid: 0c1f966162ae8c54a852ace38c380639, type: 3}
       propertyPath: m_fontSize
       value: 25

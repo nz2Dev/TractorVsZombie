@@ -32,6 +32,10 @@ public class Enemy : MonoBehaviour {
     }
 
     private void Update() {
+        if (_vehicleDriver.Target == null) {
+            return;
+        }
+
         var vehiclePosition = _vehicleDriver.transform.position;
         var targetPosition = _vehicleDriver.Target.transform.position;
         var distance = Vector3.Distance(targetPosition, vehiclePosition);
@@ -82,7 +86,7 @@ public class Enemy : MonoBehaviour {
 
             var trainHealth = _vehicleDriver.Target.GetComponent<Health>();
             if (trainHealth == null) {
-                Debug.LogWarning("Can't deal damage to train element without health");
+                // Debug.LogWarning("Can't deal damage to train element without health");
                 break;
             }
 

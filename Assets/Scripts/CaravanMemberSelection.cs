@@ -5,34 +5,34 @@ using UnityEngine;
 public class CaravanMemberSelection : MonoBehaviour {
     [SerializeField] private Tractor tractor;
 
-    private CaravanMember _selection;
+    private CaravanMember[] _selection = new CaravanMember[0];
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.E)) {
-            var head = _selection != null ? _selection : tractor.GetComponent<CaravanMember>();
-            SelectTrainElement(CaravanMembersUtils.FindNextMember(head));
-        }
-
-        if (_selection != null) {
-            var selectedGrenaderController = _selection.GetComponentInChildren<GrenaderController>();
-            if (selectedGrenaderController != null) {
-                selectedGrenaderController.UpdateControl();
-            } 
-        }
-    }
-
-    private void SelectTrainElement(CaravanMember trainElement) {
-        if (_selection != null) {
-            var unselectedSelectable = _selection.GetComponent<Selectable>();
+    public void SetMultiSelection(CaravanMember[] members) {
+        foreach (var unselectedMember in _selection) {
+            var unselectedSelectable = unselectedMember.GetComponent<Selectable>();
             if (unselectedSelectable != null) {
                 unselectedSelectable.SetSelected(false);
             }
         }
 
-        _selection = trainElement;
-        var newSelectable = _selection.GetComponent<Selectable>();
-        if (newSelectable != null) {
-            newSelectable.SetSelected(true);
+        _selection = members;
+        foreach (var selectedMember in members) {
+            var newSelectable = selectedMember.GetComponent<Selectable>();
+            if (newSelectable != null) {
+                newSelectable.SetSelected(true);
+            }
         }
     }
+
+    private void Update() {
+        if (_selection != null) {
+            foreach (var member in _selection) {
+                var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
+                if (selectedGrenaderController != null) {
+                    selectedGrenaderController.UpdateControl();
+                }
+            }
+        }
+    }
+
 }

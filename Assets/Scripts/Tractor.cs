@@ -30,14 +30,12 @@ public class Tractor : MonoBehaviour {
 
     private void OnTriggerStay(Collider other) {
         if (!_accelerated) {
-            Debug.Log("Not accelerated");
             return;
         }
         if (other.attachedRigidbody == null) {
-            Debug.Log("Kicking non rigidbody " + other.gameObject.name);
+            return;
         }
 
-        Debug.Log("Kicking " + other.attachedRigidbody.name);
         var stability = other.attachedRigidbody.GetComponent<PhysicStability>();
         if (stability != null) {
             if (!stability.IsStable) {
