@@ -15,6 +15,8 @@ public class CaravanObserver : MonoBehaviour {
 
     public IEnumerable<CaravanMember> CountedMembers => _countedMembers;
 
+    public event Action<CaravanObserver> OnMembersChanged;
+
     private void Awake() {
         CountMembers();
     }
@@ -29,6 +31,8 @@ public class CaravanObserver : MonoBehaviour {
             member.OnChanged += OnMemberStateChanged;
             member.OnDetachment += OnMemberDetached;
         }
+        
+        OnMembersChanged?.Invoke(this);
     }
 
     private void UncountMembers() {
