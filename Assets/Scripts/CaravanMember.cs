@@ -20,12 +20,8 @@ public class CaravanMember : MonoBehaviour {
     public event Detachement OnDetachment;
 
     private void Awake() {
-        OnValidate();
-    }
-
-    private void OnValidate() {
         if (head != null) {
-            AttachSelfTo(head);    
+            AttachSelfTo(head);
         }
     }
     
@@ -35,8 +31,10 @@ public class CaravanMember : MonoBehaviour {
     }
 
     public void DetachSelf() {
-        head.ChangeTail(null);
-        head = null;
+        if (head != null) {
+            head.ChangeTail(null);
+            head = null;
+        }
     }
 
     private void ChangeTail(CaravanMember newMember) {

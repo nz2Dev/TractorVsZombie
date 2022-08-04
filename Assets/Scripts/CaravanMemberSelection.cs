@@ -9,9 +9,11 @@ public class CaravanMemberSelection : MonoBehaviour {
 
     public void SetMultiSelection(CaravanMember[] members) {
         foreach (var unselectedMember in _selection) {
-            var unselectedSelectable = unselectedMember.GetComponent<Selectable>();
-            if (unselectedSelectable != null) {
-                unselectedSelectable.SetSelected(false);
+            if (unselectedMember != null) {
+                var unselectedSelectable = unselectedMember.GetComponent<Selectable>();
+                if (unselectedSelectable != null) {
+                    unselectedSelectable.SetSelected(false);
+                }
             }
         }
 
@@ -27,9 +29,11 @@ public class CaravanMemberSelection : MonoBehaviour {
     private void Update() {
         if (_selection != null) {
             foreach (var member in _selection) {
-                var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
-                if (selectedGrenaderController != null) {
-                    selectedGrenaderController.UpdateControl();
+                if (member != null) {
+                    var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
+                    if (selectedGrenaderController != null) {
+                        selectedGrenaderController.UpdateControl();
+                    }
                 }
             }
         }

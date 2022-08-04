@@ -19,6 +19,7 @@ public class TractorTrophy : MonoBehaviour {
         }
     }
 
+    [ContextMenu("OnDestroyTrophy")]
     private void OnDestroyTrophy() {
         _caravanMember.DetachFromGroup();
         StartCoroutine(DestructionRoutine());
