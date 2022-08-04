@@ -6,7 +6,7 @@ public class CaravanController : MonoBehaviour {
     
     [SerializeField] private CaravanSelection selection;
 
-    private void Update() {
+    public void OnPointerDown() {
         if (selection.IsEmpty) {
             return;
         }
@@ -14,7 +14,33 @@ public class CaravanController : MonoBehaviour {
         foreach (var member in selection.SelectedMembers) {
             var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
             if (selectedGrenaderController != null) {
-                selectedGrenaderController.UpdateControl();
+                selectedGrenaderController.OnPointerDown();
+            }
+        }
+    }
+
+    public void OnPointerStay() {
+        if (selection.IsEmpty) {
+            return;
+        }
+
+        foreach (var member in selection.SelectedMembers) {
+            var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
+            if (selectedGrenaderController != null) {
+                selectedGrenaderController.OnPointerStay();
+            }
+        }
+    }
+
+    public void OnPointerUp() {
+        if (selection.IsEmpty) {
+            return;
+        }
+
+        foreach (var member in selection.SelectedMembers) {
+            var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
+            if (selectedGrenaderController != null) {
+                selectedGrenaderController.OnPointerUp();
             }
         }
     }
