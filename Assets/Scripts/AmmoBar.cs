@@ -11,12 +11,13 @@ public class AmmoBar : MonoBehaviour {
     [SerializeField] private NotificationBar notificationBar;
     [SerializeField] private float notificationDuration = 1f;
 
-    private HorizontalLayoutGroup _layoutGroup;
-    private PrototypePopulator _layoutElementsPopulator;
+    private PrototypePopulationAdapter _ammoElementsAdapter;
+    private HorizontalLayoutGroup _ammoElementsLayout;
 
     private void Awake() {
-        _layoutGroup = GetComponentInChildren<HorizontalLayoutGroup>();
-        _layoutElementsPopulator = GetComponentInChildren<PrototypePopulator>();
+        _ammoElementsAdapter = GetComponentInChildren<PrototypePopulationAdapter>();
+        _ammoElementsLayout = GetComponentInChildren<HorizontalLayoutGroup>();
+
         if (ammo != null) {
             ammo.OnAmmoStateChanged += OnAmmoChanged;
             ammo.OnNoRequestedAmmo += OnShowNoAmmo;
@@ -31,15 +32,12 @@ public class AmmoBar : MonoBehaviour {
     }
 
     private void OnAmmoChanged(Ammo ammo) {
-        _layoutGroup.spacing = 4;
-        _layoutElementsPopulator.ChangeCountainerSize(ammo.MaxAmmo);
-
-        for (int ammoIndex = 0; ammoIndex < ammo.MaxAmmo; ammoIndex++) {
+        _ammoElementsLayout.spacing = 4;
+        _ammoElementsAdapter.AdaptCustom(ammo.MaxAmmo, (element, ammoIndex) => {
             var ammoSlotLoaded = ammoIndex < ammo.AmmoCount;
-            var elementGO = _layoutGroup.transform.GetChild(ammoIndex);
-            var elementImage = elementGO.GetComponent<Image>();
+            var elementImage = element.GetComponent<Image>();
             elementImage.color = ammoSlotLoaded ? loadedColor : emptyColor;
-        }
+        });
     }
 
     private void OnShowNoAmmo() {

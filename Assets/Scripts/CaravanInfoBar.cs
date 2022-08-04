@@ -9,10 +9,11 @@ public class CaravanInfoBar : MonoBehaviour {
 
     [SerializeField] private CaravanObserver observer;
     [SerializeField] private CaravanMemberSelection selection;
-    [SerializeField] private PrototypePopulator elementsPopulator;
-    [SerializeField] private LayoutGroup elementsLayout;
+    
+    private PrototypePopulationAdapter _groupsInfoAdapter;
 
     private void Awake() {
+        _groupsInfoAdapter = GetComponentInChildren<PrototypePopulationAdapter>();
         observer.OnMembersChanged += OnCaravanChanged;
     }
 
@@ -28,17 +29,15 @@ public class CaravanInfoBar : MonoBehaviour {
         var memberGroups = observer.CountedMembers
             .Where((member) => member.tag != null)
             .GroupBy((member) => member.tag)
-            .ToArray();
+            .ToList();
 
-        elementsPopulator.ChangeCountainerSize(memberGroups.Length);
-        for (int i = 0; i < memberGroups.Length; i++) {
-            var elementBar = elementsLayout.transform.GetChild(i).GetComponent<CaravanMemberBar>();
-            var group = memberGroups[i];
-            elementBar.SetMemberInfo(group.Key, group.Count());
+        _groupsInfoAdapter.Adapt<IGrouping<string, CaravanMember>>(memberGroups, (element, index, data) => {
+            var elementBar = element.GetComponent<GroupInfoUIElement>();
+            elementBar.SetGroupInfo(data.Key, data.Count());
             elementBar.OnSelected += () => {
-                selection.SetMultiSelection(group.ToArray());
+                selection.SetMultiSelection(data.ToArray());
             };
-        }
+        });
     }
 
 }

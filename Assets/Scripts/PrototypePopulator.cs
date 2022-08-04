@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -5,17 +7,36 @@ public class PrototypePopulator : MonoBehaviour {
 
     [SerializeField] private GameObject prototype;
     [SerializeField] private Transform container;
+    [SerializeField][Range(1, 10)] private int amount = 1;
 
-    public int ContainerSize => container.childCount;
-
-    public void ChangeCountainerSize(int amount) {
+#if UNITY_EDITOR
+    public void Rebuild() {
         ClearContainer();
-        PopulateContainer(amount);
+        PopulateContainer();
+    }
+#endif
+
+    public void PopulatePrototype(int amount) {
+        this.amount = amount;
+        ClearContainer();
+        PopulateContainer();
+    }
+
+    public IEnumerable<GameObject> CollectPopulation() {
+        foreach (Transform child in container) {
+            if (child.gameObject != prototype) {
+                yield return child.gameObject;
+            }
+        }
     }
 
     private void ClearContainer() {
         var detectedChilds = container.Cast<Transform>().ToArray();
         foreach (Transform child in detectedChilds) {
+            if (child.gameObject == prototype) {
+                continue;
+            }
+
             if (Application.isEditor) {
                 DestroyImmediate(child.gameObject);
             } else {
@@ -24,14 +45,14 @@ public class PrototypePopulator : MonoBehaviour {
         }
     }
 
-    private void PopulateContainer(int amount) {
+    private void PopulateContainer() {
+        prototype.SetActive(false);
+
         for (int i = 0; i < amount; i++) {
             var child = Instantiate(prototype);
             child.transform.SetParent(container, false);
             child.SetActive(true);
         }
-
-        prototype.SetActive(false);
     }
 
 }

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CaravanMemberBar : MonoBehaviour, IPointerClickHandler {
+public class GroupInfoUIElement : MonoBehaviour, IPointerClickHandler {
     [SerializeField] private TextMeshProUGUI typeText;
     [SerializeField] private TextMeshProUGUI amountText;
 
@@ -14,9 +14,9 @@ public class CaravanMemberBar : MonoBehaviour, IPointerClickHandler {
         OnSelected?.Invoke();
     }
 
-    public void SetMemberInfo(string typeName, int trophyAmount) {
+    public void SetGroupInfo(string typeName, int amount) {
         typeText.text = typeName.FirstOrDefault().ToString().ToUpper();
-        amountText.text = trophyAmount.ToString();
+        amountText.text = amount.ToString();
     }
 
     
