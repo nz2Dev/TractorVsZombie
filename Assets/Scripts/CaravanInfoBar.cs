@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class CaravanInfoBar : MonoBehaviour {
 
     [SerializeField] private CaravanObserver observer;
-    [SerializeField] private CaravanMemberSelection selection;
+    [SerializeField] private CaravanSelection selection;
     
     private PrototypePopulationAdapter _groupsInfoAdapter;
 
