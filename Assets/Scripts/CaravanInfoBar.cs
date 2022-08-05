@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class CaravanInfoBar : MonoBehaviour {
 
     [SerializeField] private CaravanObserver observer;
-    [SerializeField] private CaravanSelection selection;
+    [SerializeField] private CaravanController controller;
     
     private PrototypePopulationAdapter _groupsInfoAdapter;
 
@@ -35,7 +35,7 @@ public class CaravanInfoBar : MonoBehaviour {
             var elementBar = element.GetComponent<GroupInfoUIElement>();
             elementBar.SetGroupInfo(data.Key, data.Count());
             elementBar.OnSelected += () => {
-                selection.SetMultiSelection(data.ToArray());
+                controller.ChangeCommander(data.ToArray());
             };
         });
     }

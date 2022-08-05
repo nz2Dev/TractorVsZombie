@@ -10,6 +10,8 @@ public class CaravanSelection : MonoBehaviour {
 
     public bool IsEmpty => _selected == null || _selected.Length == 0;
 
+    public bool IsGrenaders => !IsEmpty && _selected.Any((member) => member.GetComponent<GrenaderController>() != null);
+
     public void SetMultiSelection(CaravanMember[] members) {
         foreach (var previouslySelected in SelectedMembers) {
             if (previouslySelected != null) {

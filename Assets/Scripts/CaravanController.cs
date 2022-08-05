@@ -5,43 +5,15 @@ using UnityEngine;
 public class CaravanController : MonoBehaviour {
     
     [SerializeField] private CaravanSelection selection;
+    [SerializeField] private GrenaderCommander grenaderCommander;
 
-    public void OnPointerDown() {
-        if (selection.IsEmpty) {
-            return;
-        }
+    public void ChangeCommander(CaravanMember[] members) {
+        selection.SetMultiSelection(members);
 
-        foreach (var member in selection.SelectedMembers) {
-            var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
-            if (selectedGrenaderController != null) {
-                selectedGrenaderController.OnPointerDown();
-            }
-        }
-    }
-
-    public void OnPointerStay() {
-        if (selection.IsEmpty) {
-            return;
-        }
-
-        foreach (var member in selection.SelectedMembers) {
-            var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
-            if (selectedGrenaderController != null) {
-                selectedGrenaderController.OnPointerStay();
-            }
-        }
-    }
-
-    public void OnPointerUp() {
-        if (selection.IsEmpty) {
-            return;
-        }
-
-        foreach (var member in selection.SelectedMembers) {
-            var selectedGrenaderController = member.GetComponentInChildren<GrenaderController>();
-            if (selectedGrenaderController != null) {
-                selectedGrenaderController.OnPointerUp();
-            }
+        if (selection.IsGrenaders) {
+            grenaderCommander.Activate(selection);
+        } else {
+            grenaderCommander.Deactivate();
         }
     }
 

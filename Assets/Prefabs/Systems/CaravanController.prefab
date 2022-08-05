@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4598833351018294025}
   - component: {fileID: 4598833351018294026}
+  - component: {fileID: 5428475466565662186}
   m_Layer: 0
   m_Name: CaravanController
   m_TagString: Untagged
@@ -44,4 +45,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdf1743ea25d09542b2b8fafec37b79b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tractor: {fileID: 0}
+  selection: {fileID: 0}
+  grenaderCommander: {fileID: 5428475466565662186}
+--- !u!114 &5428475466565662186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4598833351018294024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c001984bbc7d5e94286245385f8580f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundObservable: {fileID: 0}

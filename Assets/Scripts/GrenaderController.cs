@@ -6,27 +6,13 @@ public class GrenaderController : MonoBehaviour {
     [SerializeField] private Grenader grenader;
     [SerializeField] private LayerMask groundLayerMask;
 
-    public void OnPointerDown() {
+    public void AimGreander(Vector3 point) {
         if (ammo.RequestAmmo()) {
-            var camera = Camera.main;
-            var clickRay = camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(clickRay, out var hitInfo, float.MaxValue, groundLayerMask)) {
-                grenader.Aim(hitInfo.point);
-            }
+            grenader.Aim(point);
         }
     }
 
-    public void OnPointerStay() {
-        if (ammo.RequestAmmo()) {
-            var camera = Camera.main;
-            var clickRay = camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(clickRay, out var hitInfo, float.MaxValue, groundLayerMask)) {
-                grenader.Aim(hitInfo.point);
-            }
-        }
-    }
-
-    public void OnPointerUp() {
+    public void FireGrenade() {
         if (grenader.IsAimed) {
             if (ammo.TakeAmmo()) {
                 grenader.FireLastAimPoint();
