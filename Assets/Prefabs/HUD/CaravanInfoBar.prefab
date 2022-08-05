@@ -197,8 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   observer: {fileID: 0}
-  selection: {fileID: 0}
-  groupsAdapter: {fileID: 2783174539949085606}
+  controller: {fileID: 0}
 --- !u!1 &220972600712609752
 GameObject:
   m_ObjectHideFlags: 0

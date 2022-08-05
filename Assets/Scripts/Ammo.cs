@@ -9,6 +9,7 @@ public class Ammo : MonoBehaviour {
     private int _ammoCount;
 
     public int AmmoCount => _ammoCount;
+    public bool HasAmmo => _ammoCount > 0;
     public int MaxAmmo => maxAmmo;
 
     public event Action<Ammo> OnAmmoStateChanged;
