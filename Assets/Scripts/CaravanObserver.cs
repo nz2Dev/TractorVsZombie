@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -18,10 +16,10 @@ public class CaravanObserver : MonoBehaviour {
     public event Action<CaravanObserver> OnMembersChanged;
 
     private void Awake() {
-        CountMembers();
+        OnMemberStateChanged();
     }
 
-    private void OnValidate() {
+    private void OnEnable() {
         OnMemberStateChanged();
     }
 
@@ -52,8 +50,7 @@ public class CaravanObserver : MonoBehaviour {
         if (detachedTail != null && detachedHead != null) {
             detachedTail.AttachSelfTo(detachedHead);
         } else {
-            UncountMembers();
-            CountMembers();
+            OnMemberStateChanged();
         }
     }
 }

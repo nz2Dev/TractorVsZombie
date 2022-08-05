@@ -7,51 +7,67 @@ using UnityEngine.Serialization;
 [ExecuteInEditMode]
 public class CaravanMember : MonoBehaviour {
     
-    [SerializeField] private CaravanMember head;
+    public delegate void Detachement(CaravanMember source, CaravanMember itsHead, CaravanMember itsTail);
+    
+    [SerializeField] private CaravanMember initialHead;
+
+    private CaravanMember _head;
     private CaravanMember _tail;
 
-    public CaravanMember Head => head;
+    public CaravanMember Head => _head;
     public CaravanMember Tail => _tail;
-    public bool IsLeader => Head == null;
-
-    public delegate void Detachement(CaravanMember source, CaravanMember itsHead, CaravanMember itsTail);
+    public int ChangesSubscribersCount => OnChanged?.GetInvocationList()?.Length ?? 0;
 
     public event Action OnChanged;
     public event Detachement OnDetachment;
 
     private void Awake() {
-        if (head != null) {
-            AttachSelfTo(head);
+        AttachSelfToInitial();
+    }
+
+    public void AttachSelfToInitial() {
+        if (initialHead != null) {
+            AttachSelfTo(initialHead);
         }
     }
     
     public void AttachSelfTo(CaravanMember member) {
-        head = member;
-        head.ChangeTail(this);
+        if (_head != member) {
+            DetachSelf();
+        }
+        
+        if (member != null) {
+            member.ChangeTail(this);   
+            _head = member;
+        }
     }
 
     public void DetachSelf() {
-        if (head != null) {
-            head.ChangeTail(null);
-            head = null;
+        if (_head != null) {
+            _head.ChangeTail(null);
+            _head = null;
         }
     }
 
     private void ChangeTail(CaravanMember newMember) {
+        if (Tail == newMember) {
+            return;
+        }
+
         var previousTail = _tail;
         _tail = newMember;
         OnChanged?.Invoke();
 
-        if (previousTail != null && previousTail != newMember) {
+        if (previousTail != null && previousTail.Head == this) {
             previousTail.UnsetHead();
         }
     }
 
     public void DetachFromGroup() {
-        var detachedHead = head;
-        if (head != null) {
-            head.UnsetTail();
-            head = null;
+        var detachedHead = _head;
+        if (_head != null) {
+            _head.UnsetTail();
+            _head = null;
         }
         
         var detachedTail = _tail;
@@ -64,7 +80,7 @@ public class CaravanMember : MonoBehaviour {
     }
 
     private void UnsetHead() {
-        head = null;
+        _head = null;
     }
 
     private void UnsetTail() {
@@ -72,9 +88,9 @@ public class CaravanMember : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        if (head != null || _tail != null) {
+        if (_head != null || _tail != null) {
             Debug.LogWarning($"Caravan member {name} destroyed but still "
-                + $"has references head: {(head == null ? null : head.name)} "
+                + $"has references head: {(_head == null ? null : _head.name)} "
                 + $"tail: {(_tail == null ? null : _tail.name)}");
             
             DetachFromGroup();
