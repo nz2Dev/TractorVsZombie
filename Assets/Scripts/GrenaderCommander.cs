@@ -11,6 +11,8 @@ public class GrenaderCommander : MonoBehaviour {
     private CaravanSelection _grenaders;
     private GrenaderController _singleFireGrenader;
 
+    private Vector3 _aimPoint;
+
     public void Activate(CaravanSelection greandersSelection) {
         _grenaders = greandersSelection;
         groundObservable.OnEvent += OnGroundEvent;
@@ -25,18 +27,21 @@ public class GrenaderCommander : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.B)) {
             singleFireMode = !singleFireMode;
         }
+
+        if (_aimPoint != default) {
+            if (singleFireMode) {
+                AimSingleGreander();
+            } else {
+                AimAllGreanders();
+            }
+        }
     }
 
     private void OnGroundEvent(GroundObservable.EventType eventType, PointerEventData eventData) {
         switch (eventType) {
             case GroundObservable.EventType.PointerDown:
             case GroundObservable.EventType.PointerDrag:
-                var aimPoint = eventData.pointerCurrentRaycast.worldPosition;
-                if (singleFireMode) {
-                    AimSingleGreander(aimPoint);
-                } else {
-                    AimAllGreanders(aimPoint);
-                }
+                _aimPoint = eventData.pointerCurrentRaycast.worldPosition;
                 break;
 
             case GroundObservable.EventType.PointerUp:
@@ -45,6 +50,7 @@ public class GrenaderCommander : MonoBehaviour {
                 } else {
                     FireAllGreanders();
                 }
+                _aimPoint = default;
                 break;
 
             default:
@@ -52,7 +58,7 @@ public class GrenaderCommander : MonoBehaviour {
         }
     }
 
-    private void AimSingleGreander(Vector3 point) {
+    private void AimSingleGreander() {
         if (_singleFireGrenader == null) {
             var nextGreander = _grenaders.SelectedMembers
                 .Select((member) => member.GetComponent<GrenaderController>())
@@ -66,7 +72,7 @@ public class GrenaderCommander : MonoBehaviour {
             _singleFireGrenader = nextGreander;
         }
 
-        _singleFireGrenader.AimGreander(point);
+        _singleFireGrenader.AimGreander(_aimPoint);
     }
 
     private void FireSingleGreander() {
@@ -78,10 +84,10 @@ public class GrenaderCommander : MonoBehaviour {
         _singleFireGrenader = null;
     }
 
-    private void AimAllGreanders(Vector3 point) {
+    private void AimAllGreanders() {
         foreach (var greanderMember in _grenaders.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
-            greanderController.AimGreander(point);
+            greanderController.AimGreander(_aimPoint);
         }
     }
 
