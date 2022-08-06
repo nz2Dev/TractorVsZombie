@@ -20,6 +20,7 @@ public class GrenaderController : MonoBehaviour {
     public bool CanFire => ammo.HasAmmo;
     public float TimeToReadynes => !CanFire ? float.PositiveInfinity : _state == State.Loaded ? 0 : reloadTime;
 
+    public event Action<float> OnReload;
     public event Action OnLoaded;
 
     public void Prepare() {
@@ -31,7 +32,7 @@ public class GrenaderController : MonoBehaviour {
     public void AimGreander(Vector3 point) {
         if (_state == State.Unloaded) {
             Reload();
-        } else if (_state == State.Loaded) {
+        } else {
             grenader.Aim(point);
         }
     }
@@ -56,6 +57,7 @@ public class GrenaderController : MonoBehaviour {
     }
 
     private IEnumerator Loading() {
+        OnReload?.Invoke(reloadTime);
         yield return new WaitForSeconds(reloadTime);
         _state = State.Loaded;
 
