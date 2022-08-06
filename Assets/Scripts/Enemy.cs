@@ -60,6 +60,10 @@ public class Enemy : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
 
             var elements = FindObjectsOfType<CaravanMember>();
+            if (elements.Length <= 0) {
+                continue;
+            }
+
             var position = transform.position;
             var shortest = elements.Aggregate((shortest, next) => {
                 if (shortest == null) {

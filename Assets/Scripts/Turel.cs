@@ -26,6 +26,10 @@ public class Turel : MonoBehaviour {
             yield return new WaitForSeconds(targetSearchInterval);
 
             var enemies = FindObjectsOfType<Enemy>();
+            if (enemies.Length <= 0) {
+                continue;
+            }
+
             var position = transform.position;
             var shortest = enemies.Aggregate((shortest, next) => {
                 if (shortest == null) {
