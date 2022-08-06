@@ -13,19 +13,26 @@ public class Ammo : MonoBehaviour {
     public int MaxAmmo => maxAmmo;
 
     public event Action<Ammo> OnAmmoStateChanged;
-    public event Action OnNoRequestedAmmo;
+    public event Action OnNoAmmoState;
 
     private void Start() {
         _ammoCount = initAmmo;
         OnAmmoStateChanged?.Invoke(this);
     }
 
-    public bool RequestAmmo() {
-        var hasAmmo = AmmoCount > 0;
-        if (!hasAmmo) {
-            OnNoRequestedAmmo?.Invoke();
+    public void RefillFull() {
+        Refill(MaxAmmo);
+    }
+
+    public void Refill(int ammount) {
+        _ammoCount = Math.Max(ammount, maxAmmo);
+        OnAmmoStateChanged?.Invoke(this);
+    }
+
+    public void NotifyNeedAmmo() {
+        if (!HasAmmo) {
+            OnNoAmmoState?.Invoke();
         }
-        return hasAmmo;
     }
 
     public bool TakeAmmo() {

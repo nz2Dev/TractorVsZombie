@@ -20,14 +20,14 @@ public class AmmoBar : MonoBehaviour {
 
         if (ammo != null) {
             ammo.OnAmmoStateChanged += OnAmmoChanged;
-            ammo.OnNoRequestedAmmo += OnShowNoAmmo;
+            ammo.OnNoAmmoState += OnShowNoAmmo;
         }
     }
 
     private void OnDestroy() {
         if (ammo != null) {
             ammo.OnAmmoStateChanged -= OnAmmoChanged;
-            ammo.OnNoRequestedAmmo -= OnShowNoAmmo;
+            ammo.OnNoAmmoState -= OnShowNoAmmo;
         }
     }
 

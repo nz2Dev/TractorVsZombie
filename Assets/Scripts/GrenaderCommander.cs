@@ -28,6 +28,13 @@ public class GrenaderCommander : MonoBehaviour {
             singleFireMode = !singleFireMode;
         }
 
+        if (Input.GetKeyDown(KeyCode.R) && _grenaders != null) {
+            foreach (var greander in _grenaders.SelectedMembers) {
+                var ammo = greander.GetComponent<Ammo>();
+                ammo.RefillFull();
+            }
+        }
+
         if (_aimPoint != default) {
             if (singleFireMode) {
                 AimSingleGreander();
@@ -40,6 +47,14 @@ public class GrenaderCommander : MonoBehaviour {
     private void OnGroundEvent(GroundObservable.EventType eventType, PointerEventData eventData) {
         switch (eventType) {
             case GroundObservable.EventType.PointerDown:
+                _aimPoint = eventData.pointerCurrentRaycast.worldPosition;
+                if (singleFireMode) {
+                    ActivateSingleGreander();
+                } else {
+                    ActivateAllGreanders();
+                }
+                break;
+
             case GroundObservable.EventType.PointerDrag:
                 _aimPoint = eventData.pointerCurrentRaycast.worldPosition;
                 break;
@@ -58,43 +73,50 @@ public class GrenaderCommander : MonoBehaviour {
         }
     }
 
-    private void AimSingleGreander() {
-        if (_singleFireGrenader == null) {
-            var nextGreander = _grenaders.SelectedMembers
+    private void ActivateSingleGreander() {
+        var nextGreander = _grenaders.SelectedMembers
                 .Select((member) => member.GetComponent<GrenaderController>())
                 .OrderBy((controller) => controller.TimeToReadynes)
                 .FirstOrDefault();
 
-            if (nextGreander == null) {
-                return;
+        if (nextGreander != null) {
+            if (nextGreander.Activate(_aimPoint)) {
+                _singleFireGrenader = nextGreander;
             }
-
-            _singleFireGrenader = nextGreander;
         }
+    }
 
-        _singleFireGrenader.AimGreander(_aimPoint);
+    private void AimSingleGreander() {
+        if (_singleFireGrenader != null) {
+            _singleFireGrenader.Aim(_aimPoint);
+        }
     }
 
     private void FireSingleGreander() {
-        if (_singleFireGrenader == null) {
-            return;
+        if (_singleFireGrenader != null) {
+            _singleFireGrenader.Fire();
+            _singleFireGrenader = null;
         }
+    }
 
-        _singleFireGrenader.FireGreandeAtLastAimed();
-        _singleFireGrenader = null;
+    private void ActivateAllGreanders() {
+        foreach (var greanderMember in _grenaders.SelectedMembers) {
+            var greanderController = greanderMember.GetComponent<GrenaderController>();
+            greanderController.Activate(_aimPoint);
+        }
     }
 
     private void AimAllGreanders() {
         foreach (var greanderMember in _grenaders.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
-            greanderController.AimGreander(_aimPoint);
+            greanderController.Aim(_aimPoint);
         }
     }
 
     private void FireAllGreanders() {
         foreach (var greanderMember in _grenaders.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
-            greanderController.FireGreandeAtLastAimed();
+            greanderController.Fire();
         }
     }
 

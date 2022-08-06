@@ -12,22 +12,41 @@ public class Grenader : MonoBehaviour {
     [SerializeField] private GameObject grenadePrefab;
     [SerializeField] private AnimationCurve flyCurve;
 
-    private Vector3 lastAimPoint;
-    private Grenade loadedGrenade;
+    private Vector3 _aimPoint;
+    private Grenade _loadedGrenade;
 
-    public bool IsAimed => lastAimPoint != default;
+    private bool IsAimed => _aimPoint != default;
+    private bool IsLoaded => _loadedGrenade != null;
+    public bool CanFire => IsLoaded && IsAimed;
+    public bool CanAim => IsLoaded;
 
-    public void Aim(Vector3 point) {
-        Vector3 launcherPosition = launcherChildGameObject.transform.position;
-        if (loadedGrenade == null) {
+    public void Load(Vector3 point) {
+        if (_loadedGrenade == null) {
+            var launcherPosition = launcherChildGameObject.transform.position;
             var greandeObject = Instantiate(grenadePrefab, launcherPosition, Quaternion.identity);
-            loadedGrenade = greandeObject.GetComponent<Grenade>();
+            _loadedGrenade = greandeObject.GetComponent<Grenade>();
         }
 
-        lastAimPoint = point;
+        Aim(point);
+    }
+
+    private void Update() {
+        if (_loadedGrenade != null) {
+            _loadedGrenade.transform.position = launcherChildGameObject.transform.position;
+        }
+    }
+
+    public void Aim(Vector3 point) {
+        if (!IsLoaded) {
+            Debug.Log("Has not been loaded");
+            return;
+        }
+
+        _aimPoint = point;
         transform.LookAt(point, Vector3.up);
 
         var sampleTimeForAiming = 0.1f;
+        var launcherPosition = launcherChildGameObject.transform.position;
         var launchToLand = point - launcherPosition;
         var flyPositionLocal = launchToLand * sampleTimeForAiming + flyCurve.Evaluate(sampleTimeForAiming) * fireHeight * Vector3.up;
 
@@ -35,20 +54,20 @@ public class Grenader : MonoBehaviour {
         launcherChildGameObject.transform.LookAt(launcherAimPoint, Vector3.up);
     }
 
-    public void FireLastAimPoint() {
-        if (lastAimPoint == default) {
+    public void Fire() {
+        if (!IsAimed) {
             Debug.Log("Has not been aimed");
             return;
         }
 
         StartCoroutine(FireCoroutine(
             launcherChildGameObject.transform.position,
-            lastAimPoint,
-            loadedGrenade
+            _aimPoint,
+            _loadedGrenade
         ));
 
-        loadedGrenade = default;
-        lastAimPoint = default;
+        _loadedGrenade = null;
+        _aimPoint = default;
     }
 
     private IEnumerator FireCoroutine(Vector3 grenadeLaunchPosition, Vector3 grenadeLandPosition, Grenade grenade) {
@@ -71,13 +90,13 @@ public class Grenader : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        if (lastAimPoint != default) {
-            Gizmos.DrawSphere(lastAimPoint, 0.2f);
-            Handles.DrawWireDisc(lastAimPoint, Vector3.up, loadedGrenade.EffectRadius);
+        if (IsLoaded && IsAimed) {
+            Gizmos.DrawSphere(_aimPoint, 0.2f);
+            Handles.DrawWireDisc(_aimPoint, Vector3.up, _loadedGrenade.EffectRadius);
 
             const int curveSegments = 10;
             var launchPoint = launcherChildGameObject.transform.position;
-            var lastAimPointToLaunchPoint = lastAimPoint - launchPoint;
+            var lastAimPointToLaunchPoint = _aimPoint - launchPoint;
             
             for (int i = 0; i < curveSegments; i++) {
                 var z0 = (float) i / curveSegments;
