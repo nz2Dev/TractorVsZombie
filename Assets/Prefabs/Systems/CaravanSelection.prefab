@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07148703bc208be44a97bd178a524216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  primarySelectionColor: {r: 0.32156864, g: 0.7607844, b: 0.28235295, a: 0.49803922}
+  secondarySelectionColor: {r: 0.32156864, g: 0.7607844, b: 0.28235295, a: 0.3764706}
+  secondaryUnselectedColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0.39607844}

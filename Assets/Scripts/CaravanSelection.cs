@@ -14,6 +14,7 @@ public class CaravanSelection : MonoBehaviour {
     private bool _secondarySelectionEnabled;
 
     public IEnumerable<CaravanMember> SelectedMembers => _selected.Where((member) => member != null);
+    public int SelectedCount => _selected.Length;
     public bool IsGrenaders => !IsEmpty && _selected.Any((member) => member.GetComponent<GrenaderController>() != null);
     public bool IsEmpty => _selected == null || _selected.Length == 0;
 

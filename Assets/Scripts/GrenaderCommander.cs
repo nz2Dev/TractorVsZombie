@@ -110,17 +110,37 @@ public class GrenaderCommander : MonoBehaviour {
         }
     }
 
+    private void FindAimLine(out Vector3 lineStart, out Vector3 lineStep) {
+        var membersPositionSum = Vector3.zero;
+        foreach (var greanderMember in _grenaders.SelectedMembers) {
+            membersPositionSum += greanderMember.transform.position;
+        }
+
+        var lineStepLength = 2f;
+        var membersCenter = membersPositionSum / _grenaders.SelectedCount;
+        var lineDirection = Vector3.Cross((_aimPoint - membersCenter).normalized, Vector3.up);
+        lineStep = lineDirection * lineStepLength;
+        var lineTotal = (_grenaders.SelectedCount - 1) * lineStep;
+        lineStart = _aimPoint - lineTotal / 2f;
+    }
+
     private void ActivateAllGreanders() {
+        FindAimLine(out var lineStart, out var lineStep);
+        var lineCurrent = lineStart;
         foreach (var greanderMember in _grenaders.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
-            greanderController.Activate(_aimPoint);
+            greanderController.Activate(lineCurrent);
+            lineCurrent += lineStep;
         }
     }
 
     private void AimAllGreanders() {
+        FindAimLine(out var lineStart, out var lineStep);
+        var lineCurrent = lineStart;
         foreach (var greanderMember in _grenaders.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
-            greanderController.Aim(_aimPoint);
+            greanderController.Aim(lineCurrent);
+            lineCurrent += lineStep;
         }
     }
 
