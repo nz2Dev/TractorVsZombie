@@ -1,6 +1,10 @@
 using UnityEngine;
 
 public class CaravanHeadFollower : MonoBehaviour {
+
+    [SerializeField] private float distanceOffset = 1.5f;
+    [SerializeField] private float minDistance = 0.1f;
+
     private CaravanMember _member;
 
     private void Awake() {
@@ -13,12 +17,12 @@ public class CaravanHeadFollower : MonoBehaviour {
         }
 
         var position = transform.position;
-        var headConnectPoint = _member.Head.transform.TransformPoint(Vector3.back);
-        var forwardVector = (headConnectPoint - position).normalized;
+        var headConnectPoint = _member.Head.transform.TransformPoint(Vector3.back * distanceOffset);
+        var forwardVector = headConnectPoint - position;
 
-        transform.position = Vector3.Lerp(position, headConnectPoint, Time.deltaTime);
-        if (forwardVector.magnitude > 0) {
-            transform.rotation = Quaternion.LookRotation(forwardVector, Vector3.up);
+        if (forwardVector.magnitude > minDistance) {
+            transform.position = Vector3.Lerp(position, headConnectPoint, Time.deltaTime);
+            transform.rotation = Quaternion.LookRotation(forwardVector.normalized, Vector3.up);
         }
     }
 

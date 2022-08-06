@@ -4,6 +4,7 @@ public class TractorVehicleDriver : MonoBehaviour {
 
     [SerializeField][Range(0, 1f)] private float turnBaseOffset;
     [SerializeField] private float lookaheadDistance = 1;
+    [SerializeField] private bool handbreak = false;
 
     private Vehicle _vehicle;
     private Vector3 _turnDirection;
@@ -13,8 +14,12 @@ public class TractorVehicleDriver : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKey(KeyCode.Q)) {
-            BreakVehicle();
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            handbreak = !handbreak;
+        }
+
+        if (handbreak) {
+            HandbreakVehicle();
             return;
         }
 
@@ -31,7 +36,7 @@ public class TractorVehicleDriver : MonoBehaviour {
         }
     }
 
-    private void BreakVehicle() {
+    private void HandbreakVehicle() {
         _vehicle.ApplyForce(-_vehicle.Velocity, "Break", Color.black);
     }
 
