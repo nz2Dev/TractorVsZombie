@@ -8,7 +8,7 @@ public class CaravanController : MonoBehaviour {
     [SerializeField] private GrenaderCommander grenaderCommander;
 
     public void ChangeCommander(CaravanMember[] members) {
-        selection.SetMultiSelection(members);
+        selection.SetSelection(members);
 
         if (selection.IsGrenaders) {
             grenaderCommander.Activate(selection);

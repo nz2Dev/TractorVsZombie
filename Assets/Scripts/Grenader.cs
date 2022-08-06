@@ -15,8 +15,8 @@ public class Grenader : MonoBehaviour {
     private Vector3 _aimPoint;
     private Grenade _loadedGrenade;
 
-    private bool IsAimed => _aimPoint != default;
-    private bool IsLoaded => _loadedGrenade != null;
+    public bool IsAimed => _aimPoint != default;
+    public bool IsLoaded => _loadedGrenade != null;
     public bool CanFire => IsLoaded && IsAimed;
     public bool CanAim => IsLoaded;
 

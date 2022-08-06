@@ -26,6 +26,10 @@ public class GrenaderCommander : MonoBehaviour {
     private void Update() {
         if (Input.GetKeyDown(KeyCode.B)) {
             singleFireMode = !singleFireMode;
+            _grenaders.ToggleSecondarySelection(singleFireMode);
+            if (singleFireMode) {
+                FindNextSingleGreander();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.R) && _grenaders != null) {
@@ -73,16 +77,23 @@ public class GrenaderCommander : MonoBehaviour {
         }
     }
 
-    private void ActivateSingleGreander() {
-        var nextGreander = _grenaders.SelectedMembers
+    private void FindNextSingleGreander() {
+        _singleFireGrenader = _grenaders.SelectedMembers
                 .Select((member) => member.GetComponent<GrenaderController>())
                 .OrderBy((controller) => controller.TimeToReadynes)
                 .FirstOrDefault();
 
-        if (nextGreander != null) {
-            if (nextGreander.Activate(_aimPoint)) {
-                _singleFireGrenader = nextGreander;
-            }
+        var greanderMember = _singleFireGrenader == null ? null : _singleFireGrenader.GetComponent<CaravanMember>();
+        _grenaders.SetSecondarySelection(greanderMember);
+    }
+
+    private void ActivateSingleGreander() {
+        if (_singleFireGrenader == null) {
+            FindNextSingleGreander();
+        }
+
+        if (_singleFireGrenader != null && !_singleFireGrenader.IsActivated) {
+            _singleFireGrenader.Activate(_aimPoint);
         }
     }
 
@@ -95,7 +106,7 @@ public class GrenaderCommander : MonoBehaviour {
     private void FireSingleGreander() {
         if (_singleFireGrenader != null) {
             _singleFireGrenader.Fire();
-            _singleFireGrenader = null;
+            FindNextSingleGreander();
         }
     }
 
