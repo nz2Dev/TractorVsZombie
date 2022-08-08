@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7214194478199180491}
   - component: {fileID: 1454030952795263772}
-  - component: {fileID: 6803750101629979736}
+  - component: {fileID: 8731351016372987692}
   - component: {fileID: 3054470022215871006}
   - component: {fileID: 7998266899549892017}
   - component: {fileID: 8465468602964046783}
@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialHead: {fileID: 0}
---- !u!114 &6803750101629979736
+--- !u!114 &8731351016372987692
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

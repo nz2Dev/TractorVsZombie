@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activationWaitTime: 0.5
-  pickUpPrefab: {fileID: 622631781886126942, guid: 7b08771dee82ff24dab2d34676688eed, type: 3}
+  pickUpPrefab: {fileID: 8775258134446525582, guid: 593eba98ead88164ebced5cadab62efc, type: 3}
   geometryTransform: {fileID: 7717709554377774066}
   triggers:
   - {fileID: 8982615880691529987}
