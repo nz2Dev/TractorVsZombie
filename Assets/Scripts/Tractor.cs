@@ -14,7 +14,7 @@ public class Tractor : MonoBehaviour {
     private bool _accelerated;
 
     private void Awake() {
-        _vehicle = GetComponent<Vehicle>();
+        _vehicle = GetComponentInChildren<Vehicle>();
     }
 
     private void Update() {

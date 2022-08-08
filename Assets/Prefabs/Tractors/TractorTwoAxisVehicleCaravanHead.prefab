@@ -182,8 +182,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5627006204939823292}
   - component: {fileID: 7347891577225342020}
-  - component: {fileID: 6116108579758126566}
-  - component: {fileID: 8584035890880074882}
   m_Layer: 0
   m_Name: TurnAxis
   m_TagString: Untagged
@@ -204,7 +202,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8262178537325707651}
-  m_RootOrder: 7
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7347891577225342020
 MonoBehaviour:
@@ -223,40 +221,6 @@ MonoBehaviour:
   mass: 0.3
   minMoveVelocity: 0.1
   maxSpeedMultiplier: 1
---- !u!114 &6116108579758126566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1009829628020663699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 743cf0e8ab106d94a9eddadb5d50bdc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  turnBaseOffset: 0.5
-  lookaheadDistance: 1
-  handbreak: 0
---- !u!114 &8584035890880074882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1009829628020663699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72aab87fa5d2ecc4ba277d406bcd8b3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forceMode: 1
-  forceMultiplier: 15
-  acceleratedSpeedMultiplier: 3
-  explosionRadius: 5
-  upwardsModifier: 2
-  ramDamage: 30
-  explosionPositionSideOffset: 2
 --- !u!1 &2175192076838358533
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,12 +417,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2491530145101027110}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: -0.696}
+  m_LocalPosition: {x: 0, y: 0, z: -0.581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8262178537325707651}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2592523127048886771
 GameObject:
@@ -490,7 +454,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8262178537325707651}
-  m_RootOrder: 2
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &721238373720071485
 BoxCollider:
@@ -538,7 +502,7 @@ Transform:
   - {fileID: 2857994237800811402}
   - {fileID: 4204209544612987904}
   m_Father: {fileID: 8262178537325707651}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3514150297880659588
 GameObject:
@@ -736,12 +700,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6357126425142303608}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: -0.262}
+  m_LocalPosition: {x: 0, y: 0, z: -0.262}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8262178537325707651}
-  m_RootOrder: 6
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7054037207631140426
 GameObject:
@@ -773,7 +737,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8262178537325707651}
-  m_RootOrder: 3
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8223165656754885661
 BoxCollider:
@@ -991,7 +955,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8262178537325707651}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8262178535995775059
 BoxCollider:
@@ -1031,6 +995,8 @@ GameObject:
   - component: {fileID: 8262178537367380830}
   - component: {fileID: 6575432980825986114}
   - component: {fileID: 3707180607479747738}
+  - component: {fileID: 4067158221954341116}
+  - component: {fileID: 5004058946289187142}
   m_Layer: 0
   m_Name: TractorTwoAxisVehicleCaravanHead
   m_TagString: Player
@@ -1051,13 +1017,13 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8262178537044663488}
+  - {fileID: 2345730806704583239}
+  - {fileID: 5627006204939823292}
+  - {fileID: 8814102989945080044}
   - {fileID: 8262178535995775058}
   - {fileID: 5568259643863745016}
   - {fileID: 1230636931191449645}
   - {fileID: 8122450602416536531}
-  - {fileID: 8814102989945080044}
-  - {fileID: 2345730806704583239}
-  - {fileID: 5627006204939823292}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1117,6 +1083,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointTransform: {fileID: 8814102989945080044}
+--- !u!114 &4067158221954341116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8262178537325707650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 743cf0e8ab106d94a9eddadb5d50bdc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnBaseOffset: 0.5
+  lookaheadDistance: 1
+  handbreak: 0
+--- !u!114 &5004058946289187142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8262178537325707650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72aab87fa5d2ecc4ba277d406bcd8b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forceMode: 1
+  forceMultiplier: 15
+  acceleratedSpeedMultiplier: 3
+  explosionRadius: 5
+  upwardsModifier: 2
+  ramDamage: 30
+  explosionPositionSideOffset: 2
 --- !u!1001 &1361808982055896182
 PrefabInstance:
   m_ObjectHideFlags: 0

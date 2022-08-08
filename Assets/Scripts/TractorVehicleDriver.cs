@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Vehicle))]
 public class TractorVehicleDriver : MonoBehaviour {
 
     [SerializeField][Range(0, 1f)] private float turnBaseOffset;
@@ -11,7 +10,7 @@ public class TractorVehicleDriver : MonoBehaviour {
     private Vector3 _turnDirection;
 
     private void Awake() {
-        _vehicle = GetComponent<Vehicle>();
+        _vehicle = GetComponentInChildren<Vehicle>();
     }
 
     private void Update() {
