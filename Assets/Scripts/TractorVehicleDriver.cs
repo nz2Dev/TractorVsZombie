@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Vehicle))]
 public class TractorVehicleDriver : MonoBehaviour {
 
     [SerializeField][Range(0, 1f)] private float turnBaseOffset;

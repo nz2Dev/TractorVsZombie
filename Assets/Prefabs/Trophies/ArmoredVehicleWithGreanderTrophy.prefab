@@ -67,8 +67,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166984d6ba46be44793d182c61eb7ad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceOffset: 1.5
-  lerpSpeedMultiplier: 2
+  distanceOffset: 1
+  lerpSpeedMultiplier: 1
   minDistance: 0.1
 --- !u!114 &3054470022215871006
 MonoBehaviour:

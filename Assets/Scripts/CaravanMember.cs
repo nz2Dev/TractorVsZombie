@@ -20,6 +20,7 @@ public class CaravanMember : MonoBehaviour {
 
     public event Action OnChanged;
     public event Detachement OnDetachment;
+    public event Action<CaravanMember> OnHeadChanged;
 
     private void Awake() {
         AttachSelfToInitial();
@@ -34,23 +35,26 @@ public class CaravanMember : MonoBehaviour {
     public void AttachSelfTo(CaravanMember member) {
         if (_head != member) {
             DetachSelf();
+        } else {
+            return;
         }
         
         if (member != null) {
             member.ChangeTail(this);   
             _head = member;
+            OnHeadChanged?.Invoke(this);
         }
     }
 
     public void DetachSelf() {
         if (_head != null) {
             _head.ChangeTail(null);
-            _head = null;
+            UnsetHead();
         }
     }
 
     private void ChangeTail(CaravanMember newMember) {
-        if (Tail == newMember) {
+        if (_tail == newMember) {
             return;
         }
 
@@ -65,9 +69,9 @@ public class CaravanMember : MonoBehaviour {
 
     public void DetachFromGroup() {
         var detachedHead = _head;
-        if (_head != null) {
-            _head.UnsetTail();
-            _head = null;
+        if (detachedHead != null) {
+            detachedHead.UnsetTail();
+            UnsetHead();
         }
         
         var detachedTail = _tail;
@@ -81,6 +85,7 @@ public class CaravanMember : MonoBehaviour {
 
     private void UnsetHead() {
         _head = null;
+        OnHeadChanged?.Invoke(this);
     }
 
     private void UnsetTail() {
