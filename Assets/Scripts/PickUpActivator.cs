@@ -6,7 +6,7 @@ using UnityEngine;
 public class PickUpActivator : MonoBehaviour {
     
     private CaravanMember _trainElementParent;
-    public CaravanMember TrainElement => _trainElementParent;
+    public CaravanMember TriggeredMember => _trainElementParent;
     
     private void Awake() {
         _trainElementParent = GetComponentInParent<CaravanMember>();

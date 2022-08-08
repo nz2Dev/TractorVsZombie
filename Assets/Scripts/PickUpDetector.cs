@@ -5,8 +5,8 @@ using UnityEngine;
 
 [SelectionBase]
 public class PickUpDetector : MonoBehaviour {
-
-    [SerializeField] private float activationWaitTime = 0.5f;
+    [SerializeField] private float waitDistance = 1f;
+    [SerializeField] private float activationWaitTime = 0.1f;
     [SerializeField] private GameObject pickUpPrefab;
     [SerializeField] private Transform geometryTransform;
     [SerializeField] private GameObject[] triggers;
@@ -25,15 +25,28 @@ public class PickUpDetector : MonoBehaviour {
     }
 
     private IEnumerator ActivationRoutine(PickUpActivator activator) {
-        var newTailObject = Instantiate(pickUpPrefab, geometryTransform.position, geometryTransform.rotation);
+        var newTrophy = Instantiate(pickUpPrefab, geometryTransform.position, geometryTransform.rotation);
         Destroy(geometryTransform.gameObject);
         foreach (var trigger in triggers) {
             Destroy(trigger);
         }
 
         yield return new WaitForSeconds(activationWaitTime);
-        var tailElement = CaravanMembersUtils.FindLastTail(activator.TrainElement);
-        newTailObject.GetComponent<CaravanMember>().AttachSelfTo(tailElement);
+        var activatorTail = activator.TriggeredMember.Tail;
+        var newTrophyMember = newTrophy.GetComponent<CaravanMember>();
+        newTrophyMember.AttachSelfTo(activator.TriggeredMember);
+
+        if (activatorTail != null) {
+            activatorTail.AttachSelfTo(newTrophyMember);
+
+            var activatorTailDriver = activatorTail.GetComponent<TwoAxisVehicleFollowDriver>();
+            if (activatorTailDriver != null) {
+                var triggerConnectionPoint = activator.TriggeredMember.GetComponent<ConnectionPoint>();
+                var moveAwayTransform = triggerConnectionPoint == null ? activator.TriggeredMember.transform : triggerConnectionPoint.Transform;
+
+                activatorTailDriver.PauseUntilFarEnought(moveAwayTransform, waitDistance /* but should be bounding box length */);
+            }
+        }
 
         Destroy(gameObject);
     }

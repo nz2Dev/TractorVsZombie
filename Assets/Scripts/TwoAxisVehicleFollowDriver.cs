@@ -10,8 +10,30 @@ public class TwoAxisVehicleFollowDriver : MonoBehaviour {
     
     private TwoAxisVehicle _twoAxisVehicle;
 
+    private Coroutine _moveAwayWaiter;
+    private bool _paused;
+
     private void Awake() {
         _twoAxisVehicle = GetComponent<TwoAxisVehicle>();
+    }
+
+    public void PauseUntilFarEnought(Transform moveAwayTransform, float resumeTriggerDistance) {
+        if (_moveAwayWaiter != null) {
+            StopCoroutine(_moveAwayWaiter);
+        }
+        StartCoroutine(MoveAwayWaiterRoutine(moveAwayTransform, resumeTriggerDistance));
+    }
+
+    private IEnumerator MoveAwayWaiterRoutine(Transform moveAwayTransform, float resumeTriggerDistance) {
+        _paused = true;
+        var distance = 0f;
+        while (distance < resumeTriggerDistance) {
+            yield return new WaitForEndOfFrame();
+            distance = Vector3.Distance(moveAwayTransform.position, _twoAxisVehicle.TurnAxis.position);
+        }
+
+        _moveAwayWaiter = null;
+        _paused = false;
     }
 
     public void SetFollowPoint(ConnectionPoint followPoint) {
@@ -19,7 +41,7 @@ public class TwoAxisVehicleFollowDriver : MonoBehaviour {
     }
 
     private void Update() {
-        if (followPoint == null) {
+        if (_paused || followPoint == null) {
             return;
         }
 

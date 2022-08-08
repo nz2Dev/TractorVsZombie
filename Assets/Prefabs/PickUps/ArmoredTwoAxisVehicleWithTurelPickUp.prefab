@@ -71,7 +71,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7754600217928248765}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.5, y: 0, z: 6.75}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -94,7 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b63763cecc02aac47a4a047da4eb7758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activationWaitTime: 0.5
+  waitDistance: 2
+  activationWaitTime: 0.2
   pickUpPrefab: {fileID: 8775258134446525582, guid: 593eba98ead88164ebced5cadab62efc, type: 3}
   geometryTransform: {fileID: 1858013315974503980}
   triggers:

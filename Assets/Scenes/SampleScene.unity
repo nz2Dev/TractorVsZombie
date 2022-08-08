@@ -37053,15 +37053,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8049553902433570752, guid: f8897435627498944b625351a910fb0d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.037814
+      value: -5.249675
       objectReference: {fileID: 0}
     - target: {fileID: 8049553902433570752, guid: f8897435627498944b625351a910fb0d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 20.519203
+      value: 23.42375
       objectReference: {fileID: 0}
     - target: {fileID: 8049553902433570752, guid: f8897435627498944b625351a910fb0d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -23.046516
+      value: -24.108936
       objectReference: {fileID: 0}
     - target: {fileID: 8049553902433570752, guid: f8897435627498944b625351a910fb0d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -37195,15 +37195,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8281487549728747121, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.037814
+      value: -5.249675
       objectReference: {fileID: 0}
     - target: {fileID: 8281487549728747121, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 20.519203
+      value: 23.42375
       objectReference: {fileID: 0}
     - target: {fileID: 8281487549728747121, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -23.046516
+      value: -24.108936
       objectReference: {fileID: 0}
     - target: {fileID: 8281487549728747121, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -37232,6 +37232,10 @@ PrefabInstance:
     - target: {fileID: 8281487549728747121, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8281487550382786234, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
+      propertyPath: m_CameraDistance
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
