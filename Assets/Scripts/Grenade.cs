@@ -13,12 +13,6 @@ public class Grenade : MonoBehaviour {
 
     public float EffectRadius => effectRadius;
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            Explode();
-        }
-    }
-
     public void Explode() {
         var explosionParticles = Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
         DestructionTimer.StartOn(explosionParticles, explosionLifetime);
