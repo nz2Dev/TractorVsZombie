@@ -64,6 +64,7 @@ public class Vehicle : MonoBehaviour {
         if (physicStability != null && !physicStability.IsStable) {
             return;
         }
+        _velocity = transform.forward * _velocity.magnitude;
 
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
         var steeringForceOverMass = (_steeringForce / mass) * Time.deltaTime;
