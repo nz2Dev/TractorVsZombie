@@ -49,7 +49,6 @@ public class Vehicle : MonoBehaviour {
     private Dictionary<string, ForceDebugInfo> debugInfoList = new Dictionary<string, ForceDebugInfo>();
     private List<ForceDebugInfo> appliedInfo = new List<ForceDebugInfo>();
     private Vector3 steeringDeltaFrameDebug;
-    private float maxForceDeltaFrameDebug;
     private Vector3 velocityBeforeChangeFrameDebug;
 
     public void ApplyForce(Vector3 force, string source = null, Color color = default) {
@@ -84,7 +83,6 @@ public class Vehicle : MonoBehaviour {
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
         var steeringForceOverMass = (_steeringForce / mass) * Time.deltaTime;
         steeringDeltaFrameDebug = steeringForceOverMass;
-        maxForceDeltaFrameDebug = maxForce * Time.deltaTime;
         _steeringForce = Vector3.zero;
 
         appliedInfo.Clear();
@@ -142,7 +140,7 @@ public class Vehicle : MonoBehaviour {
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position + velocityBeforeChangeFrameDebug + Vector3.down * 0.05f, transform.position + velocityBeforeChangeFrameDebug + steeringDeltaFrameDebug + Vector3.down * 0.05f);
         Handles.color = Color.black;
-        Handles.DrawWireDisc(transform.position + velocityBeforeChangeFrameDebug + Vector3.down * 0.05f, Vector3.up, maxForceDeltaFrameDebug);
+        Handles.DrawWireDisc(transform.position + velocityBeforeChangeFrameDebug + Vector3.down * 0.05f, Vector3.up, maxForce);
         Handles.DrawSolidDisc(transform.position + velocityBeforeChangeFrameDebug + Vector3.down * 0.05f, Vector3.up, 0.01f);
         Handles.Label(transform.position + velocityBeforeChangeFrameDebug + steeringDeltaFrameDebug + Vector3.down * 0.05f, "S: " + steeringDeltaFrameDebug.magnitude.ToString("F2"));
 
