@@ -4,10 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(CaravanMember))]
 public class CaravanHeadTailDriverFollower : MonoBehaviour {
     
-    private TwoAxisVehicleFollowDriver _followDriver;
+    private TwoAxisPlatformFollowDriver _followDriver;
 
     private void Awake() {
-        _followDriver = GetComponent<TwoAxisVehicleFollowDriver>();
+        _followDriver = GetComponent<TwoAxisPlatformFollowDriver>();
         
         var member = GetComponent<CaravanMember>();
         member.OnHeadChanged += UpdateDriverWithNewTarget;

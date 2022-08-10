@@ -5,6 +5,7 @@ public class AnchoredDirectionVehicleDriver : MonoBehaviour {
     [SerializeField] private bool snapAnchorPosition = true;
     [SerializeField] private bool reanchorEachInput = false;
     [SerializeField][Range(0, 1f)] private float turnBaseOffset;
+    [SerializeField] private Transform anchorCheckPoint;
     [SerializeField] private float lookaheadDistance = 1;
     [SerializeField] private bool handbreak = false;
 
@@ -82,7 +83,7 @@ public class AnchoredDirectionVehicleDriver : MonoBehaviour {
             return position;
         }
 
-        return SimpleBasePosition(position + transform.forward);
+        return SimpleBasePosition(anchorCheckPoint.position);
     }
 
     private Vector3 SimpleBasePosition(Vector3 position) {

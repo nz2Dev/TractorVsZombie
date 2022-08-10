@@ -39,7 +39,7 @@ public class PickUpDetector : MonoBehaviour {
         if (activatorTail != null) {
             activatorTail.AttachSelfTo(newTrophyMember);
 
-            var activatorTailDriver = activatorTail.GetComponent<TwoAxisVehicleFollowDriver>();
+            var activatorTailDriver = activatorTail.GetComponent<TwoAxisPlatformFollowDriver>();
             if (activatorTailDriver != null) {
                 var triggerConnectionPoint = activator.TriggeredMember.GetComponent<ConnectionPoint>();
                 var moveAwayTransform = triggerConnectionPoint == null ? activator.TriggeredMember.transform : triggerConnectionPoint.Transform;

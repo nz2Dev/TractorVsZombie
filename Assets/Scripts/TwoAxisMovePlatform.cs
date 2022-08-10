@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TwoAxisVehicle : MonoBehaviour {
+public class TwoAxisMovePlatform : MonoBehaviour {
 
-    [SerializeField] private float turnDegreeMin = -45;
-    [SerializeField] private float turnDegreeMax = 45;
     [SerializeField] private Transform backAlignmentAxis;
     [SerializeField] private Transform frontTurnAxis;
     private float _platformDistance;
@@ -17,12 +15,6 @@ public class TwoAxisVehicle : MonoBehaviour {
         _frontAxisOffset = frontTurnAxis.localPosition.magnitude;
         var backAxisOffset = backAlignmentAxis.localPosition.magnitude;
         _platformDistance = backAxisOffset + _frontAxisOffset;
-
-        var rotationLimiter = frontTurnAxis.GetComponent<AngleRotationLimiter>();
-        if (rotationLimiter != null) {
-            rotationLimiter.yDegreeMin = turnDegreeMin;
-            rotationLimiter.yDegreeMax = turnDegreeMax;
-        }
     }
 
     private void Update() {

@@ -4,26 +4,40 @@ using UnityEngine;
 
 [SelectionBase]
 public class Vehicle : MonoBehaviour {
+
     [SerializeField] private float maxForce = 1;
     [SerializeField] private float maxSpeedRaw = 1;
     [SerializeField] private float mass = 1;
     [SerializeField] private float minMoveVelocity = 0.1f;
-
-    private Vector3 _velocity;
-    private Vector3 _steeringForce;
     [SerializeField] private float maxSpeedMultiplier = 1;
-    private PhysicStability physicStability;
+
+    private PhysicStability _physicStability;
+    private Vector3 _steeringForce;
+    private Vector3 _velocity;
+    private IVehicleInput _input;
+    private IVehicleOutput _output;
 
     public Vector3 Velocity => _velocity;
     public float MaxSpeed => maxSpeedRaw * maxSpeedMultiplier;
     public float MaxForce => maxForce;
 
     private void Awake() {
-        physicStability = GetComponent<PhysicStability>();
+        _physicStability = GetComponent<PhysicStability>();
+        var defaultModel = new GameObjectVehicleModel(this);
+        _output = defaultModel;
+        _input = defaultModel;
     }
 
     public Vector3 PredictPosition(float futureTimeAmount) {
         return transform.position + _velocity * futureTimeAmount;
+    }
+
+    public void SetVehicleInput(IVehicleInput input) {
+        _input = input;
+    }
+
+    public void SetVehicleOutput(IVehicleOutput output) {
+        _output = output;
     }
 
     struct ForceDebugInfo {
@@ -61,10 +75,10 @@ public class Vehicle : MonoBehaviour {
     }
 
     private void Update() {
-        if (physicStability != null && !physicStability.IsStable) {
+        if (_physicStability != null && !_physicStability.IsStable) {
             return;
         }
-        _velocity = transform.forward * _velocity.magnitude;
+        _velocity = _input.GetForwardDirection() * _velocity.magnitude;
 
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
         var steeringForceOverMass = (_steeringForce / mass) * Time.deltaTime;
@@ -79,15 +93,40 @@ public class Vehicle : MonoBehaviour {
         _velocity += steeringForceOverMass;
         _velocity = Vector3.ClampMagnitude(_velocity, MaxSpeed);
 
-        if (_velocity.magnitude < minMoveVelocity) {
-            return;
+        if (_velocity.magnitude > 0 && _velocity.magnitude > minMoveVelocity) {
+            _output.OnVehicleMove(_velocity * Time.deltaTime);            
         }
-        
-        var thisTransform = transform;
-        var newPosition = thisTransform.position + _velocity * Time.deltaTime;
-        if (newPosition.magnitude > 0) {
-            thisTransform.rotation = Quaternion.LookRotation(_velocity, Vector3.up);
-            thisTransform.position = newPosition;
+    }
+
+    public interface IVehicleOutput {
+        void OnVehicleMove(Vector3 velocityFrameDelta);
+    }
+
+    public interface IVehicleInput {
+        Vector3 GetForwardDirection();
+        Vector3 GetBasePosition();
+    }
+
+    public class GameObjectVehicleModel : IVehicleOutput, IVehicleInput {
+        private Vehicle vehicle;
+
+        public GameObjectVehicleModel(Vehicle vehicle) {
+            this.vehicle = vehicle;
+        }
+
+        public Vector3 GetBasePosition() {
+            return vehicle.transform.position;
+        }
+
+        public Vector3 GetForwardDirection() {
+            return vehicle.transform.forward;
+        }
+
+        public void OnVehicleMove(Vector3 velocityFrameDelta) {
+            var vehicleTransform = vehicle.transform;
+            var newPosition = vehicleTransform.position + velocityFrameDelta;
+            vehicleTransform.LookAt(newPosition, Vector3.up);
+            vehicleTransform.position = newPosition;
         }
     }
 

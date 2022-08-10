@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(TwoAxisVehicle))]
-public class TwoAxisVehicleFollowDriver : MonoBehaviour {
+[RequireComponent(typeof(TwoAxisMovePlatform))]
+public class TwoAxisPlatformFollowDriver : MonoBehaviour {
     
     [SerializeField] private ConnectionPoint followPoint;
     [SerializeField] private float followDistance = 0.2f;
     
-    private TwoAxisVehicle _twoAxisVehicle;
+    private TwoAxisMovePlatform _twoAxisVehicle;
 
     private Coroutine _moveAwayWaiter;
     private bool _paused;
 
     private void Awake() {
-        _twoAxisVehicle = GetComponent<TwoAxisVehicle>();
+        _twoAxisVehicle = GetComponent<TwoAxisMovePlatform>();
     }
 
     public void PauseUntilFarEnought(Transform moveAwayTransform, float resumeTriggerDistance) {
