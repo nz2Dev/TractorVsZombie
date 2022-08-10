@@ -4,9 +4,12 @@ using UnityEngine;
 public class WheelRotation : MonoBehaviour {
     
     public Transform steerTransform;
+    public Transform wheelTransform;
 
     private void Update() {
-        transform.localRotation = steerTransform.localRotation;
+        var targetTransform = wheelTransform == null ? transform : wheelTransform;
+        targetTransform.localPosition = transform.localPosition;
+        targetTransform.localRotation = steerTransform.localRotation;
     }
 
 }
