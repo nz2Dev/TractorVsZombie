@@ -12,6 +12,7 @@ public class Turel : MonoBehaviour {
     [SerializeField] private int turelDamage = 40;
     [SerializeField] private float targetSearchInterval = 0.25f;
     [SerializeField] private float firePushMultiplier = 0.5f;
+    [SerializeField] private ParticleSystem cannonParticles;
     
     private Animator _animator;
 
@@ -66,9 +67,11 @@ public class Turel : MonoBehaviour {
     private IEnumerator Fire() {
         while (true) {
             if (_currentTarget == null) {
+                cannonParticles.Stop();
                 break;
             }
 
+            cannonParticles.Play();
             var targetAlignment = 0f;
             while (targetAlignment < 0.99f) {
                 var turelToTarget = (_currentTarget.transform.position - transform.position).normalized;
