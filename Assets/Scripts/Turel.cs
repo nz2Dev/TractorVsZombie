@@ -3,104 +3,91 @@ using System.Collections;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 [SelectionBase]
 public class Turel : MonoBehaviour {
-    
     [SerializeField] private float fireInterval = 2f;
+    [SerializeField] [Range(0.1f, 0.98f)] private float repositionAlignmentThreashold = 0.9f;
+    [SerializeField] [Range(0.1f, 0.99f)] private float fireAlignmentThreashold = 0.99f;
     [SerializeField] private float turelAlignmentMultiplier = 2f;
     [SerializeField] private int turelDamage = 40;
-    [SerializeField] private float targetSearchInterval = 0.25f;
     [SerializeField] private float firePushMultiplier = 0.5f;
-    [SerializeField] private ParticleSystem cannonParticles;
-    
-    private Animator _animator;
+    [SerializeField] private ProjectileParticles projectileParticles;
+    [SerializeField] private CannonParticles cannonParticles;
 
-    private Enemy _currentTarget;
+    private Animator _animator;
+    private float _targetAlignment;
 
     private void Awake() {
         _animator = GetComponent<Animator>();
     }
 
-    private IEnumerator Start() {
-        while (true) {
-            yield return new WaitForSeconds(targetSearchInterval);
-
-            var enemies = FindObjectsOfType<Enemy>();
-            if (enemies.Length <= 0) {
-                continue;
-            }
-
-            var position = transform.position;
-            var shortest = enemies.Aggregate((shortest, next) => {
-                if (shortest == null) {
-                    return next;
-                }
-
-                var shortestHealth = shortest.GetComponent<Health>();
-                if (shortestHealth != null && shortestHealth.IsZero) {
-                    return next;
-                }
-
-                if (Vector3.Distance(next.transform.position, position) <
-                    Vector3.Distance(shortest.transform.position, position)) {
-                    return next;
-                } else {
-                    return shortest;
-                }
-            });
-
-            ChangeTarget(shortest);
-        }
+    private void Start() {
+        Assert.AreNotApproximatelyEqual(0f, fireInterval);
+        projectileParticles.SetFireSpeed(1 / fireInterval);
+        cannonParticles.SetEmitSpeed(1 / fireInterval);
     }
 
-    private void ChangeTarget(Enemy enemy) {
-        if (_currentTarget != null) {
-            return;
-        }
-
-        StopCoroutine(nameof(Fire));
-        _currentTarget = enemy;
-        StartCoroutine(nameof(Fire));
+    public void StartFire(GameObject target) {
+        StopAllCoroutines();
+        StartCoroutine(AimingRoutine(target));
+        StartCoroutine(FireRoutine(target));
     }
 
-    private IEnumerator Fire() {
-        while (true) {
-            if (_currentTarget == null) {
-                cannonParticles.Stop();
-                break;
-            }
+    public void StopFire() {
+        StopAllCoroutines();
+        StopParticles();
+    }
 
-            cannonParticles.Play();
-            var targetAlignment = 0f;
-            while (targetAlignment < 0.99f) {
-                var turelToTarget = (_currentTarget.transform.position - transform.position).normalized;
-                //Debug.DrawLine(transform.position, _currentTarget.transform.position, Color.blue);
+    private IEnumerator FireRoutine(GameObject target) {
+        var targetHealth = target.GetComponent<Health>();
 
-                targetAlignment = Vector3.Dot(transform.forward, turelToTarget);
-                var lookRotation = Quaternion.LookRotation(turelToTarget, Vector3.up);
-                transform.rotation = Quaternion.Lerp(
-                    transform.rotation,
-                    lookRotation,
-                    Time.deltaTime * turelAlignmentMultiplier
-                );
-                yield return new WaitForNextFrameUnit();
-            }
-
-            _animator.SetTrigger("Fire");
-            _currentTarget.transform.position += Vector3.ProjectOnPlane(transform.forward, Vector3.up) * firePushMultiplier;
-            
-            //Debug.DrawLine(transform.position, _currentTarget.transform.position, Color.red, 1f);
-            var targetHealth = _currentTarget.GetComponent<Health>();
-            if (targetHealth != null) {
-                targetHealth.TakeDamage(turelDamage);
-                if (targetHealth.IsZero) {
-                    _currentTarget = null;
+        while (targetHealth != null && !targetHealth.IsZero) {
+            if (_targetAlignment < repositionAlignmentThreashold) {
+                StopParticles();
+                yield return WaitForAlignment(target, fireAlignmentThreashold);
+                if (target == null) {
                     break;
                 }
             }
-            
+
+            StartParticles();
+            _animator.SetTrigger("Fire");
+
+            var pushForce = Vector3.ProjectOnPlane(transform.forward, Vector3.up) * firePushMultiplier;
+            target.transform.position += pushForce;
+
+            targetHealth.TakeDamage(turelDamage);
             yield return new WaitForSeconds(fireInterval);
+        }
+    }
+
+    private void StartParticles() {
+        cannonParticles.StartFire();
+        projectileParticles.StartFire();
+    }
+
+    private void StopParticles() {
+        cannonParticles.StopFire();
+        projectileParticles.StopFire();
+    }
+
+    private IEnumerator WaitForAlignment(GameObject target, float threshold) {
+        if (target != null && _targetAlignment < threshold) {
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private IEnumerator AimingRoutine(GameObject target) {
+        while (target != null) {
+            var turelToTarget = (target.transform.position - transform.position).normalized;
+            _targetAlignment = Vector3.Dot(transform.forward, turelToTarget);
+
+            var lookRotation = Quaternion.LookRotation(turelToTarget, Vector3.up);
+            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * turelAlignmentMultiplier);
+
+            yield return new WaitForNextFrameUnit(); // works in editor as well
         }
     }
 }

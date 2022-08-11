@@ -5,7 +5,7 @@ public class HealthBar : MonoBehaviour {
     [SerializeField] private Image fillImage;
     [SerializeField] private Health health;
 
-    private void Awake() {
+    private void Start() {
         if (health != null) {
             AttachHealth(health);
         }
@@ -23,6 +23,7 @@ public class HealthBar : MonoBehaviour {
         
         health = newHealth;
         health.OnHealthChanged += OnHealthChanged;
+        OnHealthChanged(newHealth);
     }
 
     private void DetachCurrentHealth() {

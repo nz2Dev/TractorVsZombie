@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 3414580515844940186}
   - component: {fileID: 3142306357442112030}
   - component: {fileID: 5603695972646280956}
+  - component: {fileID: 7403267167034188475}
   - component: {fileID: 2809655140893404100}
   m_Layer: 0
   m_Name: ArmoredTwoAxisVehicleWithTurelTrophy
@@ -516,6 +517,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb212d037ae48d24084775aafb9619e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7403267167034188475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775258134446525582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0461e1d4d0f97be46804db5c142e1383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turel: {fileID: 8669257877617586353}
+  targetSearchInterval: 0.25
 --- !u!114 &2809655140893404100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -529,6 +544,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max: 100
+  initial: 100
+  godMod: 0
 --- !u!1 &8827010765253640982
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,6 +1040,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7787568968624146252}
     m_Modifications:
+    - target: {fileID: 1842497251343401327, guid: 720bdd6bcafeefe4883f81affd16aa1e, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3396659759368886919, guid: 720bdd6bcafeefe4883f81affd16aa1e, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1067,9 +1088,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5557435883477789899, guid: 720bdd6bcafeefe4883f81affd16aa1e, type: 3}
+      propertyPath: repositionAlignmentThreashold
+      value: 0.98
+      objectReference: {fileID: 0}
     - target: {fileID: 7548238947085493202, guid: 720bdd6bcafeefe4883f81affd16aa1e, type: 3}
       propertyPath: m_Name
       value: TurelWeapon
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 720bdd6bcafeefe4883f81affd16aa1e, type: 3}
+--- !u!114 &8669257877617586353 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5557435883477789899, guid: 720bdd6bcafeefe4883f81affd16aa1e, type: 3}
+  m_PrefabInstance: {fileID: 3841744645035187322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dcb56a16c027034abc25c81e987c82c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
