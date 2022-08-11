@@ -34,7 +34,7 @@ public class TurelController : MonoBehaviour {
             var enemyHealth = enemy.GetComponent<Health>();
             if (enemyHealth != null && !enemyHealth.IsZero) {
                 var distanceToEnemy = Vector3.Distance(position, enemy.transform.position);
-                if (distanceToEnemy < closestDistance) {
+                if (distanceToEnemy < turel.FireRange && distanceToEnemy < closestDistance) {
                     closestDistance = distanceToEnemy;
                     closestEnemy = enemy;
                 }    

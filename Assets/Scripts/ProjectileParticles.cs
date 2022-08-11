@@ -1,10 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class ProjectileParticles : MonoBehaviour {
+
+    [SerializeField] private Collider aimTrigger;
     
     private ParticleSystem _particleSystem;
+    private List<Particle> _triggeredParticles = new List<Particle>(1);
+
+    public Action OnTriggerHit;
 
     private void Awake() {
         _particleSystem = GetComponent<ParticleSystem>();
@@ -12,6 +19,10 @@ public class ProjectileParticles : MonoBehaviour {
 
     public void StartFire() {
         _particleSystem.Play();
+    }
+
+    public void SetAimTriggerPosition(Vector3 position) {
+        aimTrigger.transform.position = position;
     }
 
     public void StopFire() {
@@ -22,5 +33,18 @@ public class ProjectileParticles : MonoBehaviour {
         var emission = _particleSystem.emission;
         emission.rateOverTime = particlesPerSecond;
     }
+
+    private void OnParticleTrigger() {
+        var number = ParticlePhysicsExtensions.GetTriggerParticles(
+            _particleSystem, ParticleSystemTriggerEventType.Enter, _triggeredParticles);
+        
+        for (int particleIndex = 0; particleIndex < number; particleIndex++) {
+            OnTriggerHit?.Invoke();
+        }
+    }
+
+    // private void OnParticleCollision(GameObject other) {
+    //     var hitGameObject = other.GetComponent<Collider>().attachedRigidbody;
+    // }
 
 }
