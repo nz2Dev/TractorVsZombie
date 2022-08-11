@@ -182,7 +182,7 @@ MonoBehaviour:
   turelAlignmentMultiplier: 10
   turelDamage: 10
   firePushMultiplier: 0.1
-  fireRange: 10
+  fireRange: 20
   fireGunBase: {fileID: 832810504629198761}
   projectileParticles: {fileID: 6539246400108045359}
   cannonParticles: {fileID: 4092568192735334693}
