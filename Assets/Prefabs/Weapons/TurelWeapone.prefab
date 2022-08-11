@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ProjectilesParticles
       objectReference: {fileID: 0}
+    - target: {fileID: 4357858979349962416, guid: 3befbac4def7ea245ac9f5a1e75bd2f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6998717866413328687, guid: 3befbac4def7ea245ac9f5a1e75bd2f6, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -53,6 +57,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6998717866413328687, guid: 3befbac4def7ea245ac9f5a1e75bd2f6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9182175756100910859, guid: 3befbac4def7ea245ac9f5a1e75bd2f6, type: 3}
+      propertyPath: TriggerModule.enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -169,7 +177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireInterval: 0.1
-  repositionAlignmentThreashold: 0.9
+  repositionAlignmentThreashold: 0.98
   fireAlignmentThreashold: 0.99
   turelAlignmentMultiplier: 10
   turelDamage: 10
@@ -178,7 +186,8 @@ MonoBehaviour:
   fireGunBase: {fileID: 832810504629198761}
   projectileParticles: {fileID: 6539246400108045359}
   cannonParticles: {fileID: 4092568192735334693}
-  triggerHitDamage: 1
+  triggerHitDamage: 0
+  collisionHitDamage: 1
 --- !u!1001 &2914475483934349867
 PrefabInstance:
   m_ObjectHideFlags: 0

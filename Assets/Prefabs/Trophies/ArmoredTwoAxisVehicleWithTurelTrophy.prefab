@@ -1088,10 +1088,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5557435883477789899, guid: 720bdd6bcafeefe4883f81affd16aa1e, type: 3}
-      propertyPath: repositionAlignmentThreashold
-      value: 0.98
-      objectReference: {fileID: 0}
     - target: {fileID: 7548238947085493202, guid: 720bdd6bcafeefe4883f81affd16aa1e, type: 3}
       propertyPath: m_Name
       value: TurelWeapon

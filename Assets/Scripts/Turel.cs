@@ -18,6 +18,7 @@ public class Turel : MonoBehaviour {
     [SerializeField] private ProjectileParticles projectileParticles;
     [SerializeField] private CannonParticles cannonParticles;
     [SerializeField] private bool triggerHitDamage = false;
+    [SerializeField] private bool collisionHitDamage = false;
 
     private Animator _animator;
     private float _targetAlignment;
@@ -27,7 +28,8 @@ public class Turel : MonoBehaviour {
 
     private void Awake() {
         _animator = GetComponent<Animator>();
-        projectileParticles.OnTriggerHit += OnTriggerHit;
+        projectileParticles.OnAimTriggerHit += OnTriggerHit;
+        projectileParticles.OnCollisionHit += OnCollisionHit;
     }
 
     private void Start() {
@@ -64,7 +66,7 @@ public class Turel : MonoBehaviour {
             StartParticles();
             _animator.SetTrigger("Fire");
 
-            if (!triggerHitDamage) {
+            if (!triggerHitDamage && !collisionHitDamage) {
                 DealDamage(targetHealth);
             }
             
@@ -75,6 +77,13 @@ public class Turel : MonoBehaviour {
     private void OnTriggerHit() {
         if (triggerHitDamage && _targetHealth != null) {
             DealDamage(_targetHealth);
+        }
+    }
+
+    private void OnCollisionHit(GameObject obj) {
+        var collidedHealth = obj.GetComponent<Health>();
+        if (collisionHitDamage && collidedHealth != null && !collidedHealth.IsZero) {
+            DealDamage(collidedHealth);
         }
     }
 

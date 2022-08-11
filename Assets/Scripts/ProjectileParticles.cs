@@ -11,7 +11,8 @@ public class ProjectileParticles : MonoBehaviour {
     private ParticleSystem _particleSystem;
     private List<Particle> _triggeredParticles = new List<Particle>(1);
 
-    public Action OnTriggerHit;
+    public event Action OnAimTriggerHit;
+    public event Action<GameObject> OnCollisionHit;
 
     private void Awake() {
         _particleSystem = GetComponent<ParticleSystem>();
@@ -39,12 +40,12 @@ public class ProjectileParticles : MonoBehaviour {
             _particleSystem, ParticleSystemTriggerEventType.Enter, _triggeredParticles);
         
         for (int particleIndex = 0; particleIndex < number; particleIndex++) {
-            OnTriggerHit?.Invoke();
+            OnAimTriggerHit?.Invoke();
         }
     }
 
-    // private void OnParticleCollision(GameObject other) {
-    //     var hitGameObject = other.GetComponent<Collider>().attachedRigidbody;
-    // }
+    private void OnParticleCollision(GameObject other) {
+        OnCollisionHit?.Invoke(other); // it's gameObject with rigidbody that the collider is attached to if any
+    }
 
 }
