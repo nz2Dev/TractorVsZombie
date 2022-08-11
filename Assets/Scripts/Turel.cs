@@ -13,6 +13,7 @@ public class Turel : MonoBehaviour {
     [SerializeField] private float turelAlignmentMultiplier = 2f;
     [SerializeField] private int turelDamage = 40;
     [SerializeField] private float firePushMultiplier = 0.5f;
+    [SerializeField] private Transform fireGunBase;
     [SerializeField] private ProjectileParticles projectileParticles;
     [SerializeField] private CannonParticles cannonParticles;
 
@@ -80,12 +81,15 @@ public class Turel : MonoBehaviour {
     }
 
     private IEnumerator AimingRoutine(GameObject target) {
-        while (target != null) {
-            var turelToTarget = (target.transform.position - transform.position).normalized;
-            _targetAlignment = Vector3.Dot(transform.forward, turelToTarget);
+        var hitTarget = target.GetComponent<HitTarget>();
 
-            var lookRotation = Quaternion.LookRotation(turelToTarget, Vector3.up);
-            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * turelAlignmentMultiplier);
+        while (target != null) {
+            var aimPoint = hitTarget != null ? hitTarget.GetAimPoint() : (target.transform.position + Vector3.up);
+            var turelToAimPoint = (aimPoint - fireGunBase.position).normalized;
+            _targetAlignment = Vector3.Dot(fireGunBase.forward, turelToAimPoint);
+
+            var lookRotation = Quaternion.LookRotation(turelToAimPoint, Vector3.up);
+            fireGunBase.rotation = Quaternion.Lerp(fireGunBase.rotation, lookRotation, Time.deltaTime * turelAlignmentMultiplier);
 
             yield return new WaitForNextFrameUnit(); // works in editor as well
         }

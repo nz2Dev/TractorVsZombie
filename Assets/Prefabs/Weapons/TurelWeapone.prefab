@@ -169,10 +169,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireInterval: 0.1
+  repositionAlignmentThreashold: 0.9
+  fireAlignmentThreashold: 0.99
   turelAlignmentMultiplier: 10
   turelDamage: 10
-  targetSearchInterval: 0.5
   firePushMultiplier: 0.1
+  fireGunBase: {fileID: 832810504629198761}
   projectileParticles: {fileID: 6539246400108045359}
   cannonParticles: {fileID: 4092568192735334693}
 --- !u!1001 &2914475483934349867
