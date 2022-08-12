@@ -9,6 +9,7 @@ public class TwoAxisMovePlatform : MonoBehaviour {
     private float _platformDistance;
     private float _frontAxisOffset;
 
+    public bool customExecution = false;
     public Transform TurnAxis => frontTurnAxis;
 
     private void Awake() {
@@ -17,7 +18,17 @@ public class TwoAxisMovePlatform : MonoBehaviour {
         _platformDistance = backAxisOffset + _frontAxisOffset;
     }
 
+    public void SolveNow() {
+        SolveAxis();
+    }
+
     private void Update() {
+        if (!customExecution) {
+            SolveAxis();
+        }
+    }
+
+    private void SolveAxis() {
         var turnPosition = frontTurnAxis.position;
         var turnRotation = frontTurnAxis.rotation;
         var alignDirection = (backAlignmentAxis.position - turnPosition).normalized;

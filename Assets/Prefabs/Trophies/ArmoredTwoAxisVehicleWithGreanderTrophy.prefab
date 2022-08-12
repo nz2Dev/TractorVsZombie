@@ -391,6 +391,7 @@ GameObject:
   - component: {fileID: 1242843463474985850}
   - component: {fileID: 2540496577384350386}
   - component: {fileID: 285199910705696528}
+  - component: {fileID: 5531535622058691721}
   - component: {fileID: 6993880622133077165}
   - component: {fileID: 4413731531701874214}
   - component: {fileID: 492139919404365800}
@@ -442,6 +443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backAlignmentAxis: {fileID: 6781179722964651408}
   frontTurnAxis: {fileID: 3988086413304649728}
+  customExecution: 0
 --- !u!114 &285199910705696528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +458,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followPoint: {fileID: 0}
   followDistance: 0.2
+  customExecution: 0
+--- !u!114 &5531535622058691721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7375705574767800090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9150dfdc669efa44e913dbdddd5b5784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6993880622133077165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,6 +562,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max: 100
+  initial: 100
+  godMod: 0
 --- !u!114 &2007775792492026368
 MonoBehaviour:
   m_ObjectHideFlags: 0

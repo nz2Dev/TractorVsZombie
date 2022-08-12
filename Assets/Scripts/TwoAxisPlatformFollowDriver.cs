@@ -13,6 +13,8 @@ public class TwoAxisPlatformFollowDriver : MonoBehaviour {
     private Coroutine _moveAwayWaiter;
     private bool _paused;
 
+    public bool customExecution = false;
+
     private void Awake() {
         _twoAxisVehicle = GetComponent<TwoAxisMovePlatform>();
     }
@@ -40,7 +42,17 @@ public class TwoAxisPlatformFollowDriver : MonoBehaviour {
         this.followPoint = followPoint;
     }
 
+    public void SolveNow() {
+        UpdateFollow();
+    }
+
     private void Update() {
+        if (!customExecution) {
+            UpdateFollow();
+        }
+    }
+
+    private void UpdateFollow() {
         if (_paused || followPoint == null) {
             return;
         }
@@ -49,5 +61,4 @@ public class TwoAxisPlatformFollowDriver : MonoBehaviour {
         _twoAxisVehicle.TurnAxis.position = followPoint.Point + reverceFollowDirection * followDistance;
         _twoAxisVehicle.TurnAxis.LookAt(followPoint.Point, Vector3.up);
     }
-
 }
