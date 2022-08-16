@@ -38,3 +38,6 @@ sysinfo.txt
 #Packages
 Assets/Packages/
 Logs/
+
+#Samples
+Assets/Samples/

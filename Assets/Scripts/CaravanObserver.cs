@@ -12,6 +12,7 @@ public class CaravanObserver : MonoBehaviour {
     private CaravanMember[] _countedMembers = new CaravanMember[0];
 
     public IEnumerable<CaravanMember> CountedMembers => _countedMembers;
+    public int CountedLength => _countedMembers.Length;
 
     public event Action<CaravanObserver> OnMembersChanged;
 
