@@ -11,6 +11,7 @@ public class CaravanObserver : MonoBehaviour {
     private CaravanMember _lastTail;
     private CaravanMember[] _countedMembers = new CaravanMember[0];
 
+    public CaravanMember Subject => head;
     public IEnumerable<CaravanMember> CountedMembers => _countedMembers;
     public int CountedLength => _countedMembers.Length;
 
@@ -25,6 +26,10 @@ public class CaravanObserver : MonoBehaviour {
     }
 
     private void CountMembers() {
+        if (head == null) {
+            return;
+        }
+        
         _countedMembers = CaravanMembersUtils.FromHeadToTail(head).ToArray();
         foreach (var member in CountedMembers) {
             member.OnChanged += OnMemberStateChanged;

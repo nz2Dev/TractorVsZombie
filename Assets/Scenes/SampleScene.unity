@@ -34401,8 +34401,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8281487550382786234, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
+      propertyPath: m_LookaheadTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8281487550382786234, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
       propertyPath: m_CameraDistance
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8281487550382786234, guid: 946efb4115e150f4bb3259357af152f0, type: 3}
+      propertyPath: m_LookaheadSmoothing
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 946efb4115e150f4bb3259357af152f0, type: 3}

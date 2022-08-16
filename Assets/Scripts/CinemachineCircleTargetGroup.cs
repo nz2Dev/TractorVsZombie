@@ -74,7 +74,7 @@ public class CinemachineCircleTargetGroup : MonoBehaviour, ICinemachineTargetGro
         );
     }
 
-    private void OnDrawGizmosSelected() {
+    private void OnDrawGizmos() {
         Handles.DrawWireDisc(transform.position, transform.up, radius);
     }
 }
