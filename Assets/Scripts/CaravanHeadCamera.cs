@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class CaravanHeadCamera : MonoBehaviour, ICaravanCamera {
     [SerializeField] private CaravanObserver caravanObserver;
     [SerializeField] private float memberZoomWidth = 0.5f;
@@ -28,7 +29,11 @@ public class CaravanHeadCamera : MonoBehaviour, ICaravanCamera {
     private void OnCaravanChanged(CaravanObserver observer) {
         UpdateFollowZoom();
     }
-    
+
+    public float GetZoomLevel() {
+        return _zoomWidthRangeLevel;
+    }
+
     public void SetZoomLevel(float levelNoramlized) {
         _zoomWidthRangeLevel = Mathf.Clamp01(levelNoramlized);
 

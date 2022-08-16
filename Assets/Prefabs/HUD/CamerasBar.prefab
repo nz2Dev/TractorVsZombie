@@ -484,7 +484,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Head
+  m_Text: 'Driving
 
     Camera'
 --- !u!1 &9147312788175959244
@@ -755,6 +755,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camerasManager: {fileID: 0}
+  zoomLevelSlider: {fileID: 3529124600442448729}
 --- !u!1 &9147312788921695424
 GameObject:
   m_ObjectHideFlags: 0
