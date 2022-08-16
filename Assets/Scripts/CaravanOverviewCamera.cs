@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 
-public class CaravanOverviewCamera : MonoBehaviour
-{
+public class CaravanOverviewCamera : MonoBehaviour, ICaravanCamera {
     [SerializeField] private CaravanObserver caravanObserver;
     [SerializeField] private CinemachineTargetGroup overviewTargetGroup;
     [SerializeField] private float minOverviewZoomWidth = 15f;
+    [SerializeField] private float zoomWidthChangeRange = 10f;
     [SerializeField] private float memberZoomWidth = 1f;
     [SerializeField] private float memberRadius = 1f;
 
     private CinemachineVirtualCamera _virtualCamera;
+    private float _zoomWidthChangeLevel = 0;
 
     private void Awake() {
         _virtualCamera = GetComponent<CinemachineVirtualCamera>();
@@ -24,13 +25,22 @@ public class CaravanOverviewCamera : MonoBehaviour
     }
 
     private void OnCaravanChanged(CaravanObserver observer) {
+        if (_virtualCamera == null) {
+            return;
+        }
+
         UpdateZoomWidths();
         UpdateTargetGroup();
     }
 
+    public void SetZoomLevel(float levelNoramlized) {
+        _zoomWidthChangeLevel = levelNoramlized;
+        UpdateZoomWidths();
+    }
+
     private void UpdateZoomWidths() {
         var overviewZoom = _virtualCamera.GetComponent<CinemachineFollowZoom>();
-        overviewZoom.m_Width = minOverviewZoomWidth + caravanObserver.CountedLength * memberZoomWidth;
+        overviewZoom.m_Width = minOverviewZoomWidth + _zoomWidthChangeLevel * zoomWidthChangeRange + caravanObserver.CountedLength * memberZoomWidth;
     }
 
     [ContextMenu("Bind Camera Targets")]
