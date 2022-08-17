@@ -13,7 +13,7 @@ public class GroundObservable : MonoBehaviour, IPointerDownHandler, IDragHandler
         PointerUp
     }
 
-    public Action<EventType, PointerEventData> OnEvent;
+    public event Action<EventType, PointerEventData> OnEvent;
 
     public void OnPointerDown(PointerEventData eventData) {
         OnEvent?.Invoke(EventType.PointerDown, eventData);
