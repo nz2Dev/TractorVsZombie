@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class AnchoredDirectionVehicleDriver : MonoBehaviour {
@@ -13,34 +14,44 @@ public class AnchoredDirectionVehicleDriver : MonoBehaviour {
     private Vector3 _turnDirection;
     private Vector3 _turnAnchor;
 
+    public bool IsHandbreak => handbreak;
+
     private void Awake() {
         _vehicle = GetComponentInChildren<Vehicle>();
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Q)) {
-            handbreak = !handbreak;
-        }
-
         if (handbreak) {
             HandbreakVehicle();
             return;
         }
 
-        var horizontalAxis = Input.GetAxisRaw("Horizontal");
-        var verticalAxis = Input.GetAxisRaw("Vertical");
-
-        var inputVector = new Vector3(horizontalAxis, 0, verticalAxis);
-        if (inputVector.sqrMagnitude > 0) {
-            if (reanchorEachInput || inputVector != _turnDirection) {
-                _turnAnchor = GetBasePosition();
-                _turnDirection = inputVector;
-            }
-        }
-
         if (_turnDirection != default) {
             SteerToDirection();
         }
+    }
+
+    public void SetHandbreak(bool handbreak) {
+        this.handbreak = handbreak;
+    }
+
+    public void SetSteerDirection(Vector3 direction) {
+        if (direction.sqrMagnitude > 0) {
+            if (reanchorEachInput || direction != _turnDirection) {
+                _turnAnchor = GetBasePosition();
+                _turnDirection = GetBaseDirection(direction);
+            }
+        }
+    }
+
+    private Vector3 GetBaseDirection(Vector3 direction) {
+        if (!snapAnchorPosition) {
+            return direction;
+        }
+
+        var forwardDot = Vector3.Dot(Vector3.forward, direction);
+        var rightDot = Vector3.Dot(Vector3.right, direction);
+        return Mathf.Abs(forwardDot) > Mathf.Abs(rightDot) ? Vector3.forward * Mathf.Sign(forwardDot) : Vector3.right * Mathf.Sign(rightDot);
     }
 
     private void HandbreakVehicle() {
