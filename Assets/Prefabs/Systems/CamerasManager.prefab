@@ -44,6 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41ec9568123f5f84591588bc726bab46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundObservable: {fileID: 0}
   drivingCamera: {fileID: 0}
   holdingCamera: {fileID: 0}
+  orbitSpeedMultiplier: 1
+  orbitOnGroundEvent: 1
   useDriving: 0

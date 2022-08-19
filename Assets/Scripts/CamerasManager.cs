@@ -12,14 +12,16 @@ public interface ICameraZoomController {
 }
 
 public interface ICameraOrbitController {
+    void StartOrbiting();
     void OrbitDelta(float horizontalDegree, float verticalDegree);
+    void StopOrbiting();
 }
 
 public class CamerasManager : MonoBehaviour {
 
     [SerializeField] private GroundObservable groundObservable;
     [SerializeField] private CinemachineVirtualCamera drivingCamera;
-    [SerializeField] private CinemachineVirtualCamera holdingCamera; 
+    [SerializeField] private CinemachineVirtualCamera holdingCamera;
     [SerializeField] private float orbitSpeedMultiplier = 5;
     [SerializeField] private bool orbitOnGroundEvent;
     [SerializeField] private bool useDriving;
@@ -43,15 +45,26 @@ public class CamerasManager : MonoBehaviour {
             return;
         }
 
-        var orbitXDelta = pointerEventData.delta.x / pointerEventData.pressEventCamera.pixelWidth;
-        var orbitYDelta = pointerEventData.delta.y / pointerEventData.pressEventCamera.pixelHeight;
-
         var activeCamera = HigherPriorityCamera();
         var orbitController = activeCamera.GetComponent<ICameraOrbitController>();
         if (orbitController != null) {
-            orbitController.OrbitDelta(
-                orbitXDelta * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier,
-                orbitYDelta * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier);
+            switch (eventType) {
+                case GroundObservable.EventType.PointerDown:
+                    orbitController.StartOrbiting();
+                    break;
+                case GroundObservable.EventType.PointerDrag:
+                    var orbitXDelta = pointerEventData.delta.x / pointerEventData.pressEventCamera.pixelWidth;
+                    var orbitYDelta = pointerEventData.delta.y / pointerEventData.pressEventCamera.pixelHeight;
+
+                    orbitController.OrbitDelta(
+                        orbitXDelta * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier,
+                        orbitYDelta * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier);
+                    break;
+
+                case GroundObservable.EventType.PointerUp:
+                    orbitController.StopOrbiting();
+                    break;
+            }
         }
     }
 

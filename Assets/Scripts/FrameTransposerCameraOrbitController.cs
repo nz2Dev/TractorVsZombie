@@ -12,11 +12,19 @@ public class FrameTransposerCameraOrbitController : MonoBehaviour, ICameraOrbitC
         ResetOrbitRotation();
     }
 
+    void ICameraOrbitController.StartOrbiting() {
+        // do nothing
+    }
+
     void ICameraOrbitController.OrbitDelta(float horizontalDegree, float verticalDegree) {
         _horizontalOrbit += horizontalDegree;
         _verticalOrbit += inverseVerticalOrbit ? -verticalDegree : verticalDegree;
         UpdateOrbitRotation();
     }
+
+    void ICameraOrbitController.StopOrbiting() {
+        // do nothing
+    }    
 
     [ContextMenu("Reset Orbit Rotation")]
     private void ResetOrbitRotation() {
