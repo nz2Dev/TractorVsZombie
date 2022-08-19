@@ -33769,9 +33769,9 @@ MonoBehaviour:
     m_VelocityFilterStrength: 4
     m_Bias: 0
   m_RecenterToTargetHeading:
-    m_enabled: 0
-    m_WaitTime: 1
-    m_RecenteringTime: 2
+    m_enabled: 1
+    m_WaitTime: 0
+    m_RecenteringTime: 0.3
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
@@ -34291,7 +34291,19 @@ PrefabInstance:
       objectReference: {fileID: 6051789858576847228}
     - target: {fileID: 3864656893813546847, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.8844885
+      value: 2.1031308
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922877748916775624, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922877748916775624, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
+      propertyPath: groundObservable
+      value: 
+      objectReference: {fileID: 1803614867554456926}
+    - target: {fileID: 5922877748916775624, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
+      propertyPath: orbitSpeedMultiplier
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -34505,6 +34517,10 @@ PrefabInstance:
       propertyPath: transformToAssign
       value: 
       objectReference: {fileID: 6922321607750240634}
+    - target: {fileID: 8783276227091410380, guid: b765a5879b6b6d84f9852c89e01978a8, type: 3}
+      propertyPath: groundObservable
+      value: 
+      objectReference: {fileID: 1803614867554456926}
     - target: {fileID: 8783276227091410381, guid: b765a5879b6b6d84f9852c89e01978a8, type: 3}
       propertyPath: caravanObserver
       value: 
@@ -34563,7 +34579,7 @@ PrefabInstance:
       objectReference: {fileID: 6922321607750240634}
     - target: {fileID: 8783276227091410386, guid: b765a5879b6b6d84f9852c89e01978a8, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.8844885
+      value: 2.2088976
       objectReference: {fileID: 0}
     - target: {fileID: 8783276227091410387, guid: b765a5879b6b6d84f9852c89e01978a8, type: 3}
       propertyPath: m_Name

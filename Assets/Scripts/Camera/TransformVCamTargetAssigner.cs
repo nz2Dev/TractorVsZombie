@@ -2,7 +2,7 @@ using Cinemachine;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class CinemachineTransformTargetAssigner : MonoBehaviour {
+public class TransformVCamTargetAssigner : MonoBehaviour {
     
     [SerializeField] private Transform transformToAssign;
 

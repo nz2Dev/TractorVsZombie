@@ -2,7 +2,7 @@ using System;
 using Cinemachine;
 using UnityEngine;
 
-public class CinemachineCaravanTargetGroupAssigner : MonoBehaviour {
+public class CaravanTargetGroupAssigner : MonoBehaviour {
     [SerializeField] private CinemachineTargetGroup targetGroup;
     [SerializeField] private CaravanObserver caravanObserver;
     [SerializeField] private float memberRadius = 1f;

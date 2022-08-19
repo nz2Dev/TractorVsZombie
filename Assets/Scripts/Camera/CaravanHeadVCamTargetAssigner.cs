@@ -5,7 +5,7 @@ using Cinemachine;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class CinemachineTargetCaravanHeadAssigner : MonoBehaviour {
+public class CaravanHeadVCamTargetAssigner : MonoBehaviour {
     [SerializeField] private CaravanObserver caravanObserver;
     
     private CinemachineVirtualCamera _virtualCamera;

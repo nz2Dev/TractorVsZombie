@@ -11,25 +11,40 @@ public interface ICameraZoomController {
     void SetZoomLevel(float levelNoramlized);
 }
 
-public interface ICameraOrbitController {
-    void StartOrbiting();
-    void OrbitDelta(float horizontalDegree, float verticalDegree);
-    void StopOrbiting();
+public interface ICameraController {
+    void OnActiveStateChanged(bool activeState);
 }
 
 public class CamerasManager : MonoBehaviour {
 
-    [SerializeField] private GroundObservable groundObservable;
     [SerializeField] private CinemachineVirtualCamera drivingCamera;
     [SerializeField] private CinemachineVirtualCamera holdingCamera;
-    [SerializeField] private float orbitSpeedMultiplier = 5;
-    [SerializeField] private bool orbitOnGroundEvent;
     [SerializeField] private bool useDriving;
 
     public event Action<float> OnSelectedCameraZoomLevelChanged;
+    public event Action<GameObject> OnVCamChanged;
 
-    private void Awake() {
-        groundObservable.OnEvent += OnGroundEvent;
+    private void Start() {
+        var brain = CinemachineCore.Instance.FindPotentialTargetBrain(drivingCamera);
+        brain.m_CameraActivatedEvent.AddListener(OnActiveCameraChanged);
+        OnActiveCameraChanged(HigherPriorityCamera(), null);
+    }
+
+    private void OnActiveCameraChanged(ICinemachineCamera incomingCam, ICinemachineCamera outcomingCam) {
+        var incomingController = incomingCam.VirtualCameraGameObject.GetComponent<ICameraController>();
+        if (incomingController != null) {
+            incomingController.OnActiveStateChanged(activeState: true);
+        }
+
+        if (outcomingCam != null) {
+            var outcomingController = outcomingCam.VirtualCameraGameObject.GetComponent<ICameraController>();
+            if (outcomingController != null) {
+                outcomingController.OnActiveStateChanged(activeState: false);
+            }
+        }
+
+        Debug.Log($"{incomingCam.VirtualCameraGameObject.name} enabled {outcomingCam?.VirtualCameraGameObject?.name ?? "null"} disabled");
+        OnVCamChanged?.Invoke(incomingCam.VirtualCameraGameObject);
     }
 
     private void OnValidate() {
@@ -38,34 +53,6 @@ public class CamerasManager : MonoBehaviour {
 
     private void Update() {
         UpdateCameraPriority();
-    }
-
-    private void OnGroundEvent(GroundObservable.EventType eventType, PointerEventData pointerEventData) {
-        if (!orbitOnGroundEvent) {
-            return;
-        }
-
-        var activeCamera = HigherPriorityCamera();
-        var orbitController = activeCamera.GetComponent<ICameraOrbitController>();
-        if (orbitController != null) {
-            switch (eventType) {
-                case GroundObservable.EventType.PointerDown:
-                    orbitController.StartOrbiting();
-                    break;
-                case GroundObservable.EventType.PointerDrag:
-                    var orbitXDelta = pointerEventData.delta.x / pointerEventData.pressEventCamera.pixelWidth;
-                    var orbitYDelta = pointerEventData.delta.y / pointerEventData.pressEventCamera.pixelHeight;
-
-                    orbitController.OrbitDelta(
-                        orbitXDelta * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier,
-                        orbitYDelta * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier);
-                    break;
-
-                case GroundObservable.EventType.PointerUp:
-                    orbitController.StopOrbiting();
-                    break;
-            }
-        }
     }
 
     public void SetCameraType(bool driving) {
