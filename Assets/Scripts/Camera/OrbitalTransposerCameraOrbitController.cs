@@ -36,12 +36,12 @@ public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraCont
     }
 
     private void OnGroundEvent(GroundObservable.EventType eventType, PointerEventData pointerEventData) {
-        if (eventType == GroundObservable.EventType.PointerDown) {
+        if (eventType == GroundObservable.EventType.PointerDown && pointerEventData.button == 0) {
             _startOrbitingInitCamera = pointerEventData.pressEventCamera;
             StartOrbiting();
         }
 
-        if (eventType == GroundObservable.EventType.PointerUp) {
+        if (eventType == GroundObservable.EventType.PointerUp && pointerEventData.button == 0) {
             StopOrbiting();
         }
     }
@@ -51,10 +51,10 @@ public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraCont
         _orbiting = true;
         
         // recentering disabled
-        // var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
-        // var recenter = orbitalTransposer.m_RecenterToTargetHeading;
-        // recenter.m_enabled = false;
-        // orbitalTransposer.m_RecenterToTargetHeading = recenter;
+        var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
+        var recenter = orbitalTransposer.m_RecenterToTargetHeading;
+        recenter.m_enabled = false;
+        orbitalTransposer.m_RecenterToTargetHeading = recenter;
     }
 
     private void Update() {
@@ -67,7 +67,7 @@ public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraCont
 
         var horizontalDegree = horizontalInput * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier;
         var verticalDegree = verticalInput * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier;
-        Debug.Log($"Orbiting {horizontalDegree}, {verticalDegree}");
+        // Debug.Log($"Orbiting {horizontalDegree}, {verticalDegree}");
 
         var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
         var xAxis = orbitalTransposer.m_XAxis;
@@ -82,11 +82,11 @@ public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraCont
         Cursor.lockState = CursorLockMode.None;
         _orbiting = false;
 
-        // recentering enabled
-        // var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
-        // var recenter = orbitalTransposer.m_RecenterToTargetHeading;
-        //recenter.m_enabled = true;
-        // orbitalTransposer.m_RecenterToTargetHeading = recenter;
+        //recentering enabled
+        var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
+        var recenter = orbitalTransposer.m_RecenterToTargetHeading;
+        recenter.m_enabled = true;
+        orbitalTransposer.m_RecenterToTargetHeading = recenter;
     }
 
     [ContextMenu("Update Orbit Rotation")]

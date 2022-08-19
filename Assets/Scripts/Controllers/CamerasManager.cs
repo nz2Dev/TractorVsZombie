@@ -43,7 +43,7 @@ public class CamerasManager : MonoBehaviour {
             }
         }
 
-        Debug.Log($"{incomingCam.VirtualCameraGameObject.name} enabled {outcomingCam?.VirtualCameraGameObject?.name ?? "null"} disabled");
+        // Debug.Log($"{incomingCam.VirtualCameraGameObject.name} enabled {outcomingCam?.VirtualCameraGameObject?.name ?? "null"} disabled");
         OnVCamChanged?.Invoke(incomingCam.VirtualCameraGameObject);
     }
 

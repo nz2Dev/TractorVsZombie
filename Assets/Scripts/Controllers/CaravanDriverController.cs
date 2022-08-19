@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CaravanDriverController : MonoBehaviour {
@@ -6,6 +7,8 @@ public class CaravanDriverController : MonoBehaviour {
     [SerializeField] private Transform drivingPOV;
     [SerializeField] private bool localSpace = false;
 
+    private bool mouseDriving;
+
     private void Update() {
         if (driver == null) {
             return;
@@ -13,6 +16,23 @@ public class CaravanDriverController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Q)) {
             driver.SetHandbreak(!driver.IsHandbreak);
+        }
+
+        if (Input.GetMouseButtonDown(1)) {
+            mouseDriving = true;
+        }
+
+        if (mouseDriving) {
+            var xAxis = Input.GetAxisRaw("Mouse X");
+            var angleRad = Mathf.Clamp(xAxis, -Mathf.PI / 2, Mathf.PI / 2);
+            var directionDriverSpace = new Vector3(Mathf.Sin(angleRad), 0, Mathf.Cos(angleRad));
+            var steerMouseDir = driver.transform.TransformDirection(directionDriverSpace);
+            driver.SetSteerDirection(steerMouseDir);
+        }
+
+        if (Input.GetMouseButtonUp(1)) {
+            mouseDriving = false;
+            return;
         }
 
         var horizontalAxis = Input.GetAxisRaw("Horizontal");
