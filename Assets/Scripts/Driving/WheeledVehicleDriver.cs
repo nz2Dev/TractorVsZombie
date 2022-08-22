@@ -8,6 +8,7 @@ public class WheeledVehicleDriver : MonoBehaviour {
     [SerializeField][Range(0, 1f)] private float turnBaseOffset = 0.5f;
     [SerializeField] private Transform anchorCheckPoint;
     [SerializeField] private float lookaheadDistance = 1f;
+    [SerializeField] private LayerMask wallsLayerMask;
     [SerializeField] private bool handbreak;
 
     private Vehicle _vehicle;
@@ -49,7 +50,13 @@ public class WheeledVehicleDriver : MonoBehaviour {
     }
 
     private void DriveVehicle() {
-        _vehicle.ApplyForce(_vehicle.FollowDirection(_turnAnchor, _turnDirection, lookaheadDistance));
+        var stopForce = _vehicle.StopOnFirstWall(lookaheadDistance, wallsLayerMask);
+        if (stopForce != default) {
+            _vehicle.ApplyForce(stopForce, "WallStop", Color.red);
+        }
+
+        var followDirectionForce = _vehicle.FollowDirection(_turnAnchor, _turnDirection, lookaheadDistance);
+        _vehicle.ApplyForce(followDirectionForce, "FollowDirection", Color.green);
     }
 
     private Vector3 GetBaseDirection(Vector3 direction) {

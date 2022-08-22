@@ -12,7 +12,7 @@ public static class BaseSteering {
     }
 
     public static Vector3 Arrival(this Vehicle vehicle, Vector3 targetPosition, float slowingDistance) {
-        var vehiclePosition = vehicle.transform.position;
+        var vehiclePosition = vehicle.baseTransform.position;
         var distance = Vector3.Distance(targetPosition, vehiclePosition);
         var rampedSpeed = vehicle.MaxSpeed * (distance / slowingDistance);
         var clippedSpeed = Mathf.Min(rampedSpeed, vehicle.MaxSpeed);
