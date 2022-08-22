@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour {
     private VehicleDriver _vehicleDriver;
     private Animator _animator;
 
+    private CaravanObserver _caravanObserver;
+
     private void Awake() {
         _animator = GetComponentInChildren<Animator>();
         _vehicleDriver = GetComponent<VehicleDriver>();
@@ -28,6 +30,7 @@ public class Enemy : MonoBehaviour {
     }
 
     private void Start() {
+        _caravanObserver = FindObjectOfType<CaravanObserver>();
         StartCoroutine(nameof(SearchTarget));
     }
 
@@ -59,26 +62,20 @@ public class Enemy : MonoBehaviour {
         while (true) {
             yield return new WaitForSeconds(0.5f);
 
-            var elements = FindObjectsOfType<CaravanMember>();
-            if (elements.Length <= 0) {
-                continue;
+            var position = transform.position;
+            var shortest = (CaravanMember) null;
+            var shortestDistance = float.PositiveInfinity;
+            foreach (var member in _caravanObserver.CountedMembers) {
+                var distance = Vector3.Distance(position, member.transform.position);
+                if (distance < shortestDistance) {
+                    shortestDistance = distance;
+                    shortest = member;
+                }
             }
 
-            var position = transform.position;
-            var shortest = elements.Aggregate((shortest, next) => {
-                if (shortest == null) {
-                    return next;
-                }
-
-                if (Vector3.Distance(next.transform.position, position) <
-                    Vector3.Distance(shortest.transform.position, position)) {
-                    return next;
-                } else {
-                    return shortest;
-                }
-            });
-
-            _vehicleDriver.SetTarget(shortest.gameObject);
+            if (shortest != null) {
+                _vehicleDriver.SetTarget(shortest.gameObject);
+            }
         }
     }
 
