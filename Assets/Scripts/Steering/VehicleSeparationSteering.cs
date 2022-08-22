@@ -36,7 +36,7 @@ public class VehicleSeparationSteering : MonoBehaviour {
         //var maxDistance = 3;
 
         foreach (var neighbor in neighbors) {
-            var neighborFlee = _vehicle.CalculateFleeSteeringForce(neighbor.transform.position);
+            var neighborFlee = _vehicle.Flee(neighbor.transform.position);
             //var distance = Vector3.Distance(neighbor.transform.position, vehiclePosition);
             //var distanceClamped = Mathf.Max(distance, maxDistance);
             //neighborFlee *= (distanceClamped / maxDistance);

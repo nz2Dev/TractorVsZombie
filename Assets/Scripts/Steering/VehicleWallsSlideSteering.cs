@@ -37,7 +37,7 @@ public class VehicleWallsSlideSteering : MonoBehaviour {
             var seekPosition = closestPointOnWall + wallToVehicleNormal * checkDistance + slideDirection;
             Debug.DrawLine(position, seekPosition);
 
-            var steeringForce = _vehicle.CalculateSeekSteeringForce(seekPosition) * forceWeight;
+            var steeringForce = _vehicle.Seek(seekPosition) * forceWeight;
             _vehicle.ApplyForce(steeringForce, "WallSlide", Color.magenta);
         }
     }

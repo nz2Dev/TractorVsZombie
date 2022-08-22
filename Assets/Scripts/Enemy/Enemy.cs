@@ -3,21 +3,21 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(VehicleDriver))]
+[RequireComponent(typeof(CrowdVehicleDriver))]
 public class Enemy : MonoBehaviour {
     [SerializeField] private int damage = 55;
     [SerializeField] private float stopDistance = 0.1f;
     [SerializeField] private float resumeDistance = 0.3f;
 
     private bool _chasing;
-    private VehicleDriver _vehicleDriver;
+    private CrowdVehicleDriver _vehicleDriver;
     private Animator _animator;
 
     private CaravanObserver _caravanObserver;
 
     private void Awake() {
         _animator = GetComponentInChildren<Animator>();
-        _vehicleDriver = GetComponent<VehicleDriver>();
+        _vehicleDriver = GetComponent<CrowdVehicleDriver>();
         
         var health = GetComponent<Health>();
         if (health != null) {

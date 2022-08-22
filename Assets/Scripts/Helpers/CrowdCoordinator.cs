@@ -9,7 +9,7 @@ public class CrowdCoordinator : MonoBehaviour {
     public GameObject obstacle;
 
     private void Start() {
-        foreach (var vehicle in FindObjectsOfType<VehicleDriver>()) {
+        foreach (var vehicle in FindObjectsOfType<CrowdVehicleDriver>()) {
             vehicle.SetTarget(cursor);
         }
     }

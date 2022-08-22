@@ -45,7 +45,7 @@ public class VehicleAnchoredDirectionSteering : MonoBehaviour {
         var anchorToPosition = transform.position - _turnAnchor;
         var vehiclePositionOnTurnDirection = Vector3.Project(anchorToPosition, _turnDirection);
         var futurePosition = _turnAnchor + vehiclePositionOnTurnDirection + _turnDirection * lookaheadDistance;
-        var baseSteeringForce = _vehicle.CalculateSeekSteeringForce(futurePosition);
+        var baseSteeringForce = _vehicle.Seek(futurePosition);
         _vehicle.ApplyForce(baseSteeringForce, "AnchoredDirectional", Color.gray);
     }
 

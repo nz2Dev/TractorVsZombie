@@ -13,7 +13,7 @@ public class VehicleWallsStopSteering : MonoBehaviour {
 
     private void Update() {
         if (Physics.Raycast(transform.position, transform.forward, out var hitInfo, checkDistance, wallsLayerMask)) {
-            var stoppingForce = _vehicle.CalculateArrivalSteeringForce(hitInfo.point, checkDistance);
+            var stoppingForce = _vehicle.Arrival(hitInfo.point, checkDistance);
             _vehicle.ApplyForce(stoppingForce, "WallStop", Color.gray);
         }
     }
