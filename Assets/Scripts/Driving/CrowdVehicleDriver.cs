@@ -1,12 +1,20 @@
 using System;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class CrowdVehicleDriver : MonoBehaviour {
-
     [SerializeField] private float arrivalWeight = 1f;
     [SerializeField] private float arrivalSlowingDistance = 1.5f;
     [SerializeField] private GameObject arrivalTarget;
+
+    [SerializeField] private float wallsCheckRadius = 3;
+    [SerializeField] private LayerMask wallsLayerMask;
+    [SerializeField] private float wallsCheckWeight = 1;
+
+    [SerializeField] private float separationCheckRadius = 3f;
+    [SerializeField] private LayerMask neighborsLayerMask;
+    [SerializeField] private float separationWeigh = 1f;
 
     private Vehicle _vehicle;
 
@@ -34,7 +42,17 @@ public class CrowdVehicleDriver : MonoBehaviour {
             return;
         }
 
+        var separationForce = _vehicle.SeparateInsideSphere(separationCheckRadius, neighborsLayerMask);
+        _vehicle.ApplyForce(separationForce, "Separation", Color.magenta);
+
+        var wallAvoidanceForce = _vehicle.AvoidWallsAround(wallsCheckRadius, wallsLayerMask);
+        _vehicle.ApplyForce(wallAvoidanceForce, "AvoidWalls", Color.yellow);
+
         var arrivalForce = _vehicle.Arrival(arrivalTarget.transform.position, arrivalSlowingDistance);
-        _vehicle.ApplyForce(arrivalForce * arrivalWeight, "Arrival", Color.blue); // * 1.5f
+        _vehicle.ApplyForce(arrivalForce * arrivalWeight, "Arrival", Color.blue);
+    }
+
+    private void OnDrawGizmosSelected() {
+        //Handles.DrawWireDisc(transform.position, Vector3.up, wallsCheckDistance);
     }
 }

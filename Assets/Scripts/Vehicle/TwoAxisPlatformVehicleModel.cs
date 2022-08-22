@@ -4,6 +4,8 @@ public class TwoAxisPlatformVehicleModel : MonoBehaviour, Vehicle.IVehicleInput,
 
     private TwoAxisMovePlatform _twoAxisPlatform;
 
+    public Transform BaseTransform => _twoAxisPlatform.TurnAxis.transform;
+
     private void Awake() {
         _twoAxisPlatform = GetComponent<TwoAxisMovePlatform>();
     }

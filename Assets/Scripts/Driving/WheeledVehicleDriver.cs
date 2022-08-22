@@ -5,27 +5,51 @@ public class WheeledVehicleDriver : MonoBehaviour {
     
     [SerializeField] private bool snapAnchorPosition = true;
     [SerializeField] private bool reanchorEachInput = false;
-    [SerializeField][Range(0, 1f)] private float turnBaseOffset;
+    [SerializeField][Range(0, 1f)] private float turnBaseOffset = 0.5f;
     [SerializeField] private Transform anchorCheckPoint;
+    [SerializeField] private float lookaheadDistance = 1f;
+    [SerializeField] private bool handbreak;
 
-    private VehicleAnchoredDirectionSteering _andchoredDirectionSteering;
+    private Vehicle _vehicle;
+    private Vector3 _turnDirection;
+    private Vector3 _turnAnchor;
 
-    public bool IsHandbreak => _andchoredDirectionSteering.IsHandbreak;
+    public bool IsHandbreak => handbreak;
 
     private void Awake() {
-        _andchoredDirectionSteering = GetComponent<VehicleAnchoredDirectionSteering>();
+        _vehicle = GetComponent<Vehicle>();
     }
 
     public void SetHandbreak(bool handbreak) {
-        _andchoredDirectionSteering.SetHandbreak(handbreak);
+        this.handbreak = handbreak;
     }
 
     public void SetSteerDirection(Vector3 direction) {
         if (direction.sqrMagnitude > 0) {
-            if (reanchorEachInput || direction != _andchoredDirectionSteering.TurnDirection) {
-                _andchoredDirectionSteering.SetDirection(GetBaseDirection(direction), GetBasePosition());
+            if (reanchorEachInput || direction != _turnDirection) {
+                _turnDirection = GetBaseDirection(direction);
+                _turnAnchor = GetBasePosition();
             }
         }
+    }
+
+    private void Update() {
+        if (handbreak) {
+            HandbreakVehicle();
+            return;
+        }
+
+        if (_turnDirection != default) {
+            DriveVehicle();
+        }
+    }
+
+    private void HandbreakVehicle() {
+        _vehicle.ApplyForce(-_vehicle.Velocity, "Break", Color.black);
+    }
+
+    private void DriveVehicle() {
+        _vehicle.ApplyForce(_vehicle.FollowDirection(_turnAnchor, _turnDirection, lookaheadDistance));
     }
 
     private Vector3 GetBaseDirection(Vector3 direction) {

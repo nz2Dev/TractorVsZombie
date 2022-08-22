@@ -15,20 +15,18 @@ public static class PathSteeringAlgorithm {
     }
 }
 
-public class PathSteeringApplier : MonoBehaviour {
+public class PathSteering : MonoBehaviour, ISteering {
     [SerializeField] private Path path;
     [SerializeField] private float weight = 1f;
 
-    private Vehicle _vehicle;
+    public Color Color => Color.white;
+    public string Source => "Path";
+    public float Weight => weight;
 
-    private void Awake() {
-        _vehicle = GetComponent<Vehicle>();
+    public Vector3 CalculateSteeringForce(Vehicle vehicle) {
+        return vehicle.FollowPath(path);
     }
 
-    private void Update() {
-        var steeringForce = _vehicle.FollowPath(path);
-        if (steeringForce != default) {
-            _vehicle.ApplyForce(steeringForce * weight);
-        }
+    public void OnDrawGizmosSelected(Vehicle vehicle) {
     }
 }

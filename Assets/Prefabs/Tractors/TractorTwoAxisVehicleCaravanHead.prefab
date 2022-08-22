@@ -1140,10 +1140,9 @@ GameObject:
   - component: {fileID: 6575432980825986114}
   - component: {fileID: 5355302135367459706}
   - component: {fileID: 4158971424582570648}
-  - component: {fileID: 8664671777101687275}
   - component: {fileID: 8191095105593171346}
+  - component: {fileID: 8664671777101687275}
   - component: {fileID: 5202482088296765673}
-  - component: {fileID: 4067158221954341116}
   - component: {fileID: 8262178537367380830}
   - component: {fileID: 3707180607479747738}
   - component: {fileID: 5004058946289187142}
@@ -1218,18 +1217,6 @@ MonoBehaviour:
   backAlignmentAxis: {fileID: 2345730806704583239}
   frontTurnAxis: {fileID: 5627006204939823292}
   customExecution: 0
---- !u!114 &8664671777101687275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8262178537325707650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92bc9120b5fef074bacb09690c973798, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8191095105593171346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1247,6 +1234,18 @@ MonoBehaviour:
   mass: 0.3
   minMoveVelocity: 0.1
   maxSpeedMultiplier: 1
+--- !u!114 &8664671777101687275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8262178537325707650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92bc9120b5fef074bacb09690c973798, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5202482088296765673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1263,18 +1262,6 @@ MonoBehaviour:
   reanchorEachInput: 0
   turnBaseOffset: 0.5
   anchorCheckPoint: {fileID: 6762992054960214947}
---- !u!114 &4067158221954341116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8262178537325707650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 743cf0e8ab106d94a9eddadb5d50bdc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   lookaheadDistance: 1
   handbreak: 0
 --- !u!114 &8262178537367380830
