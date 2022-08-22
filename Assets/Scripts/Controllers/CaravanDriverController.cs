@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CaravanDriverController : MonoBehaviour {
 
-    [SerializeField] private VehicleAnchoredDirectionSteering driver;
+    [SerializeField] private WheeledVehicleDriver driver;
     [SerializeField] private Transform drivingPOV;
     [SerializeField] private bool localSpace = false;
 
