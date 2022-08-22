@@ -42,6 +42,11 @@ public static class WallSlideAlgorithm {
 
         return accumulatedForce / walls.Length;
     }
+
+    public static bool TrySlideWallsAround(this Vehicle vehicle, float radius, LayerMask layerMask, out Vector3 force) {
+        force = SlideWallsAround(vehicle, radius, layerMask);
+        return force != default;
+    }
 }
 
 [ExecuteInEditMode]

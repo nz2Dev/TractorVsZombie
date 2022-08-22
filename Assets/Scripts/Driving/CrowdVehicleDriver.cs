@@ -42,11 +42,13 @@ public class CrowdVehicleDriver : MonoBehaviour {
             return;
         }
 
-        var separationForce = _vehicle.SeparateInsideSphere(separationCheckRadius, neighborsLayerMask);
-        _vehicle.ApplyForce(separationForce, "Separation", Color.magenta);
+        if (_vehicle.TrySeparateInsideSphere(separationCheckRadius, neighborsLayerMask, out var separationForce)) {
+            _vehicle.ApplyForce(separationForce, "Separation", Color.magenta);
+        }
 
-        var wallAvoidanceForce = _vehicle.AvoidWallsAround(wallsCheckRadius, wallsLayerMask);
-        _vehicle.ApplyForce(wallAvoidanceForce, "AvoidWalls", Color.yellow);
+        if (_vehicle.TryAvoidWallsAround(wallsCheckRadius, wallsLayerMask, out var wallAvoidanceForce)) {
+            _vehicle.ApplyForce(wallAvoidanceForce, "AvoidWalls", Color.yellow);
+        }
 
         var arrivalForce = _vehicle.Arrival(arrivalTarget.transform.position, arrivalSlowingDistance);
         _vehicle.ApplyForce(arrivalForce * arrivalWeight, "Arrival", Color.blue);

@@ -36,6 +36,11 @@ public static class SeparationSteerAlgorithm {
 
         return vehicle.Separate(neighbors);
     }
+
+    public static bool TrySeparateInsideSphere(this Vehicle vehicle, float radius, LayerMask layerMask, out Vector3 force) {
+        force = SeparateInsideSphere(vehicle, radius, layerMask);
+        return force != default;
+    }
 }
 
 public class SeparationSteering : MonoBehaviour, ISteering {

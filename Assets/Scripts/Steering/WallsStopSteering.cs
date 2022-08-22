@@ -10,6 +10,11 @@ public static class WallStopAlgorithm {
             return default;
         }
     }
+
+    public static bool TryStopOnFirstWall(this Vehicle vehicle, float distance, LayerMask layerMask, out Vector3 force) {
+        force = StopOnFirstWall(vehicle, distance, layerMask);
+        return force != default;
+    }
 }
 
 public class WallsStopSteering : MonoBehaviour, ISteering {

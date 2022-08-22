@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 [SelectionBase]
 public class Vehicle : MonoBehaviour {
@@ -22,7 +24,7 @@ public class Vehicle : MonoBehaviour {
     public Vector3 Position => _input == null ? default : _input.GetBasePosition();
     public Vector3 Forward => _input == null ? default : _input.GetForwardDirection();
     public float MaxForce => maxForce;
-    public Transform baseTransform => _input == null ? default : _input.BaseTransform;
+    public Transform baseTransform => _input == null ? null : _input.BaseTransform;
 
     private void Awake() {
         _physicStability = GetComponent<PhysicStability>();

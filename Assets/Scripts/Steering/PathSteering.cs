@@ -1,17 +1,13 @@
+using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public static class PathSteeringAlgorithm {
     public static Vector3 FollowPath(this Vehicle vehicle, Path path) {
-        if (path == null) {
-            return default;
-        }
-
+        Assert.IsNotNull(path);
         var futurePosition = vehicle.PredictPosition(1);
-        if (path.FindClosestNormalPoint(futurePosition, out var pointOnPath)) {
-            return vehicle.Seek(pointOnPath);
-        }
-
-        return default;
+        var pointOnPath = path.FindClosestNormalPoint(futurePosition);
+        return vehicle.Seek(pointOnPath);
     }
 }
 

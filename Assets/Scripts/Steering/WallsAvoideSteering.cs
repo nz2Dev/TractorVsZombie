@@ -16,6 +16,9 @@ public static class WallAvoideAlgorithm {
 
     public static Vector3 AvoidWallsAround(this Vehicle vehicle, float radius, LayerMask layerMask) {
         var walls = Physics.OverlapSphere(vehicle.transform.position, radius, layerMask);
+        if (walls.Length == 0) {
+            return default;
+        }
 
         var accumulatedForce = Vector3.zero;
         foreach (var wall in walls) {
@@ -24,6 +27,11 @@ public static class WallAvoideAlgorithm {
         }
 
         return accumulatedForce / walls.Length;
+    }
+
+    public static bool TryAvoidWallsAround(this Vehicle vehicle, float radius, LayerMask layerMask, out Vector3 force) {
+        force = AvoidWallsAround(vehicle, radius, layerMask);
+        return force != default;
     }
 }
 
