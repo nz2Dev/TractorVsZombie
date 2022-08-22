@@ -13,6 +13,7 @@ public class FrameTransposerCameraOrbitController : MonoBehaviour, ICameraContro
 
     private float _horizontalOrbit;
     private float _verticalOrbit;
+    private bool _orbiting;
 
     private void Awake() {
         ResetOrbitRotation();
@@ -27,6 +28,17 @@ public class FrameTransposerCameraOrbitController : MonoBehaviour, ICameraContro
     }
 
     private void OnGroundEvent(GroundObservable.EventType eventType, PointerEventData pointerEventData) {
+        if (eventType == GroundObservable.EventType.PointerDown && pointerEventData.button == 0) {
+            _orbiting = true;
+        }
+        if (eventType == GroundObservable.EventType.PointerUp && pointerEventData.button == 0) {
+            _orbiting = false;
+        }
+
+        if (!_orbiting) {
+            return;
+        }
+        
         var orbitXDelta = pointerEventData.delta.x / pointerEventData.pressEventCamera.pixelWidth;
         var orbitYDelta = pointerEventData.delta.y / pointerEventData.pressEventCamera.pixelHeight;
 

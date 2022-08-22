@@ -20,6 +20,7 @@ public class CaravanDriverController : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(1)) {
             mouseDriving = true;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         if (mouseDriving) {
@@ -32,6 +33,7 @@ public class CaravanDriverController : MonoBehaviour {
 
         if (Input.GetMouseButtonUp(1)) {
             mouseDriving = false;
+            Cursor.lockState = CursorLockMode.None;
             return;
         }
 
