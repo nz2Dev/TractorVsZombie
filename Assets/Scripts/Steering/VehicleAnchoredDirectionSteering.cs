@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class AnchoredDirectionVehicleDriver : MonoBehaviour {
+public class VehicleAnchoredDirectionSteering : MonoBehaviour {
 
     [SerializeField] private bool snapAnchorPosition = true;
     [SerializeField] private bool reanchorEachInput = false;

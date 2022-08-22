@@ -23,9 +23,15 @@ public class Vehicle : MonoBehaviour {
 
     private void Awake() {
         _physicStability = GetComponent<PhysicStability>();
-        var defaultModel = new GameObjectVehicleModel(this);
-        _output = defaultModel;
-        _input = defaultModel;
+
+        _output = GetComponent<IVehicleOutput>();
+        _input = GetComponent<IVehicleInput>(); 
+        
+        if (_input == null && _output == null) {
+            var model = gameObject.AddComponent<DefaultVehicleModel>();
+            _input = model;
+            _output = model;
+        }
     }
 
     public Vector3 PredictPosition(float futureTimeAmount) {
@@ -105,29 +111,6 @@ public class Vehicle : MonoBehaviour {
     public interface IVehicleInput {
         Vector3 GetForwardDirection();
         Vector3 GetBasePosition();
-    }
-
-    public class GameObjectVehicleModel : IVehicleOutput, IVehicleInput {
-        private Vehicle vehicle;
-
-        public GameObjectVehicleModel(Vehicle vehicle) {
-            this.vehicle = vehicle;
-        }
-
-        public Vector3 GetBasePosition() {
-            return vehicle.transform.position;
-        }
-
-        public Vector3 GetForwardDirection() {
-            return vehicle.transform.forward;
-        }
-
-        public void OnVehicleMove(Vector3 velocityFrameDelta) {
-            var vehicleTransform = vehicle.transform;
-            var newPosition = vehicleTransform.position + velocityFrameDelta;
-            vehicleTransform.LookAt(newPosition, Vector3.up);
-            vehicleTransform.position = newPosition;
-        }
     }
 
     private void OnDrawGizmosSelected() {
