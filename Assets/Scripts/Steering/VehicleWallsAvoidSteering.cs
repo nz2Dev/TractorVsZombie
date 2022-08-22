@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+[ExecuteInEditMode]
 [RequireComponent(typeof(Vehicle))]
 public class VehicleWallsAvoidSteering : MonoBehaviour {
 

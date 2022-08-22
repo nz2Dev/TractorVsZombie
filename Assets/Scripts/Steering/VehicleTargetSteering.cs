@@ -23,17 +23,8 @@ public class VehicleTargetSteering : MonoBehaviour {
             return;
         }
 
-        var arrivalForce = CalculateArrivalSteeringForce(target.transform.position);
+        var arrivalForce = _vehicle.CalculateArrivalSteeringForce(target.transform.position, slowingDistance);
         _vehicle.ApplyForce(arrivalForce * steeringWeight, "Arrival", Color.blue); // * 1.5f
-    }
-
-    private Vector3 CalculateArrivalSteeringForce(Vector3 targetPosition) {
-        var vehiclePosition = _vehicle.transform.position;
-        var distance = Vector3.Distance(targetPosition, vehiclePosition);
-        var rampedSpeed = _vehicle.MaxSpeed * (distance / slowingDistance);
-        var clippedSpeed = Mathf.Min(rampedSpeed, _vehicle.MaxSpeed);
-        var desiredVelocity = (clippedSpeed / distance) * (targetPosition - vehiclePosition);
-        return desiredVelocity - _vehicle.Velocity;
     }
 
 }
