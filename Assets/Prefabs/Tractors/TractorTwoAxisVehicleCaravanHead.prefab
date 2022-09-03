@@ -482,8 +482,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.5, z: 1}
-  m_Center: {x: 0, y: 0.25, z: 0}
+  m_Size: {x: 0.52806896, y: 0.5, z: 0.6859968}
+  m_Center: {x: 0, y: 0.25, z: -0.006511887}
 --- !u!1 &3188089563674818754
 GameObject:
   m_ObjectHideFlags: 0
@@ -1259,10 +1259,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snapAnchorPosition: 1
+  snapDirection: 0
   reanchorEachInput: 0
   turnBaseOffset: 0.5
   anchorCheckPoint: {fileID: 6762992054960214947}
   lookaheadDistance: 1
+  wallsLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
   handbreak: 0
 --- !u!114 &8262178537367380830
 MonoBehaviour:

@@ -2,8 +2,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class WheeledVehicleDriver : MonoBehaviour {
-    
+
     [SerializeField] private bool snapAnchorPosition = true;
+    [SerializeField] private bool snapDirection = false;
     [SerializeField] private bool reanchorEachInput = false;
     [SerializeField][Range(0, 1f)] private float turnBaseOffset = 0.5f;
     [SerializeField] private Transform anchorCheckPoint;
@@ -60,7 +61,7 @@ public class WheeledVehicleDriver : MonoBehaviour {
     }
 
     private Vector3 GetBaseDirection(Vector3 direction) {
-        if (!snapAnchorPosition) {
+        if (!snapDirection) {
             return direction;
         }
 
