@@ -46,7 +46,7 @@ public class CaravanDriverController : MonoBehaviour {
 
         var steerDirection = inputVector;
         if (localSpace) {
-            var perspectiveDirection = drivingPOV.TransformDirection(inputVector);
+            var perspectiveDirection = drivingPOV.TransformDirection(new Vector3(horizontalAxis, verticalAxis, 0));
             var perspectiveTurnDirection = Vector3.ProjectOnPlane(perspectiveDirection, driver.transform.up).normalized;
             steerDirection = perspectiveTurnDirection;
         }
