@@ -2,32 +2,33 @@ using System;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 [ExecuteInEditMode]
 public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraController {
 
-    [SerializeField] private GroundObservable groundObservable;
+    [SerializeField] private InputActionReference cameraEngage;
+    [SerializeField] private InputActionReference lookAction;
     [SerializeField] private float orbitDistance = 15f;
     [SerializeField] private float orbitSpeedMultiplier = 1f;
     [SerializeField] private float initialOrbitVertically = 45;
     [SerializeField] private bool inverseVerticalOrbit = true;
 
     private CinemachineVirtualCamera _virtualCamera;
+    private Camera _startOrbitingInitCamera;
     private float _verticalOrbit;
     private bool _orbiting;
-    private Camera _startOrbitingInitCamera;
+    private bool _active;
 
     private void Awake() {
         _virtualCamera = GetComponent<CinemachineVirtualCamera>();
-        ResetOrbitRotation();        
+        ResetOrbitRotation();
     }
 
     public void OnActiveStateChanged(bool activeState) {
-        if (activeState) {
-            groundObservable.OnEvent += OnGroundEvent;
-        } else {
-            groundObservable.OnEvent -= OnGroundEvent;
-        }
+        _active = activeState;
+        var brain = CinemachineCore.Instance.FindPotentialTargetBrain(_virtualCamera);
+        _startOrbitingInitCamera = brain == null ? null : brain.OutputCamera;
     }
 
     private void ResetOrbitRotation() {
@@ -35,58 +36,44 @@ public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraCont
         UpdateOrbitOffset();
     }
 
-    private void OnGroundEvent(GroundObservable.EventType eventType, PointerEventData pointerEventData) {
-        if (eventType == GroundObservable.EventType.PointerDown && pointerEventData.button == 0) {
-            _startOrbitingInitCamera = pointerEventData.pressEventCamera;
-            StartOrbiting();
-        }
-
-        if (eventType == GroundObservable.EventType.PointerUp && pointerEventData.button == 0) {
-            StopOrbiting();
-        }
-    }
-
-    public void StartOrbiting() {
-        Cursor.lockState = CursorLockMode.Locked;
-        _orbiting = true;
-        
-        // recentering disabled
-        var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
-        var recenter = orbitalTransposer.m_RecenterToTargetHeading;
-        recenter.m_enabled = false;
-        orbitalTransposer.m_RecenterToTargetHeading = recenter;
-    }
-
     private void Update() {
-        if (!_orbiting) {
+        if (!_active)
             return;
+
+        var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
+        
+        if (cameraEngage.action.WasPressedThisFrame()) {
+            Cursor.lockState = CursorLockMode.Locked;
+            var recenter = orbitalTransposer.m_RecenterToTargetHeading;
+            recenter.m_enabled = false;
+            orbitalTransposer.m_RecenterToTargetHeading = recenter;
         }
 
-        var horizontalInput = Input.GetAxis("Mouse X") / _startOrbitingInitCamera.pixelWidth;
-        var verticalInput = Input.GetAxis("Mouse Y") / _startOrbitingInitCamera.pixelHeight;
+        if (cameraEngage.action.WasReleasedThisFrame()) {
+            Cursor.lockState = CursorLockMode.None;
+            var recenter = orbitalTransposer.m_RecenterToTargetHeading;
+            recenter.m_enabled = true;
+            orbitalTransposer.m_RecenterToTargetHeading = recenter;
+        }
+        
+        _orbiting = cameraEngage.action.IsPressed();
+        if (!_orbiting)
+            return;
+
+        var lookInput = lookAction.action.ReadValue<Vector2>();
+        var horizontalInput = lookInput.x / _startOrbitingInitCamera.pixelWidth;
+        var verticalInput = lookInput.y / _startOrbitingInitCamera.pixelHeight;
 
         var horizontalDegree = horizontalInput * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier;
         var verticalDegree = verticalInput * Mathf.PI * Mathf.Rad2Deg * orbitSpeedMultiplier;
         // Debug.Log($"Orbiting {horizontalDegree}, {verticalDegree}");
 
-        var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
         var xAxis = orbitalTransposer.m_XAxis;
         xAxis.Value += horizontalDegree;
         orbitalTransposer.m_XAxis = xAxis;
 
         _verticalOrbit += inverseVerticalOrbit ? -verticalDegree : verticalDegree;
         UpdateOrbitOffset();
-    }
-
-    public void StopOrbiting() {
-        Cursor.lockState = CursorLockMode.None;
-        _orbiting = false;
-
-        //recentering enabled
-        var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
-        var recenter = orbitalTransposer.m_RecenterToTargetHeading;
-        recenter.m_enabled = true;
-        orbitalTransposer.m_RecenterToTargetHeading = recenter;
     }
 
     [ContextMenu("Update Orbit Rotation")]

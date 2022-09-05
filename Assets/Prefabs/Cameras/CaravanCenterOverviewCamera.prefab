@@ -97,11 +97,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8783276227091410385}
+  - component: {fileID: 8783276227091410386}
   - component: {fileID: 8743666698637475890}
   - component: {fileID: 8783276227091410380}
-  - component: {fileID: 8783276227091410381}
-  - component: {fileID: 8783276227091410386}
   - component: {fileID: 8783276227091410384}
+  - component: {fileID: 8783276227091410381}
   m_Layer: 0
   m_Name: CaravanCenterOverviewCamera
   m_TagString: Untagged
@@ -125,50 +125,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 41.19, y: 0, z: 0}
---- !u!114 &8743666698637475890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8783276227091410387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d3baa8c8238f06448485e07f5e3939d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  transformToAssign: {fileID: 0}
---- !u!114 &8783276227091410380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8783276227091410387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 274e4a0df01883e418abc2edf6e47c37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inverseVerticalOrbit: 1
-  initialOrbitHorizontally: 0
-  initialOrbitVertically: 75
---- !u!114 &8783276227091410381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8783276227091410387}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a63867f86b68ad24f9fa64ce8521eaad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  caravanObserver: {fileID: 0}
-  initialZoomWidth: 15
-  widthChangeRange: 10
-  widthPerMember: 1
 --- !u!114 &8783276227091410386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +154,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.8844885, y: 1}
+    m_SensorSize: {x: 2.0261195, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -207,6 +163,36 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 8783276226563250222}
+--- !u!114 &8743666698637475890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8783276227091410387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d3baa8c8238f06448485e07f5e3939d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transformToAssign: {fileID: 0}
+--- !u!114 &8783276227091410380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8783276227091410387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 274e4a0df01883e418abc2edf6e47c37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundObservable: {fileID: 0}
+  orbitSpeedMultiplier: 1
+  inverseVerticalOrbit: 1
+  initialOrbitHorizontally: 0
+  initialOrbitVertically: 75
 --- !u!114 &8783276227091410384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,3 +209,19 @@ MonoBehaviour:
   m_Damping: 1
   m_MinFOV: 3
   m_MaxFOV: 60
+--- !u!114 &8783276227091410381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8783276227091410387}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a63867f86b68ad24f9fa64ce8521eaad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  caravanObserver: {fileID: 0}
+  initialZoomWidth: 15
+  widthChangeRange: 10
+  widthPerMember: 1

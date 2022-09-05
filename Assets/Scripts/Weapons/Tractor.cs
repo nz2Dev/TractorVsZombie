@@ -1,7 +1,10 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Tractor : MonoBehaviour {
+
+    [SerializeField] private InputActionReference activateAction;
     [SerializeField] private ForceMode forceMode;
     [SerializeField] private float forceMultiplier = 1;
     [SerializeField] private float acceleratedSpeedMultiplier = 2;
@@ -18,11 +21,11 @@ public class Tractor : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (activateAction.action.WasPressedThisFrame()) {
             _accelerated = true;
             _vehicle.ChangeMaxSpeedMultiplier(acceleratedSpeedMultiplier);
         }
-        if (Input.GetKeyUp(KeyCode.Space)) {
+        if (activateAction.action.WasReleasedThisFrame()) {
             _accelerated = false;
             _vehicle.ChangeMaxSpeedMultiplier(1);
         }

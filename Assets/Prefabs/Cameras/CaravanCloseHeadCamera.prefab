@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3864656893813546844}
-  - component: {fileID: 3864656893813546840}
-  - component: {fileID: 3864656893813546841}
-  - component: {fileID: 5922877748916775624}
   - component: {fileID: 3864656893813546847}
+  - component: {fileID: 3864656893813546840}
+  - component: {fileID: 5922877748916775624}
   - component: {fileID: 3864656893813546846}
+  - component: {fileID: 3864656893813546841}
   m_Layer: 0
   m_Name: CaravanCloseHeadCamera
   m_TagString: Untagged
@@ -37,50 +37,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3864656893813546840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3864656893813546845}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 891ef501b729ac34f80e65c7dff87a11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  caravanObserver: {fileID: 0}
---- !u!114 &3864656893813546841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3864656893813546845}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a63867f86b68ad24f9fa64ce8521eaad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  caravanObserver: {fileID: 0}
-  initialZoomWidth: 5
-  widthChangeRange: 10
-  widthPerMember: 0.5
---- !u!114 &5922877748916775624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3864656893813546845}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3e50a1b02ffaeb42a576712c6050b8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  orbitDistance: 15
-  initialOrbitVertically: 45
-  inverseVerticalOrbit: 1
 --- !u!114 &3864656893813546847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +66,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.0176678, y: 1}
+    m_SensorSize: {x: 2, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -119,6 +75,37 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 3864656894205303803}
+--- !u!114 &3864656893813546840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864656893813546845}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 891ef501b729ac34f80e65c7dff87a11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  caravanObserver: {fileID: 0}
+--- !u!114 &5922877748916775624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864656893813546845}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3e50a1b02ffaeb42a576712c6050b8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraEngage: {fileID: 8417129872107452381, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  lookAction: {fileID: -8827069954738811720, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  orbitDistance: 15
+  orbitSpeedMultiplier: 1
+  initialOrbitVertically: 45
+  inverseVerticalOrbit: 1
 --- !u!114 &3864656893813546846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +122,22 @@ MonoBehaviour:
   m_Damping: 1
   m_MinFOV: 1
   m_MaxFOV: 60
+--- !u!114 &3864656893813546841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864656893813546845}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a63867f86b68ad24f9fa64ce8521eaad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  caravanObserver: {fileID: 0}
+  initialZoomWidth: 5
+  widthChangeRange: 10
+  widthPerMember: 0.5
 --- !u!1 &3864656894205303800
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,7 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 10.606602, z: 10.606602}
+  m_FollowOffset: {x: 0, y: 10.606602, z: -10.606602}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1

@@ -2,9 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class GrenaderCommander : MonoBehaviour {
 
+    [SerializeField] private InputActionReference grenadersEngage;
+    [SerializeField] private InputActionReference fireModeToggle;
+    [SerializeField] private InputActionReference reloadAction;
     [SerializeField] private GroundObservable groundObservable;
     [SerializeField] private bool singleFireMode;
 
@@ -24,7 +28,7 @@ public class GrenaderCommander : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.B)) {
+        if (fireModeToggle.action.WasPerformedThisFrame()) {
             singleFireMode = !singleFireMode;
             _grenaders.ToggleSecondarySelection(singleFireMode);
             if (singleFireMode) {
@@ -32,10 +36,18 @@ public class GrenaderCommander : MonoBehaviour {
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && _grenaders != null) {
+        if (reloadAction.action.WasPerformedThisFrame() && _grenaders != null) {
             foreach (var greander in _grenaders.SelectedMembers) {
                 var ammo = greander.GetComponent<Ammo>();
                 ammo.RefillFull();
+            }
+        }
+
+        if (grenadersEngage.action.WasPressedThisFrame()) {
+            if (singleFireMode) {
+                ActivateSingleGreander();
+            } else {
+                ActivateAllGreanders();
             }
         }
 
@@ -46,17 +58,21 @@ public class GrenaderCommander : MonoBehaviour {
                 AimAllGreanders();
             }
         }
+
+        if (grenadersEngage.action.WasReleasedThisFrame()) {
+            _aimPoint = default;
+            if (singleFireMode) {
+                FireSingleGreander();
+            } else {
+                FireAllGreanders();
+            }
+        }
     }
 
     private void OnGroundEvent(GroundObservable.EventType eventType, PointerEventData eventData) {
         switch (eventType) {
             case GroundObservable.EventType.PointerDown:
                 _aimPoint = eventData.pointerCurrentRaycast.worldPosition;
-                if (singleFireMode) {
-                    ActivateSingleGreander();
-                } else {
-                    ActivateAllGreanders();
-                }
                 break;
 
             case GroundObservable.EventType.PointerDrag:
@@ -64,11 +80,6 @@ public class GrenaderCommander : MonoBehaviour {
                 break;
 
             case GroundObservable.EventType.PointerUp:
-                if (singleFireMode) {
-                    FireSingleGreander();
-                } else {
-                    FireAllGreanders();
-                }
                 _aimPoint = default;
                 break;
 

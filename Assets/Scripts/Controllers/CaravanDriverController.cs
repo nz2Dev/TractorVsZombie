@@ -1,8 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CaravanDriverController : MonoBehaviour {
 
+    [SerializeField] private InputActionReference steeringEngage;
+    [SerializeField] private InputActionReference handbreakToggle;
+    [SerializeField] private InputActionReference steeringAxis;
+    [SerializeField] private InputActionReference moveAxis;
     [SerializeField] private WheeledVehicleDriver driver;
     [SerializeField] private Transform drivingPOV;
     [SerializeField] private bool localSpace = false;
@@ -14,39 +19,38 @@ public class CaravanDriverController : MonoBehaviour {
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Q)) {
+        if (handbreakToggle.action.WasPerformedThisFrame()) {
             driver.SetHandbreak(!driver.IsHandbreak);
         }
 
-        if (Input.GetMouseButtonDown(1)) {
+        if (steeringEngage.action.WasPressedThisFrame()) {
             mouseDriving = true;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
         if (mouseDriving) {
-            var xAxis = Input.GetAxisRaw("Mouse X");
-            var angleRad = Mathf.Clamp(xAxis, -Mathf.PI / 2, Mathf.PI / 2);
+            var xAxis = steeringAxis.action.ReadValue<Vector2>().x;
+            var angleRad = Mathf.Clamp(xAxis * Mathf.Deg2Rad, -Mathf.PI / 2, Mathf.PI / 2);
             var directionDriverSpace = new Vector3(Mathf.Sin(angleRad), 0, Mathf.Cos(angleRad));
             var steerMouseDir = driver.transform.TransformDirection(directionDriverSpace);
             driver.SetSteerDirection(steerMouseDir);
         }
 
-        if (Input.GetMouseButtonUp(1)) {
+        if (steeringEngage.action.WasReleasedThisFrame()) {
             mouseDriving = false;
             Cursor.lockState = CursorLockMode.None;
             return;
         }
 
-        var horizontalAxis = Input.GetAxisRaw("Horizontal");
-        var verticalAxis = Input.GetAxisRaw("Vertical");
-        var inputVector = new Vector3(horizontalAxis, 0, verticalAxis);
+        var inputAxis = moveAxis.action.ReadValue<Vector2>();
+        var inputVector = new Vector3(inputAxis.x, 0, inputAxis.y);
         if (inputVector.sqrMagnitude < float.Epsilon) {
             return;
         }
 
         var steerDirection = inputVector;
         if (localSpace) {
-            var perspectiveDirection = drivingPOV.TransformDirection(new Vector3(horizontalAxis, verticalAxis, 0));
+            var perspectiveDirection = drivingPOV.TransformDirection(new Vector3(inputAxis.x, inputAxis.y, 0));
             var perspectiveTurnDirection = Vector3.ProjectOnPlane(perspectiveDirection, driver.transform.up).normalized;
             steerDirection = perspectiveTurnDirection;
         }
