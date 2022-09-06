@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
 public interface ICameraZoomController {
+    event Action<float> OnZoomLevelChanged;
     float GetZoomLevel();
     void SetZoomLevel(float levelNoramlized);
 }
@@ -22,7 +23,9 @@ public class CamerasManager : MonoBehaviour {
     [SerializeField] private bool useDriving;
 
     public event Action<float> OnSelectedCameraZoomLevelChanged;
-    public event Action<GameObject> OnVCamChanged;
+    public event Action<GameObject, GameObject> OnVCamChanged;
+
+    public GameObject ActiveCam => HigherPriorityCamera().VirtualCameraGameObject;
 
     private void Start() {
         var brain = CinemachineCore.Instance.FindPotentialTargetBrain(drivingCamera);
@@ -31,20 +34,24 @@ public class CamerasManager : MonoBehaviour {
     }
 
     private void OnActiveCameraChanged(ICinemachineCamera incomingCam, ICinemachineCamera outcomingCam) {
-        var incomingController = incomingCam.VirtualCameraGameObject.GetComponent<ICameraController>();
-        if (incomingController != null) {
-            incomingController.OnActiveStateChanged(activeState: true);
+        var incomingControllers = incomingCam.VirtualCameraGameObject.GetComponents<ICameraController>();
+        if (incomingControllers != null) {
+            foreach (var controller in incomingControllers) {
+                controller.OnActiveStateChanged(activeState: true);
+            }
         }
 
         if (outcomingCam != null) {
-            var outcomingController = outcomingCam.VirtualCameraGameObject.GetComponent<ICameraController>();
-            if (outcomingController != null) {
-                outcomingController.OnActiveStateChanged(activeState: false);
+            var outcomingControllers = outcomingCam.VirtualCameraGameObject.GetComponents<ICameraController>();
+            if (outcomingControllers != null) {
+                foreach (var controller in outcomingControllers) {
+                    controller.OnActiveStateChanged(activeState: false);
+                }
             }
         }
 
         // Debug.Log($"{incomingCam.VirtualCameraGameObject.name} enabled {outcomingCam?.VirtualCameraGameObject?.name ?? "null"} disabled");
-        OnVCamChanged?.Invoke(incomingCam.VirtualCameraGameObject);
+        OnVCamChanged?.Invoke(outcomingCam == null ? null : outcomingCam.VirtualCameraGameObject, incomingCam.VirtualCameraGameObject);
     }
 
     private void OnValidate() {
@@ -60,33 +67,13 @@ public class CamerasManager : MonoBehaviour {
         UpdateCameraPriority();
     }
 
-    public void SetCameraZoomLevel(float zoomNormalized) {
-        var selectedCamera = HigherPriorityCamera();
-        if (selectedCamera == null) {
-            return;
-        }
-
-        var caravanCamera = selectedCamera.GetComponent<ICameraZoomController>();
-        if (caravanCamera != null) {
-            caravanCamera.SetZoomLevel(zoomNormalized);
-        }
-    }
-
     private void UpdateCameraPriority() {
         if (drivingCamera == null || holdingCamera == null) {
             return;
         }
 
-        var higherBefore = HigherPriorityCamera();
-
         drivingCamera.Priority = useDriving ? 11 : 9;
         holdingCamera.Priority = useDriving ? 9 : 11;
-
-        var higherAfter = HigherPriorityCamera();
-        if (higherAfter != higherBefore) {
-            var caravanCamera = higherAfter.GetComponent<ICameraZoomController>();
-            OnSelectedCameraZoomLevelChanged?.Invoke(caravanCamera == null ? 0 : caravanCamera.GetZoomLevel());
-        }
     }
 
     private CinemachineVirtualCamera HigherPriorityCamera() {

@@ -56,7 +56,7 @@ public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraCont
             orbitalTransposer.m_RecenterToTargetHeading = recenter;
         }
         
-        _orbiting = cameraEngage.action.IsPressed();
+        _orbiting = cameraEngage.action.inProgress;
         if (!_orbiting)
             return;
 

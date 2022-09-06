@@ -10,11 +10,24 @@ public class CamerasBar : MonoBehaviour {
     [SerializeField] private Slider zoomLevelSlider;
 
     private void Awake() {
-        camerasManager.OnSelectedCameraZoomLevelChanged += OnSelectedZoomLevelChanged;
+        camerasManager.OnVCamChanged += OnCameraChanged;
+    }
+
+    private void OnCameraChanged(GameObject previousCamGO, GameObject currentCamGO) {
+        var previousZoomController = previousCamGO == null ? null : previousCamGO.GetComponent<ICameraZoomController>();
+        if (previousZoomController != null) {
+            previousZoomController.OnZoomLevelChanged -= OnSelectedZoomLevelChanged;
+        }
+
+        var currentZoomController = currentCamGO.GetComponent<ICameraZoomController>();
+        if (currentZoomController != null) {
+            currentZoomController.OnZoomLevelChanged += OnSelectedZoomLevelChanged;
+            OnSelectedZoomLevelChanged(currentZoomController.GetZoomLevel());
+        }
     }
 
     private void OnSelectedZoomLevelChanged(float selectedZoomLevel) {
-        zoomLevelSlider.normalizedValue = selectedZoomLevel;
+        zoomLevelSlider.SetValueWithoutNotify(selectedZoomLevel);
     }
 
     public void OnDrivingCameraSelected() {
@@ -26,7 +39,10 @@ public class CamerasBar : MonoBehaviour {
     }
 
     public void OnZoomValueChanged(System.Single progress) {
-        camerasManager.SetCameraZoomLevel(progress);
+        var activeZoomController = camerasManager.ActiveCam.GetComponent<ICameraZoomController>(); 
+        if (activeZoomController != null) {
+            activeZoomController.SetZoomLevel(progress);
+        }
     }
 
 }

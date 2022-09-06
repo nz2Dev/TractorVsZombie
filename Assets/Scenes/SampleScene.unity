@@ -10677,7 +10677,23 @@ PrefabInstance:
     m_TransformParent: {fileID: 601957623}
     m_Modifications:
     - target: {fileID: 830693108874742050, guid: 483107d1ca1dfbd4c9909bdeab0bca16, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 830693108874742050, guid: 483107d1ca1dfbd4c9909bdeab0bca16, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 830693108874742050, guid: 483107d1ca1dfbd4c9909bdeab0bca16, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529124600442448729, guid: 483107d1ca1dfbd4c9909bdeab0bca16, type: 3}
+      propertyPath: m_MinValue
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5752820241771765868, guid: 483107d1ca1dfbd4c9909bdeab0bca16, type: 3}
+      propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5752820241771765868, guid: 483107d1ca1dfbd4c9909bdeab0bca16, type: 3}
@@ -34072,7 +34088,7 @@ PrefabInstance:
       objectReference: {fileID: -5548160789735176137, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
     - target: {fileID: 1792334737381210539, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1792334737381210539, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -34417,6 +34433,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 730222223}
     - target: {fileID: 3864656893813546841, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
+      propertyPath: zoomActionRef
+      value: 
+      objectReference: {fileID: 3598949108924630853, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+    - target: {fileID: 3864656893813546841, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
       propertyPath: caravanObserver
       value: 
       objectReference: {fileID: 730222223}
@@ -34478,7 +34498,7 @@ PrefabInstance:
       objectReference: {fileID: 6051789858576847228}
     - target: {fileID: 3864656893813546847, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.2019231
+      value: 2.0409982
       objectReference: {fileID: 0}
     - target: {fileID: 5922877748916775624, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
       propertyPath: m_Enabled
@@ -34509,7 +34529,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4598833351018294025, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4598833351018294025, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
       propertyPath: m_LocalPosition.x
@@ -34733,6 +34753,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1803614867554456926}
     - target: {fileID: 8783276227091410381, guid: b765a5879b6b6d84f9852c89e01978a8, type: 3}
+      propertyPath: zoomActionRef
+      value: 
+      objectReference: {fileID: 3598949108924630853, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+    - target: {fileID: 8783276227091410381, guid: b765a5879b6b6d84f9852c89e01978a8, type: 3}
       propertyPath: caravanObserver
       value: 
       objectReference: {fileID: 730222223}
@@ -34790,7 +34814,7 @@ PrefabInstance:
       objectReference: {fileID: 6922321607750240634}
     - target: {fileID: 8783276227091410386, guid: b765a5879b6b6d84f9852c89e01978a8, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.2019231
+      value: 2.0409982
       objectReference: {fileID: 0}
     - target: {fileID: 8783276227091410387, guid: b765a5879b6b6d84f9852c89e01978a8, type: 3}
       propertyPath: m_Name
