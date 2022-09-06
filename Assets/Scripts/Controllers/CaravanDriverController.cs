@@ -23,7 +23,7 @@ public class CaravanDriverController : MonoBehaviour {
             driver.SetHandbreak(!driver.IsHandbreak);
         }
 
-        if (steeringEngage.action.WasPressedThisFrame()) {
+        if (steeringEngage.action.inProgress && steeringEngage.action.WasPressedThisFrame()) {
             mouseDriving = true;
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -36,7 +36,7 @@ public class CaravanDriverController : MonoBehaviour {
             driver.SetSteerDirection(steerMouseDir);
         }
 
-        if (steeringEngage.action.WasReleasedThisFrame()) {
+        if (steeringEngage.action.WasPerformedThisFrame() && steeringEngage.action.WasReleasedThisFrame()) {
             mouseDriving = false;
             Cursor.lockState = CursorLockMode.None;
             return;

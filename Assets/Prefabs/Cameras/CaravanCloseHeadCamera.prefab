@@ -100,8 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e50a1b02ffaeb42a576712c6050b8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraEngage: {fileID: 8417129872107452381, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  lookAction: {fileID: -8827069954738811720, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  cameraEngage: {fileID: -2365254401711562197, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  lookAction: {fileID: -1091094506170898682, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   orbitDistance: 15
   orbitSpeedMultiplier: 1
   initialOrbitVertically: 45

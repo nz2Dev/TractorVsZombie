@@ -43,7 +43,7 @@ public class GrenaderCommander : MonoBehaviour {
             }
         }
 
-        if (grenadersEngage.action.WasPressedThisFrame()) {
+        if (grenadersEngage.action.inProgress && grenadersEngage.action.WasPressedThisFrame()) {
             if (singleFireMode) {
                 ActivateSingleGreander();
             } else {
@@ -59,7 +59,7 @@ public class GrenaderCommander : MonoBehaviour {
             }
         }
 
-        if (grenadersEngage.action.WasReleasedThisFrame()) {
+        if (grenadersEngage.action.WasPerformedThisFrame() && grenadersEngage.action.WasReleasedThisFrame()) {
             _aimPoint = default;
             if (singleFireMode) {
                 FireSingleGreander();

@@ -188,7 +188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 274e4a0df01883e418abc2edf6e47c37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundObservable: {fileID: 0}
+  orbitAction: {fileID: -1091094506170898682, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  engageAction: {fileID: -2365254401711562197, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   orbitSpeedMultiplier: 1
   inverseVerticalOrbit: 1
   initialOrbitHorizontally: 0

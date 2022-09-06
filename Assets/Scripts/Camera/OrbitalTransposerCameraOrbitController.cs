@@ -42,14 +42,14 @@ public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraCont
 
         var orbitalTransposer = _virtualCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
         
-        if (cameraEngage.action.WasPressedThisFrame()) {
+        if (cameraEngage.action.inProgress && cameraEngage.action.WasPressedThisFrame()) {
             Cursor.lockState = CursorLockMode.Locked;
             var recenter = orbitalTransposer.m_RecenterToTargetHeading;
             recenter.m_enabled = false;
             orbitalTransposer.m_RecenterToTargetHeading = recenter;
         }
 
-        if (cameraEngage.action.WasReleasedThisFrame()) {
+        if (cameraEngage.action.WasPerformedThisFrame() && cameraEngage.action.WasReleasedThisFrame()) {
             Cursor.lockState = CursorLockMode.None;
             var recenter = orbitalTransposer.m_RecenterToTargetHeading;
             recenter.m_enabled = true;
