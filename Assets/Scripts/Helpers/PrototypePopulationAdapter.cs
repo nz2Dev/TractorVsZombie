@@ -13,6 +13,8 @@ public class PrototypePopulationAdapter : MonoBehaviour {
     public delegate void BindAction<T>(GameObject layedoutElement, int index, T data);
     public delegate void BindAction(GameObject layedoutElement, int index);
 
+    public IEnumerable<GameObject> AdaptedChildsInOrder => _populator.CollectPopulation();
+
     private void Awake() {
         _populator = GetComponent<PrototypePopulator>();
     }
