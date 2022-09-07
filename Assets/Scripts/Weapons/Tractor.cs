@@ -4,40 +4,30 @@ using UnityEngine.InputSystem;
 
 public class Tractor : MonoBehaviour {
 
-    [SerializeField] private InputActionReference activateAction;
     [SerializeField] private ForceMode forceMode;
     [SerializeField] private float forceMultiplier = 1;
-    [SerializeField] private float acceleratedSpeedMultiplier = 2;
     [SerializeField] private float explosionRadius = 1;
     [SerializeField] private float upwardsModifier = 1;
-    [SerializeField] private int ramDamage = 30;
     [SerializeField] private float explosionPositionSideOffset = 1;
+    [SerializeField] private int ramDamage = 30;
     
     private Vehicle _vehicle;
-    private bool _accelerated;
+    private bool _ramActive;
 
     private void Awake() {
         _vehicle = GetComponentInChildren<Vehicle>();
     }
 
-    private void Update() {
-        if (activateAction.action.WasPressedThisFrame()) {
-            _accelerated = true;
-            _vehicle.ChangeMaxSpeedMultiplier(acceleratedSpeedMultiplier);
-        }
-        if (activateAction.action.WasReleasedThisFrame()) {
-            _accelerated = false;
-            _vehicle.ChangeMaxSpeedMultiplier(1);
-        }
+    public void SetRamActivation(bool activation) {
+        _ramActive = activation;
     }
 
     private void OnTriggerStay(Collider other) {
-        if (!_accelerated) {
+        if (!_ramActive)
             return;
-        }
-        if (other.attachedRigidbody == null) {
+        
+        if (other.attachedRigidbody == null)
             return;
-        }
 
         var stability = other.attachedRigidbody.GetComponent<PhysicStability>();
         if (stability != null) {

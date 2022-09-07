@@ -1258,9 +1258,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1181705f9366f7242b3f33fbedccc22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapAnchorPosition: 1
+  snapAnchorPosition: 0
   snapDirection: 0
-  reanchorEachInput: 0
+  reanchorEachInput: 1
   turnBaseOffset: 0.5
   anchorCheckPoint: {fileID: 6762992054960214947}
   lookaheadDistance: 1
@@ -1308,11 +1308,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forceMode: 1
   forceMultiplier: 15
-  acceleratedSpeedMultiplier: 3
   explosionRadius: 5
   upwardsModifier: 2
-  ramDamage: 30
   explosionPositionSideOffset: 2
+  ramDamage: 30
 --- !u!1 &8528880385400255799
 GameObject:
   m_ObjectHideFlags: 0

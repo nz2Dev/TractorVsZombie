@@ -4,15 +4,32 @@ using UnityEngine.InputSystem;
 
 public class CaravanDriverController : MonoBehaviour {
 
+    [SerializeField] private InputActionReference activateAction;
+    [SerializeField] private float acceleratedSpeedMultiplier = 2;
+    [Space]
     [SerializeField] private InputActionReference steeringEngage;
     [SerializeField] private InputActionReference handbreakToggle;
     [SerializeField] private InputActionReference steeringAxis;
     [SerializeField] private InputActionReference moveAxis;
     [SerializeField] private WheeledVehicleDriver driver;
+    [Space]
     [SerializeField] private Transform drivingPOV;
     [SerializeField] private bool localSpace = false;
 
-    private bool mouseDriving;
+    private Tractor _driverTractor;
+    private Vehicle _driverVehicle;
+    private bool _mouseDriving;
+
+    public InputAction MoveInputActionInfo => moveAxis;
+    public InputAction ActivationInputActionInfo => activateAction;
+    public InputAction BreakingInputActionInfo => handbreakToggle;
+    public InputAction EngagePreciseSteeringInputActionInfo => steeringEngage;
+    public InputAction PreciseSteeringAxisInputActionInfo => steeringAxis;
+
+    private void Awake() {
+        _driverTractor = driver.GetComponent<Tractor>();
+        _driverVehicle = driver.GetComponent<Vehicle>();
+    }
 
     private void Update() {
         if (driver == null) {
@@ -23,12 +40,22 @@ public class CaravanDriverController : MonoBehaviour {
             driver.SetHandbreak(!driver.IsHandbreak);
         }
 
+        if (activateAction.action.WasPressedThisFrame()) {
+            _driverTractor.SetRamActivation(true);
+            _driverVehicle.ChangeMaxSpeedMultiplier(acceleratedSpeedMultiplier);
+        }
+
+        if (activateAction.action.WasReleasedThisFrame()) {
+            _driverTractor.SetRamActivation(false);
+            _driverVehicle.ChangeMaxSpeedMultiplier(1);
+        }
+
         if (steeringEngage.action.inProgress && steeringEngage.action.WasPressedThisFrame()) {
-            mouseDriving = true;
+            _mouseDriving = true;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        if (mouseDriving) {
+        if (_mouseDriving) {
             var xAxis = steeringAxis.action.ReadValue<Vector2>().x;
             var angleRad = Mathf.Clamp(xAxis * Mathf.Deg2Rad, -Mathf.PI / 2, Mathf.PI / 2);
             var directionDriverSpace = new Vector3(Mathf.Sin(angleRad), 0, Mathf.Cos(angleRad));
@@ -37,7 +64,7 @@ public class CaravanDriverController : MonoBehaviour {
         }
 
         if (steeringEngage.action.WasPerformedThisFrame() && steeringEngage.action.WasReleasedThisFrame()) {
-            mouseDriving = false;
+            _mouseDriving = false;
             Cursor.lockState = CursorLockMode.None;
             return;
         }
