@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class FrameTransposerCameraOrbitController : MonoBehaviour, ICameraController {
+public class FrameTransposerCameraOrbitController : MonoBehaviour, ICameraController, ICameraRig {
 
     [SerializeField] private InputActionReference orbitAction; 
     [SerializeField] private InputActionReference engageAction;
@@ -21,6 +21,9 @@ public class FrameTransposerCameraOrbitController : MonoBehaviour, ICameraContro
     private float _verticalOrbit;
     private bool _orbiting;
     private bool _active;
+
+    string ICameraRig.orbitActivationInputHint => engageAction.action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions | InputBinding.DisplayStringOptions.DontOmitDevice);
+    string ICameraRig.orbitPerformingInputHint => orbitAction.action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontOmitDevice);
 
     private void Awake() {
         _vcam = GetComponent<CinemachineVirtualCamera>();

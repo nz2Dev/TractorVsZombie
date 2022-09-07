@@ -1,15 +1,16 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 
 public interface ICameraZoomController {
     event Action<float> OnZoomLevelChanged;
     float GetZoomLevel();
     void SetZoomLevel(float levelNoramlized);
+}
+
+public interface ICameraRig {
+    public string orbitActivationInputHint { get; }
+    public string orbitPerformingInputHint { get; }
 }
 
 public interface ICameraController {
@@ -18,19 +19,20 @@ public interface ICameraController {
 
 public class CamerasManager : MonoBehaviour {
 
+    [SerializeField] private CinemachineBrain brain;
     [SerializeField] private CinemachineVirtualCamera drivingCamera;
-    [SerializeField] private CinemachineVirtualCamera holdingCamera;
-    [SerializeField] private bool useDriving;
+    [SerializeField] private CinemachineVirtualCamera overviewCamera;
+    [SerializeField] private CinemachineVirtualCamera topDownCamera;
+    [SerializeField] private bool useDrivingInitialiy;
 
     public event Action<float> OnSelectedCameraZoomLevelChanged;
     public event Action<GameObject, GameObject> OnVCamChanged;
 
-    public GameObject ActiveCam => HigherPriorityCamera().VirtualCameraGameObject;
+    public GameObject ActiveCam => brain.ActiveVirtualCamera.VirtualCameraGameObject;
 
     private void Start() {
-        var brain = CinemachineCore.Instance.FindPotentialTargetBrain(drivingCamera);
         brain.m_CameraActivatedEvent.AddListener(OnActiveCameraChanged);
-        OnActiveCameraChanged(HigherPriorityCamera(), null);
+        OnActiveCameraChanged(brain.ActiveVirtualCamera, null);
     }
 
     private void OnActiveCameraChanged(ICinemachineCamera incomingCam, ICinemachineCamera outcomingCam) {
@@ -54,29 +56,21 @@ public class CamerasManager : MonoBehaviour {
         OnVCamChanged?.Invoke(outcomingCam == null ? null : outcomingCam.VirtualCameraGameObject, incomingCam.VirtualCameraGameObject);
     }
 
-    private void OnValidate() {
-        UpdateCameraPriority();
+    public void SetDrivingCamera() {
+        drivingCamera.Priority = 11;
+        overviewCamera.Priority = 9;
+        topDownCamera.Priority = 9;
     }
 
-    private void Update() {
-        UpdateCameraPriority();
+    public void SetOverviewCamera() {
+        drivingCamera.Priority = 9;
+        overviewCamera.Priority = 11;
+        topDownCamera.Priority = 9;
     }
 
-    public void SetCameraType(bool driving) {
-        useDriving = driving;
-        UpdateCameraPriority();
-    }
-
-    private void UpdateCameraPriority() {
-        if (drivingCamera == null || holdingCamera == null) {
-            return;
-        }
-
-        drivingCamera.Priority = useDriving ? 11 : 9;
-        holdingCamera.Priority = useDriving ? 9 : 11;
-    }
-
-    private CinemachineVirtualCamera HigherPriorityCamera() {
-        return drivingCamera.Priority > holdingCamera.Priority ? drivingCamera : holdingCamera;
+    public void SetTopDownCamera() {
+        drivingCamera.Priority = 9;
+        overviewCamera.Priority = 9;
+        topDownCamera.Priority = 11;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 [ExecuteInEditMode]
-public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraController {
+public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraController, ICameraRig {
 
     [SerializeField] private InputActionReference cameraEngage;
     [SerializeField] private InputActionReference lookAction;
@@ -19,6 +19,9 @@ public class OrbitalTransposerCameraOrbitController : MonoBehaviour, ICameraCont
     private float _verticalOrbit;
     private bool _orbiting;
     private bool _active;
+
+    string ICameraRig.orbitActivationInputHint => cameraEngage.action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions | InputBinding.DisplayStringOptions.DontOmitDevice);
+    string ICameraRig.orbitPerformingInputHint => lookAction.action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontOmitDevice);
 
     private void Awake() {
         _virtualCamera = GetComponent<CinemachineVirtualCamera>();
