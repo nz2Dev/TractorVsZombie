@@ -1,22 +1,37 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[Serializable]
+public struct ColorSchema {
+    [SerializeField] public Color primarySelectionColor;
+    [SerializeField] public Color secondarySelectionColor;
+    [SerializeField] public Color secondaryUnselectedColor;
+}
+
 public class CaravanSelection : MonoBehaviour {
 
-    [SerializeField] private Color primarySelectionColor;
-    [SerializeField] private Color secondarySelectionColor;
-    [SerializeField] private Color secondaryUnselectedColor;
+    [SerializeField] private ColorSchema defaultColorSchema;
 
     private CaravanMember[] _selected = new CaravanMember[0];
     private CaravanMember _secondarySelected;
     private bool _secondarySelectionEnabled;
+    private ColorSchema _colorSchema;
 
     public IEnumerable<CaravanMember> SelectedMembers => _selected.Where((member) => member != null);
     public int SelectedCount => _selected.Length;
     public bool IsGrenaders => !IsEmpty && _selected.Any((member) => member.GetComponent<GrenaderController>() != null);
     public bool IsEmpty => _selected == null || _selected.Length == 0;
+
+    private void Awake() {
+        SetColorSchema(defaultColorSchema);
+    }
+
+    public void SetColorSchema(ColorSchema? schema) {
+        _colorSchema = schema == null ? defaultColorSchema : schema.Value;
+    }
 
     public void SetSelection(CaravanMember[] members) {
         foreach (var previouslySelected in SelectedMembers) {
@@ -32,7 +47,10 @@ public class CaravanSelection : MonoBehaviour {
         foreach (var selectedMember in members) {
             var selectable = selectedMember.GetComponent<Selectable>();
             if (selectable != null) {
-                selectable.SetSelectionColors(primarySelectionColor, secondarySelectionColor, secondaryUnselectedColor);
+                selectable.SetSelectionColors(
+                    _colorSchema.primarySelectionColor, 
+                    _colorSchema.secondarySelectionColor, 
+                    _colorSchema.secondaryUnselectedColor);
                 selectable.PrimarySelection(true);
             }
         }

@@ -12,10 +12,17 @@ public struct CaravanMemberGroup {
     public CaravanMember[] members;
 }
 
+[Serializable]
+public struct CaravanMemberGroupSelectionColors {
+    [SerializeField] public string nameKey;
+    [SerializeField] public ColorSchema schema;
+}
+
 [SelectionBase]
 public class CaravanController : MonoBehaviour {
 
     [SerializeField] private InputActionReference[] quickSlotInputActions;
+    [SerializeField] private CaravanMemberGroupSelectionColors[] groupsSelectionColors;
     [SerializeField] private CaravanSelection selection;
     [SerializeField] private CaravanObserver observer;
     [SerializeField] private GameInputManager inputManager;
@@ -89,8 +96,13 @@ public class CaravanController : MonoBehaviour {
 
     public void ActivateMemberGroup(int index) {
         _lastActiveGroupIndex = index;
-        _lastActiveGroup = _memberGroups[index];
-        ChangeCommander(_memberGroups[index].members);
+        
+        var activeGroup = _memberGroups[index];
+        var selectionColors = groupsSelectionColors.FirstOrDefault(colors => colors.nameKey == activeGroup.name);
+        selection.SetColorSchema(selectionColors.schema);
+
+        _lastActiveGroup = activeGroup;
+        ChangeCommander(activeGroup.members);
     }
 
     private void ChangeCommander(CaravanMember[] members) {
