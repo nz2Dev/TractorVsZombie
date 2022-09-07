@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,19 +13,27 @@ public class GrenaderCommander : MonoBehaviour {
     [SerializeField] private GroundObservable groundObservable;
     [SerializeField] private bool singleFireMode;
 
+    private Vector3 _aimPoint;
     private CaravanSelection _grenaders;
     private GrenaderController _singleFireGrenader;
 
-    private Vector3 _aimPoint;
+    public event Action<bool> OnActiveStateChanged;
+    
+    public string ReloadActionBindingsName => reloadAction.action.GetBindingDisplayString();
+    public string FireModeActionBindingsName => fireModeToggle.action.GetBindingDisplayString();
+    public string fireActivationActionBindings => grenadersEngage.action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions);
+    public string fireAimActionBindings => "position [mouse]";
 
     public void Activate(CaravanSelection greandersSelection) {
         _grenaders = greandersSelection;
         groundObservable.OnEvent += OnGroundEvent;
+        OnActiveStateChanged?.Invoke(true);
     }
 
     public void Deactivate() {
         groundObservable.OnEvent -= OnGroundEvent;
         _grenaders = null;
+        OnActiveStateChanged?.Invoke(false);
     }
 
     private void Update() {
