@@ -6,7 +6,7 @@ public class PrefabGenerator : MonoBehaviour {
 
     public GameObject prefab;
     public LayerMask collisionMask;
-    public int generationInterval = 4;
+    public float generationInterval = 4;
 
     public Vector2 boundsStart;
     public Vector2 boundsEnd;

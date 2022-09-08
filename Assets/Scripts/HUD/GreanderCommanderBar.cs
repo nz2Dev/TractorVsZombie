@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GreanderCommanderBar : MonoBehaviour {
 
+    [SerializeField] private RectTransform root;
     [SerializeField] private GrenaderCommander grenaderCommander;
     [SerializeField] private ActionInfoUIElement reloadInfoElement;
     [SerializeField] private ActionInfoUIElement fireModeInfoElement;
@@ -21,6 +22,6 @@ public class GreanderCommanderBar : MonoBehaviour {
     }
 
     private void OnCommanderActivationChanged(bool active) {
-        gameObject.SetActive(active);
+        root.gameObject.SetActive(active);
     }
 }

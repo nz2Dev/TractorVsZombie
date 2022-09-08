@@ -11,19 +11,20 @@ public static class WallSlideAlgorithm {
         var wallToVehicleVector = position - closestPointOnWall;
         // Debug.DrawRay(wall.ClosestPoint(position), wallToVehicleVector, Color.blue, 0.1f);
         var wallToVehicleNormal = wallToVehicleVector.normalized;
-        var forwardOnWallProjection = Vector3.ProjectOnPlane(vehicleTransform.forward, wallToVehicleNormal);
+        var flatForward = Vector3.ProjectOnPlane(vehicleTransform.forward, Vector3.up);
+        var forwardOnWallProjection = Vector3.ProjectOnPlane(flatForward, wallToVehicleNormal);
         // Debug.Log("projection: " + forwardOnWallProjection + " magnitued: " + forwardOnWallProjection.magnitude + " normalized: " + forwardOnWallProjection.normalized);
 
         var slideDirection = (Vector3)default;
         if (forwardOnWallProjection.magnitude > Vector3.kEpsilon) {
             slideDirection = forwardOnWallProjection.normalized;
         } else {
-            slideDirection = vehicleTransform.right;
+            slideDirection = Vector3.ProjectOnPlane(vehicleTransform.right, Vector3.up);
         }
         // Debug.DrawRay(position, slideDirection, Color.white, 0.1f);
 
         var seekPosition = closestPointOnWall + wallToVehicleNormal * offset + slideDirection;
-        Debug.DrawLine(position, seekPosition);
+        //Debug.DrawLine(position, seekPosition);
 
         return vehicle.Seek(seekPosition);
     }

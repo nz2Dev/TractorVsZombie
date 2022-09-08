@@ -452,6 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1c8791fea34a8479eee23f2ee47445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  root: {fileID: 4579519419797613247}
   grenaderCommander: {fileID: 0}
   reloadInfoElement: {fileID: 844344105808968027}
   fireModeInfoElement: {fileID: 844344106049358424}
