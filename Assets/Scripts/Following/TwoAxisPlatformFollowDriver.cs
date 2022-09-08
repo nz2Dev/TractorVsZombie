@@ -31,7 +31,7 @@ public class TwoAxisPlatformFollowDriver : MonoBehaviour {
         var distance = 0f;
         while (distance < resumeTriggerDistance) {
             yield return new WaitForEndOfFrame();
-            distance = Vector3.Distance(moveAwayTransform.position, _twoAxisVehicle.TurnAxis.position);
+            distance = Vector3.Distance(moveAwayTransform.position, _twoAxisVehicle.FrontPosition);
         }
 
         _moveAwayWaiter = null;
@@ -57,8 +57,7 @@ public class TwoAxisPlatformFollowDriver : MonoBehaviour {
             return;
         }
 
-        var reverceFollowDirection = (_twoAxisVehicle.TurnAxis.position - followPoint.Point).normalized;
-        _twoAxisVehicle.TurnAxis.position = followPoint.Point + reverceFollowDirection * followDistance;
-        _twoAxisVehicle.TurnAxis.LookAt(followPoint.Point, Vector3.up);
+        var reverceFollowDirection = (_twoAxisVehicle.FrontPosition - followPoint.Point).normalized;
+        _twoAxisVehicle.MoveTo(followPoint.Point + reverceFollowDirection * followDistance);
     }
 }

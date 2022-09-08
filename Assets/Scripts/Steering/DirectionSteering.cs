@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class DirectionSteerAlgorithm {
     public static Vector3 FollowDirection(this Vehicle vehicle, Vector3 anchor, Vector3 direction, float lookaheadDistance) {
-        var anchorToPosition = vehicle.baseTransform.position - anchor;
+        var anchorToPosition = vehicle.Position - anchor;
         var vehiclePositionOnTurnDirection = Vector3.Project(anchorToPosition, direction);
         var futurePosition = anchor + vehiclePositionOnTurnDirection + direction * lookaheadDistance;
         return vehicle.Seek(futurePosition);

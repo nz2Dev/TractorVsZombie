@@ -1302,6 +1302,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backAlignmentAxis: {fileID: 2345730806704583239}
   frontTurnAxis: {fileID: 5627006204939823292}
+  wallsLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+  wallsCheckDistance: 0.3
   customExecution: 0
 --- !u!114 &8191095105593171346
 MonoBehaviour:

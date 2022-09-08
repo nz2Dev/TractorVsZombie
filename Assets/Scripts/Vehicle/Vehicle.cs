@@ -24,14 +24,14 @@ public class Vehicle : MonoBehaviour {
     public Vector3 Position => _input == null ? default : _input.GetBasePosition();
     public Vector3 Forward => _input == null ? default : _input.GetForwardDirection();
     public float MaxForce => maxForce;
-    public Transform baseTransform => _input == null ? null : _input.BaseTransform;
 
     private void Awake() {
         _physicStability = GetComponent<PhysicStability>();
+    }
 
+    private void OnEnable() {
         _output = GetComponent<IVehicleOutput>();
-        _input = GetComponent<IVehicleInput>(); 
-        
+        _input = GetComponent<IVehicleInput>();
         if (_input == null && _output == null) {
             var model = gameObject.AddComponent<DefaultVehicleModel>();
             _input = model;
@@ -41,14 +41,6 @@ public class Vehicle : MonoBehaviour {
 
     public Vector3 PredictPosition(float futureTimeAmount) {
         return transform.position + _velocity * futureTimeAmount;
-    }
-
-    public void SetVehicleInput(IVehicleInput input) {
-        _input = input;
-    }
-
-    public void SetVehicleOutput(IVehicleOutput output) {
-        _output = output;
     }
 
     struct ForceDebugInfo {
@@ -114,7 +106,6 @@ public class Vehicle : MonoBehaviour {
     }
 
     public interface IVehicleInput {
-        Transform BaseTransform { get; }
         Vector3 GetForwardDirection();
         Vector3 GetBasePosition();
     }

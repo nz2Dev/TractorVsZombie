@@ -3,8 +3,7 @@ using UnityEngine;
 
 public static class WallStopAlgorithm {
     public static Vector3 StopOnFirstWall(this Vehicle vehicle, float distance, LayerMask layerMask) {
-        var vehicleTransform = vehicle.baseTransform;
-        if (Physics.Raycast(vehicleTransform.position, vehicleTransform.forward, out var hitInfo, distance, layerMask)) {
+        if (Physics.Raycast(vehicle.Position, vehicle.Forward, out var hitInfo, distance, layerMask)) {
             return vehicle.Arrival(hitInfo.point, distance);
         } else {
             return default;
@@ -32,6 +31,6 @@ public class WallsStopSteering : MonoBehaviour, ISteering {
 
     public void OnDrawGizmosSelected(Vehicle vehicle) {
         Handles.color = Color.gray;
-        Handles.DrawWireDisc(vehicle.baseTransform.position, Vector3.up, checkDistance);
+        Handles.DrawWireDisc(vehicle.Position, Vector3.up, checkDistance);
     }
 }

@@ -52,7 +52,7 @@ public class WallsAvoideSteering : MonoBehaviour, ISteering {
     }
 
     public void OnDrawGizmosSelected(Vehicle vehicle) {
-        Handles.DrawWireDisc(vehicle.baseTransform.position, Vector3.up, checkRadius);
+        Handles.DrawWireDisc(vehicle.Position, Vector3.up, checkRadius);
     }
     
 }

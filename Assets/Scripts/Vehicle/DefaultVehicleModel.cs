@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class DefaultVehicleModel : MonoBehaviour, Vehicle.IVehicleOutput, Vehicle.IVehicleInput {
-    public Transform BaseTransform => transform;
 
     public Vector3 GetBasePosition() {
         return transform.position;
