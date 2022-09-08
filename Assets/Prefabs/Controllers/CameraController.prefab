@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 003cf6879af53684ca15ea3e621075d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orbitAction: {fileID: -1091094506170898682, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  engageAction: {fileID: -2365254401711562197, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  zoomActionRef: {fileID: 3598949108924630853, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  orbitAction: {fileID: 2950849367235025821, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  engageAction: {fileID: -4231372236083408840, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  zoomActionRef: {fileID: 4247767929578380252, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   caravanObserver: {fileID: 0}
   cameras: {fileID: 0}

@@ -46,7 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputActions: {fileID: -944628639613478452, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   enabledMaps:
-  - Camera
-  - Driving
-  - Commanders
-  - QuickSlots
+  - GamePlay

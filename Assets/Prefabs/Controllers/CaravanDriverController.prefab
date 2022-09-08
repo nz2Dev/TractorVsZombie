@@ -44,6 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd09a4a42d50f6f49b7925ef6c5a9c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activateAction: {fileID: -5270500262941389354, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  acceleratedSpeedMultiplier: 3
+  steeringEngage: {fileID: -3981972261125221216, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  handbreakToggle: {fileID: 6489099929257893426, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  steeringAxis: {fileID: 3159820620078537872, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  moveAxis: {fileID: -9220203316994444765, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   driver: {fileID: 0}
   drivingPOV: {fileID: 0}
-  localSpace: 0
+  localSpace: 1

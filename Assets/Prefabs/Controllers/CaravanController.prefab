@@ -45,10 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   quickSlotInputActions:
-  - {fileID: -5217515996257450830, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  - {fileID: 3424802570006099229, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  - {fileID: 8036726413698758066, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  - {fileID: 4597363275625828039, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  - {fileID: 8787353739921437052, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  - {fileID: 3268449935640317270, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  - {fileID: -5853748393629668767, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  - {fileID: -5014800217727443670, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   groupsSelectionColors:
   - nameKey: Turel
     schema:

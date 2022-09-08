@@ -109,10 +109,10 @@ public class CaravanController : MonoBehaviour {
         selection.SetSelection(members);
 
         if (selection.IsGrenaders) {
-            inputManager.SetEnabledMaps(new[] { "Driving", "Commanders", "QuickSlots" });
+            // inputManager.SetEnabledMaps(new[] { "Driving", "Commanders", "QuickSlots" });
             grenaderCommander.Activate(selection);
         } else {
-            inputManager.SetEnabledMaps(new[] { "Driving", "Camera", "QuickSlots" });
+            // inputManager.SetEnabledMaps(new[] { "Driving", "Camera", "QuickSlots" });
             grenaderCommander.Deactivate();
         }
     }

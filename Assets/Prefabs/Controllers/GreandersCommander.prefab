@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4598833351018294025}
-  - component: {fileID: 4598833351018294026}
   - component: {fileID: 5428475466565662186}
   m_Layer: 0
   m_Name: GreandersCommander
@@ -33,20 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4598833351018294026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4598833351018294024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdf1743ea25d09542b2b8fafec37b79b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selection: {fileID: 0}
-  grenaderCommander: {fileID: 5428475466565662186}
 --- !u!114 &5428475466565662186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,4 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c001984bbc7d5e94286245385f8580f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grenadersEngage: {fileID: 1414664316394933633, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  fireModeToggle: {fileID: 8745152252492936286, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  reloadAction: {fileID: -329637841334250210, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   groundObservable: {fileID: 0}
+  singleFireMode: 0

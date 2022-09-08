@@ -100,8 +100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e50a1b02ffaeb42a576712c6050b8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraEngage: {fileID: -2365254401711562197, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  lookAction: {fileID: -1091094506170898682, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   orbitDistance: 15
   orbitSpeedMultiplier: 1
   initialOrbitVertically: 45
@@ -134,10 +132,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63867f86b68ad24f9fa64ce8521eaad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caravanObserver: {fileID: 0}
   initialZoomWidth: 5
   widthChangeRange: 10
-  widthPerMember: 0.5
+  widthPerFactor: 1
 --- !u!1 &3864656894205303800
 GameObject:
   m_ObjectHideFlags: 0

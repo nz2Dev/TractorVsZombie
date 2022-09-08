@@ -34286,6 +34286,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameInput
       objectReference: {fileID: 0}
+    - target: {fileID: 511474557494045967, guid: 68f8c7a1fe3f7e14f9b6655277731ef3, type: 3}
+      propertyPath: enabledMaps.Array.data[1]
+      value: QuickSlots
+      objectReference: {fileID: 0}
+    - target: {fileID: 511474557494045967, guid: 68f8c7a1fe3f7e14f9b6655277731ef3, type: 3}
+      propertyPath: enabledMaps.Array.data[2]
+      value: QuickSlots
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68f8c7a1fe3f7e14f9b6655277731ef3, type: 3}
 --- !u!1001 &723044355316146953
@@ -34601,37 +34609,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6051789858576847231}
     - target: {fileID: 1792334737381210538, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
-      propertyPath: moveAxis
-      value: 
-      objectReference: {fileID: -2445668237078913987, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-    - target: {fileID: 1792334737381210538, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
       propertyPath: drivingPOV
       value: 
       objectReference: {fileID: 963194228}
-    - target: {fileID: 1792334737381210538, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
-      propertyPath: localSpace
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1792334737381210538, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
-      propertyPath: steeringAxis
-      value: 
-      objectReference: {fileID: -4484180312581473833, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-    - target: {fileID: 1792334737381210538, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
-      propertyPath: activateAction
-      value: 
-      objectReference: {fileID: 4283405928589969472, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-    - target: {fileID: 1792334737381210538, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
-      propertyPath: steeringEngage
-      value: 
-      objectReference: {fileID: 5986425513412970886, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-    - target: {fileID: 1792334737381210538, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
-      propertyPath: handbreakToggle
-      value: 
-      objectReference: {fileID: -5548160789735176137, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-    - target: {fileID: 1792334737381210538, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
-      propertyPath: acceleratedSpeedMultiplier
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 1792334737381210539, guid: 76694092026a1444397d21ea3364aeb9, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -35613,7 +35593,7 @@ PrefabInstance:
       objectReference: {fileID: 6051789858576847228}
     - target: {fileID: 3864656893813546847, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.5054705
+      value: 2.2854292
       objectReference: {fileID: 0}
     - target: {fileID: 5922877748916775624, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
       propertyPath: m_Enabled
@@ -35623,10 +35603,6 @@ PrefabInstance:
       propertyPath: groundObservable
       value: 
       objectReference: {fileID: 1803614867554456926}
-    - target: {fileID: 5922877748916775624, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
-      propertyPath: orbitSpeedMultiplier
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 134928491764348229, guid: f908e2409b3a0fc43800acedc6b545d5, type: 3}
@@ -36219,36 +36195,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4598833351018294026, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
-      propertyPath: tractor
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4598833351018294026, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
-      propertyPath: selection
-      value: 
-      objectReference: {fileID: 8955519147048813120}
-    - target: {fileID: 5428475466565662186, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
-      propertyPath: reloadAction
-      value: 
-      objectReference: {fileID: -5572752444232986720, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-    - target: {fileID: 5428475466565662186, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
-      propertyPath: fireModeToggle
-      value: 
-      objectReference: {fileID: 6759964838605501534, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-    - target: {fileID: 5428475466565662186, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
-      propertyPath: grenadersEngage
-      value: 
-      objectReference: {fileID: -837541568572618484, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
     - target: {fileID: 5428475466565662186, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
       propertyPath: groundObservable
       value: 
       objectReference: {fileID: 1803614867554456926}
-    - target: {fileID: 5935323505567327821, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
-      propertyPath: groundObservable
-      value: 
-      objectReference: {fileID: 1803614867554456926}
-    m_RemovedComponents:
-    - {fileID: 4598833351018294026, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20a255abd7f60844e9d0bc628bbb2866, type: 3}
 --- !u!114 &4598833351690390010 stripped
 MonoBehaviour:

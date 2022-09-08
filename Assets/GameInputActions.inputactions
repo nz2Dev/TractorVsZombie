@@ -2,13 +2,13 @@
     "name": "GameInputActions",
     "maps": [
         {
-            "name": "Driving",
-            "id": "da6d9c1e-b89e-40d0-979e-9a8ea8a7e04e",
+            "name": "GamePlay",
+            "id": "ff465941-4ba3-4ba8-bb7b-55d524bcabc7",
             "actions": [
                 {
                     "name": "Break",
                     "type": "Button",
-                    "id": "5ced3126-7aa6-4c3a-b46e-9f9b9bb0adad",
+                    "id": "db4aee95-cd33-4f1b-84bb-39cada152171",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -17,7 +17,7 @@
                 {
                     "name": "Move",
                     "type": "Value",
-                    "id": "deead3e3-4836-44d2-8dae-29520481da6c",
+                    "id": "148702a6-e090-4eba-bdef-44d939dc4181",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -26,7 +26,7 @@
                 {
                     "name": "ActivateTractor",
                     "type": "Button",
-                    "id": "603c9b1d-ba9f-46c7-b468-c8cb79f01dc5",
+                    "id": "846485a7-860e-4292-af38-8f34479af1ee",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -35,7 +35,7 @@
                 {
                     "name": "EngageSteering",
                     "type": "Button",
-                    "id": "7b0e6147-a4a2-453f-bbc2-214491b735b3",
+                    "id": "125f3d5a-4c98-4e2d-847c-a5909e954b11",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -44,17 +44,107 @@
                 {
                     "name": "Steering",
                     "type": "Value",
-                    "id": "dd366d2b-d414-4932-be78-a9c9d0a3f601",
+                    "id": "49ea1f32-b181-43f6-9b4b-04b580aea968",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "ca07d90a-8fb3-40d9-936d-80ba4cbc7851",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "EngageCamera",
+                    "type": "Button",
+                    "id": "5543663d-4e7d-47a9-9703-adb74eb02de7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "d52771b9-a9ce-4369-96c4-33d4cb904ee2",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "402f81ad-94e9-4cdb-aec7-4fa45f63c8fe",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FireMode",
+                    "type": "Button",
+                    "id": "75ae4584-6ae7-4e0b-8681-e07ac99b7a2c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "EngageWorld",
+                    "type": "Button",
+                    "id": "6a36943e-a46e-477a-a892-f295b45d1ef6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Slot0",
+                    "type": "Button",
+                    "id": "1db5f97c-9d1d-491e-8ac4-4c8e6ea8b380",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Slot1",
+                    "type": "Button",
+                    "id": "072d9fb8-856e-438d-b118-051166456920",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Slot2",
+                    "type": "Button",
+                    "id": "587b091b-0f85-403f-b0c9-88f4e9e36bf2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Slot3",
+                    "type": "Button",
+                    "id": "a5dd5304-f3d8-44d1-a56c-6c909c47fb96",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
                 {
                     "name": "",
-                    "id": "b747acd7-6a30-4f79-9ebc-1e2f791631a4",
+                    "id": "f4a91d47-07a8-4371-b36a-0bdfd67dc35f",
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
@@ -65,7 +155,7 @@
                 },
                 {
                     "name": "WASD",
-                    "id": "14123a5e-037d-41b0-a0c2-4b0bf7ea4b27",
+                    "id": "1bfcdb14-cb3b-4661-8dbd-1e54edb0450d",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
@@ -76,7 +166,7 @@
                 },
                 {
                     "name": "up",
-                    "id": "40fb7671-07a5-4ba7-b2b1-17fd5fbcd60f",
+                    "id": "f832faa1-b51e-4916-b76a-e15e1cdb42dd",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
@@ -87,7 +177,7 @@
                 },
                 {
                     "name": "down",
-                    "id": "06893677-8b98-41ed-8665-c08bcbcad472",
+                    "id": "19c4890a-3644-45af-9cac-e7f4eeff0ff1",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
@@ -98,7 +188,7 @@
                 },
                 {
                     "name": "left",
-                    "id": "e3e91775-b851-4d35-ac15-0d1e7b1d1f5d",
+                    "id": "f1555298-2702-43f0-94fc-f471e33188f3",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -109,7 +199,7 @@
                 },
                 {
                     "name": "right",
-                    "id": "328b8bf6-af16-43ed-8442-42dd943305d4",
+                    "id": "b07f140c-c005-4b62-a836-03efd5d4fd57",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -120,7 +210,7 @@
                 },
                 {
                     "name": "",
-                    "id": "08e8ef8e-88ad-4b17-b9fc-732b43727495",
+                    "id": "cf0fbcc9-32fb-4280-b73c-cbd944912f7a",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
@@ -131,9 +221,9 @@
                 },
                 {
                     "name": "",
-                    "id": "182e1b40-dab3-485e-baf7-f9116dfddc0a",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "AvoidLayerPress(blockLayer=5)",
+                    "id": "804bfd3e-39ce-4ee5-b8bf-746989a007e2",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "EngageSteering",
@@ -142,7 +232,7 @@
                 },
                 {
                     "name": "",
-                    "id": "2f03ab2a-4359-42c8-ab15-3a9205731e26",
+                    "id": "563aba66-9d60-4c19-9a02-670777326534",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
@@ -150,54 +240,10 @@
                     "action": "Steering",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Camera",
-            "id": "6bff933f-fa28-4e82-b0cb-e3749880b3d7",
-            "actions": [
-                {
-                    "name": "Look",
-                    "type": "Value",
-                    "id": "ec34db45-aa63-4b42-8ebd-2ff1dbb8225e",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 },
-                {
-                    "name": "EngageCamera",
-                    "type": "Button",
-                    "id": "e26376af-570b-49b6-b64a-e12e38e046a1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "EngageCommanderCamera",
-                    "type": "Button",
-                    "id": "8f289b13-c72a-4b58-9fe7-3830ac6acb4f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Zoom",
-                    "type": "Value",
-                    "id": "a0c08002-e629-4bbb-9974-062f0b62911a",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
                 {
                     "name": "",
-                    "id": "f3a25515-3c1a-43b3-9f4d-ffed4f3b461c",
+                    "id": "806e9afc-b726-4bbe-93f0-04d9405ac8fb",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
@@ -208,8 +254,8 @@
                 },
                 {
                     "name": "",
-                    "id": "aaffa31b-55bd-4056-97b7-f5c477c1aa1f",
-                    "path": "<Mouse>/leftButton",
+                    "id": "02f3d0f9-6472-4573-8606-10bbc114be73",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "AvoidLayerPress(blockLayer=5)",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -219,7 +265,7 @@
                 },
                 {
                     "name": "",
-                    "id": "c1f2dcc3-d577-49d3-add6-7af9e2f8e63e",
+                    "id": "593788d5-d557-4bc7-88eb-0af84bb5773f",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",
                     "processors": "Normalize(min=-120,max=120),Scale(factor=0.1)",
@@ -230,53 +276,7 @@
                 },
                 {
                     "name": "",
-                    "id": "29ebf131-7752-4870-ac3c-a881eebca101",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "AvoidLayerPress(blockLayer=5)",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "EngageCommanderCamera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Commanders",
-            "id": "b822a018-5b46-489a-8a19-dff3b01e349e",
-            "actions": [
-                {
-                    "name": "Reload",
-                    "type": "Button",
-                    "id": "4199575c-5350-4a8c-9c13-05496c5f186d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "FireMode",
-                    "type": "Button",
-                    "id": "c59a4f5d-0e53-453a-a5d1-97ee674bc037",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "EngageWorld",
-                    "type": "Button",
-                    "id": "6bfe7e77-7209-4e60-aae8-73c749cd9b12",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "e3036944-b006-4ad9-a7c8-3414606c26ba",
+                    "id": "6bb453e1-71b6-498e-838f-b89ea7954a6b",
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
@@ -287,7 +287,7 @@
                 },
                 {
                     "name": "",
-                    "id": "fc18f88f-0701-46a3-b8a0-ac0a78c65aed",
+                    "id": "02a9cead-ee80-4663-b64c-9e62725a27af",
                     "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",
@@ -298,7 +298,7 @@
                 },
                 {
                     "name": "",
-                    "id": "c9fbf097-f084-43f9-b9fc-577e75ea5734",
+                    "id": "48314146-a75a-4372-bb5d-72c36afa8f45",
                     "path": "<Mouse>/leftButton",
                     "interactions": "AvoidLayerPress(blockLayer=5)",
                     "processors": "",
@@ -306,54 +306,10 @@
                     "action": "EngageWorld",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "QuickSlots",
-            "id": "d6c7659d-d74f-408a-bc64-32f6f4c92f1a",
-            "actions": [
-                {
-                    "name": "Slot0",
-                    "type": "Button",
-                    "id": "0bffe1f7-0aaf-46ac-b047-4d9bc5fda4dc",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 },
-                {
-                    "name": "Slot1",
-                    "type": "Button",
-                    "id": "f912b235-ff34-414d-8309-6556270f35fb",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Slot2",
-                    "type": "Button",
-                    "id": "96babfdc-c531-47ce-aa06-eac6a570626b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Slot3",
-                    "type": "Button",
-                    "id": "64c9f526-9cd6-48fb-b072-e248c02b9ee1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
                 {
                     "name": "",
-                    "id": "993a3e6a-0013-4cf0-91a3-6829e87c5309",
+                    "id": "38f1c342-24d9-49fc-b668-712f3ff3f4b9",
                     "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
@@ -364,7 +320,7 @@
                 },
                 {
                     "name": "",
-                    "id": "17278b1a-7651-41ae-a4b5-73d4d0a3da2c",
+                    "id": "ec1a8287-1e80-4e94-88c7-ef01bc0ee37e",
                     "path": "<Keyboard>/2",
                     "interactions": "",
                     "processors": "",
@@ -375,7 +331,7 @@
                 },
                 {
                     "name": "",
-                    "id": "ea330e8f-c85f-424b-8b72-c18ccc8f1659",
+                    "id": "4ea1260c-a329-4c36-acfb-dd6a4f2caca1",
                     "path": "<Keyboard>/3",
                     "interactions": "",
                     "processors": "",
@@ -386,7 +342,7 @@
                 },
                 {
                     "name": "",
-                    "id": "2859cc70-bd31-4e4c-b94a-7bd40a27c5f4",
+                    "id": "99eec283-6ffc-4920-b224-7f82aff8a565",
                     "path": "<Keyboard>/4",
                     "interactions": "",
                     "processors": "",
