@@ -176,6 +176,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "EngageCommanderCamera",
+                    "type": "Button",
+                    "id": "8f289b13-c72a-4b58-9fe7-3830ac6acb4f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Zoom",
                     "type": "Value",
                     "id": "a0c08002-e629-4bbb-9974-062f0b62911a",
@@ -216,6 +225,17 @@
                     "processors": "Normalize(min=-120,max=120),Scale(factor=0.1)",
                     "groups": "",
                     "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "29ebf131-7752-4870-ac3c-a881eebca101",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "AvoidLayerPress(blockLayer=5)",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "EngageCommanderCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

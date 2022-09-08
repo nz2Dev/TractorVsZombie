@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5983646695102971150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5983646695102971151}
+  - component: {fileID: 5983646695102971120}
+  m_Layer: 0
+  m_Name: CaravanController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5983646695102971151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5983646695102971150}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5983646695102971120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5983646695102971150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf1743ea25d09542b2b8fafec37b79b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quickSlotInputActions:
+  - {fileID: -5217515996257450830, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  - {fileID: 3424802570006099229, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  - {fileID: 8036726413698758066, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  - {fileID: 4597363275625828039, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  groupsSelectionColors:
+  - nameKey: Turel
+    schema:
+      primarySelectionColor: {r: 0.32156864, g: 0.7607844, b: 0.28235295, a: 0.49803922}
+      secondarySelectionColor: {r: 0.32156864, g: 0.7607844, b: 0.28235295, a: 0.3764706}
+      secondaryUnselectedColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0.39607844}
+  - nameKey: Player
+    schema:
+      primarySelectionColor: {r: 1, g: 1, b: 1, a: 0.039215688}
+      secondarySelectionColor: {r: 1, g: 1, b: 1, a: 0.15686275}
+      secondaryUnselectedColor: {r: 1, g: 1, b: 1, a: 0.09411765}
+  - nameKey: Grenader
+    schema:
+      primarySelectionColor: {r: 0.28235295, g: 0.3047192, b: 0.7607843, a: 0.49803922}
+      secondarySelectionColor: {r: 0.28235295, g: 0.30496776, b: 0.7607843, a: 0.3764706}
+      secondaryUnselectedColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0.39607844}
+  selection: {fileID: 0}
+  observer: {fileID: 0}
+  inputManager: {fileID: 0}
+  grenaderCommander: {fileID: 0}

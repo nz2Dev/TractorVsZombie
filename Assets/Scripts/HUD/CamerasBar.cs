@@ -8,39 +8,32 @@ using UnityEngine.UI;
 public class CamerasBar : MonoBehaviour {
 
     [SerializeField] private CamerasManager camerasManager;
+    [SerializeField] private CameraController cameraController;
     [SerializeField] private Toggle initialToggle;
     [SerializeField] private Slider zoomLevelSlider;
     [SerializeField] private TMP_Text rotateCamHint;
 
     private void Awake() {
-        camerasManager.OnVCamChanged += OnCameraChanged;
+        cameraController.OnZoomLevelChanged += OnControlledZoomLevelChanged;
+        
+        cameraController.OnRigChanged += (rig) => {
+            rotateCamHint.gameObject.SetActive(cameraController.HasControledRig);
+            if (cameraController.HasControledRig) {
+                rotateCamHint.text = $"{cameraController.orbitActivationInputHint} \n + \n{cameraController.orbitPerformingInputHint}";
+            }
+        };
+
+        cameraController.OnZoomChanged += (zoom) => {
+            zoomLevelSlider.gameObject.SetActive(cameraController.HasControledZoom);
+            OnControlledZoomLevelChanged(cameraController.CurrentControlledZoomLevel);
+        };
     }
 
     private void Start() {
         initialToggle.isOn = true;
     }
 
-    private void OnCameraChanged(GameObject previousCamGO, GameObject currentCamGO) {
-        var previousZoomController = previousCamGO == null ? null : previousCamGO.GetComponent<ICameraZoomController>();
-        if (previousZoomController != null) {
-            previousZoomController.OnZoomLevelChanged -= OnSelectedZoomLevelChanged;
-        }
-
-        var currentZoomController = currentCamGO.GetComponent<ICameraZoomController>();
-        zoomLevelSlider.gameObject.SetActive(currentZoomController != null);
-        if (currentZoomController != null) {
-            currentZoomController.OnZoomLevelChanged += OnSelectedZoomLevelChanged;
-            OnSelectedZoomLevelChanged(currentZoomController.GetZoomLevel());
-        }
-
-        var currentRig = currentCamGO.GetComponent<ICameraRig>();
-        rotateCamHint.gameObject.SetActive(currentRig != null);
-        if (currentRig != null) {
-            rotateCamHint.text = $"{currentRig.orbitActivationInputHint} \n + \n{currentRig.orbitPerformingInputHint}";
-        }
-    }
-
-    private void OnSelectedZoomLevelChanged(float selectedZoomLevel) {
+    private void OnControlledZoomLevelChanged(float selectedZoomLevel) {
         zoomLevelSlider.SetValueWithoutNotify(selectedZoomLevel);
     }
 
@@ -57,10 +50,7 @@ public class CamerasBar : MonoBehaviour {
     }
 
     public void OnZoomValueChanged(System.Single progress) {
-        var activeZoomController = camerasManager.ActiveCam.GetComponent<ICameraZoomController>(); 
-        if (activeZoomController != null) {
-            activeZoomController.SetZoomLevel(progress);
-        }
+        cameraController.SetZoomLevelManually(progress);
     }
 
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4598833351018294026}
   - component: {fileID: 5428475466565662186}
   m_Layer: 0
-  m_Name: CaravanController
+  m_Name: GreandersCommander
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

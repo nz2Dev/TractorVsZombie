@@ -2,18 +2,25 @@ using System;
 using Cinemachine;
 using UnityEngine;
 
-public interface ICameraZoomController {
-    event Action<float> OnZoomLevelChanged;
+public interface ICameraZoom {
     float GetZoomLevel();
     void SetZoomLevel(float levelNoramlized);
+    void SetZoomFactor(int factor);
 }
 
 public interface ICameraRig {
-    public string orbitActivationInputHint { get; }
-    public string orbitPerformingInputHint { get; }
+    public Camera OutputCamera { get; }
+    void Orbit(float horizontalDegree, float verticalDegree);
 }
 
-public interface ICameraController {
+public interface IStatefulCameraRig : ICameraRig {
+    void OnStartOrbiting() {
+    }
+    void OnEndOrbiting() {
+    }
+}
+
+public interface ICameraStateListener {
     void OnActiveStateChanged(bool activeState);
 }
 
@@ -25,7 +32,6 @@ public class CamerasManager : MonoBehaviour {
     [SerializeField] private CinemachineVirtualCamera topDownCamera;
     [SerializeField] private bool useDrivingInitialiy;
 
-    public event Action<float> OnSelectedCameraZoomLevelChanged;
     public event Action<GameObject, GameObject> OnVCamChanged;
 
     public GameObject ActiveCam => brain.ActiveVirtualCamera.VirtualCameraGameObject;
@@ -36,18 +42,18 @@ public class CamerasManager : MonoBehaviour {
     }
 
     private void OnActiveCameraChanged(ICinemachineCamera incomingCam, ICinemachineCamera outcomingCam) {
-        var incomingControllers = incomingCam.VirtualCameraGameObject.GetComponents<ICameraController>();
-        if (incomingControllers != null) {
-            foreach (var controller in incomingControllers) {
-                controller.OnActiveStateChanged(activeState: true);
+        var incomingListeners = incomingCam.VirtualCameraGameObject.GetComponents<ICameraStateListener>();
+        if (incomingListeners != null) {
+            foreach (var listener in incomingListeners) {
+                listener.OnActiveStateChanged(activeState: true);
             }
         }
 
         if (outcomingCam != null) {
-            var outcomingControllers = outcomingCam.VirtualCameraGameObject.GetComponents<ICameraController>();
-            if (outcomingControllers != null) {
-                foreach (var controller in outcomingControllers) {
-                    controller.OnActiveStateChanged(activeState: false);
+            var outcomingListeners = outcomingCam.VirtualCameraGameObject.GetComponents<ICameraStateListener>();
+            if (outcomingListeners != null) {
+                foreach (var listener in outcomingListeners) {
+                    listener.OnActiveStateChanged(activeState: false);
                 }
             }
         }
