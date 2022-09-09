@@ -1305,7 +1305,8 @@ MonoBehaviour:
   wallsLayerMask:
     serializedVersion: 2
     m_Bits: 512
-  wallsCheckDistance: 0.3
+  wallsCheckDistance: 0.1
+  wallsCheckRadius: 0.3
   customExecution: 0
 --- !u!114 &8191095105593171346
 MonoBehaviour:
