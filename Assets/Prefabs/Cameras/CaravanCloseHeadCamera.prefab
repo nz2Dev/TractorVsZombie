@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5922877748916775624}
   - component: {fileID: 3864656893813546846}
   - component: {fileID: 3864656893813546841}
+  - component: {fileID: 1581249990421859181}
   m_Layer: 0
   m_Name: CaravanCloseHeadCamera
   m_TagString: Untagged
@@ -135,6 +136,29 @@ MonoBehaviour:
   initialZoomWidth: 5
   widthChangeRange: 10
   widthPerFactor: 1
+--- !u!114 &1581249990421859181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864656893813546845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ApplyAfter: 2
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 0
+  m_UseCameraSpace: 0
+  m_ReactionSettings:
+    m_SecondaryNoise: {fileID: 11400000, guid: e9ce97b7a206dc64d90931ea044e0c72, type: 2}
+    m_AmplitudeGain: 2
+    m_FrequencyGain: 2
+    m_Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &3864656894205303800
 GameObject:
   m_ObjectHideFlags: 0

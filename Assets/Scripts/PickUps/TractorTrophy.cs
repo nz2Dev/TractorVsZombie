@@ -1,13 +1,16 @@
 using System.Collections;
+using Cinemachine;
 using UnityEngine;
 
 [RequireComponent(typeof(CaravanMember))]
 public class TractorTrophy : MonoBehaviour {
 
     private CaravanMember _caravanMember;
+    private CinemachineImpulseSource _impulseSource;
 
     private void Awake() {
         _caravanMember = GetComponent<CaravanMember>();
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
 
         var health = GetComponent<Health>();
         if (health != null) {
@@ -34,6 +37,9 @@ public class TractorTrophy : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
 
+        if (_impulseSource != null) {
+            _impulseSource.GenerateImpulse();
+        }
         Destroy(gameObject);
     }
 }

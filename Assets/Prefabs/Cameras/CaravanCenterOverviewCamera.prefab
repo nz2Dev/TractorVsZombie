@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 8783276227091410380}
   - component: {fileID: 8783276227091410384}
   - component: {fileID: 8783276227091410381}
+  - component: {fileID: 3828358285870955748}
   m_Layer: 0
   m_Name: CaravanCenterOverviewCamera
   m_TagString: Untagged
@@ -188,8 +189,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 274e4a0df01883e418abc2edf6e47c37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orbitAction: {fileID: -1091094506170898682, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  engageAction: {fileID: -2365254401711562197, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   orbitSpeedMultiplier: 1
   inverseVerticalOrbit: 1
   initialOrbitHorizontally: 0
@@ -222,7 +221,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63867f86b68ad24f9fa64ce8521eaad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caravanObserver: {fileID: 0}
   initialZoomWidth: 15
   widthChangeRange: 10
-  widthPerMember: 1
+  widthPerFactor: 1
+--- !u!114 &3828358285870955748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8783276227091410387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ApplyAfter: 2
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 0
+  m_UseCameraSpace: 0
+  m_ReactionSettings:
+    m_SecondaryNoise: {fileID: 11400000, guid: e9ce97b7a206dc64d90931ea044e0c72, type: 2}
+    m_AmplitudeGain: 2
+    m_FrequencyGain: 2
+    m_Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
