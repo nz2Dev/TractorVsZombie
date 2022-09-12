@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Damager : MonoBehaviour {
 
-    public CaravanMember targetElement;
+    public GameObject target;
     public int damagePerIteration = 45;
     public int intervalTime = 1;
 
     private IEnumerator Start() {
-        var targetHealth = targetElement.GetComponent<Health>();
+        var targetHealth = target.GetComponent<Health>();
         if (targetHealth == null) {
-            Debug.LogError($"targetElement has no health component, was: {targetElement.name}");
+            Debug.LogError($"targetElement has no health component, was: {target.name}");
             yield break;
         }
 

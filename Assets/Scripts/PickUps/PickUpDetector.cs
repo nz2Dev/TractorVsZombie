@@ -2,6 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions;
+
+public static class PickUpState {
+
+    private static int activePickUpsCount;
+
+    public static int ActivePickUpsCount => activePickUpsCount;
+
+    internal static void OnPickUpEnabled() {
+        activePickUpsCount++;
+    }
+
+    internal static void OnPickUpDisabled() {
+        Assert.IsTrue(activePickUpsCount >= 1);
+        activePickUpsCount--;
+    }
+
+}
 
 [SelectionBase]
 public class PickUpDetector : MonoBehaviour {
@@ -12,6 +30,14 @@ public class PickUpDetector : MonoBehaviour {
     [SerializeField] private GameObject[] triggers;
 
     private bool _detected;
+
+    private void OnEnable() {
+        PickUpState.OnPickUpEnabled();
+    }
+
+    private void OnDisable() {
+        PickUpState.OnPickUpDisabled();
+    }
 
     private void OnTriggerEnter(Collider other) {
         if (_detected) {
