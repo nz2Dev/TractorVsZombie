@@ -35,7 +35,7 @@ public class CinemachineCircleTargetGroup : MonoBehaviour, ICinemachineTargetGro
         var localFarmost = observer.inverse.MultiplyPoint3x4(discFarmost);
         var angle = Vector3.Angle(localPosition.normalized, localFarmost.normalized);
         var verticalDistance = localPosition.z * Mathf.Tan(angle * Mathf.Deg2Rad);
-        
+
         var viewPortPosition = localPosition / localPosition.z;
         var viewPortSize = new Vector3(radius / localPosition.z, verticalDistance / localPosition.z, 0);
         // var viewPortSize = new Vector3(radius / localPosition.z, radius / localPosition.z, 0);
@@ -70,11 +70,13 @@ public class CinemachineCircleTargetGroup : MonoBehaviour, ICinemachineTargetGro
                  verticalDistance * 2f,
                  radius * 2f
             )
-            // radius * 2 * Vector3.one
+        // radius * 2 * Vector3.one
         );
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos() {
         Handles.DrawWireDisc(transform.position, transform.up, radius);
     }
+#endif
 }

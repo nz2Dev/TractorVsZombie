@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public interface ISteering {
-    
+
     Color Color { get; }
     string Source { get; }
     float Weight { get; }
@@ -27,9 +27,11 @@ public class SteeringApplier : MonoBehaviour {
         }
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         foreach (var steering in _steerings) {
             steering.OnDrawGizmosSelected(_vehicle);
         }
     }
+#endif
 }

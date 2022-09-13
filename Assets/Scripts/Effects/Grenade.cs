@@ -41,4 +41,10 @@ public class Grenade : MonoBehaviour {
 
         Destroy(gameObject);
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected() {
+        Gizmos.DrawWireSphere(transform.position, effectRadius);
+    }
+#endif
 }

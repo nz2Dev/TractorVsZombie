@@ -51,8 +51,10 @@ public class WallsAvoideSteering : MonoBehaviour, ISteering {
         return vehicle.AvoidWallsAround(checkRadius, wallsLayerMask);
     }
 
+#if UNITY_EDITOR
     public void OnDrawGizmosSelected(Vehicle vehicle) {
         Handles.DrawWireDisc(vehicle.Position, Vector3.up, checkRadius);
     }
-    
+#endif
+
 }

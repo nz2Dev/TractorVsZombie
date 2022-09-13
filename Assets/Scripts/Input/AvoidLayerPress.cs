@@ -8,7 +8,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.Scripting;
 
+#if UNITY_EDITOR
 [InitializeOnLoad]
+#endif
 public class AvoidLayerPress : IInputInteraction {
 
     public int blockLayer = 0;

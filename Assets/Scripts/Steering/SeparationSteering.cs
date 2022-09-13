@@ -56,8 +56,10 @@ public class SeparationSteering : MonoBehaviour, ISteering {
         return vehicle.SeparateInsideSphere(checkRadius, neighborsLayerMask);
     }
 
+#if UNITY_EDITOR
     public void OnDrawGizmosSelected(Vehicle vehicle) {
         Handles.color = Color.red;
         Handles.DrawSolidDisc(vehicle.transform.position, Vector3.up, checkRadius);
     }
+#endif
 }
