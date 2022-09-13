@@ -143,9 +143,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectRadius: 4
-  effectForce: 15
+  effectForce: 10
   effectUpwardModifier: 1
   effectForceMode: 1
-  damage: 160
+  damage: 90
   explosionParticlesPrefab: {fileID: 8491177589698551122, guid: a15c0d5d3aac6364d9d7aa3b823e4afe, type: 3}
   explosionLifetime: 1

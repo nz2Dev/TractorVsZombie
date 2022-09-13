@@ -176,6 +176,8 @@ MonoBehaviour:
   damage: 5
   stopDistance: 2
   resumeDistance: 2.1
+  searchDistance: 100
+  initialPathTarget: {fileID: 0}
 --- !u!114 &2866107349646046410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,12 +226,12 @@ MonoBehaviour:
   wallsLayerMask:
     serializedVersion: 2
     m_Bits: 512
-  wallsCheckWeight: 1
+  wallsCheckWeight: 2
   separationCheckRadius: 3
   neighborsLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  separationWeigh: 1
+  separationWeigh: 2
 --- !u!54 &798371832
 Rigidbody:
   m_ObjectHideFlags: 0
