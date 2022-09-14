@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CilinderZombie : MonoBehaviour {
+[SelectionBase]
+public class CylinderZombie : MonoBehaviour {
 
     [SerializeField] private int damage = 55;
 

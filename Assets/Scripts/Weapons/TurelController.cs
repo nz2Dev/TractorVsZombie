@@ -20,14 +20,14 @@ public class TurelController : MonoBehaviour {
         }
     }
 
-    private Enemy FindClosestEnemy() {
-        var enemies = FindObjectsOfType<Enemy>();
+    private EnemyMarker FindClosestEnemy() {
+        var enemies = FindObjectsOfType<EnemyMarker>();
         if (enemies.Length <= 0) {
             return null;
         }
 
         var position = transform.position;
-        var closestEnemy = (Enemy) null;
+        var closestEnemy = (EnemyMarker) null;
         var closestDistance = float.PositiveInfinity;
 
         foreach (var enemy in enemies) {
@@ -44,7 +44,7 @@ public class TurelController : MonoBehaviour {
         return closestEnemy;
     }
 
-    private void ChangeTarget(Enemy enemy) {
+    private void ChangeTarget(EnemyMarker enemy) {
         if (enemy != null) {
             turel.StartFire(enemy.gameObject);
         } else {

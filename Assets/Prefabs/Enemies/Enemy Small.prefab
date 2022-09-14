@@ -107,12 +107,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3285057546842354605}
+  - component: {fileID: 7374661174470027406}
   - component: {fileID: 8334857695551591603}
   - component: {fileID: 4702780241993184044}
-  - component: {fileID: 2812642249149448238}
   - component: {fileID: 2866107349646046410}
   - component: {fileID: 3816549565449533400}
   - component: {fileID: 4557958776748398446}
+  - component: {fileID: 2812642249149448238}
   - component: {fileID: 798371832}
   - component: {fileID: 2565431310803779272}
   - component: {fileID: 4049643364778986883}
@@ -142,6 +143,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7374661174470027406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077604122354342710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93c742efa6b17254791928e0df0b95a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &8334857695551591603
 Animator:
   serializedVersion: 4
@@ -175,22 +188,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 55
---- !u!114 &2812642249149448238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1077604122354342710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a682061972cc4994995c78dc7f5d8ff6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopDistance: 2
-  resumeDistance: 2.1
-  searchDistance: 100
-  initialPathTarget: {fileID: 0}
 --- !u!114 &2866107349646046410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +242,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   separationWeigh: 2
+--- !u!114 &2812642249149448238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077604122354342710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a682061972cc4994995c78dc7f5d8ff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stopDistance: 2
+  resumeDistance: 2.1
+  searchDistance: 100
+  initialPathTarget: {fileID: 0}
 --- !u!54 &798371832
 Rigidbody:
   m_ObjectHideFlags: 0

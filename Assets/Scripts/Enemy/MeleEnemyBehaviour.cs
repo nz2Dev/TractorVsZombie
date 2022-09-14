@@ -5,24 +5,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public static class EnemyState {
-
-    private static int enemyCount = 0;
-
-    public static int EnabledEnemies => enemyCount;
-
-    internal static void OnEnemyEnabled() {
-        enemyCount++;
-    }
-
-    internal static void OnEnemyDisabled() {
-        Assert.IsTrue(enemyCount >= 1);
-        enemyCount--;
-    }
-}
-
 [RequireComponent(typeof(CrowdVehicleDriver))]
-public class Enemy : MonoBehaviour {
+[RequireComponent(typeof(CylinderZombie))]
+public class MeleEnemyBehaviour : MonoBehaviour {
 
     [SerializeField] private float stopDistance = 0.1f;
     [SerializeField] private float resumeDistance = 0.3f;
@@ -33,10 +18,10 @@ public class Enemy : MonoBehaviour {
     private Transform _pathTarget;
     private CrowdVehicleDriver _vehicleDriver;
     private CaravanObserver _caravanObserver;
-    private CilinderZombie _zombie;
+    private CylinderZombie _zombie;
 
     private void Awake() {
-        _zombie = GetComponent<CilinderZombie>();
+        _zombie = GetComponent<CylinderZombie>();
         _vehicleDriver = GetComponent<CrowdVehicleDriver>();
 
         var health = GetComponent<Health>();
@@ -79,10 +64,6 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    private void OnEnable() {
-        EnemyState.OnEnemyEnabled();
-    }
-
     private void Start() {
         _caravanObserver = FindObjectOfType<CaravanObserver>();
         StartCoroutine(nameof(SearchTarget));
@@ -90,10 +71,6 @@ public class Enemy : MonoBehaviour {
 
     public void SetPathTarget(Transform pathTarget) {
         _pathTarget = pathTarget;
-    }
-
-    private void OnDisable() {
-        EnemyState.OnEnemyDisabled();
     }
 
     private IEnumerator SearchTarget() {
