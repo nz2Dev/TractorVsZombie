@@ -24,28 +24,28 @@ public static class EnemyState {
 [RequireComponent(typeof(CrowdVehicleDriver))]
 public class Enemy : MonoBehaviour {
 
-    [SerializeField] private int damage = 55;
     [SerializeField] private float stopDistance = 0.1f;
     [SerializeField] private float resumeDistance = 0.3f;
     [SerializeField] private float searchDistance = 20f;
     [SerializeField] private Transform initialPathTarget;
 
     private bool _chasing;
-    private Animator _animator;
     private Transform _pathTarget;
     private CrowdVehicleDriver _vehicleDriver;
-
     private CaravanObserver _caravanObserver;
+    private CilinderZombie _zombie;
 
     private void Awake() {
-        _animator = GetComponentInChildren<Animator>();
+        _zombie = GetComponent<CilinderZombie>();
         _vehicleDriver = GetComponent<CrowdVehicleDriver>();
 
         var health = GetComponent<Health>();
         if (health != null) {
             health.OnHealthChanged += comp => {
                 if (comp.IsZero) {
-                    StartCoroutine(Death());
+                    StopCoroutine(nameof(SearchTarget));
+                    _vehicleDriver.SetTarget(null);
+                    _zombie.StartKill();
                 }
             };
         }
@@ -53,19 +53,6 @@ public class Enemy : MonoBehaviour {
         if (initialPathTarget != null) {
             SetPathTarget(initialPathTarget);
         }
-    }
-
-    private void OnEnable() {
-        EnemyState.OnEnemyEnabled();
-    }
-
-    private void Start() {
-        _caravanObserver = FindObjectOfType<CaravanObserver>();
-        StartCoroutine(nameof(SearchTarget));
-    }
-
-    public void SetPathTarget(Transform pathTarget) {
-        _pathTarget = pathTarget;
     }
 
     private void Update() {
@@ -82,14 +69,27 @@ public class Enemy : MonoBehaviour {
         if (_chasing && targetClose) {
             _chasing = false;
             _vehicleDriver.Stop();
-            StartCoroutine(nameof(Attack));
+            _zombie.StartAttack(_vehicleDriver.Target);
         }
 
         if (!_chasing && targetFar) {
             _chasing = true;
             _vehicleDriver.Resume();
-            StopCoroutine(nameof(Attack));
+            _zombie.StopAttack();
         }
+    }
+
+    private void OnEnable() {
+        EnemyState.OnEnemyEnabled();
+    }
+
+    private void Start() {
+        _caravanObserver = FindObjectOfType<CaravanObserver>();
+        StartCoroutine(nameof(SearchTarget));
+    }
+
+    public void SetPathTarget(Transform pathTarget) {
+        _pathTarget = pathTarget;
     }
 
     private void OnDisable() {
@@ -120,36 +120,6 @@ public class Enemy : MonoBehaviour {
                 _vehicleDriver.SetTarget(_pathTarget.gameObject);
             }
         }
-    }
-
-    private IEnumerator Attack() {
-        while (true) {
-            if (_vehicleDriver.Target == null) {
-                break;
-            }
-
-            var trainHealth = _vehicleDriver.Target.GetComponent<Health>();
-            if (trainHealth == null) {
-                // Debug.LogWarning("Can't deal damage to train element without health");
-                break;
-            }
-
-            trainHealth.TakeDamage(damage);
-            _animator.SetTrigger("Attack");
-
-            yield return new WaitForSeconds(1);
-        }
-    }
-
-    private IEnumerator Death() {
-        _animator.SetTrigger("Death");
-
-        StopCoroutine(nameof(SearchTarget));
-        _vehicleDriver.SetTarget(null);
-
-        yield return new WaitForSeconds(1);
-
-        Destroy(gameObject);
     }
 
 }

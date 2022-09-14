@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3671213386281489291}
   - component: {fileID: 4839024511417884979}
   - component: {fileID: 145895151530078942}
-  - component: {fileID: 1366610814}
   m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
@@ -99,26 +98,6 @@ CapsuleCollider:
   m_Height: 2.06
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!95 &1366610814
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847656581729353754}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bfc60aa27e0c03648968dfebd0980993, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1077604122354342710
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,6 +107,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3285057546842354605}
+  - component: {fileID: 8334857695551591603}
+  - component: {fileID: 4702780241993184044}
   - component: {fileID: 2812642249149448238}
   - component: {fileID: 2866107349646046410}
   - component: {fileID: 3816549565449533400}
@@ -161,6 +142,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8334857695551591603
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077604122354342710}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bfc60aa27e0c03648968dfebd0980993, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4702780241993184044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077604122354342710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4321393910ac7664dbd2c6c5aa942296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 55
 --- !u!114 &2812642249149448238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,7 +187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a682061972cc4994995c78dc7f5d8ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 5
   stopDistance: 2
   resumeDistance: 2.1
   searchDistance: 100
