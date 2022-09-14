@@ -30,7 +30,6 @@ public class MeleEnemyBehaviour : MonoBehaviour {
                 if (comp.IsZero) {
                     StopCoroutine(nameof(SearchTarget));
                     _vehicleDriver.SetTarget(null);
-                    _zombie.StartKill();
                 }
             };
         }

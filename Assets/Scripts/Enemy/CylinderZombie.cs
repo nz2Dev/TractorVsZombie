@@ -12,6 +12,14 @@ public class CylinderZombie : MonoBehaviour {
 
     private void Awake() {
         _animator = GetComponentInChildren<Animator>();
+        var health = GetComponent<Health>();
+        if (health != null) {
+            health.OnHealthChanged += comp => {
+                if (comp.IsZero) {
+                    StartKill();
+                }
+            };
+        }
     }
 
     public void StartAttack(GameObject target) {
@@ -49,7 +57,7 @@ public class CylinderZombie : MonoBehaviour {
         }
     }
 
-    public void StartKill() {
+    private void StartKill() {
         StartCoroutine(DeathRoutine());
     }
 
