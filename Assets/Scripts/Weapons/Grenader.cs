@@ -19,6 +19,7 @@ public class Grenader : MonoBehaviour {
     public bool IsLoaded => _loadedGrenade != null;
     public bool CanFire => IsLoaded && IsAimed;
     public bool CanAim => IsLoaded;
+    public float ExplosionRadius => _loadedGrenade == null ? 0 : _loadedGrenade.EffectRadius;
 
     public void Load(Vector3 point) {
         if (_loadedGrenade == null) {

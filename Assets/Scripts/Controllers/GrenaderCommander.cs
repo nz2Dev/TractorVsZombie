@@ -11,6 +11,7 @@ public class GrenaderCommander : MonoBehaviour {
     [SerializeField] private InputActionReference fireModeToggle;
     [SerializeField] private InputActionReference reloadAction;
     [SerializeField] private GroundObservable groundObservable;
+    [SerializeField] private TargetOutline aimOutline;
     [SerializeField] private bool singleFireMode;
 
     private Vector3 _aimPoint;
@@ -119,12 +120,14 @@ public class GrenaderCommander : MonoBehaviour {
 
     private void AimSingleGreander() {
         if (_singleFireGrenader != null) {
+            aimOutline.OutlinePoint(_aimPoint, _singleFireGrenader.ExplosionRadius);
             _singleFireGrenader.Aim(_aimPoint);
         }
     }
 
     private void FireSingleGreander() {
         if (_singleFireGrenader != null) {
+            aimOutline.StopOutlining();
             _singleFireGrenader.Fire();
             FindNextSingleGreander();
         }

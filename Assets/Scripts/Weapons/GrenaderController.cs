@@ -20,6 +20,7 @@ public class GrenaderController : MonoBehaviour {
 
     public bool CanFire => ammo.HasAmmo;
     public float TimeToReadynes => !CanFire ? float.PositiveInfinity : _state == ReadyState.Ready ? 0 : reloadTime;
+    public float ExplosionRadius => grenader.ExplosionRadius;
     public bool IsActivated => grenader.CanAim;
 
     public event Action<float> OnReload;
