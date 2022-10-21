@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   circle: {fileID: 5374892840830022115}
+  scalingTime: 0.25
   yOffset: 0.05
   preview: 0
 --- !u!1 &5980833000411029612

@@ -115,20 +115,21 @@ public class GrenaderCommander : MonoBehaviour {
 
         if (_singleFireGrenader != null && !_singleFireGrenader.IsActivated) {
             _singleFireGrenader.Activate(_aimPoint);
+            aimOutline.StartOutlining(_aimPoint, _singleFireGrenader.ExplosionRadius);
         }
     }
 
     private void AimSingleGreander() {
         if (_singleFireGrenader != null) {
-            aimOutline.OutlinePoint(_aimPoint, _singleFireGrenader.ExplosionRadius);
             _singleFireGrenader.Aim(_aimPoint);
+            aimOutline.OutlinePoint(_aimPoint);
         }
     }
 
     private void FireSingleGreander() {
         if (_singleFireGrenader != null) {
-            aimOutline.StopOutlining();
             _singleFireGrenader.Fire();
+            aimOutline.StopOutlining();
             FindNextSingleGreander();
         }
     }
