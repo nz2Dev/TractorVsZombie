@@ -27,6 +27,8 @@ public class GrenaderCommander : MonoBehaviour {
 
     public void Activate(CaravanSelection greandersSelection) {
         _grenaders = greandersSelection;
+        _grenaders.ToggleSecondarySelection(singleFireMode);
+        
         groundObservable.OnEvent += OnGroundEvent;
         OnActiveStateChanged?.Invoke(true);
     }
@@ -115,14 +117,17 @@ public class GrenaderCommander : MonoBehaviour {
 
         if (_singleFireGrenader != null && !_singleFireGrenader.IsActivated) {
             _singleFireGrenader.Activate(_aimPoint);
-            aimOutline.StartOutlining(_aimPoint, _singleFireGrenader.ExplosionRadius);
+            
+            if (_singleFireGrenader.IsActivated) {
+                aimOutline.StartOutlining(_singleFireGrenader.LauncherPosition, _aimPoint, _singleFireGrenader.ExplosionRadius);
+            }
         }
     }
 
     private void AimSingleGreander() {
         if (_singleFireGrenader != null) {
             _singleFireGrenader.Aim(_aimPoint);
-            aimOutline.OutlinePoint(_aimPoint);
+            aimOutline.OutlineTarget(_singleFireGrenader.LauncherPosition, _aimPoint);
         }
     }
 

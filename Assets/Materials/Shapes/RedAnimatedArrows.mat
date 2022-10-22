@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RedOutlineCircle
-  m_Shader: {fileID: 4800000, guid: 4c3baf757fa348b45aff5f87d9cf7116, type: 3}
+  m_Name: RedAnimatedArrows
+  m_Shader: {fileID: 4800000, guid: 3839a17f68a2c0944ad93a31b5cdf8a7, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -69,15 +69,13 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Scale: 5.1961527
-    - _Smoothness: 0.01
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _Speed: -40
     - _SrcBlend: 1
-    - _Thickness: 0.024
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.7735849, g: 0.003648994, b: 0.003648994, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

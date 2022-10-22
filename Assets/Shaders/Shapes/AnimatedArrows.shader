@@ -1,16 +1,15 @@
-Shader "Shapes/Circle"
+Shader "Shapes/AnimatedArrows"
 {
     Properties
     {
-        _Thickness ("Thickness", Range(0.01, 0.5)) = 0.1
-        _Smoothness ("Smoothness", Range(0.01, 0.5)) = 0.1
-        _Color ("Color", Color) = (1.0, 1.0, 1.0)
-        [HideInInspector] _Scale ("Scale", Float) = 1.0
+        _Speed ("Speed", Float) = 3.0
+        _Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
     }
     SubShader
     {
         Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
         Blend SrcAlpha OneMinusSrcAlpha
+        Cull Off
         LOD 100
 
         Pass
@@ -36,10 +35,8 @@ Shader "Shapes/Circle"
                 float4 vertex : SV_POSITION;
             };
 
-            float _Thickness;
-            float _Smoothness;
-            float3 _Color;
-            float _Scale;
+            float _Speed;
+            float4 _Color;
 
             v2f vert (appdata v)
             {
@@ -50,18 +47,11 @@ Shader "Shapes/Circle"
                 return o;
             }
 
-            float4 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
-                float radius = 0.5;
-                float2 center = float2(radius, radius);
-                float distance = length(i.uv - center);
-                float smoothness = _Smoothness / _Scale;
-                float thickness = _Thickness / _Scale;
-                float end = radius - (smoothness);
-                float start = radius - (thickness + smoothness);
-                float circle = smoothstep(start - smoothness, start + smoothness, distance) - smoothstep(end - smoothness, end + smoothness, distance);
-
-                float4 col = float4(_Color, circle);
+                float xDistance = frac(i.uv.x * 2.0 + _Time * _Speed);
+                float crossline = step(0.4, xDistance) - step(0.5, xDistance);
+                fixed4 col = float4(_Color.rgb, crossline * _Color.a);
                 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
