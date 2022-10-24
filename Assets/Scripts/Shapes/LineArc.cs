@@ -15,7 +15,6 @@ public class LineArc : MonoBehaviour {
     private void Awake() {
         _lineRenderer = GetComponentInChildren<LineRenderer>(true);
         _lineRenderer.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
-        _lineRenderer.alignment = LineAlignment.TransformZ;
         _lineRenderer.textureMode = LineTextureMode.Stretch;
         _lineRenderer.useWorldSpace = true;
     }
