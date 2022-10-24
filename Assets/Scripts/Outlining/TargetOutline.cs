@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,29 +12,26 @@ public class TargetOutline : MonoBehaviour {
 
     private Circle _circle;
     private LineArc _trajectory;
-
-    private Coroutine _scalingCoroutine;
+    private Coroutine _activationCoroutine;
 
     private void Awake() {
         _circle = GetComponentInChildren<Circle>(true);
-        _trajectory = GetComponentInChildren<LineArc>(true);
-    }
-
-    private void Start() {
         _circle.gameObject.SetActive(false);
+
+        _trajectory = GetComponentInChildren<LineArc>(true);
         _trajectory.gameObject.SetActive(false);
-    }
+    }    
 
     public void StartOutlining(Vector3 anchor, Vector3 target, float radius) {
         _circle.gameObject.SetActive(true);
         _trajectory.gameObject.SetActive(true);
 
-        _scalingCoroutine = StartCoroutine(ShapesInRoutine(radius));
+        _activationCoroutine = StartCoroutine(ActivationAnimationRoutine(radius));
         
         OutlineTarget(anchor, target);
     }
 
-    private IEnumerator ShapesInRoutine(float radius) {
+    private IEnumerator ActivationAnimationRoutine(float radius) {
         var scalingProgressTime = 0.0f;
         var initialRadius = radius * 0.2f;
         
@@ -59,9 +57,9 @@ public class TargetOutline : MonoBehaviour {
         _circle.gameObject.SetActive(false);
         _trajectory.gameObject.SetActive(false);
         
-        if (_scalingCoroutine != null) {
-            StopCoroutine(_scalingCoroutine);
-            _scalingCoroutine = null;
+        if (_activationCoroutine != null) {
+            StopCoroutine(_activationCoroutine);
+            _activationCoroutine = null;
         }
     }
     

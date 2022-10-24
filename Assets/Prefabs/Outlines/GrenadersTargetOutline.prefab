@@ -82,7 +82,7 @@ LineRenderer:
   - {x: 1, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.2
+    widthMultiplier: 0.3
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -213,8 +213,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  segmentsCount: 5
-  height: 5
+  segmentsCount: 10
+  height: 4
   previewLength: 2
 --- !u!1 &4148582355038927759
 GameObject:
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3077285b70e1945928c5cab4f46486, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scalingTime: 0.1
+  scalingTime: 0.15
   yOffset: 0.05
 --- !u!1 &5980833000411029612
 GameObject:

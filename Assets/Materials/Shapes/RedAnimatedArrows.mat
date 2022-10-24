@@ -76,7 +76,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _PaternLength: 1
-    - _PatternLength: 8.402548
+    - _PatternLength: 10.05618
     - _ReverseFillAmount: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

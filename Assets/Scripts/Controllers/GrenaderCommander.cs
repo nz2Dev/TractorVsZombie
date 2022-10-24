@@ -11,12 +11,13 @@ public class GrenaderCommander : MonoBehaviour {
     [SerializeField] private InputActionReference fireModeToggle;
     [SerializeField] private InputActionReference reloadAction;
     [SerializeField] private GroundObservable groundObservable;
-    [SerializeField] private TargetOutline aimOutline;
+    [SerializeField] private NamedPrototypePopulator aimOutlinePopulator;
     [SerializeField] private bool singleFireMode;
 
     private Vector3 _aimPoint;
     private CaravanSelection _grenaders;
     private GrenaderController _singleFireGrenader;
+    private int _activationCount = 0;
 
     public event Action<bool> OnActiveStateChanged;
     
@@ -119,6 +120,7 @@ public class GrenaderCommander : MonoBehaviour {
             _singleFireGrenader.Activate(_aimPoint);
             
             if (_singleFireGrenader.IsActivated) {
+                var aimOutline = aimOutlinePopulator.GetOrCreateChild<TargetOutline>(0);
                 aimOutline.StartOutlining(_singleFireGrenader.LauncherPosition, _aimPoint, _singleFireGrenader.ExplosionRadius);
             }
         }
@@ -127,6 +129,8 @@ public class GrenaderCommander : MonoBehaviour {
     private void AimSingleGreander() {
         if (_singleFireGrenader != null) {
             _singleFireGrenader.Aim(_aimPoint);
+
+            var aimOutline = aimOutlinePopulator.GetOrCreateChild<TargetOutline>(0);
             aimOutline.OutlineTarget(_singleFireGrenader.LauncherPosition, _aimPoint);
         }
     }
@@ -134,7 +138,7 @@ public class GrenaderCommander : MonoBehaviour {
     private void FireSingleGreander() {
         if (_singleFireGrenader != null) {
             _singleFireGrenader.Fire();
-            aimOutline.StopOutlining();
+            aimOutlinePopulator.DestroyChild(0);
             FindNextSingleGreander();
         }
     }
@@ -154,11 +158,20 @@ public class GrenaderCommander : MonoBehaviour {
     }
 
     private void ActivateAllGreanders() {
+        _activationCount++;
+
         FindAimLine(out var lineStart, out var lineStep);
         var lineCurrent = lineStart;
+
         foreach (var greanderMember in _grenaders.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
             greanderController.Activate(lineCurrent);
+
+            if (greanderController.IsActivated) {
+                var aimOutline = aimOutlinePopulator.GetOrCreateChild<TargetOutline>(greanderController.GetInstanceID());
+                aimOutline.StartOutlining(greanderController.LauncherPosition, lineCurrent, greanderController.ExplosionRadius);
+            }
+
             lineCurrent += lineStep;
         }
     }
@@ -169,6 +182,10 @@ public class GrenaderCommander : MonoBehaviour {
         foreach (var greanderMember in _grenaders.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
             greanderController.Aim(lineCurrent);
+
+            var aimOutline = aimOutlinePopulator.GetOrCreateChild<TargetOutline>(greanderController.GetInstanceID());
+            aimOutline.OutlineTarget(greanderController.LauncherPosition, lineCurrent);
+
             lineCurrent += lineStep;
         }
     }
@@ -178,6 +195,8 @@ public class GrenaderCommander : MonoBehaviour {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
             greanderController.Fire();
         }
+
+        aimOutlinePopulator.Clear();
     }
 
 }
