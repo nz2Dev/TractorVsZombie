@@ -120,7 +120,7 @@ public class GrenaderCommander : MonoBehaviour {
             _singleFireGrenader.Activate(_aimPoint);
             
             if (_singleFireGrenader.IsActivated) {
-                var aimOutline = aimOutlinePopulator.GetOrCreateChild<TargetOutline>(0);
+                var aimOutline = aimOutlinePopulator.GetOrCreateChild<AimOutline>(0);
                 aimOutline.StartOutlining(_singleFireGrenader.LauncherPosition, _aimPoint, _singleFireGrenader.ExplosionRadius);
             }
         }
@@ -130,7 +130,7 @@ public class GrenaderCommander : MonoBehaviour {
         if (_singleFireGrenader != null) {
             _singleFireGrenader.Aim(_aimPoint);
 
-            var aimOutline = aimOutlinePopulator.GetOrCreateChild<TargetOutline>(0);
+            var aimOutline = aimOutlinePopulator.GetOrCreateChild<AimOutline>(0);
             aimOutline.OutlineTarget(_singleFireGrenader.LauncherPosition, _aimPoint);
         }
     }
@@ -168,7 +168,7 @@ public class GrenaderCommander : MonoBehaviour {
             greanderController.Activate(lineCurrent);
 
             if (greanderController.IsActivated) {
-                var aimOutline = aimOutlinePopulator.GetOrCreateChild<TargetOutline>(greanderController.GetInstanceID());
+                var aimOutline = aimOutlinePopulator.GetOrCreateChild<AimOutline>(greanderController.GetInstanceID());
                 aimOutline.StartOutlining(greanderController.LauncherPosition, lineCurrent, greanderController.ExplosionRadius);
             }
 
@@ -183,7 +183,7 @@ public class GrenaderCommander : MonoBehaviour {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
             greanderController.Aim(lineCurrent);
 
-            var aimOutline = aimOutlinePopulator.GetOrCreateChild<TargetOutline>(greanderController.GetInstanceID());
+            var aimOutline = aimOutlinePopulator.GetOrCreateChild<AimOutline>(greanderController.GetInstanceID());
             aimOutline.OutlineTarget(greanderController.LauncherPosition, lineCurrent);
 
             lineCurrent += lineStep;

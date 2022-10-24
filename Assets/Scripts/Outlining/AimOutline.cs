@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class TargetOutline : MonoBehaviour {
+public class AimOutline : MonoBehaviour {
 
     [SerializeField] private float scalingTime = 0.25f;
     [SerializeField] private float yOffset = 0.05f;

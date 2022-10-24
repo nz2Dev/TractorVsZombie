@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 8559057614516317472}
   - component: {fileID: 6425332380170519912}
   m_Layer: 0
-  m_Name: GrenadersTargetOutline
+  m_Name: AimOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
