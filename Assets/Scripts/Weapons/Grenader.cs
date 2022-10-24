@@ -15,21 +15,16 @@ public class Grenader : MonoBehaviour {
     private Vector3 _aimPoint;
     private Grenade _loadedGrenade;
 
-    public bool IsAimed => _aimPoint != default;
-    public bool IsLoaded => _loadedGrenade != null;
-    public bool CanFire => IsLoaded && IsAimed;
-    public bool CanAim => IsLoaded;
     public float ExplosionRadius => _loadedGrenade == null ? 0 : _loadedGrenade.EffectRadius;
     public Vector3 LauncherPosition => launcherChildGameObject.transform.position;
+    public bool IsInstantiated => _loadedGrenade != null;
 
-    public void Load(Vector3 point) {
+    public void InstatiateGrenade() {
         if (_loadedGrenade == null) {
             var launcherPosition = launcherChildGameObject.transform.position;
             var greandeObject = Instantiate(grenadePrefab, launcherPosition, Quaternion.identity);
             _loadedGrenade = greandeObject.GetComponent<Grenade>();
         }
-
-        Aim(point);
     }
 
     private void Update() {
@@ -39,11 +34,6 @@ public class Grenader : MonoBehaviour {
     }
 
     public void Aim(Vector3 point) {
-        if (!IsLoaded) {
-            Debug.Log("Has not been loaded");
-            return;
-        }
-
         _aimPoint = point;
         transform.LookAt(point, Vector3.up);
 
@@ -57,8 +47,8 @@ public class Grenader : MonoBehaviour {
     }
 
     public void Fire() {
-        if (!IsAimed) {
-            Debug.Log("Has not been aimed");
+        if (_aimPoint == default || _loadedGrenade == null) {
+            Debug.LogWarning("Failed to fire, aimPoint: " + _aimPoint + " loadedGreande: " + _loadedGrenade);
             return;
         }
 
@@ -92,7 +82,7 @@ public class Grenader : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        if (IsLoaded && IsAimed) {
+        if (_aimPoint != default && _loadedGrenade != null) {
             Gizmos.DrawSphere(_aimPoint, 0.2f);
             Handles.DrawWireDisc(_aimPoint, Vector3.up, _loadedGrenade.EffectRadius);
 

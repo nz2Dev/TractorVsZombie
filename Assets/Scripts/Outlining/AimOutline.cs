@@ -26,6 +26,9 @@ public class AimOutline : MonoBehaviour {
         _circle.gameObject.SetActive(true);
         _trajectory.gameObject.SetActive(true);
 
+        if (_activationCoroutine != null) {
+            StopCoroutine(_activationCoroutine);
+        }
         _activationCoroutine = StartCoroutine(ActivationAnimationRoutine(radius));
         
         OutlineTarget(anchor, target);

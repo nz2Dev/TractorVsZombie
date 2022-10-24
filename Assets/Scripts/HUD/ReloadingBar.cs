@@ -17,11 +17,11 @@ public class ReloadingBar : MonoBehaviour {
         _timeRemainingText = GetComponentInChildren<TextMeshProUGUI>();
 
         gameObject.SetActive(false);
-        controller.OnReload += ReloadBegin;
+        controller.OnStartReload += ReloadBegin;
     }
 
     private void OnDestroy() {
-        controller.OnReload -= ReloadBegin;
+        controller.OnStartReload -= ReloadBegin;
     }
 
     private void ReloadBegin(float reloadTime) {

@@ -38,6 +38,10 @@ public class LineArc : MonoBehaviour {
     }
 
     public void UpdateArc(Vector3 start, Vector3 end) {
+        if (_lineRenderer == null) {
+            return;
+        }
+
         var startToEnd = end - start;
         var segmentLength = startToEnd / segmentsCount;
         var segmentLengthNormalized = 1.0f / segmentsCount;

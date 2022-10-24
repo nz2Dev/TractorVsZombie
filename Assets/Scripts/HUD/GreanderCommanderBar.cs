@@ -18,7 +18,7 @@ public class GreanderCommanderBar : MonoBehaviour {
     private void Start() {
         reloadInfoElement.SetActionInfo(null, grenaderCommander.ReloadActionBindingsName);
         fireModeInfoElement.SetActionInfo(null, grenaderCommander.FireModeActionBindingsName);
-        fireInfoElement.SetCompaundActionInfo(null, grenaderCommander.fireActivationActionBindings, grenaderCommander.fireAimActionBindings);
+        fireInfoElement.SetCompaundActionInfo(null, grenaderCommander.enageActionBindings, grenaderCommander.aimActionBindings);
     }
 
     private void OnCommanderActivationChanged(bool active) {

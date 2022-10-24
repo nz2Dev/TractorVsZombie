@@ -7,46 +7,47 @@ using UnityEngine.InputSystem;
 
 public class GrenaderCommander : MonoBehaviour {
 
-    [SerializeField] private InputActionReference grenadersEngage;
+    [SerializeField] private InputActionReference engageAction;
     [SerializeField] private InputActionReference fireModeToggle;
     [SerializeField] private InputActionReference reloadAction;
-    [SerializeField] private GroundObservable groundObservable;
+    [SerializeField] private InputActionReference aimAction;
     [SerializeField] private NamedPrototypePopulator aimOutlinePopulator;
+    [SerializeField] private WorldRaycaster worldRaycaster;
     [SerializeField] private bool singleFireMode;
 
     private Vector3 _aimPoint;
     private CaravanSelection _grenaders;
     private GrenaderController _singleFireGrenader;
-    private int _activationCount = 0;
 
     public event Action<bool> OnActiveStateChanged;
-    
+
     public string ReloadActionBindingsName => reloadAction.action.GetBindingDisplayString();
     public string FireModeActionBindingsName => fireModeToggle.action.GetBindingDisplayString();
-    public string fireActivationActionBindings => grenadersEngage.action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions);
-    public string fireAimActionBindings => "position [mouse]";
+    public string enageActionBindings => engageAction.action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions);
+    public string aimActionBindings => "position [mouse]";
 
     public void Activate(CaravanSelection greandersSelection) {
         _grenaders = greandersSelection;
-        _grenaders.ToggleSecondarySelection(singleFireMode);
         
-        groundObservable.OnEvent += OnGroundEvent;
+        UpdateActivatedGrenaders();
+        foreach (var grenader in _grenaders.SelectedMembers) {
+            var controller = grenader.GetComponent<GrenaderController>();
+            controller.OnReloaded += () => {
+                UpdateActivatedGrenaders();
+            };
+        }
+
         OnActiveStateChanged?.Invoke(true);
     }
 
     public void Deactivate() {
-        groundObservable.OnEvent -= OnGroundEvent;
         _grenaders = null;
         OnActiveStateChanged?.Invoke(false);
     }
 
     private void Update() {
-        if (fireModeToggle.action.WasPerformedThisFrame()) {
-            singleFireMode = !singleFireMode;
-            _grenaders.ToggleSecondarySelection(singleFireMode);
-            if (singleFireMode) {
-                FindNextSingleGreander();
-            }
+        if (worldRaycaster.RaycastGroundPoint(aimAction.action.ReadValue<Vector2>(), out var groundPoint)) {
+            _aimPoint = groundPoint;
         }
 
         if (reloadAction.action.WasPerformedThisFrame() && _grenaders != null) {
@@ -56,12 +57,9 @@ public class GrenaderCommander : MonoBehaviour {
             }
         }
 
-        if (grenadersEngage.action.inProgress && grenadersEngage.action.WasPressedThisFrame()) {
-            if (singleFireMode) {
-                ActivateSingleGreander();
-            } else {
-                ActivateAllGreanders();
-            }
+        if (fireModeToggle.action.WasPerformedThisFrame()) {
+            singleFireMode = !singleFireMode;
+            UpdateActivatedGrenaders();
         }
 
         if (_aimPoint != default) {
@@ -72,38 +70,41 @@ public class GrenaderCommander : MonoBehaviour {
             }
         }
 
-        if (grenadersEngage.action.WasPerformedThisFrame() && grenadersEngage.action.WasReleasedThisFrame()) {
+        if (engageAction.action.WasPerformedThisFrame() && engageAction.action.WasReleasedThisFrame()) {
             _aimPoint = default;
             if (singleFireMode) {
                 FireSingleGreander();
             } else {
                 FireAllGreanders();
             }
+
+            UpdateActivatedGrenaders();
         }
     }
 
-    private void OnGroundEvent(GroundObservable.EventType eventType, PointerEventData eventData) {
-        switch (eventType) {
-            case GroundObservable.EventType.PointerDown:
-                _aimPoint = eventData.pointerCurrentRaycast.worldPosition;
-                break;
+    private void UpdateActivatedGrenaders() {
+        if (singleFireMode) {
+            aimOutlinePopulator.Clear();
+            _grenaders.ToggleSecondarySelection(true);
+            
+            FindNextSingleGreander();
+            ActivateSingleGreander();
+        } else {
+            aimOutlinePopulator.Clear();
+            _grenaders.ToggleSecondarySelection(false);
 
-            case GroundObservable.EventType.PointerDrag:
-                _aimPoint = eventData.pointerCurrentRaycast.worldPosition;
-                break;
-
-            case GroundObservable.EventType.PointerUp:
-                _aimPoint = default;
-                break;
-
-            default:
-                throw new System.Exception();
+            ActivateAllGreanders();
         }
     }
 
     private void FindNextSingleGreander() {
+        if (_singleFireGrenader != null && _singleFireGrenader.ReadyForActivation) {
+            return;
+        }
+
         _singleFireGrenader = _grenaders.SelectedMembers
                 .Select((member) => member.GetComponent<GrenaderController>())
+                .Where((controller) => controller.ReadyForActivation)
                 .OrderBy((controller) => controller.TimeToReadynes)
                 .FirstOrDefault();
 
@@ -112,13 +113,9 @@ public class GrenaderCommander : MonoBehaviour {
     }
 
     private void ActivateSingleGreander() {
-        if (_singleFireGrenader == null) {
-            FindNextSingleGreander();
-        }
+        if (_singleFireGrenader != null) {
+            _singleFireGrenader.Activate();
 
-        if (_singleFireGrenader != null && !_singleFireGrenader.IsActivated) {
-            _singleFireGrenader.Activate(_aimPoint);
-            
             if (_singleFireGrenader.IsActivated) {
                 var aimOutline = aimOutlinePopulator.GetOrCreateChild<AimOutline>(0);
                 aimOutline.StartOutlining(_singleFireGrenader.LauncherPosition, _aimPoint, _singleFireGrenader.ExplosionRadius);
@@ -139,7 +136,6 @@ public class GrenaderCommander : MonoBehaviour {
         if (_singleFireGrenader != null) {
             _singleFireGrenader.Fire();
             aimOutlinePopulator.DestroyChild(0);
-            FindNextSingleGreander();
         }
     }
 
@@ -158,14 +154,12 @@ public class GrenaderCommander : MonoBehaviour {
     }
 
     private void ActivateAllGreanders() {
-        _activationCount++;
-
         FindAimLine(out var lineStart, out var lineStep);
         var lineCurrent = lineStart;
 
         foreach (var greanderMember in _grenaders.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderController>();
-            greanderController.Activate(lineCurrent);
+            greanderController.Activate();
 
             if (greanderController.IsActivated) {
                 var aimOutline = aimOutlinePopulator.GetOrCreateChild<AimOutline>(greanderController.GetInstanceID());
