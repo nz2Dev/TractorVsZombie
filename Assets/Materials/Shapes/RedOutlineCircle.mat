@@ -70,14 +70,14 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _Scale: 5.1961527
-    - _Smoothness: 0.01
+    - _Smoothness: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Thickness: 0.024
+    - _Thickness: 0.05
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.7735849, g: 0.003648994, b: 0.003648994, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

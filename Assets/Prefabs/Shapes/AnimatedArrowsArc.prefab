@@ -79,10 +79,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   segmentsCount: 5
-  startPoint: {fileID: 0}
-  endPoint: {fileID: 0}
   height: 5
-  preview: 1
+  previewLength: 2
 --- !u!1 &7631526830627182164
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +211,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 1
-    textureMode: 1
+    textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 1

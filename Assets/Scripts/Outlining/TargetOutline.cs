@@ -28,24 +28,26 @@ public class TargetOutline : MonoBehaviour {
         _circle.gameObject.SetActive(true);
         _trajectory.gameObject.SetActive(true);
 
-        _scalingCoroutine = StartCoroutine(RadiusScalingRoutine(radius));
+        _scalingCoroutine = StartCoroutine(ShapesInRoutine(radius));
         
         OutlineTarget(anchor, target);
     }
 
-    private IEnumerator RadiusScalingRoutine(float radius) {
+    private IEnumerator ShapesInRoutine(float radius) {
         var scalingProgressTime = 0.0f;
         var initialRadius = radius * 0.2f;
         
         while (scalingProgressTime < scalingTime) {
             var currentRadius = initialRadius + (scalingProgressTime / scalingTime) * (radius - initialRadius);
             _circle.SetRadius(currentRadius);
+            _trajectory.FillArc(scalingProgressTime);
 
             scalingProgressTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
 
         _circle.SetRadius(radius);
+        _trajectory.FillArc(1.0f);
     }
 
     public void OutlineTarget(Vector3 anchor, Vector3 target) {
