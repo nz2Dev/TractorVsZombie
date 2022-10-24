@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4598833351018294024
+--- !u!1 &1980184983721456661
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4598833351018294025}
-  - component: {fileID: 5428475466565662186}
+  - component: {fileID: 1980184983721456660}
+  - component: {fileID: 1980184983721456663}
   m_Layer: 0
-  m_Name: GreandersCommander
+  m_Name: WorldRaycaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4598833351018294025
+--- !u!4 &1980184983721456660
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4598833351018294024}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 1980184983721456661}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -32,22 +32,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5428475466565662186
+--- !u!114 &1980184983721456663
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4598833351018294024}
+  m_GameObject: {fileID: 1980184983721456661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c001984bbc7d5e94286245385f8580f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 671fd476e274dbd4fabeae1666a06778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  engageAction: {fileID: 1414664316394933633, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  fireModeToggle: {fileID: 8745152252492936286, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  reloadAction: {fileID: -329637841334250210, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  aimAction: {fileID: -6265798999679000459, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  aimOutlinePopulator: {fileID: 0}
-  worldRaycaster: {fileID: 0}
-  singleFireMode: 0
+  povCamera: {fileID: 0}
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  maxDistance: 100
