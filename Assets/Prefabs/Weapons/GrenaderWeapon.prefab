@@ -78,13 +78,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59032d51c0f164a4b9099a0ac070423c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
+  damage: 90
   fireHeight: 5
+  explosionRadius: 5
   launcherChildGameObject: {fileID: 6697297421865838877}
-  detonateDistance: 0.3
-  grenadePrefab: {fileID: 5814709301179252190, guid: 662b94beb3b63a049b06c402bbce790d, type: 3}
+  grenadeProjectilePrefab: {fileID: 5814709301179252190, guid: 662b94beb3b63a049b06c402bbce790d, type: 3}
   flyCurve:
     serializedVersion: 2
     m_Curve:

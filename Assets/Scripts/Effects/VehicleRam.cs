@@ -22,6 +22,9 @@ public class VehicleRam : MonoBehaviour {
         _ramActive = activation;
     }
 
+    // TODO make some weapone use this effect and controll the damage it deals
+    // then implement tractor operator that uses this weapon to be consisten damage system
+
     private void OnTriggerStay(Collider other) {
         if (!_ramActive)
             return;

@@ -6,24 +6,26 @@ using UnityEngine;
 
 [SelectionBase]
 public class Grenader : MonoBehaviour {
+
+    [SerializeField] private int damage = 50;
     [SerializeField] private float fireHeight = 5;
+    [SerializeField] private float explosionRadius = 5;
     [SerializeField] private Transform launcherChildGameObject;
-    [SerializeField] private float detonateDistance = 0.3f;
-    [SerializeField] private GameObject grenadePrefab;
+    [SerializeField] private GameObject grenadeProjectilePrefab;
     [SerializeField] private AnimationCurve flyCurve;
 
     private Vector3 _aimPoint;
-    private SphereExplosion _loadedGrenade;
+    private GrenadeProjectile _loadedGrenade;
 
-    public float ExplosionRadius => _loadedGrenade == null ? 0 : _loadedGrenade.EffectRadius;
+    public float ExplosionRadius => explosionRadius;
     public Vector3 LauncherPosition => launcherChildGameObject.transform.position;
     public bool IsInstantiated => _loadedGrenade != null;
 
     public void InstatiateGrenade() {
         if (_loadedGrenade == null) {
             var launcherPosition = launcherChildGameObject.transform.position;
-            var greandeObject = Instantiate(grenadePrefab, launcherPosition, Quaternion.identity);
-            _loadedGrenade = greandeObject.GetComponent<SphereExplosion>();
+            var greandeObject = Instantiate(grenadeProjectilePrefab, launcherPosition, Quaternion.identity);
+            _loadedGrenade = greandeObject.GetComponent<GrenadeProjectile>();
         }
     }
 
@@ -48,43 +50,36 @@ public class Grenader : MonoBehaviour {
 
     public void Fire() {
         if (_aimPoint == default || _loadedGrenade == null) {
-            Debug.LogWarning("Failed to fire, aimPoint: " + _aimPoint + " loadedGreande: " + _loadedGrenade);
+            Debug.LogWarning("Failed to fire, aimPoint: " + _aimPoint + " loadedGrenade: " + _loadedGrenade);
             return;
         }
 
-        StartCoroutine(FireCoroutine(
-            launcherChildGameObject.transform.position,
-            _aimPoint,
-            _loadedGrenade
-        ));
+        var landPosition = _aimPoint;
+        _loadedGrenade.Launch(flyCurve, fireHeight, landPosition, (projectile) => {
+            var sphereExplosion = projectile.GetComponent<SphereExplosion>();
+            sphereExplosion.Explode((epicenter, hits) => {
+                foreach (var hit in hits) {
+                    if (hit.rigidbody != null) {
+                        var health = hit.rigidbody.GetComponent<Health>();
+                        var caravanMember = hit.rigidbody.GetComponent<CaravanMember>();
+                        if (health != null && caravanMember == null) {
+                            var distanceFromEpicentr = Vector3.Distance(hit.rigidbody.transform.position, epicenter);
+                            var damageDumping = (int) Utils.Map(distanceFromEpicentr, 0, explosionRadius, 0, damage);
+                            health.TakeDamage(damage - damageDumping);
+                        }
+                    }
+                }
+            });
+        });
 
         _loadedGrenade = null;
         _aimPoint = default;
     }
 
-    private IEnumerator FireCoroutine(Vector3 grenadeLaunchPosition, Vector3 grenadeLandPosition, SphereExplosion grenade) {
-        var time = 0f;
-        var launchToLand = grenadeLandPosition - grenadeLaunchPosition;
-        
-        while (true) {
-            time += Time.deltaTime;
-    
-            var flyPositionLocal = launchToLand * time + flyCurve.Evaluate(time) * fireHeight * Vector3.up;
-            grenade.transform.position = grenadeLaunchPosition + flyPositionLocal;
-
-            if (Vector3.Distance(grenade.transform.position, grenadeLandPosition) < detonateDistance || time >= 1f) {
-                grenade.Explode();
-                break;
-            }
-            
-            yield return new WaitForEndOfFrame();
-        }
-    }
-
     private void OnDrawGizmos() {
         if (_aimPoint != default && _loadedGrenade != null) {
             Gizmos.DrawSphere(_aimPoint, 0.2f);
-            Handles.DrawWireDisc(_aimPoint, Vector3.up, _loadedGrenade.EffectRadius);
+            Handles.DrawWireDisc(_aimPoint, Vector3.up, explosionRadius);
 
             const int curveSegments = 10;
             var launchPoint = launcherChildGameObject.transform.position;

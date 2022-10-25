@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,13 +8,12 @@ public class SphereExplosion : MonoBehaviour {
     [SerializeField] private float effectForce = 15;
     [SerializeField] float effectUpwardModifier = 1;
     [SerializeField] private ForceMode effectForceMode = ForceMode.Impulse;
-    [SerializeField] private int damage = 50;
     [SerializeField] private GameObject explosionParticlesPrefab;
     [SerializeField] private float explosionLifetime;
 
     public float EffectRadius => effectRadius;
 
-    public void Explode() {
+    public void Explode(Action<Vector3, RaycastHit[]> onExplodeAffected) {
         var explosionParticles = Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
         DestructionTimer.StartOn(explosionParticles, explosionLifetime);
 
@@ -28,16 +28,10 @@ public class SphereExplosion : MonoBehaviour {
                     effectUpwardModifier,
                     effectForceMode
                 );
-
-                var health = affectedRigidbody.GetComponent<Health>();
-                var train = affectedRigidbody.GetComponent<CaravanMember>();
-                if (health != null && train == null) {
-                    var distanceFromEpicentr = Vector3.Distance(affectedRigidbody.transform.position, transform.position);
-                    var damageDumping = (int) Utils.Map(distanceFromEpicentr, 0, effectRadius, 0, damage);
-                    health.TakeDamage(damage - damageDumping);
-                }
             }
         }
+
+        onExplodeAffected?.Invoke(transform.position, affectedCollisions);
 
         Destroy(gameObject);
     }
