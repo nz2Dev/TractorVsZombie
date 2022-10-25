@@ -13,7 +13,7 @@ public class Grenader : MonoBehaviour {
     [SerializeField] private AnimationCurve flyCurve;
 
     private Vector3 _aimPoint;
-    private ExplosiveProjectile _loadedGrenade;
+    private SphereExplosion _loadedGrenade;
 
     public float ExplosionRadius => _loadedGrenade == null ? 0 : _loadedGrenade.EffectRadius;
     public Vector3 LauncherPosition => launcherChildGameObject.transform.position;
@@ -23,7 +23,7 @@ public class Grenader : MonoBehaviour {
         if (_loadedGrenade == null) {
             var launcherPosition = launcherChildGameObject.transform.position;
             var greandeObject = Instantiate(grenadePrefab, launcherPosition, Quaternion.identity);
-            _loadedGrenade = greandeObject.GetComponent<ExplosiveProjectile>();
+            _loadedGrenade = greandeObject.GetComponent<SphereExplosion>();
         }
     }
 
@@ -62,7 +62,7 @@ public class Grenader : MonoBehaviour {
         _aimPoint = default;
     }
 
-    private IEnumerator FireCoroutine(Vector3 grenadeLaunchPosition, Vector3 grenadeLandPosition, ExplosiveProjectile grenade) {
+    private IEnumerator FireCoroutine(Vector3 grenadeLaunchPosition, Vector3 grenadeLandPosition, SphereExplosion grenade) {
         var time = 0f;
         var launchToLand = grenadeLandPosition - grenadeLaunchPosition;
         

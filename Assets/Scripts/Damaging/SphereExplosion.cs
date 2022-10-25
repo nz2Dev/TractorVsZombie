@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosiveProjectile : MonoBehaviour {
+public class SphereExplosion : MonoBehaviour {
     [SerializeField] private float effectRadius = 5;
     [SerializeField] private float effectForce = 15;
     [SerializeField] float effectUpwardModifier = 1;

@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Tractor : MonoBehaviour {
+public class VehicleRam : MonoBehaviour {
 
     [SerializeField] private ForceMode forceMode;
     [SerializeField] private float forceMultiplier = 1;

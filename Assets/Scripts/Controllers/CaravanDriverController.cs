@@ -16,7 +16,7 @@ public class CaravanDriverController : MonoBehaviour {
     [SerializeField] private Transform drivingPOV;
     [SerializeField] private bool localSpace = false;
 
-    private Tractor _driverTractor;
+    private VehicleRam _driverTractor;
     private Vehicle _driverVehicle;
     private bool _mouseDriving;
 
@@ -27,7 +27,7 @@ public class CaravanDriverController : MonoBehaviour {
     public InputAction PreciseSteeringAxisInputActionInfo => steeringAxis;
 
     private void Awake() {
-        _driverTractor = driver.GetComponent<Tractor>();
+        _driverTractor = driver.GetComponent<VehicleRam>();
         _driverVehicle = driver.GetComponent<Vehicle>();
     }
 
