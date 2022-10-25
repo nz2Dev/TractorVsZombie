@@ -17,7 +17,7 @@ public class GrenaderCommander : MonoBehaviour {
 
     private Vector3 _aimPoint;
     private CaravanSelection _grenaders;
-    private GrenaderController _singleFireGrenader;
+    private GrenaderOperator _singleFireGrenader;
 
     public event Action<bool> OnActiveStateChanged;
 
@@ -31,7 +31,7 @@ public class GrenaderCommander : MonoBehaviour {
         
         UpdateActivatedGrenaders();
         foreach (var grenader in _grenaders.SelectedMembers) {
-            var controller = grenader.GetComponent<GrenaderController>();
+            var controller = grenader.GetComponent<GrenaderOperator>();
             controller.OnReloaded += () => {
                 UpdateActivatedGrenaders();
             };
@@ -103,7 +103,7 @@ public class GrenaderCommander : MonoBehaviour {
         }
 
         _singleFireGrenader = _grenaders.SelectedMembers
-                .Select((member) => member.GetComponent<GrenaderController>())
+                .Select((member) => member.GetComponent<GrenaderOperator>())
                 .Where((controller) => controller.ReadyForActivation)
                 .OrderBy((controller) => controller.TimeToReadynes)
                 .FirstOrDefault();
@@ -158,7 +158,7 @@ public class GrenaderCommander : MonoBehaviour {
         var lineCurrent = lineStart;
 
         foreach (var greanderMember in _grenaders.SelectedMembers) {
-            var greanderController = greanderMember.GetComponent<GrenaderController>();
+            var greanderController = greanderMember.GetComponent<GrenaderOperator>();
             greanderController.Activate();
 
             if (greanderController.IsActivated) {
@@ -174,7 +174,7 @@ public class GrenaderCommander : MonoBehaviour {
         FindAimLine(out var lineStart, out var lineStep);
         var lineCurrent = lineStart;
         foreach (var greanderMember in _grenaders.SelectedMembers) {
-            var greanderController = greanderMember.GetComponent<GrenaderController>();
+            var greanderController = greanderMember.GetComponent<GrenaderOperator>();
             greanderController.Aim(lineCurrent);
 
             var aimOutline = aimOutlinePopulator.GetOrCreateChild<AimOutline>(greanderController.GetInstanceID());
@@ -186,7 +186,7 @@ public class GrenaderCommander : MonoBehaviour {
 
     private void FireAllGreanders() {
         foreach (var greanderMember in _grenaders.SelectedMembers) {
-            var greanderController = greanderMember.GetComponent<GrenaderController>();
+            var greanderController = greanderMember.GetComponent<GrenaderOperator>();
             greanderController.Fire();
         }
 

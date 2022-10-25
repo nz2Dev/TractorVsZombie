@@ -15,7 +15,7 @@ public class Turel : MonoBehaviour {
     [SerializeField] private float firePushMultiplier = 0.5f;
     [SerializeField] private float fireRange = 10f;
     [SerializeField] private Transform fireGunBase;
-    [SerializeField] private ProjectileParticles projectileParticles;
+    [SerializeField] private BulletProjectiles projectileParticles;
     [SerializeField] private CannonParticles cannonParticles;
     [SerializeField] private bool triggerHitDamage = false;
     [SerializeField] private bool collisionHitDamage = false;

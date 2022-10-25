@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class ReloadingBar : MonoBehaviour {
     
-    [SerializeField] private GrenaderController controller;
+    [SerializeField] private GrenaderOperator controller;
 
     private Image _progressBackground;
     private TextMeshProUGUI _timeRemainingText;

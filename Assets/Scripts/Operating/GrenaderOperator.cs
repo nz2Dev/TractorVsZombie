@@ -4,7 +4,7 @@ using System.Xml;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class GrenaderController : MonoBehaviour {
+public class GrenaderOperator : MonoBehaviour {
 
     private enum ReadyState {
         WaitingForAmmo,

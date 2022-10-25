@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
-public class ProjectileParticles : MonoBehaviour {
+public class BulletProjectiles : MonoBehaviour {
 
     [SerializeField] private Collider aimTrigger;
     

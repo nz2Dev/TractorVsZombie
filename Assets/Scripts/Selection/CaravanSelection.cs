@@ -22,7 +22,7 @@ public class CaravanSelection : MonoBehaviour {
 
     public IEnumerable<CaravanMember> SelectedMembers => _selected.Where((member) => member != null);
     public int SelectedCount => _selected.Length;
-    public bool IsGrenaders => !IsEmpty && _selected.Any((member) => member.GetComponent<GrenaderController>() != null);
+    public bool IsGrenaders => !IsEmpty && _selected.Any((member) => member.GetComponent<GrenaderOperator>() != null);
     public bool IsEmpty => _selected == null || _selected.Length == 0;
 
     private void Awake() {

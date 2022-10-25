@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-public class TurelController : MonoBehaviour {
+public class TurelOperator : MonoBehaviour {
 
     [SerializeField] private Turel turel;
     [SerializeField] private float targetSearchInterval = 0.25f;

@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 850072564715260786, guid: 3befbac4def7ea245ac9f5a1e75bd2f6, type: 3}
       propertyPath: m_Name
-      value: ProjectilesParticles
+      value: TurelBulletProjectiles
       objectReference: {fileID: 0}
     - target: {fileID: 4357858979349962416, guid: 3befbac4def7ea245ac9f5a1e75bd2f6, type: 3}
       propertyPath: m_IsActive
