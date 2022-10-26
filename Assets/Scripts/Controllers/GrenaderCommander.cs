@@ -30,16 +30,19 @@ public class GrenaderCommander : MonoBehaviour {
 
     private void Awake() {
         _caravanGroupObserver = GetComponent<CaravanGroupObserver>();
-        _caravanGroupObserver.OnGroupChanged += OnGrenadersGroupChanged;
     }
 
     public void Activate(CaravanObservable caravan, CaravanSelection selection) {
         _selection = selection;
-        _caravanGroupObserver.Subscribe(caravan, grenaderTag);
+        _caravanGroupObserver.Subscribe(caravan, grenaderTag, OnGrenadersGroupChanged);
         OnActiveStateChanged?.Invoke(true);
     }
 
     public void Deactivate() {
+        if (_selection == null) {
+            return;
+        }
+
         _selection = null;
         _caravanGroupObserver.UnsubscribeFromCaravan();
 
@@ -59,6 +62,7 @@ public class GrenaderCommander : MonoBehaviour {
             var grenaderOperator = grenaderMember.GetComponent<GrenaderOperator>();
             // potential leak, as group memebers can be changed not because of destruction, 
             // and we don't remove OnReload subscription from them, only from the last recorded group
+            grenaderOperator.OnReloaded -= UpdateFireModeState;
             grenaderOperator.OnReloaded += UpdateFireModeState;
         }
 

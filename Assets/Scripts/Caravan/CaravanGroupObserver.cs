@@ -8,16 +8,16 @@ public class CaravanGroupObserver : MonoBehaviour {
     private String _groupTag;
     private CaravanObservable _subscription;
     private List<CaravanMember> _groupMembers = new List<CaravanMember>();
+    private Action<CaravanGroupObserver> _onGroupChangedCallback;
 
     public IEnumerable<CaravanMember> GroupMembers => _groupMembers.AsEnumerable();
-    public event Action<CaravanGroupObserver> OnGroupChanged;
 
-    public void Subscribe(CaravanObservable caravanObservable, String groupTag) {
-        if (_subscription != null) {
-            UnsubscribeFromCaravan();
-        }
+    public void Subscribe(CaravanObservable caravanObservable, String groupTag, Action<CaravanGroupObserver> onGroupChangedCallback) {
+        UnsubscribeFromCaravan();
 
         _groupTag = groupTag;
+        _onGroupChangedCallback = onGroupChangedCallback;
+
         caravanObservable.OnMembersChanged += OnMembersChanged;
         _subscription = caravanObservable;
 
@@ -26,6 +26,7 @@ public class CaravanGroupObserver : MonoBehaviour {
 
     public void UnsubscribeFromCaravan() {
         if (_subscription != null) {
+            _onGroupChangedCallback = null;
             _subscription.OnMembersChanged -= OnMembersChanged;
             _subscription = null;
         }
@@ -34,6 +35,6 @@ public class CaravanGroupObserver : MonoBehaviour {
     private void OnMembersChanged(CaravanObservable source) {
         _groupMembers.Clear();
         _groupMembers.AddRange(source.CountedMembers.Where((member) => member.tag == _groupTag));
-        OnGroupChanged?.Invoke(this);
+        _onGroupChangedCallback?.Invoke(this);
     }
 }

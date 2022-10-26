@@ -54,11 +54,14 @@ public class CaravanController : MonoBehaviour {
             .ToArray();
 
         OnMemberGroupsChanged?.Invoke();
+        Debug.Log("On Caravan changed, groups: " + _memberGroups.Select((g) => g.name).Aggregate("", (p, n) => p + n));
         
         if (_lastActiveGroup.HasValue) {
+            Debug.Log("last active group name: " + _lastActiveGroup.Value.name);
             var newIndex = -1;
             for (int i = 0; i < _memberGroups.Length; i++) {
                 var memberAtIndex = _memberGroups[i];
+                Debug.Log("check for new index with " + memberAtIndex.name);
                 if (memberAtIndex.name == _lastActiveGroup.Value.name) {
                     newIndex = i;
                     _lastActiveGroupIndex = newIndex;
@@ -83,9 +86,9 @@ public class CaravanController : MonoBehaviour {
         for (int i = 0; i < quickSlotInputActions.Length; i++) {
             var slotActivator = quickSlotInputActions[i];
             if (slotActivator.action.WasPerformedThisFrame() && slotActivator.action.IsPressed()) {
-                if (_memberGroups.Length > i) {
+                if (i < _memberGroups.Length) {
                     ActivateMemberGroup(i);
-                    OnActiveGroupIndexChanged?.Invoke(_lastActiveGroupIndex);
+                    OnActiveGroupIndexChanged?.Invoke(i);
                 }
             }
         }
