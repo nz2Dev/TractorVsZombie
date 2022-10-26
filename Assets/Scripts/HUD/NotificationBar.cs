@@ -7,12 +7,17 @@ public class NotificationBar : MonoBehaviour {
 
     [SerializeField] private TextMeshProUGUI textMeshPro;
 
+    private Coroutine _displayCoroutine;
+
     private void Start() {
         textMeshPro.enabled = false;
     }
 
     public void Show(string message, float duration) {
-        StartCoroutine(DisplayRoutine(message, duration));
+        if (_displayCoroutine != null) {
+            StopCoroutine(_displayCoroutine);
+        }
+        _displayCoroutine = StartCoroutine(DisplayRoutine(message, duration));
     }
 
     private IEnumerator DisplayRoutine(string message, float duration) {

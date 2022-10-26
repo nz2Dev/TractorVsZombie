@@ -18,13 +18,12 @@ public class GrenaderOperator : MonoBehaviour {
 
     private ReadyState _state = ReadyState.Ready;
     private Coroutine _loadingCoroutine;
-    private bool _fireOnLoaded;
 
     public bool ReadyForActivation => _state == ReadyState.Ready;
     public float TimeToReadynes => _state == ReadyState.WaitingForAmmo ? float.PositiveInfinity : _state == ReadyState.Ready ? 0 : reloadTime;
     public float ExplosionRadius => grenader.ExplosionRadius;
     public Vector3 LauncherPosition => grenader.LauncherPosition;
-    public bool IsActivated => _state == ReadyState.Ready && grenader.IsInstantiated;
+    public bool IsActivated => _state == ReadyState.Ready && grenader.IsAimActivated;
 
     public event Action<float> OnStartReload;
     public event Action OnReloaded;
@@ -43,7 +42,7 @@ public class GrenaderOperator : MonoBehaviour {
         }
     }
 
-    public void Activate() {
+    public void Aim(Vector3 point) {
         if (_state == ReadyState.WaitingForAmmo) {
             Assert.IsFalse(ammo.HasAmmo, "Invalid state while ammo is available");
             ammo.NotifyNeedAmmo();
@@ -54,50 +53,51 @@ public class GrenaderOperator : MonoBehaviour {
             return;
         }
 
-        grenader.InstatiateGrenade();
+        if (_state == ReadyState.Ready) {
+            if (!grenader.IsAimActivated) {
+                grenader.ActivateAim(point);
+            }
+
+            grenader.ChangeAim(point);
+            return;
+        }
     }
 
-    public void Aim(Vector3 point) {
-        grenader.Aim(point);
+    public void Cancel() {
+        grenader.DeactivateAim();
     }
 
     public void Fire() {
         if (_state == ReadyState.Ready) {
-            FireGreander();
-        } else if (_state == ReadyState.Preparing) {
-            _fireOnLoaded = true;
-        }
-    }
+            if (ammo.HasAmmo) {
+                Assert.IsTrue(ammo.TakeAmmo());
+                grenader.SingleFire();
+            }
 
-    private void FireGreander() {
-        if (ammo.HasAmmo) {
-            Assert.IsTrue(ammo.TakeAmmo());
-            grenader.Fire();    
+            Reload();
         }
-
-        Reload();
     }
 
     private void Reload() {
+        if (_loadingCoroutine != null) {
+            StopCoroutine(_loadingCoroutine);
+        }
+
         _state = ReadyState.WaitingForAmmo;
-        if (ammo.HasAmmo) {
-            _loadingCoroutine = StartCoroutine(Loading());
+        if (ammo.HasAmmo) {    
+            _loadingCoroutine = StartCoroutine(LoadingRoutine());
         } else {
             ammo.NotifyNeedAmmo();
         }
     }
 
-    private IEnumerator Loading() {
+    private IEnumerator LoadingRoutine() {
         _state = ReadyState.Preparing;
         OnStartReload?.Invoke(reloadTime);
         yield return new WaitForSeconds(reloadTime);
+        
         _state = ReadyState.Ready;
         OnReloaded?.Invoke();
-
-        if (_fireOnLoaded) {
-            _fireOnLoaded = false;
-            FireGreander();
-        }
     }
 
 }

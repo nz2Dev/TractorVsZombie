@@ -81,6 +81,7 @@ MonoBehaviour:
   damage: 90
   fireHeight: 5
   explosionRadius: 5
+  projectilesCollection: {fileID: 0}
   launcherChildGameObject: {fileID: 6697297421865838877}
   grenadeProjectilePrefab: {fileID: 5814709301179252190, guid: 662b94beb3b63a049b06c402bbce790d, type: 3}
   flyCurve:
@@ -116,6 +117,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  aimOutline: {fileID: 0}
 --- !u!4 &6697297421865838877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2617286529352000305, guid: 2c10d844afde11c46b66357e60d698e4, type: 3}

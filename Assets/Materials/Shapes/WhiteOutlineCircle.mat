@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RedOutlineCircle
+  m_Name: WhiteOutlineCircle
   m_Shader: {fileID: 4800000, guid: 4c3baf757fa348b45aff5f87d9cf7116, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

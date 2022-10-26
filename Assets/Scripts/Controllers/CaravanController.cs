@@ -106,15 +106,19 @@ public class CaravanController : MonoBehaviour {
     }
 
     private void ChangeCommander(CaravanMember[] members) {
-        selection.SetSelection(members);
-
-        if (selection.IsGrenaders) {
+        if (IsGrenaders(members)) {
+            selection.SetSelection(members);
             // inputManager.SetEnabledMaps(new[] { "Driving", "Commanders", "QuickSlots" });
             grenaderCommander.Activate(selection);
         } else {
             // inputManager.SetEnabledMaps(new[] { "Driving", "Camera", "QuickSlots" });
             grenaderCommander.Deactivate();
+            selection.SetSelection(members);
         }
     }
+
+    private bool IsGrenaders(CaravanMember[] members) {
+        return members.Length != 0 && members.Any((member) => member.GetComponent<GrenaderOperator>() != null);
+    } 
 
 }

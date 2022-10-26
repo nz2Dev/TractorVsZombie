@@ -10,33 +10,43 @@ public class Grenader : MonoBehaviour {
     [SerializeField] private int damage = 50;
     [SerializeField] private float fireHeight = 5;
     [SerializeField] private float explosionRadius = 5;
+    [SerializeField] private Transform projectilesCollection;
     [SerializeField] private Transform launcherChildGameObject;
+    [SerializeField] private String globalAimOutlinesPopulatorName = "GrenadersAimOutlinePopulator";
     [SerializeField] private GameObject grenadeProjectilePrefab;
     [SerializeField] private AnimationCurve flyCurve;
 
-    private Vector3 _aimPoint;
+    private NamedPrototypePopulator _aimOutlinesPopulator;
     private GrenadeProjectile _loadedGrenade;
+    private Vector3 _lastAimPoint;
 
     public float ExplosionRadius => explosionRadius;
     public Vector3 LauncherPosition => launcherChildGameObject.transform.position;
-    public bool IsInstantiated => _loadedGrenade != null;
+    public bool IsAimActivated => _loadedGrenade != null;
 
-    public void InstatiateGrenade() {
+    private void Awake() {
+        _aimOutlinesPopulator = GameObject.Find(globalAimOutlinesPopulatorName).GetComponent<NamedPrototypePopulator>();
+    }
+
+    public void ActivateAim(Vector3 point) {
         if (_loadedGrenade == null) {
-            var launcherPosition = launcherChildGameObject.transform.position;
-            var greandeObject = Instantiate(grenadeProjectilePrefab, launcherPosition, Quaternion.identity);
-            _loadedGrenade = greandeObject.GetComponent<GrenadeProjectile>();
+            var projectileObject = Instantiate(grenadeProjectilePrefab);
+            _loadedGrenade = projectileObject.GetComponent<GrenadeProjectile>();
+        } else {
+            Debug.LogWarning("Activating aim while loaded grenade already instantiated");
         }
+
+        var launcherPosition = launcherChildGameObject.transform.position;
+        _loadedGrenade.transform.position = launcherPosition;
+        _loadedGrenade.transform.SetParent(launcherChildGameObject.transform, true);
+
+        var aimOutline = _aimOutlinesPopulator.GetOrCreateChild<AimOutline>(gameObject.GetInstanceID());
+        aimOutline.StartOutlining(launcherPosition, point, explosionRadius);
+
+        _lastAimPoint = point;
     }
 
-    private void Update() {
-        if (_loadedGrenade != null) {
-            _loadedGrenade.transform.position = launcherChildGameObject.transform.position;
-        }
-    }
-
-    public void Aim(Vector3 point) {
-        _aimPoint = point;
+    public void ChangeAim(Vector3 point) {
         transform.LookAt(point, Vector3.up);
 
         var sampleTimeForAiming = 0.1f;
@@ -46,57 +56,55 @@ public class Grenader : MonoBehaviour {
 
         var launcherAimPoint = launcherPosition + flyPositionLocal;
         launcherChildGameObject.transform.LookAt(launcherAimPoint, Vector3.up);
+
+        var aimOutline = _aimOutlinesPopulator.GetOrCreateChild<AimOutline>(gameObject.GetInstanceID());
+        aimOutline.OutlineTarget(launcherPosition, point);
+
+        _lastAimPoint = point;
     }
 
-    public void Fire() {
-        if (_aimPoint == default || _loadedGrenade == null) {
-            Debug.LogWarning("Failed to fire, aimPoint: " + _aimPoint + " loadedGrenade: " + _loadedGrenade);
+    public void DeactivateAim() {
+        var aimOutline = _aimOutlinesPopulator.GetOrCreateChild<AimOutline>(gameObject.GetInstanceID());
+        aimOutline.StopOutlining();
+
+        if (_loadedGrenade != null) {
+            Destroy(_loadedGrenade);
+        }
+        _loadedGrenade = null;
+        _lastAimPoint = default;
+    }
+
+    public void SingleFire() {
+        if (_loadedGrenade == null) {
+            Debug.LogWarning("Failed to fire, loadedGrenade: " + _loadedGrenade);
             return;
         }
 
-        var landPosition = _aimPoint;
-        _loadedGrenade.Launch(flyCurve, fireHeight, landPosition, (projectile) => {
+        var shotGrenade = _loadedGrenade;
+        _loadedGrenade = null;
+
+        var landPosition = _lastAimPoint;
+        _lastAimPoint = default;
+
+        var aimOutline = _aimOutlinesPopulator.GetOrCreateChild<AimOutline>(gameObject.GetInstanceID());
+        aimOutline.StopOutlining();
+
+        shotGrenade.transform.SetParent(projectilesCollection, true);
+        shotGrenade.Launch(flyCurve, fireHeight, (Vector3)landPosition, (projectile) => {
             var sphereExplosion = projectile.GetComponent<SphereExplosion>();
-            sphereExplosion.Explode((epicenter, hits) => {
+            sphereExplosion.Explode((Vector3 epicenter, RaycastHit[] hits) => {
                 foreach (var hit in hits) {
                     if (hit.rigidbody != null) {
                         var health = hit.rigidbody.GetComponent<Health>();
                         var caravanMember = hit.rigidbody.GetComponent<CaravanMember>();
                         if (health != null && caravanMember == null) {
                             var distanceFromEpicentr = Vector3.Distance(hit.rigidbody.transform.position, epicenter);
-                            var damageDumping = (int) Utils.Map(distanceFromEpicentr, 0, explosionRadius, 0, damage);
+                            var damageDumping = (int)Utils.Map(distanceFromEpicentr, 0, explosionRadius, 0, damage);
                             health.TakeDamage(damage - damageDumping);
                         }
                     }
                 }
             });
         });
-
-        _loadedGrenade = null;
-        _aimPoint = default;
-    }
-
-    private void OnDrawGizmos() {
-        if (_aimPoint != default && _loadedGrenade != null) {
-            Gizmos.DrawSphere(_aimPoint, 0.2f);
-            Handles.DrawWireDisc(_aimPoint, Vector3.up, explosionRadius);
-
-            const int curveSegments = 10;
-            var launchPoint = launcherChildGameObject.transform.position;
-            var lastAimPointToLaunchPoint = _aimPoint - launchPoint;
-            
-            for (int i = 0; i < curveSegments; i++) {
-                var z0 = (float) i / curveSegments;
-                var y0 = flyCurve.Evaluate(z0) * fireHeight;
-
-                var z1 = ((float) i + 1) / curveSegments;
-                var y1 = flyCurve.Evaluate(z1) * fireHeight;
-
-                Gizmos.DrawLine(
-                    launchPoint + lastAimPointToLaunchPoint * z0 + Vector3.up * y0,
-                    launchPoint + lastAimPointToLaunchPoint * z1 + Vector3.up * y1
-                );
-            }
-        }
     }
 }
