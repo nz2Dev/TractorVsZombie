@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 public class CaravanDriverController : MonoBehaviour {
 
     [SerializeField] private InputActionReference activateAction;
-    [SerializeField] private float acceleratedSpeedMultiplier = 2;
+    [SerializeField] private TractorOperator tractorOperator;
+    
     [Space]
     [SerializeField] private InputActionReference steeringEngage;
     [SerializeField] private InputActionReference handbreakToggle;
@@ -16,8 +17,6 @@ public class CaravanDriverController : MonoBehaviour {
     [SerializeField] private Transform drivingPOV;
     [SerializeField] private bool localSpace = false;
 
-    private VehicleRam _driverTractor;
-    private Vehicle _driverVehicle;
     private bool _mouseDriving;
 
     public InputAction MoveInputActionInfo => moveAxis;
@@ -25,11 +24,6 @@ public class CaravanDriverController : MonoBehaviour {
     public InputAction BreakingInputActionInfo => handbreakToggle;
     public InputAction EngagePreciseSteeringInputActionInfo => steeringEngage;
     public InputAction PreciseSteeringAxisInputActionInfo => steeringAxis;
-
-    private void Awake() {
-        _driverTractor = driver.GetComponent<VehicleRam>();
-        _driverVehicle = driver.GetComponent<Vehicle>();
-    }
 
     private void Update() {
         if (driver == null) {
@@ -41,13 +35,11 @@ public class CaravanDriverController : MonoBehaviour {
         }
 
         if (activateAction.action.WasPressedThisFrame()) {
-            _driverTractor.SetRamActivation(true);
-            _driverVehicle.ChangeMaxSpeedMultiplier(acceleratedSpeedMultiplier);
+            tractorOperator.ActivateRam();
         }
 
         if (activateAction.action.WasReleasedThisFrame()) {
-            _driverTractor.SetRamActivation(false);
-            _driverVehicle.ChangeMaxSpeedMultiplier(1);
+            tractorOperator.DeactivateRam();
         }
 
         if (steeringEngage.action.inProgress && steeringEngage.action.WasPressedThisFrame()) {
