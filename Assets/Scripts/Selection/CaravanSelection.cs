@@ -32,7 +32,7 @@ public class CaravanSelection : MonoBehaviour {
         _colorSchema = schema == null ? defaultColorSchema : schema.Value;
     }
 
-    public void SetSelection(CaravanMember[] members) {
+    public void SetSelection(IEnumerable<CaravanMember> members) {
         foreach (var previouslySelected in SelectedMembers) {
             if (previouslySelected != null) {
                 var selectable = previouslySelected.GetComponent<Selectable>();
@@ -42,7 +42,7 @@ public class CaravanSelection : MonoBehaviour {
             }
         }
 
-        _selected = members;
+        _selected = members.ToArray();
         foreach (var selectedMember in members) {
             var selectable = selectedMember.GetComponent<Selectable>();
             if (selectable != null) {

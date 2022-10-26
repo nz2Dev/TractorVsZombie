@@ -18,7 +18,7 @@ public class FollowWidthCameraZoom : MonoBehaviour, ICameraZoom {
         _followZoom = GetComponent<CinemachineFollowZoom>();
     }
 
-    private void OnCaravanChanged(CaravanObserver observer) {
+    private void OnCaravanChanged(CaravanObservable observer) {
         UpdateZoomWidths();
     }
 

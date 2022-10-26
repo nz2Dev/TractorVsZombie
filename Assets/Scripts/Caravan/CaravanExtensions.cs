@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class CaravanObserverExtensions {
+public static class CaravanExtensions {
+
+    // TODO actually this is an caravan list extension
 
     public static bool TryGetShortestDistanceMember(
-        this CaravanObserver observer, Vector3 searchPoint, 
+        this CaravanObservable observer, Vector3 searchPoint, 
         float searchRadius, out CaravanMember shortest) {
             
         shortest = null;

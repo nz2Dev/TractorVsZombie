@@ -17,7 +17,7 @@ public class MeleEnemyBehaviour : MonoBehaviour {
     private bool _chasing;
     private Transform _pathTarget;
     private CrowdVehicleDriver _vehicleDriver;
-    private CaravanObserver _caravanObserver;
+    private CaravanObservable _caravanObservable;
     private CylinderZombie _zombie;
 
     private void Awake() {
@@ -64,7 +64,7 @@ public class MeleEnemyBehaviour : MonoBehaviour {
     }
 
     private void Start() {
-        _caravanObserver = FindObjectOfType<CaravanObserver>();
+        _caravanObservable = FindObjectOfType<CaravanObservable>();
         StartCoroutine(nameof(SearchTarget));
     }
 
@@ -80,8 +80,8 @@ public class MeleEnemyBehaviour : MonoBehaviour {
             var shortest = (CaravanMember)null;
             var shortestDistance = float.PositiveInfinity;
 
-            if (_caravanObserver != null) {
-                foreach (var member in _caravanObserver.CountedMembers) {
+            if (_caravanObservable != null) {
+                foreach (var member in _caravanObservable.CountedMembers) {
                     var distance = Vector3.Distance(position, member.transform.position);
                     if (distance < searchDistance && distance < shortestDistance) {
                         shortestDistance = distance;

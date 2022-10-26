@@ -10,7 +10,7 @@ public class CameraController : MonoBehaviour {
     [SerializeField] private InputActionReference orbitAction;
     [SerializeField] private InputActionReference engageAction;
     [SerializeField] private InputActionReference zoomActionRef;
-    [SerializeField] private CaravanObserver caravanObserver;
+    [SerializeField] private CaravanObservable caravanObservable;
     [SerializeField] private CamerasManager cameras;
 
     private ICameraRig _controlledRig;
@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour {
     private void Awake() {
         cameras.OnVCamChanged += OnCameraChanged;
 
-        caravanObserver.OnMembersChanged += (ctx) => {
+        caravanObservable.OnMembersChanged += (ctx) => {
             if (_controlledZoom != null) {
                 _controlledZoom.SetZoomFactor(ctx.CountedLength);
             }

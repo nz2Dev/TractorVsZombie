@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpecialEnemyBehaviour : MonoBehaviour {
     [SerializeField] private Transform directionReference;
-    [SerializeField] private CaravanObserver caravanObserver;
+    [SerializeField] private CaravanObservable caravanObservable;
     [SerializeField] private float checkCaravanInterval = 0.5f;
 
     private SpecialCrowdDriver _zombieDriver;
@@ -23,7 +23,7 @@ public class SpecialEnemyBehaviour : MonoBehaviour {
     private IEnumerator WaitCaravanRoutine() {
         while (true) {
             yield return new WaitForSeconds(checkCaravanInterval);
-            if (caravanObserver.TryGetShortestDistanceMember(transform.position, 1, out var member)) {
+            if (caravanObservable.TryGetShortestDistanceMember(transform.position, 1, out var member)) {
                 _zombieDriver.SetChaseTransform(member.transform);
                 _zombie.StartAttack(member.gameObject);
             } else {

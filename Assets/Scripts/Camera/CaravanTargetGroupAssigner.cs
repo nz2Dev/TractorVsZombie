@@ -1,26 +1,25 @@
-using System;
 using Cinemachine;
 using UnityEngine;
 
 public class CaravanTargetGroupAssigner : MonoBehaviour {
     [SerializeField] private CinemachineTargetGroup targetGroup;
-    [SerializeField] private CaravanObserver caravanObserver;
+    [SerializeField] private CaravanObservable caravanObservable;
     [SerializeField] private float memberRadius = 1f;
 
     private void Awake() {
-        caravanObserver.OnMembersChanged += OnMembersChanged;
+        caravanObservable.OnMembersChanged += OnMembersChanged;
     }
 
-    private void OnMembersChanged(CaravanObserver observer) {
+    private void OnMembersChanged(CaravanObservable observer) {
         UpdateTargetGroup();
     }
 
     [ContextMenu("Update Target Group")]
     private void UpdateTargetGroup() {
         var targetIndex = 0;
-        var targets = new CinemachineTargetGroup.Target[caravanObserver.CountedLength];
+        var targets = new CinemachineTargetGroup.Target[caravanObservable.CountedLength];
 
-        foreach (var member in caravanObserver.CountedMembers) {
+        foreach (var member in caravanObservable.CountedMembers) {
             targets[targetIndex++] = new CinemachineTargetGroup.Target {
                 radius = memberRadius,
                 target = member.transform,

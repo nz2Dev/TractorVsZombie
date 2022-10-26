@@ -4,24 +4,19 @@ using System.Linq;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class CaravanObserver : MonoBehaviour {
+public class CaravanObservable : MonoBehaviour {
 
     [SerializeField] private CaravanMember head;
 
-    private CaravanMember _lastTail;
     private CaravanMember[] _countedMembers = new CaravanMember[0];
 
     public CaravanMember Subject => head;
     public IEnumerable<CaravanMember> CountedMembers => _countedMembers;
     public int CountedLength => _countedMembers.Length;
 
-    public event Action<CaravanObserver> OnMembersChanged;
+    public event Action<CaravanObservable> OnMembersChanged;
 
-    private void Awake() {
-        OnMemberStateChanged();
-    }
-
-    private void OnEnable() {
+    private void Start() {
         OnMemberStateChanged();
     }
 

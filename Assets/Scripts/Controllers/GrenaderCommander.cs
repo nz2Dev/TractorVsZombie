@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(CaravanGroupObserver))]
 public class GrenaderCommander : MonoBehaviour {
 
     [SerializeField] private InputActionReference engageAction;
@@ -12,11 +13,13 @@ public class GrenaderCommander : MonoBehaviour {
     [SerializeField] private InputActionReference reloadAction;
     [SerializeField] private InputActionReference aimAction;
     [SerializeField] private WorldRaycaster worldRaycaster;
+    [SerializeField] private String grenaderTag = "Grenader";
     [SerializeField] private bool singleFireMode;
 
     private Vector3 _aimPoint;
-    private CaravanSelection _grenaders;
+    private CaravanSelection _selection;
     private GrenaderOperator _singleFireGrenader;
+    private CaravanGroupObserver _caravanGroupObserver;
 
     public event Action<bool> OnActiveStateChanged;
 
@@ -25,41 +28,52 @@ public class GrenaderCommander : MonoBehaviour {
     public string enageActionBindings => engageAction.action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions);
     public string aimActionBindings => "position [mouse]";
 
-    public void Activate(CaravanSelection greandersSelection) {
-        _grenaders = greandersSelection;
-        
-        UpdateFireModeState();
-        foreach (var grenader in _grenaders.SelectedMembers) {
-            var controller = grenader.GetComponent<GrenaderOperator>();
-            controller.OnReloaded += () => {
-                UpdateFireModeState();
-            };
-        }
+    private void Awake() {
+        _caravanGroupObserver = GetComponent<CaravanGroupObserver>();
+        _caravanGroupObserver.OnGroupChanged += OnGrenadersGroupChanged;
+    }
 
+    public void Activate(CaravanObservable caravan, CaravanSelection selection) {
+        _selection = selection;
+        _caravanGroupObserver.Subscribe(caravan, grenaderTag);
         OnActiveStateChanged?.Invoke(true);
     }
 
     public void Deactivate() {
-        if (_grenaders != null && _grenaders.SelectedMembers != null) {
-            foreach (var member in _grenaders.SelectedMembers) {
-                var grenader = member.GetComponent<GrenaderOperator>();
-                grenader.Cancel();
-            }
+        _selection = null;
+        _caravanGroupObserver.UnsubscribeFromCaravan();
+
+        foreach (var grenaderMember in _caravanGroupObserver.GroupMembers) {
+            var grenaderOperator = grenaderMember.GetComponent<GrenaderOperator>();
+            grenaderOperator.OnReloaded -= UpdateFireModeState;
+            grenaderOperator.Cancel();
         }
 
-        _grenaders = null;
         OnActiveStateChanged?.Invoke(false);
     }
 
+    private void OnGrenadersGroupChanged(CaravanGroupObserver observer) {
+        _selection.SetSelection(observer.GroupMembers);
+
+        foreach (var grenaderMember in observer.GroupMembers) {
+            var grenaderOperator = grenaderMember.GetComponent<GrenaderOperator>();
+            // potential leak, as group memebers can be changed not because of destruction, 
+            // and we don't remove OnReload subscription from them, only from the last recorded group
+            grenaderOperator.OnReloaded += UpdateFireModeState;
+        }
+
+        UpdateFireModeState();
+    }
+
     private void Update() {
-        if (reloadAction.action.WasPerformedThisFrame() && _grenaders != null) {
-            foreach (var greander in _grenaders.SelectedMembers) {
+        if (reloadAction.action.WasPerformedThisFrame() && _selection != null) {
+            foreach (var greander in _selection.SelectedMembers) {
                 var ammo = greander.GetComponent<Ammo>();
                 ammo.RefillFull();
             }
         }
 
-        if (_grenaders == null) {
+        if (_selection == null) {
             return;
         }
 
@@ -94,17 +108,17 @@ public class GrenaderCommander : MonoBehaviour {
 
     private void UpdateFireModeState() {
         if (singleFireMode) {
-            _grenaders.ToggleSecondarySelection(true);
+            _selection.ToggleSecondarySelection(true);
             FindNextSingleGreander();
 
-            foreach(var member in _grenaders.SelectedMembers) {
+            foreach(var member in _selection.SelectedMembers) {
                 var grenader = member.GetComponent<GrenaderOperator>();
                 if (grenader != _singleFireGrenader) {
                     grenader.Cancel();
                 }
             }
         } else {
-            _grenaders.ToggleSecondarySelection(false);
+            _selection.ToggleSecondarySelection(false);
         }
     }
 
@@ -113,14 +127,14 @@ public class GrenaderCommander : MonoBehaviour {
             return;
         }
 
-        _singleFireGrenader = _grenaders.SelectedMembers
+        _singleFireGrenader = _selection.SelectedMembers
                 .Select((member) => member.GetComponent<GrenaderOperator>())
                 .Where((controller) => controller.ReadyForActivation)
                 .OrderBy((controller) => controller.TimeToReadynes)
                 .FirstOrDefault();
 
         var greanderMember = _singleFireGrenader == null ? null : _singleFireGrenader.GetComponent<CaravanMember>();
-        _grenaders.SetSecondarySelection(greanderMember);
+        _selection.SetSecondarySelection(greanderMember);
     }
 
     private void AimSingleGreander() {
@@ -137,15 +151,15 @@ public class GrenaderCommander : MonoBehaviour {
 
     private void FindAimLine(out Vector3 lineStart, out Vector3 lineStep) {
         var membersPositionSum = Vector3.zero;
-        foreach (var greanderMember in _grenaders.SelectedMembers) {
+        foreach (var greanderMember in _selection.SelectedMembers) {
             membersPositionSum += greanderMember.transform.position;
         }
 
         var lineStepLength = 2f;
-        var membersCenter = membersPositionSum / _grenaders.SelectedCount;
+        var membersCenter = membersPositionSum / _selection.SelectedCount;
         var lineDirection = Vector3.Cross((_aimPoint - membersCenter).normalized, Vector3.up);
         lineStep = lineDirection * lineStepLength;
-        var lineTotal = (_grenaders.SelectedCount - 1) * lineStep;
+        var lineTotal = (_selection.SelectedCount - 1) * lineStep;
         lineStart = _aimPoint - lineTotal / 2f;
     }
 
@@ -153,7 +167,7 @@ public class GrenaderCommander : MonoBehaviour {
         FindAimLine(out var lineStart, out var lineStep);
         var lineCurrent = lineStart;
 
-        foreach (var greanderMember in _grenaders.SelectedMembers) {
+        foreach (var greanderMember in _selection.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderOperator>();
             greanderController.Aim(lineCurrent);
 
@@ -162,7 +176,7 @@ public class GrenaderCommander : MonoBehaviour {
     }
 
     private void FireAllGreanders() {
-        foreach (var greanderMember in _grenaders.SelectedMembers) {
+        foreach (var greanderMember in _selection.SelectedMembers) {
             var greanderController = greanderMember.GetComponent<GrenaderOperator>();
             greanderController.Fire();
         }

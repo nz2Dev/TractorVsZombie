@@ -6,7 +6,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class CaravanHeadVCamTargetAssigner : MonoBehaviour {
-    [SerializeField] private CaravanObserver caravanObserver;
+    [SerializeField] private CaravanObservable caravanObservable;
     
     private CinemachineVirtualCamera _virtualCamera;
     
@@ -17,7 +17,7 @@ public class CaravanHeadVCamTargetAssigner : MonoBehaviour {
 
     [ContextMenu("Bind Camera Targets")]
     private void BindCameraTargets() {
-        _virtualCamera.Follow = caravanObserver.Subject.transform;
-        _virtualCamera.LookAt = caravanObserver.Subject.transform;
+        _virtualCamera.Follow = caravanObservable.Subject.transform;
+        _virtualCamera.LookAt = caravanObservable.Subject.transform;
     }
 }

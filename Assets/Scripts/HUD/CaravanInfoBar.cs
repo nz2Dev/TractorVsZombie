@@ -25,10 +25,6 @@ public class CaravanInfoBar : MonoBehaviour {
         toggle.isOn = true;
     }
 
-    private void Start() {
-        OnMemberGroupsChanged();
-    }
-
     public void OnMemberGroupsChanged() {
         _groupsInfoAdapter.Adapt<CaravanMemberGroup>(controller.MemberGroups.ToList(), (element, index, data) => {
             var elementBar = element.GetComponent<GroupInfoUIElement>();

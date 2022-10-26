@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 // Player, Turel, Grenader (each CaravanMember that has tag string assigned)
 public struct CaravanMemberGroup {
@@ -24,7 +25,7 @@ public class CaravanController : MonoBehaviour {
     [SerializeField] private InputActionReference[] quickSlotInputActions;
     [SerializeField] private CaravanMemberGroupSelectionColors[] groupsSelectionColors;
     [SerializeField] private CaravanSelection selection;
-    [SerializeField] private CaravanObserver observer;
+    [SerializeField] private CaravanObservable observable;
     [SerializeField] private GameInputManager inputManager;
     [SerializeField] private GrenaderCommander grenaderCommander;
 
@@ -39,15 +40,11 @@ public class CaravanController : MonoBehaviour {
     public InputActionReference[] MemberGroupsActivators => quickSlotInputActions;
 
     private void Awake() {
-        observer.OnMembersChanged += OnCaravanChanged;
+        observable.OnMembersChanged += OnCaravanChanged;
     }
 
-    private void Start() {
-        OnCaravanChanged(observer);
-    }
-
-    private void OnCaravanChanged(CaravanObserver observer) {
-        _memberGroups = observer.CountedMembers
+    private void OnCaravanChanged(CaravanObservable observable) {
+        _memberGroups = observable.CountedMembers
             .Where((member) => member.tag != null)
             .GroupBy((member) => member.tag)
             .Select((group) => new CaravanMemberGroup {
@@ -107,12 +104,10 @@ public class CaravanController : MonoBehaviour {
 
     private void ChangeCommander(CaravanMember[] members) {
         if (IsGrenaders(members)) {
-            selection.SetSelection(members);
-            // inputManager.SetEnabledMaps(new[] { "Driving", "Commanders", "QuickSlots" });
-            grenaderCommander.Activate(selection);
+            grenaderCommander.Activate(observable, selection);
         } else {
-            // inputManager.SetEnabledMaps(new[] { "Driving", "Camera", "QuickSlots" });
             grenaderCommander.Deactivate();
+            selection.ToggleSecondarySelection(false);
             selection.SetSelection(members);
         }
     }
