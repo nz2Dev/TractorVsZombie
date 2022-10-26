@@ -28,6 +28,12 @@ public class Grenader : MonoBehaviour {
         _aimOutlinesPopulator = GameObject.Find(globalAimOutlinesPopulatorName).GetComponent<NamedPrototypePopulator>();
     }
 
+    private void OnDestroy() {
+        // TODO better way to use gameObject reference, and clean up automatically 
+        // from populator when the link is not valid, e.g link object is destroyed
+        _aimOutlinesPopulator.DestroyChild(gameObject.GetInstanceID());
+    }
+
     public void ActivateAim(Vector3 point) {
         if (_loadedGrenade == null) {
             var projectileObject = Instantiate(grenadeProjectilePrefab);

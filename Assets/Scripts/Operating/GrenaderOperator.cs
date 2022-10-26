@@ -7,12 +7,14 @@ using UnityEngine.Assertions;
 public class GrenaderOperator : MonoBehaviour {
 
     private enum ReadyState {
+        Invalid,
         WaitingForAmmo,
         Preparing,
         Ready
     }
 
     [SerializeField] private Ammo ammo;
+    [SerializeField] private Health health;
     [SerializeField] private Grenader grenader;
     [SerializeField] private float reloadTime = 0.3f;
 
@@ -30,6 +32,12 @@ public class GrenaderOperator : MonoBehaviour {
 
     private void Awake() {
         ammo.OnAmmoStateChanged += AmmoRefillObserver;
+        health.OnHealthChanged += (h) => {
+            if (h.IsZero) {
+                _state = ReadyState.Invalid;
+                Cancel();
+            }
+        };
     }
 
     private void OnDestroy() {
@@ -43,6 +51,10 @@ public class GrenaderOperator : MonoBehaviour {
     }
 
     public void Aim(Vector3 point) {
+        if (_state == ReadyState.Invalid) {
+            return;
+        }
+
         if (_state == ReadyState.WaitingForAmmo) {
             Assert.IsFalse(ammo.HasAmmo, "Invalid state while ammo is available");
             ammo.NotifyNeedAmmo();
@@ -81,6 +93,10 @@ public class GrenaderOperator : MonoBehaviour {
     private void Reload() {
         if (_loadingCoroutine != null) {
             StopCoroutine(_loadingCoroutine);
+        }
+
+        if (_state == ReadyState.Invalid) {
+            return;
         }
 
         _state = ReadyState.WaitingForAmmo;
