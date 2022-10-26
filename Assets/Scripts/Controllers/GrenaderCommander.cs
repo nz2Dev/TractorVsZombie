@@ -40,7 +40,7 @@ public class GrenaderCommander : MonoBehaviour {
     }
 
     public void Deactivate() {
-        if (_grenaders.SelectedMembers != null) {
+        if (_grenaders != null && _grenaders.SelectedMembers != null) {
             foreach (var member in _grenaders.SelectedMembers) {
                 var grenader = member.GetComponent<GrenaderOperator>();
                 grenader.Cancel();
@@ -52,15 +52,19 @@ public class GrenaderCommander : MonoBehaviour {
     }
 
     private void Update() {
-        if (worldRaycaster.RaycastGroundPoint(aimAction.action.ReadValue<Vector2>(), out var groundPoint)) {
-            _aimPoint = groundPoint;
-        }
-
         if (reloadAction.action.WasPerformedThisFrame() && _grenaders != null) {
             foreach (var greander in _grenaders.SelectedMembers) {
                 var ammo = greander.GetComponent<Ammo>();
                 ammo.RefillFull();
             }
+        }
+
+        if (_grenaders == null) {
+            return;
+        }
+
+        if (worldRaycaster.RaycastGroundPoint(aimAction.action.ReadValue<Vector2>(), out var groundPoint)) {
+            _aimPoint = groundPoint;
         }
 
         if (fireModeToggle.action.WasPerformedThisFrame()) {

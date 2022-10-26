@@ -68,7 +68,7 @@ public class Grenader : MonoBehaviour {
         aimOutline.StopOutlining();
 
         if (_loadedGrenade != null) {
-            Destroy(_loadedGrenade);
+            Destroy(_loadedGrenade.gameObject);
         }
         _loadedGrenade = null;
         _lastAimPoint = default;
