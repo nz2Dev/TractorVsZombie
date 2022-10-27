@@ -60,14 +60,9 @@ public class PickUpDetector : MonoBehaviour {
         yield return new WaitForSeconds(activationWaitTime);
         var activatorTail = activator.TriggeredMember.Tail;
         var newTrophyMember = newTrophy.GetComponent<CaravanMember>();
-        newTrophyMember.AttachSelfTo(activator.TriggeredMember);
-        
-        // TODO Fix double OnChange callback invocation, when there is two callbacks:
-        // first with only two caravan memeber, and the second when two pieces glue together
+        newTrophyMember.AttachToGroupAt(activator.TriggeredMember);
 
         if (activatorTail != null) {
-            activatorTail.AttachSelfTo(newTrophyMember);
-
             var activatorTailDriver = activatorTail.GetComponent<TwoAxisPlatformFollowDriver>();
             if (activatorTailDriver != null) {
                 var triggerConnectionPoint = activator.TriggeredMember.GetComponent<ConnectionPoint>();

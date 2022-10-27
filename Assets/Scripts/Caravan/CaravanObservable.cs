@@ -49,7 +49,7 @@ public class CaravanObservable : MonoBehaviour {
 
     private void OnMemberDetached(CaravanMember source, CaravanMember detachedHead, CaravanMember detachedTail) {
         if (detachedTail != null && detachedHead != null) {
-            detachedTail.AttachSelfTo(detachedHead);
+            detachedTail.AttachAfter(detachedHead);
         } else {
             OnMemberStateChanged();
         }

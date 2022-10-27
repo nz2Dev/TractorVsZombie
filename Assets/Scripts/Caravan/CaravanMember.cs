@@ -6,9 +6,9 @@ using UnityEngine.Serialization;
 [SelectionBase]
 [ExecuteInEditMode]
 public class CaravanMember : MonoBehaviour {
-    
+
     public delegate void Detachement(CaravanMember source, CaravanMember itsHead, CaravanMember itsTail);
-    
+
     [SerializeField] private CaravanMember initialHead;
 
     private CaravanMember _head;
@@ -23,73 +23,85 @@ public class CaravanMember : MonoBehaviour {
     public event Action<CaravanMember> OnHeadChanged;
 
     private void Awake() {
-        AttachSelfToInitial();
+        AttachToInitialHead();
     }
 
-    public void AttachSelfToInitial() {
+    public void AttachToInitialHead() {
         if (initialHead != null) {
-            AttachSelfTo(initialHead);
-        }
-    }
-    
-    public void AttachSelfTo(CaravanMember member) {
-        if (_head != member) {
-            DetachSelf();
-        } else {
-            return;
-        }
-        
-        if (member != null) {
-            member.ChangeTail(this);   
-            _head = member;
-            OnHeadChanged?.Invoke(this);
+            AttachAfter(initialHead);
         }
     }
 
-    public void DetachSelf() {
-        if (_head != null) {
-            _head.ChangeTail(null);
-            UnsetHead();
-        }
+    public void AttachAfter(CaravanMember member) {
+        SetHead(member);
     }
 
-    private void ChangeTail(CaravanMember newMember) {
-        if (_tail == newMember) {
-            return;
-        }
+    public void DetachFromHead() {
+        UnsetHead(notifyOnNull: true);
+    }
 
-        var previousTail = _tail;
-        _tail = newMember;
-        OnChanged?.Invoke();
-
-        if (previousTail != null && previousTail.Head == this) {
-            previousTail.UnsetHead();
-        }
+    public void AttachToGroupAt(CaravanMember member) {
+        var myTail = member.Tail;
+        member.UnsetTail(notifyTailUnset: false);
+        myTail.AttachAfter(this);
+        this.AttachAfter(member);
     }
 
     public void DetachFromGroup() {
-        var detachedHead = _head;
-        if (detachedHead != null) {
-            detachedHead.UnsetTail();
-            UnsetHead();
-        }
-        
-        var detachedTail = _tail;
-        if (_tail != null) {
-            _tail.UnsetHead();
-            _tail = null;
-        }
+        var detachedHead = UnsetHead(notifyOnNull: true);
+        var detachedTail = UnsetTail(notifyTailUnset: true);
 
         OnDetachment?.Invoke(this, detachedHead, detachedTail);
     }
 
-    private void UnsetHead() {
-        _head = null;
+    private void SetHead(CaravanMember newHead) {
+        if (newHead == null || newHead == _head) {
+            return;
+        }
+
+        UnsetHead(notifyOnNull: false);
+        _head = newHead;
+        newHead.SetTail(this);
+
         OnHeadChanged?.Invoke(this);
     }
 
-    private void UnsetTail() {
+    private CaravanMember UnsetHead(bool notifyOnNull) {
+        var unsetHead = _head;
+        _head = null;
+
+        if (unsetHead != null && unsetHead.Tail == this) {
+            unsetHead.UnsetTail(notifyTailUnset: false);
+        }
+
+        if (notifyOnNull) {
+            OnHeadChanged?.Invoke(this);
+        }
+
+        return unsetHead;
+    }
+
+    private void SetTail(CaravanMember newTail) {
+        if (newTail == null || newTail == _tail) {
+            return;
+        }
+
+        UnsetTail(notifyTailUnset: false);
+        newTail.SetHead(this);
+        _tail = newTail;
+
+        OnChanged?.Invoke();
+    }
+
+    private CaravanMember UnsetTail(bool notifyTailUnset) {
+        var unsetTail = _tail;
         _tail = null;
+
+        if (unsetTail != null && unsetTail.Head == this) {
+            unsetTail.UnsetHead(notifyOnNull: notifyTailUnset);
+        }
+
+        return unsetTail;
     }
 
     private void OnDestroy() {
@@ -97,9 +109,9 @@ public class CaravanMember : MonoBehaviour {
             Debug.LogWarning($"Caravan member {name} destroyed but still "
                 + $"has references head: {(_head == null ? null : _head.name)} "
                 + $"tail: {(_tail == null ? null : _tail.name)}");
-            
+
             DetachFromGroup();
         }
     }
-    
+
 }

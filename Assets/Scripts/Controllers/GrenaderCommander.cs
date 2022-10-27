@@ -31,7 +31,6 @@ public class GrenaderCommander : MonoBehaviour {
     private void Awake() {
         _caravanGroupObserver = GetComponent<CaravanGroupObserver>();
     }
-
     public void Activate(CaravanObservable caravan, CaravanSelection selection) {
         _selection = selection;
         _caravanGroupObserver.Subscribe(caravan, grenaderTag, OnGrenadersGroupChanged);

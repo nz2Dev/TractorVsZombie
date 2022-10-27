@@ -19,20 +19,20 @@ public class CaravanMemberEditor : Editor {
         EditorGUILayout.Space();
 
         if (GUILayout.Button("AttachSelftToInitial")) {
-            member.AttachSelfToInitial();
+            member.AttachToInitialHead();
         }
 
         EditorGUILayout.BeginHorizontal();
         memberToAttach = (CaravanMember) EditorGUILayout.ObjectField(memberToAttach, typeof(CaravanMember), true);
         if (GUILayout.Button("AttachSelfTo")) {
-            member.AttachSelfTo(memberToAttach);
+            member.AttachAfter(memberToAttach);
             memberToAttach = null;
         }
         EditorGUILayout.EndHorizontal();
         
 
         if (GUILayout.Button("DetachSelf")) {
-            member.DetachSelf();
+            member.DetachFromHead();
         }
 
         GUILayout.Label("Observers: " + member.ChangesSubscribersCount);
