@@ -542,6 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammo: {fileID: 2007775792492026368}
+  health: {fileID: 6863811704320662959}
   grenader: {fileID: 5139050086637534102}
   reloadTime: 0.3
 --- !u!114 &6863811704320662959
