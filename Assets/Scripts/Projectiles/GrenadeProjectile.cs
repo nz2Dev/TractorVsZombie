@@ -6,8 +6,14 @@ using UnityEngine;
 public class GrenadeProjectile : MonoBehaviour {
 
     [SerializeField] private float detonateDistance = 0.3f;
+    [SerializeField] private String globalLandingObjectPopulatorName = "LandingOutlinePopulator";
 
+    private NamedPrototypePopulator _landingOutlinesPopulator;
     private bool _launched;
+
+    private void Awake() {
+        _landingOutlinesPopulator = GameObject.Find(globalLandingObjectPopulatorName).GetComponent<NamedPrototypePopulator>();
+    }
 
     public void Launch(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<GrenadeProjectile> landCallback) {
         if (_launched) {
@@ -23,13 +29,20 @@ public class GrenadeProjectile : MonoBehaviour {
         var launchPosition = transform.position;
         var launchToLand = landPosition - launchPosition;
 
+        var landingOutline = _landingOutlinesPopulator.GetOrCreateChild<LandingOutline>(gameObject.GetInstanceID());
+        landingOutline.OutlineLanding(landPosition);
+
         while (true) {
             time += Time.deltaTime;
 
             var flyPositionLocal = launchToLand * time + flyCurve.Evaluate(time) * flyHeight * Vector3.up;
             transform.position = launchPosition + flyPositionLocal;
 
-            if (Vector3.Distance(transform.position, landPosition) < detonateDistance || time >= 1f) {
+            var distanceToLanding = Vector3.Distance(transform.position, landPosition);
+            landingOutline.SetProgress(1 - (distanceToLanding / launchToLand.magnitude));
+
+            if (distanceToLanding < detonateDistance || time >= 1f) {
+                _landingOutlinesPopulator.DestroyChild(gameObject.GetInstanceID());
                 landCallback?.Invoke(this);
                 break;
             }
