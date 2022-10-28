@@ -50,7 +50,7 @@ public class CaravanController : MonoBehaviour {
     private void OnControlGroupChanged() {
         OnControlGroupsChanged?.Invoke();
 
-        if (_lastActiveCommander != null && _lastActiveCommander.GroupInfo.length == 0) {
+        if (_lastActiveCommander == null || _lastActiveCommander != null && _lastActiveCommander.GroupInfo.length == 0) {
             ActivateMemberGroup(0);
         }
     }
