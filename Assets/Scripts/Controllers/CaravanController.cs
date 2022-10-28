@@ -7,78 +7,51 @@ using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-// Player, Turel, Grenader (each CaravanMember that has tag string assigned)
-public struct CaravanMemberGroup {
+public struct CommanderGroupInfo {
     public string name;
-    public CaravanMember[] members;
+    public int length;
 }
 
-[Serializable]
-public struct CaravanMemberGroupSelectionColors {
-    [SerializeField] public string nameKey;
-    [SerializeField] public ColorSchema schema;
+public interface ICaravanGroupCommander {
+    CommanderGroupInfo GroupInfo { get; }
+    void Subscribe(CaravanObservable caravan, Action onGroupChanged);
+    void Activate(CaravanSelection selection);
+    void Deactivate();
 }
 
 [SelectionBase]
 public class CaravanController : MonoBehaviour {
 
     [SerializeField] private InputActionReference[] quickSlotInputActions;
-    [SerializeField] private CaravanMemberGroupSelectionColors[] groupsSelectionColors;
-    [SerializeField] private CaravanSelection selection;
-    [SerializeField] private CaravanObservable observable;
     [SerializeField] private GameInputManager inputManager;
-    [SerializeField] private GrenaderCommander grenaderCommander;
+    [SerializeField] private CaravanSelection selection;
+    [SerializeField] private CaravanObservable caravan;
 
-    private CaravanMemberGroup[] _memberGroups;
-    private CaravanMemberGroup? _lastActiveGroup;
-    private int _lastActiveGroupIndex = -1;
+    private ICaravanGroupCommander[] _commanders;
+    private ICaravanGroupCommander _lastActiveCommander;
 
-    public event Action OnMemberGroupsChanged;
-    public event Action<int> OnActiveGroupIndexChanged;
+    public event Action OnControlGroupsChanged;
+    public event Action OnActiveGroupChanged;
 
-    public CaravanMemberGroup[] MemberGroups => _memberGroups;
-    public InputActionReference[] MemberGroupsActivators => quickSlotInputActions;
+    public IEnumerable<CommanderGroupInfo> CommandersGroupInfo => _commanders.Select((cmd) => cmd.GroupInfo);
+    public CommanderGroupInfo? ActiveCommanderGroupInfo => _lastActiveCommander == null ? null : _lastActiveCommander.GroupInfo;
+    public InputActionReference[] CommanderActivators => quickSlotInputActions;
 
     private void Awake() {
-        observable.OnMembersChanged += OnCaravanChanged;
+        _commanders = GetComponentsInChildren<ICaravanGroupCommander>();
     }
 
-    private void OnCaravanChanged(CaravanObservable observable) {
-        _memberGroups = observable.CountedMembers
-            .Where((member) => member.tag != null)
-            .GroupBy((member) => member.tag)
-            .Select((group) => new CaravanMemberGroup {
-                members = group.ToArray<CaravanMember>(),
-                name = group.Key
-            })
-            .ToArray();
-
-        OnMemberGroupsChanged?.Invoke();
-        Debug.Log("On Caravan changed, groups: " + _memberGroups.Select((g) => g.name).Aggregate("", (p, n) => p + n));
-        
-        if (_lastActiveGroup.HasValue) {
-            Debug.Log("last active group name: " + _lastActiveGroup.Value.name);
-            var newIndex = -1;
-            for (int i = 0; i < _memberGroups.Length; i++) {
-                var memberAtIndex = _memberGroups[i];
-                Debug.Log("check for new index with " + memberAtIndex.name);
-                if (memberAtIndex.name == _lastActiveGroup.Value.name) {
-                    newIndex = i;
-                    _lastActiveGroupIndex = newIndex;
-                    OnActiveGroupIndexChanged?.Invoke(i);
-                    break;
-                }
-            }
-
-            if (newIndex == -1) {
-                _lastActiveGroupIndex = -1;
-                _lastActiveGroup = null;
-            }
+    private void Start() {
+        foreach (var commander in _commanders) {
+            commander.Subscribe(caravan, OnControlGroupChanged);
         }
+    }
 
-        if (_lastActiveGroup == null) {
+    private void OnControlGroupChanged() {
+        OnControlGroupsChanged?.Invoke();
+
+        if (_lastActiveCommander != null && _lastActiveCommander.GroupInfo.length == 0) {
             ActivateMemberGroup(0);
-            OnActiveGroupIndexChanged?.Invoke(_lastActiveGroupIndex);
         }
     }
 
@@ -86,37 +59,23 @@ public class CaravanController : MonoBehaviour {
         for (int i = 0; i < quickSlotInputActions.Length; i++) {
             var slotActivator = quickSlotInputActions[i];
             if (slotActivator.action.WasPerformedThisFrame() && slotActivator.action.IsPressed()) {
-                if (i < _memberGroups.Length) {
+                if (i < _commanders.Length && _commanders[i].GroupInfo.length > 0) {
                     ActivateMemberGroup(i);
-                    OnActiveGroupIndexChanged?.Invoke(i);
                 }
             }
         }
     }
 
     public void ActivateMemberGroup(int index) {
-        _lastActiveGroupIndex = index;
-        
-        var activeGroup = _memberGroups[index];
-        var selectionColors = groupsSelectionColors.FirstOrDefault(colors => colors.nameKey == activeGroup.name);
-        selection.SetColorSchema(selectionColors.schema);
-
-        _lastActiveGroup = activeGroup;
-        ChangeCommander(activeGroup.members);
-    }
-
-    private void ChangeCommander(CaravanMember[] members) {
-        if (IsGrenaders(members)) {
-            grenaderCommander.Activate(observable, selection);
-        } else {
-            grenaderCommander.Deactivate();
-            selection.ToggleSecondarySelection(false);
-            selection.SetSelection(members);
+        if (_lastActiveCommander != null) {
+            _lastActiveCommander.Deactivate();
         }
-    }
 
-    private bool IsGrenaders(CaravanMember[] members) {
-        return members.Length != 0 && members.Any((member) => member.GetComponent<GrenaderOperator>() != null);
-    } 
+        var activeCommander = _commanders[index];
+        _lastActiveCommander = activeCommander;
+        activeCommander.Activate(selection);
+
+        OnActiveGroupChanged?.Invoke();
+    }
 
 }

@@ -43,7 +43,9 @@ public class CaravanMember : MonoBehaviour {
     public void AttachToGroupAt(CaravanMember member) {
         var myTail = member.Tail;
         member.UnsetTail(notifyTailUnset: false);
-        myTail.AttachAfter(this);
+        if (myTail != null) {
+            myTail.AttachAfter(this);
+        }
         this.AttachAfter(member);
     }
 

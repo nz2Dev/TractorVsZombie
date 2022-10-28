@@ -19,7 +19,7 @@ public class EnemyManager : MonoBehaviour {
         while (true) {
             yield return new WaitForSeconds(1f);
             bool canGenerateMoreEnemy = EnemyState.EnabledEnemies < enemiesLimit;
-            Debug.Log("Enabled enemies: " + EnemyState.EnabledEnemies + " can generate more?: " + canGenerateMoreEnemy);
+            // Debug.Log("Enabled enemies: " + EnemyState.EnabledEnemies + " can generate more?: " + canGenerateMoreEnemy);
             foreach (var generator in enemiesGenerators) {
                 generator.enabled = canGenerateMoreEnemy;
             }

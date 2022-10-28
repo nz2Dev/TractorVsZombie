@@ -2,31 +2,34 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class CaravanGroupObserver : MonoBehaviour {
+
     private String _groupTag;
     private CaravanObservable _subscription;
     private List<CaravanMember> _groupMembers = new List<CaravanMember>();
-    private Action<CaravanGroupObserver> _onGroupChangedCallback;
 
+    public int GroupSize => _groupMembers.Count;
     public IEnumerable<CaravanMember> GroupMembers => _groupMembers.AsEnumerable();
 
-    public void Subscribe(CaravanObservable caravanObservable, String groupTag, Action<CaravanGroupObserver> onGroupChangedCallback) {
+    public event Action<CaravanGroupObserver> OnGroupChanged;
+
+    public void Subscribe(CaravanObservable caravan, String groupTag) {
         UnsubscribeFromCaravan();
 
         _groupTag = groupTag;
-        _onGroupChangedCallback = onGroupChangedCallback;
+        caravan.OnMembersChanged += OnMembersChanged;
+        _subscription = caravan;
 
-        caravanObservable.OnMembersChanged += OnMembersChanged;
-        _subscription = caravanObservable;
-
-        OnMembersChanged(caravanObservable);
+        OnMembersChanged(caravan);
     }
 
     public void UnsubscribeFromCaravan() {
         if (_subscription != null) {
-            _onGroupChangedCallback = null;
+            OnGroupChanged = null;
             _subscription.OnMembersChanged -= OnMembersChanged;
             _subscription = null;
         }
@@ -35,6 +38,6 @@ public class CaravanGroupObserver : MonoBehaviour {
     private void OnMembersChanged(CaravanObservable source) {
         _groupMembers.Clear();
         _groupMembers.AddRange(source.CountedMembers.Where((member) => member.tag == _groupTag));
-        _onGroupChangedCallback?.Invoke(this);
+        OnGroupChanged?.Invoke(this);
     }
 }

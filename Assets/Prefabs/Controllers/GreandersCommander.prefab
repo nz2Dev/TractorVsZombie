@@ -51,6 +51,10 @@ MonoBehaviour:
   aimAction: {fileID: -6265798999679000459, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   worldRaycaster: {fileID: 0}
   grenaderTag: Grenader
+  selectionColorSchema:
+    primarySelectionColor: {r: 0, g: 0, b: 0, a: 0}
+    secondarySelectionColor: {r: 0.28235295, g: 0.30496776, b: 0.7607843, a: 0.3764706}
+    secondaryUnselectedColor: {r: 0, g: 0, b: 0, a: 0}
   singleFireMode: 0
 --- !u!114 &7506277619637880631
 MonoBehaviour:

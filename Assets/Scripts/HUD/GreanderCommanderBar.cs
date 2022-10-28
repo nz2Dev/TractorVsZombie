@@ -6,7 +6,7 @@ using UnityEngine;
 public class GreanderCommanderBar : MonoBehaviour {
 
     [SerializeField] private RectTransform root;
-    [SerializeField] private GrenaderCommander grenaderCommander;
+    [SerializeField] private CaravanGrenadersCommander grenaderCommander;
     [SerializeField] private ActionInfoUIElement reloadInfoElement;
     [SerializeField] private ActionInfoUIElement fireModeInfoElement;
     [SerializeField] private CompaundActionInfoUIElement fireInfoElement;

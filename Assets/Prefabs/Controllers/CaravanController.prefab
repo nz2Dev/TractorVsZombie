@@ -1,5 +1,197 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &782552116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782552117}
+  - component: {fileID: 782552118}
+  - component: {fileID: 7238393056562032211}
+  m_Layer: 0
+  m_Name: TractorControlGroup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &782552117
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782552116}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5983646695102971151}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &782552118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782552116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 301e25ced06d1574caa7314fd87599db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7238393056562032211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782552116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7bc1e2d5997cfb4c9f73a9a5908b2d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groupTag: Player
+  selectionColorSchema:
+    primarySelectionColor: {r: 1, g: 1, b: 1, a: 0.0627451}
+    secondarySelectionColor: {r: 1, g: 1, b: 1, a: 0.0627451}
+    secondaryUnselectedColor: {r: 1, g: 1, b: 1, a: 0.0627451}
+--- !u!1 &1182413663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1182413664}
+  - component: {fileID: 1182413665}
+  - component: {fileID: 1182413666}
+  m_Layer: 0
+  m_Name: GrenaderControlGroup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1182413664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182413663}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5983646695102971151}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1182413665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182413663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 301e25ced06d1574caa7314fd87599db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1182413666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182413663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c001984bbc7d5e94286245385f8580f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  engageAction: {fileID: 1414664316394933633, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  fireModeToggle: {fileID: 8745152252492936286, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  reloadAction: {fileID: -329637841334250210, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  aimAction: {fileID: -6265798999679000459, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
+  worldRaycaster: {fileID: 0}
+  selectionColorSchema:
+    primarySelectionColor: {r: 0.28235295, g: 0.3047192, b: 0.7607843, a: 0.49803922}
+    secondarySelectionColor: {r: 0.28235295, g: 0.30496776, b: 0.7607843, a: 0.3764706}
+    secondaryUnselectedColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0.39607844}
+  controlGroupTag: Grenader
+  singleFireMode: 1
+--- !u!1 &1897344268
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1897344269}
+  - component: {fileID: 1897344270}
+  - component: {fileID: 7491767263657767885}
+  m_Layer: 0
+  m_Name: TurelControlGroup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1897344269
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897344268}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5983646695102971151}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1897344270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897344268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 301e25ced06d1574caa7314fd87599db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7491767263657767885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897344268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7bc1e2d5997cfb4c9f73a9a5908b2d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groupTag: Turel
+  selectionColorSchema:
+    primarySelectionColor: {r: 0.32156864, g: 0.7607844, b: 0.28235295, a: 0.49803922}
+    secondarySelectionColor: {r: 0.32156864, g: 0.7607844, b: 0.28235295, a: 0.3764706}
+    secondaryUnselectedColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0.39607844}
 --- !u!1 &5983646695102971150
 GameObject:
   m_ObjectHideFlags: 0
@@ -28,7 +220,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 782552117}
+  - {fileID: 1897344269}
+  - {fileID: 1182413664}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,23 +244,6 @@ MonoBehaviour:
   - {fileID: 3268449935640317270, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   - {fileID: -5853748393629668767, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
   - {fileID: -5014800217727443670, guid: 6c8034f7c4c217446b1c8af07780a7cd, type: 3}
-  groupsSelectionColors:
-  - nameKey: Turel
-    schema:
-      primarySelectionColor: {r: 0.32156864, g: 0.7607844, b: 0.28235295, a: 0.49803922}
-      secondarySelectionColor: {r: 0.32156864, g: 0.7607844, b: 0.28235295, a: 0.3764706}
-      secondaryUnselectedColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0.39607844}
-  - nameKey: Player
-    schema:
-      primarySelectionColor: {r: 1, g: 1, b: 1, a: 0.039215688}
-      secondarySelectionColor: {r: 1, g: 1, b: 1, a: 0.15686275}
-      secondaryUnselectedColor: {r: 1, g: 1, b: 1, a: 0.09411765}
-  - nameKey: Grenader
-    schema:
-      primarySelectionColor: {r: 0.28235295, g: 0.3047192, b: 0.7607843, a: 0.49803922}
-      secondarySelectionColor: {r: 0.28235295, g: 0.30496776, b: 0.7607843, a: 0.3764706}
-      secondaryUnselectedColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0.39607844}
-  selection: {fileID: 0}
-  observer: {fileID: 0}
   inputManager: {fileID: 0}
-  grenaderCommander: {fileID: 0}
+  selection: {fileID: 0}
+  caravan: {fileID: 0}
