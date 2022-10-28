@@ -21,7 +21,7 @@ public class GrenaderOperator : MonoBehaviour {
     private ReadyState _state = ReadyState.Ready;
     private Coroutine _loadingCoroutine;
 
-    public bool ReadyForActivation => _state == ReadyState.Ready;
+    public bool ReadyForActivation => !health.IsZero && _state == ReadyState.Ready;
     public float TimeToReadynes => _state == ReadyState.WaitingForAmmo ? float.PositiveInfinity : _state == ReadyState.Ready ? 0 : reloadTime;
     public float ExplosionRadius => grenader.ExplosionRadius;
     public Vector3 LauncherPosition => grenader.LauncherPosition;

@@ -19,12 +19,10 @@ public class CaravanGroupCommander : MonoBehaviour, ICaravanGroupCommander {
     }
 
     void ICaravanGroupCommander.Subscribe(CaravanObservable caravan, Action onGroupChanged) {
-        _groupObserver.OnGroupChanged += (c) => {
+        _groupObserver.Subscribe(caravan, groupTag, (c) => {
             onGroupChanged?.Invoke();
             UpdateActiveSelectionMembers();
-        };
-        
-        _groupObserver.Subscribe(caravan, groupTag);
+        });
     }
 
     void ICaravanGroupCommander.Activate(CaravanSelection selection) {
