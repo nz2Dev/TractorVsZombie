@@ -1,9 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -64,7 +58,7 @@ public class TwoAxisMovePlatform : MonoBehaviour {
             var firstFacingWallHitNormal = hit.normal;
             var firstFacingWallRefraction = Vector3.ProjectOnPlane(vector, Vector3.ProjectOnPlane(firstFacingWallHitNormal, Vector3.up).normalized);
             var hitNewWall = false;
-            
+
             // Debug.DrawRay(hit.point + hit.normal * 0.1f, hit.normal, Color.red);
             // Debug.DrawRay(hit.point + hit.normal * 0.1f, firstFacingWallRefraction.normalized * 0.3f, Color.red);
 
@@ -126,10 +120,12 @@ public class TwoAxisMovePlatform : MonoBehaviour {
         backAlignmentAxis.position = alignmentPosition;
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         Handles.color = Color.green;
         Handles.DrawWireDisc(frontTurnAxis.position, Vector3.up, wallsCheckRadius);
         Handles.DrawWireDisc(frontTurnAxis.position, Vector3.up, wallsCheckRadius + wallsCheckDistance);
     }
+#endif
 
 }

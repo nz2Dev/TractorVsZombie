@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class GroupInfoUIElement : MonoBehaviour, IPointerClickHandler {
-    [SerializeField] private TextMeshProUGUI typeText;
-    [SerializeField] private TextMeshProUGUI amountText;
+    [SerializeField] private TMP_Text typeText;
+    [SerializeField] private TMP_Text amountText;
     [SerializeField] private TMP_Text inputBindingText;
 
     private String _key;

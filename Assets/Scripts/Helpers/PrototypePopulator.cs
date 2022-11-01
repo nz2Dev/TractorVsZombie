@@ -36,12 +36,7 @@ public class PrototypePopulator : MonoBehaviour {
             if (child.gameObject == prototype) {
                 continue;
             }
-
-            if (Application.isEditor) {
-                DestroyImmediate(child.gameObject);
-            } else {
-                Destroy(child.gameObject);
-            }
+            DestroyImmediate(child.gameObject);
         }
     }
 

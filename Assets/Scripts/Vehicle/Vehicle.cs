@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 [SelectionBase]
 public class Vehicle : MonoBehaviour {
@@ -91,13 +89,13 @@ public class Vehicle : MonoBehaviour {
         appliedInfo.Clear();
         appliedInfo.AddRange(debugInfoList.Values);
         debugInfoList.Clear();
-    
+
         velocityBeforeChangeFrameDebug = _velocity;
         _velocity += steeringForceOverMass;
         _velocity = Vector3.ClampMagnitude(_velocity, MaxSpeed);
 
         if (_velocity.magnitude > 0 && _velocity.magnitude > minMoveVelocity) {
-            _output.OnVehicleMove(_velocity * Time.deltaTime);            
+            _output.OnVehicleMove(_velocity * Time.deltaTime);
         }
     }
 
@@ -110,6 +108,7 @@ public class Vehicle : MonoBehaviour {
         Vector3 GetBasePosition();
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.white;
         Gizmos.DrawLine(transform.position, transform.position + velocityBeforeChangeFrameDebug);
@@ -143,4 +142,5 @@ public class Vehicle : MonoBehaviour {
             heightStack += 1;
         }
     }
+#endif
 }

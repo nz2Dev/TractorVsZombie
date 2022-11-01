@@ -7,7 +7,9 @@ public interface ISteering {
     float Weight { get; }
 
     Vector3 CalculateSteeringForce(Vehicle vehicle);
+#if UNITY_EDITOR
     void OnDrawGizmosSelected(Vehicle vehicle);
+#endif
 
 }
 

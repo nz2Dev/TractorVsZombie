@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -52,7 +51,7 @@ public static class WallSlideAlgorithm {
 
 [ExecuteInEditMode]
 public class WallsSlideSteering : MonoBehaviour, ISteering {
-    
+
     [SerializeField] private float checkRadius = 1f;
     [SerializeField] private LayerMask wallsLayerMask;
     [SerializeField] private float weight = 1f;
@@ -65,8 +64,10 @@ public class WallsSlideSteering : MonoBehaviour, ISteering {
         return vehicle.SlideWallsAround(checkRadius, wallsLayerMask);
     }
 
+#if UNITY_EDITOR
     public void OnDrawGizmosSelected(Vehicle vehicle) {
         Handles.color = Color.magenta;
         Handles.DrawWireDisc(vehicle.Position, Vector3.up, checkRadius);
     }
+#endif
 }

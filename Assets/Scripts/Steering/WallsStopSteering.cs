@@ -29,8 +29,10 @@ public class WallsStopSteering : MonoBehaviour, ISteering {
         return vehicle.StopOnFirstWall(checkDistance, wallsLayerMask);
     }
 
+#if UNITY_EDITOR
     public void OnDrawGizmosSelected(Vehicle vehicle) {
         Handles.color = Color.gray;
         Handles.DrawWireDisc(vehicle.Position, Vector3.up, checkDistance);
     }
+#endif
 }
