@@ -35,6 +35,8 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+WebGLBuild/
+
 #Packages
 Assets/Packages/
 Logs/
