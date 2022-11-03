@@ -17,6 +17,11 @@ public class Health : MonoBehaviour {
     public event Action<Health> OnHealthChanged;
 
     private void Awake() {
+        Full();
+        OnHealthChanged?.Invoke(this);
+    }
+
+    public void Full() {
         _value = Mathf.Min(Mathf.Clamp(initial, 0, max), max);
     }
 

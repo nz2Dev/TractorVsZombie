@@ -20,6 +20,8 @@ public class MeleEnemyBehaviour : MonoBehaviour {
     private CaravanObservable _caravanObservable;
     private CylinderZombie _zombie;
 
+    public event Action OnDeath;
+
     private void Awake() {
         _zombie = GetComponent<CylinderZombie>();
         _vehicleDriver = GetComponent<CrowdVehicleDriver>();
@@ -30,6 +32,9 @@ public class MeleEnemyBehaviour : MonoBehaviour {
                 if (comp.IsZero) {
                     StopCoroutine(nameof(SearchTarget));
                     _vehicleDriver.SetTarget(null);
+                    _zombie.StartKill(() => {
+                        OnDeath?.Invoke();
+                    });
                 }
             };
         }
@@ -64,8 +69,13 @@ public class MeleEnemyBehaviour : MonoBehaviour {
     }
 
     private void Start() {
+        Patrol();
+    }
+
+    public void Patrol() {
         _caravanObservable = FindObjectOfType<CaravanObservable>();
         StartCoroutine(nameof(SearchTarget));
+        _zombie.StartIdle();
     }
 
     public void SetPathTarget(Transform pathTarget) {

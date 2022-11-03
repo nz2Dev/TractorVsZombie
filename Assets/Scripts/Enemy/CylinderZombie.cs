@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,14 +13,10 @@ public class CylinderZombie : MonoBehaviour {
 
     private void Awake() {
         _animator = GetComponentInChildren<Animator>();
-        var health = GetComponent<Health>();
-        if (health != null) {
-            health.OnHealthChanged += comp => {
-                if (comp.IsZero) {
-                    StartKill();
-                }
-            };
-        }
+    }
+
+    public void StartIdle() {
+        _animator.Play("Base Layer.New State");
     }
 
     public void StartAttack(GameObject target) {
@@ -57,13 +54,13 @@ public class CylinderZombie : MonoBehaviour {
         }
     }
 
-    private void StartKill() {
-        StartCoroutine(DeathRoutine());
+    public void StartKill(Action onDeath) {
+        StartCoroutine(DeathRoutine(onDeath));
     }
 
-    private IEnumerator DeathRoutine() {
+    private IEnumerator DeathRoutine(Action onDeathCallback) {
         _animator.SetTrigger("Death");
         yield return new WaitForSeconds(1);
-        Destroy(gameObject);
+        onDeathCallback?.Invoke();
     }
 }
