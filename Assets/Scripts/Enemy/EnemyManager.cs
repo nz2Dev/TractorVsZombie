@@ -27,7 +27,7 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private void OnNewEnemy(GameObject enemyGO) {
-        var enemy = enemyGO.GetComponent<MeleEnemyBehaviour>();
+        var enemy = enemyGO.GetComponent<MeleZombieOperator>();
         enemy.SetPathTarget(initialArrivalTarget);
     }
 

@@ -7,7 +7,7 @@ using UnityEngine.Assertions;
 
 [RequireComponent(typeof(CrowdVehicleDriver))]
 [RequireComponent(typeof(CylinderZombie))]
-public class MeleEnemyBehaviour : MonoBehaviour {
+public class MeleZombieOperator : MonoBehaviour {
 
     [SerializeField] private float stopDistance = 0.1f;
     [SerializeField] private float resumeDistance = 0.3f;
