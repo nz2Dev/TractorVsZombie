@@ -25,6 +25,7 @@ public class MeleEnemyBehaviour : MonoBehaviour {
     private void Awake() {
         _zombie = GetComponent<CylinderZombie>();
         _vehicleDriver = GetComponent<CrowdVehicleDriver>();
+        _caravanObservable = FindObjectOfType<CaravanObservable>();
 
         var health = GetComponent<Health>();
         if (health != null) {
@@ -66,14 +67,9 @@ public class MeleEnemyBehaviour : MonoBehaviour {
             _vehicleDriver.Resume();
             _zombie.StopAttack();
         }
-    }
-
-    private void Start() {
-        Patrol();
-    }
+    }   
 
     public void Patrol() {
-        _caravanObservable = FindObjectOfType<CaravanObservable>();
         StartCoroutine(nameof(SearchTarget));
         _zombie.StartIdle();
     }

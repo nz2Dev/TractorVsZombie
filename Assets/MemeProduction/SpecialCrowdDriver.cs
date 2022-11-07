@@ -32,7 +32,7 @@ public class SpecialCrowdDriver : MonoBehaviour {
         }
         _vehicle.ApplyForce(arrivalForce, "Arrival", Color.blue);
 
-        if (_vehicle.TrySeparateInsideSphere(separationCheckRadius, neighborsLayerMask, out var separationForce)) {
+        if (_vehicle.TrySeparateInsideSphere(separationCheckRadius, neighborsLayerMask, new Collider[5], out var separationForce)) {
             _vehicle.ApplyForce(separationForce, "Separation", Color.magenta);
         }
     }

@@ -14,23 +14,23 @@ public static class WallAvoideAlgorithm {
         return desiredVelocity - vehicle.Velocity;
     }
 
-    public static Vector3 AvoidWallsAround(this Vehicle vehicle, float radius, LayerMask layerMask) {
-        var walls = Physics.OverlapSphere(vehicle.transform.position, radius, layerMask);
-        if (walls.Length == 0) {
+    public static Vector3 AvoidWallsAround(this Vehicle vehicle, float radius, LayerMask layerMask, Collider[] wallsAvoidAllocation) {
+        var wallsCount = Physics.OverlapSphereNonAlloc(vehicle.transform.position, radius, wallsAvoidAllocation, layerMask);
+        if (wallsCount == 0) {
             return default;
         }
 
         var accumulatedForce = Vector3.zero;
-        foreach (var wall in walls) {
-            var avoidForce = vehicle.AvoidWall(wall);
+        for (int i = 0; i < wallsCount; i++) {
+            var avoidForce = vehicle.AvoidWall(wallsAvoidAllocation[i]);
             accumulatedForce += avoidForce;
         }
 
-        return accumulatedForce / walls.Length;
+        return accumulatedForce / wallsCount;
     }
 
-    public static bool TryAvoidWallsAround(this Vehicle vehicle, float radius, LayerMask layerMask, out Vector3 force) {
-        force = AvoidWallsAround(vehicle, radius, layerMask);
+    public static bool TryAvoidWallsAround(this Vehicle vehicle, float radius, LayerMask layerMask, Collider[] wallsAvoidAllocation, out Vector3 force) {
+        force = AvoidWallsAround(vehicle, radius, layerMask, wallsAvoidAllocation);
         return force != default;
     }
 }
@@ -43,12 +43,14 @@ public class WallsAvoideSteering : MonoBehaviour, ISteering {
     [SerializeField] private LayerMask wallsLayerMask;
     [SerializeField] private float weight = 1f;
 
+    private Collider[] _allocation = new Collider[5];
+
     public Color Color => Color.yellow;
     public string Source => "WallsAvoidance";
     public float Weight => weight;
 
     public Vector3 CalculateSteeringForce(Vehicle vehicle) {
-        return vehicle.AvoidWallsAround(checkRadius, wallsLayerMask);
+        return vehicle.AvoidWallsAround(checkRadius, wallsLayerMask, _allocation);
     }
 
 #if UNITY_EDITOR

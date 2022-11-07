@@ -18,11 +18,11 @@ public class Health : MonoBehaviour {
 
     private void Awake() {
         Full();
-        OnHealthChanged?.Invoke(this);
     }
 
     public void Full() {
         _value = Mathf.Min(Mathf.Clamp(initial, 0, max), max);
+        OnHealthChanged?.Invoke(this);
     }
 
     public void TakeDamage(int damage) {

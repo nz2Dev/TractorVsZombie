@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Pool;
@@ -29,6 +30,10 @@ public class EnemyGenerator : MonoBehaviour {
     [SerializeField] private float spawnInterval = 0.5f;
     [SerializeField] private int enemiesPerSpawn = 10;
     [SerializeField] private int maxPoolSize = 30;
+    [SerializeField] private int maxEnemies = 200;
+
+    public int innactiveCount = 0;
+    public int totalActive = 0;
 
     private IObjectPool<GameObject> _pool;
 
@@ -43,6 +48,11 @@ public class EnemyGenerator : MonoBehaviour {
             }
             yield return new WaitForSeconds(spawnInterval);
         }
+    }
+
+    private void Update() {
+        innactiveCount = _pool.CountInactive;
+        totalActive = enemyContainer.childCount - innactiveCount;
     }
 
     private GameObject OnCreateEnemy() {
@@ -70,6 +80,10 @@ public class EnemyGenerator : MonoBehaviour {
     }
 
     public void GenerateNext() {
+        if (enemyContainer.childCount - innactiveCount >= maxEnemies) {
+            return;
+        }
+
         var enemy = _pool.Get();
         enemy.transform.position = spawnPoint.position;
     }

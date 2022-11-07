@@ -36,6 +36,8 @@ public class HealthBar : MonoBehaviour {
         fillImage.fillAmount = changedHealth.Amount;
         if (changedHealth.IsZero) {
             gameObject.SetActive(false);
+        } else if (!gameObject.activeSelf) {
+            gameObject.SetActive(true);
         }
     }
 }

@@ -588,12 +588,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 1096170150}
-  enemyContainer: {fileID: 1096170150}
+  enemyContainer: {fileID: 768696608}
   enemyPrefab: {fileID: 1077604122354342710, guid: 7c4dd6b5f50c6e74b8ebcacc88ca62a0, type: 3}
   initialTarget: {fileID: 756164624}
-  spawnInterval: 0.5
-  enemiesPerSpawn: 20
-  maxPoolSize: 1000
+  spawnInterval: 0.1
+  enemiesPerSpawn: 5
+  maxPoolSize: 100
+  maxEnemies: 400
+  innactiveCount: 0
+  totalActive: 0
 --- !u!1 &1360675054
 GameObject:
   m_ObjectHideFlags: 0

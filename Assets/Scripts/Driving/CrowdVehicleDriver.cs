@@ -17,6 +17,8 @@ public class CrowdVehicleDriver : MonoBehaviour {
     [SerializeField] private float separationWeigh = 1f;
 
     private Vehicle _vehicle;
+    private Collider[] _separationAllocation = new Collider[50];
+    private Collider[] _wallsAvoidAllocation = new Collider[10];
 
     public GameObject Target => arrivalTarget;
 
@@ -42,11 +44,11 @@ public class CrowdVehicleDriver : MonoBehaviour {
             return;
         }
 
-        if (_vehicle.TrySeparateInsideSphere(separationCheckRadius, neighborsLayerMask, out var separationForce)) {
+        if (_vehicle.TrySeparateInsideSphere(separationCheckRadius, neighborsLayerMask, _separationAllocation, out var separationForce)) {
             _vehicle.ApplyForce(separationForce, "Separation", Color.magenta);
         }
 
-        if (_vehicle.TryAvoidWallsAround(wallsCheckRadius, wallsLayerMask, out var wallAvoidanceForce)) {
+        if (_vehicle.TryAvoidWallsAround(wallsCheckRadius, wallsLayerMask, _wallsAvoidAllocation, out var wallAvoidanceForce)) {
             _vehicle.ApplyForce(wallAvoidanceForce, "AvoidWalls", Color.yellow);
         }
 
