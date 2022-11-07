@@ -9,6 +9,7 @@ using UnityEngine.Assertions;
 [RequireComponent(typeof(CylinderZombie))]
 public class MeleZombieOperator : MonoBehaviour {
 
+    [SerializeField] private int damage = 10;
     [SerializeField] private float stopDistance = 0.1f;
     [SerializeField] private float resumeDistance = 0.3f;
     [SerializeField] private float searchDistance = 20f;
@@ -59,7 +60,12 @@ public class MeleZombieOperator : MonoBehaviour {
         if (_chasing && targetClose) {
             _chasing = false;
             _vehicleDriver.Stop();
-            _zombie.StartAttack(_vehicleDriver.Target);
+            _zombie.StartAttack(_vehicleDriver.Target, (attackedGO) => {
+                var health = attackedGO.GetComponent<Health>();
+                if (health != null) {
+                    health.TakeDamage(damage);
+                }
+            });
         }
 
         if (!_chasing && targetFar) {

@@ -6,9 +6,19 @@ using UnityEngine;
 public class TurelOperator : MonoBehaviour {
 
     [SerializeField] private Turel turel;
+    [SerializeField] private int turelDamage = 40;
     [SerializeField] private float targetSearchInterval = 0.25f;
 
     private void Start() {
+        turel.OnHit += (hitGO) => {
+            var health = hitGO.GetComponent<Health>();
+            if (health != null && !health.IsZero) {
+                health.TakeDamage(turelDamage);
+                return true;
+            }
+            return false;
+        };
+
         StartCoroutine(SearchRoutine());
     }
 
@@ -46,7 +56,7 @@ public class TurelOperator : MonoBehaviour {
 
     private void ChangeTarget(EnemyMarker enemy) {
         if (enemy != null) {
-            turel.StartFire(enemy.gameObject);
+            turel.StartFire(enemy.gameObject, (target) => target.GetComponent<Health>().IsZero);
         } else {
             turel.StopFire();
         }

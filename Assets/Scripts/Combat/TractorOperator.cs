@@ -6,6 +6,7 @@ using UnityEngine;
 public class TractorOperator : MonoBehaviour
 {
     [SerializeField] private Ram ram;
+    [SerializeField] private int ramDamage = 30;
     [SerializeField] private float acceleratedSpeedMultiplier = 2;
     
     private Vehicle _vehicle;
@@ -13,6 +14,13 @@ public class TractorOperator : MonoBehaviour
     private void Awake() {
         _vehicle = GetComponent<Vehicle>();
         ram = GetComponentInChildren<Ram>();
+        ram.OnPushed += (rigidbody) => {
+            var health = rigidbody.GetComponent<Health>();
+            if (health != null) {
+                health.TakeDamage(ramDamage);
+            }
+        };
+
         DeactivateRam();
     }
 

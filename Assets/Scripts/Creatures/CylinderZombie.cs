@@ -6,8 +6,6 @@ using UnityEngine;
 [SelectionBase]
 public class CylinderZombie : MonoBehaviour {
 
-    [SerializeField] private int damage = 55;
-
     private Coroutine _attackCoroutine;
     private Animator _animator;
 
@@ -19,13 +17,13 @@ public class CylinderZombie : MonoBehaviour {
         _animator.Play("Base Layer.New State");
     }
 
-    public void StartAttack(GameObject target) {
+    public void StartAttack(GameObject target, Action<GameObject> onAttack) {
         if (_attackCoroutine != null) {
             StopCoroutine(_attackCoroutine);
         }
 
         _attackCoroutine =
-            StartCoroutine(AttackRoutine(target));
+            StartCoroutine(AttackRoutine(target, onAttack));
     }
 
     public void StopAttack() {
@@ -35,19 +33,13 @@ public class CylinderZombie : MonoBehaviour {
         }
     }
 
-    private IEnumerator AttackRoutine(GameObject target) {
+    private IEnumerator AttackRoutine(GameObject target, Action<GameObject> onAttack) {
         while (true) {
             if (target == null) {
                 break;
             }
 
-            var health = target.GetComponent<Health>();
-            if (health == null) {
-                // Debug.LogWarning("Can't deal damage to train element without health");
-                break;
-            }
-
-            health.TakeDamage(damage);
+            onAttack?.Invoke(target);
             _animator.SetTrigger("Attack");
 
             yield return new WaitForSeconds(1);

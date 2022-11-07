@@ -7,7 +7,6 @@ using UnityEngine;
 [SelectionBase]
 public class Grenader : MonoBehaviour {
 
-    [SerializeField] private int damage = 50;
     [SerializeField] private float fireHeight = 5;
     [SerializeField] private float explosionRadius = 5;
     [SerializeField] private Transform projectilesCollection;
@@ -80,7 +79,7 @@ public class Grenader : MonoBehaviour {
         _lastAimPoint = default;
     }
 
-    public void SingleFire() {
+    public void SingleFire(Action<Rigidbody, float> onExplosionHitAtDistanceToEpicenter) {
         if (_loadedGrenade == null) {
             Debug.LogWarning("Failed to fire, loadedGrenade: " + _loadedGrenade);
             return;
@@ -101,13 +100,7 @@ public class Grenader : MonoBehaviour {
             sphereExplosion.Explode((Vector3 epicenter, RaycastHit[] hits) => {
                 foreach (var hit in hits) {
                     if (hit.rigidbody != null) {
-                        var health = hit.rigidbody.GetComponent<Health>();
-                        var caravanMember = hit.rigidbody.GetComponent<CaravanMember>();
-                        if (health != null && caravanMember == null) {
-                            var distanceFromEpicentr = Vector3.Distance(hit.rigidbody.transform.position, epicenter);
-                            var damageDumping = (int)Utils.Map(distanceFromEpicentr, 0, explosionRadius, 0, damage);
-                            health.TakeDamage(damage - damageDumping);
-                        }
+                        onExplosionHitAtDistanceToEpicenter?.Invoke(hit.rigidbody, Vector3.Distance(hit.rigidbody.transform.position, epicenter));
                     }
                 }
             });

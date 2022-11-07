@@ -11,7 +11,6 @@ public class Turel : MonoBehaviour {
     [SerializeField] [Range(0.1f, 0.98f)] private float repositionAlignmentThreashold = 0.9f;
     [SerializeField] [Range(0.1f, 0.99f)] private float fireAlignmentThreashold = 0.99f;
     [SerializeField] private float turelAlignmentMultiplier = 2f;
-    [SerializeField] private int turelDamage = 40;
     [SerializeField] private float firePushMultiplier = 0.5f;
     [SerializeField] private float fireRange = 10f;
     [SerializeField] private Transform fireGunBase;
@@ -22,9 +21,11 @@ public class Turel : MonoBehaviour {
 
     private Animator _animator;
     private float _targetAlignment;
-    private Health _targetHealth;
+    private GameObject _activeTarget;
 
     public float FireRange => fireRange;
+
+    public event Func<GameObject, bool> OnHit;
 
     private void Awake() {
         _animator = GetComponent<Animator>();
@@ -38,12 +39,12 @@ public class Turel : MonoBehaviour {
         cannonParticles.SetEmitSpeed(1 / fireInterval);
     }
 
-    public void StartFire(GameObject targetObject) {
+    public void StartFire(GameObject targetObject, Func<GameObject, bool> haltCondition) {
         StopAllCoroutines();
 
-        _targetHealth = targetObject.GetComponent<Health>();
+        _activeTarget = targetObject;
         StartCoroutine(AimingRoutine(targetObject));
-        StartCoroutine(FireRoutine(targetObject));
+        StartCoroutine(FireRoutine(targetObject, haltCondition));
     }
 
     public void StopFire() {
@@ -51,14 +52,12 @@ public class Turel : MonoBehaviour {
         StopParticles();
     }
 
-    private IEnumerator FireRoutine(GameObject target) {
-        var targetHealth = target.GetComponent<Health>();
-
-        while (targetHealth != null && !targetHealth.IsZero) {
+    private IEnumerator FireRoutine(GameObject target, Func<GameObject, bool> haltCondition) {
+        while (target != null && !haltCondition(target)) {
             if (_targetAlignment < repositionAlignmentThreashold) {
                 StopParticles();
                 yield return WaitForAlignment(target, fireAlignmentThreashold);
-                if (target == null) {
+                if (target == null || haltCondition(target)) {
                     break;
                 }
             }
@@ -67,30 +66,33 @@ public class Turel : MonoBehaviour {
             _animator.SetTrigger("Fire");
 
             if (!triggerHitDamage && !collisionHitDamage) {
-                DealDamage(targetHealth);
+                // we don't use projectile callbacks, and deal damage immediately when we alligned
+                HitTarget(target);
             }
             
             yield return new WaitForSeconds(fireInterval);
         }
     }
 
+    // we just hit the aimed trigger that we placed on target position in aiming routine, so we have hit the activated target
     private void OnTriggerHit() {
-        if (triggerHitDamage && _targetHealth != null) {
-            DealDamage(_targetHealth);
+        if (triggerHitDamage && _activeTarget != null) {
+            HitTarget(_activeTarget);
         }
     }
 
+    // we hit some collider, but not neccessary our active target, so we notify it anyway, and receiver should decide if it damageble or not
     private void OnCollisionHit(GameObject obj) {
-        var collidedHealth = obj.GetComponent<Health>();
-        if (collisionHitDamage && collidedHealth != null && !collidedHealth.IsZero) {
-            DealDamage(collidedHealth);
+        if (collisionHitDamage) {
+            HitTarget(obj);
         }
     }
 
-    private void DealDamage(Health health) {
+    private void HitTarget(GameObject target) {
         var pushForce = Vector3.ProjectOnPlane(transform.forward, Vector3.up) * firePushMultiplier;
-        health.transform.position += pushForce;
-        health.TakeDamage(turelDamage);
+        if (OnHit?.Invoke(target) == true) {
+            target.transform.position += pushForce;
+        }
     }
 
     private void StartParticles() {

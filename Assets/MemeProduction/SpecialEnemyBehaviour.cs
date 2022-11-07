@@ -25,7 +25,7 @@ public class SpecialEnemyBehaviour : MonoBehaviour {
             yield return new WaitForSeconds(checkCaravanInterval);
             if (caravanObservable.TryGetShortestDistanceMember(transform.position, 1, out var member)) {
                 _zombieDriver.SetChaseTransform(member.transform);
-                _zombie.StartAttack(member.gameObject);
+                _zombie.StartAttack(member.gameObject, (g) => {});
             } else {
                 _zombieDriver.SetChaseTransform(null);
                 _zombie.StopAttack();

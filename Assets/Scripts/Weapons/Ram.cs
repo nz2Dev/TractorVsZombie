@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,17 +6,14 @@ using UnityEngine;
 [RequireComponent(typeof(CollisionRam))]
 public class Ram : MonoBehaviour {
 
-    [SerializeField] private int ramDamage = 30;
-
     private CollisionRam _ramEffect;
+
+    public event Action<Rigidbody> OnPushed;
 
     private void Awake() {
         _ramEffect = GetComponent<CollisionRam>();
         _ramEffect.OnRamCollision += (rigidbody) => {
-            var health = rigidbody.GetComponent<Health>();
-            if (health != null) {
-                health.TakeDamage(ramDamage);
-            }
+            OnPushed?.Invoke(rigidbody);
         };
     }
     

@@ -16,6 +16,7 @@ public class GrenaderOperator : MonoBehaviour {
     [SerializeField] private Ammo ammo;
     [SerializeField] private Health health;
     [SerializeField] private Grenader grenader;
+    [SerializeField] private int explosionDamage = 90;
     [SerializeField] private float reloadTime = 0.3f;
 
     private ReadyState _state = ReadyState.Ready;
@@ -83,7 +84,14 @@ public class GrenaderOperator : MonoBehaviour {
         if (_state == ReadyState.Ready) {
             if (ammo.HasAmmo) {
                 Assert.IsTrue(ammo.TakeAmmo());
-                grenader.SingleFire();
+                grenader.SingleFire((rigidbody, distanceToEpicenter) => {
+                    var hittedHealth = rigidbody.GetComponent<Health>();
+                    var hittedCaravanMember = rigidbody.GetComponent<CaravanMember>();
+                    if (hittedHealth != null && hittedCaravanMember == null) {
+                        var damageDumping = (int) Utils.Map(distanceToEpicenter, 0, ExplosionRadius, 0, explosionDamage);
+                        hittedHealth.TakeDamage(explosionDamage - damageDumping);
+                    }
+                });
             }
 
             Reload();
