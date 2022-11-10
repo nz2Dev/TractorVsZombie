@@ -21,7 +21,7 @@ public class CylinderZombie : MonoBehaviour {
             StopCoroutine(_chaseCoroutine);
         }
         
-        _animator.Play("Base Layer.New State");
+        _animator.SetTrigger("Idle");
     }
 
     public void MovementWalk(GameObject target) {
@@ -29,7 +29,7 @@ public class CylinderZombie : MonoBehaviour {
             StopCoroutine(_chaseCoroutine);
         }
 
-        _animator.Play("Base Layer.New State");
+        _animator.SetTrigger("Idle");
         _driver.SetTarget(target);
     }
 
@@ -45,7 +45,7 @@ public class CylinderZombie : MonoBehaviour {
     }
 
     private IEnumerator ChaseRoutine(GameObject target, float stopDistance, float resumeDistance, Action onStop, Action onResume) {
-        _animator.Play("Base Layer.New State");
+        _animator.SetTrigger("Idle");
         _driver.SetTarget(target);
 
         var chasing = true;
