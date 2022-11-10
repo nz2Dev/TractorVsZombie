@@ -82,6 +82,9 @@ public class Vehicle : MonoBehaviour {
         _velocity = _input.GetForwardDirection() * _velocity.magnitude;
 
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);
+        // TODO: when framerate is high, there is not enought velocity magnitude to surpass OnVehicleMove
+        // and because of that, for some vehicle models forward direction doesn't change, and the velocity calculation keeps on same level infinetly
+        // and when interacting with editor, there is enought deltat time to trigger and surpass that
         var steeringForceOverMass = (_steeringForce / mass) * Time.deltaTime;
         steeringDeltaFrameDebug = steeringForceOverMass;
         _steeringForce = Vector3.zero;

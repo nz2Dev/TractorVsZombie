@@ -128,6 +128,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &2890101296919141277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7131091367063481065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4176430bcf321545901ac4703b06baa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &294640442723433574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,18 +165,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   separationWeigh: 1
---- !u!114 &2890101296919141277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7131091367063481065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4176430bcf321545901ac4703b06baa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3531015378272019438
 MonoBehaviour:
   m_ObjectHideFlags: 0
