@@ -11,7 +11,6 @@ public class Vehicle : MonoBehaviour {
     [SerializeField] private float minMoveVelocity = 0.1f;
     [SerializeField] private float maxSpeedMultiplier = 1;
 
-    private PhysicStability _physicStability;
     private Vector3 _steeringForce;
     private Vector3 _velocity;
     private IVehicleInput _input;
@@ -22,10 +21,6 @@ public class Vehicle : MonoBehaviour {
     public Vector3 Position => _input == null ? default : _input.GetBasePosition();
     public Vector3 Forward => _input == null ? default : _input.GetForwardDirection();
     public float MaxForce => maxForce;
-
-    private void Awake() {
-        _physicStability = GetComponent<PhysicStability>();
-    }
 
     private void OnEnable() {
         _output = GetComponent<IVehicleOutput>();
@@ -76,9 +71,6 @@ public class Vehicle : MonoBehaviour {
     }
 
     private void Update() {
-        if (_physicStability != null && !_physicStability.IsStable) {
-            return;
-        }
         _velocity = _input.GetForwardDirection() * _velocity.magnitude;
 
         _steeringForce = Vector3.ClampMagnitude(_steeringForce, maxForce);

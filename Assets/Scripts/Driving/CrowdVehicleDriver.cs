@@ -20,27 +20,36 @@ public class CrowdVehicleDriver : MonoBehaviour {
     private Collider[] _separationAllocation = new Collider[50];
     private Collider[] _wallsAvoidAllocation = new Collider[10];
 
+    private bool _pause;
+    private bool _stop;
+
     public GameObject Target => arrivalTarget;
 
     private void Awake() {
         _vehicle = GetComponent<Vehicle>();
     }
 
-    public void Stop() {
-        _vehicle.enabled = false;
+    public void SetPause(bool pause) {
+        _pause = pause;
+        UpdateVehicleState();
     }
 
-    public void Resume() {
-        _vehicle.enabled = true;
+    public void SetStop(bool stop) {
+        _stop = stop;
+        UpdateVehicleState();
     }
 
     public void SetTarget(GameObject newTarget) {
-        _vehicle.enabled = newTarget != null;
         arrivalTarget = newTarget;
+        UpdateVehicleState();
+    }
+
+    private void UpdateVehicleState() {
+        _vehicle.enabled = !_pause && !_stop && arrivalTarget != null;
     }
 
     private void Update() {
-        if (arrivalTarget == null) {
+        if (arrivalTarget == null || !_vehicle.enabled) {
             return;
         }
 

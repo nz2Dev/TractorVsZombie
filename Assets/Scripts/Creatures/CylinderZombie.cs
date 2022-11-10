@@ -1,19 +1,28 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 [SelectionBase]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PhysicMember))]
 [RequireComponent(typeof(CrowdVehicleDriver))]
-public class CylinderZombie : MonoBehaviour {
+public class CylinderZombie : MonoBehaviour, IStabilityListener {
 
     private Animator _animator;
+    private PhysicMember _physicMember;
     private CrowdVehicleDriver _driver;
 
     private void Awake() {
-        _animator = GetComponentInChildren<Animator>();
+        _animator = GetComponent<Animator>();
+        _physicMember = GetComponent<PhysicMember>();
         _driver = GetComponent<CrowdVehicleDriver>();
+    }
+
+    void IStabilityListener.OnStabilityChanged(Rigidbody thisRigidbody, bool stability) {
+        thisRigidbody.constraints = stability ? RigidbodyConstraints.FreezeRotation : 0;
+        // thisRigidbody.isKinematic = stability;
+        _driver.SetPause(!stability);
     }
 
     public void MovementIdle() {
@@ -58,13 +67,13 @@ public class CylinderZombie : MonoBehaviour {
 
             if (chasing && targetClose) {
                 chasing = false;
-                _driver.Stop();
+                _driver.SetStop(true);
                 onStop?.Invoke();
             }
 
             if (!chasing && targetFar) {
                 chasing = true;
-                _driver.Resume();
+                _driver.SetStop(false);
                 onResume?.Invoke();
             }
 
@@ -109,6 +118,7 @@ public class CylinderZombie : MonoBehaviour {
     }
 
     private IEnumerator DeathRoutine(Action onDeathCallback) {
+        _animator.ResetTrigger("Idle");
         _animator.SetTrigger("Death");
         yield return new WaitForSeconds(1);
         onDeathCallback?.Invoke();

@@ -19,7 +19,7 @@ public class CollisionRam : MonoBehaviour {
             return;
         }
 
-        var stability = other.attachedRigidbody.GetComponent<PhysicStability>();
+        var stability = other.attachedRigidbody.GetComponent<PhysicMember>();
         if (stability != null) {
             if (stability.IsStable) {
                 stability.Destabilize();
