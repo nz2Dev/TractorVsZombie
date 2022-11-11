@@ -31,6 +31,8 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
         }
         
         _animator.SetTrigger("Idle");
+        _driver.SetTarget(null);
+        _driver.SetStop(true);
     }
 
     public void MovementWalk(GameObject target) {
@@ -40,6 +42,7 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
 
         _animator.SetTrigger("Idle");
         _driver.SetTarget(target);
+        _driver.SetStop(false);
     }
 
     private Coroutine _chaseCoroutine;
@@ -56,6 +59,7 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
     private IEnumerator ChaseRoutine(GameObject target, float stopDistance, float resumeDistance, Action onStop, Action onResume) {
         _animator.SetTrigger("Idle");
         _driver.SetTarget(target);
+        _driver.SetStop(false);
 
         var chasing = true;
         while (true) {

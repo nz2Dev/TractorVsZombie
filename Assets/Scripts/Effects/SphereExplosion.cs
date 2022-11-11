@@ -14,8 +14,10 @@ public class SphereExplosion : MonoBehaviour {
     public float EffectRadius => effectRadius;
 
     public void Explode(Action<Vector3, RaycastHit[]> onExplodeAffected) {
-        var explosionParticles = Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
-        DestructionTimer.StartOn(explosionParticles, explosionLifetime);
+        if (explosionParticlesPrefab != null) {
+            var explosionParticles = Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
+            DestructionTimer.StartOn(explosionParticles, explosionLifetime);
+        }
 
         var affectedCollisions = Physics.SphereCastAll(transform.position, effectRadius, Vector3.up);
         foreach (var collision in affectedCollisions) {
