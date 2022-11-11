@@ -14,9 +14,14 @@ public static class BaseSteering {
     public static Vector3 Arrival(this Vehicle vehicle, Vector3 targetPosition, float slowingDistance) {
         var vehiclePosition = vehicle.Position;
         var distance = Vector3.Distance(targetPosition, vehiclePosition);
+        if (distance < float.Epsilon) {
+            return Vector3.zero;
+        }
+
         var rampedSpeed = vehicle.MaxSpeed * (distance / slowingDistance);
         var clippedSpeed = Mathf.Min(rampedSpeed, vehicle.MaxSpeed);
         var desiredVelocity = (clippedSpeed / distance) * (targetPosition - vehiclePosition);
+        
         return desiredVelocity - vehicle.Velocity;
     }
 
