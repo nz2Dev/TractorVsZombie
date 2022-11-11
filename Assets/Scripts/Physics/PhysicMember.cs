@@ -19,6 +19,9 @@ public class PhysicMember : MonoBehaviour {
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody>();
+    }
+
+    private void OnEnable() {
         _stabilityListenres = GetComponents<IStabilityListener>() ?? new IStabilityListener[0];
         if (_stabilityListenres.Length == 0) {
             Debug.LogWarning("No stability listeners, state change will have no effect");
@@ -35,6 +38,11 @@ public class PhysicMember : MonoBehaviour {
 
     private void ChangeStability(bool stability) {
         _stability = stability;
+
+        _rigidbody.constraints = stability ? RigidbodyConstraints.FreezeRotation : 0;
+        if (stability) {
+            _rigidbody.transform.rotation = Quaternion.identity;
+        }
         
         foreach (var listener in _stabilityListenres) {
             listener.OnStabilityChanged(_rigidbody, stability);
@@ -42,7 +50,8 @@ public class PhysicMember : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision other) {
-        if (stabilizers == (stabilizers | (1 << other.gameObject.layer))) {
+        Debug.Log("Physic memeber on collision enter: " + other.gameObject.name);
+        if (!_stability && stabilizers == (stabilizers | (1 << other.gameObject.layer))) {
             ChangeStability(true);
         }
     }

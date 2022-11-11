@@ -20,8 +20,6 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
     }
 
     void IStabilityListener.OnStabilityChanged(Rigidbody thisRigidbody, bool stability) {
-        thisRigidbody.constraints = stability ? RigidbodyConstraints.FreezeRotation : 0;
-        // thisRigidbody.isKinematic = stability;
         _driver.SetPause(!stability);
     }
 
