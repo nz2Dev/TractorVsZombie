@@ -87,10 +87,12 @@ public class MeleZombieOperator : MonoBehaviour {
                         _zombie.StopAttack();
                     });
             } else if (_pathTarget != null) {
+                _zombie.StopAttack();
                 _zombie.MovementWalk(
                     _pathTarget.gameObject
                 );
             } else {
+                _zombie.StopAttack();
                 _zombie.MovementIdle();
             }
         }

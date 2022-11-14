@@ -20,47 +20,92 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
     }
 
     void IStabilityListener.OnStabilityChanged(Rigidbody thisRigidbody, bool stability) {
-        _driver.SetPause(!stability);
+        // state is checked per active coroutine each frame if neccessary
     }
 
+    private Coroutine _movementCoroutine;
+
     public void MovementIdle() {
-        if (_chaseCoroutine != null) {
-            StopCoroutine(_chaseCoroutine);
+        if (!_physicMember.IsStable){
+            return;
+        }
+
+        if (_movementCoroutine != null) {
+            StopCoroutine(_movementCoroutine);
         }
         
+        _movementCoroutine = StartCoroutine(IdleRoutine());
+    }
+
+    private IEnumerator IdleRoutine() {
         _animator.SetTrigger("Idle");
         _driver.SetTarget(null);
         _driver.SetStop(true);
+
+        while(true) {
+            if (!_physicMember.IsStable) {
+                // exit point for stability callbacks, when using coroutine as container for state, has no effect, 
+                // with polimorfism through interface it will be much clearer
+                break;
+            }
+            yield return new WaitForNextFrameUnit();
+        }
     }
 
     public void MovementWalk(GameObject target) {
-        if (_chaseCoroutine != null) {
-            StopCoroutine(_chaseCoroutine);
+        if (!_physicMember.IsStable) {
+            return;
         }
 
-        _animator.SetTrigger("Idle");
-        _driver.SetTarget(target);
-        _driver.SetStop(false);
-    }
-
-    private Coroutine _chaseCoroutine;
-
-    public void MovementChase(GameObject target, float stopDistance, float resumeDistance, Action onStop, Action onResume) {
-        if (_chaseCoroutine != null) {
-            StopCoroutine(_chaseCoroutine);
+        if (_movementCoroutine != null) {
+            StopCoroutine(_movementCoroutine);
         }
 
-        _chaseCoroutine =
-            StartCoroutine(ChaseRoutine(target, stopDistance, resumeDistance, onStop, onResume));
+        _movementCoroutine = StartCoroutine(WalkRoutine(target));
     }
 
-    private IEnumerator ChaseRoutine(GameObject target, float stopDistance, float resumeDistance, Action onStop, Action onResume) {
+    private IEnumerator WalkRoutine(GameObject target) {
         _animator.SetTrigger("Idle");
         _driver.SetTarget(target);
         _driver.SetStop(false);
 
+        while(true) {
+            _driver.SetStop(!_physicMember.IsStable);
+            yield return new WaitForNextFrameUnit();
+        }
+    }
+
+    public void MovementChase(GameObject target, float stopDistance, float resumeDistance, Action onStop, Action onResume, Action onCancelUnstable = null) {
+        if (!_physicMember.IsStable) {
+            return;
+        }
+
+        if (_movementCoroutine != null) {
+            StopCoroutine(_movementCoroutine);
+        }
+
+        _movementCoroutine =
+            StartCoroutine(ChaseRoutine(target, stopDistance, resumeDistance, onStop, onResume, onCancelUnstable));
+    }
+
+    private IEnumerator ChaseRoutine(GameObject target, float stopDistance, float resumeDistance, Action onStop, Action onResume, Action onCancelUnstable) {
+        _animator.SetTrigger("Idle");
+        _driver.SetTarget(target);
+        _driver.SetStop(false);
         var chasing = true;
+        onResume?.Invoke();
+
         while (true) {
+            if (target == null) {
+                _driver.SetTarget(null);
+                break;
+            }
+
+            if (!_physicMember.IsStable) {
+                onCancelUnstable?.Invoke();
+                break;
+            }
+
             var vehiclePosition = _driver.transform.position;
             var targetPosition = _driver.Target.transform.position;
             var distance = Vector3.Distance(targetPosition, vehiclePosition);
@@ -85,17 +130,24 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
 
     private Coroutine _attackCoroutine;
 
-    public void StartAttack(GameObject target, Action<GameObject> onAttack) {
+    public void StartAttack(GameObject target, Action<GameObject> onAttack, Action onCancelUnstable = null) {
         if (_attackCoroutine != null) {
             StopCoroutine(_attackCoroutine);
         }
 
-        _attackCoroutine = StartCoroutine(AttackRoutine(target, onAttack));
+        _attackCoroutine = StartCoroutine(AttackRoutine(target, onAttack, onCancelUnstable));
     }
 
-    private IEnumerator AttackRoutine(GameObject target, Action<GameObject> onAttack) {
+    private IEnumerator AttackRoutine(GameObject target, Action<GameObject> onAttack, Action onCancelUnstable) {
         while (true) {
             if (target == null) {
+                _animator.SetTrigger("Idle");
+                break;
+            }
+
+            if (!_physicMember.IsStable) {
+                _animator.SetTrigger("Idle");
+                onCancelUnstable?.Invoke();
                 break;
             }
 
@@ -111,6 +163,8 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
             StopCoroutine(_attackCoroutine);
             _attackCoroutine = null;
         }
+
+        _animator.SetTrigger("Idle");
     }
 
     public void Kill(Action onDeath) {
