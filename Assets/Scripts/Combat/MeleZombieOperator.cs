@@ -15,6 +15,7 @@ public class MeleZombieOperator : MonoBehaviour {
     private CaravanObservable _caravanObservable;
 
     private Transform _pathTarget;
+    private CaravanMember _attackTarget;
 
     public event Action OnDeath;
 
@@ -87,11 +88,13 @@ public class MeleZombieOperator : MonoBehaviour {
                         _zombie.StopAttack();
                     });
             } else if (_pathTarget != null) {
+                _attackTarget = null;
                 _zombie.StopAttack();
                 _zombie.MovementWalk(
                     _pathTarget.gameObject
                 );
             } else {
+                _attackTarget = null;
                 _zombie.StopAttack();
                 _zombie.MovementIdle();
             }

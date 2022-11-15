@@ -564,7 +564,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ram: {fileID: 507051277656531186}
-  acceleratedSpeedMultiplier: 2
+  ramDamage: 30
+  acceleratedSpeedMultiplier: 3
 --- !u!114 &5146199989204777081
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -91,9 +91,8 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
     private IEnumerator ChaseRoutine(GameObject target, float stopDistance, float resumeDistance, Action onStop, Action onResume, Action onCancelUnstable) {
         _animator.SetTrigger("Idle");
         _driver.SetTarget(target);
-        _driver.SetStop(false);
-        var chasing = true;
-        onResume?.Invoke();
+        _driver.SetStop(true);
+        var chasing = false;
 
         while (true) {
             if (target == null) {
@@ -141,12 +140,12 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
     private IEnumerator AttackRoutine(GameObject target, Action<GameObject> onAttack, Action onCancelUnstable) {
         while (true) {
             if (target == null) {
-                _animator.SetTrigger("Idle");
+                _animator.SetTrigger("Cancel");
                 break;
             }
 
             if (!_physicMember.IsStable) {
-                _animator.SetTrigger("Idle");
+                _animator.SetTrigger("Cancel");
                 onCancelUnstable?.Invoke();
                 break;
             }
@@ -164,7 +163,7 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
             _attackCoroutine = null;
         }
 
-        _animator.SetTrigger("Idle");
+        _animator.SetTrigger("Cancel");
     }
 
     public void Kill(Action onDeath) {

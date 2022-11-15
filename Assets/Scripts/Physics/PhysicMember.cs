@@ -50,7 +50,6 @@ public class PhysicMember : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision other) {
-        Debug.Log("Physic memeber on collision enter: " + other.gameObject.name);
         if (!_stability && stabilizers == (stabilizers | (1 << other.gameObject.layer))) {
             ChangeStability(true);
         }
