@@ -57,7 +57,7 @@ public class EnemyGenerator : MonoBehaviour {
 
     private GameObject OnCreateEnemy() {
         var enemyObject = Instantiate(enemyPrefab, enemyContainer);
-        var enemy = enemyObject.AddComponent<MeleZombieOperator>();
+        var enemy = enemyObject.GetComponent<MeleZombieOperator>();
         enemy.OnDeath += () => _pool.Release(enemyObject);
         return enemyObject;
     }
