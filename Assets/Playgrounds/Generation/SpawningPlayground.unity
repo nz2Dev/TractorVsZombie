@@ -1121,7 +1121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5309961021798131975, guid: a587c71d912be8f44929150eaac7a894, type: 3}
       propertyPath: maxEnemies
-      value: 50
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 5309961021798131975, guid: a587c71d912be8f44929150eaac7a894, type: 3}
       propertyPath: initialTarget

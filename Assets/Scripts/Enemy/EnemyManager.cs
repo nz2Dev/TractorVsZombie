@@ -5,30 +5,13 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
 
-    [SerializeField] private PrefabGenerator[] enemiesGenerators;
+    [SerializeField] private EnemyGenerator[] enemiesGenerators;
     [SerializeField] private Transform initialArrivalTarget;
     [SerializeField] private int enemiesLimit = 100;
 
-    private void Awake() {
+    private void Start() {
         foreach (var generator in enemiesGenerators) {
-            generator.OnGenerate += OnNewEnemy;
+            generator.StartGeneration(400, 30f);
         }
     }
-
-    private IEnumerator Start() {
-        while (true) {
-            yield return new WaitForSeconds(1f);
-            bool canGenerateMoreEnemy = EnemyState.EnabledEnemies < enemiesLimit;
-            // Debug.Log("Enabled enemies: " + EnemyState.EnabledEnemies + " can generate more?: " + canGenerateMoreEnemy);
-            foreach (var generator in enemiesGenerators) {
-                generator.enabled = canGenerateMoreEnemy;
-            }
-        }        
-    }
-
-    private void OnNewEnemy(GameObject enemyGO) {
-        var enemy = enemyGO.GetComponent<MeleZombieOperator>();
-        enemy.SetPathTarget(initialArrivalTarget);
-    }
-
 }
