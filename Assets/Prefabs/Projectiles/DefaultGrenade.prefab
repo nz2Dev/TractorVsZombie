@@ -97,6 +97,56 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1008886970278936251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2155165889145548306}
+  - component: {fileID: 7748340540292718705}
+  m_Layer: 0
+  m_Name: GrenadeExplosiveness
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2155165889145548306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008886970278936251}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5814709301179252195}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7748340540292718705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008886970278936251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb40197c9e58e14a92f58a115271651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectRadius: 4
+  effectForce: 10
+  effectUpwardModifier: 1
+  effectForceMode: 1
+  explosionParticlesPrefab: {fileID: 8491177589698551122, guid: a15c0d5d3aac6364d9d7aa3b823e4afe, type: 3}
+  explosionLifetime: 1
 --- !u!1 &5814709301179252190
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +157,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5814709301179252195}
   - component: {fileID: 3071425408457925835}
-  - component: {fileID: 5814709301179252191}
   m_Layer: 0
   m_Name: DefaultGrenade
   m_TagString: Untagged
@@ -128,6 +177,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1590317273}
+  - {fileID: 2155165889145548306}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -144,22 +194,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detonateDistance: 0.3
---- !u!114 &5814709301179252191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5814709301179252190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: deb40197c9e58e14a92f58a115271651, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  effectRadius: 4
-  effectForce: 10
-  effectUpwardModifier: 1
-  effectForceMode: 1
-  damage: 90
-  explosionParticlesPrefab: {fileID: 8491177589698551122, guid: a15c0d5d3aac6364d9d7aa3b823e4afe, type: 3}
-  explosionLifetime: 1
+  globalLandingObjectPopulatorName: LandingOutlinePopulator
+  explosiveness: {fileID: 7748340540292718705}

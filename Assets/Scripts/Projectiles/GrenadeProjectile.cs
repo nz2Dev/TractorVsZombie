@@ -7,6 +7,7 @@ public class GrenadeProjectile : MonoBehaviour {
 
     [SerializeField] private float detonateDistance = 0.3f;
     [SerializeField] private String globalLandingObjectPopulatorName = "LandingOutlinePopulator";
+    [SerializeField] private SphereExplosion explosiveness;
 
     private NamedPrototypePopulator _landingOutlinesPopulator;
     private bool _launched;
@@ -15,7 +16,7 @@ public class GrenadeProjectile : MonoBehaviour {
         _landingOutlinesPopulator = GameObject.Find(globalLandingObjectPopulatorName).GetComponent<NamedPrototypePopulator>();
     }
 
-    public void Launch(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<GrenadeProjectile> landCallback) {
+    public void Launch(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<Vector3, RaycastHit[]> landCallback) {
         if (_launched) {
             return;
         }
@@ -24,7 +25,7 @@ public class GrenadeProjectile : MonoBehaviour {
         _launched = true;
     }
 
-    private IEnumerator FlyCoroutine(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<GrenadeProjectile> landCallback) {
+    private IEnumerator FlyCoroutine(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<Vector3, RaycastHit[]> landCallback) {
         var time = 0f;
         var launchPosition = transform.position;
         var launchToLand = landPosition - launchPosition;
@@ -43,7 +44,8 @@ public class GrenadeProjectile : MonoBehaviour {
 
             if (distanceToLanding < detonateDistance || time >= 1f) {
                 _landingOutlinesPopulator.DestroyChild(gameObject.GetInstanceID());
-                landCallback?.Invoke(this);
+                explosiveness.Explode(landCallback);
+                Destroy(gameObject);
                 break;
             }
 
