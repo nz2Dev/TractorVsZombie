@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class SphereExplosion : MonoBehaviour {
@@ -11,7 +12,13 @@ public class SphereExplosion : MonoBehaviour {
     [SerializeField] private GameObject explosionParticlesPrefab;
     [SerializeField] private float explosionLifetime;
 
+    private CinemachineImpulseSource _impulseSource;
+
     public float EffectRadius => effectRadius;
+
+    private void Awake() {
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
+    }
 
     public void Explode(Action<Vector3, RaycastHit[]> onExplodeAffected) {
         if (explosionParticlesPrefab != null) {
@@ -34,6 +41,10 @@ public class SphereExplosion : MonoBehaviour {
         }
 
         onExplodeAffected?.Invoke(transform.position, affectedCollisions);
+
+        if (_impulseSource != null) {
+            _impulseSource.GenerateImpulse();
+        }
 
         Destroy(gameObject);
     }

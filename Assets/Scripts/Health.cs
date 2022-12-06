@@ -25,6 +25,11 @@ public class Health : MonoBehaviour {
         OnHealthChanged?.Invoke(this);
     }
 
+    [ContextMenu("Kill")]
+    public void Kill() {
+        TakeDamage(_value);
+    }
+
     public void TakeDamage(int damage) {
         if (godMod) {
             Debug.LogWarning($"Disperse damage {damage} in godMode");
