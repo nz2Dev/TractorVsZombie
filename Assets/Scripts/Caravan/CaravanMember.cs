@@ -56,6 +56,14 @@ public class CaravanMember : MonoBehaviour {
         OnDetachment?.Invoke(this, detachedHead, detachedTail);
     }
 
+    public CaravanMember GetAnyNeighbord() {
+        return _head != null ? _head : _tail != null ? _tail : null;
+    }
+
+    public bool HasAnyNeighbord() {
+        return GetAnyNeighbord() != null;
+    }
+
     private void SetHead(CaravanMember newHead) {
         if (newHead == null || newHead == _head) {
             return;
