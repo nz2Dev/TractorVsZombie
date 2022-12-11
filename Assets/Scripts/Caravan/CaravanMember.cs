@@ -22,7 +22,7 @@ public class CaravanMember : MonoBehaviour {
     public event Detachement OnDetachment;
     public event Action<CaravanMember> OnHeadChanged;
 
-    private void Awake() {
+    private void Start() {
         AttachToInitialHead();
     }
 
