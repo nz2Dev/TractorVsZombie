@@ -38,16 +38,4 @@ public static class CaravanMembersUtils {
         return lastCheckedElement;
     }
 
-    public static void ExecuteUpdateFunctionInDescendingOrder(CaravanMember head) {
-        foreach (var member in FromHeadToTail(head)) {
-            var orderedExecutor = member.gameObject.GetComponent<IOrderedUpdateBehaviour>();
-            if (orderedExecutor != null) {
-                orderedExecutor.OrderedUpdate();
-            }
-        }
-    }
-
-    public interface IOrderedUpdateBehaviour {
-        void OrderedUpdate();
-    }
 }
