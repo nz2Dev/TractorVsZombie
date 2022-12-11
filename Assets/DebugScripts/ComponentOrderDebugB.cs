@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class ComponentOrderDebugB : MonoBehaviour
 {
+    private void Awake() {
+        Debug.Log("Awake B");
+    }
+
+    private void OnEnable() {
+        Debug.Log("OnEnable B");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +22,6 @@ public class ComponentOrderDebugB : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Update B");
+        //Debug.Log("Update B");
     }
 }

@@ -410,9 +410,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 258884298202490895be726a94c3d0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxForce: 1
+  maxForce: 3
   maxSpeedRaw: 1
-  mass: 1
+  mass: 0.2
   minMoveVelocity: 0.1
   maxSpeedMultiplier: 1
 --- !u!114 &8347994977301555017
@@ -427,6 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fade3a9d566e647e9a415bc1b1894a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxSpeedMultiplier: 2
 --- !u!114 &3414580515844940186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -454,7 +455,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followPoint: {fileID: 0}
   followDistance: 0.6
-  solvedThisFrame: 0
 --- !u!114 &1262511078864111773
 MonoBehaviour:
   m_ObjectHideFlags: 0

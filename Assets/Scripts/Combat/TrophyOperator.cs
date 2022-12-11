@@ -19,13 +19,16 @@ public class TrophyOperator : MonoBehaviour {
 
         health.OnHealthChanged += (h) => {
             if (h.IsZero) {
-                var neighbord = caravanMember.GetAnyNeighbord();
-                caravanMember.DetachFromGroup();
-                if (neighbord == null) {
-                    Debug.LogWarning("No neighbord when trophy is going to drive away from it");
-                }
+                var caravanHead = CaravanMembersUtils.FindFirstHead(caravanMember);
+                var caravanHeadVehicle = caravanHead.GetComponent<Vehicle>();
 
-                damagedTrophyDriver.DriveAwayFrom(neighbord.transform);
+                var trophyToHead = caravanMember.transform.position - caravanMember.Head.transform.position;
+                caravanMember.DetachFromGroup();
+
+                var awayDirection = Vector3.Cross(Vector3.up, trophyToHead.normalized);
+                awayDirection *= Random.value > 0.5f ? 1f : -1f;
+                damagedTrophyDriver.DriveAway(caravanHeadVehicle.Velocity, awayDirection);
+
                 trophyPartsDestructable.StartDestruction((power, affectedRigidbody) => {
                     var affectedHealth = affectedRigidbody.GetComponent<Health>();
                     var affectedCaravanMember = affectedRigidbody.GetComponent<CaravanMember>();

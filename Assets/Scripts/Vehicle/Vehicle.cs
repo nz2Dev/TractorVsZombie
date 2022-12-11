@@ -62,8 +62,12 @@ public class Vehicle : MonoBehaviour {
         debugInfoList[source] = new ForceDebugInfo {
             source = source,
             force = force,
-            color = color
+            color = color == default ? Color.black : color
         };
+    }
+
+    public void SetVelocity(Vector3 velocity) {
+        _velocity = velocity;
     }
 
     public void ChangeMaxSpeedMultiplier(float multiplier) {

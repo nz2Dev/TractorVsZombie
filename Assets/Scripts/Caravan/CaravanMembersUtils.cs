@@ -28,7 +28,7 @@ public static class CaravanMembersUtils {
         return head.Tail;
     }
 
-    public static object FindFirstHead(CaravanMember member) {
+    public static CaravanMember FindFirstHead(CaravanMember member) {
         var lastCheckedElement = member;
 
         while (lastCheckedElement.Head != null && lastCheckedElement.Head != member) {
