@@ -18,6 +18,8 @@ public class FollowingConnector : MonoBehaviour, IConnectionMovement {
     private bool _solvedThisFrame = false;
     private bool _paused;
 
+    public FollowingConnectionPoint FollowPoint => followPoint;
+
     private void OnEnable() {
         _body = GetComponent<IConnectorBody>();
         _body.SetConnected(this.followPoint != null);

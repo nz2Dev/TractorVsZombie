@@ -480,6 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa37fb527df55f4495610e260e4f26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  swapWaitDistance: 2
 --- !u!114 &2199145181526621449
 MonoBehaviour:
   m_ObjectHideFlags: 0

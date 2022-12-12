@@ -58,19 +58,8 @@ public class PickUpDetector : MonoBehaviour {
         }
 
         yield return new WaitForSeconds(activationWaitTime);
-        var activatorTail = activator.TriggeredMember.Tail;
         var newTrophyMember = newTrophy.GetComponent<CaravanMember>();
         newTrophyMember.AttachToGroupAt(activator.TriggeredMember);
-
-        if (activatorTail != null) {
-            var activatorTailDriver = activatorTail.GetComponent<FollowingConnector>();
-            if (activatorTailDriver != null) {
-                var triggerConnectionPoint = activator.TriggeredMember.GetComponent<FollowingConnectionPoint>();
-                var moveAwayTransform = triggerConnectionPoint == null ? activator.TriggeredMember.transform : triggerConnectionPoint.Transform;
-
-                activatorTailDriver.PauseUntilFarEnought(moveAwayTransform, waitDistance /* but should be bounding box length */);
-            }
-        }
 
         Destroy(gameObject);
     }
