@@ -53,6 +53,10 @@ public class ElementDestructionTestWindow : EditorWindow {
             var health = caravanTail.GetComponent<Health>();
             health.Kill();
         }
+        if (GUILayout.Button("Kill before last tail trophy")) {
+            var caravanTail = CaravanMembersUtils.FindLastTail(caravan.Subject);
+            caravanTail.Head.GetComponent<Health>().Kill();
+        }
         GUILayout.Space(10);
 
     }

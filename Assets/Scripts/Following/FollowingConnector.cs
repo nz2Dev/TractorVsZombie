@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IConnectorBody {
@@ -15,7 +16,9 @@ public class FollowingConnector : MonoBehaviour, IConnectionMovement {
 
     private IConnectorBody _body;
     private Coroutine _moveAwayWaiter;
+    private Coroutine _shrinkingCoroutine;
     private bool _solvedThisFrame = false;
+    private bool _followPointDistanceConnected = false;
     private bool _paused;
 
     public FollowingConnectionPoint FollowPoint => followPoint;
@@ -33,8 +36,11 @@ public class FollowingConnector : MonoBehaviour, IConnectionMovement {
     }
 
     private IEnumerator MoveAwayWaiterRoutine(Transform moveAwayTransform, float resumeTriggerDistance) {
+        DisconnectDistanceToFollowPoint();
+        
         _paused = true;
         var distance = 0f;
+        
         while (distance < resumeTriggerDistance) {
             yield return new WaitForEndOfFrame();
             distance = Vector3.Distance(moveAwayTransform.position, _body.Position);
@@ -42,6 +48,8 @@ public class FollowingConnector : MonoBehaviour, IConnectionMovement {
 
         _moveAwayWaiter = null;
         _paused = false;
+
+        StartShrinkDistanceToFollowPoint();
     }
 
     public void SetFollowPoint(FollowingConnectionPoint newFollowPoint) {
@@ -56,6 +64,40 @@ public class FollowingConnector : MonoBehaviour, IConnectionMovement {
         }
 
         _body.SetConnected(newFollowPoint != null);
+        if (!_paused) {
+            StartShrinkDistanceToFollowPoint();
+        }
+    }
+
+    private void DisconnectDistanceToFollowPoint() {
+        _followPointDistanceConnected = false;
+        if (_shrinkingCoroutine != null) {
+            StopCoroutine(_shrinkingCoroutine);
+        }
+    }
+
+    private void StartShrinkDistanceToFollowPoint() {
+        DisconnectDistanceToFollowPoint();
+        _shrinkingCoroutine = StartCoroutine(DistanceShrinkingRoutine(0.5f));
+    }
+
+    private IEnumerator DistanceShrinkingRoutine(float duration) {
+        var time = 0f;
+        var initialDistance = Vector3.Distance(_body.Position, followPoint.Point) - followDistance;
+        
+        while(time < duration) {
+            time += Time.deltaTime;
+            var shrinkingProgress = 1 - time / duration;
+            var shrinkedDistance = initialDistance * shrinkingProgress;
+
+            var reverceFollowDirection = (_body.Position - followPoint.Point).normalized;
+            var followPointProgress = followPoint.Point + reverceFollowDirection * (followDistance + shrinkedDistance);
+
+            _body.MoveTo(followPointProgress);
+            yield return new WaitForEndOfFrameUnit();
+        }
+
+        _followPointDistanceConnected = true;
     }
 
     void IConnectionMovement.SolveThisFrameMovementNow() {
@@ -81,9 +123,12 @@ public class FollowingConnector : MonoBehaviour, IConnectionMovement {
         }
 
         followPoint.SolveThisFrameMovementNow();
+        if (_followPointDistanceConnected) {
+            var reverceFollowDirection = (_body.Position - followPoint.Point).normalized;
+            var followPointWithOffset = followPoint.Point + reverceFollowDirection * followDistance;
 
-        var reverceFollowDirection = (_body.Position - followPoint.Point).normalized;
-        _body.MoveTo(followPoint.Point + reverceFollowDirection * followDistance);
+            _body.MoveTo(followPointWithOffset);
+        }
     }
 
 }

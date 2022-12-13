@@ -49,7 +49,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b63763cecc02aac47a4a047da4eb7758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activationWaitTime: 0.5
+  waitDistance: 1
+  activationWaitTime: 0
   pickUpPrefab: {fileID: 8775258134446525582, guid: 593eba98ead88164ebced5cadab62efc, type: 3}
   geometryTransform: {fileID: 7717709554377774066}
   triggers:

@@ -26,6 +26,7 @@ public class CaravanMemberFollowingConnectorAssigner : MonoBehaviour {
 
         _followingConnector.SetFollowPoint(newHeadConnectionPoint);
         if (newHeadConnectionPoint != null && previousConnectionPoint != null && newHeadConnectionPoint != previousConnectionPoint) {
+            Debug.LogWarning("Swap case");
             _followingConnector.PauseUntilFarEnought(previousConnectionPoint.transform, swapWaitDistance /* but should be bounding box length */);
         }
     }

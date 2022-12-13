@@ -411,6 +411,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followPoint: {fileID: 0}
+  reapproachmentSpeed: 3
+  reapproachingSnapDistance: 0.1
   followDistance: 0.5
 --- !u!114 &492139919404365800
 MonoBehaviour:
