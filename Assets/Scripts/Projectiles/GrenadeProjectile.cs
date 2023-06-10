@@ -16,7 +16,7 @@ public class GrenadeProjectile : MonoBehaviour {
         _landingOutlinesPopulator = GameObject.Find(globalLandingObjectPopulatorName).GetComponent<NamedPrototypePopulator>();
     }
 
-    public void Launch(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<Vector3, RaycastHit[]> landCallback) {
+    public void Launch(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<Vector3, IEnumerable<Rigidbody>> landCallback) {
         if (_launched) {
             return;
         }
@@ -25,7 +25,7 @@ public class GrenadeProjectile : MonoBehaviour {
         _launched = true;
     }
 
-    private IEnumerator FlyCoroutine(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<Vector3, RaycastHit[]> landCallback) {
+    private IEnumerator FlyCoroutine(AnimationCurve flyCurve, float flyHeight, Vector3 landPosition, Action<Vector3, IEnumerable<Rigidbody>> landCallback) {
         var time = 0f;
         var launchPosition = transform.position;
         var launchToLand = landPosition - launchPosition;

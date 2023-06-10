@@ -88,7 +88,9 @@ public class GrenaderOperator : MonoBehaviour {
                     var hittedHealth = rigidbody.GetComponent<Health>();
                     var hittedCaravanMember = rigidbody.GetComponent<CaravanMember>();
                     if (hittedHealth != null && hittedCaravanMember == null) {
-                        var damageDumping = (int) Utils.Map(distanceToEpicenter, 0, ExplosionRadius, 0, explosionDamage);
+                        var clampedDistance = Mathf.Clamp(distanceToEpicenter, 0, ExplosionRadius);
+                        var damageDumping = (int) ((clampedDistance / ExplosionRadius) * explosionDamage);
+                        // var damageDumping = (int) Utils.Map(clampedDistance, 0, ExplosionRadius, 0, explosionDamage);
                         hittedHealth.TakeDamage(explosionDamage - damageDumping);
                     }
                 });

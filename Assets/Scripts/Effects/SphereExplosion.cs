@@ -20,27 +20,32 @@ public class SphereExplosion : MonoBehaviour {
         _impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
-    public void Explode(Action<Vector3, RaycastHit[]> onExplodeAffected) {
+    public void Explode(Action<Vector3, IEnumerable<Rigidbody>> onExplodeAffected) {
         if (explosionParticlesPrefab != null) {
             var explosionParticles = Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
             DestructionTimer.StartOn(explosionParticles, explosionLifetime);
         }
 
         var affectedCollisions = Physics.SphereCastAll(transform.position, effectRadius, Vector3.up);
+        var affectedRigidbodies = new HashSet<Rigidbody>();
         foreach (var collision in affectedCollisions) {
             var affectedRigidbody = collision.rigidbody;
             if (affectedRigidbody != null) {
-                affectedRigidbody.AddExplosionForce(
-                    effectForce,
-                    transform.position,
-                    effectRadius,
-                    effectUpwardModifier,
-                    effectForceMode
-                );
+                affectedRigidbodies.Add(affectedRigidbody);
             }
         }
 
-        onExplodeAffected?.Invoke(transform.position, affectedCollisions);
+        foreach (var rigidbody in affectedRigidbodies) {
+            rigidbody.AddExplosionForce(
+                effectForce,
+                transform.position,
+                effectRadius,
+                effectUpwardModifier,
+                effectForceMode
+            );
+        }
+
+        onExplodeAffected?.Invoke(transform.position, affectedRigidbodies);
 
         if (_impulseSource != null) {
             _impulseSource.GenerateImpulse();

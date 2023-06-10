@@ -95,11 +95,9 @@ public class Grenader : MonoBehaviour {
         aimOutline.StopOutlining();
 
         shotGrenade.transform.SetParent(projectilesCollection, true);
-        shotGrenade.Launch(flyCurve, fireHeight, (Vector3)landPosition, (epicenter, hits) => {
-            foreach (var hit in hits) {
-                if (hit.rigidbody != null) {
-                    onExplosionHitAtDistanceToEpicenter?.Invoke(hit.rigidbody, Vector3.Distance(hit.rigidbody.transform.position, epicenter));
-                }
+        shotGrenade.Launch(flyCurve, fireHeight, (Vector3)landPosition, (epicenter, rigidbodies) => {
+            foreach (var rigidbody in rigidbodies) {
+                onExplosionHitAtDistanceToEpicenter?.Invoke(rigidbody, Vector3.Distance(rigidbody.transform.position, epicenter));
             }
         });
     }

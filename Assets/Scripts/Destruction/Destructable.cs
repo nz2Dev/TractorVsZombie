@@ -20,11 +20,9 @@ public class Destructable : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
 
-        destructionExplosiveness.Explode((epicenter, hits) => {
-            foreach (var hit in hits) {
-                if (hit.rigidbody != null) {
-                    onExplosionAffected?.Invoke(Vector3.Distance(hit.rigidbody.transform.position, epicenter), hit.rigidbody);
-                }
+        destructionExplosiveness.Explode((epicenter, rigidbodies) => {
+            foreach (var rigidbody in rigidbodies) {
+                onExplosionAffected?.Invoke(Vector3.Distance(rigidbody.transform.position, epicenter), rigidbody);
             }
         });
 
