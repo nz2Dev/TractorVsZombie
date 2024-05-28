@@ -65,7 +65,7 @@ public class WallsSlideSteering : MonoBehaviour, ISteering {
     }
 
 #if UNITY_EDITOR
-    public void OnDrawGizmosSelected(Vehicle vehicle) {
+    public void DrawGizmosSelected(Vehicle vehicle) {
         Handles.color = Color.magenta;
         Handles.DrawWireDisc(vehicle.Position, Vector3.up, checkRadius);
     }

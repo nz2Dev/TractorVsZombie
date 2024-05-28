@@ -28,7 +28,7 @@ public class DirectionSteering : MonoBehaviour, ISteering {
         return vehicle.FollowDirection(turnAnchor, turnDirection, lookaheadDistance);
     }
 
-    public void OnDrawGizmosSelected(Vehicle vehicle) {
+    public void DrawGizmosSelected(Vehicle vehicle) {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(turnAnchor, 0.1f);
         Gizmos.DrawRay(turnAnchor, turnDirection);

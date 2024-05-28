@@ -23,6 +23,6 @@ public class PathSteering : MonoBehaviour, ISteering {
         return vehicle.FollowPath(path);
     }
 
-    public void OnDrawGizmosSelected(Vehicle vehicle) {
+    public void DrawGizmosSelected(Vehicle vehicle) {
     }
 }

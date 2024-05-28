@@ -8,7 +8,7 @@ public interface ISteering {
 
     Vector3 CalculateSteeringForce(Vehicle vehicle);
 #if UNITY_EDITOR
-    void OnDrawGizmosSelected(Vehicle vehicle);
+    void DrawGizmosSelected(Vehicle vehicle);
 #endif
 
 }
@@ -32,7 +32,7 @@ public class SteeringApplier : MonoBehaviour {
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
         foreach (var steering in _steerings) {
-            steering.OnDrawGizmosSelected(_vehicle);
+            steering.DrawGizmosSelected(_vehicle);
         }
     }
 #endif

@@ -30,7 +30,7 @@ public class WallsStopSteering : MonoBehaviour, ISteering {
     }
 
 #if UNITY_EDITOR
-    public void OnDrawGizmosSelected(Vehicle vehicle) {
+    public void DrawGizmosSelected(Vehicle vehicle) {
         Handles.color = Color.gray;
         Handles.DrawWireDisc(vehicle.Position, Vector3.up, checkDistance);
     }

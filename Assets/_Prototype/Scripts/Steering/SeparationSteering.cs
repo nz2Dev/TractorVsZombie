@@ -58,7 +58,7 @@ public class SeparationSteering : MonoBehaviour, ISteering {
     }
 
 #if UNITY_EDITOR
-    public void OnDrawGizmosSelected(Vehicle vehicle) {
+    public void DrawGizmosSelected(Vehicle vehicle) {
         Handles.color = Color.red;
         Handles.DrawSolidDisc(vehicle.transform.position, Vector3.up, checkRadius);
     }

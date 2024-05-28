@@ -54,7 +54,7 @@ public class WallsAvoideSteering : MonoBehaviour, ISteering {
     }
 
 #if UNITY_EDITOR
-    public void OnDrawGizmosSelected(Vehicle vehicle) {
+    public void DrawGizmosSelected(Vehicle vehicle) {
         Handles.DrawWireDisc(vehicle.Position, Vector3.up, checkRadius);
     }
 #endif
