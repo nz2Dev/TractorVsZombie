@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CargoControl : MonoBehaviour {
     [SerializeField] private Transform carier;
+    [SerializeField] private float breakTorque = 0;
+    [SerializeField] private float motorTorque = 0;
 
     private WheelControl[] wheels;
 
@@ -20,6 +22,11 @@ public class CargoControl : MonoBehaviour {
             if (wheel.steerable) {
                 wheel.WheelCollider.steerAngle = steerAngle;
             }
+        }
+
+        foreach (var wheel in wheels) {
+            wheel.WheelCollider.brakeTorque = breakTorque;
+            wheel.WheelCollider.motorTorque = motorTorque;
         }
     }
 }
