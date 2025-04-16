@@ -43,6 +43,9 @@ public class CarControl : MonoBehaviour
         // Use that to calculate how much torque is available 
         // (zero torque at top speed)
         float currentMotorTorque = Mathf.Lerp(motorTorque, 0, speedFactor);
+        if (Mathf.Sign(vInput) < 0) {
+            currentMotorTorque *= 0.25f;
+        }
 
         // …and to calculate how much to steer 
         // (the car steers more gently at top speed)
