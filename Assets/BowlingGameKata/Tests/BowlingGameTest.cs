@@ -32,8 +32,26 @@ public class BowlingGameTest {
         RollSpare();
         game.Roll(3);
         RollMany(17, 0);
-
         Assert.That(game.Score(), Is.EqualTo(16));
+    }
+
+    [Test]
+    public void TestOneStrike() {
+        RollStrike();
+        game.Roll(3);
+        game.Roll(4);
+        RollMany(16, 0);
+        Assert.That(game.Score(), Is.EqualTo(24));
+    }
+
+    [Test]
+    public void TestPerfectGame() {
+        RollMany(12, 10);
+        Assert.That(game.Score(), Is.EqualTo(300));
+    }
+
+    private void RollStrike() {
+        game.Roll(10);
     }
 
     private void RollSpare() {
