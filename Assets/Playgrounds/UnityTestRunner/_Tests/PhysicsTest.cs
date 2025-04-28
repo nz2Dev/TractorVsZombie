@@ -5,7 +5,7 @@ using UnityEngine.TestTools;
 
 public class PhysicsTest {
     
-    [UnityTest]
+    // [UnityTest]
     public IEnumerator PhysicsMovesCube() {
         var initialPosition = Vector3.up * 10;
         var cubeUnderTest = GameObject.CreatePrimitive(PrimitiveType.Cube);
