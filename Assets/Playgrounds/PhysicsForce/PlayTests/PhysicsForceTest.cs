@@ -13,10 +13,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 [TestFixture]
-public class PhysicsTest : IPrebuildSetup, IPostBuildCleanup {
+public class PhysicsForceTest : IPrebuildSetup, IPostBuildCleanup {
 
     private string originalScene;
-    private readonly string ScenePath = Path.Combine("Assets", "NewFolder", "NewScene.unity");
+    private readonly string ScenePath = Path.Combine("Assets", "Playgrounds", "PhysicsForce", "PhysicsForceScene.unity");
 
     public void Setup() {
 #if UNITY_EDITOR

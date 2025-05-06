@@ -1,5 +1,5 @@
 {
-    "name": "NewTests",
+    "name": "PhysicsForceTests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
