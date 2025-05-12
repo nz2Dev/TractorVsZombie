@@ -25,6 +25,12 @@ public class ConvoyMovement {
         convoyMemberJoint.connectedBody = connectionBody;
         convoyMemberJoint.connectedAnchor = connectionAnchor;
 
+        var wheelColliders = newConvoyMember.GetComponentsInChildren<WheelCollider>();
+        foreach (var wheelCollider in wheelColliders) {
+            wheelCollider.brakeTorque = 0;
+            wheelCollider.motorTorque = 1;
+        }
+
         members.Add(newConvoyMember);
     }
 

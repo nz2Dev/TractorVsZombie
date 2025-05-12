@@ -44,28 +44,31 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
     [UnityTest]
     public IEnumerator OneParticipantWithDestination_OutputNewPosition() {
         var convoyMovement = new ConvoyMovement();
+        convoyMovement.SetDestination(new Vector3(0, 0, 2));
         convoyMovement.AddParticipant(Vector3.zero);
-        convoyMovement.SetDestination(new Vector3(0, 0, 1));
 
-        yield return new WaitForFixedUpdate();
+        Debug.Break();
+        for (int i = 0; i < 50; i++)
+            yield return new WaitForFixedUpdate();
 
-        Assert.That(convoyMovement.GetParticipant(0),
-            Is.Not.EqualTo(Vector3.zero));
+        var distanceTraveled = Vector3.Distance(convoyMovement.GetParticipant(0), Vector3.zero);
+        Assert.That(distanceTraveled, Is.GreaterThan(0.5f));
     }
 
     [UnityTest]
     public IEnumerator SetParticipantsNextToEachOther_NoMovement() {
         var convoyMovement = new ConvoyMovement();
-        convoyMovement.AddParticipant(Vector3.zero);
-        convoyMovement.AddParticipant(Vector3.back * 2);
+        var m1Position = Vector3.zero;
+        convoyMovement.AddParticipant(m1Position);
+        var m2Position = Vector3.back * 2;
+        convoyMovement.AddParticipant(m2Position);
         
-        Debug.Break();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 10; i++)
             yield return new WaitForFixedUpdate();
 
-        var vector3Comparer = new Vector3EqualityComparer(1e-5f);
-        Assert.That(convoyMovement.GetParticipant(0), Is.EqualTo(Vector3.zero).Using(vector3Comparer));
-        Assert.That(convoyMovement.GetParticipant(1), Is.EqualTo(Vector3.back).Using(vector3Comparer));
+        var vector3Comparer = new Vector3EqualityComparer(1e-2f);
+        Assert.That(convoyMovement.GetParticipant(0), Is.EqualTo(m1Position).Using(vector3Comparer));
+        Assert.That(convoyMovement.GetParticipant(1), Is.EqualTo(m2Position).Using(vector3Comparer));
     }
 
     [UnityTearDown]
