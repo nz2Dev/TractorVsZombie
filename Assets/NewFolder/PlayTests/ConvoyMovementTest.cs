@@ -58,7 +58,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
     [UnityTest]
     public IEnumerator OneParticipant_NoMovement() {
         var initPosition = Vector3.zero;
-        convoyMovement.SetHeadParticipant(initPosition);
+        convoyMovement.AddParticipant(initPosition);
 
         for (int i = 0; i < 50; i++)
             yield return new WaitForFixedUpdate();
@@ -75,7 +75,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         var m2Position = Vector3.back * 2;
         var InitialM2DistanceToM1 = Vector3.Distance(m1Position, m2Position);
         
-        convoyMovement.SetHeadParticipant(m1Position);
+        convoyMovement.AddParticipant(m1Position);
         convoyMovement.AddParticipant(m2Position);
         
         for (int i = 0; i < 100; i++)
@@ -98,9 +98,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         const int participantsCount = 5;
         
         var initPositions = new Vector3[participantsCount];
-        initPositions[0] = Vector3.zero;
-        convoyMovement.SetHeadParticipant(initPositions[0]);
-        for (int i = 1; i < initPositions.Length; i++) {
+        for (int i = 0; i < initPositions.Length; i++) {
             initPositions[i] = 2 * i * Vector3.back;
             convoyMovement.AddParticipant(initPositions[i]);
         }

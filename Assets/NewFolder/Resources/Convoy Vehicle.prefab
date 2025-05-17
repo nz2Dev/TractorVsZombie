@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 8444394153978212991}
   - component: {fileID: 6410955937319479108}
   m_Layer: 0
-  m_Name: Convoy Head
+  m_Name: Convoy Vehicle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

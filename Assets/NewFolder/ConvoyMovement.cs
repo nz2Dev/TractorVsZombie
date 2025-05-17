@@ -6,38 +6,43 @@ using UnityEngine;
 
 public class ConvoyMovement {
 
-    private readonly List<GameObject> members = new();
-
-    public void SetHeadParticipant(Vector3 position, Quaternion rotation = default) {
-        var headMember = InstantiateConvoyHead();
-        SetupHeadVehicle(headMember);
-        SetupVehicleTransforms(headMember, position, rotation);
-        members.Add(headMember);
-    }
+    private readonly List<GameObject> vehicles = new();
 
     public void AddParticipant(Vector3 position, Quaternion rotation = default) {
-        var newConvoyMember = InstantiateConvoyMember();
-        SetupTailVehicle(newConvoyMember);
-        SetupVehicleTransforms(newConvoyMember, position, rotation);
-        ConnectWithSpringJoint(newConvoyMember, members[^1]);
-        members.Add(newConvoyMember);
+        var newConvoyVehicle = InstantiateConvoyVehicle();
+        SetupVehicleTransforms(newConvoyVehicle, position, rotation);
+
+        var isFirstVehicle = vehicles.Count == 0;
+        if (isFirstVehicle) {
+            SetupHeadMemberWheels(newConvoyVehicle);
+        } else {
+            SetupTailMemberWheels(newConvoyVehicle);
+            ConnectWithSpringJoint(newConvoyVehicle, vehicles[^1]);
+        }
+
+        vehicles.Add(newConvoyVehicle);
     }
 
     private void ConnectWithSpringJoint(GameObject tail, GameObject head) {
+        var anchorOffset = new Vector3(0, 0, 0.7f);
         var connectionBody = head.GetComponent<Rigidbody>();
 
-        var connectionAnchor = head.transform.position - new Vector3(0, 0, 0.7f);
-        if (head.TryGetComponent<SpringJoint>(out var headSpringJoint)) {
-            var miroredAnchorVector = -headSpringJoint.anchor;
-            connectionAnchor = miroredAnchorVector;
-        }
+        var tailSpringJoint = tail.AddComponent<SpringJoint>();
+        tailSpringJoint.anchor = anchorOffset;
+        tailSpringJoint.autoConfigureConnectedAnchor = false;
+        tailSpringJoint.connectedBody = connectionBody;
+        tailSpringJoint.connectedAnchor = -anchorOffset;
 
-        var convoyMemberJoint = tail.GetComponent<SpringJoint>();
-        convoyMemberJoint.connectedBody = connectionBody;
-        convoyMemberJoint.connectedAnchor = connectionAnchor;
+        tailSpringJoint.spring = 10_000;
+        tailSpringJoint.damper = 3_000;
+        tailSpringJoint.maxDistance = 0.2f;
     }
 
-    private void SetupHeadVehicle(GameObject vehicleGO) {
+    private void SetupVehicleTransforms(GameObject vehicleGO, Vector3 position, Quaternion rotaiton) {
+        vehicleGO.transform.SetPositionAndRotation(position, rotaiton);
+    }
+
+    private void SetupHeadMemberWheels(GameObject vehicleGO) {
         const int holdBreakForce = 500;
         var wheelColliders = vehicleGO.GetComponentsInChildren<WheelCollider>();
         foreach (var wheelCollider in wheelColliders) {
@@ -46,11 +51,7 @@ public class ConvoyMovement {
         }
     }
 
-    private void SetupVehicleTransforms(GameObject vehicleGO, Vector3 position, Quaternion rotaiton) {
-        vehicleGO.transform.SetPositionAndRotation(position, rotaiton);
-    }
-
-    private void SetupTailVehicle(GameObject vehicleGO) {
+    private void SetupTailMemberWheels(GameObject vehicleGO) {
         var wheelColliders = vehicleGO.GetComponentsInChildren<WheelCollider>();
         foreach (var wheelCollider in wheelColliders) {
             wheelCollider.brakeTorque = 0;
@@ -58,22 +59,17 @@ public class ConvoyMovement {
         }
     }
 
-    private static GameObject InstantiateConvoyHead() {
-        var convoyHeadPrefab = Resources.Load<GameObject>("Convoy Head");
-        return GameObject.Instantiate(convoyHeadPrefab);
-    }
-
-    private static GameObject InstantiateConvoyMember() {
-        var convoyMemberPrefab = Resources.Load<GameObject>("Convoy Member");
+    private static GameObject InstantiateConvoyVehicle() {
+        var convoyMemberPrefab = Resources.Load<GameObject>("Convoy Vehicle");
         var convoyMember = GameObject.Instantiate(convoyMemberPrefab);
         return convoyMember;
     }
 
     public Vector3 GetParticipant(int index) {
-        return members[index].transform.position;
+        return vehicles[index].transform.position;
     }
 
     public Quaternion GetParticipantRotation(int index) {
-        return members[index].transform.rotation;
+        return vehicles[index].transform.rotation;
     }
 }
