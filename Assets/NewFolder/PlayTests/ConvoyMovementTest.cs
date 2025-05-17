@@ -29,6 +29,11 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
 #endif
     }
 
+    [SetUp]
+    public void EditorTestSetup() {
+        convoyMovement = new ConvoyMovement();
+    }
+
     [UnitySetUp]
     public IEnumerator TestSetup() {
         convoyMovement = new ConvoyMovement();
@@ -39,6 +44,15 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
 
     [Test]
     public void CreateMovement() {
+    }
+
+    [Test]
+    public void PlaceParticipantWithRotation() {
+        var initRotation = Quaternion.LookRotation(Vector3.left, Vector3.up);
+        convoyMovement.AddParticipant(Vector3.zero, initRotation);
+
+        var pulledRotation = convoyMovement.GetParticipantRotation(0);
+        Assert.That(pulledRotation, Is.EqualTo(initRotation));
     }
 
     [UnityTest]
@@ -107,6 +121,19 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
             Assert.That(movementForwardDotProduct, Is.GreaterThan(0.98f), indexMessage);
         }
     }
+
+    // [UnityTest]
+    // public IEnumerator SetParticipantsInAngle_TailTurnsTowrdHead() {
+    //     convoyMovement.SetHeadParticipant(
+    //         Vector3.zero,
+    //         Quaternion.LookRotation(Vector3.forward, Vector3.up));
+    //     convoyMovement.AddParticipant(
+    //         2 * Vector3.back + Vector3.right,
+    //         Quaternion.LookRotation(Vector2.left, Vector3.up));
+
+    //     for (int i = 0; i < 100; i++)
+    //         yield return new WaitForFixedUpdate();
+    // }
 
     [UnityTearDown]
     public void TestTeardown() {

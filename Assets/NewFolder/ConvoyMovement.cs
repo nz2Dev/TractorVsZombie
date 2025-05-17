@@ -8,15 +8,17 @@ public class ConvoyMovement {
 
     private readonly List<GameObject> members = new();
 
-    public void SetHeadParticipant(Vector3 position) {
-        var head = InstantiateConvoyHead();
-        SetupHeadVehicle(head, position);
-        members.Add(head);
+    public void SetHeadParticipant(Vector3 position, Quaternion rotation = default) {
+        var headMember = InstantiateConvoyHead();
+        SetupHeadVehicle(headMember);
+        SetupVehicleTransforms(headMember, position, rotation);
+        members.Add(headMember);
     }
 
-    public void AddParticipant(Vector3 position, Vector3 size = default) {
+    public void AddParticipant(Vector3 position, Quaternion rotation = default) {
         var newConvoyMember = InstantiateConvoyMember();
-        SetupTailVehicle(newConvoyMember, position);
+        SetupTailVehicle(newConvoyMember);
+        SetupVehicleTransforms(newConvoyMember, position, rotation);
         ConnectWithSpringJoint(newConvoyMember, members[^1]);
         members.Add(newConvoyMember);
     }
@@ -35,10 +37,8 @@ public class ConvoyMovement {
         convoyMemberJoint.connectedAnchor = connectionAnchor;
     }
 
-    private void SetupHeadVehicle(GameObject vehicleGO, Vector3 position) {
+    private void SetupHeadVehicle(GameObject vehicleGO) {
         const int holdBreakForce = 500;
-        
-        vehicleGO.transform.position = position;
         var wheelColliders = vehicleGO.GetComponentsInChildren<WheelCollider>();
         foreach (var wheelCollider in wheelColliders) {
             wheelCollider.brakeTorque = holdBreakForce;
@@ -46,8 +46,11 @@ public class ConvoyMovement {
         }
     }
 
-    private void SetupTailVehicle(GameObject vehicleGO, Vector3 position) {
-        vehicleGO.transform.position = position;
+    private void SetupVehicleTransforms(GameObject vehicleGO, Vector3 position, Quaternion rotaiton) {
+        vehicleGO.transform.SetPositionAndRotation(position, rotaiton);
+    }
+
+    private void SetupTailVehicle(GameObject vehicleGO) {
         var wheelColliders = vehicleGO.GetComponentsInChildren<WheelCollider>();
         foreach (var wheelCollider in wheelColliders) {
             wheelCollider.brakeTorque = 0;
@@ -70,4 +73,7 @@ public class ConvoyMovement {
         return members[index].transform.position;
     }
 
+    public Quaternion GetParticipantRotation(int index) {
+        return members[index].transform.rotation;
+    }
 }
