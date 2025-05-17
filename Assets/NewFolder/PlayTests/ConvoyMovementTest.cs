@@ -45,7 +45,6 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         convoyMovement.SetDestination(new Vector3(0, 0, 2));
         convoyMovement.AddParticipant(Vector3.zero);
 
-        Debug.Break();
         for (int i = 0; i < 50; i++)
             yield return new WaitForFixedUpdate();
 
