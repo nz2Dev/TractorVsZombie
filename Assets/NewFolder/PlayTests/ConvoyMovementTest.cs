@@ -79,6 +79,35 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
             Is.GreaterThan(0.1f));
     }
 
+    [UnityTest]
+    public IEnumerator SetArrayOfParticipantsAppart_AllMovesInHeadDirection() {
+        const int participantsCount = 5;
+        
+        var initPositions = new Vector3[participantsCount];
+        initPositions[0] = Vector3.zero;
+        convoyMovement.SetHeadParticipant(initPositions[0]);
+        for (int i = 1; i < initPositions.Length; i++) {
+            initPositions[i] = 2 * i * Vector3.back;
+            convoyMovement.AddParticipant(initPositions[i]);
+        }
+
+        for (int i = 0; i < 100; i++)
+            yield return new WaitForFixedUpdate();
+
+        var simulatedPositions = new Vector3[initPositions.Length];        
+        const int nonHeadParticipantStartIndex = 1;
+        for (int i = nonHeadParticipantStartIndex; i < simulatedPositions.Length; i++) {
+            var nonHeadInitPosition = initPositions[i]; 
+            var nonHeadSimulatedPosition = convoyMovement.GetParticipant(i);
+            var movementVector = nonHeadSimulatedPosition - nonHeadInitPosition;
+            var movementForwardDotProduct = Vector3.Dot(movementVector.normalized, Vector3.forward);
+
+            var indexMessage = $"for i = {i}";
+            Assert.That(movementVector.magnitude, Is.GreaterThan(0.1f), indexMessage);
+            Assert.That(movementForwardDotProduct, Is.GreaterThan(0.98f), indexMessage);
+        }
+    }
+
     [UnityTearDown]
     public void TestTeardown() {
         SceneManager.LoadScene(originalScene);
