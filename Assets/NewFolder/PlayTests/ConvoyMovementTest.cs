@@ -62,7 +62,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         convoyMovement.AddParticipant(m1Position);
         convoyMovement.AddParticipant(m2Position);
         
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 100; i++)
             yield return new WaitForFixedUpdate();
 
         var vector3Comparer = new Vector3EqualityComparer(1e-2f);
@@ -70,7 +70,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         var m2PositionAfterSim = convoyMovement.GetParticipant(1);
         var M2DistanceToM1AfterSim = Vector3.Distance(m2PositionAfterSim, m1PositionAfterSim);
         Assert.That(m1PositionAfterSim, Is.EqualTo(m1Position).Using(vector3Comparer));
-        Assert.That(M2DistanceToM1AfterSim, Is.LessThan(InitialM2DistanceToM1));
+        Assert.That(InitialM2DistanceToM1 - M2DistanceToM1AfterSim, Is.GreaterThan(0.1f));
     }
 
     [UnityTearDown]

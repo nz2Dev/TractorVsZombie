@@ -817,7 +817,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2818917440406281383, guid: 490dfde015c184117bd837167f95df6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 2818917440406281383, guid: 490dfde015c184117bd837167f95df6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -858,10 +858,6 @@ PrefabInstance:
     - target: {fileID: 3731689488733032046, guid: 490dfde015c184117bd837167f95df6d, type: 3}
       propertyPath: m_ConnectedAnchor.z
       value: -0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3731689488733032046, guid: 490dfde015c184117bd837167f95df6d, type: 3}
-      propertyPath: m_AutoConfigureConnectedAnchor
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5343116838650895792, guid: 490dfde015c184117bd837167f95df6d, type: 3}
       propertyPath: m_Mesh
@@ -914,7 +910,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2818917440406281383, guid: 490dfde015c184117bd837167f95df6d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.483
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2818917440406281383, guid: 490dfde015c184117bd837167f95df6d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -950,7 +946,7 @@ PrefabInstance:
       objectReference: {fileID: 1242195506}
     - target: {fileID: 3731689488733032046, guid: 490dfde015c184117bd837167f95df6d, type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: 2.59
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3815189923435764398, guid: 490dfde015c184117bd837167f95df6d, type: 3}
       propertyPath: m_Enabled

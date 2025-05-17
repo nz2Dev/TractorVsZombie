@@ -6410,7 +6410,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5458610776825567563, guid: 1c20295508f574d4a9bd76ed4a817996, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.237
+      value: -2.142
       objectReference: {fileID: 0}
     - target: {fileID: 5458610776825567563, guid: 1c20295508f574d4a9bd76ed4a817996, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6571,7 +6571,7 @@ SpringJoint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 805406126}
-  m_ConnectedBody: {fileID: 1636215954}
+  m_ConnectedBody: {fileID: 1928297930}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0.7}
   m_AutoConfigureConnectedAnchor: 1
@@ -11536,11 +11536,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!54 &1636215954 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 8344957475687721278, guid: 8bacf72830e314fa387790f0b400b8e5, type: 3}
-  m_PrefabInstance: {fileID: 4975164536291058030}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1640164226
 Mesh:
   m_ObjectHideFlags: 0
