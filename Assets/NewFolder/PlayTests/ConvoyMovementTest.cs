@@ -45,12 +45,13 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         var initPosition = Vector3.zero;
         convoyMovement.SetHeadParticipant(initPosition);
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 50; i++)
             yield return new WaitForFixedUpdate();
 
-        var distanceTraveled = 
-            Vector3.Distance(convoyMovement.GetParticipant(0), initPosition);
-        Assert.That(distanceTraveled, Is.Zero);
+        var distanceTraveled = Vector3.Distance(
+                Vector3.ProjectOnPlane(convoyMovement.GetParticipant(0), Vector3.up), 
+                initPosition);
+        Assert.That(distanceTraveled, Is.Zero.Within(0.0001f));
     }
 
     [UnityTest]
@@ -62,15 +63,20 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         convoyMovement.SetHeadParticipant(m1Position);
         convoyMovement.AddParticipant(m2Position);
         
+        Debug.Break();
         for (int i = 0; i < 100; i++)
             yield return new WaitForFixedUpdate();
 
         var vector3Comparer = new Vector3EqualityComparer(1e-2f);
         var m1PositionAfterSim = convoyMovement.GetParticipant(0);
         var m2PositionAfterSim = convoyMovement.GetParticipant(1);
-        var M2DistanceToM1AfterSim = Vector3.Distance(m2PositionAfterSim, m1PositionAfterSim);
-        Assert.That(m1PositionAfterSim, Is.EqualTo(m1Position).Using(vector3Comparer));
-        Assert.That(InitialM2DistanceToM1 - M2DistanceToM1AfterSim, Is.GreaterThan(0.1f));
+        var M2DistanceToM1AfterSim = 
+            Vector3.Distance(m2PositionAfterSim, m1PositionAfterSim);
+        
+        Assert.That(m1PositionAfterSim, 
+            Is.EqualTo(m1Position).Using(vector3Comparer));
+        Assert.That(InitialM2DistanceToM1 - M2DistanceToM1AfterSim, 
+            Is.GreaterThan(0.1f));
     }
 
     [UnityTearDown]

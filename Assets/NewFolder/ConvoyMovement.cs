@@ -6,40 +6,58 @@ using UnityEngine;
 
 public class ConvoyMovement {
 
-    private GameObject head;
-    private List<GameObject> members = new();
+    private readonly List<GameObject> members = new();
 
-    public void SetHeadParticipant(Vector3 destination) {
-        head = new GameObject();
-        head.transform.position = destination;
+    public void SetHeadParticipant(Vector3 position) {
+        var head = InstantiateConvoyHead();
+        SetupHeadVehicle(head, position);
         members.Add(head);
     }
 
     public void AddParticipant(Vector3 position, Vector3 size = default) {
         var newConvoyMember = InstantiateConvoyMember();
-        newConvoyMember.transform.position = position;
+        SetupTailVehicle(newConvoyMember, position);
+        ConnectWithSpringJoint(newConvoyMember, members[^1]);
+        members.Add(newConvoyMember);
+    }
 
-        var connectionBody = (Rigidbody) null;
-        if (members.Count > 0)
-            connectionBody = members[^1].GetComponent<Rigidbody>();
+    private void ConnectWithSpringJoint(GameObject tail, GameObject head) {
+        var connectionBody = head.GetComponent<Rigidbody>();
 
-        var connectionAnchor = head.transform.position;
-        if (members.Count > 1)
-            connectionAnchor = -members[^1].GetComponent<SpringJoint>().anchor;
-
-        var convoyMemberJoint = newConvoyMember.GetComponent<SpringJoint>();
-        convoyMemberJoint.connectedBody = connectionBody;
-        convoyMemberJoint.connectedAnchor = connectionAnchor;
-
-        var isFirstInConvoy = members.Count == 0;
-        var holdBreakForce = 500;
-        var wheelColliders = newConvoyMember.GetComponentsInChildren<WheelCollider>();
-        foreach (var wheelCollider in wheelColliders) {
-            wheelCollider.brakeTorque = isFirstInConvoy ? holdBreakForce : 0;
-            wheelCollider.motorTorque = isFirstInConvoy ? 0 : 1;
+        var connectionAnchor = head.transform.position - new Vector3(0, 0, 0.7f);
+        if (head.TryGetComponent<SpringJoint>(out var headSpringJoint)) {
+            var miroredAnchorVector = -headSpringJoint.anchor;
+            connectionAnchor = miroredAnchorVector;
         }
 
-        members.Add(newConvoyMember);
+        var convoyMemberJoint = tail.GetComponent<SpringJoint>();
+        convoyMemberJoint.connectedBody = connectionBody;
+        convoyMemberJoint.connectedAnchor = connectionAnchor;
+    }
+
+    private void SetupHeadVehicle(GameObject vehicleGO, Vector3 position) {
+        const int holdBreakForce = 500;
+        
+        vehicleGO.transform.position = position;
+        var wheelColliders = vehicleGO.GetComponentsInChildren<WheelCollider>();
+        foreach (var wheelCollider in wheelColliders) {
+            wheelCollider.brakeTorque = holdBreakForce;
+            wheelCollider.motorTorque = 0;
+        }
+    }
+
+    private void SetupTailVehicle(GameObject vehicleGO, Vector3 position) {
+        vehicleGO.transform.position = position;
+        var wheelColliders = vehicleGO.GetComponentsInChildren<WheelCollider>();
+        foreach (var wheelCollider in wheelColliders) {
+            wheelCollider.brakeTorque = 0;
+            wheelCollider.motorTorque = 1;
+        }
+    }
+
+    private static GameObject InstantiateConvoyHead() {
+        var convoyHeadPrefab = Resources.Load<GameObject>("Convoy Head");
+        return GameObject.Instantiate(convoyHeadPrefab);
     }
 
     private static GameObject InstantiateConvoyMember() {
