@@ -51,8 +51,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         var initRotation = Quaternion.LookRotation(Vector3.left, Vector3.up);
         convoyMovement.AddParticipant(Vector3.zero, initRotation);
 
-        for (int i = 0; i < 10; i++)
-            yield return new WaitForFixedUpdate();
+        yield return WaitForFixedUpdates(10);
 
         var quaternionComparer = new QuaternionEqualityComparer(0.001f);
         var pulledRotation = convoyMovement.GetParticipantRotation(0);
@@ -60,17 +59,16 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
     }
 
     [UnityTest]
-    public IEnumerator OneParticipant_NoMovement() {
+    public IEnumerator OneParticipant_NoHorizontalMovement() {
         var initPosition = Vector3.zero;
         convoyMovement.AddParticipant(initPosition);
 
-        for (int i = 0; i < 50; i++)
-            yield return new WaitForFixedUpdate();
+        yield return WaitForFixedUpdates(50);
 
-        var distanceTraveled = Vector3.Distance(
-                Vector3.ProjectOnPlane(convoyMovement.GetParticipant(0), Vector3.up), 
-                initPosition);
-        Assert.That(distanceTraveled, Is.Zero.Within(0.0001f));
+        var simPosition = convoyMovement.GetParticipant(0);
+        var horizontalSimPosition = Vector3.ProjectOnPlane(simPosition, Vector3.up);
+        var horizontalDistanceTraveled = Vector3.Distance(horizontalSimPosition, initPosition);
+        Assert.That(horizontalDistanceTraveled, Is.Zero.Within(0.0001f));
     }
 
     [UnityTest]
@@ -81,9 +79,8 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         
         convoyMovement.AddParticipant(m1Position);
         convoyMovement.AddParticipant(m2Position);
-        
-        for (int i = 0; i < 100; i++)
-            yield return new WaitForFixedUpdate();
+
+        yield return WaitForFixedUpdates(100);
 
         var vector3Comparer = new Vector3EqualityComparer(1e-2f);
         var m1PositionAfterSim = convoyMovement.GetParticipant(0);
@@ -107,8 +104,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
             convoyMovement.AddParticipant(initPositions[i]);
         }
 
-        for (int i = 0; i < 100; i++)
-            yield return new WaitForFixedUpdate();
+        yield return WaitForFixedUpdates(100);
 
         var simulatedPositions = new Vector3[initPositions.Length];        
         const int nonHeadParticipantStartIndex = 1;
@@ -136,6 +132,11 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
     //     for (int i = 0; i < 100; i++)
     //         yield return new WaitForFixedUpdate();
     // }
+
+    private static IEnumerator WaitForFixedUpdates(int amount) {
+        for (int i = 0; i < amount; i++)
+            yield return new WaitForFixedUpdate();
+    }
 
     [UnityTearDown]
     public void TestTeardown() {
