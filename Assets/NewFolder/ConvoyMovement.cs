@@ -6,8 +6,14 @@ using UnityEngine;
 
 public class ConvoyMovement {
 
-    private Vector3 anchor;
+    private GameObject head;
     private List<GameObject> members = new();
+
+    public void SetHeadParticipant(Vector3 destination) {
+        head = new GameObject();
+        head.transform.position = destination;
+        members.Add(head);
+    }
 
     public void AddParticipant(Vector3 position, Vector3 size = default) {
         var newConvoyMember = InstantiateConvoyMember();
@@ -17,8 +23,8 @@ public class ConvoyMovement {
         if (members.Count > 0)
             connectionBody = members[^1].GetComponent<Rigidbody>();
 
-        var connectionAnchor = anchor;
-        if (members.Count > 0)
+        var connectionAnchor = head.transform.position;
+        if (members.Count > 1)
             connectionAnchor = -members[^1].GetComponent<SpringJoint>().anchor;
 
         var convoyMemberJoint = newConvoyMember.GetComponent<SpringJoint>();
@@ -30,7 +36,7 @@ public class ConvoyMovement {
         var wheelColliders = newConvoyMember.GetComponentsInChildren<WheelCollider>();
         foreach (var wheelCollider in wheelColliders) {
             wheelCollider.brakeTorque = isFirstInConvoy ? holdBreakForce : 0;
-            wheelCollider.motorTorque = 1;
+            wheelCollider.motorTorque = isFirstInConvoy ? 0 : 1;
         }
 
         members.Add(newConvoyMember);
@@ -46,7 +52,4 @@ public class ConvoyMovement {
         return members[index].transform.position;
     }
 
-    public void SetDestination(Vector3 destination) {
-        anchor = destination;
-    }
 }
