@@ -46,13 +46,17 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
     public void CreateMovement() {
     }
 
-    [Test]
-    public void PlaceParticipantWithRotation() {
+    [UnityTest]
+    public IEnumerator PlaceParticipantWithRotation() {
         var initRotation = Quaternion.LookRotation(Vector3.left, Vector3.up);
         convoyMovement.AddParticipant(Vector3.zero, initRotation);
 
+        for (int i = 0; i < 10; i++)
+            yield return new WaitForFixedUpdate();
+
+        var quaternionComparer = new QuaternionEqualityComparer(0.001f);
         var pulledRotation = convoyMovement.GetParticipantRotation(0);
-        Assert.That(pulledRotation, Is.EqualTo(initRotation));
+        Assert.That(pulledRotation, Is.EqualTo(initRotation).Using(quaternionComparer));
     }
 
     [UnityTest]
