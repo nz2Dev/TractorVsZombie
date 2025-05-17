@@ -56,7 +56,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
     }
 
     [UnityTest]
-    public IEnumerator SetParticipantsNextToEachOther_ShrinksTowardFront() {
+    public IEnumerator SetOneParticipantsApartToHead_MovesTowardHead() {
         var m1Position = Vector3.zero;
         var m2Position = Vector3.back * 2;
         var InitialM2DistanceToM1 = Vector3.Distance(m1Position, m2Position);
