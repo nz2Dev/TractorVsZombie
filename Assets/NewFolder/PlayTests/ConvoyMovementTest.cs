@@ -17,7 +17,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
     private string originalScene;
     private readonly string TestEnvironmentScenePath = Path.Combine(
         "Assets", "NewFolder", "TestEnvironment.unity");
-
+    private ConvoyMovement convoyMovement = new();
 
     public void Setup() {
 #if UNITY_EDITOR
@@ -38,12 +38,10 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
 
     [Test]
     public void CreateMovement() {
-        var convoyMovement = new ConvoyMovement();
     }
 
     [UnityTest]
     public IEnumerator OneParticipantWithDestination_OutputNewPosition() {
-        var convoyMovement = new ConvoyMovement();
         convoyMovement.SetDestination(new Vector3(0, 0, 2));
         convoyMovement.AddParticipant(Vector3.zero);
 
@@ -57,10 +55,10 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
 
     [UnityTest]
     public IEnumerator SetParticipantsNextToEachOther_NoMovement() {
-        var convoyMovement = new ConvoyMovement();
         var m1Position = Vector3.zero;
-        convoyMovement.AddParticipant(m1Position);
         var m2Position = Vector3.back * 2;
+        
+        convoyMovement.AddParticipant(m1Position);
         convoyMovement.AddParticipant(m2Position);
         
         for (int i = 0; i < 10; i++)
