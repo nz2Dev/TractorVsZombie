@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7283491339166585878}
   - component: {fileID: 9170290526025819461}
-  - component: {fileID: 2648866236133005406}
   m_Layer: 0
   m_Name: Wheel
   m_TagString: Untagged
@@ -72,19 +71,3 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
---- !u!114 &2648866236133005406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4200596308204101612}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08625ec603e9345039e4af3e5917497f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wheelModel: {fileID: 0}
-  WheelCollider: {fileID: 0}
-  steerable: 0
-  motorized: 0

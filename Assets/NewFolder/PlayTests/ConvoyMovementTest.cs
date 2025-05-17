@@ -59,6 +59,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         var m2Position = Vector3.back * 2;
         var InitialM2DistanceToM1 = Vector3.Distance(m1Position, m2Position);
         
+        convoyMovement.SetDestination(Vector3.forward);
         convoyMovement.AddParticipant(m1Position);
         convoyMovement.AddParticipant(m2Position);
         
