@@ -31,6 +31,7 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
 
     [UnitySetUp]
     public IEnumerator TestSetup() {
+        convoyMovement = new ConvoyMovement();
         originalScene = SceneManager.GetActiveScene().path;
         SceneManager.LoadScene(TestEnvironmentScenePath);
         yield return null;
@@ -63,7 +64,6 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         convoyMovement.SetHeadParticipant(m1Position);
         convoyMovement.AddParticipant(m2Position);
         
-        Debug.Break();
         for (int i = 0; i < 100; i++)
             yield return new WaitForFixedUpdate();
 
