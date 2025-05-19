@@ -23,6 +23,27 @@ public class ConvoyMovement {
         vehicles.Add(newConvoyVehicle);
     }
 
+    // public void UpdateTailSteerAngles() {
+    //     for (int i = 1; i < vehicles.Count; i++) {
+    //         var headVehicle = vehicles[i - 1];
+    //         var tailVehicle = vehicles[i];
+
+    //         var headAnchorPoint = headVehicle.transform.position - headVehicle.transform.forward * 0.7f;
+    //         var tailAnchorPoint = tailVehicle.transform.position + tailVehicle.transform.forward * 0.7f;
+    //         var tailToHead = headAnchorPoint - tailAnchorPoint;
+    //         var flatDirectionVector = Vector3.ProjectOnPlane(tailToHead, Vector3.up);
+    //         var flatForwardVector = Vector3.ProjectOnPlane(tailVehicle.transform.forward, Vector3.up);
+    //         var steerAngle = Vector3.SignedAngle(flatForwardVector, flatDirectionVector.normalized, Vector3.up);
+    //         // steerAngle = Math.Clamp(steerAngle, -45, 45);
+
+    //         foreach (var wheel in tailVehicle.GetComponentsInChildren<WheelCollider>().Take(2)) {
+    //             wheel.steerAngle = steerAngle;
+    //             wheel.brakeTorque = 0;
+    //             wheel.motorTorque = 1;
+    //         }
+    //     }
+    // }
+
     private void ConnectWithSpringJoint(GameObject tail, GameObject head) {
         var anchorOffset = new Vector3(0, 0, 0.7f);
         var connectionBody = head.GetComponent<Rigidbody>();
@@ -72,4 +93,9 @@ public class ConvoyMovement {
     public Quaternion GetParticipantRotation(int index) {
         return vehicles[index].transform.rotation;
     }
+
+    public GameObject GetParticipantGO(int index) {
+        return vehicles[index];
+    }
+
 }

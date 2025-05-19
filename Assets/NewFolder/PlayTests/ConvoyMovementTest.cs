@@ -7,6 +7,7 @@ using NUnit.Framework;
 using UnityEditor;
 
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
@@ -120,18 +121,31 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
         }
     }
 
-    // [UnityTest]
-    // public IEnumerator SetParticipantsInAngle_TailTurnsTowrdHead() {
-    //     convoyMovement.SetHeadParticipant(
-    //         Vector3.zero,
-    //         Quaternion.LookRotation(Vector3.forward, Vector3.up));
-    //     convoyMovement.AddParticipant(
-    //         2 * Vector3.back + Vector3.right,
-    //         Quaternion.LookRotation(Vector2.left, Vector3.up));
+    [UnityTest]
+    public IEnumerator SetParticipantsPerpendicular_TailTurnsTowardHead() {
+        convoyMovement.AddParticipant(
+            Vector3.zero,
+            Quaternion.LookRotation(Vector3.forward, Vector3.up));
 
-    //     for (int i = 0; i < 100; i++)
-    //         yield return new WaitForFixedUpdate();
-    // }
+        var p2InitRot = Quaternion.LookRotation(Vector2.left, Vector3.up);
+        convoyMovement.AddParticipant(
+            2 * Vector3.back + Vector3.right,
+            p2InitRot);
+
+        var initHeadForward = convoyMovement.GetParticipantGO(0).transform.forward;
+        var initTailForward = convoyMovement.GetParticipantGO(1).transform.forward;
+        var initTailHeadDot = Vector3.Dot(initHeadForward, initTailForward);
+
+        for (int i = 0; i < 100; i++) {
+            yield return new WaitForFixedUpdate();
+        }
+
+        var simHeadForward = convoyMovement.GetParticipantGO(0).transform.forward;
+        var simTailForward = convoyMovement.GetParticipantGO(1).transform.forward;
+        var simTailHeadDot = Vector3.Dot(simTailForward, simHeadForward);
+            
+        Assert.That(simTailHeadDot, Is.GreaterThan(initTailHeadDot));
+    }
 
     private static IEnumerator WaitForFixedUpdates(int amount) {
         for (int i = 0; i < amount; i++)
