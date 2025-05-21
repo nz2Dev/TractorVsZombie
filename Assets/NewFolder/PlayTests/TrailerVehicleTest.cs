@@ -41,7 +41,7 @@ public class TrailerVehicleTest {
 
         var initPosition = Vector3.back * 2;
         var targetPosition = Vector3.zero;
-        var targetRigidbody = CreateKinematicRigidbodyGO();
+        var targetRigidbody = CreateTargetRigidbodyGO();
         targetRigidbody.position = targetPosition;
         
         trailerVehicle.SetPosition(initPosition);
@@ -53,11 +53,12 @@ public class TrailerVehicleTest {
             Is.EqualTo(targetPosition).Using(smallVector3Comparer));
     }
 
-    private Rigidbody CreateKinematicRigidbodyGO() {
+    private Rigidbody CreateTargetRigidbodyGO() {
         // Is not destroyed, will have memory leak?
         var rigidbodyGO = new GameObject();
         var rigidbody = rigidbodyGO.AddComponent<Rigidbody>();
-        rigidbody.isKinematic = true;
+        rigidbody.useGravity = false;
+        rigidbody.isKinematic = false;
         return rigidbody;
     }
 
