@@ -10,6 +10,7 @@ using UnityEngine.TestTools.Utils;
 public class TrailerVehicleTest {
 
     private GameObject trailerVehicle;
+    private readonly Vector3EqualityComparer smallVector3Comparer = new Vector3EqualityComparer(0.0001f);
 
     [SetUp]
     public void SetupTest() {
@@ -39,9 +40,16 @@ public class TrailerVehicleTest {
 
     [UnityTest]
     public IEnumerator CreateTrailerApartTarget_SnapsToTarget_NoVelocity() {
+        var initPosition = Vector3.back * 2;
+        trailerVehicle.transform.position = initPosition;
 
+        var hingeJoint = trailerVehicle.GetComponent<HingeJoint>();
+        hingeJoint.connectedAnchor = Vector3.zero;
         yield return WaitInitializationWithPauseGap();
-        
+
+        var targetPosition = hingeJoint.connectedAnchor - hingeJoint.anchor;
+        Assert.That(trailerVehicle.transform.position,
+            Is.EqualTo(targetPosition).Using(smallVector3Comparer));
     }
 
     private IEnumerator WaitInitializationWithPauseGap() {
