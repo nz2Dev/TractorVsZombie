@@ -6,6 +6,7 @@ using UnityEngine;
 public class TrailerVehicle : System.IDisposable {
 
     private Transform transform;
+    private Rigidbody rigidbody;
     private HingeJoint hingeJoint;
 
     public Vector3 Position => transform.position;
@@ -15,6 +16,7 @@ public class TrailerVehicle : System.IDisposable {
         var vehiclePrefab = Resources.Load<GameObject>("Trailer Vehicle");
         var vehicle = Object.Instantiate(vehiclePrefab);
         transform = vehicle.transform;
+        rigidbody = vehicle.GetComponent<Rigidbody>();
         hingeJoint = vehicle.GetComponent<HingeJoint>();
     }
 
@@ -25,6 +27,10 @@ public class TrailerVehicle : System.IDisposable {
             var connectedAnchorWSPosition = position + hingeJoint.anchor;
             hingeJoint.connectedAnchor = connectedAnchorWSPosition;
         }
+    }
+
+    public void Connect(TrailerVehicle other, Vector3 connectionOffset) {
+        Connect(other.rigidbody, connectionOffset);
     }
 
     public void Connect(Rigidbody rigidbody, Vector3 connectionOffset) {

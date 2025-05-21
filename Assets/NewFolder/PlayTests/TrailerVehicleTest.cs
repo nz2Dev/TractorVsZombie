@@ -2,6 +2,8 @@ using System.Collections;
 
 using NUnit.Framework;
 
+using TreeEditor;
+
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
