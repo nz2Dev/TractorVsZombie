@@ -27,13 +27,12 @@ public class TrailerVehicleTest {
     [UnityTest]
     public IEnumerator CreateTrailerNoJoint_StayAtPlace() {
         var initPosition = Vector3.zero;
-        trailerVehicle.SetPosition(initPosition);
 
+        trailerVehicle.SetPosition(initPosition);
         yield return WaitOneFrameWithPauseGap();
 
-        var vector3Comparer = new Vector3EqualityComparer(0.0001f);
         Assert.That(trailerVehicle.Position,
-            Is.EqualTo(initPosition).Using(vector3Comparer));
+            Is.EqualTo(initPosition).Using(smallVector3Comparer));
     }
 
     [UnityTest]

@@ -5,29 +5,29 @@ using UnityEngine;
 
 public class TrailerVehicle : System.IDisposable {
 
-    private GameObject vehicleGO;
+    private Transform transform;
+    private HingeJoint hingeJoint;
 
-    public Vector3 HeadPosition =>
-        vehicleGO.transform.position + vehicleGO.GetComponent<HingeJoint>().anchor;
-    public Vector3 Position => vehicleGO.transform.position;
+    public Vector3 Position => transform.position;
+    public Vector3 HeadPosition => transform.position + hingeJoint.anchor;
 
     public TrailerVehicle() {
-        var trailerVehiclePrefab = Resources.Load<GameObject>("Trailer Vehicle");
-        vehicleGO = Object.Instantiate(trailerVehiclePrefab);
+        var vehiclePrefab = Resources.Load<GameObject>("Trailer Vehicle");
+        var vehicle = Object.Instantiate(vehiclePrefab);
+        transform = vehicle.transform;
+        hingeJoint = vehicle.GetComponent<HingeJoint>();
     }
 
     public void SetPosition(Vector3 position) {
-        vehicleGO.transform.position = position;
+        transform.position = position;
 
-        var hinge = vehicleGO.GetComponent<HingeJoint>();
-        if (hinge.connectedBody == null) {
-            var connectedAnchorWSPosition = position + hinge.anchor;
-            hinge.connectedAnchor = connectedAnchorWSPosition;
+        if (hingeJoint.connectedBody == null) {
+            var connectedAnchorWSPosition = position + hingeJoint.anchor;
+            hingeJoint.connectedAnchor = connectedAnchorWSPosition;
         }
     }
 
     public void Connect(Rigidbody rigidbody, Vector3 connectionOffset) {
-        var hingeJoint = vehicleGO.GetComponent<HingeJoint>();
         hingeJoint.connectedBody = rigidbody;
         hingeJoint.connectedAnchor = connectionOffset;
         const float infiniteMassScale = 0;
@@ -35,6 +35,6 @@ public class TrailerVehicle : System.IDisposable {
     }
 
     public void Dispose() {
-        Object.Destroy(vehicleGO);
+        Object.Destroy(transform.gameObject);
     }
 }
