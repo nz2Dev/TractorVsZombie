@@ -9,13 +9,13 @@ using UnityEngine.TestTools.Utils;
 [TestFixture]
 public class TrailerVehicleTest {
 
-    private GameObject trailerVehicle;
+    private TrailerVehicle trailerVehicle;
     private readonly Vector3EqualityComparer smallVector3Comparer = new Vector3EqualityComparer(0.0001f);
 
-    [SetUp]
-    public void SetupTest() {
-        var trailerVehiclePrefab = Resources.Load<GameObject>("Trailer Vehicle");
-        trailerVehicle = Object.Instantiate(trailerVehiclePrefab);
+    [UnitySetUp]
+    public IEnumerator SetupTest() {
+        trailerVehicle = new TrailerVehicle();
+        yield return null;
     }
 
     [UnityTest]
@@ -27,39 +27,50 @@ public class TrailerVehicleTest {
     [UnityTest]
     public IEnumerator CreateTrailerNoJoint_StayAtPlace() {
         var initPosition = Vector3.zero;
-        trailerVehicle.transform.position = initPosition;
+        trailerVehicle.SetPosition(initPosition);
 
-        yield return WaitInitializationWithPauseGap();
+        yield return WaitOneFrameWithPauseGap();
 
-        var hingeAnchor = trailerVehicle.GetComponent<HingeJoint>().anchor;
-        var targetPosition = initPosition - hingeAnchor;
         var vector3Comparer = new Vector3EqualityComparer(0.0001f);
-        Assert.That(trailerVehicle.transform.position,
-            Is.EqualTo(targetPosition).Using(vector3Comparer));
+        Assert.That(trailerVehicle.Position,
+            Is.EqualTo(initPosition).Using(vector3Comparer));
     }
 
     [UnityTest]
-    public IEnumerator CreateTrailerApartTarget_SnapsToTarget_NoVelocity() {
+    public IEnumerator CreateTrailerApartConnectedTarget_SnapsToIt() {
+        yield return new WaitForSecondsRealtime(0.5f);
+
         var initPosition = Vector3.back * 2;
-        trailerVehicle.transform.position = initPosition;
-
-        var hingeJoint = trailerVehicle.GetComponent<HingeJoint>();
-        hingeJoint.connectedAnchor = Vector3.zero;
-        yield return WaitInitializationWithPauseGap();
-
-        var targetPosition = hingeJoint.connectedAnchor - hingeJoint.anchor;
-        Assert.That(trailerVehicle.transform.position,
+        var targetPosition = Vector3.zero;
+        var targetRigidbody = CreateKinematicRigidbodyGO();
+        targetRigidbody.position = targetPosition;
+        
+        trailerVehicle.SetPosition(initPosition);
+        trailerVehicle.Connect(targetRigidbody, Vector3.zero);
+        yield return new WaitForFixedUpdate();
+        yield return null;
+        
+        Assert.That(trailerVehicle.HeadPosition,
             Is.EqualTo(targetPosition).Using(smallVector3Comparer));
     }
 
-    private IEnumerator WaitInitializationWithPauseGap() {
+    private Rigidbody CreateKinematicRigidbodyGO() {
+        // Is not destroyed, will have memory leak?
+        var rigidbodyGO = new GameObject();
+        var rigidbody = rigidbodyGO.AddComponent<Rigidbody>();
+        rigidbody.isKinematic = true;
+        return rigidbody;
+    }
+
+    private IEnumerator WaitOneFrameWithPauseGap() {
         yield return new WaitForSecondsRealtime(0.5f);
         yield return null;
     }
 
-    [TearDown]
-    public void TearDownTest() {
-        Object.Destroy(trailerVehicle);
+    [UnityTearDown]
+    public IEnumerator TearDownTest() {
+        trailerVehicle.Dispose();
+        yield return null;
     }
 
 }
