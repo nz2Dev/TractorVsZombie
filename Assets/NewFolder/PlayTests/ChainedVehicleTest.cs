@@ -13,12 +13,12 @@ using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
 
 [TestFixture]
-public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
+public class ChainedVehicleTest : IPrebuildSetup, IPostBuildCleanup {
 
     private string originalScene;
     private readonly string TestEnvironmentScenePath = Path.Combine(
         "Assets", "NewFolder", "TestEnvironment.unity");
-    private ConvoyMovement convoyMovement = new();
+    private ChainedVehicle convoyMovement = new();
 
     public void Setup() {
 #if UNITY_EDITOR
@@ -32,12 +32,12 @@ public class ConvoyMovementTest : IPrebuildSetup, IPostBuildCleanup {
 
     [SetUp]
     public void EditorTestSetup() {
-        convoyMovement = new ConvoyMovement();
+        convoyMovement = new ChainedVehicle();
     }
 
     [UnitySetUp]
     public IEnumerator TestSetup() {
-        convoyMovement = new ConvoyMovement();
+        convoyMovement = new ChainedVehicle();
         originalScene = SceneManager.GetActiveScene().path;
         SceneManager.LoadScene(TestEnvironmentScenePath);
         yield return null;

@@ -4,7 +4,7 @@ using System.IO;
 
 using UnityEngine;
 
-public class ConvoyMovement {
+public class ChainedVehicle {
 
     private readonly List<GameObject> vehicles = new();
 
