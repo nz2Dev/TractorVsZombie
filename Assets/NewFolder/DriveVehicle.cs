@@ -24,6 +24,7 @@ public class DriveVehicle : IDisposable {
     }
 
     public Vector3 Position => transform.position;
+    public Rigidbody Rigidbody => rigidbody;
 
     public void Brakes(float breakTorque) {
         foreach (var wheel in wheels)
