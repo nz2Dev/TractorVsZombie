@@ -8,7 +8,7 @@ public class DriveVehicle : IDisposable {
     private readonly Transform transform;
     private readonly Rigidbody rigidbody;
     private readonly WheelCollider[] wheels;
-    
+
     private WheelCollider BackWheelL => wheels[0];
     private WheelCollider BackWheelR => wheels[1];
     private WheelCollider FrontWheelL => wheels[2];
@@ -24,6 +24,7 @@ public class DriveVehicle : IDisposable {
     }
 
     public Vector3 Position => transform.position;
+    public Quaternion Rotation => transform.rotation;
     public Rigidbody Rigidbody => rigidbody;
 
     public void Brakes(float breakTorque) {
@@ -36,6 +37,11 @@ public class DriveVehicle : IDisposable {
             wheel.motorTorque = motorTorque;
     }
 
+    public void Steer(float angleDegrees) {
+        FrontWheelL.steerAngle = angleDegrees;
+        FrontWheelR.steerAngle = angleDegrees;
+    }
+
     public void AddForce(Vector3 force) {
         rigidbody.AddForce(force, ForceMode.Force);
     }
@@ -43,4 +49,5 @@ public class DriveVehicle : IDisposable {
     public void Dispose() {
         UnityEngine.Object.Destroy(transform.gameObject);
     }
+
 }

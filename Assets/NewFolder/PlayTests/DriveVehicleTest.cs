@@ -78,6 +78,19 @@ public class DriveVehicleTest : IPrebuildSetup, IPostBuildCleanup {
         Assert.That(driveVehicle.Position.z, Is.GreaterThan(0.1f));
     }
 
+    [UnityTest]
+    public IEnumerator SetSteerAngleWithGas_DriveTurnsTowardIt() {
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        driveVehicle.Gas(50);
+        driveVehicle.Steer(45);
+        for (int i = 0; i < 25; i++)
+            yield return new WaitForFixedUpdate();
+
+        var angle = Quaternion.Angle(driveVehicle.Rotation, Quaternion.identity);
+        Assert.That(angle, Is.GreaterThan(10));
+    }
+
     [TearDown]
     public void TearDownTest() {
         driveVehicle.Dispose();
