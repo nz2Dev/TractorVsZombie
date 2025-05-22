@@ -36,8 +36,6 @@ public class TrailerVehicle : System.IDisposable {
     public void Connect(Rigidbody rigidbody, Vector3 connectionOffset) {
         hingeJoint.connectedBody = rigidbody;
         hingeJoint.connectedAnchor = connectionOffset;
-        const float infiniteMassScale = 0;
-        hingeJoint.connectedMassScale = infiniteMassScale;
     }
 
     public void Dispose() {

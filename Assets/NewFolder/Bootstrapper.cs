@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Bootstrapper : MonoBehaviour {
 
+    [Range(1, 50)][SerializeField] private float maxTorque = 49;
+    [Range(1, 45)][SerializeField] private float maxSteerAngel = 45;
+
     private DriveVehicle driveVehicle;
     private TrailerVehicle trailerVehicle;
 
@@ -18,14 +21,15 @@ public class Bootstrapper : MonoBehaviour {
         var verticalAxisInput = Input.GetAxis("Vertical");
 
         if (verticalAxisInput > 0) {
-            driveVehicle.Gas(verticalAxisInput * 50);
+            driveVehicle.Gas(verticalAxisInput * maxTorque);
             driveVehicle.Brakes(0);
         } else {
             driveVehicle.Gas(0);
-            driveVehicle.Brakes(-verticalAxisInput * 50);
+            driveVehicle.Brakes(-verticalAxisInput * maxTorque);
         }
 
         var horizontalAxisInput = Input.GetAxis("Horizontal");
+        driveVehicle.Steer(horizontalAxisInput * maxSteerAngel);
     }
 
 }
