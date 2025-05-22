@@ -9,12 +9,15 @@ public class Bootstrapper : MonoBehaviour {
     [Range(1, 45)][SerializeField] private float maxSteerAngel = 45;
 
     private DriveVehicle driveVehicle;
-    private TrailerVehicle trailerVehicle;
 
     void Start() {
+        Application.targetFrameRate = 60;
+        var connectionOffset = new Vector3(0, 0, -0.7f);
         driveVehicle = new DriveVehicle();
-        trailerVehicle = new TrailerVehicle();
-        trailerVehicle.Connect(driveVehicle.Rigidbody, new Vector3(0, 0, -0.7f));
+        var trailerVehicle = new TrailerVehicle();
+        trailerVehicle.Connect(driveVehicle.Rigidbody, connectionOffset);
+        var trailerVehicle2 = new TrailerVehicle();
+        trailerVehicle2.Connect(trailerVehicle, connectionOffset);
     }
 
     private void Update() {

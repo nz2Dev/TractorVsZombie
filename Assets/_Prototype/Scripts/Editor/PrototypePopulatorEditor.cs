@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using System.Reflection;
-using UnityEditor.ProBuilder;
 
 [CustomEditor(typeof(PrototypePopulator))]
 public class PrototypePopulatorEditor : Editor {

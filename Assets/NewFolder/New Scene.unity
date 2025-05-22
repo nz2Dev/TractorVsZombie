@@ -353,8 +353,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 543a00999593c4b1580afb0e803055ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTorque: 20.8
-  maxSteerAngel: 33.5
+  maxTorque: 50
+  maxSteerAngel: 20
 --- !u!1 &1073069429
 GameObject:
   m_ObjectHideFlags: 0
