@@ -11,6 +11,7 @@ public class TrailerVehicle : System.IDisposable {
 
     public Vector3 Position => transform.position;
     public Vector3 HeadPosition => transform.position + hingeJoint.anchor;
+    public Rigidbody Rigidbody => rigidbody;
 
     public TrailerVehicle() {
         var vehiclePrefab = Resources.Load<GameObject>("Trailer Vehicle");
