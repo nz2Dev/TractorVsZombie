@@ -22,8 +22,7 @@ public class WheelControl : MonoBehaviour {
             var steerAngle = Vector3.SignedAngle(flatForwardVector, flatDirectionVector.normalized, Vector3.up);
             wheelCollider.steerAngle = steerAngle;
             this.steerAngle = steerAngle;
-        }
-        else {
+        } else {
             wheelCollider.steerAngle = steerAngle;
         }
     }
