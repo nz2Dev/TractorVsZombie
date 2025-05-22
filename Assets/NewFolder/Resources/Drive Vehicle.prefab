@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 8444394153978212991}
   - component: {fileID: 6410955937319479108}
   m_Layer: 0
-  m_Name: Convoy Vehicle
+  m_Name: Drive Vehicle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,10 +142,10 @@ Transform:
   - {fileID: 6096530196135323805}
   - {fileID: 1226457241497089826}
   - {fileID: 4738671079665284814}
-  - {fileID: 170863961115087450}
-  - {fileID: 2959358151286433551}
   - {fileID: 2334776544296977132}
   - {fileID: 2863859823817534788}
+  - {fileID: 170863961115087450}
+  - {fileID: 2959358151286433551}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8696,7 +8696,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3503894982384825959, guid: 9f372032cb4c84be391679bec8b3d8a4, type: 3}
       propertyPath: m_Name
-      value: Front Wheel
+      value: Front Wheel L
       objectReference: {fileID: 0}
     - target: {fileID: 8070443053294828957, guid: 9f372032cb4c84be391679bec8b3d8a4, type: 3}
       propertyPath: m_RootOrder
