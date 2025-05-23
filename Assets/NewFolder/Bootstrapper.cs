@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Bootstrapper : MonoBehaviour {
 
-    [Range(1, 50)][SerializeField] private float maxTorque = 49;
+    [Range(1, 1000)][SerializeField] private float maxTorque = 49;
     [Range(1, 45)][SerializeField] private float maxSteerAngel = 45;
     [SerializeField] private bool autoDrive = false;
     [SerializeField] private RigidbodyInterpolation interpolationMode = RigidbodyInterpolation.Interpolate;
