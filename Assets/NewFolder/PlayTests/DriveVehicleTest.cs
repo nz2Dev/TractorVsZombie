@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using UnityEditor;
+using UnityEditor.VersionControl;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -68,7 +69,7 @@ public class DriveVehicleTest : IPrebuildSetup, IPostBuildCleanup {
     public IEnumerator ApplySubstantialForceNoBrakesWithLittleGas_MovesVehicle() {
         yield return new WaitForSecondsRealtime(0.5f);
 
-        driveVehicle.Gas(1);
+        driveVehicle.Throttle(0.01f);
         driveVehicle.Brakes(0);
         for (int i = 0; i < 10; i++) {
             driveVehicle.AddForce(Vector3.forward * 5000);
@@ -82,13 +83,61 @@ public class DriveVehicleTest : IPrebuildSetup, IPostBuildCleanup {
     public IEnumerator SetSteerAngleWithGas_DriveTurnsTowardIt() {
         yield return new WaitForSecondsRealtime(0.5f);
 
-        driveVehicle.Gas(50);
+        driveVehicle.Throttle(0.1f);
         driveVehicle.Steer(45);
         for (int i = 0; i < 25; i++)
             yield return new WaitForFixedUpdate();
 
         var angle = Quaternion.Angle(driveVehicle.Rotation, Quaternion.identity);
         Assert.That(angle, Is.GreaterThan(10));
+    }
+
+    [UnityTest]
+    public IEnumerator FullThrothlleAccelerateMoreThanHalfOfIt() {
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        var initSpeed = driveVehicle.Speed;
+        driveVehicle.Throttle(0.5f);
+        for (int i = 0; i < 5; i++)
+            yield return new WaitForFixedUpdate();    
+
+        var halfThrottleSpeed = driveVehicle.Speed;
+        driveVehicle.Throttle(0);
+        driveVehicle.Brakes(1);
+        driveVehicle.Rigidbody.velocity = Vector3.zero;
+        driveVehicle.Rigidbody.angularVelocity = Vector3.zero;
+        driveVehicle.Rigidbody.Sleep();
+        yield return new WaitForFixedUpdate();
+
+        Assert.That(driveVehicle.Speed, Is.LessThanOrEqualTo(initSpeed));
+        driveVehicle.Throttle(1.0f);
+        driveVehicle.Brakes(0f);
+        for (int i = 0; i < 5; i++)
+            yield return new WaitForFixedUpdate();
+        
+        var fullThrottleSpeed = driveVehicle.Speed;
+        Assert.That(fullThrottleSpeed, Is.GreaterThan(halfThrottleSpeed));
+    }
+
+    private void PrintDriveVehicleWheelInfo() {
+        Debug.Log(
+            "\nvehicle info:"
+            + $"\n{driveVehicle.Speed}"
+            + "\nwheels info:"
+            + GetWheelContactDebugInfo(driveVehicle.BackWheelL)
+            + GetWheelContactDebugInfo(driveVehicle.BackWheelR)
+            + GetWheelContactDebugInfo(driveVehicle.FrontWheelL)
+            + GetWheelContactDebugInfo(driveVehicle.FrontWheelR)
+        );
+    }
+
+    private string GetWheelContactDebugInfo(WheelCollider wheel) {
+        if (wheel.GetGroundHit(out var wheelHit)) {
+            return $"\n {wheel.name} - motorTorque: {wheel.motorTorque} breakTorque: {wheel.brakeTorque} rotationSpeed: {wheel.rotationSpeed}"
+                + $" - force: {wheelHit.force}, forwardSlip: {wheelHit.forwardSlip}, sidewaySli: {wheelHit.sidewaysSlip}";
+        } else {
+            return $"\n{wheel.name} - doesn't hit the ground";
+        }
     }
 
     [TearDown]

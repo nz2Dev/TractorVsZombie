@@ -9,10 +9,10 @@ public class DriveVehicle : IDisposable {
     private readonly Rigidbody rigidbody;
     private readonly WheelCollider[] wheels;
 
-    private WheelCollider BackWheelL => wheels[0];
-    private WheelCollider BackWheelR => wheels[1];
-    private WheelCollider FrontWheelL => wheels[2];
-    private WheelCollider FrontWheelR => wheels[3];
+    public WheelCollider BackWheelL => wheels[0];
+    public WheelCollider BackWheelR => wheels[1];
+    public WheelCollider FrontWheelL => wheels[2];
+    public WheelCollider FrontWheelR => wheels[3];
 
     public DriveVehicle() {
         var driveVehiclePrefab = Resources.Load<GameObject>("Drive Vehicle");
@@ -26,15 +26,19 @@ public class DriveVehicle : IDisposable {
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
     public Rigidbody Rigidbody => rigidbody;
+    public float Speed => rigidbody.velocity.magnitude;
 
-    public void Brakes(float breakTorque) {
+    const float maxTorque = 150f;
+
+    public void Brakes(float brakesThrottle) {
         foreach (var wheel in wheels)
-            wheel.brakeTorque = breakTorque;
+            wheel.brakeTorque = brakesThrottle * maxTorque;
     }
 
-    public void Gas(float motorTorque) {
+    public void Throttle(float throttle) {
+        throttle = Mathf.Clamp01(throttle);
         foreach (var wheel in wheels)
-            wheel.motorTorque = motorTorque;
+            wheel.motorTorque = throttle * maxTorque;
     }
 
     public void Steer(float angleDegrees) {

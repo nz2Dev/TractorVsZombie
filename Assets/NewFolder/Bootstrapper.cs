@@ -44,11 +44,11 @@ public class Bootstrapper : MonoBehaviour {
         }
 
         if (verticalAxisInput > 0) {
-            driveVehicle.Gas(verticalAxisInput * maxTorque);
+            driveVehicle.Throttle(verticalAxisInput);
             driveVehicle.Brakes(0);
         } else {
-            driveVehicle.Gas(0);
-            driveVehicle.Brakes(-verticalAxisInput * maxTorque);
+            driveVehicle.Throttle(0);
+            driveVehicle.Brakes(-verticalAxisInput);
         }
 
         driveVehicle.Steer(horizontalAxisInput * maxSteerAngel);
