@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class DriveVehicle : IDisposable {
 
+    private readonly float maxTorque = 150f;
+
     private readonly Transform transform;
     private readonly Rigidbody rigidbody;
     private readonly WheelCollider[] wheels;
@@ -14,9 +16,10 @@ public class DriveVehicle : IDisposable {
     public WheelCollider FrontWheelL => wheels[2];
     public WheelCollider FrontWheelR => wheels[3];
 
-    public DriveVehicle() {
-        var driveVehiclePrefab = Resources.Load<GameObject>("Drive Vehicle");
+    public DriveVehicle(float maxTorque = 150) {
+        this.maxTorque = maxTorque;
 
+        var driveVehiclePrefab = Resources.Load<GameObject>("Drive Vehicle");
         var vehicleGO = UnityEngine.Object.Instantiate(driveVehiclePrefab);
         transform = vehicleGO.transform;
         rigidbody = vehicleGO.GetComponent<Rigidbody>();
@@ -27,8 +30,6 @@ public class DriveVehicle : IDisposable {
     public Quaternion Rotation => transform.rotation;
     public Rigidbody Rigidbody => rigidbody;
     public float Speed => rigidbody.velocity.magnitude;
-
-    const float maxTorque = 150f;
 
     public void Brakes(float brakesThrottle) {
         foreach (var wheel in wheels)

@@ -23,7 +23,7 @@ public class Bootstrapper : MonoBehaviour {
 
     void Start() {
         var connectionOffset = new Vector3(0, 0, -0.7f);
-        driveVehicle = new DriveVehicle();
+        driveVehicle = new DriveVehicle(maxTorque);
         driveVehicle.Rigidbody.interpolation = interpolationMode;
         
         var trailerVehicle = new TrailerVehicle();
