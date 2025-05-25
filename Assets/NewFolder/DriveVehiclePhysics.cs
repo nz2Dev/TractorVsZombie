@@ -14,9 +14,9 @@ public class DriveVehiclePhysics {
         this.source = source;
     }
 
-    public void Construct(Scene scene) {
+    public GameObject Construct(Transform container = null) {
         gameObject = new GameObject($"{source.name} (Physics)", typeof(Rigidbody));
-        SceneManager.MoveGameObjectToScene(gameObject, scene);
+        gameObject.transform.parent = container;
 
         var rigidbody = gameObject.GetComponent<Rigidbody>();
         rigidbody.hideFlags = HideFlags.NotEditable;
@@ -31,10 +31,8 @@ public class DriveVehiclePhysics {
             var wheelR = CreateDefaultWheel(wheelRow.radius);
             wheelR.transform.localPosition = new Vector3(wheelRow.rowOffset, wheelRow.verticalOffset, wheelRow.horizontalOffset);
         }
-    }
 
-    public void DestroyConstruction() {
-        Object.Destroy(gameObject);
+        return gameObject;
     }
 
     private GameObject CreateDefaultWheel(float radius) {

@@ -6,10 +6,23 @@ public class DriveVehiclesBootstrapper : MonoBehaviour {
     
     [SerializeField] private DriveVehicleEntity source;
 
-    [ContextMenu("Reconstruct In Scene")]
+    private DriveVehiclePhysics vehiclePhysics;
+    private DriveVehicleVisuals vehicleVisuals;
+
+    [ContextMenu("Reconstruct Nested")]
     public void Reconstruct() {
-        var vehiclePhysics = new DriveVehiclePhysics(source);
-        vehiclePhysics.Construct(scene: gameObject.scene);
+        while (transform.childCount > 0)
+            DestroyImmediate(transform.GetChild(0).gameObject);
+        
+        ConstructComponents(transform);
+    }
+
+    private void ConstructComponents(Transform container = null) {
+        vehiclePhysics = new DriveVehiclePhysics(source);
+        vehiclePhysics.Construct(container: transform);
+
+        vehicleVisuals = new DriveVehicleVisuals(source);
+        vehicleVisuals.Construct(container: transform);
     }
 
 }
