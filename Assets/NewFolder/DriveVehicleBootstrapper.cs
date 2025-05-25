@@ -19,10 +19,10 @@ public class DriveVehiclesBootstrapper : MonoBehaviour {
 
     private void ConstructComponents(Transform container = null) {
         vehiclePhysics = new DriveVehiclePhysics(source);
-        vehiclePhysics.Construct(container: transform);
+        vehiclePhysics.Construct(container);
 
         vehicleVisuals = new DriveVehicleVisuals(source);
-        vehicleVisuals.Construct(container: transform);
+        vehicleVisuals.Construct(container);
     }
 
 }
