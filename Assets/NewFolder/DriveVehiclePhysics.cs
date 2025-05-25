@@ -30,7 +30,7 @@ public class DriveVehiclePhysics : MonoBehaviour {
     }
 
     private GameObject CreateDefaultWheel(float radius) {
-        var wheel = new GameObject("wheel", typeof(WheelCollider));
+        var wheel = new GameObject("Default Wheel (New)", typeof(WheelCollider));
         wheel.transform.parent = transform; 
         var wheelCollider = wheel.GetComponent<WheelCollider>();
         SetupDefaultWheelCollider(wheelCollider, radius);
