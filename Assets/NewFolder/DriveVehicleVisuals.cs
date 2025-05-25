@@ -19,7 +19,7 @@ public class DriveVehicleVisuals {
 
     public GameObject Construct(Transform container = null) {
         gameObject = new GameObject($"{source.name} (Visuals)");
-        gameObject.transform.parent = container;
+        gameObject.transform.SetParent(container, worldPositionStays: false);
 
         var baseGeometry = Object.Instantiate(source.baseGeometry, gameObject.transform, worldPositionStays: false);
         baseGeometry.transform.SetLocalPositionAndRotation(source.baseGeometryFit.position, source.baseGeometryFit.rotation);

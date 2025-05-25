@@ -17,7 +17,7 @@ public class DriveVehiclePhysics {
 
     public GameObject Construct(Transform container = null) {
         gameObject = new GameObject($"{source.name} (Physics)", typeof(Rigidbody));
-        gameObject.transform.parent = container;
+        gameObject.transform.SetParent(container, worldPositionStays: false);
 
         var rigidbody = gameObject.GetComponent<Rigidbody>();
         rigidbody.hideFlags = HideFlags.NotEditable;
