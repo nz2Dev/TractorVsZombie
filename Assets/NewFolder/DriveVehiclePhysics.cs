@@ -43,6 +43,21 @@ public class DriveVehiclePhysics {
         return gameObject;
     }
 
+    public void GasThrottle(float v) {
+        const float maxTorque = 400;
+        for (int row = 0; row < source.wheelRows.Length; row++) {
+            var wheelRowInfo = source.wheelRows[row];
+            if (wheelRowInfo.drive) {
+                var colliderL = wheelColliders[row * 2 + 0];
+                colliderL.motorTorque = v * maxTorque;
+                colliderL.brakeTorque = 0;
+                var colliderR = wheelColliders[row * 2 + 1];
+                colliderR.motorTorque = v * maxTorque;
+                colliderR.brakeTorque = 0;
+            }            
+        }
+    }
+
     public void GetWorldPose(out Vector3 position, out Quaternion rotation) {
         position = gameObject.transform.position;
         rotation = gameObject.transform.rotation;
@@ -79,4 +94,5 @@ public class DriveVehiclePhysics {
             damper = 450,
         };
     }
+
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class DriveVehiclesBootstrapper : MonoBehaviour {
     
     [SerializeField] private DriveVehicleEntity source;
+    [SerializeField] private float gasThrottle = 0;
 
     private DriveVehiclePhysics vehiclePhysics;
     private DriveVehicleVisuals vehicleVisuals;
@@ -22,6 +23,8 @@ public class DriveVehiclesBootstrapper : MonoBehaviour {
     }
 
     private void Update() {
+        vehiclePhysics.GasThrottle(gasThrottle);
+
         vehiclePhysics.GetWorldPose(out var physicsPosition, out var physicsRotation);
         vehicleVisuals.SetPositionAndRotation(physicsPosition, physicsRotation);
 
