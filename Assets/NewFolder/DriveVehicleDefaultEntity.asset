@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1285681b6c6549cbb1825d079f7b2b9, type: 3}
-  m_Name: DriveVehicleEntity
+  m_Name: DriveVehicleDefaultEntity
   m_EditorClassIdentifier: 
   baseCollider: {fileID: 4346922104823608654, guid: 64661a42ee7bf45eabb782ba3a6a5084, type: 3}
   baseGeometry: {fileID: 6502951602268579337, guid: 7c8f2b546d9b945bcaec6feddde2e8c0, type: 3}

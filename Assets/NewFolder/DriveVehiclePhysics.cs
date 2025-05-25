@@ -1,26 +1,30 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class DriveVehiclePhysics : MonoBehaviour {
+public class DriveVehiclePhysics {
     
-    [SerializeField] private DriveVehicleEntity source;
+    private readonly DriveVehicleEntity source;
 
-    [ContextMenu("Reconstruct")]
-    public void Reconstruct() {
-        DestroyImmediate(GetComponent<Rigidbody>());        
-        var rigidbody = gameObject.AddComponent<Rigidbody>();
+    private GameObject gameObject;
+
+    public DriveVehiclePhysics(DriveVehicleEntity source) {
+        this.source = source;
+    }
+
+    public void Construct(Scene scene) {
+        gameObject = new GameObject($"{source.name} (Physics)", typeof(Rigidbody));
+        SceneManager.MoveGameObjectToScene(gameObject, scene);
+
+        var rigidbody = gameObject.GetComponent<Rigidbody>();
         rigidbody.hideFlags = HideFlags.NotEditable;
         rigidbody.isKinematic = false;
         rigidbody.useGravity = true;
         rigidbody.mass = 150;
-
-        while (transform.childCount > 0)
-            DestroyImmediate(transform.GetChild(0).gameObject);
-
-        Instantiate(source.baseCollider, transform, worldPositionStays: false);
+        
+        Object.Instantiate(source.baseCollider, gameObject.transform, worldPositionStays: false);
         foreach (var wheelRow in source.wheelRows) {
             var wheelL = CreateDefaultWheel(wheelRow.radius);
             wheelL.transform.localPosition = new Vector3(-wheelRow.rowOffset, wheelRow.verticalOffset, wheelRow.horizontalOffset);
@@ -29,10 +33,16 @@ public class DriveVehiclePhysics : MonoBehaviour {
         }
     }
 
+    public void DestroyConstruction() {
+        Object.Destroy(gameObject);
+    }
+
     private GameObject CreateDefaultWheel(float radius) {
         var wheel = new GameObject("Default Wheel (New)", typeof(WheelCollider));
-        wheel.transform.parent = transform; 
+        wheel.transform.hideFlags = HideFlags.NotEditable;
+        wheel.transform.parent = gameObject.transform; 
         var wheelCollider = wheel.GetComponent<WheelCollider>();
+        wheelCollider.hideFlags = HideFlags.NotEditable;
         SetupDefaultWheelCollider(wheelCollider, radius);
         return wheel;
     }
