@@ -9,6 +9,7 @@ public class DriveVehiclePhysics {
     private readonly DriveVehicleEntity source;
 
     private GameObject gameObject;
+    private WheelCollider[] wheelColliders = new WheelCollider[0];
 
     public DriveVehiclePhysics(DriveVehicleEntity source) {
         this.source = source;
@@ -25,14 +26,33 @@ public class DriveVehiclePhysics {
         rigidbody.mass = 150;
         
         Object.Instantiate(source.baseCollider, gameObject.transform, worldPositionStays: false);
+
+        int rowIndex = 0;
+        wheelColliders = new WheelCollider[source.wheelRows.Length * 2];
         foreach (var wheelRow in source.wheelRows) {
             var wheelL = CreateDefaultWheel(wheelRow.radius);
             wheelL.transform.localPosition = new Vector3(-wheelRow.rowOffset, wheelRow.verticalOffset, wheelRow.horizontalOffset);
             var wheelR = CreateDefaultWheel(wheelRow.radius);
             wheelR.transform.localPosition = new Vector3(wheelRow.rowOffset, wheelRow.verticalOffset, wheelRow.horizontalOffset);
+
+            wheelColliders[rowIndex * 2 + 0] = wheelL.GetComponent<WheelCollider>();
+            wheelColliders[rowIndex * 2 + 1] = wheelR.GetComponent<WheelCollider>();
+            rowIndex++;
         }
 
         return gameObject;
+    }
+
+    public void GetWorldPose(out Vector3 position, out Quaternion rotation) {
+        position = gameObject.transform.position;
+        rotation = gameObject.transform.rotation;
+    }
+
+    public void GetWheelRowWorldPos(int rowIndex, out Vector3 positionL, out Quaternion rotationL, out Vector3 positionR, out Quaternion rotationR) {
+        var leftWheel = wheelColliders[rowIndex * 2 + 0];
+        leftWheel.GetWorldPose(out positionL, out rotationL);
+        var rightWheel = wheelColliders[rowIndex * 2 + 1];
+        rightWheel.GetWorldPose(out positionR, out rotationR);
     }
 
     private GameObject CreateDefaultWheel(float radius) {
