@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1285681b6c6549cbb1825d079f7b2b9, type: 3}
+  m_Name: DriveVehicleEntity
+  m_EditorClassIdentifier: 
+  baseCollider: {fileID: 4346922104823608654, guid: 64661a42ee7bf45eabb782ba3a6a5084, type: 3}
+  baseGeometry: {fileID: 6502951602268579337, guid: 7c8f2b546d9b945bcaec6feddde2e8c0, type: 3}
+  baseGeometryFit: {fileID: 7839519505740745578, guid: c28fbe666b35b4e438e2b28ca85060de, type: 3}
+  wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
+  wheelGeometryFit: {fileID: 4533803720872584508, guid: 5912d8d27ba034cb4aeb40025f286b56, type: 3}
+  wheelRows:
+  - horizontalOffset: -0.25
+    verticalOffset: 0
+    rowOffset: 0.15
+    radius: 0.1
+    drive: 1
+    stear: 0
+  - horizontalOffset: 0.25
+    verticalOffset: 0
+    rowOffset: 0.15
+    radius: 0.1
+    drive: 0
+    stear: 1
