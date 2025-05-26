@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/_Prototype/GameModes/ArenaGameMode.unity
     guid: 65d59128173f7f740938160c63657626
   - enabled: 1
-    path: Assets/NewFolder/New Scene.unity
+    path: Assets/NewFolder/Scenes/New Scene.unity
     guid: 8c449d73178e14dda9377e63c81d1ee1
   m_configObjects: {}
