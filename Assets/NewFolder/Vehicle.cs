@@ -3,7 +3,7 @@ using System;
 
 using UnityEngine;
 
-public class DriveVehicle : IDisposable {
+public class Vehicle : IDisposable {
 
     private readonly float maxTorque = 150f;
 
@@ -16,7 +16,7 @@ public class DriveVehicle : IDisposable {
     public WheelCollider FrontWheelL => wheels[2];
     public WheelCollider FrontWheelR => wheels[3];
 
-    public DriveVehicle(float maxTorque = 150) {
+    public Vehicle(float maxTorque = 150) {
         this.maxTorque = maxTorque;
 
         var driveVehiclePrefab = Resources.Load<GameObject>("Drive Vehicle");

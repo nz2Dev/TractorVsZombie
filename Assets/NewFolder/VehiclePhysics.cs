@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DriveVehiclePhysics {
+public class VehiclePhysics {
     
-    private readonly DriveVehicleEntity source;
+    private readonly VehicleEntity source;
 
     private GameObject gameObject;
     private WheelCollider[] wheelColliders = new WheelCollider[0];
 
-    public DriveVehiclePhysics(DriveVehicleEntity source) {
+    public VehiclePhysics(VehicleEntity source) {
         this.source = source;
     }
 

@@ -5,15 +5,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DriveVehicleVisuals {
+public class VehicleVisuals {
 
-    private readonly DriveVehicleEntity source;
+    private readonly VehicleEntity source;
 
     private GameObject gameObject;
 
     private GameObject[] wheelsGeometries;
 
-    public DriveVehicleVisuals(DriveVehicleEntity source) {
+    public VehicleVisuals(VehicleEntity source) {
         this.source = source;
     }
 

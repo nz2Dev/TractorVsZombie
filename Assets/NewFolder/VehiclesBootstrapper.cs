@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DriveVehiclesBootstrapper : MonoBehaviour {
+public class VehiclesBootstrapper : MonoBehaviour {
     
-    [SerializeField] private DriveVehicleEntity source;
+    [SerializeField] private VehicleEntity source;
     [SerializeField] private float gasThrottle = 0;
 
-    private DriveVehiclePhysics vehiclePhysics;
-    private DriveVehicleVisuals vehicleVisuals;
+    private VehiclePhysics vehiclePhysics;
+    private VehicleVisuals vehicleVisuals;
 
     private void Awake() {
         Reconstruct();
@@ -39,10 +39,10 @@ public class DriveVehiclesBootstrapper : MonoBehaviour {
     }
 
     private void ConstructComponents(Transform container = null) {
-        vehiclePhysics = new DriveVehiclePhysics(source);
+        vehiclePhysics = new VehiclePhysics(source);
         vehiclePhysics.Construct(container);
 
-        vehicleVisuals = new DriveVehicleVisuals(source);
+        vehicleVisuals = new VehicleVisuals(source);
         vehicleVisuals.Construct(container);
     }
 

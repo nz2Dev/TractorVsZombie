@@ -19,7 +19,7 @@ public class DriveVehicleTest : IPrebuildSetup, IPostBuildCleanup {
     private readonly string TestEnvironmentScenePath = Path.Combine(
         "Assets", "NewFolder", "TestEnvironment.unity");
 
-    private DriveVehicle driveVehicle;
+    private Vehicle driveVehicle;
     private readonly Vector3EqualityComparer smallVectorComparer = new(0.0001f);
 
     public void Setup() {
@@ -37,7 +37,7 @@ public class DriveVehicleTest : IPrebuildSetup, IPostBuildCleanup {
         originalScene = SceneManager.GetActiveScene().path;
         SceneManager.LoadScene(TestEnvironmentScenePath);
         yield return null;
-        driveVehicle = new DriveVehicle();
+        driveVehicle = new Vehicle();
     }
 
     [UnityTest]

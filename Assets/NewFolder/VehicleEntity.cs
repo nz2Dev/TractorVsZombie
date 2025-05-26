@@ -13,7 +13,7 @@ public struct WheelRowConstructionInfo {
 }
 
 [CreateAssetMenu(fileName = "DriveVehicleEntity", menuName = "Entities")]
-public class DriveVehicleEntity : ScriptableObject {
+public class VehicleEntity : ScriptableObject {
     [SerializeField] public Collider baseCollider;
     [SerializeField] public GameObject baseGeometry;
     [SerializeField] public Transform baseGeometryFit;

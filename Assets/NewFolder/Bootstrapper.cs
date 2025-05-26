@@ -14,7 +14,7 @@ public class Bootstrapper : MonoBehaviour {
     [SerializeField] public int targetFrameRate = 120;
     [SerializeField] public int vSyncCount = 0;
 
-    private DriveVehicle driveVehicle;
+    private Vehicle driveVehicle;
 
     private void Awake() {
         QualitySettings.vSyncCount = vSyncCount;
@@ -23,7 +23,7 @@ public class Bootstrapper : MonoBehaviour {
 
     void Start() {
         var connectionOffset = new Vector3(0, 0, -0.7f);
-        driveVehicle = new DriveVehicle(maxTorque);
+        driveVehicle = new Vehicle(maxTorque);
         driveVehicle.Rigidbody.interpolation = interpolationMode;
         
         var trailerVehicle = new TrailerVehicle();
