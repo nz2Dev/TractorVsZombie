@@ -5,7 +5,6 @@ using System.Linq;
 using NUnit.Framework;
 
 using UnityEditor;
-using UnityEditor.VersionControl;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,7 +12,7 @@ using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
 
 [TestFixture]
-public class DriveVehicleTest : IPrebuildSetup, IPostBuildCleanup {
+public class VehicleTest : IPrebuildSetup, IPostBuildCleanup {
 
     private string originalScene;
     private readonly string TestEnvironmentScenePath = Path.Combine(
