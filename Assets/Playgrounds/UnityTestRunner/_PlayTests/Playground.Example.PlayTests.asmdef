@@ -1,10 +1,10 @@
 {
-    "name": "PlayTests",
+    "name": "Playground.Example.PlayTests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "GameVVAssembly"
+        "Playground.Example"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

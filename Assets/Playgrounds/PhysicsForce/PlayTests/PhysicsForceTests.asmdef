@@ -1,10 +1,10 @@
 {
-    "name": "PhysicsForceTests",
+    "name": "Playground.PhysicsForce.PlayTests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "NewAssembly"
+        "Playground.PhysicsForce"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
