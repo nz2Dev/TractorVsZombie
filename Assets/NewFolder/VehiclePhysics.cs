@@ -23,7 +23,7 @@ public class VehiclePhysics {
     public Quaternion Rotation => root.transform.rotation;
 
     public VehiclePhysics(Transform container) {
-        root = new GameObject("Vehicle Construction (New)", typeof(Rigidbody));
+        root = new GameObject("Vehicle Physics (New)", typeof(Rigidbody));
         root.transform.SetParent(container, worldPositionStays: false);
         var rigidbody = root.GetComponent<Rigidbody>();
         rigidbody.hideFlags = HideFlags.NotEditable;
