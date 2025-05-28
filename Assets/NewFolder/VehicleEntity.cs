@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct WheelRowConstructionInfo {
-    public float horizontalOffset;
-    public float verticalOffset;
-    public float rowOffset;
+public struct WheelAxisData {
+    public float forwardOffset;
+    public float upOffset;
+    public float halfLength;
     public float radius;
     public bool drive;
     public bool stear;
@@ -19,5 +19,5 @@ public class VehicleEntity : ScriptableObject {
     [SerializeField] public Transform baseGeometryFit;
     [SerializeField] public GameObject wheelGeometry;
     [SerializeField] public Transform wheelGeometryFit;
-    [SerializeField] public WheelRowConstructionInfo[] wheelRows;
+    [SerializeField] public WheelAxisData[] wheelAxisDatas;
 }

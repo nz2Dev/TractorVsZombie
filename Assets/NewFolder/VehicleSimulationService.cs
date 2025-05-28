@@ -11,15 +11,15 @@ public class VehicleSimulationService {
         this.physicsContainer = physicsContainer;
     }
 
-    public void CreateVehicle(Collider baseColliderPrefab, WheelRowConstructionInfo[] wheels) {
+    public void CreateVehicle(Collider baseColliderPrefab, WheelAxisData[] wheels) {
         var vehiclePhysics = new VehiclePhysics(physicsContainer);
         vehiclePhysics.ConfigureBase(baseColliderPrefab);
         
         foreach (var wheelAxis in wheels)
             vehiclePhysics.CreateWheelAxis(
-                wheelAxis.rowOffset * 2, 
-                wheelAxis.verticalOffset, 
-                wheelAxis.horizontalOffset, 
+                wheelAxis.halfLength * 2, 
+                wheelAxis.upOffset, 
+                wheelAxis.forwardOffset, 
                 wheelAxis.radius, 
                 wheelAxis.drive, 
                 wheelAxis.stear

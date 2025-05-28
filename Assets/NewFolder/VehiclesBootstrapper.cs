@@ -15,7 +15,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
             DestroyImmediate(transform.GetChild(0).gameObject);
 
         vehicleSimulationService = new (physicsContainer: transform);
-        vehicleSimulationService.CreateVehicle(source.baseCollider, source.wheelRows);
+        vehicleSimulationService.CreateVehicle(source.baseCollider, source.wheelAxisDatas);
         
         vehicleVisuals = new VehicleVisuals(source);
         vehicleVisuals.Construct(container: transform);
@@ -27,7 +27,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
             DestroyImmediate(transform.GetChild(0).gameObject);
 
         vehicleSimulationService = new (physicsContainer: transform);
-        vehicleSimulationService.CreateVehicle(source.baseCollider, source.wheelRows);
+        vehicleSimulationService.CreateVehicle(source.baseCollider, source.wheelAxisDatas);
         
         vehicleVisuals = new VehicleVisuals(source);
         vehicleVisuals.Construct(container: transform);
@@ -39,7 +39,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
         var vehiclePose = vehicleSimulationService.GetVehiclePose(vehicleIndex: 0);
         vehicleVisuals.SetPositionAndRotation(vehiclePose.position, vehiclePose.rotation);
 
-        for (int wheelRowIndex = 0; wheelRowIndex < source.wheelRows.Length; wheelRowIndex++) {
+        for (int wheelRowIndex = 0; wheelRowIndex < source.wheelAxisDatas.Length; wheelRowIndex++) {
             var wheelAxisPose = vehicleSimulationService.GetVehicleWheelAxisPose(vehicleIndex:0, axisIndex: wheelRowIndex);
             vehicleVisuals.SetWheelRow(wheelRowIndex, 
                 wheelAxisPose.positionL, 

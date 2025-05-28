@@ -25,14 +25,14 @@ public class VehicleVisuals {
         baseGeometry.transform.SetLocalPositionAndRotation(source.baseGeometryFit.position, source.baseGeometryFit.rotation);
 
         int rowIndex = 0;
-        wheelsGeometries = new GameObject[source.wheelRows.Length * 2];
-        foreach (var wheelRow in source.wheelRows) {
+        wheelsGeometries = new GameObject[source.wheelAxisDatas.Length * 2];
+        foreach (var wheelRow in source.wheelAxisDatas) {
             var wheelGeometryL = Object.Instantiate(source.wheelGeometry, gameObject.transform, worldPositionStays: false);
-            wheelGeometryL.transform.localPosition = new Vector3(-wheelRow.rowOffset, wheelRow.verticalOffset, wheelRow.horizontalOffset);
+            wheelGeometryL.transform.localPosition = new Vector3(-wheelRow.halfLength, wheelRow.upOffset, wheelRow.forwardOffset);
             wheelGeometryL.transform.localScale = source.wheelGeometryFit.localScale * wheelRow.radius;
 
             var wheelGeometryR = Object.Instantiate(source.wheelGeometry, gameObject.transform, worldPositionStays: false);
-            wheelGeometryR.transform.localPosition = new Vector3(wheelRow.rowOffset, wheelRow.verticalOffset, wheelRow.horizontalOffset);
+            wheelGeometryR.transform.localPosition = new Vector3(wheelRow.halfLength, wheelRow.upOffset, wheelRow.forwardOffset);
             wheelGeometryR.transform.localScale = source.wheelGeometryFit.localScale * wheelRow.radius;
 
             wheelsGeometries[rowIndex * 2 + 0] = wheelGeometryL;
