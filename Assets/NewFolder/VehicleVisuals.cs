@@ -7,51 +7,47 @@ using UnityEngine.SceneManagement;
 
 public class VehicleVisuals {
 
-    private readonly VehicleEntity source;
+    struct WheelAxis {
+        public GameObject leftWheel;
+        public GameObject rightWheel;
+    } 
 
-    private GameObject gameObject;
+    private readonly GameObject root;
+    private readonly List<WheelAxis> wheelsAxes = new ();
 
-    private GameObject[] wheelsGeometries;
-
-    public VehicleVisuals(VehicleEntity source) {
-        this.source = source;
+    public VehicleVisuals(Transform container = null) {
+        root = new GameObject($"Vehicle Visuals (New)");
+        root.transform.SetParent(container, worldPositionStays: false);
     }
 
-    public GameObject Construct(Transform container = null) {
-        gameObject = new GameObject($"{source.name} (Visuals)");
-        gameObject.transform.SetParent(container, worldPositionStays: false);
-
-        var baseGeometry = Object.Instantiate(source.baseGeometry, gameObject.transform, worldPositionStays: false);
-        baseGeometry.transform.SetLocalPositionAndRotation(source.baseGeometryFit.position, source.baseGeometryFit.rotation);
-
-        int rowIndex = 0;
-        wheelsGeometries = new GameObject[source.wheelAxisDatas.Length * 2];
-        foreach (var wheelRow in source.wheelAxisDatas) {
-            var wheelGeometryL = Object.Instantiate(source.wheelGeometry, gameObject.transform, worldPositionStays: false);
-            wheelGeometryL.transform.localPosition = new Vector3(-wheelRow.halfLength, wheelRow.upOffset, wheelRow.forwardOffset);
-            wheelGeometryL.transform.localScale = source.wheelGeometryFit.localScale * wheelRow.radius;
-
-            var wheelGeometryR = Object.Instantiate(source.wheelGeometry, gameObject.transform, worldPositionStays: false);
-            wheelGeometryR.transform.localPosition = new Vector3(wheelRow.halfLength, wheelRow.upOffset, wheelRow.forwardOffset);
-            wheelGeometryR.transform.localScale = source.wheelGeometryFit.localScale * wheelRow.radius;
-
-            wheelsGeometries[rowIndex * 2 + 0] = wheelGeometryL;
-            wheelsGeometries[rowIndex * 2 + 1] = wheelGeometryR;
-            rowIndex++;
-        }
-        
-        return gameObject;
+    public void AddBaseGeometry(GameObject baseGeometryPrefab, Transform baseGeometryFit) {
+        var baseGeometry = Object.Instantiate(baseGeometryPrefab, root.transform, worldPositionStays: false);
+        baseGeometry.transform.SetLocalPositionAndRotation(baseGeometryFit.position, baseGeometryFit.rotation);
     }
 
-    public void SetPositionAndRotation(Vector3 position, Quaternion rotation) {
-        gameObject.transform.SetPositionAndRotation(position, rotation);
+    public void AddWheelAxisGeometries(GameObject wheelGeometry, Transform wheelGeometryFit, float forwardOffset, float upOffset, float halfLength, float radius) {
+        var wheelGeometryL = Object.Instantiate(wheelGeometry, root.transform, worldPositionStays: false);
+        wheelGeometryL.transform.localPosition = new Vector3(-halfLength, upOffset, forwardOffset);
+        wheelGeometryL.transform.localScale = wheelGeometryFit.localScale * radius;
+
+        var wheelGeometryR = Object.Instantiate(wheelGeometry, root.transform, worldPositionStays: false);
+        wheelGeometryR.transform.localPosition = new Vector3(halfLength, upOffset, forwardOffset);
+        wheelGeometryR.transform.localScale = wheelGeometryFit.localScale * radius;
+
+        wheelsAxes.Add(new WheelAxis {
+            leftWheel = wheelGeometryL,
+            rightWheel = wheelGeometryR
+        });
     }
 
-    public void SetWheelRow(int rowIndex, Vector3 positionL, Quaternion rotationL, Vector3 positionR, Quaternion rotationR) {
-        var wheelGeometryL = wheelsGeometries[rowIndex * 2 + 0];
-        wheelGeometryL.transform.SetPositionAndRotation(positionL, rotationL);
-        var wheelGeometryR = wheelsGeometries[rowIndex * 2 + 1];
-        wheelGeometryR.transform.SetPositionAndRotation(positionR, rotationR);
+    public void SetPositionAndRotation(VehiclePose vehiclePose) {
+        root.transform.SetPositionAndRotation(vehiclePose.position, vehiclePose.rotation);
+    }
+
+    public void SetAxisPositionAndRotation(int axisIndex, WheelAxisPose axisPose) {
+        var wheelAxis = wheelsAxes[axisIndex];
+        wheelAxis.leftWheel.transform.SetPositionAndRotation(axisPose.positionL, axisPose.rotationL);
+        wheelAxis.rightWheel.transform.SetPositionAndRotation(axisPose.positionR, axisPose.rotationR);
     }
 
 }
