@@ -1,90 +1,93 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 
+using UnityEditor.Experimental.GraphView;
+
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Assertions;
 
 public class VehiclePhysics {
-    
-    private readonly VehicleEntity source;
 
-    private GameObject gameObject;
-    private WheelCollider[] wheelColliders = new WheelCollider[0];
-
-    public VehiclePhysics(VehicleEntity source) {
-        this.source = source;
+    struct WheelAxis {
+        public WheelCollider leftWheel;    
+        public WheelCollider rightWheel;    
+        public bool drive;
+        public bool steer;
     }
+    
+    private readonly GameObject root;
+    private readonly List<WheelAxis> wheelAxes = new ();
 
-    public GameObject Construct(Transform container = null) {
-        gameObject = new GameObject($"{source.name} (Physics)", typeof(Rigidbody));
-        gameObject.transform.SetParent(container, worldPositionStays: false);
+    public int AxisCount => wheelAxes.Count;
+    public Vector3 Position => root.transform.position;
+    public Quaternion Rotation => root.transform.rotation;
 
-        var rigidbody = gameObject.GetComponent<Rigidbody>();
+    public VehiclePhysics(Transform container) {
+        root = new GameObject("Vehicle Construction (New)", typeof(Rigidbody));
+        root.transform.SetParent(container, worldPositionStays: false);
+        var rigidbody = root.GetComponent<Rigidbody>();
         rigidbody.hideFlags = HideFlags.NotEditable;
         rigidbody.isKinematic = false;
         rigidbody.useGravity = true;
         rigidbody.mass = 150;
-        
-        Object.Instantiate(source.baseCollider, gameObject.transform, worldPositionStays: false);
-
-        int rowIndex = 0;
-        wheelColliders = new WheelCollider[source.wheelRows.Length * 2];
-        foreach (var wheelRow in source.wheelRows) {
-            var wheelL = CreateDefaultWheel(wheelRow.radius);
-            wheelL.transform.localPosition = new Vector3(-wheelRow.rowOffset, wheelRow.verticalOffset, wheelRow.horizontalOffset);
-            var wheelR = CreateDefaultWheel(wheelRow.radius);
-            wheelR.transform.localPosition = new Vector3(wheelRow.rowOffset, wheelRow.verticalOffset, wheelRow.horizontalOffset);
-
-            wheelColliders[rowIndex * 2 + 0] = wheelL.GetComponent<WheelCollider>();
-            wheelColliders[rowIndex * 2 + 1] = wheelR.GetComponent<WheelCollider>();
-            rowIndex++;
-        }
-
-        return gameObject;
     }
 
-    public void GasThrottle(float v) {
-        const float maxTorque = 400;
-        for (int row = 0; row < source.wheelRows.Length; row++) {
-            var wheelRowInfo = source.wheelRows[row];
-            if (wheelRowInfo.drive) {
-                var colliderL = wheelColliders[row * 2 + 0];
-                colliderL.motorTorque = v * maxTorque;
-                colliderL.brakeTorque = 0;
-                var colliderR = wheelColliders[row * 2 + 1];
-                colliderR.motorTorque = v * maxTorque;
-                colliderR.brakeTorque = 0;
-            }            
-        }
+    public void ConfigureBase(Collider baseColliderPrefab) {
+        Assert.IsNull(root.GetComponentInChildren<BoxCollider>());
+        UnityEngine.Object.Instantiate(baseColliderPrefab, root.transform);
+        // var baseGameObject = new GameObject("Base Box Collider (New)", typeof(BoxCollider));
+        // baseGameObject.transform.SetParent(root.transform, worldPositionStays: false);
+        // var baseCollider = baseGameObject.GetComponent<BoxCollider>();
+        // baseCollider.center = boxBounds.center;
+        // baseCollider.size = boxBounds.size;
     }
 
-    public void GetWorldPose(out Vector3 position, out Quaternion rotation) {
-        position = gameObject.transform.position;
-        rotation = gameObject.transform.rotation;
+    public void CreateWheelAxis(float length, float upOffset, float forwardOffset, float radius, bool drive, bool steer) {
+        var wheelL = CreateDefaultWheel(radius);
+        wheelL.transform.localPosition = new Vector3(-length / 2f, upOffset, forwardOffset);
+        var wheelR = CreateDefaultWheel(radius);
+        wheelR.transform.localPosition = new Vector3(+length / 2f, upOffset, forwardOffset);
+        wheelAxes.Add(new WheelAxis {
+            leftWheel = wheelL,
+            rightWheel = wheelR,
+            drive = drive,
+            steer = steer
+        });
     }
 
-    public void GetWheelRowWorldPos(int rowIndex, out Vector3 positionL, out Quaternion rotationL, out Vector3 positionR, out Quaternion rotationR) {
-        var leftWheel = wheelColliders[rowIndex * 2 + 0];
-        leftWheel.GetWorldPose(out positionL, out rotationL);
-        var rightWheel = wheelColliders[rowIndex * 2 + 1];
-        rightWheel.GetWorldPose(out positionR, out rotationR);
+    public void SetAxisMotorTorque(int axisIndex, float torque) {
+        var axis = wheelAxes[axisIndex];
+        axis.leftWheel.motorTorque = torque;
+        axis.rightWheel.motorTorque = torque;
     }
 
-    private GameObject CreateDefaultWheel(float radius) {
+    public void SetAxisBreaksTorque(int axisIndex, float torque) {
+        var axis = wheelAxes[axisIndex];
+        axis.leftWheel.brakeTorque = torque;
+        axis.rightWheel.brakeTorque = torque;
+    }
+
+    public void GetAxisPose(int axisIndex, out Vector3 positionL, out Quaternion rotationL, out Vector3 positionR, out Quaternion rotationR) {
+        var axis = wheelAxes[axisIndex];
+        axis.leftWheel.GetWorldPose(out positionL, out rotationL);
+        axis.rightWheel.GetWorldPose(out positionR, out rotationR);
+    }
+
+    public bool IsDriveAxis(int axisIndex) {
+        return wheelAxes[axisIndex].drive;
+    }
+
+    private WheelCollider CreateDefaultWheel(float radius) {
         var wheel = new GameObject("Default Wheel (New)", typeof(WheelCollider));
         wheel.transform.hideFlags = HideFlags.NotEditable;
-        wheel.transform.parent = gameObject.transform; 
+        wheel.transform.SetParent(root.transform, worldPositionStays: false);
         var wheelCollider = wheel.GetComponent<WheelCollider>();
         wheelCollider.hideFlags = HideFlags.NotEditable;
-        SetupDefaultWheelCollider(wheelCollider, radius);
-        return wheel;
-    }
-
-    private void SetupDefaultWheelCollider(WheelCollider wheelCollider, float wheelRadius) {
         wheelCollider.suspensionSpring = CreateDefaultJointSpring();
-        wheelCollider.suspensionDistance = wheelRadius * 0.6f;
-        wheelCollider.radius = wheelRadius;
+        wheelCollider.suspensionDistance = radius * 0.6f;
+        wheelCollider.radius = radius;
         wheelCollider.mass = 5;
+        return wheelCollider;
     }
 
     private JointSpring CreateDefaultJointSpring() {

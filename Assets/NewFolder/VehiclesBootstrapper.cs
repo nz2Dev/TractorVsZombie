@@ -7,43 +7,48 @@ public class VehiclesBootstrapper : MonoBehaviour {
     [SerializeField] private VehicleEntity source;
     [SerializeField] private float gasThrottle = 0;
 
-    private VehiclePhysics vehiclePhysics;
+    private VehicleSimulationService vehicleSimulationService;
     private VehicleVisuals vehicleVisuals;
 
-    private void Awake() {
-        Reconstruct();
-    }
-
-    [ContextMenu("Reconstruct Nested")]
-    public void Reconstruct() {
+    private void Start() {
         while (transform.childCount > 0)
             DestroyImmediate(transform.GetChild(0).gameObject);
+
+        vehicleSimulationService = new (physicsContainer: transform);
+        vehicleSimulationService.CreateVehicle(source.baseCollider, source.wheelRows);
         
-        ConstructComponents(transform);
+        vehicleVisuals = new VehicleVisuals(source);
+        vehicleVisuals.Construct(container: transform);
+    }
+    
+    [ContextMenu("Preview")]
+    private void Preview() {
+        while (transform.childCount > 0)
+            DestroyImmediate(transform.GetChild(0).gameObject);
+
+        vehicleSimulationService = new (physicsContainer: transform);
+        vehicleSimulationService.CreateVehicle(source.baseCollider, source.wheelRows);
+        
+        vehicleVisuals = new VehicleVisuals(source);
+        vehicleVisuals.Construct(container: transform);
     }
 
     private void Update() {
-        vehiclePhysics.GasThrottle(gasThrottle);
+        vehicleSimulationService.SetVehicleGasThrottle(vehicleIndex: 0, gasThrottle);
 
-        vehiclePhysics.GetWorldPose(out var physicsPosition, out var physicsRotation);
-        vehicleVisuals.SetPositionAndRotation(physicsPosition, physicsRotation);
+        var vehiclePose = vehicleSimulationService.GetVehiclePose(vehicleIndex: 0);
+        vehicleVisuals.SetPositionAndRotation(vehiclePose.position, vehiclePose.rotation);
 
         for (int wheelRowIndex = 0; wheelRowIndex < source.wheelRows.Length; wheelRowIndex++) {
-            vehiclePhysics.GetWheelRowWorldPos(wheelRowIndex, 
-                out var positionL, out var rotationL, 
-                out var positionR, out var rotationR);
+            var wheelAxisPose = vehicleSimulationService.GetVehicleWheelAxisPose(vehicleIndex:0, axisIndex: wheelRowIndex);
             vehicleVisuals.SetWheelRow(wheelRowIndex, 
-                positionL, rotationL, 
-                positionR, rotationR);
+                wheelAxisPose.positionL, 
+                wheelAxisPose.rotationL, 
+                wheelAxisPose.positionR, 
+                wheelAxisPose.rotationR);
         }
     }
 
-    private void ConstructComponents(Transform container = null) {
-        vehiclePhysics = new VehiclePhysics(source);
-        vehiclePhysics.Construct(container);
-
-        vehicleVisuals = new VehicleVisuals(source);
-        vehicleVisuals.Construct(container);
-    }
+    
 
 }
