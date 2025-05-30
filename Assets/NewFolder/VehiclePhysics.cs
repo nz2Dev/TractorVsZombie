@@ -22,9 +22,10 @@ public class VehiclePhysics {
     public Vector3 Position => root.transform.position;
     public Quaternion Rotation => root.transform.rotation;
 
-    public VehiclePhysics(Transform container) {
+    public VehiclePhysics(Vector3 position, Transform container) {
         root = new GameObject("Vehicle Physics (New)", typeof(Rigidbody));
         root.transform.SetParent(container, worldPositionStays: false);
+        root.transform.position = position;
         var rigidbody = root.GetComponent<Rigidbody>();
         rigidbody.hideFlags = HideFlags.NotEditable;
         rigidbody.isKinematic = false;

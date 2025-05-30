@@ -11,8 +11,8 @@ public class VehicleSimulationService {
         this.physicsContainer = physicsContainer;
     }
 
-    public void CreateVehicle(Bounds baseBounds, WheelAxisData[] wheels) {
-        var vehiclePhysics = new VehiclePhysics(physicsContainer);
+    public int CreateVehicle(Bounds baseBounds, WheelAxisData[] wheels, Vector3 position = default) {
+        var vehiclePhysics = new VehiclePhysics(position, physicsContainer);
         vehiclePhysics.ConfigureBase(baseBounds);
         
         foreach (var wheelAxis in wheels)
@@ -26,7 +26,13 @@ public class VehicleSimulationService {
             );
 
         physicsRegistry.Add(vehiclePhysics);
+        var lastVehicleIndex = physicsRegistry.Count - 1;
+        return lastVehicleIndex;
     }
+
+    // public void ConnectVehicleWithHing(int headVehicleIndex, int tailVehicleIndex) {
+
+    // }
 
     public void SetVehicleGasThrottle(int vehicleIndex, float v) {
         const float maxTorque = 400;
