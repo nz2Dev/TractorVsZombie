@@ -30,12 +30,6 @@ public class VehicleSimulationService {
         return lastVehicleIndex;
     }
 
-    public void ConnectVehicleWithHing(int headVehicleIndex, float headVehicleAnchorOffset, int tailVehicleIndex, float tailVehicleAnchorOffset) {
-        var headPhysics = physicsRegistry[headVehicleIndex];
-        var tailPhysics = physicsRegistry[tailVehicleIndex];
-        tailPhysics.ConnectWithHinge(headPhysics, headVehicleAnchorOffset, tailVehicleAnchorOffset);
-    }
-
     public void SetVehicleGasThrottle(int vehicleIndex, float v) {
         const float maxTorque = 400;
         var construction = physicsRegistry[vehicleIndex];
@@ -53,6 +47,12 @@ public class VehicleSimulationService {
         for (int axisIndex = 0; axisIndex < construction.AxisCount; axisIndex++) {
             construction.SetAxisBreaksTorque(axisIndex, v * maxBreaksTorque);
         }
+    }
+
+    public void ConnectVehicleWithHinge(int headVehicleIndex, float headVehicleAnchorOffset, int tailVehicleIndex, float tailVehicleAnchorOffset) {
+        var headPhysics = physicsRegistry[headVehicleIndex];
+        var tailPhysics = physicsRegistry[tailVehicleIndex];
+        tailPhysics.ConnectWithHinge(headPhysics, headVehicleAnchorOffset, tailVehicleAnchorOffset);
     }
 
     public VehiclePose GetVehiclePose(int vehicleIndex) {

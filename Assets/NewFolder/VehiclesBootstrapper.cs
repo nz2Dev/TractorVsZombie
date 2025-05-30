@@ -17,7 +17,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicleSimulationService = new (physicsContainer: transform);
         vehicleSimulationService.CreateVehicle(source.baseBounds, source.wheelAxisDatas);
         vehicleSimulationService.CreateVehicle(source.baseBounds, source.wheelAxisDatas, new Vector3(0, 0, -2f));
-        vehicleSimulationService.ConnectVehicleWithHing(headVehicleIndex: 0, -0.7f, tailVehicleIndex: 1, 0.7f);
+        vehicleSimulationService.ConnectVehicleWithHinge(headVehicleIndex: 0, -0.7f, tailVehicleIndex: 1, 0.7f);
         
         vehicleView = new (container: transform);
         vehicleView.AddVehicle(source.baseGeometry, source.baseGeometryFit,

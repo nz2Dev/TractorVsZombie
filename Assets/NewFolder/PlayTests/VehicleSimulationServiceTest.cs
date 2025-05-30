@@ -41,7 +41,7 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var baseBounds = new Bounds(new Vector3(0, 0.2f, 0), new Vector3(.5f, 0.4f, 1.0f));
         var backAxis = new WheelAxisData { drive = true, halfLength = 0.15f, forwardOffset = -0.15f, upOffset = 0f, radius = 0.1f};
         var frontAxis = new WheelAxisData { drive = false, halfLength = 0.15f, forwardOffset = 0.15f, upOffset = 0f, radius = 0.1f};
-        var position = new Vector3(0, 0, -2);
+        var position = new Vector3(0, 0.15f, -2);
         
         vehicleSimulationService.CreateVehicle(baseBounds, new WheelAxisData[] {backAxis, frontAxis}, position);
         Debug.Break();
@@ -58,23 +58,21 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
     [UnityTest]
     public IEnumerator ConnectVehiclesWithHinge_TailFollowsHeadInNextUpdate() {
         var vehicleSimulationService = new VehicleSimulationService(physicsContainer: null);
-        Vector3 headVehicleInitPosition = new (0, .05f, 0);
+        Vector3 headVehicleInitPosition = new (0, .15f, 0);
         var headVehicleIndex = CreateDefault4WheelsVehicle(
             vehicleSimulationService, headVehicleInitPosition);
 
-        Vector3 tailVehicleInitPosition = new(0, .05f, -2);
+        Vector3 tailVehicleInitPosition = new(0, .15f, -2);
         var tailVehicleIndex = CreateDefault4WheelsVehicle(
             vehicleSimulationService, tailVehicleInitPosition);
         
         var headVehicleAnchorOffset = -0.7f;
         var tailVehicleAnchorOffset = 0.7f;
-        vehicleSimulationService.ConnectVehicleWithHing(
+        vehicleSimulationService.ConnectVehicleWithHinge(
             headVehicleIndex, headVehicleAnchorOffset, 
             tailVehicleIndex, tailVehicleAnchorOffset);
-        Debug.Break();
         yield return new WaitForFixedUpdate();
         yield return new WaitForFixedUpdate();
-
 
         var headVehiclePose = vehicleSimulationService.GetVehiclePose(headVehicleIndex);
         var tailVehiclePose = vehicleSimulationService.GetVehiclePose(tailVehicleIndex);

@@ -55,6 +55,9 @@ public class VehiclePhysics {
             drive = drive,
             steer = steer
         });
+
+        var rigidbody = root.GetComponent<Rigidbody>();
+        rigidbody.centerOfMass = new Vector3(0, -radius * 1.5f, 0);
     }
 
     internal void ConnectWithHinge(VehiclePhysics headPhysics, float headVehicleAnchorOffset, float thisAnchorOffset) {
@@ -67,6 +70,7 @@ public class VehiclePhysics {
         hingeJoint.autoConfigureConnectedAnchor = false;
         hingeJoint.connectedAnchor = new Vector3(0, 0, headVehicleAnchorOffset);
         hingeJoint.connectedBody = headPhysics.root.GetComponent<Rigidbody>();
+        hingeJoint.connectedMassScale = 0.1f;
         hingeJoint.anchor = new Vector3(0, 0, thisAnchorOffset);
 
         BreakWheelsFrictionWithConstantTorque();
@@ -108,7 +112,7 @@ public class VehiclePhysics {
         var wheelCollider = wheel.GetComponent<WheelCollider>();
         wheelCollider.hideFlags = HideFlags.NotEditable;
         wheelCollider.suspensionSpring = CreateDefaultJointSpring();
-        wheelCollider.suspensionDistance = radius * 0.6f;
+        wheelCollider.suspensionDistance = 0.1f;
         wheelCollider.radius = radius;
         wheelCollider.mass = 5;
         return wheelCollider;
