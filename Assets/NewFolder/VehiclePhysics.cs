@@ -32,14 +32,13 @@ public class VehiclePhysics {
         rigidbody.mass = 150;
     }
 
-    public void ConfigureBase(Collider baseColliderPrefab) {
+    public void ConfigureBase(Bounds bounds) {
         Assert.IsNull(root.GetComponentInChildren<BoxCollider>());
-        UnityEngine.Object.Instantiate(baseColliderPrefab, root.transform);
-        // var baseGameObject = new GameObject("Base Box Collider (New)", typeof(BoxCollider));
-        // baseGameObject.transform.SetParent(root.transform, worldPositionStays: false);
-        // var baseCollider = baseGameObject.GetComponent<BoxCollider>();
-        // baseCollider.center = boxBounds.center;
-        // baseCollider.size = boxBounds.size;
+        var baseGameObject = new GameObject("Base Box Collider (New)", typeof(BoxCollider));
+        baseGameObject.transform.SetParent(root.transform, worldPositionStays: false);
+        var baseCollider = baseGameObject.GetComponent<BoxCollider>();
+        baseCollider.center = bounds.center;
+        baseCollider.size = bounds.size;
     }
 
     public void CreateWheelAxis(float length, float upOffset, float forwardOffset, float radius, bool drive, bool steer) {

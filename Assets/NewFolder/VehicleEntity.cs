@@ -14,7 +14,7 @@ public struct WheelAxisData {
 
 [CreateAssetMenu(fileName = "DriveVehicleEntity", menuName = "Entities")]
 public class VehicleEntity : ScriptableObject {
-    [SerializeField] public Collider baseCollider;
+    [SerializeField] public Bounds baseBounds;
     [SerializeField] public GameObject baseGeometry;
     [SerializeField] public Transform baseGeometryFit;
     [SerializeField] public GameObject wheelGeometry;
