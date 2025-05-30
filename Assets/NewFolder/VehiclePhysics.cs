@@ -27,6 +27,8 @@ public class VehiclePhysics {
         root.transform.SetParent(container, worldPositionStays: false);
         root.transform.position = position;
         var rigidbody = root.GetComponent<Rigidbody>();
+        rigidbody.automaticCenterOfMass = false;
+        rigidbody.centerOfMass = Vector3.zero;
         rigidbody.hideFlags = HideFlags.NotEditable;
         rigidbody.isKinematic = false;
         rigidbody.useGravity = true;
@@ -53,6 +55,28 @@ public class VehiclePhysics {
             drive = drive,
             steer = steer
         });
+    }
+
+    internal void ConnectWithHinge(VehiclePhysics headPhysics, float headVehicleAnchorOffset, float thisAnchorOffset) {
+        var hingeJoint = root.GetComponent<HingeJoint>();;
+        if (hingeJoint == null) {
+            hingeJoint = root.AddComponent<HingeJoint>();
+        }
+
+        hingeJoint.axis = Vector3.up;
+        hingeJoint.autoConfigureConnectedAnchor = false;
+        hingeJoint.connectedAnchor = new Vector3(0, 0, headVehicleAnchorOffset);
+        hingeJoint.connectedBody = headPhysics.root.GetComponent<Rigidbody>();
+        hingeJoint.anchor = new Vector3(0, 0, thisAnchorOffset);
+
+        BreakWheelsFrictionWithConstantTorque();
+    }
+
+    private void BreakWheelsFrictionWithConstantTorque() {
+        foreach (var axis in wheelAxes) {
+            axis.leftWheel.motorTorque = 0.1f;
+            axis.rightWheel.motorTorque = 0.1f;
+        }
     }
 
     public void SetAxisMotorTorque(int axisIndex, float torque) {
@@ -93,7 +117,7 @@ public class VehiclePhysics {
     private JointSpring CreateDefaultJointSpring() {
         return new JointSpring {
             targetPosition = .5f,
-            spring = 35_000,
+            spring = 3500,
             damper = 450,
         };
     }
