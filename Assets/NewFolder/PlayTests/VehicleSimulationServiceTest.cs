@@ -80,7 +80,7 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
 
     // [UnityTest]
     // public void SteerFrontAxis_VehicleSteersInThatDirection() {
-
+    //     var driveVehicleIndex = vehicleService.CreateVehicle()
     // }
 
     private int Create2WheelsTrailerVehicle(Vector3 position) {

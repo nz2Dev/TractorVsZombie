@@ -20,19 +20,19 @@ public class VehicleVisuals {
         root.transform.SetParent(container, worldPositionStays: false);
     }
 
-    public void AddBaseGeometry(GameObject baseGeometryPrefab, Transform baseGeometryFit) {
-        var baseGeometry = Object.Instantiate(baseGeometryPrefab, root.transform, worldPositionStays: false);
-        baseGeometry.transform.SetLocalPositionAndRotation(baseGeometryFit.position, baseGeometryFit.rotation);
+    public void AddBaseGeometry(GameObject baseGeometryPrefab) {
+        var baseGeometry = Object.Instantiate(baseGeometryPrefab, Vector3.zero, Quaternion.identity);
+        baseGeometry.transform.SetParent(root.transform, worldPositionStays: false);
     }
 
-    public void AddWheelAxisGeometries(GameObject wheelGeometry, Transform wheelGeometryFit, float forwardOffset, float upOffset, float halfLength, float radius) {
+    public void AddWheelAxisGeometries(GameObject wheelGeometry, float forwardOffset, float upOffset, float halfLength, float radius) {
         var wheelGeometryL = Object.Instantiate(wheelGeometry, root.transform, worldPositionStays: false);
         wheelGeometryL.transform.localPosition = new Vector3(-halfLength, upOffset, forwardOffset);
-        wheelGeometryL.transform.localScale = wheelGeometryFit.localScale * radius;
+        wheelGeometryL.transform.localScale = Vector3.one * radius;
 
         var wheelGeometryR = Object.Instantiate(wheelGeometry, root.transform, worldPositionStays: false);
         wheelGeometryR.transform.localPosition = new Vector3(halfLength, upOffset, forwardOffset);
-        wheelGeometryR.transform.localScale = wheelGeometryFit.localScale * radius;
+        wheelGeometryR.transform.localScale = Vector3.one * radius;
 
         wheelsAxes.Add(new WheelAxis {
             leftWheel = wheelGeometryL,

@@ -21,15 +21,11 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicleSimulationService = new (physicsContainer: transform);
 
         vehicleSimulationService.CreateVehicle(driveVehicle.baseBounds, driveVehicle.wheelAxisDatas);
-        vehicleView.AddVehicle(driveVehicle.baseGeometry, driveVehicle.baseGeometryFit,
-            driveVehicle.wheelGeometry, driveVehicle.wheelGeometryFit,
-            driveVehicle.wheelAxisDatas);
+        vehicleView.AddVehicle(driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.wheelAxisDatas);
         vehicles.Add(driveVehicle);
 
         vehicleSimulationService.CreateVehicle(trailerVehicle.baseBounds, trailerVehicle.wheelAxisDatas, new Vector3(0, 0, -2f));
-        vehicleView.AddVehicle(trailerVehicle.baseGeometry, trailerVehicle.baseGeometryFit,
-            trailerVehicle.wheelGeometry, trailerVehicle.wheelGeometryFit,
-            trailerVehicle.wheelAxisDatas);
+        vehicleView.AddVehicle(trailerVehicle.baseGeometry, trailerVehicle.wheelGeometry, trailerVehicle.wheelAxisDatas);
         vehicles.Add(trailerVehicle);
 
         vehicleSimulationService.ConnectVehicleWithHinge(headVehicleIndex: 0, -0.7f, tailVehicleIndex: 1, 0.7f);
@@ -44,9 +40,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicleSimulationService.CreateVehicle(driveVehicle.baseBounds, driveVehicle.wheelAxisDatas);
         
         vehicleView = new (container: transform);
-        vehicleView.AddVehicle(driveVehicle.baseGeometry, driveVehicle.baseGeometryFit,
-            driveVehicle.wheelGeometry, driveVehicle.wheelGeometryFit,
-            driveVehicle.wheelAxisDatas);
+        vehicleView.AddVehicle(driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.wheelAxisDatas);
     }
 
     private void Update() {

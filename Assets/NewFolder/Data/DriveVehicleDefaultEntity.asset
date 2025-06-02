@@ -15,10 +15,8 @@ MonoBehaviour:
   baseBounds:
     m_Center: {x: 0, y: 0.2, z: 0}
     m_Extent: {x: 0.25, y: 0.2, z: 0.5}
-  baseGeometry: {fileID: 6502951602268579337, guid: 7c8f2b546d9b945bcaec6feddde2e8c0, type: 3}
-  baseGeometryFit: {fileID: 7839519505740745578, guid: c28fbe666b35b4e438e2b28ca85060de, type: 3}
+  baseGeometry: {fileID: 308101743189184403, guid: 7c8f2b546d9b945bcaec6feddde2e8c0, type: 3}
   wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
-  wheelGeometryFit: {fileID: 4533803720872584508, guid: 5912d8d27ba034cb4aeb40025f286b56, type: 3}
   wheelAxisDatas:
   - forwardOffset: -0.25
     upOffset: 0

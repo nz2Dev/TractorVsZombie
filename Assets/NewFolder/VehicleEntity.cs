@@ -16,8 +16,6 @@ public struct WheelAxisData {
 public class VehicleEntity : ScriptableObject {
     [SerializeField] public Bounds baseBounds;
     [SerializeField] public GameObject baseGeometry;
-    [SerializeField] public Transform baseGeometryFit;
     [SerializeField] public GameObject wheelGeometry;
-    [SerializeField] public Transform wheelGeometryFit;
     [SerializeField] public WheelAxisData[] wheelAxisDatas;
 }

@@ -12,13 +12,12 @@ public class VehicleView {
         this.container = container;
     }
 
-    public void AddVehicle(GameObject baseGeometryPrefab, Transform baseGeometryFit, GameObject wheelGeometry, Transform wheelGeometryFit, WheelAxisData[] wheelAxisDatas) {
+    public void AddVehicle(GameObject baseGeometryPrefab, GameObject wheelGeometry, WheelAxisData[] wheelAxisDatas) {
         var vehicleVisuals = new VehicleVisuals(container);
-        vehicleVisuals.AddBaseGeometry(baseGeometryPrefab, baseGeometryFit);
+        vehicleVisuals.AddBaseGeometry(baseGeometryPrefab);
         foreach (var wheelAxis in wheelAxisDatas)
             vehicleVisuals.AddWheelAxisGeometries(
                 wheelGeometry, 
-                wheelGeometryFit, 
                 wheelAxis.forwardOffset,
                 wheelAxis.upOffset,
                 wheelAxis.halfLength,
