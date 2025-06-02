@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class VehicleSimulationService {
+public class VehicleService {
     
     private List<VehiclePhysics> physicsRegistry = new ();
     private Transform physicsContainer;
 
-    public VehicleSimulationService(Transform physicsContainer) {
+    public VehicleService(Transform physicsContainer) {
         this.physicsContainer = physicsContainer;
     }
 

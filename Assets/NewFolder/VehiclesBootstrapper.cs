@@ -9,7 +9,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
     [SerializeField] private float gasThrottle = 0;
 
     private List<VehicleEntity> vehicles;
-    private VehicleSimulationService vehicleSimulationService;
+    private VehicleService vehicleSimulationService;
     private VehicleView vehicleView;
 
     private void Start() {
