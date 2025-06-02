@@ -80,20 +80,47 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
 
     [UnityTest]
     public IEnumerator SteerFrontAxisNoTorque_StaysAtPosition() {
-        var initPosition = new Vector3(0, 0, -2f);
         const int frontAxisIndex = 1;
-        var vehicleIndex = CreateDefault4WheelsVehicle(initPosition);
-        yield return new WaitForFixedUpdate();
-
         var steerDegrees = +45f;
+        var initPosition = new Vector3(0, 0, -2f);
+        var vehicleIndex = CreateDefault4WheelsVehicle(initPosition);
+        
         vehicleService.SetVehicleAxisSteer(vehicleIndex, frontAxisIndex, steerDegrees);
-        yield return new WaitForFixedUpdate();
         yield return new WaitForFixedUpdate();
 
         var vehiclePose = vehicleService.GetVehiclePose(vehicleIndex);
         Assert.That(vehiclePose.position.x, Is.EqualTo(initPosition.x).Within(FloatError));
         Assert.That(vehiclePose.position.z, Is.EqualTo(initPosition.z).Within(FloatError));
     }
+
+    // TODO: decide on test strategy
+    // test torque first with friction...
+    // or test output poses position, rpm for gas and steer and force and friction separately
+
+    // [UnityTest]
+    // public IEnumerator SteerFrontAxisWithTorque_DrivesInSteerDirection() {
+    //     const int frontAxisIndex = 1;
+    //     var steerDegrees = +45f;
+    //     var initPosition = new Vector3(0, 0, -2f);
+        
+    //     var vehicleIndex = CreateDefault4WheelsVehicle(initPosition);
+    //     yield return new WaitForFixedUpdate();
+    //     var createdPose = vehicleService.GetVehiclePose(vehicleIndex);
+
+    //     vehicleService.SetVehicleAxisSteer(vehicleIndex, frontAxisIndex, steerDegrees);
+    //     vehicleService.SetVehicleGasThrottle(vehicleIndex, 0.5f);
+    //     Debug.Break();
+    //     yield return new WaitForFixedUpdate();
+    //     yield return new WaitForFixedUpdate();
+    //     yield return new WaitForFixedUpdate();
+
+    //     var simulatedPose = vehicleService.GetVehiclePose(vehicleIndex);
+    //     Assert.That(simulatedPose.position.x, Is.Not.EqualTo(initPosition.x).Within(FloatError));
+    //     Assert.That(simulatedPose.position.z, Is.Not.EqualTo(initPosition.z).Within(FloatError));
+        
+    //     var rotation = Quaternion.Angle(createdPose.rotation, simulatedPose.rotation);
+    //     Assert.That(rotation, Is.GreaterThan(1));
+    // }
 
     private int Create2WheelsTrailerVehicle(Vector3 position) {
         Vector3 baseSize = new (0.5f, 0.4f, 1.0f);

@@ -32,17 +32,18 @@ public class VehicleService {
     }
 
     public void SetVehicleAxisSteer(int vehicleIndex, int axisIndex, float steerDegrees) {
-        
+        throw new NotImplementedException();
     }
 
     public void SetVehicleGasThrottle(int vehicleIndex, float v) {
         const float maxTorque = 400;
+        const float minTorqueToEaseFriction = 0.1f;
+        
+        var engineTorque = v * maxTorque;
         var construction = physicsRegistry[vehicleIndex];
         for (int axisIndex = 0; axisIndex < construction.AxisCount; axisIndex++) {
-            if (construction.IsDriveAxis(axisIndex)) {
-                construction.SetAxisMotorTorque(axisIndex, v * maxTorque);
-                construction.SetAxisBreaksTorque(axisIndex, 0);
-            }            
+            var torque = construction.IsDriveAxis(axisIndex) ? engineTorque : minTorqueToEaseFriction;
+            construction.SetAxisMotorTorque(axisIndex, torque);
         }
     }
 
