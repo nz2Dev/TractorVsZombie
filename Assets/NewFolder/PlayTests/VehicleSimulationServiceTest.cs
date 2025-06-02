@@ -78,10 +78,22 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         Assert.That(distanceBetween, Is.EqualTo(offsetDistance).Within(FloatError));
     }
 
-    // [UnityTest]
-    // public void SteerFrontAxis_VehicleSteersInThatDirection() {
-    //     var driveVehicleIndex = vehicleService.CreateVehicle()
-    // }
+    [UnityTest]
+    public IEnumerator SteerFrontAxisNoTorque_StaysAtPosition() {
+        var initPosition = new Vector3(0, 0, -2f);
+        const int frontAxisIndex = 1;
+        var vehicleIndex = CreateDefault4WheelsVehicle(initPosition);
+        yield return new WaitForFixedUpdate();
+
+        var steerDegrees = +45f;
+        vehicleService.SetVehicleAxisSteer(vehicleIndex, frontAxisIndex, steerDegrees);
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+
+        var vehiclePose = vehicleService.GetVehiclePose(vehicleIndex);
+        Assert.That(vehiclePose.position.x, Is.EqualTo(initPosition.x).Within(FloatError));
+        Assert.That(vehiclePose.position.z, Is.EqualTo(initPosition.z).Within(FloatError));
+    }
 
     private int Create2WheelsTrailerVehicle(Vector3 position) {
         Vector3 baseSize = new (0.5f, 0.4f, 1.0f);

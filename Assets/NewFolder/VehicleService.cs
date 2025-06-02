@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -28,6 +29,10 @@ public class VehicleService {
         physicsRegistry.Add(vehiclePhysics);
         var lastVehicleIndex = physicsRegistry.Count - 1;
         return lastVehicleIndex;
+    }
+
+    public void SetVehicleAxisSteer(int vehicleIndex, int axisIndex, float steerDegrees) {
+        
     }
 
     public void SetVehicleGasThrottle(int vehicleIndex, float v) {
