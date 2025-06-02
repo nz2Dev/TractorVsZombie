@@ -15,9 +15,10 @@ public class VehicleVisuals {
     private readonly GameObject root;
     private readonly List<WheelAxis> wheelsAxes = new ();
 
-    public VehicleVisuals(Transform container = null) {
+    public VehicleVisuals(Vector3 position, Transform container = null) {
         root = new GameObject($"Vehicle Visuals (New)");
         root.transform.SetParent(container, worldPositionStays: false);
+        root.transform.position = position;
     }
 
     public void AddBaseGeometry(GameObject baseGeometryPrefab) {

@@ -12,8 +12,8 @@ public class VehicleView {
         this.container = container;
     }
 
-    public void AddVehicle(GameObject baseGeometryPrefab, GameObject wheelGeometry, WheelAxisData[] wheelAxisDatas) {
-        var vehicleVisuals = new VehicleVisuals(container);
+    public void AddVehicle(Vector3 position, GameObject baseGeometryPrefab, GameObject wheelGeometry, WheelAxisData[] wheelAxisDatas) {
+        var vehicleVisuals = new VehicleVisuals(position, container);
         vehicleVisuals.AddBaseGeometry(baseGeometryPrefab);
         foreach (var wheelAxis in wheelAxisDatas)
             vehicleVisuals.AddWheelAxisGeometries(
