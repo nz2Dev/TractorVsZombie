@@ -21,12 +21,12 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicleSimulationService = new (physicsContainer: transform);
 
         var driveVehiclePosition = Vector3.zero;
-        vehicleSimulationService.CreateVehicle(driveVehicle.baseBounds, driveVehicle.wheelAxisDatas);
+        vehicleSimulationService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas);
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.wheelAxisDatas);
         vehicles.Add(driveVehicle);
 
         var trailerVehiclePosition = new Vector3(0, 0, -2f);
-        vehicleSimulationService.CreateVehicle(trailerVehicle.baseBounds, trailerVehicle.wheelAxisDatas, trailerVehiclePosition);
+        vehicleSimulationService.CreateVehicle(trailerVehicle.baseSize, trailerVehicle.wheelAxisDatas, trailerVehiclePosition);
         vehicleView.AddVehicle(trailerVehiclePosition, trailerVehicle.baseGeometry, trailerVehicle.wheelGeometry, trailerVehicle.wheelAxisDatas);
         vehicles.Add(trailerVehicle);
 
@@ -39,7 +39,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
             DestroyImmediate(transform.GetChild(0).gameObject);
 
         vehicleSimulationService = new (physicsContainer: transform);
-        vehicleSimulationService.CreateVehicle(driveVehicle.baseBounds, driveVehicle.wheelAxisDatas);
+        vehicleSimulationService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas);
         
         vehicleView = new (container: transform);
         vehicleView.AddVehicle(Vector3.zero, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.wheelAxisDatas);

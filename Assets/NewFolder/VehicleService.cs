@@ -11,9 +11,9 @@ public class VehicleService {
         this.physicsContainer = physicsContainer;
     }
 
-    public int CreateVehicle(Bounds baseBounds, WheelAxisData[] wheels, Vector3 position = default) {
+    public int CreateVehicle(Vector3 baseSize, WheelAxisData[] wheels, Vector3 position = default) {
         var vehiclePhysics = new VehiclePhysics(position, physicsContainer);
-        vehiclePhysics.ConfigureBase(baseBounds);
+        vehiclePhysics.ConfigureBase(baseSize);
         
         foreach (var wheelAxis in wheels)
             vehiclePhysics.CreateWheelAxis(

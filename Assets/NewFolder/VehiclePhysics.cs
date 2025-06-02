@@ -35,13 +35,13 @@ public class VehiclePhysics {
         rigidbody.mass = 150;
     }
 
-    public void ConfigureBase(Bounds bounds) {
+    public void ConfigureBase(Vector3 baseSize) {
         Assert.IsNull(root.GetComponentInChildren<BoxCollider>());
         var baseGameObject = new GameObject("Base Box Collider (New)", typeof(BoxCollider));
         baseGameObject.transform.SetParent(root.transform, worldPositionStays: false);
         var baseCollider = baseGameObject.GetComponent<BoxCollider>();
-        baseCollider.center = bounds.center;
-        baseCollider.size = bounds.size;
+        baseCollider.center = new Vector3(0, baseSize.y * 0.5f, 0);
+        baseCollider.size = baseSize;
     }
 
     public void CreateWheelAxis(float length, float upOffset, float forwardOffset, float radius, bool drive, bool steer) {

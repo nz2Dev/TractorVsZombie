@@ -39,12 +39,12 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
     
     [UnityTest]
     public IEnumerator Create4WheelsVehicle_StaysAtPosition() {
-        var baseBounds = new Bounds(new Vector3(0, 0.2f, 0), new Vector3(.5f, 0.4f, 1.0f));
+        var baseSize = new Vector3(0.5f, 0.4f, 1.0f);
         var backAxis = new WheelAxisData { drive = true, halfLength = 0.15f, forwardOffset = -0.15f, upOffset = 0f, radius = 0.1f};
         var frontAxis = new WheelAxisData { drive = false, halfLength = 0.15f, forwardOffset = 0.15f, upOffset = 0f, radius = 0.1f};
         var position = new Vector3(0, 0.15f, -2);
         
-        vehicleService.CreateVehicle(baseBounds, new WheelAxisData[] {backAxis, frontAxis}, position);
+        vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis, frontAxis}, position);
         yield return new WaitForFixedUpdate();
         yield return new WaitForFixedUpdate();
 
@@ -84,18 +84,16 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
     // }
 
     private int Create2WheelsTrailerVehicle(Vector3 position) {
-        Vector3 defaultSize = new (0.5f, 0.4f, 1.0f);
-        var baseBounds = new Bounds(new Vector3(0, defaultSize.y * 0.5f, 0), defaultSize);
+        Vector3 baseSize = new (0.5f, 0.4f, 1.0f);
         var backAxis = new WheelAxisData { drive = true, halfLength = 0.15f, forwardOffset = -0.15f, upOffset = 0f, radius = 0.1f};
-        return vehicleService.CreateVehicle(baseBounds, new WheelAxisData[] {backAxis}, position);
+        return vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis}, position);
     }
     
     private int CreateDefault4WheelsVehicle(Vector3 position) {
-        Vector3 defaultSize = new (0.5f, 0.4f, 1.0f);
-        var baseBounds = new Bounds(new Vector3(0, defaultSize.y * 0.5f, 0), defaultSize);
+        Vector3 baseSize = new (0.5f, 0.4f, 1.0f);
         var backAxis = new WheelAxisData { drive = true, halfLength = 0.15f, forwardOffset = -0.15f, upOffset = 0f, radius = 0.1f};
         var frontAxis = new WheelAxisData { drive = false, halfLength = 0.15f, forwardOffset = 0.15f, upOffset = 0f, radius = 0.1f};
-        return vehicleService.CreateVehicle(baseBounds, new WheelAxisData[] {backAxis, frontAxis}, position);
+        return vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis, frontAxis}, position);
     }
 
     [TearDown]
