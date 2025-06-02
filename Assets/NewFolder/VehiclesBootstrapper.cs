@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class VehiclesBootstrapper : MonoBehaviour {
     
-    [SerializeField] private VehicleEntity source;
+    [SerializeField] private VehicleEntity driveVehicle;
+    [SerializeField] private VehicleEntity trailerVehicle;
     [SerializeField] private float gasThrottle = 0;
 
+    private List<VehicleEntity> vehicles;
     private VehicleSimulationService vehicleSimulationService;
     private VehicleView vehicleView;
 
@@ -14,18 +16,23 @@ public class VehiclesBootstrapper : MonoBehaviour {
         while (transform.childCount > 0)
             DestroyImmediate(transform.GetChild(0).gameObject);
 
-        vehicleSimulationService = new (physicsContainer: transform);
-        vehicleSimulationService.CreateVehicle(source.baseBounds, source.wheelAxisDatas);
-        vehicleSimulationService.CreateVehicle(source.baseBounds, source.wheelAxisDatas, new Vector3(0, 0, -2f));
-        vehicleSimulationService.ConnectVehicleWithHinge(headVehicleIndex: 0, -0.7f, tailVehicleIndex: 1, 0.7f);
-        
+        vehicles = new();
         vehicleView = new (container: transform);
-        vehicleView.AddVehicle(source.baseGeometry, source.baseGeometryFit,
-            source.wheelGeometry, source.wheelGeometryFit,
-            source.wheelAxisDatas);
-        vehicleView.AddVehicle(source.baseGeometry, source.baseGeometryFit,
-            source.wheelGeometry, source.wheelGeometryFit,
-            source.wheelAxisDatas);
+        vehicleSimulationService = new (physicsContainer: transform);
+
+        vehicleSimulationService.CreateVehicle(driveVehicle.baseBounds, driveVehicle.wheelAxisDatas);
+        vehicleView.AddVehicle(driveVehicle.baseGeometry, driveVehicle.baseGeometryFit,
+            driveVehicle.wheelGeometry, driveVehicle.wheelGeometryFit,
+            driveVehicle.wheelAxisDatas);
+        vehicles.Add(driveVehicle);
+
+        vehicleSimulationService.CreateVehicle(trailerVehicle.baseBounds, trailerVehicle.wheelAxisDatas, new Vector3(0, 0, -2f));
+        vehicleView.AddVehicle(trailerVehicle.baseGeometry, trailerVehicle.baseGeometryFit,
+            trailerVehicle.wheelGeometry, trailerVehicle.wheelGeometryFit,
+            trailerVehicle.wheelAxisDatas);
+        vehicles.Add(trailerVehicle);
+
+        vehicleSimulationService.ConnectVehicleWithHinge(headVehicleIndex: 0, -0.7f, tailVehicleIndex: 1, 0.7f);
     }
     
     [ContextMenu("Preview")]
@@ -34,23 +41,23 @@ public class VehiclesBootstrapper : MonoBehaviour {
             DestroyImmediate(transform.GetChild(0).gameObject);
 
         vehicleSimulationService = new (physicsContainer: transform);
-        vehicleSimulationService.CreateVehicle(source.baseBounds, source.wheelAxisDatas);
+        vehicleSimulationService.CreateVehicle(driveVehicle.baseBounds, driveVehicle.wheelAxisDatas);
         
         vehicleView = new (container: transform);
-        vehicleView.AddVehicle(source.baseGeometry, source.baseGeometryFit,
-            source.wheelGeometry, source.wheelGeometryFit,
-            source.wheelAxisDatas);
+        vehicleView.AddVehicle(driveVehicle.baseGeometry, driveVehicle.baseGeometryFit,
+            driveVehicle.wheelGeometry, driveVehicle.wheelGeometryFit,
+            driveVehicle.wheelAxisDatas);
     }
 
     private void Update() {
         vehicleSimulationService.SetVehicleGasThrottle(vehicleIndex: 0, gasThrottle);
 
-        const int vehicleCount = 2;
-        for (int vehicleIndex = 0; vehicleIndex < vehicleCount; vehicleIndex++) {
+        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
+            var vehicleData = vehicles[vehicleIndex];
             var vehiclePose = vehicleSimulationService.GetVehiclePose(vehicleIndex);
             vehicleView.UpdateVehiclePose(vehicleIndex, vehiclePose);
 
-            for (int wheelAxisIndex = 0; wheelAxisIndex < source.wheelAxisDatas.Length; wheelAxisIndex++) {
+            for (int wheelAxisIndex = 0; wheelAxisIndex < vehicleData.wheelAxisDatas.Length; wheelAxisIndex++) {
                 var wheelAxisPose = vehicleSimulationService.GetVehicleWheelAxisPose(vehicleIndex, wheelAxisIndex);
                 vehicleView.UpdateWheelAxisPose(vehicleIndex, wheelAxisIndex, wheelAxisPose);
             }    

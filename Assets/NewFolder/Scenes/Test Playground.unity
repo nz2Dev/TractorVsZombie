@@ -7245,7 +7245,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c589fbb6f0e145ad9f3201ded3cf546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  source: {fileID: 11400000, guid: 1dbd68138503c4d99b4eba6949b1331d, type: 2}
+  driveVehicle: {fileID: 11400000, guid: 1dbd68138503c4d99b4eba6949b1331d, type: 2}
+  trailerVehicle: {fileID: 11400000, guid: 7dc24518fd78948c0b8769c94a6cb051, type: 2}
   gasThrottle: 0
 --- !u!1 &2031860922
 GameObject:
