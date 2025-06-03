@@ -95,6 +95,12 @@ public class VehiclePhysics {
         axis.rightWheel.brakeTorque = torque;
     }
 
+    public void SetAxisSteerAngle(int axisIndex, float steerAngleInDegrees) {
+        var axis = wheelAxes[axisIndex];
+        axis.leftWheel.steerAngle = steerAngleInDegrees;
+        axis.rightWheel.steerAngle = steerAngleInDegrees;
+    }
+
     public void GetAxisPose(int axisIndex, out Vector3 positionL, out Quaternion rotationL, out Vector3 positionR, out Quaternion rotationR) {
         var axis = wheelAxes[axisIndex];
         axis.leftWheel.GetWorldPose(out positionL, out rotationL);
@@ -103,6 +109,10 @@ public class VehiclePhysics {
 
     public bool IsDriveAxis(int axisIndex) {
         return wheelAxes[axisIndex].drive;
+    }
+
+    public bool IsSteerAxis(int axisIndex) {
+        return wheelAxes[axisIndex].steer;
     }
 
     private WheelCollider CreateDefaultWheel(float radius) {

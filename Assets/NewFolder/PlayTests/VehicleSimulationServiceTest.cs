@@ -13,7 +13,7 @@ using UnityEngine.TestTools;
 
 [TestFixture]
 public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
-    private const float FloatError = 0.01f;
+    private const float FloatError = 0.001f;
     private string originalScene;
     private VehicleService vehicleService;
     private readonly string TestEnvironmentScenePath = Path.Combine(
@@ -78,14 +78,18 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         Assert.That(distanceBetween, Is.EqualTo(offsetDistance).Within(FloatError));
     }
 
+    // [UnityTest]
+    // public IEnumerator SetMotorTorqueWithEnoughGrip_AccelerateWithoutSlip() {
+        // var vehicleIndex = vehicleService.CreateVehicle()
+    // }
+
     [UnityTest]
     public IEnumerator SteerFrontAxisNoTorque_StaysAtPosition() {
-        const int frontAxisIndex = 1;
         var steerDegrees = +45f;
         var initPosition = new Vector3(0, 0, -2f);
         var vehicleIndex = CreateDefault4WheelsVehicle(initPosition);
         
-        vehicleService.SetVehicleAxisSteer(vehicleIndex, frontAxisIndex, steerDegrees);
+        vehicleService.SetVehicleSteer(vehicleIndex, steerDegrees);
         yield return new WaitForFixedUpdate();
 
         var vehiclePose = vehicleService.GetVehiclePose(vehicleIndex);
@@ -93,34 +97,37 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         Assert.That(vehiclePose.position.z, Is.EqualTo(initPosition.z).Within(FloatError));
     }
 
-    // TODO: decide on test strategy
-    // test torque first with friction...
-    // or test output poses position, rpm for gas and steer and force and friction separately
-
-    // [UnityTest]
-    // public IEnumerator SteerFrontAxisWithTorque_DrivesInSteerDirection() {
-    //     const int frontAxisIndex = 1;
-    //     var steerDegrees = +45f;
-    //     var initPosition = new Vector3(0, 0, -2f);
+    [UnityTest]
+    public IEnumerator SteerFrontAxisWithTorque_DrivesInSteerDirection() {
+        var steerDegrees = +45f;
+        var initPosition = new Vector3(0, 0, -2f);
         
-    //     var vehicleIndex = CreateDefault4WheelsVehicle(initPosition);
-    //     yield return new WaitForFixedUpdate();
-    //     var createdPose = vehicleService.GetVehiclePose(vehicleIndex);
+        var vehicleIndex = CreateDefault4WheelsVehicle(initPosition);
+        yield return new WaitForFixedUpdate();
+        var createdPose = vehicleService.GetVehiclePose(vehicleIndex);
 
-    //     vehicleService.SetVehicleAxisSteer(vehicleIndex, frontAxisIndex, steerDegrees);
-    //     vehicleService.SetVehicleGasThrottle(vehicleIndex, 0.5f);
-    //     Debug.Break();
-    //     yield return new WaitForFixedUpdate();
-    //     yield return new WaitForFixedUpdate();
-    //     yield return new WaitForFixedUpdate();
+        vehicleService.SetVehicleSteer(vehicleIndex, steerDegrees);
+        vehicleService.SetVehicleGasThrottle(vehicleIndex, 0.1f);
+        yield return DebugWaitForFixedUpdates(15);
 
-    //     var simulatedPose = vehicleService.GetVehiclePose(vehicleIndex);
-    //     Assert.That(simulatedPose.position.x, Is.Not.EqualTo(initPosition.x).Within(FloatError));
-    //     Assert.That(simulatedPose.position.z, Is.Not.EqualTo(initPosition.z).Within(FloatError));
+        var simulatedPose = vehicleService.GetVehiclePose(vehicleIndex);
+        Assert.That(simulatedPose.position.x, Is.Not.EqualTo(initPosition.x).Within(FloatError));
+        Assert.That(simulatedPose.position.z, Is.Not.EqualTo(initPosition.z).Within(FloatError));
         
-    //     var rotation = Quaternion.Angle(createdPose.rotation, simulatedPose.rotation);
-    //     Assert.That(rotation, Is.GreaterThan(1));
-    // }
+        var rotation = Quaternion.Angle(createdPose.rotation, simulatedPose.rotation);
+        Assert.That(rotation, Is.GreaterThan(1));
+    }
+
+    private IEnumerator DebugWaitForFixedUpdates(int countMultiplier) {
+        Debug.Break();
+        for (int i = 0; i < countMultiplier * 10; i++)
+            yield return new WaitForFixedUpdate();
+    }
+
+    private IEnumerator WaitForFixedUpdates(int count) {
+        for (int i = 0; i < count; i++)
+            yield return new WaitForFixedUpdate();
+    }
 
     private int Create2WheelsTrailerVehicle(Vector3 position) {
         Vector3 baseSize = new (0.5f, 0.4f, 1.0f);
@@ -131,7 +138,7 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
     private int CreateDefault4WheelsVehicle(Vector3 position) {
         Vector3 baseSize = new (0.5f, 0.4f, 1.0f);
         var backAxis = new WheelAxisData { drive = true, halfLength = 0.15f, forwardOffset = -0.15f, upOffset = 0f, radius = 0.1f};
-        var frontAxis = new WheelAxisData { drive = false, halfLength = 0.15f, forwardOffset = 0.15f, upOffset = 0f, radius = 0.1f};
+        var frontAxis = new WheelAxisData { stear = true, halfLength = 0.15f, forwardOffset = 0.15f, upOffset = 0f, radius = 0.1f};
         return vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis, frontAxis}, position);
     }
 

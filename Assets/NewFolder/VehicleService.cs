@@ -31,8 +31,12 @@ public class VehicleService {
         return lastVehicleIndex;
     }
 
-    public void SetVehicleAxisSteer(int vehicleIndex, int axisIndex, float steerDegrees) {
-        throw new NotImplementedException();
+    public void SetVehicleSteer(int vehicleIndex, float steerDegrees) {
+        var vehiclePhysics = physicsRegistry[vehicleIndex];
+        for (int axisIndex = 0; axisIndex < vehiclePhysics.AxisCount; axisIndex++) {
+            var steerAngle = vehiclePhysics.IsSteerAxis(axisIndex) ? steerDegrees : 0;
+            vehiclePhysics.SetAxisSteerAngle(axisIndex, steerAngle);
+        }
     }
 
     public void SetVehicleGasThrottle(int vehicleIndex, float v) {
