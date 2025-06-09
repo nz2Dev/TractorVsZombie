@@ -12,15 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1285681b6c6549cbb1825d079f7b2b9, type: 3}
   m_Name: DriveVehicleDefaultEntity
   m_EditorClassIdentifier: 
-  baseBounds:
-    m_Center: {x: 0, y: 0.2, z: 0}
-    m_Extent: {x: 0.25, y: 0.2, z: 0.5}
+  baseSize: {x: 0.5, y: 0.4, z: 1}
   baseGeometry: {fileID: 308101743189184403, guid: 7c8f2b546d9b945bcaec6feddde2e8c0, type: 3}
   wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
   wheelAxisDatas:
   - forwardOffset: -0.25
     upOffset: 0
-    halfLength: 0.15
+    halfLength: 0.2
     radius: 0.1
     drive: 1
     stear: 0
