@@ -27,6 +27,7 @@ public class VehiclePhysics {
         root.transform.SetParent(container, worldPositionStays: false);
         root.transform.position = position;
         var rigidbody = root.GetComponent<Rigidbody>();
+        rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
         rigidbody.automaticCenterOfMass = false;
         rigidbody.centerOfMass = Vector3.zero;
         rigidbody.hideFlags = HideFlags.NotEditable;

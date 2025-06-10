@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.TestTools.Utils;
 
 [TestFixture]
 public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
@@ -116,6 +117,25 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         
         var rotation = Quaternion.Angle(createdPose.rotation, simulatedPose.rotation);
         Assert.That(rotation, Is.GreaterThan(1));
+    }
+
+    [UnityTest]
+    public IEnumerator ConstantVelocity_ProduceNewUpdateEachRenderFrame() {
+        var vehicleIndex = CreateDefault4WheelsVehicle(Vector3.zero);
+        yield return new WaitForFixedUpdate();
+        
+        vehicleService.SetVehicleGasThrottle(vehicleIndex, 0.5f);
+        yield return new WaitForFixedUpdate();
+        
+        var previousPose = vehicleService.GetVehiclePose(vehicleIndex);
+        for (int i = 0; i < 10; i++) {
+            yield return new WaitForEndOfFrame();
+            var poseInTheEndOfFrame = vehicleService.GetVehiclePose(vehicleIndex);
+            Assert.That(previousPose.position, 
+                Is.Not.EqualTo(poseInTheEndOfFrame.position)
+                .Using(Vector3EqualityComparer.Instance));
+            previousPose = poseInTheEndOfFrame;
+        }
     }
 
     private IEnumerator DebugWaitForFixedUpdates(int countMultiplier) {
