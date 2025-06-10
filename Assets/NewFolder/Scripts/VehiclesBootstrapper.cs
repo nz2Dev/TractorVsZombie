@@ -26,14 +26,23 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.wheelAxisDatas);
         vehicles.Add(driveVehicle);
 
-        var trailerVehiclePosition = new Vector3(0, 0, -2f);
+        PlusTrailer(new Vector3(0, 0, -2f));
+        PlusTrailer(new Vector3(0, 0, -4f));
+        PlusTrailer(new Vector3(0, 0, -6f));
+
+        cameraService.InitTopDownFollowTarget(driveVehiclePosition, 10f);
+    }
+
+    private void PlusTrailer(Vector3 position) {
+        var trailerVehiclePosition = position;
         vehicleService.CreateVehicle(trailerVehicle.baseSize, trailerVehicle.wheelAxisDatas, trailerVehiclePosition);
         vehicleView.AddVehicle(trailerVehiclePosition, trailerVehicle.baseGeometry, trailerVehicle.wheelGeometry, trailerVehicle.wheelAxisDatas);
         vehicles.Add(trailerVehicle);
 
-        vehicleService.ConnectVehicleWithHinge(headVehicleIndex: 0, -0.7f, tailVehicleIndex: 1, 0.7f);
-
-        cameraService.InitTopDownFollowTarget(driveVehiclePosition, 10f);
+        var lastIndex = vehicles.Count - 1;
+        vehicleService.ConnectVehicleWithHinge(
+            headVehicleIndex: lastIndex - 1, -0.7f, 
+            tailVehicleIndex: lastIndex, 0.7f);
     }
 
     private void Update() {
