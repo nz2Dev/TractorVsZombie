@@ -56,6 +56,9 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicleService.SetVehicleGasThrottle(vehicleIndex: 0, gasInput);
         vehicleService.SetVehicleSteer(vehicleIndex: 0, steerInput * maxSteerAngle);
 
+        var driveVehiclePose = vehicleService.GetVehiclePose(vehicleIndex: 0);
+        cameraService.UpdateTopDownFollowPosition(driveVehiclePose.position);
+
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicleData = vehicles[vehicleIndex];
             var vehiclePose = vehicleService.GetVehiclePose(vehicleIndex);
