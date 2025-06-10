@@ -11,6 +11,12 @@ public class CameraService {
     private Transform followTransform;
     private CinemachineVirtualCamera topDownCamera;
 
+    public CameraService(Camera unityCamera) {
+        if (unityCamera.GetComponent<CinemachineBrain>() == null) {
+            unityCamera.gameObject.AddComponent<CinemachineBrain>();
+        }
+    }
+
     public Vector3 CameraPosition => topDownCamera.transform.position;
     public Vector3 CameraForward => topDownCamera.transform.forward;
 

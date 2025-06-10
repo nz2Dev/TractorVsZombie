@@ -9,6 +9,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.TestTools.Utils;
 
 [TestFixture]
 public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
@@ -38,12 +39,28 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
 
     [Test]
     public void Create() {
-        var cameraService = new CameraService();
+        var cameraService = new CameraService(Camera.main);
+    }
+
+    [UnityTest]
+    public IEnumerator CreateWithCamerasCullingMask_InitTopDownAndUpdates() {
+        var cameraService = new CameraService(Camera.main);
+        
+        cameraService.InitTopDownFollowTarget(Vector3.zero, 1f);
+        yield return WaitForFrames(1);
+
+        Assert.That(Camera.main.transform.position, 
+            Is.EqualTo(cameraService.CameraPosition)
+            .Using(Vector3EqualityComparer.Instance));
+
+        Assert.That(Camera.main.transform.forward,
+            Is.EqualTo(cameraService.CameraForward)
+            .Using(Vector3EqualityComparer.Instance));
     }
 
     [UnityTest]
     public IEnumerator InitTopDownFollow_CameraInSpecifiedDistanceAndPointingAtTarget() {
-        var cameraService = new CameraService();
+        var cameraService = new CameraService(Camera.main);
         var initFollowPosition = new Vector3(0, 0, 0);
         var initFollowDistance = 10f;
 

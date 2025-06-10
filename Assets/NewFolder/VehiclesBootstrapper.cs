@@ -10,6 +10,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
     private List<VehicleEntity> vehicles;
     private VehicleService vehicleService;
     private VehicleView vehicleView;
+    private CameraService cameraService;
 
     private void Start() {
         while (transform.childCount > 0)
@@ -18,6 +19,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicles = new();
         vehicleView = new (container: transform);
         vehicleService = new (physicsContainer: transform);
+        cameraService = new CameraService(Camera.main);
 
         var driveVehiclePosition = Vector3.zero;
         vehicleService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas);
@@ -30,6 +32,8 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicles.Add(trailerVehicle);
 
         vehicleService.ConnectVehicleWithHinge(headVehicleIndex: 0, -0.7f, tailVehicleIndex: 1, 0.7f);
+
+        cameraService.InitTopDownFollowTarget(driveVehiclePosition, 10f);
     }
     
     [ContextMenu("Preview")]
