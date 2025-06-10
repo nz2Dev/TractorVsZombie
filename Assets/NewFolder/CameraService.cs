@@ -13,7 +13,7 @@ public class CameraService {
     public Vector3 CameraPosition => topDownCamera.transform.position;
     public Vector3 CameraForward => topDownCamera.transform.forward;
 
-    public void InitFollowTarget(Vector3 initPosition, float distance) {
+    public void InitTopDownFollowTarget(Vector3 initPosition, float distance) {
         Assert.IsNull(followTransform);
         var followGameObject = new GameObject("Camera Follow Target (New)");
         followTransform = followGameObject.transform;

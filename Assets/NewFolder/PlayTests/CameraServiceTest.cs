@@ -42,21 +42,22 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
     }
 
     [UnityTest]
-    public IEnumerator InitFollow_CameraInSpecifiedDistanceAndPointingAtTarget() {
+    public IEnumerator InitTopDownFollow_CameraInSpecifiedDistanceAndPointingAtTarget() {
         var cameraService = new CameraService();
         var initFollowPosition = new Vector3(0, 0, 0);
         var initFollowDistance = 10f;
 
-        cameraService.InitFollowTarget(initFollowPosition, initFollowDistance);
+        cameraService.InitTopDownFollowTarget(initFollowPosition, initFollowDistance);
         yield return null;
 
-        var cameraPosition = cameraService.CameraPosition;
-        var distanceToCamera = Vector3.Distance(initFollowPosition, cameraPosition);
-        Assert.That(distanceToCamera, Is.EqualTo(initFollowDistance).Within(FloatError));
-        var cameraToFollow = initFollowPosition - cameraPosition;
         var cameraForward = cameraService.CameraForward;
-        var forwardAlignmentDotProduct = Vector3.Dot(cameraToFollow.normalized, cameraForward);
-        Assert.That(forwardAlignmentDotProduct, Is.InRange(0.99, 1.0f));
+        var cameraPosition = cameraService.CameraPosition;
+        var cameraToFollow = initFollowPosition - cameraPosition;
+        Assert.That(cameraToFollow.magnitude, Is.EqualTo(initFollowDistance).Within(FloatError));
+        var forwardFollowAlignmentDotProduct = Vector3.Dot(cameraToFollow.normalized, cameraForward);
+        Assert.That(forwardFollowAlignmentDotProduct, Is.InRange(0.99f, 1.0f));
+        var forwardDownAlignmentDotProduct = Vector3.Dot(cameraForward, Vector3.down);
+        Assert.That(forwardDownAlignmentDotProduct, Is.InRange(0.1f, 1.0f));
     }
 
     [TearDown]
