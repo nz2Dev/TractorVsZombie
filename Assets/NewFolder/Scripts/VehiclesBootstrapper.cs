@@ -35,18 +35,6 @@ public class VehiclesBootstrapper : MonoBehaviour {
 
         cameraService.InitTopDownFollowTarget(driveVehiclePosition, 10f);
     }
-    
-    [ContextMenu("Preview")]
-    private void Preview() {
-        while (transform.childCount > 0)
-            DestroyImmediate(transform.GetChild(0).gameObject);
-
-        vehicleService = new (physicsContainer: transform);
-        vehicleService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas);
-        
-        vehicleView = new (container: transform);
-        vehicleView.AddVehicle(Vector3.zero, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.wheelAxisDatas);
-    }
 
     private void Update() {
         const float maxSteerAngle = 45;
