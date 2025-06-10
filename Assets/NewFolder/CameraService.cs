@@ -37,4 +37,7 @@ public class CameraService {
         CinemachineBrain.SoloCamera = topDownCamera;
     }
 
+    public void UpdateTopDownFollowPosition(Vector3 vector3) {
+        followTransform.position = vector3;
+    }
 }

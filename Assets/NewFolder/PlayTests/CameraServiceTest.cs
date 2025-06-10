@@ -81,10 +81,19 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
         Assert.That(forwardDownAlignmentDotProduct, Is.InRange(0.1f, 1.0f));
     }
 
-    // [UnityTest]
-    // public IEnumerator MoveTopDownFollowPosition_CameraPropertiesUpdates() {
+    [UnityTest]
+    public IEnumerator MoveTopDownFollowPosition_CameraPropertiesUpdates() {
+        cameraService.InitTopDownFollowTarget(Vector3.zero, 10f);
+        yield return WaitForFrames(1);
+        
+        var initCameraPosition = cameraService.CameraPosition;
+        cameraService.UpdateTopDownFollowPosition(new Vector3(0, 0, 5f));
+        yield return WaitForFrames(1);
 
-    // }
+        Assert.That(cameraService.CameraPosition, 
+            Is.Not.EqualTo(initCameraPosition)
+            .Using(Vector3EqualityComparer.Instance));
+    }
 
     private IEnumerator WaitForFrames(int frameNumber) {
         for (int i = 0; i < frameNumber; i++)
