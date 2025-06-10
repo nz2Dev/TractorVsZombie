@@ -17,8 +17,8 @@ public class VehiclesBootstrapper : MonoBehaviour {
             DestroyImmediate(transform.GetChild(0).gameObject);
 
         vehicles = new();
-        vehicleView = new (container: transform);
-        vehicleService = new (physicsContainer: transform);
+        vehicleView = new (container: null);
+        vehicleService = new (physicsContainer: null);
         cameraService = new CameraService(Camera.main);
 
         var driveVehiclePosition = Vector3.zero;
@@ -37,7 +37,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
     }
 
     private void Update() {
-        const float maxSteerAngle = 45;
+        const float maxSteerAngle = 35;
         var gasInput = Input.GetAxis("Vertical");
         var steerInput = Input.GetAxis("Horizontal");
 
