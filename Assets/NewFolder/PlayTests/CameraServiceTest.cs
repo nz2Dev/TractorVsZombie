@@ -20,6 +20,8 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
     private readonly string TestEnvironmentScenePath = Path.Combine(
         "Assets", "NewFolder", "Scenes", "Test Environment.unity");
 
+    private CameraService cameraService;
+
     public void Setup() {
 #if UNITY_EDITOR
         if (EditorBuildSettings.scenes.Any(scene => scene.path == TestEnvironmentScenePath))
@@ -28,6 +30,11 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
         includedScenes.Add(new EditorBuildSettingsScene(TestEnvironmentScenePath, true));
         EditorBuildSettings.scenes = includedScenes.ToArray();
 #endif
+    }
+
+    [SetUp]
+    public void SetUpTest() {
+        cameraService = new CameraService(Camera.main);
     }
 
     [UnitySetUp]
@@ -44,8 +51,6 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
 
     [UnityTest]
     public IEnumerator CreateWithCamerasCullingMask_InitTopDownAndUpdates() {
-        var cameraService = new CameraService(Camera.main);
-        
         cameraService.InitTopDownFollowTarget(Vector3.zero, 1f);
         yield return WaitForFrames(1);
 
@@ -60,7 +65,6 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
 
     [UnityTest]
     public IEnumerator InitTopDownFollow_CameraInSpecifiedDistanceAndPointingAtTarget() {
-        var cameraService = new CameraService(Camera.main);
         var initFollowPosition = new Vector3(0, 0, 0);
         var initFollowDistance = 10f;
 
@@ -76,6 +80,11 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var forwardDownAlignmentDotProduct = Vector3.Dot(cameraForward, Vector3.down);
         Assert.That(forwardDownAlignmentDotProduct, Is.InRange(0.1f, 1.0f));
     }
+
+    // [UnityTest]
+    // public IEnumerator MoveTopDownFollowPosition_CameraPropertiesUpdates() {
+
+    // }
 
     private IEnumerator WaitForFrames(int frameNumber) {
         for (int i = 0; i < frameNumber; i++)
