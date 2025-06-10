@@ -48,7 +48,7 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var initFollowDistance = 10f;
 
         cameraService.InitTopDownFollowTarget(initFollowPosition, initFollowDistance);
-        yield return null;
+        yield return WaitForFrames(1);
 
         var cameraForward = cameraService.CameraForward;
         var cameraPosition = cameraService.CameraPosition;
@@ -58,6 +58,18 @@ public class CameraServiceTest : IPrebuildSetup, IPostBuildCleanup {
         Assert.That(forwardFollowAlignmentDotProduct, Is.InRange(0.99f, 1.0f));
         var forwardDownAlignmentDotProduct = Vector3.Dot(cameraForward, Vector3.down);
         Assert.That(forwardDownAlignmentDotProduct, Is.InRange(0.1f, 1.0f));
+    }
+
+    private IEnumerator WaitForFrames(int frameNumber) {
+        for (int i = 0; i < frameNumber; i++)
+            yield return null;
+    }
+    
+    private IEnumerator DebugWaitForFrames(int frameNumberMultiplier) {
+        int waitCount = frameNumberMultiplier * 10;
+        Debug.Break();
+        for (int i = 0; i < waitCount; i++)
+            yield return null;
     }
 
     [TearDown]

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using Cinemachine;
 
@@ -23,8 +24,11 @@ public class CameraService {
         topDownCamera = UnityEngine.Object.Instantiate(topDownCameraPrefab);
         topDownCamera.m_Follow = followTransform;
         topDownCamera.m_LookAt = followTransform;
+
         var framingTransposer = topDownCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         framingTransposer.m_CameraDistance = distance;
+
+        CinemachineBrain.SoloCamera = topDownCamera;
     }
 
 }
