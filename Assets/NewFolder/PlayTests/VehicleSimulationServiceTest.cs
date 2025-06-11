@@ -65,8 +65,7 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         vehicleService.ConnectVehicleWithHinge(
             headVehicleIndex, headVehicleAnchorOffset, 
             tailVehicleIndex, tailVehicleAnchorOffset);
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
+        yield return DebugWaitForFixedUpdates(1);
 
         var headVehiclePose = vehicleService.GetVehiclePose(headVehicleIndex);
         var tailVehiclePose = vehicleService.GetVehiclePose(tailVehicleIndex);

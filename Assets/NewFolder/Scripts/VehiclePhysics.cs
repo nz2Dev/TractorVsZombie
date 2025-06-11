@@ -72,7 +72,7 @@ public class VehiclePhysics {
         hingeJoint.autoConfigureConnectedAnchor = false;
         hingeJoint.connectedAnchor = new Vector3(0, 0, headVehicleAnchorOffset);
         hingeJoint.connectedBody = headPhysics.root.GetComponent<Rigidbody>();
-        hingeJoint.connectedMassScale = 0.1f;
+        hingeJoint.connectedMassScale = 0.05f;
         hingeJoint.anchor = new Vector3(0, 0, thisAnchorOffset);
 
         BreakWheelsFrictionWithConstantTorque();
