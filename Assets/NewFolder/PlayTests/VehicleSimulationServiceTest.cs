@@ -15,6 +15,8 @@ using UnityEngine.TestTools.Utils;
 [TestFixture]
 public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
     private const float FloatError = 0.001f;
+    private readonly Vector3 DefaultBaseSize = new (0.5f, 0.4f, 1.0f);
+
     private string originalScene;
     private VehicleService vehicleService;
     private readonly string TestEnvironmentScenePath = Path.Combine(
@@ -76,10 +78,19 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         Assert.That(distanceBetween, Is.EqualTo(offsetDistance).Within(FloatError));
     }
 
-    // [UnityTest]
-    // public IEnumerator SetMotorTorqueWithEnoughGrip_AccelerateWithoutSlip() {
-        // var vehicleIndex = vehicleService.CreateVehicle()
-    // }
+    [UnityTest]
+    public IEnumerator ConnectWithHingeDifferentHeight_HeadStaysHorizontal() {
+        var tallHeadVehicle = CreateDefault4WheelsVehicle(Vector3.zero, wheelRadius: 0.2f);
+        var shortTailVehicle = CreateDefault4WheelsVehicle(new Vector3(0, 0, -2f), wheelRadius: 0.1f);
+
+        yield return new WaitForFixedUpdate();
+        vehicleService.ConnectVehicleWithHinge(tallHeadVehicle, -0.7f, shortTailVehicle, 0.7f);
+        yield return DebugWaitForFixedUpdates(1);
+
+        var tallVehiclePose = vehicleService.GetVehiclePose(tallHeadVehicle);
+        var normalizedXRotation = NormalizeEuqler(tallVehiclePose.rotation.eulerAngles.x);
+        Assert.That(normalizedXRotation, Is.InRange(-1, 1));
+    }
 
     [UnityTest]
     public IEnumerator SteerFrontAxisNoTorque_StaysAtPosition() {
@@ -151,12 +162,15 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var backAxis = new WheelAxisData { drive = true, halfLength = 0.15f, forwardOffset = -0.15f, upOffset = 0f, radius = 0.1f};
         return vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis}, position);
     }
-    
-    private int CreateDefault4WheelsVehicle(Vector3 position) {
-        Vector3 baseSize = new (0.5f, 0.4f, 1.0f);
-        var backAxis = new WheelAxisData { drive = true, halfLength = 0.15f, forwardOffset = -0.15f, upOffset = 0f, radius = 0.1f};
-        var frontAxis = new WheelAxisData { stear = true, halfLength = 0.15f, forwardOffset = 0.15f, upOffset = 0f, radius = 0.1f};
-        return vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis, frontAxis}, position);
+
+    private int CreateDefault4WheelsVehicle(Vector3 position, float halfLength = 0.15f, float forwardDistance = 0.15f, float wheelRadius = 0.1f) {
+        var backAxis = new WheelAxisData { drive = true, halfLength = halfLength, forwardOffset = -forwardDistance, upOffset = 0f, radius = wheelRadius};
+        var frontAxis = new WheelAxisData { stear = true, halfLength = halfLength, forwardOffset = forwardDistance, upOffset = 0f, radius = wheelRadius};
+        return vehicleService.CreateVehicle(DefaultBaseSize, new WheelAxisData[] {backAxis, frontAxis}, position);
+    }
+
+    float NormalizeEuqler(float angleDegrees) {
+        return Mathf.Repeat(angleDegrees + 180f, 360f) - 180f;
     }
 
     [TearDown]
