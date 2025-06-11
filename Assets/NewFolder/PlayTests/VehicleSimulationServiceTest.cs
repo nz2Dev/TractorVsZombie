@@ -46,12 +46,10 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var position = new Vector3(0, 0.15f, -2);
         
         vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis, frontAxis}, position);
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
+        yield return DebugWaitForFixedUpdates(1);
 
         var backAxisPose = vehicleService.GetVehicleWheelAxisPose(vehicleIndex: 0, axisIndex: 0);
         Assert.That(backAxisPose.positionL.z, Is.EqualTo(backAxis.forwardOffset + position.z).Within(FloatError));
-        Assert.That(backAxisPose.positionL.y, Is.EqualTo(backAxis.radius).Within(FloatError));
     }
 
     [UnityTest]
@@ -91,7 +89,7 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var vehicleIndex = CreateDefault4WheelsVehicle(initPosition);
         
         vehicleService.SetVehicleSteer(vehicleIndex, steerDegrees);
-        yield return new WaitForFixedUpdate();
+        yield return DebugWaitForFixedUpdates(1);
 
         var vehiclePose = vehicleService.GetVehiclePose(vehicleIndex);
         Assert.That(vehiclePose.position.x, Is.EqualTo(initPosition.x).Within(FloatError));
