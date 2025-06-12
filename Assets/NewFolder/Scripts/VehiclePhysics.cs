@@ -62,18 +62,40 @@ public class VehiclePhysics {
         rigidbody.centerOfMass = new Vector3(0, -radius * 1.5f, 0);
     }
 
-    internal void ConnectWithHinge(VehiclePhysics headPhysics, float headVehicleAnchorOffset, float thisAnchorOffset) {
-        var hingeJoint = root.GetComponent<HingeJoint>();;
-        if (hingeJoint == null) {
-            hingeJoint = root.AddComponent<HingeJoint>();
-        }
+    internal void ConnectWithHinge(VehiclePhysics headPhysics, float headVehicleAnchorOffset, float thisAnchorOffset, float distanceBetween) {
+        Assert.IsNull(root.GetComponent<ConfigurableJoint>());
 
-        hingeJoint.axis = Vector3.up;
-        hingeJoint.autoConfigureConnectedAnchor = false;
-        hingeJoint.connectedAnchor = new Vector3(0, 0, headVehicleAnchorOffset);
-        hingeJoint.connectedBody = headPhysics.root.GetComponent<Rigidbody>();
-        hingeJoint.connectedMassScale = 0.05f;
-        hingeJoint.anchor = new Vector3(0, 0, thisAnchorOffset);
+        var connector = CreateDefaultConnector(distanceBetween);
+        var connectorJoint = connector.GetComponent<ConfigurableJoint>();
+        connectorJoint.anchor = new Vector3(0, 0, distanceBetween * 0.5f);
+        connectorJoint.connectedBody = headPhysics.root.GetComponent<Rigidbody>();
+        connectorJoint.connectedAnchor = new Vector3(0, 0, headVehicleAnchorOffset);
+
+        var headConnectPoint = headPhysics.root.transform.TransformPoint(new Vector3(0, 0, headVehicleAnchorOffset));
+        var connectorRigidbody = connector.GetComponent<Rigidbody>();
+        connectorRigidbody.position = headConnectPoint - 0.5f * distanceBetween * headPhysics.root.transform.forward;
+        connector.transform.position = connectorRigidbody.position;
+
+        var tailJoint = root.AddComponent<ConfigurableJoint>();
+        tailJoint.hideFlags = HideFlags.NotEditable;
+        tailJoint.autoConfigureConnectedAnchor = false;
+        tailJoint.xMotion = ConfigurableJointMotion.Locked;
+        tailJoint.yMotion = ConfigurableJointMotion.Locked;
+        tailJoint.zMotion = ConfigurableJointMotion.Locked;
+        tailJoint.angularXMotion = ConfigurableJointMotion.Limited;
+        tailJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
+        tailJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
+        tailJoint.angularYMotion = ConfigurableJointMotion.Locked;
+        tailJoint.angularZMotion = ConfigurableJointMotion.Locked;
+        tailJoint.anchor = new Vector3(0, 0, thisAnchorOffset);
+        tailJoint.connectedBody = connector.GetComponent<Rigidbody>();
+        tailJoint.connectedAnchor = new Vector3(0, 0, -distanceBetween * 0.5f);
+        tailJoint.connectedMassScale = 1;
+
+        var headJoint = headPhysics.root.GetComponent<ConfigurableJoint>();
+        if (headJoint != null) {
+            headJoint.connectedMassScale = 0.5f;
+        }
 
         BreakWheelsFrictionWithConstantTorque();
     }
@@ -115,6 +137,31 @@ public class VehiclePhysics {
 
     public bool IsSteerAxis(int axisIndex) {
         return wheelAxes[axisIndex].steer;
+    }
+
+    private GameObject CreateDefaultConnector(float length) {
+        var connector = new GameObject("Connector (New)", typeof(Rigidbody), typeof(BoxCollider), typeof(ConfigurableJoint));
+        connector.transform.SetParent(root.transform.parent, worldPositionStays: false);
+        var collider = connector.GetComponent<BoxCollider>();
+        collider.hideFlags = HideFlags.NotEditable;
+        collider.size = new Vector3(0.025f, 0.025f, length);
+        var rigidbody = connector.GetComponent<Rigidbody>();
+        rigidbody.hideFlags = HideFlags.NotEditable;
+        rigidbody.mass = 10;
+        rigidbody.useGravity = false;
+        var joint = connector.GetComponent<ConfigurableJoint>();
+        joint.hideFlags = HideFlags.NotEditable;
+        joint.autoConfigureConnectedAnchor = false;
+        joint.xMotion = ConfigurableJointMotion.Locked;
+        joint.yMotion = ConfigurableJointMotion.Locked;
+        joint.zMotion = ConfigurableJointMotion.Locked;
+        joint.angularXMotion = ConfigurableJointMotion.Limited;
+        joint.lowAngularXLimit = new SoftJointLimit { limit = -20, };
+        joint.highAngularXLimit = new SoftJointLimit { limit = 20, };
+        joint.angularYMotion = ConfigurableJointMotion.Free;
+        joint.angularYLimit = new SoftJointLimit { limit = 40, };
+        joint.angularZMotion = ConfigurableJointMotion.Locked;
+        return connector;
     }
 
     private WheelCollider CreateDefaultWheel(float radius) {

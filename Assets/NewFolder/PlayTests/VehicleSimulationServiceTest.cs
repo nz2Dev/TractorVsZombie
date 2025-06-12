@@ -79,13 +79,13 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
     }
 
     [UnityTest]
-    public IEnumerator ConnectWithHingeDifferentHeight_HeadStaysHorizontal() {
+    public IEnumerator ConnectWithHingeDifferentHeight_StaysHorizontal() {
         var tallHeadVehicle = CreateDefault4WheelsVehicle(Vector3.zero, wheelRadius: 0.2f);
         var shortTailVehicle = CreateDefault4WheelsVehicle(new Vector3(0, 0, -2f), wheelRadius: 0.1f);
 
         yield return new WaitForFixedUpdate();
-        vehicleService.ConnectVehicleWithHinge(tallHeadVehicle, -0.7f, shortTailVehicle, 0.7f);
-        yield return DebugWaitForFixedUpdates(1);
+        vehicleService.ConnectVehicleWithHinge(tallHeadVehicle, -0.5f, shortTailVehicle, 0.5f, 0.5f);
+        yield return WaitForFixedUpdates(1);
 
         var tallVehiclePose = vehicleService.GetVehiclePose(tallHeadVehicle);
         var normalizedXRotation = NormalizeEuqler(tallVehiclePose.rotation.eulerAngles.x);

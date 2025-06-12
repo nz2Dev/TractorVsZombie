@@ -59,10 +59,10 @@ public class VehicleService {
         }
     }
 
-    public void ConnectVehicleWithHinge(int headVehicleIndex, float headVehicleAnchorOffset, int tailVehicleIndex, float tailVehicleAnchorOffset) {
+    public void ConnectVehicleWithHinge(int headVehicleIndex, float headVehicleAnchorOffset, int tailVehicleIndex, float tailVehicleAnchorOffset, float distanceBetween = 0.5f) {
         var headPhysics = physicsRegistry[headVehicleIndex];
         var tailPhysics = physicsRegistry[tailVehicleIndex];
-        tailPhysics.ConnectWithHinge(headPhysics, headVehicleAnchorOffset, tailVehicleAnchorOffset);
+        tailPhysics.ConnectWithHinge(headPhysics, headVehicleAnchorOffset, tailVehicleAnchorOffset, distanceBetween);
     }
 
     public VehiclePose GetVehiclePose(int vehicleIndex) {

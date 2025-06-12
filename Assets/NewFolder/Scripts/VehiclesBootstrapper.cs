@@ -41,8 +41,9 @@ public class VehiclesBootstrapper : MonoBehaviour {
 
         var lastIndex = vehicles.Count - 1;
         vehicleService.ConnectVehicleWithHinge(
-            headVehicleIndex: lastIndex - 1, -0.7f, 
-            tailVehicleIndex: lastIndex, 0.7f);
+            headVehicleIndex: lastIndex - 1, -0.55f, 
+            tailVehicleIndex: lastIndex, 0.55f,
+            distanceBetween: 0.5f);
     }
 
     private void Update() {
