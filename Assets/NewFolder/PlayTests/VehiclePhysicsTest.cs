@@ -50,6 +50,27 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
         Assert.That(vehiclePhysics.Position.XZ(), Is.EqualTo(Vector3.zero.XZ())
             .Using(new Vector2EqualityComparer(FloatError)));
     }
+
+    [UnityTest]
+    public IEnumerator GetTowingConnectorWithTowingWheelAxis_ReturnsTurningBodyConnector() {
+        var towingBodyLength = 0.7f;
+        var towingAxisForwardOffset = 0.25f;
+        var vehicleGroundPosition = new Vector3(0f, 0f, 0f);
+        
+        var vehiclePhysics = new VehiclePhysics(vehicleGroundPosition + Vector3.up * 0.25f, null);
+        vehiclePhysics.ConfigureBase(VehiclePhysics.DefaultBaseSize);
+        vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
+        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, towingBodyLength);
+        yield return DebugWaitForSleepState("Vehicle Physics (New)");
+        yield return DebugWaitForFixedUpdates(1);
+
+        var towingConnector = vehiclePhysics.GetTowingConnector();
+        var predictedAxisTowingConnectorPoint =
+            vehicleGroundPosition.z + towingAxisForwardOffset + towingBodyLength;
+        
+        Assert.That(towingConnector.worldAnchorRestPoint.z, Is.EqualTo(predictedAxisTowingConnectorPoint)
+            .Within(FloatError));
+    }
     
     private IEnumerator DebugWaitForSleepState(string name, int limit = 100) {
         Debug.Break();
@@ -64,7 +85,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
 
     private IEnumerator DebugWaitForFixedUpdates(int count) {
         Debug.Break();
-        yield return WaitForFixedUpdates(count * 10);
+        yield return WaitForFixedUpdates(count * 100);
     }
 
     private IEnumerator WaitForFixedUpdates(int count) {

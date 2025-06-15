@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEditor.Experimental.GraphView;
 
@@ -14,6 +15,12 @@ public class VehiclePhysics {
         public Rigidbody turningBody;
         public bool drive;
         public bool steer;
+    }
+
+    public struct VehicleConnector {
+        public Rigidbody rigidbody;
+        public Vector3 anchorOffset;
+        public Vector3 worldAnchorRestPoint;
     }
 
     public static readonly Vector3 DefaultBaseSize = new Vector3(0.5f, 0.2f, 1.0f);
@@ -99,6 +106,42 @@ public class VehiclePhysics {
         joint.angularZMotion = ConfigurableJointMotion.Locked;
         joint.autoConfigureConnectedAnchor = true;
         joint.connectedBody = turningBody;
+    }
+
+    public VehicleConnector GetTowingConnector() {
+        var towingWheelAxis = wheelAxes.SingleOrDefault(axis => axis.turningBody != null);
+        bool hasTowingAxis = !towingWheelAxis.Equals(default);
+
+        var connectorRigidbody = root.GetComponent<Rigidbody>();
+        if (hasTowingAxis) {
+            connectorRigidbody = towingWheelAxis.turningBody;
+        }
+        
+        var baseGO = root.transform.Find("Base Box Collider (New)");
+        var baseSize = baseGO.GetComponent<BoxCollider>().size;
+        var connectorAnchor = new Vector3(0, 0, /*assuming center is 0,0,0 */baseSize.z * 0.5f);
+        if (hasTowingAxis) {
+            var turningBodyBoxCollider = towingWheelAxis.turningBody.GetComponent<BoxCollider>();
+            connectorAnchor = new Vector3(0, 0, /*assuming center is 0, 0, 1/2*/turningBodyBoxCollider.size.z);
+        }
+
+        var worldAnchorRestPoint = root.transform.TransformPoint(connectorAnchor);
+        if (hasTowingAxis) {
+            var anyWheelTransform = towingWheelAxis.leftWheel.transform;
+            worldAnchorRestPoint = root.transform.TransformPoint(
+                new Vector3(0, 
+                    anyWheelTransform.position.y, 
+                    anyWheelTransform.position.z
+                )
+                + connectorAnchor
+            );
+        }
+
+        return new VehicleConnector {
+            rigidbody = connectorRigidbody,
+            anchorOffset = connectorAnchor,
+            worldAnchorRestPoint = worldAnchorRestPoint,
+        };
     }
 
     internal void ConnectWithHinge(VehiclePhysics headPhysics, float headVehicleAnchorOffset, float thisAnchorOffset, float distanceBetween) {
