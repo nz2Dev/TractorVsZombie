@@ -28,7 +28,6 @@ public class VehiclesBootstrapper : MonoBehaviour {
 
         PlusTrailer(new Vector3(0, 0, -2f));
         PlusTrailer(new Vector3(0, 0, -4f));
-        PlusTrailer(new Vector3(0, 0, -6f));
 
         cameraService.InitTopDownFollowTarget(driveVehiclePosition, 10f);
     }

@@ -22,6 +22,8 @@ public class VehiclePhysics {
         public Vector3 anchorOffset;
         public Vector3 worldAnchorRestPoint;
     }
+
+    private static readonly HideFlags DefaultHideFlag = HideFlags.None;
     
     private readonly GameObject root;
     private readonly List<WheelAxis> wheelAxes = new ();
@@ -39,7 +41,7 @@ public class VehiclePhysics {
         rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
         rigidbody.automaticCenterOfMass = false;
         rigidbody.centerOfMass = Vector3.zero;
-        rigidbody.hideFlags = HideFlags.NotEditable;
+        rigidbody.hideFlags = DefaultHideFlag;
         rigidbody.isKinematic = false;
         rigidbody.useGravity = true;
         rigidbody.mass = 150;
@@ -91,7 +93,7 @@ public class VehiclePhysics {
     private void JointTurningBody(Rigidbody turningBody) {
         Assert.IsNull(root.GetComponent<ConfigurableJoint>());
         var joint = root.AddComponent<ConfigurableJoint>();
-        joint.hideFlags = HideFlags.NotEditable;
+        joint.hideFlags = DefaultHideFlag;
         joint.xMotion = ConfigurableJointMotion.Locked;
         joint.yMotion = ConfigurableJointMotion.Locked;
         joint.zMotion = ConfigurableJointMotion.Locked;
@@ -108,9 +110,9 @@ public class VehiclePhysics {
     }
 
     public VehicleConnector GetTowingConnector() {
-        var towingWheelAxis = wheelAxes.SingleOrDefault(axis => axis.turningBody != null);
-        bool hasTowingAxis = !towingWheelAxis.Equals(default);
-        if (hasTowingAxis) {
+        var towingAxisCount = wheelAxes.Count(axis => axis.turningBody != null);
+        Assert.IsTrue(towingAxisCount == 1 || towingAxisCount == 0);
+        if (towingAxisCount == 1) {
             return GetTowingWheelAxisTowingConnector();
         } else {
             return GetBaseVehicleTowingConnector();
@@ -162,9 +164,11 @@ public class VehiclePhysics {
     }
 
     internal void BreakWheelsFrictionWithConstantTorque() {
+        var flipFlop = 1;
         foreach (var axis in wheelAxes) {
-            axis.leftWheel.motorTorque = 0.1f;
-            axis.rightWheel.motorTorque = 0.1f;
+            flipFlop = flipFlop < 0 ? 1 : -1;
+            axis.leftWheel.motorTorque = flipFlop * 0.1f;
+            axis.rightWheel.motorTorque = flipFlop * 0.1f;
         }
     }
 
@@ -205,21 +209,21 @@ public class VehiclePhysics {
         turningBody.transform.SetParent(root.transform, worldPositionStays: false);
         turningBody.transform.localPosition = new Vector3(0, upOffset, forwardOffset);
         var collider = turningBody.GetComponent<BoxCollider>();
-        collider.hideFlags = HideFlags.NotEditable;
+        collider.hideFlags = DefaultHideFlag;
         collider.center = new Vector3(0, 0, length * 0.5f);
         collider.size = new Vector3(0.025f, 0.025f, length);
         var rigidbody = turningBody.GetComponent<Rigidbody>();
-        rigidbody.hideFlags = HideFlags.NotEditable;
+        rigidbody.hideFlags = DefaultHideFlag;
         rigidbody.mass = 1;
         return rigidbody;
     }
 
     private WheelCollider CreateDefaultWheel(float radius) {
-        var wheel = new GameObject("Default Wheel (New)", typeof(WheelCollider));
-        wheel.transform.hideFlags = HideFlags.NotEditable;
+        var wheel = new GameObject("Default Wheel (New)", typeof(WheelCollider), typeof(WheelDebug));
+        wheel.transform.hideFlags = DefaultHideFlag;
         wheel.transform.SetParent(root.transform, worldPositionStays: false);
         var wheelCollider = wheel.GetComponent<WheelCollider>();
-        wheelCollider.hideFlags = HideFlags.NotEditable;
+        wheelCollider.hideFlags = DefaultHideFlag;
         wheelCollider.suspensionSpring = CreateDefaultJointSpring();
         wheelCollider.suspensionDistance = 0.1f;
         wheelCollider.radius = radius;

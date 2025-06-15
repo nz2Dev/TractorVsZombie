@@ -63,7 +63,9 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var tailVehicleIndex = CreateDefault4WheelsVehicle(tailVehicleInitPosition);
         
         vehicleService.MakeTowingConnection(headVehicleIndex, tailVehicleIndex, 0.2f);
-        yield return DebugWaitForFixedUpdates(1);
+        // TODO place in the loop maters for registering physics Updates!
+        yield return WaitForSleepState("Vehicle Physics (New)");
+        yield return WaitForFixedUpdates(100);
 
         var headVehiclePose = vehicleService.GetVehiclePose(headVehicleIndex);
         var tailVehiclePose = vehicleService.GetVehiclePose(tailVehicleIndex);
@@ -141,6 +143,17 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
                 .Using(Vector3EqualityComparer.Instance));
             previousPose = poseInTheEndOfFrame;
         }
+    }
+
+    private IEnumerator DebugWaitForSleepState(string name, int limit = 100) {
+        Debug.Break();
+        yield return WaitForSleepState(name, limit * 2);
+    }
+
+    private IEnumerator WaitForSleepState(string name, int limit = 100) {
+        var rigidbody = GameObject.Find(name).GetComponent<Rigidbody>();
+        for (int count = 0; count < limit && !rigidbody.IsSleeping(); count++)
+            yield return new WaitForFixedUpdate();
     }
 
     private IEnumerator DebugWaitForFixedUpdates(int countMultiplier) {
