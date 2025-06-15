@@ -67,21 +67,20 @@ public class VehicleService {
         var pullingConnector = headPhysics.GetPullingConnector();
 
         var pullJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
-        // pullJoint.hideFlags = HideFlags.NotEditable;
         pullJoint.xMotion = ConfigurableJointMotion.Locked;
         pullJoint.yMotion = ConfigurableJointMotion.Locked;
         pullJoint.zMotion = ConfigurableJointMotion.Free;
-        pullJoint.zDrive = new JointDrive { positionSpring = 20_000,  positionDamper = 8_000 };
         pullJoint.angularXMotion = ConfigurableJointMotion.Limited;
-        pullJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
-        pullJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
         pullJoint.angularYMotion = ConfigurableJointMotion.Free;
         pullJoint.angularZMotion = ConfigurableJointMotion.Locked;
-        pullJoint.connectedBody = pullingConnector.rigidbody;
+        pullJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
+        pullJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
+        pullJoint.zDrive = new JointDrive { positionSpring = 10_000,  positionDamper = 3_000, maximumForce = float.MaxValue };
         pullJoint.autoConfigureConnectedAnchor = false;
+        pullJoint.connectedMassScale = 0.1f;
+        pullJoint.connectedBody = pullingConnector.rigidbody;
         var pullingOffset = anchorsOffset * 0.5f * Vector3.back;
         pullJoint.connectedAnchor = pullingConnector.anchorOffset + pullingOffset;
-        pullJoint.connectedMassScale = 0.1f; //
         var towingOffset = anchorsOffset * 0.5f * Vector3.forward;
         pullJoint.anchor = towingConnector.anchorOffset + towingOffset;
 
