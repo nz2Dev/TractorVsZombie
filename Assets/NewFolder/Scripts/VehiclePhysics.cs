@@ -109,35 +109,39 @@ public class VehiclePhysics {
     public VehicleConnector GetTowingConnector() {
         var towingWheelAxis = wheelAxes.SingleOrDefault(axis => axis.turningBody != null);
         bool hasTowingAxis = !towingWheelAxis.Equals(default);
-
-        var connectorRigidbody = root.GetComponent<Rigidbody>();
         if (hasTowingAxis) {
-            connectorRigidbody = towingWheelAxis.turningBody;
+            return GetTowingWheelAxisTowingConnector();
+        } else {
+            return GetBaseVehicleTowingConnector();
         }
-        
+    }
+
+    private VehicleConnector GetBaseVehicleTowingConnector() {
         var baseGO = root.transform.Find("Base Box Collider (New)");
         var baseSize = baseGO.GetComponent<BoxCollider>().size;
-        var connectorAnchor = new Vector3(0, 0, /*assuming center is 0,0,0 */baseSize.z * 0.5f);
-        if (hasTowingAxis) {
-            var turningBodyBoxCollider = towingWheelAxis.turningBody.GetComponent<BoxCollider>();
-            connectorAnchor = new Vector3(0, 0, /*assuming center is 0, 0, 1/2*/turningBodyBoxCollider.size.z);
-        }
+        
+        var inFrontOfBoxCollider = new Vector3(0, 0, baseSize.z * 0.5f);
+        var worldAnchorRestPoint = root.transform.TransformPoint(inFrontOfBoxCollider);
+        
+        return new VehicleConnector {
+            rigidbody = root.GetComponent<Rigidbody>(),
+            anchorOffset = inFrontOfBoxCollider,
+            worldAnchorRestPoint = worldAnchorRestPoint,
+        };
+    }
 
-        var worldAnchorRestPoint = root.transform.TransformPoint(connectorAnchor);
-        if (hasTowingAxis) {
-            var anyWheelTransform = towingWheelAxis.leftWheel.transform;
-            worldAnchorRestPoint = root.transform.TransformPoint(
-                new Vector3(0, 
-                    anyWheelTransform.position.y, 
-                    anyWheelTransform.position.z
-                )
-                + connectorAnchor
-            );
-        }
+    private VehicleConnector GetTowingWheelAxisTowingConnector() {
+        var towingWheelAxis = wheelAxes.Single(axis => axis.turningBody != null);
+        var turningBodyBoxCollider = towingWheelAxis.turningBody.GetComponent<BoxCollider>();
+        
+        var inFrontOfTurningBodyCollider = new Vector3(0, 0, turningBodyBoxCollider.size.z);
+        var anyWheelTransform = towingWheelAxis.leftWheel.transform;
+        var wheelAxisCenter = new Vector3(0, anyWheelTransform.position.y, anyWheelTransform.position.z);
+        var worldAnchorRestPoint = root.transform.TransformPoint(wheelAxisCenter + inFrontOfTurningBodyCollider);
 
         return new VehicleConnector {
-            rigidbody = connectorRigidbody,
-            anchorOffset = connectorAnchor,
+            rigidbody = towingWheelAxis.turningBody,
+            anchorOffset = inFrontOfTurningBodyCollider,
             worldAnchorRestPoint = worldAnchorRestPoint,
         };
     }
