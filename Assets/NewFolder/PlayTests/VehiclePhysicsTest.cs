@@ -88,17 +88,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
         yield return WaitForSleepState("Vehicle Physics (New)");
 
         var towingConnector = vehiclePhysics.GetTowingConnector();
-        var towingJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
-        towingJoint.anchor = towingConnector.anchorOffset;
-        towingJoint.autoConfigureConnectedAnchor = false;
-        towingJoint.connectedBody = targetRigidbody;
-        towingJoint.connectedAnchor = Vector3.zero;
-        towingJoint.xMotion = ConfigurableJointMotion.Locked;
-        towingJoint.yMotion = ConfigurableJointMotion.Locked;
-        towingJoint.zMotion = ConfigurableJointMotion.Free;
-        towingJoint.angularXMotion = ConfigurableJointMotion.Free;
-        towingJoint.angularYMotion = ConfigurableJointMotion.Free;
-        towingJoint.angularZMotion = ConfigurableJointMotion.Locked;
+        JointForAnglePulling(towingConnector, targetRigidbody);
         yield return DebugWaitForFixedUpdates(1);
 
         vehiclePhysics.GetAxisPose(axisIndex: 1, out var _, out var rotationL, out var _, out var _);
@@ -106,7 +96,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
         var wheelAxisToTarget = targetPosition - wheelAxisCenter;
         var wheelAxisToTargetRotation = Quaternion.LookRotation(wheelAxisToTarget.normalized, Vector3.up);
         var vehicleToTargetAngle = Quaternion.Angle(vehiclePhysics.Rotation, wheelAxisToTargetRotation);
-        Assert.That(rotationL.eulerAngles.y, Is.EqualTo(vehicleToTargetAngle).Within(FloatError));
+        Assert.That(vehicleToTargetAngle, Is.EqualTo(rotationL.eulerAngles.y).Within(FloatError));
     }
     
     private IEnumerator DebugWaitForSleepState(string name, int limit = 100) {
@@ -128,6 +118,20 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     private IEnumerator WaitForFixedUpdates(int count) {
         for (int i = 0; i < count; i++)
             yield return new WaitForFixedUpdate();
+    }
+
+    private void JointForAnglePulling(VehiclePhysics.VehicleConnector towingConnector, Rigidbody targetRigidbody) {
+        var towingJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
+        towingJoint.anchor = towingConnector.anchorOffset;
+        towingJoint.autoConfigureConnectedAnchor = false;
+        towingJoint.connectedBody = targetRigidbody;
+        towingJoint.connectedAnchor = Vector3.zero;
+        towingJoint.xMotion = ConfigurableJointMotion.Locked;
+        towingJoint.yMotion = ConfigurableJointMotion.Locked;
+        towingJoint.zMotion = ConfigurableJointMotion.Free;
+        towingJoint.angularXMotion = ConfigurableJointMotion.Free;
+        towingJoint.angularYMotion = ConfigurableJointMotion.Free;
+        towingJoint.angularZMotion = ConfigurableJointMotion.Locked;
     }
 
     private Rigidbody CreateKinematicRigidbody(Vector3 position) {
