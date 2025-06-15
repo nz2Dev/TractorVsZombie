@@ -20,6 +20,9 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     private readonly string TestEnvironmentScenePath = Path.Combine(
         "Assets", "NewFolder", "Scenes", "Test Environment.unity");
     
+    private readonly Vector3 initVehicleGroundPosition = new Vector3(0, 0, 0);
+    private VehiclePhysics vehiclePhysics;
+
     public void Setup() {
 #if UNITY_EDITOR
         if (EditorBuildSettings.scenes.Any(scene => scene.path == TestEnvironmentScenePath))
@@ -36,16 +39,18 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
         SceneManager.LoadScene(TestEnvironmentScenePath);
         yield return null;
     }
+
+    [SetUp]
+    public void SetupTest() {
+        vehiclePhysics = new (initVehicleGroundPosition + Vector3.up * 0.25f, null);
+    } 
     
     [UnityTest]
     public IEnumerator CreateHingeWheelAxis_KeepVehicleAtPlace() {
-        var vehiclePhysics = new VehiclePhysics(new Vector3(0, 0.25f, 0), null);
-
         vehiclePhysics.ConfigureBase(VehiclePhysics.DefaultBaseSize);
         vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
         vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, 0.25f, 0.1f, 0.7f);
-        yield return DebugWaitForSleepState("Vehicle Physics (New)");
-        yield return DebugWaitForFixedUpdates(1);
+        yield return WaitForSleepState("Vehicle Physics (New)");
 
         Assert.That(vehiclePhysics.Position.XZ(), Is.EqualTo(Vector3.zero.XZ())
             .Using(new Vector2EqualityComparer(FloatError)));
@@ -55,18 +60,15 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     public IEnumerator GetTowingConnectorWithTowingWheelAxis_ReturnsTurningBodyConnector() {
         var towingBodyLength = 0.7f;
         var towingAxisForwardOffset = 0.25f;
-        var vehicleGroundPosition = new Vector3(0f, 0f, 0f);
         
-        var vehiclePhysics = new VehiclePhysics(vehicleGroundPosition + Vector3.up * 0.25f, null);
         vehiclePhysics.ConfigureBase(VehiclePhysics.DefaultBaseSize);
         vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
         vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, towingBodyLength);
-        yield return DebugWaitForSleepState("Vehicle Physics (New)");
-        yield return DebugWaitForFixedUpdates(1);
+        yield return WaitForSleepState("Vehicle Physics (New)");
 
         var towingConnector = vehiclePhysics.GetTowingConnector();
         var predictedAxisTowingConnectorPoint =
-            vehicleGroundPosition.z + towingAxisForwardOffset + towingBodyLength;
+            initVehicleGroundPosition.z + towingAxisForwardOffset + towingBodyLength;
         
         Assert.That(towingConnector.worldAnchorRestPoint.z, Is.EqualTo(predictedAxisTowingConnectorPoint)
             .Within(FloatError));
