@@ -1,26 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
+[Serializable]
+public struct WheelAxis {
+    public WheelCollider wheelL;
+    public WheelCollider wheelR;
+    public float motorTorque;
+    public float breakTorque;
+    public float steerAngle;
+}
+
 public class VehicleControl : MonoBehaviour {
 
-    [SerializeField] private float forwardWheelsMotorTorque = 0;
-    [SerializeField] private float rearWheelsMotorTorque = 0;
-    [SerializeField] private float breakTorque = 0;
-
-    [SerializeField] private WheelCollider[] rearWheels;
-    [SerializeField] private WheelCollider[] forwardWheels;
+    [SerializeField] private WheelAxis[] axes;
 
     private void FixedUpdate() {
-        foreach (var wheel in rearWheels) {
-            wheel.motorTorque = rearWheelsMotorTorque;
-            wheel.brakeTorque = breakTorque;
+        foreach (var axis in axes) {
+            UpdateWheel(axis.wheelL, axis.motorTorque, axis.breakTorque, axis.steerAngle);
+            UpdateWheel(axis.wheelR, axis.motorTorque, axis.breakTorque, axis.steerAngle);
         }
-        
-        foreach (var wheel in forwardWheels) {
-            wheel.motorTorque = forwardWheelsMotorTorque;
-            wheel.brakeTorque = breakTorque;
-        }
+    }
+
+    private void UpdateWheel(WheelCollider wheel, float motorTorque, float breakTorque, float steerAngle) {
+        wheel.motorTorque = motorTorque;
+        wheel.brakeTorque = breakTorque;
+        wheel.steerAngle = steerAngle;
     }
 }
