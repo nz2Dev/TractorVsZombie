@@ -92,7 +92,6 @@ public class VehiclePhysics {
         Assert.IsNull(root.GetComponent<ConfigurableJoint>());
         var joint = root.AddComponent<ConfigurableJoint>();
         joint.hideFlags = HideFlags.NotEditable;
-        joint.autoConfigureConnectedAnchor = false;
         joint.xMotion = ConfigurableJointMotion.Locked;
         joint.yMotion = ConfigurableJointMotion.Locked;
         joint.zMotion = ConfigurableJointMotion.Locked;
@@ -102,8 +101,10 @@ public class VehiclePhysics {
         joint.angularYMotion = ConfigurableJointMotion.Limited;
         joint.angularYLimit = new SoftJointLimit { limit = 180 };
         joint.angularZMotion = ConfigurableJointMotion.Locked;
-        joint.autoConfigureConnectedAnchor = true;
+        joint.anchor = root.transform.InverseTransformPoint(turningBody.transform.position);
+        joint.autoConfigureConnectedAnchor = false;
         joint.connectedBody = turningBody;
+        joint.connectedAnchor = Vector3.zero;
     }
 
     public VehicleConnector GetTowingConnector() {
