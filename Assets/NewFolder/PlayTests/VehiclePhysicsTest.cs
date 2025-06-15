@@ -43,7 +43,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
 
         vehiclePhysics.ConfigureBase(VehiclePhysics.DefaultBaseSize);
         vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
-        vehiclePhysics.CreateHingeWheelAxis(0.4f, 0, 0.25f, 0.1f, 0.7f);
+        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, 0.25f, 0.1f, 0.7f);
         yield return DebugWaitForSleepState("Vehicle Physics (New)");
         yield return DebugWaitForFixedUpdates(1);
 

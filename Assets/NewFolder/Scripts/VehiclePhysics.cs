@@ -65,7 +65,7 @@ public class VehiclePhysics {
         rigidbody.centerOfMass = new Vector3(0, -radius * 1.5f, 0);
     }
 
-    public void CreateHingeWheelAxis(float axisLength, int upOffset, float forwardOffset, float radius, float hingeLength) {
+    public void CreateTowingWheelAxis(float axisLength, int upOffset, float forwardOffset, float radius, float hingeLength) {
         var wheelL = CreateDefaultWheel(radius);
         wheelL.transform.localPosition = new Vector3(-axisLength / 2f, upOffset, forwardOffset);
         var wheelR = CreateDefaultWheel(radius);
