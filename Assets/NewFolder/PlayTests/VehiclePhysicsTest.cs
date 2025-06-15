@@ -20,7 +20,8 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     private readonly string TestEnvironmentScenePath = Path.Combine(
         "Assets", "NewFolder", "Scenes", "Test Environment.unity");
     
-    private readonly Vector3 initVehicleGroundPosition = new Vector3(0, 0, 0);
+    private static readonly Vector3 InitVehicleGroundPosition = new (0, 0, 0);
+    private static readonly Vector3 DefaultBaseSize = new (0.5f, 0.2f, 1.0f);
     private VehiclePhysics vehiclePhysics;
 
     public void Setup() {
@@ -42,12 +43,12 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
 
     [SetUp]
     public void SetupTest() {
-        vehiclePhysics = new (initVehicleGroundPosition + Vector3.up * 0.25f, null);
+        vehiclePhysics = new (InitVehicleGroundPosition + Vector3.up * 0.25f, null);
     } 
     
     [UnityTest]
     public IEnumerator CreateHingeWheelAxis_KeepVehicleAtPlace() {
-        vehiclePhysics.ConfigureBase(VehiclePhysics.DefaultBaseSize);
+        vehiclePhysics.ConfigureBase(DefaultBaseSize);
         vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
         vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, 0.25f, 0.1f, 0.7f);
         yield return WaitForSleepState("Vehicle Physics (New)");
@@ -61,17 +62,51 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
         var towingBodyLength = 0.7f;
         var towingAxisForwardOffset = 0.25f;
         
-        vehiclePhysics.ConfigureBase(VehiclePhysics.DefaultBaseSize);
+        vehiclePhysics.ConfigureBase(DefaultBaseSize);
         vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
         vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, towingBodyLength);
         yield return WaitForSleepState("Vehicle Physics (New)");
 
         var towingConnector = vehiclePhysics.GetTowingConnector();
         var predictedAxisTowingConnectorPoint =
-            initVehicleGroundPosition.z + towingAxisForwardOffset + towingBodyLength;
+            InitVehicleGroundPosition.z + towingAxisForwardOffset + towingBodyLength;
         
         Assert.That(towingConnector.worldAnchorRestPoint.z, Is.EqualTo(predictedAxisTowingConnectorPoint)
             .Within(FloatError));
+    }
+
+    [UnityTest]
+    public IEnumerator JointTowingConnectorInAgnel_WheelAxisTurnsOnSameAngle() {
+        var towingBodyLength = 0.7f;
+        var towingAxisForwardOffset = 0.25f;
+        var targetPosition = new Vector3(1, 0, 2);
+        var targetRigidbody = CreateKinematicRigidbody(targetPosition);
+
+        vehiclePhysics.ConfigureBase(DefaultBaseSize);
+        vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
+        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, towingBodyLength);
+        yield return WaitForSleepState("Vehicle Physics (New)");
+
+        var towingConnector = vehiclePhysics.GetTowingConnector();
+        var towingJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
+        towingJoint.anchor = towingConnector.anchorOffset;
+        towingJoint.autoConfigureConnectedAnchor = false;
+        towingJoint.connectedBody = targetRigidbody;
+        towingJoint.connectedAnchor = Vector3.zero;
+        towingJoint.xMotion = ConfigurableJointMotion.Locked;
+        towingJoint.yMotion = ConfigurableJointMotion.Locked;
+        towingJoint.zMotion = ConfigurableJointMotion.Free;
+        towingJoint.angularXMotion = ConfigurableJointMotion.Free;
+        towingJoint.angularYMotion = ConfigurableJointMotion.Free;
+        towingJoint.angularZMotion = ConfigurableJointMotion.Locked;
+        yield return DebugWaitForFixedUpdates(1);
+
+        vehiclePhysics.GetAxisPose(axisIndex: 1, out var _, out var rotationL, out var _, out var _);
+        var wheelAxisCenter = InitVehicleGroundPosition + Vector3.forward * towingAxisForwardOffset;
+        var wheelAxisToTarget = targetPosition - wheelAxisCenter;
+        var wheelAxisToTargetRotation = Quaternion.LookRotation(wheelAxisToTarget.normalized, Vector3.up);
+        var vehicleToTargetAngle = Quaternion.Angle(vehiclePhysics.Rotation, wheelAxisToTargetRotation);
+        Assert.That(rotationL.eulerAngles.y, Is.EqualTo(vehicleToTargetAngle).Within(FloatError));
     }
     
     private IEnumerator DebugWaitForSleepState(string name, int limit = 100) {
@@ -93,6 +128,14 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     private IEnumerator WaitForFixedUpdates(int count) {
         for (int i = 0; i < count; i++)
             yield return new WaitForFixedUpdate();
+    }
+
+    private Rigidbody CreateKinematicRigidbody(Vector3 position) {
+        var rigidbodyGO = new GameObject("Kinematic Rigidbody", typeof(Rigidbody));
+        var rigidbody = rigidbodyGO.GetComponent<Rigidbody>();
+        rigidbody.isKinematic = true;
+        rigidbody.position = position;
+        return rigidbody;
     }
 
     [TearDown]

@@ -22,8 +22,6 @@ public class VehiclePhysics {
         public Vector3 anchorOffset;
         public Vector3 worldAnchorRestPoint;
     }
-
-    public static readonly Vector3 DefaultBaseSize = new Vector3(0.5f, 0.2f, 1.0f);
     
     private readonly GameObject root;
     private readonly List<WheelAxis> wheelAxes = new ();
