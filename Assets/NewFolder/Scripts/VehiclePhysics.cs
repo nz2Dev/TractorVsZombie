@@ -147,29 +147,21 @@ public class VehiclePhysics {
         };
     }
 
-    internal void ConnectWithHinge(VehiclePhysics headPhysics, float headVehicleAnchorOffset, float thisAnchorOffset, float distanceBetween) {
-        Assert.IsNull(root.GetComponent<ConfigurableJoint>());
-
-        var tailJoint = root.AddComponent<ConfigurableJoint>();
-        tailJoint.hideFlags = HideFlags.NotEditable;
-        tailJoint.autoConfigureConnectedAnchor = false;
-        tailJoint.xMotion = ConfigurableJointMotion.Locked;
-        tailJoint.yMotion = ConfigurableJointMotion.Locked;
-        tailJoint.zMotion = ConfigurableJointMotion.Locked;
-        tailJoint.angularXMotion = ConfigurableJointMotion.Limited;
-        tailJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
-        tailJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
-        tailJoint.angularYMotion = ConfigurableJointMotion.Free;
-        tailJoint.angularZMotion = ConfigurableJointMotion.Locked;
-        tailJoint.anchor = new Vector3(0, 0, thisAnchorOffset);
-        tailJoint.connectedBody = headPhysics.root.GetComponent<Rigidbody>();
-        tailJoint.connectedAnchor = new Vector3(0, 0, headVehicleAnchorOffset);
-        tailJoint.connectedMassScale = 1;
-
-        BreakWheelsFrictionWithConstantTorque();
+    public VehicleConnector GetPullingConnector() {
+        var baseGO = root.transform.Find("Base Box Collider (New)");
+        var baseSize = baseGO.GetComponent<BoxCollider>().size;
+        
+        var inBackOfBoxCollider = new Vector3(0, 0, -baseSize.z * 0.5f);
+        var worldAnchorRestPoint = root.transform.TransformPoint(inBackOfBoxCollider);
+        
+        return new VehicleConnector {
+            rigidbody = root.GetComponent<Rigidbody>(),
+            anchorOffset = inBackOfBoxCollider,
+            worldAnchorRestPoint = worldAnchorRestPoint,
+        };
     }
 
-    private void BreakWheelsFrictionWithConstantTorque() {
+    internal void BreakWheelsFrictionWithConstantTorque() {
         foreach (var axis in wheelAxes) {
             axis.leftWheel.motorTorque = 0.1f;
             axis.rightWheel.motorTorque = 0.1f;

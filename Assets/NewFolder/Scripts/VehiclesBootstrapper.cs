@@ -40,10 +40,10 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicles.Add(trailerVehicle);
 
         var lastIndex = vehicles.Count - 1;
-        vehicleService.ConnectVehicleWithHinge(
-            headVehicleIndex: lastIndex - 1, -0.55f, 
-            tailVehicleIndex: lastIndex, 0.55f,
-            distanceBetween: 0.5f);
+        vehicleService.MakeTowingConnection(
+            headVehicleIndex: lastIndex - 1, 
+            tailVehicleIndex: lastIndex,
+            anchorsOffset: 0.5f);
     }
 
     private void Update() {

@@ -62,29 +62,26 @@ public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
         Vector3 tailVehicleInitPosition = new(0, .15f, -2);
         var tailVehicleIndex = CreateDefault4WheelsVehicle(tailVehicleInitPosition);
         
-        var headVehicleAnchorOffset = -0.7f;
-        var tailVehicleAnchorOffset = 0.7f;
-        vehicleService.ConnectVehicleWithHinge(
-            headVehicleIndex, headVehicleAnchorOffset, 
-            tailVehicleIndex, tailVehicleAnchorOffset);
+        vehicleService.MakeTowingConnection(headVehicleIndex, tailVehicleIndex, 0.2f);
         yield return DebugWaitForFixedUpdates(1);
 
         var headVehiclePose = vehicleService.GetVehiclePose(headVehicleIndex);
         var tailVehiclePose = vehicleService.GetVehiclePose(tailVehicleIndex);
         Assert.That(headVehiclePose.position.z, Is.EqualTo(headVehicleInitPosition.z).Within(FloatError));
         
+        var constraintsLength = DefaultBaseSize.z + 0.2f;
         var distanceBetween = Vector3.Distance(headVehiclePose.position, tailVehiclePose.position);
-        var offsetDistance = Math.Abs(headVehicleAnchorOffset) + Math.Abs(tailVehicleAnchorOffset);
-        Assert.That(distanceBetween, Is.EqualTo(offsetDistance).Within(FloatError));
+        Assert.That(distanceBetween, Is.EqualTo(constraintsLength).Within(FloatError));
     }
 
     [UnityTest]
-    public IEnumerator ConnectWithHingeDifferentHeight_StaysHorizontal() {
+    public IEnumerator MakeTowingConnectionBetweenTrailerAndVehicle_BothStayWithoutIncine() {
         var tallHeadVehicle = CreateDefault4WheelsVehicle(Vector3.zero, wheelRadius: 0.2f);
         var shortTailVehicle = CreateDefault4WheelsVehicle(new Vector3(0, 0, -2f), wheelRadius: 0.1f);
+        throw new NotImplementedException("can't configure adjustable towing axis via service");
 
         yield return new WaitForFixedUpdate();
-        vehicleService.ConnectVehicleWithHinge(tallHeadVehicle, -0.5f, shortTailVehicle, 0.5f, 0.5f);
+        vehicleService.MakeTowingConnection(tallHeadVehicle, shortTailVehicle, 0.5f);
         yield return WaitForFixedUpdates(1);
 
         var tallVehiclePose = vehicleService.GetVehiclePose(tallHeadVehicle);

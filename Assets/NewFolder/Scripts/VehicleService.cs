@@ -59,10 +59,31 @@ public class VehicleService {
         }
     }
 
-    public void ConnectVehicleWithHinge(int headVehicleIndex, float headVehicleAnchorOffset, int tailVehicleIndex, float tailVehicleAnchorOffset, float distanceBetween = 0.5f) {
+    public void MakeTowingConnection(int headVehicleIndex, int tailVehicleIndex, float anchorsOffset) {
         var headPhysics = physicsRegistry[headVehicleIndex];
         var tailPhysics = physicsRegistry[tailVehicleIndex];
-        tailPhysics.ConnectWithHinge(headPhysics, headVehicleAnchorOffset, tailVehicleAnchorOffset, distanceBetween);
+        
+        var towingConnector = tailPhysics.GetTowingConnector();
+        var pullingConnector = headPhysics.GetPullingConnector();
+
+        var pullJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
+        pullJoint.hideFlags = HideFlags.NotEditable;
+        pullJoint.xMotion = ConfigurableJointMotion.Locked;
+        pullJoint.yMotion = ConfigurableJointMotion.Locked;
+        pullJoint.zMotion = ConfigurableJointMotion.Locked;
+        pullJoint.angularXMotion = ConfigurableJointMotion.Limited;
+        pullJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
+        pullJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
+        pullJoint.angularYMotion = ConfigurableJointMotion.Free;
+        pullJoint.angularZMotion = ConfigurableJointMotion.Locked;
+        pullJoint.connectedBody = pullingConnector.rigidbody;
+        pullJoint.autoConfigureConnectedAnchor = false;
+        var pullingOffset = anchorsOffset * 0.5f * Vector3.back;
+        pullJoint.connectedAnchor = pullingConnector.anchorOffset + pullingOffset;
+        var towingOffset = anchorsOffset * 0.5f * Vector3.forward;
+        pullJoint.anchor = towingConnector.anchorOffset + towingOffset;
+
+        tailPhysics.BreakWheelsFrictionWithConstantTorque();
     }
 
     public VehiclePose GetVehiclePose(int vehicleIndex) {
