@@ -113,7 +113,7 @@ public class VehiclePhysics {
         joint.highAngularXLimit = new SoftJointLimit { limit = 20 };
         joint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
         joint.angularYMotion = ConfigurableJointMotion.Limited;
-        joint.angularYLimit = new SoftJointLimit { limit = 180 };
+        joint.angularYLimit = new SoftJointLimit { limit = 120 };
         joint.angularZMotion = ConfigurableJointMotion.Locked;
         joint.anchor = root.transform.InverseTransformPoint(turningBody.transform.position);
         joint.autoConfigureConnectedAnchor = false;
