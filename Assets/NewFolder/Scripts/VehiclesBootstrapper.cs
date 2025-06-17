@@ -6,6 +6,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
     
     [SerializeField] private VehicleEntity driveVehicle;
     [SerializeField] private VehicleEntity trailerVehicle;
+    [SerializeField] private int trailersCount = 3;
 
     private List<VehicleEntity> vehicles;
     private VehicleService vehicleService;
@@ -26,8 +27,9 @@ public class VehiclesBootstrapper : MonoBehaviour {
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.towingBodyGeometry, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData());
         vehicles.Add(driveVehicle);
 
-        PlusTrailer(new Vector3(0, 0, -2f));
-        PlusTrailer(new Vector3(0, 0, -4f));
+        for (int i = 0; i < trailersCount; i++) {
+            PlusTrailer(new Vector3(0, 0, -2f + i * -2f));
+        }
 
         cameraService.InitTopDownFollowTarget(driveVehiclePosition, 10f);
     }

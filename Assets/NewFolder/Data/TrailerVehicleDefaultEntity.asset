@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1285681b6c6549cbb1825d079f7b2b9, type: 3}
   m_Name: TrailerVehicleDefaultEntity
   m_EditorClassIdentifier: 
-  mass: 50
+  mass: 30
   baseSize: {x: 0.5, y: 0.1, z: 1}
   baseGeometry: {fileID: 1494103975643840448, guid: 50bfe1a81e3144c77be85e0b9d29c252, type: 3}
   wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}

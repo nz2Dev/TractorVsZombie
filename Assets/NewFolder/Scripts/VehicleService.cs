@@ -65,7 +65,7 @@ public class VehicleService {
     }
 
     public void SetVehicleGasThrottle(int vehicleIndex, float v) {
-        const float maxTorque = 400;
+        const float maxTorque = 1000;
         const float minTorqueToEaseFriction = 0.1f;
         
         var engineTorque = v * maxTorque;
