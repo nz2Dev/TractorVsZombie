@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: DriveVehicleDefaultEntity
   m_EditorClassIdentifier: 
   baseSize: {x: 0.5, y: 0.4, z: 1}
-  baseGeometry: {fileID: 308101743189184403, guid: 7c8f2b546d9b945bcaec6feddde2e8c0, type: 3}
+  baseGeometry: {fileID: 6437747089859687489, guid: c0a65a2b06cc04f75af45a58b851557f, type: 3}
   wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
   towingBodyGeometry: {fileID: 4636972372568082026, guid: 0d7315037516b4408be2620e9fbd9722, type: 3}
   wheelAxisDatas:
-  - forwardOffset: -0.25
-    upOffset: 0
-    halfLength: 0.2
-    radius: 0.1
-    drive: 1
-    stear: 0
   - forwardOffset: 0.25
     upOffset: 0
-    halfLength: 0.2
-    radius: 0.1
+    halfLength: 0.25
+    radius: 0.15
     drive: 0
     stear: 1
+  - forwardOffset: -0.25
+    upOffset: 0.05
+    halfLength: 0.3
+    radius: 0.25
+    drive: 1
+    stear: 0
   towingWheelAxisData:
     forwardOffset: 0
     upOffset: 0
