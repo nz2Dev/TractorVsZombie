@@ -44,6 +44,15 @@ public class VehicleService {
     public void UpdateVehicles() {
         foreach (var vehiclePhysics in physicsRegistry) {
             vehiclePhysics.UpdateTowingWheelAxis();
+            
+            var towingConnector = vehiclePhysics.GetTowingConnector();
+            if (towingConnector.rigidbody.TryGetComponent<ConfigurableJoint>(out var towingJoint)) {
+                var towingTip = towingJoint.transform.TransformPoint(towingJoint.anchor);
+                var pullingTip = towingJoint.connectedBody.transform.TransformPoint(towingJoint.connectedAnchor);
+                if (Vector3.Distance(towingTip, pullingTip) < 0.1f) {
+                    towingJoint.zMotion = ConfigurableJointMotion.Locked;
+                }
+            }
         }
     }
 
