@@ -14,6 +14,6 @@ public class VehiclePreview : MonoBehaviour {
         vehicleService.CreateVehicle(vehicleEntity.baseSize, vehicleEntity.wheelAxisDatas);
         
         var vehicleView = new VehicleView(container: transform);
-        vehicleView.AddVehicle(Vector3.zero, vehicleEntity.baseGeometry, vehicleEntity.wheelGeometry, vehicleEntity.wheelAxisDatas);
+        vehicleView.AddVehicle(Vector3.zero, vehicleEntity.baseGeometry, vehicleEntity.wheelGeometry, vehicleEntity.towingBodyGeometry, vehicleEntity.wheelAxisDatas, vehicleEntity.GetTowingWheelAxisData());
     }
 }

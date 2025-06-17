@@ -23,7 +23,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
 
         var driveVehiclePosition = Vector3.zero;
         vehicleService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData());
-        vehicleView.AddVehicle(driveVehiclePosition, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.wheelAxisDatas);
+        vehicleView.AddVehicle(driveVehiclePosition, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.towingBodyGeometry, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData());
         vehicles.Add(driveVehicle);
 
         PlusTrailer(new Vector3(0, 0, -2f));
@@ -35,7 +35,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
     private void PlusTrailer(Vector3 position) {
         var trailerVehiclePosition = position;
         vehicleService.CreateVehicle(trailerVehicle.baseSize, trailerVehicle.wheelAxisDatas, trailerVehicle.GetTowingWheelAxisData(), trailerVehiclePosition);
-        vehicleView.AddVehicle(trailerVehiclePosition, trailerVehicle.baseGeometry, trailerVehicle.wheelGeometry, trailerVehicle.wheelAxisDatas);
+        vehicleView.AddVehicle(trailerVehiclePosition, trailerVehicle.baseGeometry, trailerVehicle.wheelGeometry, trailerVehicle.towingBodyGeometry, trailerVehicle.wheelAxisDatas, trailerVehicle.GetTowingWheelAxisData());
         vehicles.Add(trailerVehicle);
 
         var lastIndex = vehicles.Count - 1;
@@ -67,7 +67,12 @@ public class VehiclesBootstrapper : MonoBehaviour {
             for (int wheelAxisIndex = 0; wheelAxisIndex < vehicleData.wheelAxisDatas.Length; wheelAxisIndex++) {
                 var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(vehicleIndex, wheelAxisIndex);
                 vehicleView.UpdateWheelAxisPose(vehicleIndex, wheelAxisIndex, wheelAxisPose);
-            }    
+            }   
+
+            if (vehicleData.towingWheel) {
+                var towingWheelAxisPose = vehicleService.GetVehicleTowingWheelAxisPose(vehicleIndex);
+                vehicleView.UpdateTowingWheelAxisPose(vehicleIndex, towingWheelAxisPose);
+            }
         }
     }
 

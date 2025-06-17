@@ -121,4 +121,16 @@ public class VehicleService {
         };
     }
 
+    public TowingWheelAxisPose GetVehicleTowingWheelAxisPose(int vehicleIndex) {
+        var vehiclePhysics = physicsRegistry[vehicleIndex];
+        vehiclePhysics.GetTowingAxisPose(out var positionL, out var rotationL, out var positionR, out var rotationR, out var tipRotation);
+        return new TowingWheelAxisPose {
+            positionL = positionL,
+            rotationL = rotationL,
+            positionR = positionR,
+            rotationR = rotationR,
+            tipRotation = tipRotation
+        };
+    }
+
 }

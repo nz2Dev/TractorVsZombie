@@ -27,6 +27,7 @@ public class VehicleEntity : ScriptableObject {
     [SerializeField] public Vector3 baseSize = new Vector3(0.5f, 0.4f, 1.0f);
     [SerializeField] public GameObject baseGeometry;
     [SerializeField] public GameObject wheelGeometry;
+    [SerializeField] public GameObject towingBodyGeometry;
     [SerializeField] public WheelAxisData[] wheelAxisDatas;
     [SerializeField] public TowingWheelAxisData towingWheelAxisData;
     [SerializeField] public bool towingWheel;

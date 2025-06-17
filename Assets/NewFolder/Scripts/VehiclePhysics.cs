@@ -208,6 +208,13 @@ public class VehiclePhysics {
         axis.rightWheel.GetWorldPose(out positionR, out rotationR);
     }
 
+    public void GetTowingAxisPose(out Vector3 positionL, out Quaternion rotationL, out Vector3 positionR, out Quaternion rotationR, out Quaternion tipRotation) {
+        var towingAxis = wheelAxes.Single(axis => axis.turningBody != null);
+        towingAxis.leftWheel.GetWorldPose(out positionL, out rotationL);
+        towingAxis.rightWheel.GetWorldPose(out positionR, out rotationR);
+        tipRotation = towingAxis.turningBody.transform.rotation;
+    }
+
     public bool IsDriveAxis(int axisIndex) {
         return wheelAxes[axisIndex].drive;
     }
