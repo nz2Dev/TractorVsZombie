@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1285681b6c6549cbb1825d079f7b2b9, type: 3}
   m_Name: DriveVehicleDefaultEntity
   m_EditorClassIdentifier: 
+  mass: 150
   baseSize: {x: 0.5, y: 0.4, z: 1}
   baseGeometry: {fileID: 6437747089859687489, guid: c0a65a2b06cc04f75af45a58b851557f, type: 3}
   wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}

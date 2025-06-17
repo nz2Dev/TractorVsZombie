@@ -24,6 +24,7 @@ public struct TowingWheelAxisData {
 
 [CreateAssetMenu(fileName = "DriveVehicleEntity", menuName = "Entities")]
 public class VehicleEntity : ScriptableObject {
+    [SerializeField] public float mass = 100;
     [SerializeField] public Vector3 baseSize = new Vector3(0.5f, 0.4f, 1.0f);
     [SerializeField] public GameObject baseGeometry;
     [SerializeField] public GameObject wheelGeometry;

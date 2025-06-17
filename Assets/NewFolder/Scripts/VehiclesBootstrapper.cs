@@ -22,7 +22,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
         cameraService = new CameraService(Camera.main);
 
         var driveVehiclePosition = Vector3.zero;
-        vehicleService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData());
+        vehicleService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData(), mass: driveVehicle.mass);
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.towingBodyGeometry, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData());
         vehicles.Add(driveVehicle);
 
@@ -34,7 +34,7 @@ public class VehiclesBootstrapper : MonoBehaviour {
 
     private void PlusTrailer(Vector3 position) {
         var trailerVehiclePosition = position;
-        vehicleService.CreateVehicle(trailerVehicle.baseSize, trailerVehicle.wheelAxisDatas, trailerVehicle.GetTowingWheelAxisData(), trailerVehiclePosition);
+        vehicleService.CreateVehicle(trailerVehicle.baseSize, trailerVehicle.wheelAxisDatas, trailerVehicle.GetTowingWheelAxisData(), trailerVehiclePosition, mass: driveVehicle.mass);
         vehicleView.AddVehicle(trailerVehiclePosition, trailerVehicle.baseGeometry, trailerVehicle.wheelGeometry, trailerVehicle.towingBodyGeometry, trailerVehicle.wheelAxisDatas, trailerVehicle.GetTowingWheelAxisData());
         vehicles.Add(trailerVehicle);
 

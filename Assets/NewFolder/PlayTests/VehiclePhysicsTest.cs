@@ -43,7 +43,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
 
     [SetUp]
     public void SetupTest() {
-        vehiclePhysics = new (InitVehicleGroundPosition + Vector3.up * 0.25f, null);
+        vehiclePhysics = new (InitVehicleGroundPosition + Vector3.up * 0.25f, null, 100);
     } 
     
     [UnityTest]

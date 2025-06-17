@@ -12,8 +12,8 @@ public class VehicleService {
         this.physicsContainer = physicsContainer;
     }
 
-    public int CreateVehicle(Vector3 baseSize, WheelAxisData[] wheels, TowingWheelAxisData? towingWheel = null, Vector3 position = default) {
-        var vehiclePhysics = new VehiclePhysics(position, physicsContainer);
+    public int CreateVehicle(Vector3 baseSize, WheelAxisData[] wheels, TowingWheelAxisData? towingWheel = null, Vector3 position = default, float mass = 100) {
+        var vehiclePhysics = new VehiclePhysics(position, physicsContainer, mass);
         vehiclePhysics.ConfigureBase(baseSize);
         
         foreach (var wheelAxis in wheels)

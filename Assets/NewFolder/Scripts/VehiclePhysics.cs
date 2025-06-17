@@ -32,7 +32,7 @@ public class VehiclePhysics {
     public Vector3 Position => root.transform.position;
     public Quaternion Rotation => root.transform.rotation;
 
-    public VehiclePhysics(Vector3 position, Transform container) {
+    public VehiclePhysics(Vector3 position, Transform container, float mass) {
         root = new GameObject("Vehicle Physics (New)", typeof(Rigidbody));
         root.transform.SetParent(container, worldPositionStays: false);
         root.transform.position = position;
@@ -44,7 +44,7 @@ public class VehiclePhysics {
         rigidbody.hideFlags = DefaultHideFlag;
         rigidbody.isKinematic = false;
         rigidbody.useGravity = true;
-        rigidbody.mass = 150;
+        rigidbody.mass = mass;
     }
 
     public void ConfigureBase(Vector3 baseSize) {
