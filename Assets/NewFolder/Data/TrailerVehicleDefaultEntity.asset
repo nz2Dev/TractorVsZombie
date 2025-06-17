@@ -22,9 +22,10 @@ MonoBehaviour:
     radius: 0.1
     drive: 0
     stear: 0
-  - forwardOffset: 0.25
+  towingWheelAxisData:
+    forwardOffset: 0.25
     upOffset: 0
     halfLength: 0.15
     radius: 0.1
-    drive: 0
-    stear: 0
+    towingBodyLength: 0.7
+  towingWheel: 1

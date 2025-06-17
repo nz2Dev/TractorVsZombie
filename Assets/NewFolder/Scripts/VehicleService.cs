@@ -12,7 +12,7 @@ public class VehicleService {
         this.physicsContainer = physicsContainer;
     }
 
-    public int CreateVehicle(Vector3 baseSize, WheelAxisData[] wheels, Vector3 position = default) {
+    public int CreateVehicle(Vector3 baseSize, WheelAxisData[] wheels, TowingWheelAxisData? towingWheel = null, Vector3 position = default) {
         var vehiclePhysics = new VehiclePhysics(position, physicsContainer);
         vehiclePhysics.ConfigureBase(baseSize);
         
@@ -25,6 +25,16 @@ public class VehicleService {
                 wheelAxis.drive, 
                 wheelAxis.stear
             );
+        
+        if (towingWheel.HasValue) {
+            vehiclePhysics.CreateTowingWheelAxis(
+                towingWheel.Value.halfLength * 2,
+                towingWheel.Value.upOffset,
+                towingWheel.Value.forwardOffset,
+                towingWheel.Value.radius,
+                towingWheel.Value.towingBodyLength
+            );
+        }
 
         physicsRegistry.Add(vehiclePhysics);
         var lastVehicleIndex = physicsRegistry.Count - 1;
