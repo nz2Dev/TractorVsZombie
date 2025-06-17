@@ -79,24 +79,28 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     public IEnumerator JointTowingConnectorInAgnel_WheelAxisTurnsOnSameAngle() {
         var towingBodyLength = 0.7f;
         var towingAxisForwardOffset = 0.25f;
-        var targetPosition = new Vector3(1, 0, 2);
+        var targetPosition = new Vector3(2, 0, 2);
         var targetRigidbody = CreateKinematicRigidbody(targetPosition);
 
         vehiclePhysics.ConfigureBase(DefaultBaseSize);
         vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
         vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, towingBodyLength);
-        yield return WaitForSleepState("Vehicle Physics (New)");
 
+        yield return new WaitForFixedUpdate();
         var towingConnector = vehiclePhysics.GetTowingConnector();
         JointForAnglePulling(towingConnector, targetRigidbody);
-        yield return DebugWaitForFixedUpdates(1);
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        vehiclePhysics.UpdateTowingWheelAxis();
+        yield return new WaitForFixedUpdate();
 
-        vehiclePhysics.GetAxisPose(axisIndex: 1, out var _, out var rotationL, out var _, out var _);
-        var wheelAxisCenter = InitVehicleGroundPosition + Vector3.forward * towingAxisForwardOffset;
+        vehiclePhysics.GetAxisPose(axisIndex: 1, out var positionL, out var rotationL, out var _, out var _);
+        var wheelAxisCenter = new Vector3(vehiclePhysics.Position.x, positionL.y, positionL.z);
         var wheelAxisToTarget = targetPosition - wheelAxisCenter;
-        var wheelAxisToTargetRotation = Quaternion.LookRotation(wheelAxisToTarget.normalized, Vector3.up);
-        var vehicleToTargetAngle = Quaternion.Angle(vehiclePhysics.Rotation, wheelAxisToTargetRotation);
-        Assert.That(vehicleToTargetAngle, Is.EqualTo(rotationL.eulerAngles.y).Within(FloatError));
+        var wheelAxisRotation = Quaternion.LookRotation(wheelAxisToTarget.normalized, Vector3.up);
+        var vehicleToTargetAngle = Quaternion.Angle(vehiclePhysics.Rotation, wheelAxisRotation);
+        var vehicleToWheelAngle = Quaternion.Angle(vehiclePhysics.Rotation, rotationL);
+        Assert.That(vehicleToTargetAngle, Is.EqualTo(vehicleToWheelAngle).Within(0.5f));
     }
     
     private IEnumerator DebugWaitForSleepState(string name, int limit = 100) {

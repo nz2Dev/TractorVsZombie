@@ -90,6 +90,16 @@ public class VehiclePhysics {
         rigidbody.centerOfMass = new Vector3(0, -radius * 1.5f, 0);
     }
 
+    public void UpdateTowingWheelAxis() {
+        foreach (var axis in wheelAxes) {
+            if (axis.turningBody != null) {
+                var axisAngle = Quaternion.Angle(root.transform.rotation, axis.turningBody.rotation);
+                axis.leftWheel.steerAngle = axisAngle;
+                axis.rightWheel.steerAngle = axisAngle;
+            }
+        }
+    }
+
     private void JointTurningBody(Rigidbody turningBody) {
         Assert.IsNull(root.GetComponent<ConfigurableJoint>());
         var joint = root.AddComponent<ConfigurableJoint>();

@@ -41,6 +41,12 @@ public class VehicleService {
         return lastVehicleIndex;
     }
 
+    public void UpdateVehicles() {
+        foreach (var vehiclePhysics in physicsRegistry) {
+            vehiclePhysics.UpdateTowingWheelAxis();
+        }
+    }
+
     public void SetVehicleSteer(int vehicleIndex, float steerDegrees) {
         var vehiclePhysics = physicsRegistry[vehicleIndex];
         for (int axisIndex = 0; axisIndex < vehiclePhysics.AxisCount; axisIndex++) {
