@@ -26,6 +26,6 @@ MonoBehaviour:
     forwardOffset: 0.25
     upOffset: 0
     halfLength: 0.15
-    radius: 0.1
+    radius: 0.12
     towingBodyLength: 0.7
   towingWheel: 1

@@ -91,9 +91,8 @@ public class VehicleService {
         pullJoint.angularZMotion = ConfigurableJointMotion.Locked;
         pullJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
         pullJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
-        pullJoint.zDrive = new JointDrive { positionSpring = 10_000,  positionDamper = 3_000, maximumForce = float.MaxValue };
+        pullJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
         pullJoint.autoConfigureConnectedAnchor = false;
-        pullJoint.connectedMassScale = 0.1f;
         pullJoint.connectedBody = pullingConnector.rigidbody;
         var pullingOffset = anchorsOffset * 0.5f * Vector3.back;
         pullJoint.connectedAnchor = pullingConnector.anchorOffset + pullingOffset;
