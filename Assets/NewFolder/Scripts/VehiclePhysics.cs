@@ -245,6 +245,20 @@ public class VehiclePhysics {
         wheelCollider.hideFlags = DefaultHideFlag;
         wheelCollider.suspensionSpring = CreateDefaultJointSpring();
         wheelCollider.suspensionDistance = 0.1f;
+        wheelCollider.forwardFriction = new WheelFrictionCurve {
+            asymptoteSlip = 0.4f,
+            asymptoteValue = 1,
+            extremumSlip = 0.8f,
+            extremumValue = 0.5f,
+            stiffness = 1.4f
+        };
+        wheelCollider.sidewaysFriction = new WheelFrictionCurve {
+            asymptoteSlip = 0.2f,
+            asymptoteValue = 1,
+            extremumSlip = 0.5f,
+            extremumValue = 0.75f,
+            stiffness = 1.4f
+        };
         wheelCollider.radius = radius;
         wheelCollider.mass = 5;
         return wheelCollider;

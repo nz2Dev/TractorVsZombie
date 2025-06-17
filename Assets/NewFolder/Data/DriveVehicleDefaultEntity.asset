@@ -19,7 +19,7 @@ MonoBehaviour:
   towingBodyGeometry: {fileID: 4636972372568082026, guid: 0d7315037516b4408be2620e9fbd9722, type: 3}
   wheelAxisDatas:
   - forwardOffset: 0.25
-    upOffset: 0
+    upOffset: 0.05
     halfLength: 0.25
     radius: 0.15
     drive: 0

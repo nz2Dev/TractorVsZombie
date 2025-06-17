@@ -3269,7 +3269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &729370149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7619,6 +7619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   driveVehicle: {fileID: 11400000, guid: 1dbd68138503c4d99b4eba6949b1331d, type: 2}
   trailerVehicle: {fileID: 11400000, guid: 7dc24518fd78948c0b8769c94a6cb051, type: 2}
+  trailersCount: 3
 --- !u!1 &2055084289
 GameObject:
   m_ObjectHideFlags: 0
