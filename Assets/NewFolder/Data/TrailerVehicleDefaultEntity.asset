@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1285681b6c6549cbb1825d079f7b2b9, type: 3}
   m_Name: TrailerVehicleDefaultEntity
   m_EditorClassIdentifier: 
-  baseSize: {x: 0.5, y: 0.4, z: 1}
-  baseGeometry: {fileID: 308101743189184403, guid: 7c8f2b546d9b945bcaec6feddde2e8c0, type: 3}
+  baseSize: {x: 0.5, y: 0.1, z: 1}
+  baseGeometry: {fileID: 1494103975643840448, guid: 50bfe1a81e3144c77be85e0b9d29c252, type: 3}
   wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
   towingBodyGeometry: {fileID: 4636972372568082026, guid: 0d7315037516b4408be2620e9fbd9722, type: 3}
   wheelAxisDatas:
@@ -27,6 +27,6 @@ MonoBehaviour:
     forwardOffset: 0.25
     upOffset: 0
     halfLength: 0.15
-    radius: 0.12
+    radius: 0.1
     towingBodyLength: 0.7
   towingWheel: 1
