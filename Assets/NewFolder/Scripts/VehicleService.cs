@@ -75,7 +75,7 @@ public class VehicleService {
         }
     }
 
-    public void MakeTowingConnection(int headVehicleIndex, int tailVehicleIndex, float anchorsOffset) {
+    public void MakeTowingConnection(int headVehicleIndex, int tailVehicleIndex, float anchorsOffset = 0) {
         var headPhysics = physicsRegistry[headVehicleIndex];
         var tailPhysics = physicsRegistry[tailVehicleIndex];
         

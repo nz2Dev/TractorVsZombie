@@ -91,9 +91,11 @@ public class VehiclePhysics {
     }
 
     public void UpdateTowingWheelAxis() {
+        var rigidbodyForward = root.GetComponent<Rigidbody>().rotation * Vector3.forward;
         foreach (var axis in wheelAxes) {
             if (axis.turningBody != null) {
-                var axisAngle = Quaternion.Angle(root.transform.rotation, axis.turningBody.rotation);
+                var turningBodyForward = axis.turningBody.rotation * Vector3.forward;
+                var axisAngle = Vector3.SignedAngle(rigidbodyForward, turningBodyForward, Vector3.up);
                 axis.leftWheel.steerAngle = axisAngle;
                 axis.rightWheel.steerAngle = axisAngle;
             }

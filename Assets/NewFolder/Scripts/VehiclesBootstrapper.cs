@@ -41,8 +41,11 @@ public class VehiclesBootstrapper : MonoBehaviour {
         var lastIndex = vehicles.Count - 1;
         vehicleService.MakeTowingConnection(
             headVehicleIndex: lastIndex - 1, 
-            tailVehicleIndex: lastIndex,
-            anchorsOffset: 0.5f);
+            tailVehicleIndex: lastIndex);
+    }
+
+    private void FixedUpdate() {
+        vehicleService.UpdateVehicles();
     }
 
     private void Update() {

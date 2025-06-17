@@ -79,7 +79,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     public IEnumerator JointTowingConnectorInAgnel_WheelAxisTurnsOnSameAngle() {
         var towingBodyLength = 0.7f;
         var towingAxisForwardOffset = 0.25f;
-        var targetPosition = new Vector3(2, 0, 2);
+        var targetPosition = new Vector3(-2, 0, 2);
         var targetRigidbody = CreateKinematicRigidbody(targetPosition);
 
         vehiclePhysics.ConfigureBase(DefaultBaseSize);
@@ -92,7 +92,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
         yield return new WaitForFixedUpdate();
         yield return new WaitForFixedUpdate();
         vehiclePhysics.UpdateTowingWheelAxis();
-        yield return new WaitForFixedUpdate();
+        yield return DebugWaitForFixedUpdates(1);
 
         vehiclePhysics.GetAxisPose(axisIndex: 1, out var positionL, out var rotationL, out var _, out var _);
         var wheelAxisCenter = new Vector3(vehiclePhysics.Position.x, positionL.y, positionL.z);
