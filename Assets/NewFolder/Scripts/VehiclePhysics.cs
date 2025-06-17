@@ -54,6 +54,13 @@ public class VehiclePhysics {
         var baseCollider = baseGameObject.GetComponent<BoxCollider>();
         baseCollider.center = new Vector3(0, baseSize.y * 0.5f, 0);
         baseCollider.size = baseSize;
+        baseCollider.material = new PhysicMaterial {
+            dynamicFriction = 0,
+            staticFriction = 0,
+            bounciness = 0.1f,
+            bounceCombine = PhysicMaterialCombine.Average,
+            frictionCombine = PhysicMaterialCombine.Minimum,
+        };
     }
 
     public void CreateWheelAxis(float length, float upOffset, float forwardOffset, float radius, bool drive, bool steer) {
@@ -250,14 +257,14 @@ public class VehiclePhysics {
             asymptoteValue = 1,
             extremumSlip = 0.8f,
             extremumValue = 0.5f,
-            stiffness = 1.4f
+            stiffness = 1,
         };
         wheelCollider.sidewaysFriction = new WheelFrictionCurve {
             asymptoteSlip = 0.2f,
             asymptoteValue = 1,
             extremumSlip = 0.5f,
             extremumValue = 0.75f,
-            stiffness = 1.4f
+            stiffness = 1.5f,
         };
         wheelCollider.radius = radius;
         wheelCollider.mass = 5;
