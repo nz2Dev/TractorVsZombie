@@ -13,7 +13,7 @@ using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
 
 [TestFixture]
-public class VehicleSimulationServiceTest : IPrebuildSetup, IPostBuildCleanup {
+public class VehicleServiceTest : IPrebuildSetup, IPostBuildCleanup {
     private const float FloatError = 0.001f;
     private readonly Vector3 DefaultBaseSize = new (0.5f, 0.4f, 1.0f);
 
