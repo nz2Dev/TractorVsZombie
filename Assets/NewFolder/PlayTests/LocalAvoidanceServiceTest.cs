@@ -8,6 +8,8 @@ using UnityEngine.TestTools.Utils;
 [TestFixture]
 public class LocalAvoidanceServiceTest {
     
+    private const float DefaultDeltaTime = 0.1f;
+
     private LocalAvoidanceService localAvoidanceService;
 
     [SetUp]
@@ -41,6 +43,22 @@ public class LocalAvoidanceServiceTest {
 
         Assert.That(localAvoidanceService.GetAgentPosition(agentId), 
             Is.EqualTo(initPosition).Using(Vector3EqualityComparer.Instance));
+    }
+
+    [Test]
+    public void SimulateOneAgentPreferedVelocity_MovesInDirection() {
+        var initPosition = Vector3.zero;
+        var preferedVelocity = Vector3.forward;
+        
+        var agentId = localAvoidanceService.AddAgent(initPosition);
+        localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
+        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+
+        var simulatedPosition = localAvoidanceService.GetAgentPosition(agentId);
+        Assert.That(simulatedPosition, Is.Not.EqualTo(initPosition));
+        var movementDirection = (simulatedPosition - initPosition).normalized;
+        var movementDotProduct = Vector3.Dot(preferedVelocity, movementDirection);
+        Assert.That(movementDotProduct, Is.EqualTo(1.0f).Within(float.Epsilon));
     }
 
     // [Test]
