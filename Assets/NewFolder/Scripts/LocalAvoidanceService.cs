@@ -18,4 +18,11 @@ public class LocalAvoidanceService {
     public Vector3 GetAgentPosition(int agentId) {
         return agentPositions[agentId];
     }
+
+    public void SetPreferedVelocity(int agentId, Vector3 preferedVelocity) {
+        throw new NotImplementedException();
+    }
+
+    public void SimulateMovement(float deltaTime) {
+    }
 }

@@ -32,8 +32,23 @@ public class LocalAvoidanceServiceTest {
     }
 
     [Test]
-    public void SetAgentPreferedVelocity_NoObstacles_MovesInDirection() {
-        throw new NotImplementedException();
+    public void SimulateDefault_DoesNotChangeState() {
+        var deltaTime = 0.1f;
+        var initPosition = Vector3.zero;
+        var agentId = localAvoidanceService.AddAgent(initPosition);
+        
+        localAvoidanceService.SimulateMovement(deltaTime);
+
+        Assert.That(localAvoidanceService.GetAgentPosition(agentId), 
+            Is.EqualTo(initPosition).Using(Vector3EqualityComparer.Instance));
     }
+
+    // [Test]
+    // public void SetAgentPreferedVelocity_NoObstacles_MovesInDirection() {
+    //     var initPosition = new Vector3(1, 0, 1);
+    //     var preferedVelocity = new Vector3(0, 0, 1f);
+    //     var agentId = localAvoidanceService.AddAgent(initPosition);
+    //     localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
+    // }
 
 }
