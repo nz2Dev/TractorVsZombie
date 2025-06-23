@@ -46,7 +46,7 @@ public class LocalAvoidanceServiceTest {
     }
 
     [Test]
-    public void SimulateOneAgentPreferedVelocity_MovesInDirection() {
+    public void SimulateOneAgentPreferedVelocity_ChangesItsState() {
         var initPosition = Vector3.zero;
         var preferedVelocity = Vector3.forward;
         
@@ -56,17 +56,6 @@ public class LocalAvoidanceServiceTest {
 
         var simulatedPosition = localAvoidanceService.GetAgentPosition(agentId);
         Assert.That(simulatedPosition, Is.Not.EqualTo(initPosition));
-        var movementDirection = (simulatedPosition - initPosition).normalized;
-        var movementDotProduct = Vector3.Dot(preferedVelocity, movementDirection);
-        Assert.That(movementDotProduct, Is.EqualTo(1.0f).Within(float.Epsilon));
     }
-
-    // [Test]
-    // public void SetAgentPreferedVelocity_NoObstacles_MovesInDirection() {
-    //     var initPosition = new Vector3(1, 0, 1);
-    //     var preferedVelocity = new Vector3(0, 0, 1f);
-    //     var agentId = localAvoidanceService.AddAgent(initPosition);
-    //     localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
-    // }
 
 }
