@@ -19,6 +19,8 @@ public class LocalAvoidanceService {
         };
     }
 
+    public IEnumerable<int> AgentIds => agentRegistry.Keys;
+
     public int AddAgent(Vector3 initPosition) {
         var newAgent = agentsGroup.Add(initPosition);
         agentRegistry.Add(nextId, newAgent);
@@ -27,6 +29,10 @@ public class LocalAvoidanceService {
 
     public Vector3 GetAgentPosition(int agentId) {
         return agentRegistry[agentId].pos;
+    }
+
+    public Vector3 GetVelocity(int agentId) {
+        return agentRegistry[agentId].velocity;
     }
 
     public void SetPreferedVelocity(int agentId, Vector3 preferedVelocity) {
@@ -47,4 +53,5 @@ public class LocalAvoidanceService {
     public void Release() {
         orca.DisposeAll();
     }
+
 }
