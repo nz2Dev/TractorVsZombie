@@ -32,7 +32,11 @@ public class LocalAvoidanceService {
     public void SetPreferedVelocity(int agentId, Vector3 preferedVelocity) {
         var agent = agentRegistry[agentId];
         agent.prefVelocity = preferedVelocity;
-        agent.velocity = preferedVelocity;
+    }
+
+    public void SetMaxSpeed(int agentId, float maxSpeed) {
+        var agent = agentRegistry[agentId];
+        agent.maxSpeed = maxSpeed;
     }
 
     public void SimulateMovement(float deltaTime) {
