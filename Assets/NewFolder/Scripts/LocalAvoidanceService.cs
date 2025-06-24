@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using Nebukam.ORCA;
 
+using Unity.Mathematics;
+
 using UnityEngine;
 
 public class LocalAvoidanceService {
@@ -10,12 +12,14 @@ public class LocalAvoidanceService {
     private int nextId = 0;
     private readonly ORCA orca;
     private readonly AgentGroup<Agent> agentsGroup = new();
+    private readonly ObstacleGroup staticObstacles = new();
     private readonly Dictionary<int, Agent> agentRegistry = new();
 
     public LocalAvoidanceService() {
         orca = new ORCA() {
             plane = Nebukam.Common.AxisPair.XZ,
-            agents = agentsGroup
+            agents = agentsGroup,
+            staticObstacles = staticObstacles
         };
     }
 
@@ -43,6 +47,17 @@ public class LocalAvoidanceService {
     public void SetMaxSpeed(int agentId, float maxSpeed) {
         var agent = agentRegistry[agentId];
         agent.maxSpeed = maxSpeed;
+    }
+
+    public void AddStaticObstacle(float3[] verticies) {
+        staticObstacles.Add(verticies);
+    }
+
+    public void CopyBoxObstaclePose(float3[] poseArray) {
+        var obstacle = staticObstacles[0];
+        for (int i = 0; i < obstacle.Count; i++) {
+            poseArray[i] = obstacle[i];
+        }
     }
 
     public void SimulateMovement(float deltaTime) {
