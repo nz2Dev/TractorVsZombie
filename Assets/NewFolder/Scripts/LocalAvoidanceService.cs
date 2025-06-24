@@ -1,38 +1,46 @@
 using System;
 using System.Collections.Generic;
 
+using Nebukam.ORCA;
+
 using UnityEngine;
 
 public class LocalAvoidanceService {
 
-    class AgentState {
-        public Vector3 Position { get; set; }
-        public Vector3 PreferedVelocity { get; set; }
+    private int nextId = 0;
+    private readonly ORCA orca;
+    private readonly AgentGroup<Agent> agentsGroup = new();
+    private readonly Dictionary<int, Agent> agentRegistry = new();
+
+    public LocalAvoidanceService() {
+        orca = new ORCA() {
+            plane = Nebukam.Common.AxisPair.XZ,
+            agents = agentsGroup
+        };
     }
 
-    private int nextId = 0;
-    private Dictionary<int, AgentState> agentStates = new();
-
     public int AddAgent(Vector3 initPosition) {
-        agentStates.Add(nextId, new AgentState {
-            Position = initPosition,
-            PreferedVelocity = Vector3.zero,
-        });
+        var newAgent = agentsGroup.Add(initPosition);
+        agentRegistry.Add(nextId, newAgent);
         return nextId++;
     }
 
     public Vector3 GetAgentPosition(int agentId) {
-        return agentStates[agentId].Position;
+        return agentRegistry[agentId].pos;
     }
 
     public void SetPreferedVelocity(int agentId, Vector3 preferedVelocity) {
-        var agentState = agentStates[agentId];
-        agentState.PreferedVelocity = preferedVelocity;
+        var agent = agentRegistry[agentId];
+        agent.prefVelocity = preferedVelocity;
+        agent.velocity = preferedVelocity;
     }
 
     public void SimulateMovement(float deltaTime) {
-        foreach (var agentState in agentStates.Values) {
-            agentState.Position += agentState.PreferedVelocity * deltaTime;
-        }
+        orca.Schedule(deltaTime);
+        orca.Complete();
+    }
+
+    public void Release() {
+        orca.DisposeAll();
     }
 }

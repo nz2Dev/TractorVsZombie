@@ -46,16 +46,22 @@ public class LocalAvoidanceServiceTest {
     }
 
     [Test]
-    public void SimulateOneAgentPreferedVelocity_ChangesItsState() {
+    public void SimulateOneAgentWithInput_ChangesItsState() {
         var initPosition = Vector3.zero;
         var preferedVelocity = Vector3.forward;
         
         var agentId = localAvoidanceService.AddAgent(initPosition);
+        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
         localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
         localAvoidanceService.SimulateMovement(DefaultDeltaTime);
 
         var simulatedPosition = localAvoidanceService.GetAgentPosition(agentId);
         Assert.That(simulatedPosition, Is.Not.EqualTo(initPosition));
+    }
+
+    [TearDown]
+    public void TearDownTest() {
+        localAvoidanceService.Release();
     }
 
 }
