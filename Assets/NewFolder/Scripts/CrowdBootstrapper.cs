@@ -24,8 +24,8 @@ public class CrowdBootstrapper : MonoBehaviour {
     private IEnumerator Start() {
         var wallBoxCollider = GameObject.Find("Wall").GetComponent<BoxCollider>();
         var obstacleVerticies = new float3[4];
-        ComputeBoxColliderVerticies(wallBoxCollider, obstacleVerticies);
-        localAvoidanceService.AddStaticObstacle(obstacleVerticies);
+        ComputeClockwiseBoxColliderVerticies(wallBoxCollider, obstacleVerticies);
+        localAvoidanceService.AddStaticObstacle(obstacleVerticies, inverseOrder: true);
 
         for (int i = 0; i < agentsCount; i++) {
             localAvoidanceService.AddAgent(spawnPoint);
@@ -33,7 +33,7 @@ public class CrowdBootstrapper : MonoBehaviour {
         }
     }
 
-    private void ComputeBoxColliderVerticies(BoxCollider boxObstacle, float3[] arrayRef) {
+    private void ComputeClockwiseBoxColliderVerticies(BoxCollider boxObstacle, float3[] arrayRef) {
         Assert.IsTrue(boxObstacle.transform.rotation == Quaternion.identity);
         var center = (float3) boxObstacle.transform.position;
         center.y = 0;

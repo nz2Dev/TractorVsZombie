@@ -49,8 +49,8 @@ public class LocalAvoidanceService {
         agent.maxSpeed = maxSpeed;
     }
 
-    public void AddStaticObstacle(float3[] verticies) {
-        staticObstacles.Add(verticies);
+    public void AddStaticObstacle(float3[] contrClockwiseVerticies, bool inverseOrder = false) {
+        staticObstacles.Add(contrClockwiseVerticies, inverseOrder);
     }
 
     public void CopyBoxObstaclePose(float3[] poseArray) {
