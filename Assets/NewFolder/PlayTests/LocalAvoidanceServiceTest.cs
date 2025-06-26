@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 
 using NUnit.Framework;
 
 using UnityEngine;
+using UnityEngine.TestTools;
 using UnityEngine.TestTools.Utils;
 
 [TestFixture]
@@ -57,6 +59,35 @@ public class LocalAvoidanceServiceTest {
 
         var simulatedPosition = localAvoidanceService.GetAgentPosition(agentId);
         Assert.That(simulatedPosition, Is.Not.EqualTo(initPosition));
+    }
+
+    [Test]
+    public void AddNoObstacles_AgentKeepsPreferedVelocity() {
+        var initPosition = Vector3.zero;
+        var preferedVelocity = new Vector3(0, 0, 4f);
+
+        var agentId = localAvoidanceService.AddAgent(initPosition);
+        localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
+        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+
+        var simulatedVelocity = localAvoidanceService.GetVelocity(agentId);
+        Assert.That(simulatedVelocity.magnitude, Is.EqualTo(preferedVelocity.z).Within(0.01f));
+    }
+
+    [Test]
+    public void AddStaticBoxObstacle_AgentChangesVelocity() {
+        var initPosition = Vector3.zero;
+        var preferedVelocity = new Vector3(0, 0, 4f);
+
+        var agentId = localAvoidanceService.AddAgent(initPosition);
+        localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
+        localAvoidanceService.AddStaticBoxObstacle(new Vector3(0, 0, 1.5f), Quaternion.identity, new Vector2(1, 1));
+        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+
+        var simulatedVelocity = localAvoidanceService.GetVelocity(agentId);
+        Assert.That(simulatedVelocity.magnitude, Is.LessThan(1));
     }
 
     [TearDown]
