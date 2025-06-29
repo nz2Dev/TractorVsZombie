@@ -50,17 +50,17 @@ public class LocalAvoidanceService {
         agent.maxSpeed = maxSpeed;
     }
 
-    public void AddStaticBoxObstacle(Vector3 position, Quaternion rotation, Vector2 boxExtents) {
+    public void AddStaticBoxObstacle(Vector3 position, Quaternion rotation, Vector3 boxExtents) {
         var computedVerticies = ComputeBoxVerticies(position, boxExtents);
         staticObstacles.Add(computedVerticies, inverseOrder: true);
     }
 
-    private float3[] ComputeBoxVerticies(float3 position, float2 boxExtents) {
+    private float3[] ComputeBoxVerticies(float3 position, float3 boxExtents) {
         var verticies = new float3[4];
         var left = -boxExtents.x;
         var right = boxExtents.x;
-        var forward = boxExtents.y;
-        var backward = -boxExtents.y;
+        var forward = boxExtents.z;
+        var backward = -boxExtents.z;
         verticies[0] = position + new float3(left, 0, backward);
         verticies[1] = position + new float3(left, 0, forward);
         verticies[2] = position + new float3(right, 0, forward);

@@ -19,14 +19,19 @@ public class CrowdBootstrapper : MonoBehaviour {
     }
 
     private IEnumerator Start() {
-        var wall = GameObject.Find("Wall");
-        var wallBoxCollider = wall.GetComponent<BoxCollider>();
-        localAvoidanceService.AddStaticBoxObstacle(wall.transform.position, wall.transform.rotation, wallBoxCollider.bounds.extents);
+        AddObstacles();
 
         for (int i = 0; i < agentsCount; i++) {
             localAvoidanceService.AddAgent(spawnPoint);
             yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    private void AddObstacles() {
+        var wall = GameObject.Find("Wall");
+        var wallBoxCollider = wall.GetComponent<BoxCollider>();
+        var extents = wallBoxCollider.bounds.extents;
+        localAvoidanceService.AddStaticBoxObstacle(wall.transform.position, wall.transform.rotation, extents);
     }
 
     private void Update() {
