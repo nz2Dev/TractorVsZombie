@@ -68,13 +68,6 @@ public class LocalAvoidanceService {
         return verticies;
     }
 
-    public void CopyBoxObstaclePose(float3[] poseArray) {
-        var obstacle = staticObstacles[0];
-        for (int i = 0; i < obstacle.Count; i++) {
-            poseArray[i] = obstacle[i];
-        }
-    }
-
     public void SimulateMovement(float deltaTime) {
         orca.Schedule(deltaTime);
         orca.Complete();
