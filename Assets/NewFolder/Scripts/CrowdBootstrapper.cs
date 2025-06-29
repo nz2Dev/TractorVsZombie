@@ -30,8 +30,9 @@ public class CrowdBootstrapper : MonoBehaviour {
     private void AddObstacles() {
         var wall = GameObject.Find("Wall");
         var wallBoxCollider = wall.GetComponent<BoxCollider>();
-        var extents = wallBoxCollider.bounds.extents;
-        localAvoidanceService.AddStaticBoxObstacle(wall.transform.position, wall.transform.rotation, extents);
+        var size = wallBoxCollider.size;
+        size.Scale(wallBoxCollider.transform.lossyScale);
+        localAvoidanceService.AddStaticBoxObstacle(wall.transform.position, wall.transform.rotation, size);
     }
 
     private void Update() {
