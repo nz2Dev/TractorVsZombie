@@ -21,6 +21,7 @@ public class LocalAvoidanceService {
             agents = agentsGroup,
             staticObstacles = staticObstacles
         };
+        ORCADebuger.Debug(orca);
     }
 
     public IEnumerable<int> AgentIds => agentRegistry.Keys;

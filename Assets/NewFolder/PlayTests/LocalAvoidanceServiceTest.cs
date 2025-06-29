@@ -61,33 +61,43 @@ public class LocalAvoidanceServiceTest {
         Assert.That(simulatedPosition, Is.Not.EqualTo(initPosition));
     }
 
-    [Test]
-    public void AddNoObstacles_AgentKeepsPreferedVelocity() {
+    [UnityTest]
+    public IEnumerator AddNoObstacles_AgentKeepsPreferedVelocity() {
         var initPosition = Vector3.zero;
         var preferedVelocity = new Vector3(0, 0, 4f);
 
         var agentId = localAvoidanceService.AddAgent(initPosition);
         localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
-        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
-        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+        yield return SimulateFrames(1);
 
         var simulatedVelocity = localAvoidanceService.GetVelocity(agentId);
         Assert.That(simulatedVelocity.magnitude, Is.EqualTo(preferedVelocity.z).Within(0.01f));
     }
 
-    [Test]
-    public void AddStaticBoxObstacle_AgentChangesVelocity() {
+    [UnityTest]
+    public IEnumerator AddStaticBoxObstacle_AgentChangesVelocity() {
         var initPosition = Vector3.zero;
         var preferedVelocity = new Vector3(0, 0, 4f);
 
         var agentId = localAvoidanceService.AddAgent(initPosition);
         localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
-        localAvoidanceService.AddStaticBoxObstacle(new Vector3(0, 0, 1.5f), Quaternion.identity, new Vector2(1, 1));
-        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
-        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+        localAvoidanceService.AddStaticBoxObstacle(new Vector3(0, 0, 2.5f), Quaternion.identity, new Vector2(1, 1));
+        yield return SimulateFrames(1);
 
         var simulatedVelocity = localAvoidanceService.GetVelocity(agentId);
         Assert.That(simulatedVelocity.magnitude, Is.LessThan(1));
+    }
+
+    private IEnumerator DebugSimulateFrames(int count) {
+        Debug.Break();
+        yield return SimulateFrames(count * 100);
+    }
+
+    private IEnumerator SimulateFrames(int count) {
+        for (int i = 0; i < count; i++) {
+            localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+            yield return null;
+        }
     }
 
     [TearDown]
