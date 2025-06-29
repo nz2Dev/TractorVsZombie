@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {x: -10.39, y: 0, z: 0}
-  agentsCount: 1
+  agentsCount: 20
   targetPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &2063572847
 GameObject:

@@ -14,11 +14,8 @@ public class CrowdBootstrapper : MonoBehaviour {
 
     private LocalAvoidanceService localAvoidanceService;
 
-    private float3[] gizmosVerticies;
-
     private void Awake() {
         localAvoidanceService = new LocalAvoidanceService();
-        gizmosVerticies = new float3[5];
     }
 
     private IEnumerator Start() {
@@ -51,26 +48,6 @@ public class CrowdBootstrapper : MonoBehaviour {
         Gizmos.DrawWireCube(spawnPoint, Vector3.one);
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(targetPoint, Vector3.one);
-
-        if (!Application.isPlaying) {
-            return;
-        }
-
-        Gizmos.color = Color.gray;
-        foreach (var agentId in localAvoidanceService.AgentIds) {
-            var agentPosition = localAvoidanceService.GetAgentPosition(agentId);
-            Gizmos.DrawWireSphere(agentPosition, 0.5f);
-            var agentVelocity = localAvoidanceService.GetVelocity(agentId);
-            Gizmos.DrawRay(agentPosition, agentVelocity);
-        }
-
-        Gizmos.color = Color.white;
-        localAvoidanceService.CopyBoxObstaclePose(gizmosVerticies);
-        for (int i = 0; i < gizmosVerticies.Length - 1; i++) {
-            var lineStart = gizmosVerticies[i];
-            var lineEnd = gizmosVerticies[i + 1];
-            Gizmos.DrawLine(lineStart, lineEnd);
-        }
     }
 #endif
 }
