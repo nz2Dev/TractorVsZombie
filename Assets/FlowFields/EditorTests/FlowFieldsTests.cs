@@ -1,4 +1,5 @@
-using System.Security.Cryptography.X509Certificates;
+using System.Collections;
+using System.Collections.Generic;
 
 using NUnit.Framework;
 
@@ -46,12 +47,12 @@ public class FlowFieldsTests {
         var flowFields = new FlowFields();
         flowFields.SetGrid(size: 2);
         
-        Vector2Int[] neighborsSE = flowFields.GetNeightbors(x: 0, y: 0);
+        var neighborsSE = flowFields.GetNeighbors(x: 0, y: 0);
         Assert.That(neighborsSE, Does.Contain(new Vector2Int(1, 0)));
         Assert.That(neighborsSE, Does.Contain(new Vector2Int(0, 1)));
         Assert.That(neighborsSE, Does.Contain(new Vector2Int(1, 1)));
 
-        Vector2Int[] neighborsNW = flowFields.GetNeightbors(x: 1, y: 1);
+        var neighborsNW = flowFields.GetNeighbors(x: 1, y: 1);
         Assert.That(neighborsNW, Does.Contain(new Vector2Int(0, 1)));
         Assert.That(neighborsNW, Does.Contain(new Vector2Int(0, 0)));
         Assert.That(neighborsNW, Does.Contain(new Vector2Int(1, 0)));

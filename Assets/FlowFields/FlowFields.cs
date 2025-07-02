@@ -11,6 +11,17 @@ public class FlowFields {
         public int integratedCost;
     }
     
+    private static readonly Vector2Int[] NeighborsOffsets = new Vector2Int[] {
+        new(0, -1),
+        new(+1, -1),
+        new(+1, 0),
+        new(+1, +1),
+        new(0, +1),
+        new(-1, +1),
+        new(-1, 0),
+        new(-1, -1),
+    };
+
     private int size;
     private Cell[,] cells;
 
@@ -44,22 +55,18 @@ public class FlowFields {
         return cellCost == 255;
     }
 
-    public Vector2Int[] GetNeightbors(int x, int y) {
-        return new Vector2Int[] {
-            new(x, y - 1),
-            new(x + 1, y - 1),
-            new(x + 1, y),
-            new(x + 1, y + 1),
-            new(x, y + 1),
-            new(x - 1, y + 1),
-            new(x - 1, y),
-            new(x - 1, y - 1),
-        };
+    public Vector2Int[] GetNeighbors(int x, int y) {
+        var point = new Vector2Int(x, y);
+        var neighbors = new Vector2Int[NeighborsOffsets.Length];
+        for (int i = 0; i < neighbors.Length; i++) {
+            neighbors[i] = NeighborsOffsets[i] + point;
+        }
+        return neighbors;
     }
 
     public void ComputeCosts(Vector2Int goal) {
         cells[goal.x, goal.y].integratedCost = 0;
-        var inSearch = new List<Vector2Int> { goal };
+        var inSearch = new List<Vector2Int>(capacity: 64) { goal };
         int safeCounter = 0;
         
         while (inSearch.Count > 0) {
@@ -70,8 +77,8 @@ public class FlowFields {
             var nextCell = cells[nextLocation.x, nextLocation.y];
             inSearch.RemoveAt(0);
 
-            var neighbors = GetNeightbors(nextLocation.x, nextLocation.y);
-            foreach (var neighborLocation in neighbors) {
+            foreach (var offset in NeighborsOffsets) {
+                var neighborLocation = nextLocation + offset;
                 if (neighborLocation.x < 0 || neighborLocation.x >= size
                     || neighborLocation.y < 0 || neighborLocation.y >= size
                     || neighborLocation == goal)
