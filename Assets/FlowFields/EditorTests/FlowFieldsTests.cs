@@ -37,8 +37,8 @@ public class FlowFieldsTests {
         flowFields.SetGrid(size: 2);
         flowFields.SetCellBlocked(x: 0, y: 0, blocked: true);
 
-        var cost = flowFields.GetCellCost(x: 0, y: 0);
-        Assert.That(cost, Is.EqualTo(255));
+        var blocked = flowFields.IsCellBlocked(x: 0, y: 0);
+        Assert.That(blocked, Is.True);
     }
 
     [Test]
@@ -55,6 +55,18 @@ public class FlowFieldsTests {
         Assert.That(neighborsNW, Does.Contain(new Vector2Int(0, 1)));
         Assert.That(neighborsNW, Does.Contain(new Vector2Int(0, 0)));
         Assert.That(neighborsNW, Does.Contain(new Vector2Int(1, 0)));
+    }
+
+    [Test]
+    public void ComputeCostsInOpositeCorner_IsMaximum() {
+        int size = 100;
+        var flowFields = new FlowFields();
+        flowFields.SetGrid(size: size);
+
+        flowFields.ComputeCosts(new Vector2Int(size - 1, size - 1));
+        var computedCost = flowFields.GetIntegratedCost(x: 0, y: 0);
+
+        Assert.That(computedCost, Is.EqualTo(size - 1));
     }
 
 }
