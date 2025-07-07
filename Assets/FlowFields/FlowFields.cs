@@ -12,7 +12,18 @@ public class FlowFields {
         public Vector2Int flowVector;
     }
     
-    public static readonly Vector2Int[] NeighborsOffsets = new Vector2Int[] {
+    public static readonly Vector2Int[] CostNeighborsOffsets = new Vector2Int[] {
+        new(0, -1),
+        // new(+1, -1),
+        new(+1, 0),
+        // new(+1, +1),
+        new(0, +1),
+        // new(-1, +1),
+        new(-1, 0),
+        // new(-1, -1),
+    };
+
+    public static readonly Vector2Int[] FlowNeighborsOffsets = new Vector2Int[] {
         new(0, -1),
         new(+1, -1),
         new(+1, 0),
@@ -53,15 +64,6 @@ public class FlowFields {
         return cellCost == 255;
     }
 
-    public Vector2Int[] GetNeighbors(int x, int y) {
-        var point = new Vector2Int(x, y);
-        var neighbors = new Vector2Int[NeighborsOffsets.Length];
-        for (int i = 0; i < neighbors.Length; i++) {
-            neighbors[i] = NeighborsOffsets[i] + point;
-        }
-        return neighbors;
-    }
-
     public void ComputeCosts(Vector2Int goal) {
         cells[goal.x, goal.y].integratedCost = 0;
         var inSearch = new List<Vector2Int>(capacity: 64) { goal };
@@ -75,7 +77,7 @@ public class FlowFields {
             var nextCell = cells[nextLocation.x, nextLocation.y];
             inSearch.RemoveAt(0);
 
-            foreach (var offset in NeighborsOffsets) {
+            foreach (var offset in CostNeighborsOffsets) {
                 var neighborLocation = nextLocation + offset;
                 if (IsLocationOutsideBounds(neighborLocation) || neighborLocation == goal)
                     continue;
@@ -106,7 +108,7 @@ public class FlowFields {
                 
                 var lowestCost = int.MaxValue;
                 Vector2Int lowestCostLocation = cellLocation;
-                foreach (var offset in NeighborsOffsets) {
+                foreach (var offset in FlowNeighborsOffsets) {
                     var neighborLocation = cellLocation + offset;
                     if (IsLocationOutsideBounds(neighborLocation))
                         continue;

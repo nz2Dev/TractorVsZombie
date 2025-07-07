@@ -261,6 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: 5
   goal: {x: 2, y: 2}
+  costOrFields: 1
 --- !u!1 &1998784680
 GameObject:
   m_ObjectHideFlags: 0

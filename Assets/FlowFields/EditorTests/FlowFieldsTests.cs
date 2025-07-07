@@ -43,49 +43,27 @@ public class FlowFieldsTests {
     }
 
     [Test]
-    public void GetNeighbordsOnAnOpenFields() {
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(size: 2);
-        
-        var neighborsSE = flowFields.GetNeighbors(x: 0, y: 0);
-        Assert.That(neighborsSE, Does.Contain(new Vector2Int(1, 0)));
-        Assert.That(neighborsSE, Does.Contain(new Vector2Int(0, 1)));
-        Assert.That(neighborsSE, Does.Contain(new Vector2Int(1, 1)));
-
-        var neighborsNW = flowFields.GetNeighbors(x: 1, y: 1);
-        Assert.That(neighborsNW, Does.Contain(new Vector2Int(0, 1)));
-        Assert.That(neighborsNW, Does.Contain(new Vector2Int(0, 0)));
-        Assert.That(neighborsNW, Does.Contain(new Vector2Int(1, 0)));
-    }
-
-    [Test]
     public void ComputeCostsInOpositeCorner_IsMaximum() {
-        int size = 100;
+        int size = 5;
         var flowFields = new FlowFields();
         flowFields.SetGrid(size: size);
 
         flowFields.ComputeCosts(new Vector2Int(size - 1, size - 1));
         var computedCost = flowFields.GetIntegratedCost(x: 0, y: 0);
 
-        Assert.That(computedCost, Is.EqualTo(size - 1));
+        Assert.That(computedCost, Is.EqualTo((size - 1) * 2));
     }
 
     [Test]
-    public void ComputeCostsToCenter_CostBasedOnRadius() {
+    public void ComputeCostsToCenter_CornerIsHigherThanEdge() {
         const int radius = 2;
         var flowFields = new FlowFields();
         flowFields.SetGrid(radius * 2 + 1);
         flowFields.ComputeCosts(new Vector2Int(radius, radius));
 
-        var leftbottom = new Vector2Int(0, 0);
-        var leftBottomCost = flowFields.GetIntegratedCost(leftbottom.x, leftbottom.y);
-        Assert.That(leftBottomCost, Is.EqualTo(radius));
-        var leftTop = new Vector2Int(0, radius * 2);
-        var leftTopCost = flowFields.GetIntegratedCost(leftTop.x, leftTop.y);
-        Assert.That(leftTopCost, Is.EqualTo(radius));
-        var rightTop = new Vector2Int(radius * 2, radius * 2);
-        var rightTopCost = flowFields.GetIntegratedCost(rightTop.x, rightTop.y);
-        Assert.That(rightTopCost, Is.EqualTo(radius));
+        var cornerCost = flowFields.GetIntegratedCost(0, 0);
+        var edgeCost = flowFields.GetIntegratedCost(0, radius);
+        Assert.That(cornerCost, Is.GreaterThan(edgeCost));
     }
 
     [Test]
@@ -114,7 +92,7 @@ public class FlowFieldsTests {
 
         int radius = size / 2;
         var center = new Vector2Int(radius, radius);
-        foreach (var offset in FlowFields.NeighborsOffsets) {
+        foreach (var offset in FlowFields.CostNeighborsOffsets) {
             var cirularLocation = center + offset * radius;
             var locationToCenter = center - cirularLocation;
             var flowVector = flowFields.GetFlowVector(cirularLocation.x, cirularLocation.y);
