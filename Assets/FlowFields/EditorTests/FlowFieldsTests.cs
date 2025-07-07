@@ -70,16 +70,20 @@ public class FlowFieldsTests {
         Assert.That(computedCost, Is.EqualTo(size - 1));
     }
 
-    // [Test]
-    // public void ComputeVelocitiesInDirectionOfLowestCost() {
-    //     int size = 2;
-    //     var flowFields = new FlowFields();
-    //     flowFields.SetGrid(size);
-    //     flowFields.ComputeCosts(new Vector2Int(1, 1));
-    //     flowFields.ComputeFlow();
+    [Test]
+    public void ComputeVelocitiesInDirectionOfLowestCost() {
+        int size = 2;
+        var flowFields = new FlowFields();
+        flowFields.SetGrid(size);
+        flowFields.ComputeCosts(new Vector2Int(1, 1));
+        flowFields.ComputeFlow();
 
-    //     var flowVector = flowFields.GetFlowVector(0, 0);
-    //     Assert.That(flowVector, Is.EqualTo(new Vector2Int(1, 1)));
-    // }
+        var centerFV = flowFields.GetFlowVector(0, 0);        
+        Assert.That(centerFV, Is.EqualTo(Vector2Int.one));
+        var upFV = flowFields.GetFlowVector(0, 1);
+        Assert.That(upFV, Is.EqualTo(Vector2Int.right));
+        var rightFV = flowFields.GetFlowVector(1, 0);
+        Assert.That(rightFV, Is.EqualTo(Vector2Int.up));
+    }
 
 }

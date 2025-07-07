@@ -9,6 +9,7 @@ public class FlowFields {
     public class Cell {
         public int cost;
         public int integratedCost;
+        public Vector2Int flowVector;
     }
     
     private static readonly Vector2Int[] NeighborsOffsets = new Vector2Int[] {
@@ -97,30 +98,32 @@ public class FlowFields {
         return cells[x, y].integratedCost;
     }
 
-    // public void ComputeFlow() {
-    //     for (int row = 0; row < size; row++) {
-    //         for (int column = 0; column < size; column++) {
+    public void ComputeFlow() {
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                var cellLocation = new Vector2Int(row, column);
                 
-    //             foreach (var offset in NeighborsOffsets) {
-    //                 var neighborLocation = nextLocation + offset;
-    //                 if (neighborLocation.x < 0 || neighborLocation.x >= size
-    //                     || neighborLocation.y < 0 || neighborLocation.y >= size
-    //                     || neighborLocation == goal)
-    //                         continue;
+                var lowestCost = int.MaxValue;
+                Vector2Int lowestCostLocation = cellLocation;
+                foreach (var offset in NeighborsOffsets) {
+                    var neighborLocation = cellLocation + offset;
+                    if (IsLocationOutsideBounds(neighborLocation))
+                        continue;
 
-    //                 var neighborCell = cells[neighborLocation.x, neighborLocation.y];
-    //                 if (neighborCell.integratedCost != 0)
-    //                     continue;
-                    
-    //                 neighborCell.integratedCost = neighborCell.cost + nextCell.integratedCost;
-    //                 inSearch.Add(neighborLocation);
-    //             }
-    //         }
-    //     }
-    // }
+                    var neighborCell = cells[neighborLocation.x, neighborLocation.y];
+                    if (neighborCell.integratedCost < lowestCost) {
+                        lowestCost = neighborCell.integratedCost;
+                        lowestCostLocation = neighborLocation;
+                    }
+                }
+
+                cells[row, column].flowVector = lowestCostLocation - cellLocation;
+            }
+        }
+    }
 
     public Vector2Int GetFlowVector(int x, int y) {
-        return Vector2Int.zero;
+        return cells[x, y].flowVector;
     }
 
 }
