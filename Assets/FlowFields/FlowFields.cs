@@ -27,6 +27,7 @@ public class FlowFields {
     private Cell[,] cells;
 
     public int CellCount => cells.Length;
+    public int Size => size;
 
     public FlowFields() {
     }
