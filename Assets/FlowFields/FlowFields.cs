@@ -12,7 +12,7 @@ public class FlowFields {
         public Vector2Int flowVector;
     }
     
-    private static readonly Vector2Int[] NeighborsOffsets = new Vector2Int[] {
+    public static readonly Vector2Int[] NeighborsOffsets = new Vector2Int[] {
         new(0, -1),
         new(+1, -1),
         new(+1, 0),
