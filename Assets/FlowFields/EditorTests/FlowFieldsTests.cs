@@ -71,7 +71,7 @@ public class FlowFieldsTests {
     }
 
     [Test]
-    public void ComputeVelocitiesInDirectionOfLowestCost() {
+    public void GoalAtTopRightCornern_FlowVectorsPointingToIt() {
         int size = 2;
         var flowFields = new FlowFields();
         flowFields.SetGrid(size);
