@@ -71,6 +71,24 @@ public class FlowFieldsTests {
     }
 
     [Test]
+    public void ComputeCostsToCenter_CostBasedOnRadius() {
+        const int radius = 3;
+        var flowFields = new FlowFields();
+        flowFields.SetGrid(radius * 2 + 1);
+        flowFields.ComputeCosts(new Vector2Int(radius, radius));
+
+        var leftbottom = new Vector2Int(0, 0);
+        var leftBottomCost = flowFields.GetIntegratedCost(leftbottom.x, leftbottom.y);
+        Assert.That(leftBottomCost, Is.EqualTo(radius));
+        var leftTop = new Vector2Int(0, radius * 2);
+        var leftTopCost = flowFields.GetIntegratedCost(leftTop.x, leftTop.y);
+        Assert.That(leftTopCost, Is.EqualTo(radius));
+        var rightTop = new Vector2Int(radius * 2, radius * 2);
+        var rightTopCost = flowFields.GetIntegratedCost(rightTop.x, rightTop.y);
+        Assert.That(rightTopCost, Is.EqualTo(radius));
+    }
+
+    [Test]
     public void GoalAtTopRightCornern_FlowVectorsPointingToIt() {
         int size = 2;
         var flowFields = new FlowFields();
