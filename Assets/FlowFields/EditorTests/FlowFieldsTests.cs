@@ -29,7 +29,7 @@ public class FlowFieldsTests {
         flowFields.SetGrid(size: 2);
 
         var vector = flowFields.GetFlowVector(x: 0, y: 0);
-        Assert.That(vector, Is.EqualTo(Vector3.zero).Using(Vector3EqualityComparer.Instance));
+        Assert.That(vector, Is.EqualTo(Vector2Int.zero));
     }
 
     [Test]
@@ -69,5 +69,17 @@ public class FlowFieldsTests {
 
         Assert.That(computedCost, Is.EqualTo(size - 1));
     }
+
+    // [Test]
+    // public void ComputeVelocitiesInDirectionOfLowestCost() {
+    //     int size = 2;
+    //     var flowFields = new FlowFields();
+    //     flowFields.SetGrid(size);
+    //     flowFields.ComputeCosts(new Vector2Int(1, 1));
+    //     flowFields.ComputeFlow();
+
+    //     var flowVector = flowFields.GetFlowVector(0, 0);
+    //     Assert.That(flowVector, Is.EqualTo(new Vector2Int(1, 1)));
+    // }
 
 }

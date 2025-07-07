@@ -42,10 +42,6 @@ public class FlowFields {
         }
     }
 
-    public Vector3 GetFlowVector(int x, int y) {
-        return Vector3.zero;
-    }
-
     public void SetCellBlocked(int x, int y, bool blocked) {
         cells[x, y].cost = blocked ? 255 : 0;
     }
@@ -79,22 +75,52 @@ public class FlowFields {
 
             foreach (var offset in NeighborsOffsets) {
                 var neighborLocation = nextLocation + offset;
-                if (neighborLocation.x < 0 || neighborLocation.x >= size
-                    || neighborLocation.y < 0 || neighborLocation.y >= size
-                    || neighborLocation == goal)
-                        continue;
+                if (IsLocationOutsideBounds(neighborLocation) || neighborLocation == goal)
+                    continue;
 
                 var neighborCell = cells[neighborLocation.x, neighborLocation.y];
                 if (neighborCell.integratedCost != 0)
                     continue;
-                
+
                 neighborCell.integratedCost = neighborCell.cost + nextCell.integratedCost;
                 inSearch.Add(neighborLocation);
             }
         }
     }
 
+    private bool IsLocationOutsideBounds(Vector2Int gridLocation) {
+        return gridLocation.x < 0 || gridLocation.x >= size
+            || gridLocation.y < 0 || gridLocation.y >= size;
+    }
+
     public int GetIntegratedCost(int x, int y) {
         return cells[x, y].integratedCost;
     }
+
+    // public void ComputeFlow() {
+    //     for (int row = 0; row < size; row++) {
+    //         for (int column = 0; column < size; column++) {
+                
+    //             foreach (var offset in NeighborsOffsets) {
+    //                 var neighborLocation = nextLocation + offset;
+    //                 if (neighborLocation.x < 0 || neighborLocation.x >= size
+    //                     || neighborLocation.y < 0 || neighborLocation.y >= size
+    //                     || neighborLocation == goal)
+    //                         continue;
+
+    //                 var neighborCell = cells[neighborLocation.x, neighborLocation.y];
+    //                 if (neighborCell.integratedCost != 0)
+    //                     continue;
+                    
+    //                 neighborCell.integratedCost = neighborCell.cost + nextCell.integratedCost;
+    //                 inSearch.Add(neighborLocation);
+    //             }
+    //         }
+    //     }
+    // }
+
+    public Vector2Int GetFlowVector(int x, int y) {
+        return Vector2Int.zero;
+    }
+
 }
