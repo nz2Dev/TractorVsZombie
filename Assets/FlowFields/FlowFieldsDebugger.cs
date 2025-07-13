@@ -1,31 +1,21 @@
 using System;
 
-using Codice.Client.Common.GameUI;
-
 using UnityEditor;
 
 using UnityEngine;
 
 public class FlowFieldsDebugger : MonoBehaviour {
 
-    [SerializeField] private int size;
     [SerializeField] private Vector2Int goal;
+    [SerializeField] private FlowFieldsGrid grid;
     [SerializeField] private bool costOrFields = true;
-    [SerializeField] private Vector2Int[] blockedCells;
 
     private FlowFields flowFields = new FlowFields();
 
     [ContextMenu("Update Fields")]
     private void UpdateFields() {
         flowFields = new FlowFields();
-        flowFields.SetGrid(size);
-
-        if (blockedCells != null) {
-            foreach (var blocked in blockedCells) {
-                flowFields.SetCellBlocked(blocked.x, blocked.y, true);
-            }
-        }
-
+        grid.UpdateCells(flowFields);
         flowFields.ComputeCosts(goal);
         flowFields.ComputeFlow();
     }
@@ -41,8 +31,8 @@ public class FlowFieldsDebugger : MonoBehaviour {
     private void DrawFields() {
         for (int row = 0; row < flowFields.Size; row++) {
             for (int column = 0; column < flowFields.Size; column++) {
+                var worldPos = grid.ConvertToWorld(new Vector2Int(row, column), atCenter: true);
                 var flowVector = flowFields.GetFlowVector(row, column);
-                var worldPos = new Vector3(row + 0.5f, 0, column + 0.5f);
                 Handles.DrawLine(worldPos, worldPos + new Vector3(flowVector.x * 0.5f, 0, flowVector.y * 0.5f), thickness: 2);
             }
         }
@@ -51,8 +41,8 @@ public class FlowFieldsDebugger : MonoBehaviour {
     private void DrawCosts() {
         for (int row = 0; row < flowFields.Size; row++) {
             for (int column = 0; column < flowFields.Size; column++) {
+                var worldPos = grid.ConvertToWorld(new Vector2Int(row, column), atCenter: true);
                 var integratedCost = flowFields.GetIntegratedCost(row, column);
-                var worldPos = new Vector3(row + 0.5f, 0, column + 0.5f);
                 Handles.Label(worldPos, $"{integratedCost}");
             }
         }
