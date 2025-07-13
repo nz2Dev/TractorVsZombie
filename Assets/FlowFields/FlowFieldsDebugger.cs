@@ -21,6 +21,8 @@ public class FlowFieldsDebugger : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
+        UpdateFields();
+
         if (costOrFields) {
             DrawCosts();
         } else {
