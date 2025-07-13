@@ -1,6 +1,7 @@
 using UnityEditor;
 
 using UnityEngine;
+using UnityEngine.XR;
 
 public class FlowFieldsGrid : MonoBehaviour {
     
@@ -41,7 +42,7 @@ public class FlowFieldsGrid : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        Handles.ArrowHandleCap(0, transform.position, Quaternion.LookRotation(Vector3.up), 0.5f, EventType.Repaint);
+        Handles.color = Color.white;
         Handles.DrawPolyLine(
             anchor,
             anchor + new Vector3(size * scale, 0, 0),

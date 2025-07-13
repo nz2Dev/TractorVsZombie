@@ -33,7 +33,8 @@ public class FlowFieldsDebugger : MonoBehaviour {
             for (int column = 0; column < flowFields.Size; column++) {
                 var worldPos = grid.ConvertToWorld(new Vector2Int(row, column), atCenter: true);
                 var flowVector = flowFields.GetFlowVector(row, column);
-                Handles.DrawLine(worldPos, worldPos + new Vector3(flowVector.x * 0.5f, 0, flowVector.y * 0.5f), thickness: 2);
+                var pointArrow = new Vector3(flowVector.x, 0, flowVector.y).normalized * 0.5f;
+                Handles.DrawLine(worldPos, worldPos + pointArrow, thickness: 2);
             }
         }
     }
