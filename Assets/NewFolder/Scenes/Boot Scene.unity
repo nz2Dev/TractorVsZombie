@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 1833006783}
   - component: {fileID: 1833006784}
   m_Layer: 0
-  m_Name: FlowFieldsDebugger
+  m_Name: FieldsDebugger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
