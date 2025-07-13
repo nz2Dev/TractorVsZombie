@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 using UnityEditor;
 
 using UnityEngine;
@@ -16,11 +19,51 @@ public class FlowFieldsGrid : MonoBehaviour {
         anchor = transform.position + new Vector3(-sizeOffset * scale, 0, -sizeOffset * scale);
     }
 
+    [ContextMenu("Regenerate blockers")]
+    public void GenerateBlockers() {
+        var colliders = Object.FindObjectsOfType<Collider>();
+        var cellsSet = new HashSet<Vector2Int>(size * size);
+
+        foreach (var collider in colliders) {
+            if (collider.gameObject.layer == 11 /* walls */) {
+                FindBlockerRaycasts(collider, cellsSet);
+            }
+        }
+
+        blockedCells = cellsSet.ToArray();
+    }
+
+    private void FindBlockerRaycasts(Collider collider, ISet<Vector2Int> collection) {
+        var center = collider.bounds.center;
+        var extens = collider.bounds.extents;
+        var doubleUp = new Vector3(0, collider.bounds.size.y * 2, 0);
+
+        Vector3 bottomLeft = center + new Vector3(-extens.x, 0, -extens.z);
+        Vector3 topRight = center + new Vector3(+extens.x, 0, +extens.z);
+
+        var gridStart = ConvertToGrid(bottomLeft);
+        var gridEnd = ConvertToGrid(topRight);
+        var rowsSpan = gridEnd.x - gridStart.x;
+        var columnSpan = gridEnd.y - gridStart.y;
+        for (int row = 0; row <= rowsSpan; row++) {
+            for (int column = 0; column <= columnSpan; column++) {
+                var gridLocation = gridStart + new Vector2Int(row, column);
+                var gridWorld = ConvertToWorld(gridLocation, atCenter: true);
+
+                var gridRay = new Ray(gridWorld + doubleUp, Vector3.down);
+                var raycasted = collider.Raycast(gridRay, out var _, maxDistance: float.MaxValue);
+                
+                if (raycasted) {
+                    collection.Add(gridLocation);
+                }
+            }
+        }
+    }
+
     public void UpdateCells(FlowFields flowFields) {
         flowFields.SetGrid(size);
         foreach (var blocked in blockedCells) {
-            var gridLocation = ConvertToGrid(new Vector3(blocked.x, 0, blocked.y));
-            flowFields.SetCellBlocked(gridLocation.x, gridLocation.y, true);
+            flowFields.SetCellBlocked(blocked.x, blocked.y, true);
         }
     }
 
@@ -53,7 +96,7 @@ public class FlowFieldsGrid : MonoBehaviour {
         
         Handles.color = Color.red;
         foreach (var blockedCell in blockedCells) {
-            var worldPos = new Vector3(blockedCell.x + scale * 0.5f, 0, blockedCell.y + scale * 0.5f);
+            var worldPos = ConvertToWorld(blockedCell, atCenter: true);
             Handles.RectangleHandleCap(0, worldPos, Quaternion.LookRotation(Vector3.up), scale * 0.5f, EventType.Repaint);
         }
     }

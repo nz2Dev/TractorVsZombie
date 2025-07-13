@@ -2,7 +2,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-public class BockersGenerator : MonoBehaviour {
+public class FlowFieldsGridBlocker : MonoBehaviour {
 
     [SerializeField] private FlowFieldsGrid grid;
     
@@ -32,18 +32,18 @@ public class BockersGenerator : MonoBehaviour {
 
         var gridStart = grid.ConvertToGrid(bottomLeft);
         var gridEnd = grid.ConvertToGrid(topRight);
-        var rowsSpan = Mathf.Max(gridEnd.x - gridStart.x, 1);
-        var columnSpan = Mathf.Max(gridEnd.y - gridStart.y, 1);
-        for (int row = 0; row < rowsSpan; row++) {
-            for (int column = 0; column < columnSpan; column++) {
+        var rowsSpan = gridEnd.x - gridStart.x;
+        var columnSpan = gridEnd.y - gridStart.y;
+        for (int row = 0; row <= rowsSpan; row++) {
+            for (int column = 0; column <= columnSpan; column++) {
                 var gridLocation = gridStart + new Vector2Int(row, column);
                 var gridWorld = grid.ConvertToWorld(gridLocation, atCenter: true);
 
                 var gridRay = new Ray(gridWorld + Vector3.up * 10, Vector3.down);
                 var raycasted = collider.Raycast(gridRay, out var _, maxDistance: float.MaxValue);
                 
-                Gizmos.color = raycasted ? Color.red : Color.white;
-                Gizmos.DrawWireSphere(gridWorld, 0.5f);
+                Handles.color = raycasted ? Color.red : Color.white;
+                Handles.DrawWireDisc(gridWorld, Vector3.up, 0.5f);
             }
         }
     }
