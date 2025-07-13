@@ -7,15 +7,11 @@ using UnityEngine;
 public class FlowFieldsDebugger : MonoBehaviour {
 
     [SerializeField] private FlowFieldsGrid grid;
+    [SerializeField] private bool updateGoalInEditor = true;
     [SerializeField] private bool costOrFields = true;
-    [SerializeField] private bool validateToggle;
 
     private Vector2Int goal;
     private FlowFields flowFields = new FlowFields();
-
-    private void OnValidate() {
-        goal = grid.ConvertToGrid(transform.position);
-    }
 
     private void UpdateFields() {
         flowFields = new FlowFields();
@@ -25,7 +21,10 @@ public class FlowFieldsDebugger : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        UpdateFields();
+        if (updateGoalInEditor) {
+            goal = grid.ConvertToGrid(transform.position);
+            UpdateFields();
+        }
 
         if (costOrFields) {
             DrawCosts();

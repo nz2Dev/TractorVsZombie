@@ -9,6 +9,7 @@ using UnityEngine.XR;
 public class FlowFieldsGrid : MonoBehaviour {
     
     [SerializeField] private int size;
+    [SerializeField] private bool updateBlockersInEditor;
     [SerializeField] private Vector2Int[] blockedCells;
     [Range(0.1f, 1f)][SerializeField] private float scale = 1;
 
@@ -20,7 +21,7 @@ public class FlowFieldsGrid : MonoBehaviour {
     }
 
     [ContextMenu("Regenerate blockers")]
-    public void GenerateBlockers() {
+    private void GenerateBlockers() {
         var colliders = Object.FindObjectsOfType<Collider>();
         var cellsSet = new HashSet<Vector2Int>(size * size);
 
@@ -85,6 +86,10 @@ public class FlowFieldsGrid : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
+        if (updateBlockersInEditor) {
+            GenerateBlockers();
+        }
+
         Handles.color = Color.white;
         Handles.DrawPolyLine(
             anchor,
