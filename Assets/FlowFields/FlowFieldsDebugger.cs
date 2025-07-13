@@ -6,13 +6,17 @@ using UnityEngine;
 
 public class FlowFieldsDebugger : MonoBehaviour {
 
-    [SerializeField] private Vector2Int goal;
     [SerializeField] private FlowFieldsGrid grid;
     [SerializeField] private bool costOrFields = true;
+    [SerializeField] private bool validateToggle;
 
+    private Vector2Int goal;
     private FlowFields flowFields = new FlowFields();
 
-    [ContextMenu("Update Fields")]
+    private void OnValidate() {
+        goal = grid.ConvertToGrid(transform.position);
+    }
+
     private void UpdateFields() {
         flowFields = new FlowFields();
         grid.UpdateCells(flowFields);
