@@ -79,7 +79,9 @@ public class FlowFields {
 
             foreach (var offset in CostNeighborsOffsets) {
                 var neighborLocation = nextLocation + offset;
-                if (IsLocationOutsideBounds(neighborLocation) || neighborLocation == goal)
+                if (IsLocationOutsideBounds(neighborLocation) 
+                    || IsCellBlocked(neighborLocation.x, neighborLocation.y)
+                    || neighborLocation == goal)
                     continue;
 
                 var neighborCell = cells[neighborLocation.x, neighborLocation.y];
@@ -105,12 +107,17 @@ public class FlowFields {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 var cellLocation = new Vector2Int(row, column);
+                if (IsCellBlocked(row, column)) {
+                    cells[row, column].flowVector = Vector2Int.zero;
+                    continue;
+                }
                 
                 var lowestCost = int.MaxValue;
                 Vector2Int lowestCostLocation = cellLocation;
                 foreach (var offset in FlowNeighborsOffsets) {
                     var neighborLocation = cellLocation + offset;
-                    if (IsLocationOutsideBounds(neighborLocation))
+                    if (IsLocationOutsideBounds(neighborLocation)
+                        || IsCellBlocked(neighborLocation.x, neighborLocation.y))
                         continue;
 
                     var neighborCell = cells[neighborLocation.x, neighborLocation.y];

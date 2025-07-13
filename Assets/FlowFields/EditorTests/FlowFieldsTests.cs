@@ -101,4 +101,17 @@ public class FlowFieldsTests {
         }
     }
 
+    [Test]
+    public void BlockedCells_FlowPointsAway() {
+        int size = 3;
+        var flowFields = new FlowFields();
+        flowFields.SetGrid(size);
+        flowFields.SetCellBlocked(1, 1, true);
+        flowFields.ComputeCosts(new Vector2Int(2, 2));
+        flowFields.ComputeFlow();
+
+        Assert.That(flowFields.GetFlowVector(1, 1), Is.EqualTo(Vector2Int.zero));
+        Assert.That(flowFields.GetFlowVector(0, 0), Is.Not.EqualTo(new Vector2Int(1, 1)));
+    }
+
 }

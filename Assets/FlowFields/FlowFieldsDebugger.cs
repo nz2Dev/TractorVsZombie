@@ -10,7 +10,8 @@ public class FlowFieldsDebugger : MonoBehaviour {
 
     [SerializeField] private int size;
     [SerializeField] private Vector2Int goal;
-    [SerializeField] private bool costOrFields = true; 
+    [SerializeField] private bool costOrFields = true;
+    [SerializeField] private Vector2Int[] blockedCells;
 
     private FlowFields flowFields = new FlowFields();
 
@@ -18,6 +19,13 @@ public class FlowFieldsDebugger : MonoBehaviour {
     private void UpdateFields() {
         flowFields = new FlowFields();
         flowFields.SetGrid(size);
+
+        if (blockedCells != null) {
+            foreach (var blocked in blockedCells) {
+                flowFields.SetCellBlocked(blocked.x, blocked.y, true);
+            }
+        }
+
         flowFields.ComputeCosts(goal);
         flowFields.ComputeFlow();
     }

@@ -259,9 +259,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af109c94e6b344aa89f99b3f00eecbbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 5
-  goal: {x: 2, y: 2}
+  size: 4
+  goal: {x: 3, y: 3}
   costOrFields: 1
+  blockedCells:
+  - {x: 1, y: 1}
+  - {x: 1, y: 2}
+  - {x: 2, y: 1}
+  - {x: 2, y: 2}
 --- !u!1 &1998784680
 GameObject:
   m_ObjectHideFlags: 0
