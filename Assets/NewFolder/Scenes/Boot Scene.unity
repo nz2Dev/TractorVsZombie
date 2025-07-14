@@ -260,64 +260,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2a651aa3654942cf864072452760d1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 50
+  size: 5
   scale: 1
-  updateBlockersInEditor: 0
+  updateBlockersInEditor: 1
   drawBlockers: 1
-  blockedCells:
-  - {x: 28, y: 24}
-  - {x: 28, y: 25}
-  - {x: 29, y: 22}
-  - {x: 29, y: 23}
-  - {x: 29, y: 24}
-  - {x: 29, y: 25}
-  - {x: 29, y: 26}
-  - {x: 30, y: 21}
-  - {x: 30, y: 22}
-  - {x: 30, y: 23}
-  - {x: 30, y: 24}
-  - {x: 30, y: 25}
-  - {x: 31, y: 20}
-  - {x: 31, y: 21}
-  - {x: 31, y: 22}
-  - {x: 31, y: 23}
-  - {x: 31, y: 24}
-  - {x: 32, y: 20}
-  - {x: 32, y: 21}
-  - {x: 32, y: 22}
-  - {x: 33, y: 20}
-  - {x: 33, y: 21}
-  - {x: 11, y: 16}
-  - {x: 11, y: 17}
-  - {x: 12, y: 15}
-  - {x: 12, y: 16}
-  - {x: 12, y: 17}
-  - {x: 13, y: 15}
-  - {x: 18, y: 13}
-  - {x: 18, y: 14}
-  - {x: 19, y: 14}
-  - {x: 19, y: 15}
-  - {x: 20, y: 15}
-  - {x: 20, y: 16}
-  - {x: 21, y: 15}
-  - {x: 21, y: 16}
-  - {x: 21, y: 17}
-  - {x: 22, y: 16}
-  - {x: 22, y: 17}
-  - {x: 22, y: 18}
-  - {x: 23, y: 17}
-  - {x: 23, y: 18}
-  - {x: 23, y: 19}
-  - {x: 24, y: 18}
-  - {x: 18, y: 25}
-  - {x: 18, y: 26}
-  - {x: 18, y: 27}
-  - {x: 19, y: 25}
-  - {x: 19, y: 26}
-  - {x: 19, y: 27}
-  - {x: 20, y: 25}
-  - {x: 20, y: 26}
-  - {x: 20, y: 27}
+  blockedCells: []
   drawComputation: 1
   costOrFields: 0
   updateGoalInEditor: 1
@@ -393,7 +340,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1456848647}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.86, y: 0, z: -1.29}
+  m_LocalPosition: {x: 0.03, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

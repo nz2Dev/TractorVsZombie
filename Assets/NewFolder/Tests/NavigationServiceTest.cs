@@ -16,11 +16,11 @@ public class NavigationServiceTest {
 
     [Test]
     public void CreateFlowFieldWithGoal_ReturnVectorPointingToward() {
-        var checkPosition = new Vector3(-2, -2);
-        var goalPosition = new Vector3(0, 0);
+        var checkPosition = new Vector3(-2, 0, -2);
+        var goalPosition = new Vector3(0, 0, 0);
         
         var navigationService = new NavigationService();
-        navigationService.SetupFlowField(sizeBounds: 3, density: 1, obstacles: null);
+        navigationService.SetupFlowField(sizeBounds: 5, density: 1, obstacles: null);
         navigationService.SetGoal(goalPosition);
 
         var flowVector = navigationService.GetFlowVector(checkPosition);
