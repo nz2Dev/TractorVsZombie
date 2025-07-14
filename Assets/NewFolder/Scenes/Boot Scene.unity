@@ -213,7 +213,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 34.2, y: 90, z: 0}
 --- !u!1 &804724241
 GameObject:
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 804724242}
   - component: {fileID: 804724243}
   m_Layer: 0
-  m_Name: FlowFieldsGrid
+  m_Name: FlowFieldsSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -243,9 +243,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1456848648}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &804724243
 MonoBehaviour:
@@ -260,24 +261,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 50
+  scale: 1
   updateBlockersInEditor: 0
+  drawBlockers: 1
   blockedCells:
-  - {x: 18, y: 13}
-  - {x: 18, y: 14}
-  - {x: 19, y: 14}
-  - {x: 19, y: 15}
-  - {x: 20, y: 15}
-  - {x: 20, y: 16}
-  - {x: 21, y: 15}
-  - {x: 21, y: 16}
-  - {x: 21, y: 17}
-  - {x: 22, y: 16}
-  - {x: 22, y: 17}
-  - {x: 22, y: 18}
-  - {x: 23, y: 17}
-  - {x: 23, y: 18}
-  - {x: 23, y: 19}
-  - {x: 24, y: 18}
   - {x: 28, y: 24}
   - {x: 28, y: 25}
   - {x: 29, y: 22}
@@ -300,6 +287,28 @@ MonoBehaviour:
   - {x: 32, y: 22}
   - {x: 33, y: 20}
   - {x: 33, y: 21}
+  - {x: 11, y: 16}
+  - {x: 11, y: 17}
+  - {x: 12, y: 15}
+  - {x: 12, y: 16}
+  - {x: 12, y: 17}
+  - {x: 13, y: 15}
+  - {x: 18, y: 13}
+  - {x: 18, y: 14}
+  - {x: 19, y: 14}
+  - {x: 19, y: 15}
+  - {x: 20, y: 15}
+  - {x: 20, y: 16}
+  - {x: 21, y: 15}
+  - {x: 21, y: 16}
+  - {x: 21, y: 17}
+  - {x: 22, y: 16}
+  - {x: 22, y: 17}
+  - {x: 22, y: 18}
+  - {x: 23, y: 17}
+  - {x: 23, y: 18}
+  - {x: 23, y: 19}
+  - {x: 24, y: 18}
   - {x: 18, y: 25}
   - {x: 18, y: 26}
   - {x: 18, y: 27}
@@ -309,13 +318,10 @@ MonoBehaviour:
   - {x: 20, y: 25}
   - {x: 20, y: 26}
   - {x: 20, y: 27}
-  - {x: 11, y: 16}
-  - {x: 11, y: 17}
-  - {x: 12, y: 15}
-  - {x: 12, y: 16}
-  - {x: 12, y: 17}
-  - {x: 13, y: 15}
-  scale: 1
+  drawComputation: 1
+  costOrFields: 0
+  updateGoalInEditor: 0
+  goalTransform: {fileID: 1456848648}
 --- !u!1 &1170023892
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +352,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1170023894
 MonoBehaviour:
@@ -363,7 +369,7 @@ MonoBehaviour:
   wallsMask:
     serializedVersion: 2
     m_Bits: 2048
---- !u!1 &1833006782
+--- !u!1 &1456848647
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -371,45 +377,29 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1833006783}
-  - component: {fileID: 1833006784}
+  - component: {fileID: 1456848648}
   m_Layer: 0
-  m_Name: FieldsDebugger
+  m_Name: Goal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1833006783
+--- !u!4 &1456848648
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833006782}
+  m_GameObject: {fileID: 1456848647}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.7, y: 0, z: -3.79}
+  m_LocalPosition: {x: -0.38, y: 0, z: -1.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_Father: {fileID: 804724242}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1833006784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833006782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af109c94e6b344aa89f99b3f00eecbbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grid: {fileID: 804724243}
-  updateGoalInEditor: 0
-  costOrFields: 0
 --- !u!1 &1998784680
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +430,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1998784682
 MonoBehaviour:
@@ -487,7 +477,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2011514141
 MonoBehaviour:
@@ -535,7 +525,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2063572849
 MonoBehaviour:

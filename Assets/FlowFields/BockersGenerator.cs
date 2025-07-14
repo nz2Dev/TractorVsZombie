@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class FlowFieldsGridBlocker : MonoBehaviour {
 
-    [SerializeField] private FlowFieldsGrid grid;
+    [SerializeField] private FlowFieldsSystem grid;
     
+    private FlowFieldsSpace space;
+
     private void OnValidate() {
-        
+        space = new FlowFieldsSpace(20, 1);
     }
 
     void OnDrawGizmos() {
@@ -27,17 +29,17 @@ public class FlowFieldsGridBlocker : MonoBehaviour {
             bottomLeft
         );
 
-        if (grid == null)
+        if (space == null)
             return;
 
-        var gridStart = grid.ConvertToGrid(bottomLeft);
-        var gridEnd = grid.ConvertToGrid(topRight);
+        var gridStart = space.ConvertToGrid(bottomLeft);
+        var gridEnd = space.ConvertToGrid(topRight);
         var rowsSpan = gridEnd.x - gridStart.x;
         var columnSpan = gridEnd.y - gridStart.y;
         for (int row = 0; row <= rowsSpan; row++) {
             for (int column = 0; column <= columnSpan; column++) {
                 var gridLocation = gridStart + new Vector2Int(row, column);
-                var gridWorld = grid.ConvertToWorld(gridLocation, atCenter: true);
+                var gridWorld = space.ConvertToWorld(gridLocation, atCenter: true);
 
                 var gridRay = new Ray(gridWorld + Vector3.up * 10, Vector3.down);
                 var raycasted = collider.Raycast(gridRay, out var _, maxDistance: float.MaxValue);
