@@ -11,6 +11,7 @@ public class CrowdBootstrapper : MonoBehaviour {
     [SerializeField] Vector3 spawnPoint;
     [SerializeField] int agentsCount = 10;
     [SerializeField] Vector3 targetPoint;
+    [SerializeField] private LevelProvider levelProvider;
 
     private LocalAvoidanceService localAvoidanceService;
 
@@ -28,11 +29,9 @@ public class CrowdBootstrapper : MonoBehaviour {
     }
 
     private void AddObstacles() {
-        var wall = GameObject.Find("Wall");
-        var wallBoxCollider = wall.GetComponent<BoxCollider>();
-        var size = wallBoxCollider.size;
-        size.Scale(wallBoxCollider.transform.lossyScale);
-        localAvoidanceService.AddStaticBoxObstacle(wall.transform.position, wall.transform.rotation, size);
+        foreach (var wall in levelProvider.GetWalls()) {
+            localAvoidanceService.AddStaticBoxObstacle(wall.position, wall.rotation, wall.size);
+        }
     }
 
     private void Update() {
