@@ -7,6 +7,7 @@ public struct Wall {
     public Vector3 position;
     public Quaternion rotation;
     public Vector3 size;
+    public BoxCollider boxCollider;
 }
 
 public class LevelProvider : MonoBehaviour {
@@ -25,7 +26,8 @@ public class LevelProvider : MonoBehaviour {
                 walls.Add(new Wall {
                     position = collider.transform.position,
                     rotation = collider.transform.rotation,
-                    size = scaledBoxSize
+                    size = scaledBoxSize,
+                    boxCollider = collider
                 });
             }
         }

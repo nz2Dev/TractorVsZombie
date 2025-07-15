@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -10,10 +11,23 @@ public class NavigationService {
     public NavigationService() {
     }
 
-    public void SetupFlowField(int sizeBounds, int density, object obstacles) {
+    public void SetupFlowField(int sizeBounds, int density, IEnumerable<BoxCollider> obstacles) {
+        space = new FlowFieldsSpace(sizeBounds, density);
+
         flowFields = new FlowFields();
         flowFields.SetGrid(sizeBounds);
-        space = new FlowFieldsSpace(sizeBounds, density);
+
+        if (obstacles != null) {
+            var blockedCells = new HashSet<Vector2Int>();
+            foreach (var boxCollider in obstacles) {
+                CellRaycaster.ColliderCast(boxCollider, space, blockedCells);
+            }
+            
+            foreach (var blockedLocation in blockedCells) {
+                flowFields.SetCellBlocked(blockedLocation.x, blockedLocation.y, true);
+            }
+        }
+
     }
 
     public Vector3 GetFlowVector(Vector3 worldSpacePosition) {

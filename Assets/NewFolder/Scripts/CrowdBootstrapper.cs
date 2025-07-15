@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 
 using Unity.Mathematics;
 
@@ -14,12 +15,17 @@ public class CrowdBootstrapper : MonoBehaviour {
     [SerializeField] private LevelProvider levelProvider;
 
     private LocalAvoidanceService localAvoidanceService;
+    private NavigationService navigationService;
 
     private void Awake() {
         localAvoidanceService = new LocalAvoidanceService();
+        navigationService = new NavigationService();
     }
 
     private IEnumerator Start() {
+        navigationService.SetupFlowField(50, 1, levelProvider.GetWalls().Select(wall => wall.boxCollider));
+        navigationService.SetGoal(Vector3.zero);
+
         AddObstacles();
 
         for (int i = 0; i < agentsCount; i++) {
@@ -42,8 +48,11 @@ public class CrowdBootstrapper : MonoBehaviour {
     private void UpdateTargetFollowing() {
         foreach (var agentId in localAvoidanceService.AgentIds) {
             var agentPosition = localAvoidanceService.GetAgentPosition(agentId);
-            var targetVelocity = (targetPoint - agentPosition).normalized;
-            localAvoidanceService.SetPreferedVelocity(agentId, targetVelocity);
+            
+            // var targetVelocity = (targetPoint - agentPosition).normalized;
+            var flowVector = navigationService.GetFlowVector(agentPosition);
+            
+            localAvoidanceService.SetPreferedVelocity(agentId, flowVector);
         }
     }
 
