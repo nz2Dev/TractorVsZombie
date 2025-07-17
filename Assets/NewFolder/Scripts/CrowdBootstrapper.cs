@@ -41,8 +41,15 @@ public class CrowdBootstrapper : MonoBehaviour {
     }
 
     private void Update() {
+        UpdateGoalPosition();
         UpdateTargetFollowing();
         localAvoidanceService.SimulateMovement(Time.deltaTime);
+    }
+
+    private void UpdateGoalPosition() {
+        if (Time.frameCount % 3 == 0) {
+            navigationService.SetGoal(targetPoint);
+        }
     }
 
     private void UpdateTargetFollowing() {
