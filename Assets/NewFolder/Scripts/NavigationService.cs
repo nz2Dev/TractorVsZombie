@@ -42,11 +42,6 @@ public class NavigationService {
         }
     }
 
-    private bool TrySampleValidFlowVector(Vector3 samplePosition, out Vector3 flowVector) {
-        flowVector = surface.GetFlowVector(samplePosition);
-        return flowVector.magnitude > float.Epsilon;
-    }
-
     public void SetGoal(Vector3 worldSpacePosition) {
         surface.SetGoal(worldSpacePosition);
     }
