@@ -12,7 +12,7 @@ public class FlowFieldsSurface : MonoBehaviour {
 
     [SerializeField] private int size;
     [SerializeField] private LayerMask blockersMask;
-    [SerializeField] private Vector2Int[] blockedCells;
+    [SerializeField] private Vector2Int[] blockedCells = new Vector2Int[0];
     [Space]
     [SerializeField] private bool bakeInRealTime;
     [SerializeField] private bool displayBlockers = true;
@@ -47,8 +47,20 @@ public class FlowFieldsSurface : MonoBehaviour {
         space = new FlowFieldsSpace(size, DefaultScale);
     }
 
+    public void SetSize(int size) {
+        this.size = size;
+        DefineSpace();
+    }
+
     public void BakeBlockers() {
         var colliders = FindObjectsByType<Collider>(FindObjectsSortMode.None);
+        BakeWithBlockers(colliders);
+    }
+
+    public void BakeWithBlockers(IEnumerable<Collider> colliders) {
+        if (colliders == null)
+            return;
+
         var cellsSet = new HashSet<Vector2Int>(size * size);
 
         foreach (var collider in colliders) {
@@ -73,6 +85,11 @@ public class FlowFieldsSurface : MonoBehaviour {
 
     public int GetIntegratedCost(int x, int y) {
         return flowFields.GetIntegratedCost(x, y);
+    }
+
+    public Vector3 GetFlowVector(Vector3 worldPos) {
+        var gridPos = space.ConvertToGrid(worldPos);
+        return GetFlowVector(gridPos.x, gridPos.y);
     }
 
     public Vector3 GetFlowVector(int x, int y) {

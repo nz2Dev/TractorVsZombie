@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "NewFolder",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "FlowFields"
     ],
     "includePlatforms": [
         "Editor"

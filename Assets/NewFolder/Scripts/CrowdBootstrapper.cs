@@ -13,17 +13,17 @@ public class CrowdBootstrapper : MonoBehaviour {
     [SerializeField] int agentsCount = 10;
     [SerializeField] Vector3 targetPoint;
     [SerializeField] private LevelProvider levelProvider;
+    [SerializeField] private FlowFieldsSurface flowFieldsSurface;
 
     private LocalAvoidanceService localAvoidanceService;
     private NavigationService navigationService;
 
     private void Awake() {
         localAvoidanceService = new LocalAvoidanceService();
-        navigationService = new NavigationService();
+        navigationService = new NavigationService(flowFieldsSurface);
     }
 
     private IEnumerator Start() {
-        navigationService.SetupFlowField(50, 1, levelProvider.GetWalls().Select(wall => wall.boxCollider));
         navigationService.SetGoal(Vector3.zero);
 
         AddObstacles();

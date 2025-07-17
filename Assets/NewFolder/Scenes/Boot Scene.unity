@@ -264,6 +264,32 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   blockedCells:
+  - {x: 13, y: 34}
+  - {x: 13, y: 35}
+  - {x: 14, y: 32}
+  - {x: 14, y: 33}
+  - {x: 14, y: 34}
+  - {x: 14, y: 35}
+  - {x: 15, y: 30}
+  - {x: 15, y: 31}
+  - {x: 15, y: 32}
+  - {x: 15, y: 33}
+  - {x: 16, y: 31}
+  - {x: 11, y: 22}
+  - {x: 11, y: 23}
+  - {x: 11, y: 24}
+  - {x: 11, y: 25}
+  - {x: 11, y: 26}
+  - {x: 11, y: 27}
+  - {x: 12, y: 20}
+  - {x: 12, y: 21}
+  - {x: 12, y: 22}
+  - {x: 12, y: 23}
+  - {x: 12, y: 24}
+  - {x: 12, y: 25}
+  - {x: 12, y: 26}
+  - {x: 12, y: 27}
+  - {x: 12, y: 28}
   - {x: 16, y: 25}
   - {x: 17, y: 24}
   - {x: 17, y: 25}
@@ -293,32 +319,6 @@ MonoBehaviour:
   - {x: 25, y: 31}
   - {x: 25, y: 32}
   - {x: 25, y: 33}
-  - {x: 13, y: 34}
-  - {x: 13, y: 35}
-  - {x: 14, y: 32}
-  - {x: 14, y: 33}
-  - {x: 14, y: 34}
-  - {x: 14, y: 35}
-  - {x: 15, y: 30}
-  - {x: 15, y: 31}
-  - {x: 15, y: 32}
-  - {x: 15, y: 33}
-  - {x: 16, y: 31}
-  - {x: 11, y: 22}
-  - {x: 11, y: 23}
-  - {x: 11, y: 24}
-  - {x: 11, y: 25}
-  - {x: 11, y: 26}
-  - {x: 11, y: 27}
-  - {x: 12, y: 20}
-  - {x: 12, y: 21}
-  - {x: 12, y: 22}
-  - {x: 12, y: 23}
-  - {x: 12, y: 24}
-  - {x: 12, y: 25}
-  - {x: 12, y: 26}
-  - {x: 12, y: 27}
-  - {x: 12, y: 28}
   - {x: 29, y: 26}
   - {x: 29, y: 27}
   - {x: 30, y: 25}
@@ -409,7 +409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1998784681
 Transform:
   m_ObjectHideFlags: 0
@@ -488,6 +488,7 @@ MonoBehaviour:
   agentsCount: 20
   targetPoint: {x: -0.51, y: 0, z: -1.4}
   levelProvider: {fileID: 1170023894}
+  flowFieldsSurface: {fileID: 804724243}
 --- !u!1 &2063572847
 GameObject:
   m_ObjectHideFlags: 0
