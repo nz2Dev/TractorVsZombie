@@ -11,6 +11,7 @@ public class FlowFieldsSurface : MonoBehaviour {
     private const float DefaultScale = 1;
 
     [SerializeField] private int size;
+    [SerializeField] private LayerMask blockersMask;
     [SerializeField] private Vector2Int[] blockedCells;
     [Space]
     [SerializeField] private bool bakeInRealTime;
@@ -51,7 +52,7 @@ public class FlowFieldsSurface : MonoBehaviour {
         var cellsSet = new HashSet<Vector2Int>(size * size);
 
         foreach (var collider in colliders) {
-            if (collider.gameObject.layer == 11 /* walls */) {
+            if (MaskContainsLayer(blockersMask, collider.gameObject.layer)) {
                 CellRaycaster.ColliderCast(collider, space, cellsSet);
             }
         }
@@ -92,6 +93,10 @@ public class FlowFieldsSurface : MonoBehaviour {
         var goalLocation = space.ConvertToGrid(goal);
         flowFields.ComputeCosts(goalLocation);
         flowFields.ComputeFlow();
+    }
+
+    private static bool MaskContainsLayer(LayerMask layerMask, int layer) {
+        return (layerMask.value & (1 << layer)) != 0;
     }
 
 }

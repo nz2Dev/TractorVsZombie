@@ -260,6 +260,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 50
+  blockersMask:
+    serializedVersion: 2
+    m_Bits: 2048
   blockedCells:
   - {x: 16, y: 25}
   - {x: 17, y: 24}
@@ -338,7 +341,7 @@ MonoBehaviour:
   - {x: 33, y: 24}
   - {x: 33, y: 25}
   - {x: 34, y: 23}
-  bakeInRealTime: 0
+  bakeInRealTime: 1
   displayBlockers: 1
   displayComputations: 1
   costOrFieldsDisplay: 0
