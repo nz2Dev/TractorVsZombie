@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FlowFieldsGridBlocker : MonoBehaviour {
 
-    [SerializeField] private FlowFieldsSystem grid;
+    [SerializeField] private FlowFieldsSurface grid;
     
     private FlowFieldsSpace space;
 

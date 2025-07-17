@@ -226,12 +226,12 @@ GameObject:
   - component: {fileID: 804724242}
   - component: {fileID: 804724243}
   m_Layer: 0
-  m_Name: FlowFieldsSystem
+  m_Name: FlowFieldsSurface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &804724242
 Transform:
   m_ObjectHideFlags: 0
@@ -243,8 +243,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1456848648}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -261,67 +260,89 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 50
-  scale: 1
-  updateBlockersInEditor: 0
-  drawBlockers: 1
   blockedCells:
-  - {x: 28, y: 24}
-  - {x: 28, y: 25}
-  - {x: 29, y: 22}
-  - {x: 29, y: 23}
-  - {x: 29, y: 24}
-  - {x: 29, y: 25}
-  - {x: 29, y: 26}
-  - {x: 30, y: 21}
-  - {x: 30, y: 22}
-  - {x: 30, y: 23}
-  - {x: 30, y: 24}
-  - {x: 30, y: 25}
-  - {x: 31, y: 20}
-  - {x: 31, y: 21}
-  - {x: 31, y: 22}
-  - {x: 31, y: 23}
-  - {x: 31, y: 24}
-  - {x: 32, y: 20}
-  - {x: 32, y: 21}
-  - {x: 32, y: 22}
-  - {x: 33, y: 20}
-  - {x: 33, y: 21}
-  - {x: 11, y: 16}
-  - {x: 11, y: 17}
-  - {x: 12, y: 15}
-  - {x: 12, y: 16}
-  - {x: 12, y: 17}
-  - {x: 13, y: 15}
-  - {x: 18, y: 13}
-  - {x: 18, y: 14}
-  - {x: 19, y: 14}
-  - {x: 19, y: 15}
-  - {x: 20, y: 15}
-  - {x: 20, y: 16}
-  - {x: 21, y: 15}
-  - {x: 21, y: 16}
-  - {x: 21, y: 17}
-  - {x: 22, y: 16}
-  - {x: 22, y: 17}
-  - {x: 22, y: 18}
-  - {x: 23, y: 17}
-  - {x: 23, y: 18}
-  - {x: 23, y: 19}
-  - {x: 24, y: 18}
+  - {x: 16, y: 25}
+  - {x: 17, y: 24}
+  - {x: 17, y: 25}
+  - {x: 17, y: 26}
   - {x: 18, y: 25}
   - {x: 18, y: 26}
   - {x: 18, y: 27}
-  - {x: 19, y: 25}
   - {x: 19, y: 26}
   - {x: 19, y: 27}
-  - {x: 20, y: 25}
-  - {x: 20, y: 26}
+  - {x: 19, y: 28}
   - {x: 20, y: 27}
-  drawComputation: 1
-  costOrFields: 0
-  updateGoalInEditor: 0
-  goalTransform: {fileID: 1456848648}
+  - {x: 20, y: 28}
+  - {x: 20, y: 29}
+  - {x: 21, y: 28}
+  - {x: 21, y: 29}
+  - {x: 21, y: 30}
+  - {x: 22, y: 29}
+  - {x: 22, y: 30}
+  - {x: 22, y: 31}
+  - {x: 23, y: 30}
+  - {x: 23, y: 31}
+  - {x: 23, y: 32}
+  - {x: 24, y: 30}
+  - {x: 24, y: 31}
+  - {x: 24, y: 32}
+  - {x: 24, y: 33}
+  - {x: 25, y: 31}
+  - {x: 25, y: 32}
+  - {x: 25, y: 33}
+  - {x: 13, y: 34}
+  - {x: 13, y: 35}
+  - {x: 14, y: 32}
+  - {x: 14, y: 33}
+  - {x: 14, y: 34}
+  - {x: 14, y: 35}
+  - {x: 15, y: 30}
+  - {x: 15, y: 31}
+  - {x: 15, y: 32}
+  - {x: 15, y: 33}
+  - {x: 16, y: 31}
+  - {x: 11, y: 22}
+  - {x: 11, y: 23}
+  - {x: 11, y: 24}
+  - {x: 11, y: 25}
+  - {x: 11, y: 26}
+  - {x: 11, y: 27}
+  - {x: 12, y: 20}
+  - {x: 12, y: 21}
+  - {x: 12, y: 22}
+  - {x: 12, y: 23}
+  - {x: 12, y: 24}
+  - {x: 12, y: 25}
+  - {x: 12, y: 26}
+  - {x: 12, y: 27}
+  - {x: 12, y: 28}
+  - {x: 29, y: 26}
+  - {x: 29, y: 27}
+  - {x: 30, y: 25}
+  - {x: 30, y: 26}
+  - {x: 30, y: 27}
+  - {x: 30, y: 28}
+  - {x: 31, y: 23}
+  - {x: 31, y: 24}
+  - {x: 31, y: 25}
+  - {x: 31, y: 26}
+  - {x: 31, y: 27}
+  - {x: 31, y: 28}
+  - {x: 32, y: 22}
+  - {x: 32, y: 23}
+  - {x: 32, y: 24}
+  - {x: 32, y: 25}
+  - {x: 32, y: 26}
+  - {x: 33, y: 22}
+  - {x: 33, y: 23}
+  - {x: 33, y: 24}
+  - {x: 33, y: 25}
+  - {x: 34, y: 23}
+  bakeInRealTime: 0
+  displayBlockers: 1
+  displayComputations: 1
+  costOrFieldsDisplay: 0
+  updateGoalInEditor: 1
 --- !u!1 &1170023892
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,37 +390,6 @@ MonoBehaviour:
   wallsMask:
     serializedVersion: 2
     m_Bits: 2048
---- !u!1 &1456848647
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1456848648}
-  m_Layer: 0
-  m_Name: Goal
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1456848648
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1456848647}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 0, z: -1.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 804724242}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1998784680
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1998784681
 Transform:
   m_ObjectHideFlags: 0
@@ -491,9 +481,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91b8ce48a00274d768e023c7215cd517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoint: {x: -10.39, y: 0, z: 9.39}
+  spawnPoint: {x: -15.9, y: 0, z: 13.92}
   agentsCount: 20
-  targetPoint: {x: 0, y: 0, z: 0}
+  targetPoint: {x: -0.51, y: 0, z: -1.4}
   levelProvider: {fileID: 1170023894}
 --- !u!1 &2063572847
 GameObject:
