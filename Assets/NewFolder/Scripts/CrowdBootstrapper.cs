@@ -12,7 +12,6 @@ public class CrowdBootstrapper : MonoBehaviour {
     [SerializeField] Vector3 spawnPoint;
     [SerializeField] int agentsCount = 10;
     [SerializeField] Vector3 targetPoint;
-    [SerializeField] private LevelProvider levelProvider;
     [SerializeField] private FlowFieldsSurface flowFieldsSurface;
     [SerializeField] private ORCAEnvironment orcaEnvironment;
 
