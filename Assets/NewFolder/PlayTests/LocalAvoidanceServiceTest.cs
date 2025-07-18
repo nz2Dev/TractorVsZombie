@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 
 using NUnit.Framework;
@@ -10,81 +9,118 @@ using UnityEngine.TestTools.Utils;
 [TestFixture]
 public class LocalAvoidanceServiceTest {
     
-    private const float DefaultDeltaTime = 0.1f;
+    private ORCAEnvironment environment;
+    private GameObject testContainer;
+    private LocalAvoidanceService service;
 
-    private LocalAvoidanceService localAvoidanceService;
+    private void InstantiateORCAEnvironement() {
+        var gameObject = new GameObject("Test ORCA Environment (New)", typeof(ORCAEnvironment));
+        environment = gameObject.GetComponent<ORCAEnvironment>();
+        environment.transform.SetParent(testContainer.transform);
+    }
+
+    private void InstantiateBoxCollider(Vector3 position, Vector3 size) {
+        var gameObject = new GameObject("Test Box Collider (New)", typeof(BoxCollider));
+        var boxCollider = gameObject.GetComponent<BoxCollider>();
+        boxCollider.transform.SetParent(testContainer.transform, true);
+        boxCollider.transform.position = position;
+        boxCollider.size = size;
+    }
+
+    private void InstantiateService() {
+        service = new LocalAvoidanceService(environment);
+    }
 
     [SetUp]
     public void SetUpTest() {
-        localAvoidanceService = new LocalAvoidanceService();
+        testContainer = new GameObject("Test Container");
     }
 
     [Test]
     public void AddAgents_ReturnDifferentIds() {
+        InstantiateORCAEnvironement();
+        InstantiateService();
+
         var initPosition = new Vector3(1f, 0, 1f);
-        var agent1Id = localAvoidanceService.AddAgent(initPosition);
-        var agent2Id = localAvoidanceService.AddAgent(initPosition);
+        var agent1Id = service.AddAgent(initPosition);
+        var agent2Id = service.AddAgent(initPosition);
         Assert.That(agent1Id, Is.Not.EqualTo(agent2Id));
     }
 
     [Test]
     public void AddNewAgent_ReturnInitPosition() {
+        InstantiateORCAEnvironement();
+        InstantiateService();
+
         var initPosition = new Vector3(1f, 0, 1f);
-        var agentId = localAvoidanceService.AddAgent(initPosition);
-        var agentPosition = localAvoidanceService.GetAgentPosition(agentId);
+        var agentId = service.AddAgent(initPosition);
+        var agentPosition = service.GetAgentPosition(agentId);
         Assert.That(agentPosition, Is.EqualTo(initPosition).Using(Vector3EqualityComparer.Instance));
     }
 
-    [Test]
-    public void SimulateDefault_DoesNotChangeState() {
-        var deltaTime = 0.1f;
-        var initPosition = Vector3.zero;
-        var agentId = localAvoidanceService.AddAgent(initPosition);
-        
-        localAvoidanceService.SimulateMovement(deltaTime);
+    [UnityTest]
+    public IEnumerator SimulateFrame_DoesNotChangeState() {
+        InstantiateORCAEnvironement();
+        InstantiateService();
 
-        Assert.That(localAvoidanceService.GetAgentPosition(agentId), 
+        var initPosition = Vector3.zero;
+        var agentId = service.AddAgent(initPosition);
+        
+        yield return null;
+
+        Assert.That(service.GetAgentPosition(agentId), 
             Is.EqualTo(initPosition).Using(Vector3EqualityComparer.Instance));
     }
 
-    [Test]
-    public void SimulateOneAgentWithInput_ChangesItsState() {
+    [UnityTest]
+    public IEnumerator SimulateOneAgentWithInput_ChangesItsState() {
+        InstantiateORCAEnvironement();
+        InstantiateService();
+        yield return null;
+
         var initPosition = Vector3.zero;
         var preferedVelocity = Vector3.forward;
         
-        var agentId = localAvoidanceService.AddAgent(initPosition);
-        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
-        localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
-        localAvoidanceService.SimulateMovement(DefaultDeltaTime);
+        var agentId = service.AddAgent(initPosition);
+        yield return null;
+        service.SetPreferedVelocity(agentId, preferedVelocity);
+        yield return null;
 
-        var simulatedPosition = localAvoidanceService.GetAgentPosition(agentId);
+        var simulatedPosition = service.GetAgentPosition(agentId);
         Assert.That(simulatedPosition, Is.Not.EqualTo(initPosition));
     }
 
     [UnityTest]
     public IEnumerator AddNoObstacles_AgentKeepsPreferedVelocity() {
+        InstantiateORCAEnvironement();
+        InstantiateService();
+
         var initPosition = Vector3.zero;
         var preferedVelocity = new Vector3(0, 0, 4f);
 
-        var agentId = localAvoidanceService.AddAgent(initPosition);
-        localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
+        var agentId = service.AddAgent(initPosition);
+        service.SetPreferedVelocity(agentId, preferedVelocity);
         yield return SimulateFrames(1);
 
-        var simulatedVelocity = localAvoidanceService.GetVelocity(agentId);
+        var simulatedVelocity = service.GetVelocity(agentId);
         Assert.That(simulatedVelocity.magnitude, Is.EqualTo(preferedVelocity.z).Within(0.01f));
     }
 
     [UnityTest]
     public IEnumerator AddStaticBoxObstacle_AgentChangesVelocity() {
+        InstantiateBoxCollider(new Vector3(0, 0, 2.5f), new Vector3(1, 1, 1));
+        InstantiateORCAEnvironement();
+        InstantiateService();
+        yield return null;
+
         var initPosition = Vector3.zero;
         var preferedVelocity = new Vector3(0, 0, 4f);
 
-        var agentId = localAvoidanceService.AddAgent(initPosition);
-        localAvoidanceService.SetPreferedVelocity(agentId, preferedVelocity);
-        localAvoidanceService.AddStaticBoxObstacle(new Vector3(0, 0, 2.5f), Quaternion.identity, new Vector2(1, 1));
+        var agentId = service.AddAgent(initPosition);
+        service.SetPreferedVelocity(agentId, preferedVelocity);
         yield return SimulateFrames(1);
 
-        var simulatedVelocity = localAvoidanceService.GetVelocity(agentId);
+        var simulatedVelocity = service.GetVelocity(agentId);
         Assert.That(simulatedVelocity.magnitude, Is.LessThan(1));
     }
 
@@ -95,14 +131,13 @@ public class LocalAvoidanceServiceTest {
 
     private IEnumerator SimulateFrames(int count) {
         for (int i = 0; i < count; i++) {
-            localAvoidanceService.SimulateMovement(DefaultDeltaTime);
             yield return null;
         }
     }
 
     [TearDown]
     public void TearDownTest() {
-        localAvoidanceService.Release();
+        Object.Destroy(testContainer);
     }
 
 }

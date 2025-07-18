@@ -4,7 +4,8 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "NewFolder"
+        "NewFolder",
+        "ORCAHelper"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

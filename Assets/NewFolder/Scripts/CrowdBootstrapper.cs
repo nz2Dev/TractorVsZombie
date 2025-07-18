@@ -14,19 +14,18 @@ public class CrowdBootstrapper : MonoBehaviour {
     [SerializeField] Vector3 targetPoint;
     [SerializeField] private LevelProvider levelProvider;
     [SerializeField] private FlowFieldsSurface flowFieldsSurface;
+    [SerializeField] private ORCAEnvironment orcaEnvironment;
 
     private LocalAvoidanceService localAvoidanceService;
     private NavigationService navigationService;
 
     private void Awake() {
-        localAvoidanceService = new LocalAvoidanceService();
+        localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         navigationService = new NavigationService(flowFieldsSurface);
     }
 
     private IEnumerator Start() {
         navigationService.SetGoal(Vector3.zero);
-
-        AddObstacles();
 
         for (int i = 0; i < agentsCount; i++) {
             localAvoidanceService.AddAgent(spawnPoint);
@@ -34,16 +33,9 @@ public class CrowdBootstrapper : MonoBehaviour {
         }
     }
 
-    private void AddObstacles() {
-        foreach (var wall in levelProvider.GetWalls()) {
-            localAvoidanceService.AddStaticBoxObstacle(wall.position, wall.rotation, wall.size);
-        }
-    }
-
     private void Update() {
         UpdateGoalPosition();
         UpdateTargetFollowing();
-        localAvoidanceService.SimulateMovement(Time.deltaTime);
     }
 
     private void UpdateGoalPosition() {
