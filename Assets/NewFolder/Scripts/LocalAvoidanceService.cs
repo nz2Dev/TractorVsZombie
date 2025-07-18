@@ -28,6 +28,8 @@ public class LocalAvoidanceService {
 
     public int AddAgent(Vector3 initPosition) {
         var newAgent = agentsGroup.Add(initPosition);
+        newAgent.timeHorizon = 1.5f;
+        newAgent.timeHorizonObst = 2.5f;
         agentRegistry.Add(nextId, newAgent);
         return nextId++;
     }
