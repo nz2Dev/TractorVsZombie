@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &186795254
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 186795255}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &186795255
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186795254}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.23, y: 0, z: -6.81}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &618815298
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,6 +246,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 34.2, y: 90, z: 0}
+--- !u!1 &650734647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 650734648}
+  m_Layer: 0
+  m_Name: TargetPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &650734648
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 650734647}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -15.08, y: 0, z: 13.82}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &804724241
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,7 +307,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &804724243
 MonoBehaviour:
@@ -264,6 +326,46 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   blockedCells:
+  - {x: 10, y: 24}
+  - {x: 10, y: 25}
+  - {x: 10, y: 26}
+  - {x: 10, y: 27}
+  - {x: 10, y: 28}
+  - {x: 10, y: 29}
+  - {x: 10, y: 30}
+  - {x: 10, y: 31}
+  - {x: 10, y: 32}
+  - {x: 10, y: 33}
+  - {x: 11, y: 24}
+  - {x: 11, y: 25}
+  - {x: 11, y: 26}
+  - {x: 11, y: 27}
+  - {x: 11, y: 28}
+  - {x: 11, y: 29}
+  - {x: 11, y: 30}
+  - {x: 11, y: 31}
+  - {x: 11, y: 32}
+  - {x: 11, y: 33}
+  - {x: 12, y: 24}
+  - {x: 12, y: 25}
+  - {x: 12, y: 26}
+  - {x: 12, y: 27}
+  - {x: 12, y: 28}
+  - {x: 12, y: 29}
+  - {x: 12, y: 30}
+  - {x: 12, y: 31}
+  - {x: 12, y: 32}
+  - {x: 12, y: 33}
+  - {x: 13, y: 24}
+  - {x: 13, y: 25}
+  - {x: 13, y: 26}
+  - {x: 13, y: 27}
+  - {x: 13, y: 28}
+  - {x: 13, y: 29}
+  - {x: 13, y: 30}
+  - {x: 13, y: 31}
+  - {x: 13, y: 32}
+  - {x: 13, y: 33}
   - {x: 16, y: 23}
   - {x: 16, y: 24}
   - {x: 16, y: 25}
@@ -320,46 +422,6 @@ MonoBehaviour:
   - {x: 19, y: 35}
   - {x: 19, y: 36}
   - {x: 19, y: 37}
-  - {x: 10, y: 24}
-  - {x: 10, y: 25}
-  - {x: 10, y: 26}
-  - {x: 10, y: 27}
-  - {x: 10, y: 28}
-  - {x: 10, y: 29}
-  - {x: 10, y: 30}
-  - {x: 10, y: 31}
-  - {x: 10, y: 32}
-  - {x: 10, y: 33}
-  - {x: 11, y: 24}
-  - {x: 11, y: 25}
-  - {x: 11, y: 26}
-  - {x: 11, y: 27}
-  - {x: 11, y: 28}
-  - {x: 11, y: 29}
-  - {x: 11, y: 30}
-  - {x: 11, y: 31}
-  - {x: 11, y: 32}
-  - {x: 11, y: 33}
-  - {x: 12, y: 24}
-  - {x: 12, y: 25}
-  - {x: 12, y: 26}
-  - {x: 12, y: 27}
-  - {x: 12, y: 28}
-  - {x: 12, y: 29}
-  - {x: 12, y: 30}
-  - {x: 12, y: 31}
-  - {x: 12, y: 32}
-  - {x: 12, y: 33}
-  - {x: 13, y: 24}
-  - {x: 13, y: 25}
-  - {x: 13, y: 26}
-  - {x: 13, y: 27}
-  - {x: 13, y: 28}
-  - {x: 13, y: 29}
-  - {x: 13, y: 30}
-  - {x: 13, y: 31}
-  - {x: 13, y: 32}
-  - {x: 13, y: 33}
   - {x: 23, y: 29}
   - {x: 23, y: 30}
   - {x: 23, y: 31}
@@ -419,7 +481,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &851369242
 MonoBehaviour:
@@ -466,7 +528,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1998784682
 MonoBehaviour:
@@ -513,7 +575,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2011514141
 MonoBehaviour:
@@ -527,11 +589,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91b8ce48a00274d768e023c7215cd517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoint: {x: -15.9, y: 0, z: 13.92}
-  agentsCount: 20
-  targetPoint: {x: -3.9, y: 0, z: -3.06}
+  unitsCount: 10
+  spawnPoint: {fileID: 186795255}
+  targetPoint: {fileID: 650734648}
   flowFieldsSurface: {fileID: 804724243}
   orcaEnvironment: {fileID: 851369242}
+  unitVisualsPrefab: {fileID: 0}
 --- !u!1 &2063572847
 GameObject:
   m_ObjectHideFlags: 0
