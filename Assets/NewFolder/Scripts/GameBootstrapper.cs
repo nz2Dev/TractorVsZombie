@@ -25,7 +25,7 @@ public class GameBootstrapper : MonoBehaviour {
         var cameraService = new CameraService(Camera.main);
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
-        var physicsService = new PhysicsService(parent: null);
+        var physicsService = new PhysicsService(container: null);
         var crowdView = new CrowdView(unitVisualsPrefab);
 
         vehiclesController = new VehiclesController(

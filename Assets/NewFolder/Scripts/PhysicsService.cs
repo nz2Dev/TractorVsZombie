@@ -10,11 +10,8 @@ public class PhysicsService {
     private readonly Collider[] hitBuffer = new Collider[MaxHits];
     private readonly List<int> sphereQueryResult = new List<int>(64);
 
-    public PhysicsService(Transform parent = null) {
-        var containerGO = new GameObject("PhysicsService Container");
-        container = containerGO.transform;
-        if (parent != null)
-            container.SetParent(parent, false);
+    public PhysicsService(Transform container = null) {
+        this.container = container;
     }
 
     internal class PhysicsEntity {
@@ -46,7 +43,7 @@ public class PhysicsService {
     public int RegisterPhysicsEntity(int id, Vector3 position, float height, float radius) {
         if (entities.ContainsKey(id))
             throw new ArgumentException($"Physics entity with id {id} already exists.");
-        var go = new GameObject($"PhysicsEntity_{id}", typeof(CapsuleCollider), typeof(Rigidbody));
+        var go = new GameObject($"Physics Entity {id} (New)", typeof(CapsuleCollider), typeof(Rigidbody));
         go.transform.SetParent(container, false);
         go.transform.position = position;
         var capsule = go.GetComponent<CapsuleCollider>();
