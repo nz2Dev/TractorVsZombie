@@ -23,6 +23,7 @@ public class CrowdBootstrapper : MonoBehaviour {
         controller = new CrowdController(
             new LocalAvoidanceService(orcaEnvironment),
             new NavigationService(flowFieldsSurface),
+            new PhysicsService(parent: null),
             new CrowdView(unitVisualsPrefab),
             spawnPoint,
             targetPoint,
