@@ -43,7 +43,9 @@ public class ORCAEnvironment : MonoBehaviour {
         staticObstacles.Clear();
         var boxColliders = FindObjectsByType<BoxCollider>(FindObjectsSortMode.None);
         foreach (var boxCollider in boxColliders) {
-            AddBoxColliderObstacle(boxCollider);
+            if ((staticObstaclesMask & (1 << boxCollider.gameObject.layer)) != 0) {
+                AddBoxColliderObstacle(boxCollider);
+            }
         }
     }
 
