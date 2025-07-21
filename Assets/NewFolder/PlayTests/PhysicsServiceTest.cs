@@ -40,5 +40,18 @@ public class PhysicsServiceTest {
         Assert.That(result, Does.Not.Contains(id3));
     }
 
+    [UnityTest]
+    public IEnumerator TestEntityDoesNotDropByGravity() {
+        var physicsService = new PhysicsService();
+        var startPosition = new Vector3(0, 10, 0);
+        var id = physicsService.RegisterPhysicsEntity(1, startPosition, 1, 1);
+        // Wait for several physics steps
+        for (int i = 0; i < 10; i++) {
+            yield return new WaitForFixedUpdate();
+        }
+        var pose = physicsService.GetEntityPose(id);
+        Assert.That(pose.Position, Is.EqualTo(startPosition));
+    }
+
 
 }
