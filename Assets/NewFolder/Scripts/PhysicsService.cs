@@ -50,6 +50,7 @@ public class PhysicsService {
         go.transform.SetParent(container, false);
         go.transform.position = position;
         var capsule = go.GetComponent<CapsuleCollider>();
+        capsule.isTrigger = true;
         capsule.height = height;
         capsule.radius = radius;
         capsule.direction = 1;
