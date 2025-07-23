@@ -54,6 +54,7 @@ public class PhysicsService {
         capsule.center = new Vector3(0f, height * 0.5f, 0f);
         var rb = go.GetComponent<Rigidbody>();
         rb.isKinematic = true;
+        rb.useGravity = false;
         entities[id] = new PhysicsEntity(id, go, capsule, rb);
         colliderToId[capsule] = id;
         return id;
