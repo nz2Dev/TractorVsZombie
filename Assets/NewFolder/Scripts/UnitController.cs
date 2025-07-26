@@ -28,19 +28,26 @@ public class UnitController {
     }
 
     public IEnumerator Initialize() {
+        yield return AddsNewUnitsEachFrameForFixedTime();
+    }
+
+    public void Update() {
+        PerformKillZoneDamage();
+        FilterDeadUnits();
+        SetUnitPoseFromAvoidanceService();
+        NavigateLocalAvoidanceService();
+        SetPhysicsStateFromUnit();
+        UpdateViewPose();
+    }
+
+    private IEnumerator AddsNewUnitsEachFrameForFixedTime() {
         for (int i = 0; i < unitsCount; i++) {
             SpawnUnit(spawnPoint.position);
             yield return new WaitForSeconds(0.1f);
         }
     }
 
-    public void Update() {
-        CoordinateUnits();
-        UpdateBattleground();
-        UpdateUnits();
-    }
-
-    private void UpdateBattleground() {
+    private void PerformKillZoneDamage() {
         var battlegroundKillZone = targetPoint.position;
         var battlegroundKillZoneRadius = 1f;
         
@@ -63,7 +70,7 @@ public class UnitController {
         unitView.AddUnit(newUnit.Id, position);
     }
 
-    private void CoordinateUnits() {
+    private void NavigateLocalAvoidanceService() {
         navigationService.SetGoal(targetPoint.position);
         foreach (var unit in units) {
             var flowVector = navigationService.GetFlowVector(unit.Position);
@@ -72,16 +79,29 @@ public class UnitController {
         }
     }
 
-    private void UpdateUnits() {
-        var unitsToRemove = new List<int>();
-        
+    private void SetPhysicsStateFromUnit() {
+        foreach (var unit in units) {
+            physicsService.UpdatePhysicsEntityPosition(unit.Id, unit.Position);
+        }
+    }
+
+    private void SetUnitPoseFromAvoidanceService() {
         foreach (var unit in units) {
             var unitAgentId = agentIdToUnitId[unit.Id];
             unit.Position = localAvoidanceService.GetAgentPosition(unitAgentId);
             unit.Rotation = localAvoidanceService.GetAgentRotation(unitAgentId);
-            physicsService.UpdatePhysicsEntityPosition(unit.Id, unit.Position);
+        }
+    }
+
+    private void UpdateViewPose() {
+        foreach (var unit in units) {
             unitView.UpdateUnitPositionAndRotation(unit.Id, unit.Position, unit.Rotation);
-            
+        }
+    }
+
+    private void FilterDeadUnits() {
+        var unitsToRemove = new List<int>();
+        foreach (var unit in units) {
             if (!unit.IsAlive) {
                 unitsToRemove.Add(unit.Id);
             }
