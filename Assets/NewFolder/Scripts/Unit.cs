@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CrowdUnit {
+public class Unit {
     
     public int Id { get; set; }
     public Vector3 Position { get; set; }
@@ -10,7 +10,7 @@ public class CrowdUnit {
     public Vector3 TargetPosition { get; set; }
     public bool IsAlive { get; private set; }
 
-    public CrowdUnit(int id, Vector3 position, Quaternion rotation, float maxSpeed) {
+    public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed) {
         Id = id;
         Position = position;
         Rotation = rotation;
@@ -23,5 +23,4 @@ public class CrowdUnit {
     public void ForceKill() {
         IsAlive = false;
     }
-}
-
+} 

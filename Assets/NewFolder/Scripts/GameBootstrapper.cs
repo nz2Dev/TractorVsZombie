@@ -17,7 +17,7 @@ public class GameBootstrapper : MonoBehaviour {
 
     private VehiclesController vehiclesController;
     private CameraController cameraController;
-    private CrowdController crowdController;
+    private UnitController unitController;
 
     private IEnumerator Start() {
         var vehicleService = new VehicleService(null);
@@ -26,7 +26,7 @@ public class GameBootstrapper : MonoBehaviour {
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null);
-        var crowdView = new CrowdView(unitVisualsPrefab);
+        var unitView = new UnitView(unitVisualsPrefab);
 
         vehiclesController = new VehiclesController(
             vehicleService, vehicleView,
@@ -36,23 +36,23 @@ public class GameBootstrapper : MonoBehaviour {
         cameraController = new CameraController(
             cameraService, vehicleService);
 
-        crowdController = new CrowdController(
+        unitController = new UnitController(
             localAvoidanceService,
             navigationService,
             physicsService,
-            crowdView,
+            unitView,
             spawnPoint,
             targetPoint,
             unitsCount);
 
         vehiclesController.Init();
         cameraController.Init();
-        yield return crowdController.Initialize();
+        yield return unitController.Initialize();
     }
 
     private void Update() {
         cameraController.Update();
-        crowdController.Update();
+        unitController.Update();
         vehiclesController.Update();
     }
 

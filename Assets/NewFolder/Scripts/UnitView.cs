@@ -2,13 +2,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class CrowdView {
+public class UnitView {
 
     private Dictionary<int, GameObject> unitVisuals = new Dictionary<int, GameObject>();
 
     private readonly GameObject visualsPrefab;
 
-    public CrowdView(GameObject visualsPrefab = null) {
+    public UnitView(GameObject visualsPrefab = null) {
         this.visualsPrefab = visualsPrefab;
     }
 

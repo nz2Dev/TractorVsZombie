@@ -2,25 +2,25 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
-public class CrowdController {
+public class UnitController {
 
-    private CrowdView crowdView;
-    private LocalAvoidanceService localAvoidanceService;
-    private NavigationService navigationService;
-    private PhysicsService physicsService;
+    private readonly UnitView unitView;
+    private readonly LocalAvoidanceService localAvoidanceService;
+    private readonly NavigationService navigationService;
+    private readonly PhysicsService physicsService;
 
     private Transform spawnPoint;
     private Transform targetPoint;
     private int unitsCount;
 
-    private readonly List<CrowdUnit> crowdUnits = new List<CrowdUnit>();
-    private readonly Dictionary<int, int> agentIdToCrowdUnitId = new Dictionary<int, int>();
+    private readonly List<Unit> units = new List<Unit>();
+    private readonly Dictionary<int, int> agentIdToUnitId = new Dictionary<int, int>();
 
-    public CrowdController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, PhysicsService physicsService, CrowdView crowdView, 
+    public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, PhysicsService physicsService, UnitView crowdView, 
         Transform spawnPoint, Transform targetPoint, int unitsCount) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
-        this.crowdView = crowdView;
+        this.unitView = crowdView;
         this.spawnPoint = spawnPoint;
         this.targetPoint = targetPoint;
         this.unitsCount = unitsCount;
@@ -29,15 +29,15 @@ public class CrowdController {
 
     public IEnumerator Initialize() {
         for (int i = 0; i < unitsCount; i++) {
-            SpawnCrowdUnit(spawnPoint.position);
+            SpawnUnit(spawnPoint.position);
             yield return new WaitForSeconds(0.1f);
         }
     }
 
     public void Update() {
-        CoordinateCrowdUnits();
+        CoordinateUnits();
         UpdateBattleground();
-        UpdateCrowdUnits();
+        UpdateUnits();
     }
 
     private void UpdateBattleground() {
@@ -46,41 +46,41 @@ public class CrowdController {
         
         var unitsInKillZone = physicsService.QuerySphere(battlegroundKillZone, battlegroundKillZoneRadius);
         foreach (var unitId in unitsInKillZone) {
-            var unit = crowdUnits.Find(u => u.Id == unitId);
+            var unit = units.Find(u => u.Id == unitId);
             unit.ForceKill();
         }
     }
 
-    private void SpawnCrowdUnit(Vector3 position) {
-        CrowdUnit newUnit = new CrowdUnit(crowdUnits.Count, position, Quaternion.identity, 10f);
-        crowdUnits.Add(newUnit);
+    private void SpawnUnit(Vector3 position) {
+        Unit newUnit = new Unit(units.Count, position, Quaternion.identity, 10f);
+        units.Add(newUnit);
         
         var agentId = localAvoidanceService.AddAgent(position);
-        agentIdToCrowdUnitId[agentId] = newUnit.Id;
+        agentIdToUnitId[agentId] = newUnit.Id;
         
         physicsService.RegisterPhysicsEntity(newUnit.Id, position, 1, 1);
         
-        crowdView.AddUnit(newUnit.Id, position);
+        unitView.AddUnit(newUnit.Id, position);
     }
 
-    private void CoordinateCrowdUnits() {
+    private void CoordinateUnits() {
         navigationService.SetGoal(targetPoint.position);
-        foreach (var unit in crowdUnits) {
+        foreach (var unit in units) {
             var flowVector = navigationService.GetFlowVector(unit.Position);
-            var unitAgentId = agentIdToCrowdUnitId[unit.Id];
+            var unitAgentId = agentIdToUnitId[unit.Id];
             localAvoidanceService.SetPreferedVelocity(unitAgentId, flowVector);
         }
     }
 
-    private void UpdateCrowdUnits() {
+    private void UpdateUnits() {
         var unitsToRemove = new List<int>();
         
-        foreach (var unit in crowdUnits) {
-            var unitAgentId = agentIdToCrowdUnitId[unit.Id];
+        foreach (var unit in units) {
+            var unitAgentId = agentIdToUnitId[unit.Id];
             unit.Position = localAvoidanceService.GetAgentPosition(unitAgentId);
             unit.Rotation = localAvoidanceService.GetAgentRotation(unitAgentId);
             physicsService.UpdatePhysicsEntityPosition(unit.Id, unit.Position);
-            crowdView.UpdateUnitPositionAndRotation(unit.Id, unit.Position, unit.Rotation);
+            unitView.UpdateUnitPositionAndRotation(unit.Id, unit.Position, unit.Rotation);
             
             if (!unit.IsAlive) {
                 unitsToRemove.Add(unit.Id);
@@ -88,15 +88,15 @@ public class CrowdController {
         }
 
         foreach (var id in unitsToRemove) {
-            DespawnCrowdUnit(id);
+            DespawnUnit(id);
         }
     }
 
-    private void DespawnCrowdUnit(int id) {
-        crowdUnits.RemoveAll(u => u.Id == id);
-        agentIdToCrowdUnitId.Remove(id);
+    private void DespawnUnit(int id) {
+        units.RemoveAll(u => u.Id == id);
+        agentIdToUnitId.Remove(id);
         physicsService.UnregisterPhysicsEntity(id);
-        crowdView.RemoveUnit(id);
+        unitView.RemoveUnit(id);
     }
 
 }
