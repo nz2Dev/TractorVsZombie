@@ -29,6 +29,12 @@ public class LocalAvoidanceService {
         return nextId++;
     }
 
+    public void RemoveAgent(int agentId) {
+        var agent = agentRegistry[agentId];
+        environment.RemoveAgent(agent);
+        agentRegistry.Remove(agentId);
+    }
+
     public void SetAgentPosition(int agentId, Vector3 position) {
         var agent = agentRegistry[agentId];
         agent.pos = position;

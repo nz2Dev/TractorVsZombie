@@ -1,6 +1,7 @@
 using UnityEngine;
 using Nebukam.ORCA;
 using Unity.Mathematics;
+using System;
 
 public class ORCAEnvironment : MonoBehaviour {
     
@@ -37,6 +38,10 @@ public class ORCAEnvironment : MonoBehaviour {
 
     public Agent AddAgent(Vector3 position) {
         return agentsGroup.Add(position);
+    }
+
+    public void RemoveAgent(Agent agent) {
+        agentsGroup.Remove(agent);
     }
 
     private void ComputeStaticObstacles() {

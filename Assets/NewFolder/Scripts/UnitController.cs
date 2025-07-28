@@ -160,7 +160,7 @@ public class UnitController {
     private void DespawnUnitAt(int unitIndex) {
         var unitId = units[unitIndex].Id;
         units.RemoveAt(unitIndex);
-        // localAvoidanceService.RemoveAgent(unitIdToAvoidanceId[id]);
+        localAvoidanceService.RemoveAgent(unitIdToAvoidanceId[unitId]);
         unitIdToAvoidanceId.Remove(unitId);
         combatService.UnregisterAgent(unitIdToCombatId[unitId]);
         unitIdToCombatId.Remove(unitId);
