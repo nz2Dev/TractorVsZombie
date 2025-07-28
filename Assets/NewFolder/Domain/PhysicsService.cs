@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PhysicsService {
+
+    private readonly int operationalLayer;
     private readonly Dictionary<int, PhysicsEntity> entities = new();
     private readonly Dictionary<Collider, int> colliderToId = new();
     private readonly Transform container;
@@ -10,8 +12,9 @@ public class PhysicsService {
     private readonly Collider[] hitBuffer = new Collider[MaxHits];
     private readonly List<int> sphereQueryResult = new List<int>(64);
 
-    public PhysicsService(Transform container = null) {
+    public PhysicsService(Transform container = null, int operationalLayer = 0) {
         this.container = container;
+        this.operationalLayer = operationalLayer;
     }
 
     internal class PhysicsEntity {
@@ -45,6 +48,7 @@ public class PhysicsService {
     public int RegisterPhysicsEntity(Vector3 position, float height, float radius) {
         var entityId = entities.Count;
         var go = new GameObject($"Physics Entity {entityId} (New)", typeof(CapsuleCollider), typeof(Rigidbody));
+        go.layer = operationalLayer;
         go.transform.SetParent(container, false);
         go.transform.position = position;
         var capsule = go.GetComponent<CapsuleCollider>();
@@ -92,7 +96,7 @@ public class PhysicsService {
 
     public IReadOnlyList<int> QuerySphere(Vector3 center, float radius) {
         sphereQueryResult.Clear();
-        int hitCount = Physics.OverlapSphereNonAlloc(center, radius, hitBuffer, ~0, QueryTriggerInteraction.Collide);
+        int hitCount = Physics.OverlapSphereNonAlloc(center, radius, hitBuffer, 1 << operationalLayer, QueryTriggerInteraction.Collide);
         for (int i = 0; i < hitCount; i++) {
             if (colliderToId.TryGetValue(hitBuffer[i], out var id)) {
                 sphereQueryResult.Add(id);

@@ -6,6 +6,7 @@ public class GameBootstrapper : MonoBehaviour {
     
     [SerializeField] private string combatServiceLayer;
     [SerializeField] private string vehicleServiceLayer;
+    [SerializeField] private string physicsServiceLayer;
     [SerializeField] int unitsCount = 10;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform targetPoint;
@@ -27,7 +28,7 @@ public class GameBootstrapper : MonoBehaviour {
         var cameraService = new CameraService(Camera.main);
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
-        var physicsService = new PhysicsService(container: null);
+        var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         var combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer));
         var unitView = new UnitView(unitVisualsPrefab);
 

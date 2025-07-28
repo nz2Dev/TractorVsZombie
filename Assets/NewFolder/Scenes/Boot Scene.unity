@@ -200,6 +200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatServiceLayer: Combat
   vehicleServiceLayer: Vehicles
+  physicsServiceLayer: UnitPhysics
   unitsCount: 100
   spawnPoints:
   - {fileID: 186795255}

@@ -84,13 +84,13 @@ public class UnitController {
             if (isStartsFlying) {
                 unit.SetFlying();
                 unit.Position = physicsPose.Position;
-                localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, false);
+                // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, false);
             } else if (keepFlying) {
                 unit.Position = physicsPose.Position;
             } else if (becomeGrounded) {
                 unit.SetGrounded();
                 unit.Position = physicsPose.Position;
-                localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, true);
+                // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, true);
                 physicsService.SetPhysicsActive(physicsAgentId, false);
             } else if (keepsGrouned) {
                 unit.Position = localAvoidanceService.GetAgentPosition(avoidanceAgentId);
@@ -121,7 +121,7 @@ public class UnitController {
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
-                physicsService.AddExplosionForce(unitPhysicsId, 5, combatState.pushEpicenter, 1f, 1, ForceMode.Impulse);
+                physicsService.AddExplosionForce(unitPhysicsId, 10, combatState.pushEpicenter, 1f, 1, ForceMode.Impulse);
             }
 
             combatService.ClearState(combatId);
