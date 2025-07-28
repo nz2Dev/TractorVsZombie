@@ -84,12 +84,15 @@ public class UnitController {
             if (isStartsFlying) {
                 unit.SetFlying();
                 unit.Position = physicsPose.Position;
+                unit.Rotation = physicsPose.Rotation;
                 // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, false);
             } else if (keepFlying) {
                 unit.Position = physicsPose.Position;
+                unit.Rotation = physicsPose.Rotation;
             } else if (becomeGrounded) {
                 unit.SetGrounded();
-                unit.Position = physicsPose.Position;
+                unit.Position = physicsService.GetGroundPosition(physicsPose.Position);
+                unit.Rotation = Quaternion.identity;
                 // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, true);
                 physicsService.SetPhysicsActive(physicsAgentId, false);
             } else if (keepsGrouned && unit.IsAlive) {

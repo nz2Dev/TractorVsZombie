@@ -113,6 +113,15 @@ public class PhysicsService {
         }
     }
 
+    public Vector3 GetGroundPosition(Vector3 position) {
+        var groundLayer = LayerMask.NameToLayer("Default"); // TODO use input variable;
+        if (Physics.Raycast(position + Vector3.up, Vector3.down, out var hitInfo, 100, 1 << groundLayer)) {
+            return hitInfo.point;
+        } else {
+            return Vector3.zero;
+        }
+    }
+
     public PhysicsEntityPose GetEntityPose(int id) {
         if (entities.TryGetValue(id, out var entity)) {
             var rb = entity.Rigidbody;
