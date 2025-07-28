@@ -50,7 +50,7 @@ public class PhysicsService {
         var capsule = go.GetComponent<CapsuleCollider>();
         capsule.isTrigger = true;
         capsule.height = height;
-        capsule.radius = radius;
+        capsule.radius = Mathf.Min(radius, height * 0.5f);
         capsule.direction = 1;
         capsule.center = new Vector3(0f, height * 0.5f, 0f);
         var rb = go.GetComponent<Rigidbody>();
