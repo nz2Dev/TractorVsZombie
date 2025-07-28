@@ -36,45 +36,6 @@ public class UnitController {
         yield return AddsNewUnitsEachFrameForFixedTime();
     }
 
-    public void Update() {
-        FilterDeadUnits();
-        ReadUnitOrientation();
-        ReadCombatServiceInput();
-        SetCombatStateFromUnit();
-        UpdateUnitsNavigation();
-        UpdateViewPose();
-    }
-
-    private void UpdateUnitsNavigation() {
-        navigationService.SetGoal(targetPoint.position);
-        foreach (var unit in units) {
-            if (!unit.Flying) {
-                var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
-                localAvoidanceService.SetAgentPosition(avoidanceAgentId, unit.Position);
-                
-                var flowVector = navigationService.GetFlowVector(unit.Position);
-                localAvoidanceService.SetPreferedVelocity(avoidanceAgentId, flowVector);
-            }
-        }
-    }
-
-    private void ReadUnitOrientation() {
-        foreach (var unit in units) {
-            if (unit.Flying) {
-                var unitPhysicsId = unitIdToPhysicsId[unit.Id];
-                var physicsPose = physicsService.GetEntityPose(unitPhysicsId);
-                unit.Position = physicsPose.Position;
-                if (!physicsPose.InMotion) {
-                    unit.Walking();
-                }
-            } else {
-                var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
-                unit.Position = localAvoidanceService.GetAgentPosition(avoidanceAgentId);
-                unit.Rotation = localAvoidanceService.GetAgentRotation(avoidanceAgentId);
-            }
-        }
-    }
-
     private IEnumerator AddsNewUnitsEachFrameForFixedTime() {
         for (int i = 0; i < unitsCount; i++) {
             SpawnUnit(spawnPoint.position);
@@ -96,6 +57,32 @@ public class UnitController {
         unitIdToPhysicsId[newUnit.Id] = physicsAgentId;
         
         unitView.AddUnit(newUnit.Id, position);
+    }
+
+    public void Update() {
+        FilterDeadUnits();
+        ReadUnitOrientation();
+        ReadCombatServiceInput();
+        SetCombatStateFromUnit();
+        UpdateUnitsNavigation();
+        UpdateViewPose();
+    }
+
+    private void ReadUnitOrientation() {
+        foreach (var unit in units) {
+            if (unit.Flying) {
+                var unitPhysicsId = unitIdToPhysicsId[unit.Id];
+                var physicsPose = physicsService.GetEntityPose(unitPhysicsId);
+                unit.Position = physicsPose.Position;
+                if (!physicsPose.InMotion) {
+                    unit.Walking();
+                }
+            } else {
+                var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
+                unit.Position = localAvoidanceService.GetAgentPosition(avoidanceAgentId);
+                unit.Rotation = localAvoidanceService.GetAgentRotation(avoidanceAgentId);
+            }
+        }
     }
 
     private void ReadCombatServiceInput() {
@@ -125,6 +112,19 @@ public class UnitController {
             combatService.UpdateAgentPosition(combatId, unit.Position);
             if (unit.Flying) {
                 combatService.UpdateAgentDiscovered(combatId, false);
+            }
+        }
+    }
+
+    private void UpdateUnitsNavigation() {
+        navigationService.SetGoal(targetPoint.position);
+        foreach (var unit in units) {
+            if (!unit.Flying) {
+                var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
+                localAvoidanceService.SetAgentPosition(avoidanceAgentId, unit.Position);
+                
+                var flowVector = navigationService.GetFlowVector(unit.Position);
+                localAvoidanceService.SetPreferedVelocity(avoidanceAgentId, flowVector);
             }
         }
     }
