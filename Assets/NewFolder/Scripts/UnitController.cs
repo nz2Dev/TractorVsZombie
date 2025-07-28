@@ -36,6 +36,10 @@ public class UnitController {
 
     private float lastTimeProduced = float.MinValue;
 
+    public void Init() {
+        navigationService.SetGoal(targetPoint.position);
+    }
+
     private void ProduceNewUnits() {
         if (units.Count > unitsCount) 
             return;
@@ -123,7 +127,6 @@ public class UnitController {
     }
 
     private void UpdateUnitsOrientation() {
-        navigationService.SetGoal(targetPoint.position);
         foreach (var unit in units) {
             if (unit.Grouned) {
                 var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];

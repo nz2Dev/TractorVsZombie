@@ -53,6 +53,7 @@ public class GameBootstrapper : MonoBehaviour {
             combatService,
             physicsService);
 
+        unitController.Init();
         vehiclesController.Init();
         cameraController.Init();
     }
