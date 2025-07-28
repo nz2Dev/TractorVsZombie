@@ -65,6 +65,7 @@ public class PhysicsService {
         if (entities.TryGetValue(id, out var entity)) {
             entity.Rigidbody.isKinematic = !active;
             entity.Rigidbody.useGravity = active;
+            entity.Collider.isTrigger = !active;
         }
     }
 
@@ -115,7 +116,7 @@ public class PhysicsService {
                 rb.position,
                 rb.rotation,
                 rb.velocity,
-                inMotion: !rb.IsSleeping()
+                inMotion: rb.velocity.magnitude > 1
             );
         }
         return default;

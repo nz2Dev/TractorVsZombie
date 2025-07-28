@@ -111,9 +111,11 @@ public class UnitController {
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
-                physicsService.AddExplosionForce(unitPhysicsId, 1, combatState.pushEpicenter, 1f, 1, ForceMode.Impulse);
+                physicsService.AddExplosionForce(unitPhysicsId, 2, combatState.pushEpicenter, 1f, 1, ForceMode.Impulse);
                 unit.SetFlying();
             }
+
+            combatService.ClearState(combatId);
         }
     }
 

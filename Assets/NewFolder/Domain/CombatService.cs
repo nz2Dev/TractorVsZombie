@@ -92,6 +92,13 @@ public class CombatService {
         return agents[agentId];
     }
 
+    public void ClearState(int agentId) {
+        var agent = agents[agentId];
+        agent.damageReceived = 0;
+        agent.pushed = false;
+        agent.pushEpicenter = default;
+    }
+
     private SphereCollider CreateSpatialMarker(Vector3 position, float radius) {
         var go = new GameObject("Combat Agent (New)", typeof(SphereCollider));
         go.transform.position = position;
