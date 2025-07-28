@@ -10,7 +10,7 @@ public class VehiclePreview : MonoBehaviour {
         while (transform.childCount > 0)
             DestroyImmediate(transform.GetChild(0).gameObject);
 
-        var vehicleService = new VehicleService(physicsContainer: transform);
+        var vehicleService = new VehicleService(physicsContainer: transform, operationalLayer: 0);
         vehicleService.CreateVehicle(vehicleEntity.baseSize, vehicleEntity.wheelAxisDatas);
         
         var vehicleView = new VehicleView(container: transform);

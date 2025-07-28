@@ -25,6 +25,7 @@ public class VehiclePhysics {
 
     private static readonly HideFlags DefaultHideFlag = HideFlags.None;
     
+    private readonly int operationLayer;
     private readonly GameObject root;
     private readonly List<WheelAxis> wheelAxes = new ();
 
@@ -32,8 +33,10 @@ public class VehiclePhysics {
     public Vector3 Position => root.transform.position;
     public Quaternion Rotation => root.transform.rotation;
 
-    public VehiclePhysics(Vector3 position, Transform container, float mass) {
+    public VehiclePhysics(Vector3 position, Transform container, float mass, int operationLayer = 0) {
+        this.operationLayer = operationLayer;
         root = new GameObject("Vehicle Physics (New)", typeof(Rigidbody));
+        root.layer = operationLayer;
         root.transform.SetParent(container, worldPositionStays: false);
         root.transform.position = position;
         var rigidbody = root.GetComponent<Rigidbody>();
@@ -246,6 +249,7 @@ public class VehiclePhysics {
 
     private WheelCollider CreateDefaultWheel(float radius) {
         var wheel = new GameObject("Default Wheel (New)", typeof(WheelCollider), typeof(WheelDebug));
+        wheel.layer = operationLayer;
         wheel.transform.hideFlags = DefaultHideFlag;
         wheel.transform.SetParent(root.transform, worldPositionStays: false);
         var wheelCollider = wheel.GetComponent<WheelCollider>();

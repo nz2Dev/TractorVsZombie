@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameBootstrapper : MonoBehaviour {
     
     [SerializeField] private string combatServiceLayer;
+    [SerializeField] private string vehicleServiceLayer;
     [SerializeField] int unitsCount = 10;
     [SerializeField] Transform spawnPoint;
     [SerializeField] Transform targetPoint;
@@ -21,7 +22,7 @@ public class GameBootstrapper : MonoBehaviour {
     private UnitController unitController;
 
     private IEnumerator Start() {
-        var vehicleService = new VehicleService(null);
+        var vehicleService = new VehicleService(null, LayerMask.NameToLayer(vehicleServiceLayer));
         var vehicleView = new VehicleView(null);
         var cameraService = new CameraService(Camera.main);
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);

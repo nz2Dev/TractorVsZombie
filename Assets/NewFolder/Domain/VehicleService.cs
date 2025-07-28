@@ -5,15 +5,17 @@ using UnityEngine;
 
 public class VehicleService {
     
+    private readonly int operationalLayer;
     private List<VehiclePhysics> physicsRegistry = new ();
     private Transform physicsContainer;
 
-    public VehicleService(Transform physicsContainer) {
+    public VehicleService(Transform physicsContainer, int operationalLayer = 0) {
         this.physicsContainer = physicsContainer;
+        this.operationalLayer = operationalLayer;
     }
 
     public int CreateVehicle(Vector3 baseSize, WheelAxisData[] wheels, TowingWheelAxisData? towingWheel = null, Vector3 position = default, float mass = 100) {
-        var vehiclePhysics = new VehiclePhysics(position, physicsContainer, mass);
+        var vehiclePhysics = new VehiclePhysics(position, physicsContainer, mass, operationalLayer);
         vehiclePhysics.ConfigureBase(baseSize);
         
         foreach (var wheelAxis in wheels)
