@@ -11,7 +11,7 @@ public class UnitController {
     private readonly CombatService combatService;
     private readonly PhysicsService physicsService;
 
-    private Transform spawnPoint;
+    private Transform[] spawnPoints;
     private Transform targetPoint;
     private int unitsCount;
 
@@ -21,11 +21,11 @@ public class UnitController {
     private readonly Dictionary<int, int> unitIdToPhysicsId = new Dictionary<int, int>();
 
     public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
-        Transform spawnPoint, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService) {
+        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.unitView = crowdView;
-        this.spawnPoint = spawnPoint;
+        this.spawnPoints = spawnPoints;
         this.targetPoint = targetPoint;
         this.unitsCount = unitsCount;
         this.combatService = combatService;
@@ -38,8 +38,10 @@ public class UnitController {
 
     private IEnumerator AddsNewUnitsEachFrameForFixedTime() {
         for (int i = 0; i < unitsCount; i++) {
-            SpawnUnit(spawnPoint.position);
-            yield return new WaitForSeconds(0.1f);
+            foreach (var spawnPoint in spawnPoints) {    
+                SpawnUnit(spawnPoint.position);
+                yield return new WaitForSeconds(0.1f);
+            }
         }
     }
 
@@ -110,6 +112,7 @@ public class UnitController {
             var combatState = combatService.GetState(combatId);
             
             if (unit.Grouned && combatState.pushed) {
+                // unit.TakeDamage(1);
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);

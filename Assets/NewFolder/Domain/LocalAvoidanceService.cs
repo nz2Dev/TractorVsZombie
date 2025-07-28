@@ -24,6 +24,7 @@ public class LocalAvoidanceService {
         var newAgent = environment.AddAgent(initPosition);
         newAgent.timeHorizon = 1.5f;
         newAgent.timeHorizonObst = 2.5f;
+        newAgent.radius = 0.3f;
         agentRegistry.Add(nextId, newAgent);
         return nextId++;
     }
