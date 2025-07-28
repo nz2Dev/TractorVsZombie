@@ -151,9 +151,12 @@ public class UnitController {
 
     private void DespawnUnit(int id) {
         units.RemoveAll(u => u.Id == id);
-        unitIdToAvoidanceId.Remove(unitIdToAvoidanceId[id]);
+        // localAvoidanceService.RemoveAgent(unitIdToAvoidanceId[id]);
+        unitIdToAvoidanceId.Remove(id);
         combatService.UnregisterAgent(unitIdToCombatId[id]);
+        unitIdToCombatId.Remove(id);
         physicsService.UnregisterPhysicsEntity(unitIdToPhysicsId[id]);
+        unitIdToPhysicsId.Remove(id);
         unitView.RemoveUnit(id);
     }
 
