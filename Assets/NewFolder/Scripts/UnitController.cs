@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using Unity.Profiling;
 
 public class UnitController {
 
@@ -64,14 +65,29 @@ public class UnitController {
         unitView.AddUnit(newUnit.Id, position);
     }
 
+    private static readonly ProfilerMarker readUnitOrientationMarker = new ProfilerMarker("ReadOrientation");
+    private static readonly ProfilerMarker filterDeadUnitsMarker = new ProfilerMarker("FilterDeadUnits");
+    private static readonly ProfilerMarker readCombatServiceInputMarker = new ProfilerMarker("ReadCombatServiceInput");
+    private static readonly ProfilerMarker setCombatStateMarker = new ProfilerMarker("SetCombatState");
+    private static readonly ProfilerMarker updateUnitsOrientationMarker = new ProfilerMarker("UpdateUnitsOrientation");
+    private static readonly ProfilerMarker updateViewPoseMarker = new ProfilerMarker("UpdateViewPose");
+
     public void Update() {
-        ReadUnitOrientation();
-        FilterDeadUnits();
+        using (readUnitOrientationMarker.Auto())
+            ReadUnitOrientation();
+        using (filterDeadUnitsMarker.Auto())
+            FilterDeadUnits();
+        
         ProduceNewUnits();
-        ReadCombatServiceInput();
-        SetCombatStateFromUnit();
-        UpdateUnitsOrientation();
-        UpdateViewPose();
+
+        using (readCombatServiceInputMarker.Auto())
+            ReadCombatServiceInput();
+        using (setCombatStateMarker.Auto())
+            SetCombatStateFromUnit();
+        using (updateUnitsOrientationMarker.Auto())
+            UpdateUnitsOrientation();
+        using (updateViewPoseMarker.Auto())
+            UpdateViewPose();
     }
 
     private void ReadUnitOrientation() {

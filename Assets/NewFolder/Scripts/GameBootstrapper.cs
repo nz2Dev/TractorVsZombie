@@ -1,5 +1,7 @@
 using System.Collections;
 
+using Unity.Profiling;
+
 using UnityEngine;
 
 public class GameBootstrapper : MonoBehaviour {
@@ -55,10 +57,18 @@ public class GameBootstrapper : MonoBehaviour {
         cameraController.Init();
     }
 
+    private static readonly ProfilerMarker cameraUpdateMarker = new ProfilerMarker("Game.CameraController");
+    private static readonly ProfilerMarker unitUpdateMarker = new ProfilerMarker("Game.UnitController");
+    private static readonly ProfilerMarker vehicleUpdateMarker = new ProfilerMarker("Game.VehicleController");
+
+
     private void Update() {
-        cameraController.Update();
-        unitController.Update();
-        vehiclesController.Update();
+        using (cameraUpdateMarker.Auto())
+            cameraController.Update();
+        using (unitUpdateMarker.Auto())
+            unitController.Update();
+        using (vehicleUpdateMarker.Auto())
+            vehiclesController.Update();
     }
 
     private void FixedUpdate() {
