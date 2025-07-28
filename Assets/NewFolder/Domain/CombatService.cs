@@ -9,7 +9,9 @@ public class CombatAgent {
     public float physicalDamage;
     public float damageReceived;
     public SphereCollider spatialMarker;
-
+    public bool pushed;
+    public Vector3 pushEpicenter;
+    public bool discoverable;
 }
 
 public class CombatService {
@@ -33,7 +35,8 @@ public class CombatService {
         var agent = new CombatAgent {
             agentId = agentId,
             physicalDamage = physicalDamage,
-            spatialMarker = collider
+            spatialMarker = collider,
+            discoverable = true,
         };
         
         markerToAgent[collider] = agent;
@@ -53,6 +56,11 @@ public class CombatService {
         agent.spatialMarker.transform.position = position;
     }
 
+    public void UpdateAgentDiscovered(int agentId, bool discoverable) {
+        var agent = agents[agentId];
+        agent.discoverable = discoverable;   
+    }
+
     public void ApplyDirectDamage(int sourceId, int targetId) {
         var sourceAgent = agents[sourceId];
         var targetAgent = agents[targetId];
@@ -68,8 +76,12 @@ public class CombatService {
             var overlapAgent = markerToAgent[overlapCollider];
             if (overlapAgent.agentId == sourceId) 
                 continue;
+            if (!overlapAgent.discoverable)
+                continue;
 
             overlapAgent.damageReceived += sourceAgent.physicalDamage;
+            overlapAgent.pushed = true;
+            overlapAgent.pushEpicenter = sourceAgent.spatialMarker.transform.position;
             damageCount++;
         }
 

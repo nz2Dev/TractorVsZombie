@@ -9,7 +9,7 @@ public class PhysicsServiceTest {
     [Test]
     public void TestRegisterPhysicsEntity() {
         var physicsService = new PhysicsService();
-        var id = physicsService.RegisterPhysicsEntity(1, new Vector3(0, 0, 0), 1, 1);
+        var id = physicsService.RegisterPhysicsEntity(new Vector3(0, 0, 0), 1, 1);
         Assert.That(id, Is.EqualTo(1));
         var pose = physicsService.GetEntityPose(id);
         Assert.That(pose.Position, Is.EqualTo(new Vector3(0, 0, 0)));
@@ -20,7 +20,7 @@ public class PhysicsServiceTest {
     [UnityTest]
     public IEnumerator TestUpdatePhysicsEntityPosition() {
         var physicsService = new PhysicsService();
-        var id = physicsService.RegisterPhysicsEntity(1, new Vector3(0, 0, 0), 1, 1);
+        var id = physicsService.RegisterPhysicsEntity(new Vector3(0, 0, 0), 1, 1);
         physicsService.UpdatePhysicsEntityPosition(id, new Vector3(1, 0, 0));
         yield return new WaitForFixedUpdate();
         var pose = physicsService.GetEntityPose(id);
@@ -30,9 +30,9 @@ public class PhysicsServiceTest {
     [UnityTest]
     public IEnumerator TestQuerySphere() {
         var physicsService = new PhysicsService();
-        var id1 = physicsService.RegisterPhysicsEntity(1, new Vector3(0, 0, 0), 1, 1);
-        var id2 = physicsService.RegisterPhysicsEntity(2, new Vector3(2, 0, 0), 1, 1);
-        var id3 = physicsService.RegisterPhysicsEntity(3, new Vector3(10, 0, 0), 1, 1);
+        var id1 = physicsService.RegisterPhysicsEntity(new Vector3(0, 0, 0), 1, 1);
+        var id2 = physicsService.RegisterPhysicsEntity(new Vector3(2, 0, 0), 1, 1);
+        var id3 = physicsService.RegisterPhysicsEntity(new Vector3(10, 0, 0), 1, 1);
         yield return new WaitForFixedUpdate();
         var result = physicsService.QuerySphere(new Vector3(0, 0, 0), 3f);
         Assert.That(result, Does.Contain(id1));
@@ -44,7 +44,7 @@ public class PhysicsServiceTest {
     public IEnumerator TestEntityDoesNotDropByGravity() {
         var physicsService = new PhysicsService();
         var startPosition = new Vector3(0, 10, 0);
-        var id = physicsService.RegisterPhysicsEntity(1, startPosition, 1, 1);
+        var id = physicsService.RegisterPhysicsEntity(startPosition, 1, 1);
         // Wait for several physics steps
         for (int i = 0; i < 10; i++) {
             yield return new WaitForFixedUpdate();

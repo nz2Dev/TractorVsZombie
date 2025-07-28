@@ -32,18 +32,19 @@ public class PhysicsService {
         public Vector3 Position;
         public Quaternion Rotation;
         public Vector3 Velocity;
+        public bool InMotion;
 
-        public PhysicsEntityPose(Vector3 position, Quaternion rotation, Vector3 velocity) {
+        public PhysicsEntityPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool inMotion) {
             Position = position;
             Rotation = rotation;
             Velocity = velocity;
+            InMotion = inMotion;
         }
     }
 
-    public int RegisterPhysicsEntity(int id, Vector3 position, float height, float radius) {
-        if (entities.ContainsKey(id))
-            throw new ArgumentException($"Physics entity with id {id} already exists.");
-        var go = new GameObject($"Physics Entity {id} (New)", typeof(CapsuleCollider), typeof(Rigidbody));
+    public int RegisterPhysicsEntity(Vector3 position, float height, float radius) {
+        var entityId = entities.Count;
+        var go = new GameObject($"Physics Entity {entityId} (New)", typeof(CapsuleCollider), typeof(Rigidbody));
         go.transform.SetParent(container, false);
         go.transform.position = position;
         var capsule = go.GetComponent<CapsuleCollider>();
@@ -55,14 +56,15 @@ public class PhysicsService {
         var rb = go.GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
-        entities[id] = new PhysicsEntity(id, go, capsule, rb);
-        colliderToId[capsule] = id;
-        return id;
+        entities[entityId] = new PhysicsEntity(entityId, go, capsule, rb);
+        colliderToId[capsule] = entityId;
+        return entityId;
     }
 
     public void SetPhysicsActive(int id, bool active) {
         if (entities.TryGetValue(id, out var entity)) {
             entity.Rigidbody.isKinematic = !active;
+            entity.Rigidbody.useGravity = active;
         }
     }
 
@@ -112,7 +114,8 @@ public class PhysicsService {
             return new PhysicsEntityPose(
                 rb.position,
                 rb.rotation,
-                rb.velocity
+                rb.velocity,
+                inMotion: !rb.IsSleeping()
             );
         }
         return default;

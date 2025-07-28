@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 public class Unit {
@@ -10,6 +12,7 @@ public class Unit {
     public Vector3 TargetPosition { get; set; }
     public int Health { get; private set; }
     public bool IsAlive => Health >= 0;
+    public bool Flying { get; private set; }
 
     public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 100) {
         Id = id;
@@ -27,5 +30,13 @@ public class Unit {
 
     public void TakeDamage(int damageReceived) {
         Health -= damageReceived;
+    }
+
+    public void SetFlying() {
+        Flying = true;
+    }
+
+    internal void Walking() {
+        Flying = false;
     }
 } 

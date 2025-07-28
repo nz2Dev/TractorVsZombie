@@ -28,6 +28,11 @@ public class LocalAvoidanceService {
         return nextId++;
     }
 
+    public void SetAgentPosition(int agentId, Vector3 position) {
+        var agent = agentRegistry[agentId];
+        agent.pos = position;
+    }
+
     public Vector3 GetAgentPosition(int agentId) {
         return agentRegistry[agentId].pos;
     }
