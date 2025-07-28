@@ -14,7 +14,7 @@ public class Unit {
     public bool IsAlive => Health >= 0;
     public bool Grouned { get; private set; }
 
-    public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 100) {
+    public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 2) {
         Id = id;
         Position = position;
         Rotation = rotation;

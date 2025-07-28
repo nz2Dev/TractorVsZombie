@@ -92,7 +92,7 @@ public class UnitController {
                 unit.Position = physicsPose.Position;
                 // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, true);
                 physicsService.SetPhysicsActive(physicsAgentId, false);
-            } else if (keepsGrouned) {
+            } else if (keepsGrouned && unit.IsAlive) {
                 unit.Position = localAvoidanceService.GetAgentPosition(avoidanceAgentId);
                 unit.Rotation = localAvoidanceService.GetAgentRotation(avoidanceAgentId);
             }
@@ -117,11 +117,11 @@ public class UnitController {
             var combatState = combatService.GetState(combatId);
             
             if (unit.Grouned && combatState.pushed) {
-                // unit.TakeDamage(1);
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
                 physicsService.AddExplosionForce(unitPhysicsId, 10, combatState.pushEpicenter, 1f, 1, ForceMode.Impulse);
+                unit.TakeDamage(1);
             }
 
             combatService.ClearState(combatId);
@@ -139,7 +139,7 @@ public class UnitController {
     private void FilterDeadUnits() {
         var unitsToRemove = new List<int>();
         foreach (var unit in units) {
-            if (!unit.IsAlive) {
+            if (!unit.IsAlive && unit.Grouned) {
                 unitsToRemove.Add(unit.Id);
             }
         }
