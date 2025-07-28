@@ -22,7 +22,7 @@ public class GameBootstrapper : MonoBehaviour {
     private CameraController cameraController;
     private UnitController unitController;
 
-    private IEnumerator Start() {
+    private void Start() {
         var vehicleService = new VehicleService(null, LayerMask.NameToLayer(vehicleServiceLayer));
         var vehicleView = new VehicleView(null);
         var cameraService = new CameraService(Camera.main);
@@ -53,7 +53,6 @@ public class GameBootstrapper : MonoBehaviour {
 
         vehiclesController.Init();
         cameraController.Init();
-        yield return unitController.Initialize();
     }
 
     private void Update() {

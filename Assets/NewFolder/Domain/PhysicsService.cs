@@ -11,6 +11,7 @@ public class PhysicsService {
     private const int MaxHits = 32;
     private readonly Collider[] hitBuffer = new Collider[MaxHits];
     private readonly List<int> sphereQueryResult = new List<int>(64);
+    private int idCounter;
 
     public PhysicsService(Transform container = null, int operationalLayer = 0) {
         this.container = container;
@@ -46,7 +47,7 @@ public class PhysicsService {
     }
 
     public int RegisterPhysicsEntity(Vector3 position, float height, float radius) {
-        var entityId = entities.Count;
+        var entityId = idCounter++;
         var go = new GameObject($"Physics Entity {entityId} (New)", typeof(CapsuleCollider), typeof(Rigidbody));
         go.layer = operationalLayer;
         go.transform.SetParent(container, false);

@@ -27,11 +27,12 @@ public class CombatService {
 
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
     private readonly Dictionary<Collider, CombatAgent> markerToAgent = new Dictionary<Collider, CombatAgent>();
+    private int idCounter;
     
     private readonly Collider[] overlapBuffer = new Collider[64];
 
     public int RegisterCombatant(float radius, Vector3 position, float physicalDamage) {
-        var agentId = agents.Count;
+        var agentId = idCounter++;
         var collider = CreateSpatialMarker(agentId, position, radius);
         var agent = new CombatAgent {
             agentId = agentId,
@@ -77,6 +78,11 @@ public class CombatService {
         int damageCount = 0;
         for (int i = 0; i < overlapCount; i++) {
             var overlapCollider = overlapBuffer[i];
+            if (!markerToAgent.ContainsKey(overlapCollider)) {
+                Debug.LogWarning($"overlapping collider {overlapCollider} that has no entry in markerToAgent");
+                continue;
+            }
+            
             var overlapAgent = markerToAgent[overlapCollider];
             if (overlapAgent.agentId == sourceId) 
                 continue;
