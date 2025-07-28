@@ -28,7 +28,7 @@ public class NavigationService {
         Vector3 flowSum = Vector3.zero;
         foreach (var offset in SampleOffsets) {
             var samplePosition = worldSpacePosition + offset;
-            var sampledFlowVector = surface.GetFlowVector(samplePosition);
+            var sampledFlowVector = surface.GetFlowVectorClamped(samplePosition);
             if (sampledFlowVector.magnitude > 0) {
                 flowSum += sampledFlowVector;
                 sumsCount++;

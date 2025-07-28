@@ -87,9 +87,16 @@ public class FlowFieldsSurface : MonoBehaviour {
         return flowFields.GetIntegratedCost(x, y);
     }
 
-    public Vector3 GetFlowVector(Vector3 worldPos) {
-        var gridPos = space.ConvertToGrid(worldPos);
+    public Vector3 GetFlowVectorClamped(Vector3 worldPos) {
+        var gridPos = ClampGridPositionInBounds(space.ConvertToGrid(worldPos));
         return GetFlowVector(gridPos.x, gridPos.y);
+    }
+
+    private Vector2Int ClampGridPositionInBounds(Vector2Int position) {
+        return new Vector2Int {
+            x = Mathf.Clamp(position.x, 0, flowFields.Size - 1),
+            y = Mathf.Clamp(position.y, 0, flowFields.Size - 1)
+        };
     }
 
     public Vector3 GetFlowVector(int x, int y) {
