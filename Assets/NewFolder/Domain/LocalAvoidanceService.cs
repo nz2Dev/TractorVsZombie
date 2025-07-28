@@ -33,6 +33,11 @@ public class LocalAvoidanceService {
         agent.pos = position;
     }
 
+    public void SetAgentCollisionEnabled(int agentId, bool enabled) {
+        var agent = agentRegistry[agentId];
+        agent.collisionEnabled = enabled;
+    }
+
     public Vector3 GetAgentPosition(int agentId) {
         return agentRegistry[agentId].pos;
     }

@@ -11,7 +11,7 @@ public class CombatAgent {
     public SphereCollider spatialMarker;
     public bool pushed;
     public Vector3 pushEpicenter;
-    public bool discoverable;
+    public bool aoeDiscoverable;
 }
 
 public class CombatService {
@@ -31,12 +31,12 @@ public class CombatService {
 
     public int RegisterCombatant(float radius, Vector3 position, float physicalDamage) {
         var agentId = agents.Count;
-        var collider = CreateSpatialMarker(position, radius);
+        var collider = CreateSpatialMarker(agentId, position, radius);
         var agent = new CombatAgent {
             agentId = agentId,
             physicalDamage = physicalDamage,
             spatialMarker = collider,
-            discoverable = true,
+            aoeDiscoverable = true,
         };
         
         markerToAgent[collider] = agent;
@@ -47,7 +47,7 @@ public class CombatService {
     public void UnregisterAgent(int agentId) {
         var agent = agents[agentId];
         markerToAgent.Remove(agent.spatialMarker);
-        GameObject.Destroy(agent.spatialMarker);
+        GameObject.Destroy(agent.spatialMarker.gameObject);
         agents.Remove(agentId);
     }
 
@@ -56,9 +56,9 @@ public class CombatService {
         agent.spatialMarker.transform.position = position;
     }
 
-    public void UpdateAgentDiscovered(int agentId, bool discoverable) {
+    public void UpdateAgentAOEDiscoverable(int agentId, bool discoverable) {
         var agent = agents[agentId];
-        agent.discoverable = discoverable;   
+        agent.aoeDiscoverable = discoverable;   
     }
 
     public void ApplyDirectDamage(int sourceId, int targetId) {
@@ -76,7 +76,7 @@ public class CombatService {
             var overlapAgent = markerToAgent[overlapCollider];
             if (overlapAgent.agentId == sourceId) 
                 continue;
-            if (!overlapAgent.discoverable)
+            if (!overlapAgent.aoeDiscoverable)
                 continue;
 
             overlapAgent.damageReceived += sourceAgent.physicalDamage;
@@ -99,8 +99,8 @@ public class CombatService {
         agent.pushEpicenter = default;
     }
 
-    private SphereCollider CreateSpatialMarker(Vector3 position, float radius) {
-        var go = new GameObject("Combat Agent (New)", typeof(SphereCollider));
+    private SphereCollider CreateSpatialMarker(int id, Vector3 position, float radius) {
+        var go = new GameObject("Combat Agent (New) " + id, typeof(SphereCollider));
         go.transform.position = position;
         go.layer = layer;
         var collider = go.GetComponent<SphereCollider>();
