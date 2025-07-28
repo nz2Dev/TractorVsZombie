@@ -36,7 +36,7 @@ public class Unit {
         Grouned = false;
     }
 
-    internal void SetWalking() {
+    internal void SetGrounded() {
         Grouned = true;
     }
 } 

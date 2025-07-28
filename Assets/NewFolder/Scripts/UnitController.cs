@@ -70,19 +70,36 @@ public class UnitController {
 
     private void ReadUnitOrientation() {
         foreach (var unit in units) {
-            if (unit.Grouned) {
-                var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
+            var physicsAgentId = unitIdToPhysicsId[unit.Id];
+            var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
+            var physicsPose = physicsService.GetEntityPose(physicsAgentId);
+            
+            if (unit.Grouned && physicsPose.InMotion) {
+                unit.SetFlying();
+                unit.Position = physicsPose.Position;
+                localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, false);
+            } else if (!unit.Grouned && physicsPose.InMotion) {
+                unit.Position = physicsPose.Position;
+            } else if (!unit.Grouned && !physicsPose.InMotion) {
+                unit.SetGrounded();
+                unit.Position = physicsPose.Position;
+                localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, true);
+                physicsService.SetPhysicsActive(physicsAgentId, false);
+            } else if (unit.Grouned && !physicsPose.InMotion) {
                 unit.Position = localAvoidanceService.GetAgentPosition(avoidanceAgentId);
                 unit.Rotation = localAvoidanceService.GetAgentRotation(avoidanceAgentId);
-            } else {
-                var unitPhysicsId = unitIdToPhysicsId[unit.Id];
-                var physicsPose = physicsService.GetEntityPose(unitPhysicsId);
-                unit.Position = physicsPose.Position;
-                if (physicsPose.InMotion) {
-                    unit.SetFlying();
-                } else {
-                    unit.SetWalking();
-                }
+            }
+        }
+    }
+
+    private void UpdateUnitsOrientation() {
+        navigationService.SetGoal(targetPoint.position);
+        foreach (var unit in units) {
+            if (unit.Grouned) {
+                var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
+                localAvoidanceService.SetAgentPosition(avoidanceAgentId, unit.Position);
+                var flowVector = navigationService.GetFlowVector(unit.Position);
+                localAvoidanceService.SetPreferedVelocity(avoidanceAgentId, flowVector);
             }
         }
     }
@@ -93,12 +110,10 @@ public class UnitController {
             var combatState = combatService.GetState(combatId);
             
             if (unit.Grouned && combatState.pushed) {
-                unit.TakeDamage(1);
-
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
-                physicsService.AddExplosionForce(unitPhysicsId, 2, combatState.pushEpicenter, 1f, 1, ForceMode.Impulse);
+                physicsService.AddExplosionForce(unitPhysicsId, 5, combatState.pushEpicenter, 1f, 1, ForceMode.Impulse);
             }
 
             combatService.ClearState(combatId);
@@ -110,19 +125,6 @@ public class UnitController {
             var combatId = unitIdToCombatId[unit.Id];
             combatService.UpdateAgentPosition(combatId, unit.Position);
             combatService.UpdateAgentAOEDiscoverable(combatId, unit.Grouned);
-        }
-    }
-
-    private void UpdateUnitsOrientation() {
-        navigationService.SetGoal(targetPoint.position);
-        foreach (var unit in units) {
-            var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
-            localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, unit.Grouned);
-            if (unit.Grouned) {
-                localAvoidanceService.SetAgentPosition(avoidanceAgentId, unit.Position);
-                var flowVector = navigationService.GetFlowVector(unit.Position);
-                localAvoidanceService.SetPreferedVelocity(avoidanceAgentId, flowVector);
-            }
         }
     }
 
