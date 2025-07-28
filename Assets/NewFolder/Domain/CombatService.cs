@@ -11,6 +11,7 @@ public class CombatAgent {
     public SphereCollider spatialMarker;
     public bool pushed;
     public Vector3 pushEpicenter;
+    public float lastTimePushed;
     public bool aoeDiscoverable;
 }
 
@@ -36,6 +37,7 @@ public class CombatService {
             agentId = agentId,
             physicalDamage = physicalDamage,
             spatialMarker = collider,
+            lastTimePushed = float.MinValue,
             aoeDiscoverable = true,
         };
         
@@ -67,6 +69,8 @@ public class CombatService {
         targetAgent.damageReceived += sourceAgent.physicalDamage;
     }
 
+    const float PushCooldown = 0.25f;
+
     public bool ApplyPushDamage(int sourceId, Vector3 areaSize) {
         var sourceAgent = agents[sourceId];
         var overlapCount = Physics.OverlapBoxNonAlloc(sourceAgent.spatialMarker.transform.position, areaSize * 0.5f, overlapBuffer, Quaternion.identity, queryMask);
@@ -78,10 +82,13 @@ public class CombatService {
                 continue;
             if (!overlapAgent.aoeDiscoverable)
                 continue;
+            if (overlapAgent.lastTimePushed + PushCooldown > Time.time)
+                continue;
 
             overlapAgent.damageReceived += sourceAgent.physicalDamage;
             overlapAgent.pushed = true;
             overlapAgent.pushEpicenter = sourceAgent.spatialMarker.transform.position;
+            overlapAgent.lastTimePushed = Time.time;
             damageCount++;
         }
 
