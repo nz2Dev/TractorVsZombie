@@ -132,7 +132,7 @@ public class PhysicsService {
                 rb.position,
                 rb.rotation,
                 rb.velocity,
-                inMotion: rb.velocity.magnitude > 0.5f,
+                inMotion: rb.velocity.sqrMagnitude > 0.75f,
                 pending: !rb.isKinematic
             );
         }

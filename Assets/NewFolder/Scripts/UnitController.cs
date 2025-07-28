@@ -120,8 +120,11 @@ public class UnitController {
                 // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, true);
                 physicsService.SetPhysicsActive(physicsAgentId, false);
             } else if (keepsGrouned && unit.IsAlive) {
-                unit.Position = localAvoidanceService.GetAgentPosition(avoidanceAgentId);
-                unit.Rotation = localAvoidanceService.GetAgentRotation(avoidanceAgentId);
+                // unit.Position = localAvoidanceService.GetAgentPosition(avoidanceAgentId);
+                // unit.Rotation = localAvoidanceService.GetAgentRotation(avoidanceAgentId);
+                localAvoidanceService.GetAgentPositionAndRotation(avoidanceAgentId, out var pos, out var rot);
+                unit.Position = pos;
+                unit.Rotation = rot;
             }
         }
     }
