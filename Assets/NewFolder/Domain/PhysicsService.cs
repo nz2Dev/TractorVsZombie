@@ -37,12 +37,14 @@ public class PhysicsService {
         public Quaternion Rotation;
         public Vector3 Velocity;
         public bool InMotion;
+        public bool Pending;
 
-        public PhysicsEntityPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool inMotion) {
+        public PhysicsEntityPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool inMotion, bool pending) {
             Position = position;
             Rotation = rotation;
             Velocity = velocity;
             InMotion = inMotion;
+            Pending = pending;
         }
     }
 
@@ -130,7 +132,8 @@ public class PhysicsService {
                 rb.position,
                 rb.rotation,
                 rb.velocity,
-                inMotion: rb.velocity.magnitude > 1
+                inMotion: rb.velocity.magnitude > 0.5f,
+                pending: !rb.isKinematic
             );
         }
         return default;

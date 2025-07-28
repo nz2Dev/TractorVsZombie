@@ -80,7 +80,7 @@ public class UnitController {
             var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
             
             var physicsPose = physicsService.GetEntityPose(physicsAgentId);
-            var isStartsFlying = unit.Grouned && physicsPose.InMotion;
+            var isStartsFlying = unit.Grouned && (physicsPose.InMotion || physicsPose.Pending);
             var keepFlying = !unit.Grouned && physicsPose.InMotion;
             var becomeGrounded = !unit.Grouned && !physicsPose.InMotion;
             var keepsGrouned = unit.Grouned && !physicsPose.InMotion;
