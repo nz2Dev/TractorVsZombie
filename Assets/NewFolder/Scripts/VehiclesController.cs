@@ -8,17 +8,22 @@ public class VehiclesController : MonoBehaviour {
     private readonly VehicleEntity driveVehicle;
     private readonly VehicleEntity trailerVehicle;
 
+    private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
     private readonly VehicleView vehicleView;
     private readonly List<VehicleEntity> vehicles;
 
-    public VehiclesController(VehicleService vehicleService, VehicleView vehicleView, VehicleEntity driveVehicle, VehicleEntity trailerVehicle, int trailersCount) {
+    private int driveVehicleVehicleId;
+    private int driveVehicleCombatId;
+
+    public VehiclesController(VehicleService vehicleService, VehicleView vehicleView, VehicleEntity driveVehicle, VehicleEntity trailerVehicle, int trailersCount, CombatService combatService) {
         this.vehicleService = vehicleService;
         this.vehicleView = vehicleView;
         this.driveVehicle = driveVehicle;
         this.trailerVehicle = trailerVehicle;
         this.trailersCount = trailersCount;
         this.vehicles = new();
+        this.combatService = combatService;
     }
 
     public void Init() {
@@ -31,6 +36,8 @@ public class VehiclesController : MonoBehaviour {
 
     public void FixedUpdate() {
         vehicleService.UpdateVehicles();
+        var driveVehiclePose = vehicleService.GetVehiclePose(driveVehicleVehicleId);
+        combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehiclePose.position);
     }
 
     public void Update() {
@@ -40,6 +47,10 @@ public class VehiclesController : MonoBehaviour {
 
         vehicleService.SetVehicleGasThrottle(vehicleIndex: 0, gasInput);
         vehicleService.SetVehicleSteer(vehicleIndex: 0, steerInput * maxSteerAngle);
+        
+        if (combatService.ApplyPushDamage(driveVehicleCombatId, Vector3.one)) {
+            Debug.Log("Vehicle applied push damage");
+        }
 
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicleData = vehicles[vehicleIndex];
@@ -60,9 +71,11 @@ public class VehiclesController : MonoBehaviour {
 
     private void SpawnDriveVehicle() {
         var driveVehiclePosition = Vector3.zero;
-        vehicleService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData(), mass: driveVehicle.mass);
+        driveVehicleVehicleId = vehicleService.CreateVehicle(driveVehicle.baseSize, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData(), mass: driveVehicle.mass);
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicle.baseGeometry, driveVehicle.wheelGeometry, driveVehicle.towingBodyGeometry, driveVehicle.wheelAxisDatas, driveVehicle.GetTowingWheelAxisData());
         vehicles.Add(driveVehicle);
+        
+        driveVehicleCombatId = combatService.RegisterCombatant(1, driveVehiclePosition, 10);
     }
 
     private void SpawnTrailerVehicle(Vector3 position) {

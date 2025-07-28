@@ -8,19 +8,24 @@ public class Unit {
     public Vector3 Velocity { get; set; }
     public float MaxSpeed { get; set; }
     public Vector3 TargetPosition { get; set; }
-    public bool IsAlive { get; private set; }
+    public int Health { get; private set; }
+    public bool IsAlive => Health >= 0;
 
-    public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed) {
+    public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 100) {
         Id = id;
         Position = position;
         Rotation = rotation;
         MaxSpeed = maxSpeed;
         Velocity = Vector3.zero;
         TargetPosition = position;
-        IsAlive = true;
+        Health = health;
     }
 
     public void ForceKill() {
-        IsAlive = false;
+        Health = 0;
+    }
+
+    public void TakeDamage(int damageReceived) {
+        Health -= damageReceived;
     }
 } 

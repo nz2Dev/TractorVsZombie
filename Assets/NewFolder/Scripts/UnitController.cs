@@ -7,7 +7,7 @@ public class UnitController {
     private readonly UnitView unitView;
     private readonly LocalAvoidanceService localAvoidanceService;
     private readonly NavigationService navigationService;
-    private readonly PhysicsService physicsService;
+    private readonly CombatService combatService;
 
     private Transform spawnPoint;
     private Transform targetPoint;
@@ -15,16 +15,17 @@ public class UnitController {
 
     private readonly List<Unit> units = new List<Unit>();
     private readonly Dictionary<int, int> agentIdToUnitId = new Dictionary<int, int>();
+    private readonly Dictionary<int, int> unitIdToCombatId = new Dictionary<int, int>();
 
-    public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, PhysicsService physicsService, UnitView crowdView, 
-        Transform spawnPoint, Transform targetPoint, int unitsCount) {
+    public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
+        Transform spawnPoint, Transform targetPoint, int unitsCount, CombatService combatService) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.unitView = crowdView;
         this.spawnPoint = spawnPoint;
         this.targetPoint = targetPoint;
         this.unitsCount = unitsCount;
-        this.physicsService = physicsService;
+        this.combatService = combatService;
     }
 
     public IEnumerator Initialize() {
@@ -32,11 +33,11 @@ public class UnitController {
     }
 
     public void Update() {
-        PerformKillZoneDamage();
         FilterDeadUnits();
         SetUnitPoseFromAvoidanceService();
         NavigateLocalAvoidanceService();
-        SetPhysicsStateFromUnit();
+        ReadCombatServiceInput();
+        SetCombatStateFromUnit();
         UpdateViewPose();
     }
 
@@ -47,17 +48,6 @@ public class UnitController {
         }
     }
 
-    private void PerformKillZoneDamage() {
-        var battlegroundKillZone = targetPoint.position;
-        var battlegroundKillZoneRadius = 1f;
-        
-        var unitsInKillZone = physicsService.QuerySphere(battlegroundKillZone, battlegroundKillZoneRadius);
-        foreach (var unitId in unitsInKillZone) {
-            var unit = units.Find(u => u.Id == unitId);
-            unit.ForceKill();
-        }
-    }
-
     private void SpawnUnit(Vector3 position) {
         Unit newUnit = new Unit(units.Count, position, Quaternion.identity, 10f);
         units.Add(newUnit);
@@ -65,7 +55,8 @@ public class UnitController {
         var agentId = localAvoidanceService.AddAgent(position);
         agentIdToUnitId[agentId] = newUnit.Id;
         
-        physicsService.RegisterPhysicsEntity(newUnit.Id, position, 1, 1);
+        var combatAgentId = combatService.RegisterCombatant(0.5f, position, physicalDamage: 10);
+        unitIdToCombatId[newUnit.Id] = combatAgentId;
         
         unitView.AddUnit(newUnit.Id, position);
     }
@@ -79,9 +70,21 @@ public class UnitController {
         }
     }
 
-    private void SetPhysicsStateFromUnit() {
+    private void ReadCombatServiceInput() {
         foreach (var unit in units) {
-            physicsService.UpdatePhysicsEntityPosition(unit.Id, unit.Position);
+            var combatId = unitIdToCombatId[unit.Id];
+            var combatState = combatService.GetState(combatId);
+            if (combatState.damageReceived > 0) {
+                unit.TakeDamage((int) combatState.damageReceived);
+                Debug.Log($"unit {unit.Id} receive {combatState.damageReceived} damage");
+            }
+        }
+    }
+
+    private void SetCombatStateFromUnit() {
+        foreach (var unit in units) {
+            var combatId = unitIdToCombatId[unit.Id];
+            combatService.UpdateAgentPosition(combatId, unit.Position);
         }
     }
 
@@ -115,7 +118,7 @@ public class UnitController {
     private void DespawnUnit(int id) {
         units.RemoveAll(u => u.Id == id);
         agentIdToUnitId.Remove(id);
-        physicsService.UnregisterPhysicsEntity(id);
+        combatService.UnregisterAgent(unitIdToCombatId[id]);
         unitView.RemoveUnit(id);
     }
 

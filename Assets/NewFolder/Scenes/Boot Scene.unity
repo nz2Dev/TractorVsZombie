@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972a34e951a0e4d95acb2ae214840102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combatServiceLayer: Combat
   unitsCount: 10
   spawnPoint: {fileID: 186795255}
   targetPoint: {fileID: 650734648}
