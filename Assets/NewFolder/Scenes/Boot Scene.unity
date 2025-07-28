@@ -201,7 +201,7 @@ MonoBehaviour:
   combatServiceLayer: Combat
   vehicleServiceLayer: Vehicles
   physicsServiceLayer: UnitPhysics
-  unitsCount: 100
+  unitsCount: 200
   spawnPoints:
   - {fileID: 186795255}
   - {fileID: 1856700855}

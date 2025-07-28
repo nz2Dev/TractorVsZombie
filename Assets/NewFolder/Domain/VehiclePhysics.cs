@@ -53,6 +53,7 @@ public class VehiclePhysics {
     public void ConfigureBase(Vector3 baseSize) {
         Assert.IsNull(root.GetComponentInChildren<BoxCollider>());
         var baseGameObject = new GameObject("Base Box Collider (New)", typeof(BoxCollider));
+        baseGameObject.layer = operationLayer;
         baseGameObject.transform.SetParent(root.transform, worldPositionStays: false);
         var baseCollider = baseGameObject.GetComponent<BoxCollider>();
         baseCollider.center = new Vector3(0, baseSize.y * 0.5f, 0);
