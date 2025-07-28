@@ -24,10 +24,18 @@ public class NavigationService {
     }
 
     public Vector3 GetFlowVector(Vector3 worldSpacePosition) {
+        return surface.GetFlowVectorClamped(worldSpacePosition);
+    }
+
+    public void SetGoal(Vector3 worldSpacePosition) {
+        surface.SetGoal(worldSpacePosition);
+    }
+
+    private Vector3 MultiSampleFlowVector(Vector3 worldPos) {
         var sumsCount = 0;
         Vector3 flowSum = Vector3.zero;
         foreach (var offset in SampleOffsets) {
-            var samplePosition = worldSpacePosition + offset;
+            var samplePosition = worldPos + offset;
             var sampledFlowVector = surface.GetFlowVectorClamped(samplePosition);
             if (sampledFlowVector.magnitude > 0) {
                 flowSum += sampledFlowVector;
@@ -40,9 +48,5 @@ public class NavigationService {
         } else {
             return Vector3.zero;
         }
-    }
-
-    public void SetGoal(Vector3 worldSpacePosition) {
-        surface.SetGoal(worldSpacePosition);
     }
 }
