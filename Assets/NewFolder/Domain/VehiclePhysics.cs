@@ -236,6 +236,7 @@ public class VehiclePhysics {
 
     private Rigidbody CreateDefaultTurningBody(float upOffset, float forwardOffset, float length) {
         var turningBody = new GameObject("Turning Body (New)", typeof(Rigidbody), typeof(BoxCollider));
+        turningBody.layer = operationLayer;
         turningBody.transform.SetParent(root.transform, worldPositionStays: false);
         turningBody.transform.localPosition = new Vector3(0, upOffset, forwardOffset);
         var collider = turningBody.GetComponent<BoxCollider>();
