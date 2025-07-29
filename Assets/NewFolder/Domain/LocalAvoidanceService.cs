@@ -52,7 +52,7 @@ public class LocalAvoidanceService {
     public void GetAgentPositionAndRotation(int agentId, out Vector3 pos, out Quaternion rot) {
         var agent = agentRegistry[agentId];
         pos = agent.pos;
-        rot = Quaternion.identity;
+        rot = Quaternion.LookRotation(agent.velocity, Vector3.up);
     }
 
     public Quaternion GetAgentRotation(int agentId) {

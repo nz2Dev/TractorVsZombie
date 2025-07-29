@@ -201,7 +201,7 @@ MonoBehaviour:
   combatServiceLayer: Combat
   vehicleServiceLayer: Vehicles
   physicsServiceLayer: UnitPhysics
-  unitsCount: 1000
+  unitsCount: 400
   spawnPoints:
   - {fileID: 186795255}
   - {fileID: 1856700855}
@@ -245,6 +245,71 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &500263746
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786345494800347938, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_Name
+      value: Default Unit Geometry
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786345494800347938, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
 --- !u!1 &618815298
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,27 +482,69 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   blockedCells:
-  - {x: 35, y: 33}
-  - {x: 35, y: 34}
-  - {x: 35, y: 35}
-  - {x: 35, y: 36}
-  - {x: 35, y: 37}
-  - {x: 35, y: 38}
-  - {x: 35, y: 39}
-  - {x: 36, y: 33}
-  - {x: 36, y: 34}
-  - {x: 36, y: 35}
-  - {x: 36, y: 36}
-  - {x: 36, y: 37}
-  - {x: 36, y: 38}
-  - {x: 36, y: 39}
-  - {x: 37, y: 33}
-  - {x: 37, y: 34}
-  - {x: 37, y: 35}
-  - {x: 37, y: 36}
-  - {x: 37, y: 37}
-  - {x: 37, y: 38}
-  - {x: 37, y: 39}
+  - {x: 36, y: 9}
+  - {x: 36, y: 10}
+  - {x: 36, y: 11}
+  - {x: 36, y: 12}
+  - {x: 36, y: 13}
+  - {x: 36, y: 14}
+  - {x: 36, y: 15}
+  - {x: 37, y: 9}
+  - {x: 37, y: 10}
+  - {x: 37, y: 11}
+  - {x: 37, y: 12}
+  - {x: 37, y: 13}
+  - {x: 37, y: 14}
+  - {x: 37, y: 15}
+  - {x: 38, y: 9}
+  - {x: 38, y: 10}
+  - {x: 38, y: 11}
+  - {x: 38, y: 12}
+  - {x: 38, y: 13}
+  - {x: 38, y: 14}
+  - {x: 38, y: 15}
+  - {x: 24, y: 7}
+  - {x: 24, y: 8}
+  - {x: 24, y: 9}
+  - {x: 24, y: 10}
+  - {x: 24, y: 11}
+  - {x: 24, y: 12}
+  - {x: 24, y: 13}
+  - {x: 25, y: 7}
+  - {x: 25, y: 8}
+  - {x: 25, y: 9}
+  - {x: 25, y: 10}
+  - {x: 25, y: 11}
+  - {x: 25, y: 12}
+  - {x: 25, y: 13}
+  - {x: 26, y: 7}
+  - {x: 26, y: 8}
+  - {x: 26, y: 9}
+  - {x: 26, y: 10}
+  - {x: 26, y: 11}
+  - {x: 26, y: 12}
+  - {x: 26, y: 13}
+  - {x: 41, y: 22}
+  - {x: 41, y: 23}
+  - {x: 41, y: 24}
+  - {x: 41, y: 25}
+  - {x: 41, y: 26}
+  - {x: 41, y: 27}
+  - {x: 41, y: 28}
+  - {x: 42, y: 22}
+  - {x: 42, y: 23}
+  - {x: 42, y: 24}
+  - {x: 42, y: 25}
+  - {x: 42, y: 26}
+  - {x: 42, y: 27}
+  - {x: 42, y: 28}
+  - {x: 43, y: 22}
+  - {x: 43, y: 23}
+  - {x: 43, y: 24}
+  - {x: 43, y: 25}
+  - {x: 43, y: 26}
+  - {x: 43, y: 27}
+  - {x: 43, y: 28}
   - {x: 10, y: 24}
   - {x: 10, y: 25}
   - {x: 10, y: 26}
@@ -499,48 +606,6 @@ MonoBehaviour:
   - {x: 14, y: 14}
   - {x: 14, y: 15}
   - {x: 14, y: 16}
-  - {x: 24, y: 6}
-  - {x: 24, y: 7}
-  - {x: 24, y: 8}
-  - {x: 24, y: 9}
-  - {x: 24, y: 10}
-  - {x: 24, y: 11}
-  - {x: 24, y: 12}
-  - {x: 25, y: 6}
-  - {x: 25, y: 7}
-  - {x: 25, y: 8}
-  - {x: 25, y: 9}
-  - {x: 25, y: 10}
-  - {x: 25, y: 11}
-  - {x: 25, y: 12}
-  - {x: 26, y: 6}
-  - {x: 26, y: 7}
-  - {x: 26, y: 8}
-  - {x: 26, y: 9}
-  - {x: 26, y: 10}
-  - {x: 26, y: 11}
-  - {x: 26, y: 12}
-  - {x: 36, y: 9}
-  - {x: 36, y: 10}
-  - {x: 36, y: 11}
-  - {x: 36, y: 12}
-  - {x: 36, y: 13}
-  - {x: 36, y: 14}
-  - {x: 36, y: 15}
-  - {x: 37, y: 9}
-  - {x: 37, y: 10}
-  - {x: 37, y: 11}
-  - {x: 37, y: 12}
-  - {x: 37, y: 13}
-  - {x: 37, y: 14}
-  - {x: 37, y: 15}
-  - {x: 38, y: 9}
-  - {x: 38, y: 10}
-  - {x: 38, y: 11}
-  - {x: 38, y: 12}
-  - {x: 38, y: 13}
-  - {x: 38, y: 14}
-  - {x: 38, y: 15}
   - {x: 16, y: 21}
   - {x: 16, y: 22}
   - {x: 16, y: 23}
@@ -583,27 +648,27 @@ MonoBehaviour:
   - {x: 23, y: 36}
   - {x: 23, y: 37}
   - {x: 23, y: 38}
-  - {x: 41, y: 22}
-  - {x: 41, y: 23}
-  - {x: 41, y: 24}
-  - {x: 41, y: 25}
-  - {x: 41, y: 26}
-  - {x: 41, y: 27}
-  - {x: 41, y: 28}
-  - {x: 42, y: 22}
-  - {x: 42, y: 23}
-  - {x: 42, y: 24}
-  - {x: 42, y: 25}
-  - {x: 42, y: 26}
-  - {x: 42, y: 27}
-  - {x: 42, y: 28}
-  - {x: 43, y: 22}
-  - {x: 43, y: 23}
-  - {x: 43, y: 24}
-  - {x: 43, y: 25}
-  - {x: 43, y: 26}
-  - {x: 43, y: 27}
-  - {x: 43, y: 28}
+  - {x: 35, y: 33}
+  - {x: 35, y: 34}
+  - {x: 35, y: 35}
+  - {x: 35, y: 36}
+  - {x: 35, y: 37}
+  - {x: 35, y: 38}
+  - {x: 35, y: 39}
+  - {x: 36, y: 33}
+  - {x: 36, y: 34}
+  - {x: 36, y: 35}
+  - {x: 36, y: 36}
+  - {x: 36, y: 37}
+  - {x: 36, y: 38}
+  - {x: 36, y: 39}
+  - {x: 37, y: 33}
+  - {x: 37, y: 34}
+  - {x: 37, y: 35}
+  - {x: 37, y: 36}
+  - {x: 37, y: 37}
+  - {x: 37, y: 38}
+  - {x: 37, y: 39}
   bakeInRealTime: 1
   displayBlockers: 1
   displayComputations: 1
