@@ -16,8 +16,8 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private ORCAEnvironment orcaEnvironment;
     [SerializeField] private GameObject unitVisualsPrefab;
     [Space]
-    [SerializeField] private VehicleEntity driveVehicle;
-    [SerializeField] private VehicleEntity trailerVehicle;
+    [SerializeField] private VehicleBlueprint driveVehicle;
+    [SerializeField] private VehicleBlueprint trailerVehicle;
     [SerializeField] private int trailersCount = 3;
 
     private VehiclesController vehiclesController;

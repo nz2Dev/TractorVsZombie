@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public struct WheelAxisData {
     public float forwardOffset;
     public float upOffset;
@@ -22,8 +22,8 @@ public struct TowingWheelAxisData {
     public float towingBodyLength;
 }
 
-[CreateAssetMenu(fileName = "DriveVehicleEntity", menuName = "Entities")]
-public class VehicleEntity : ScriptableObject {
+[CreateAssetMenu(fileName = "VehicleBlueprint", menuName = "VehicleBlueprint")]
+public class VehicleBlueprint : ScriptableObject {
     [SerializeField] public float mass = 100;
     [SerializeField] public Vector3 baseSize = new Vector3(0.5f, 0.4f, 1.0f);
     [SerializeField] public GameObject baseGeometry;

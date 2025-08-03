@@ -5,18 +5,18 @@ using UnityEngine;
 public class VehiclesController : MonoBehaviour {
     
     private readonly int trailersCount;
-    private readonly VehicleEntity driveVehicle;
-    private readonly VehicleEntity trailerVehicle;
+    private readonly VehicleBlueprint driveVehicle;
+    private readonly VehicleBlueprint trailerVehicle;
 
     private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
     private readonly VehicleView vehicleView;
-    private readonly List<VehicleEntity> vehicles;
+    private readonly List<VehicleBlueprint> vehicles;
 
     private int driveVehicleVehicleId;
     private int driveVehicleCombatId;
 
-    public VehiclesController(VehicleService vehicleService, VehicleView vehicleView, VehicleEntity driveVehicle, VehicleEntity trailerVehicle, int trailersCount, CombatService combatService) {
+    public VehiclesController(VehicleService vehicleService, VehicleView vehicleView, VehicleBlueprint driveVehicle, VehicleBlueprint trailerVehicle, int trailersCount, CombatService combatService) {
         this.vehicleService = vehicleService;
         this.vehicleView = vehicleView;
         this.driveVehicle = driveVehicle;

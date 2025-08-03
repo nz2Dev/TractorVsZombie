@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class VehiclePreview : MonoBehaviour {
-    [SerializeField] private VehicleEntity vehicleEntity;
+    [SerializeField] private VehicleBlueprint vehicleEntity;
 
     [ContextMenu("Preview")]
     private void Preview() {
