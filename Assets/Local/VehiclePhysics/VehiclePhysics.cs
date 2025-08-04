@@ -186,7 +186,8 @@ public class VehiclePhysics {
         };
     }
 
-    internal void BreakWheelsFrictionWithConstantTorque() {
+    // was internal
+    public void BreakWheelsFrictionWithConstantTorque() {
         var flipFlop = 1;
         foreach (var axis in wheelAxes) {
             flipFlop = flipFlop < 0 ? 1 : -1;
