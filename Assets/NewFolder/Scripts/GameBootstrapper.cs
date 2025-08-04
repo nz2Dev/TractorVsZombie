@@ -72,7 +72,4 @@ public class GameBootstrapper : MonoBehaviour {
             vehiclesController.Update();
     }
 
-    private void FixedUpdate() {
-        vehiclesController.FixedUpdate();
-    }
 }
