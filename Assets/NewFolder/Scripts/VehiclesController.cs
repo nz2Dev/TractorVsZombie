@@ -35,7 +35,6 @@ public class VehiclesController : MonoBehaviour {
     }
 
     public void FixedUpdate() {
-        vehicleService.UpdateVehicles();
         var driveVehiclePose = vehicleService.GetVehiclePose(driveVehicleVehicleId);
         combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehiclePose.position);
     }

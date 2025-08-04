@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class VehicleService {
     
-    private readonly int operationalLayer;
-    private List<VehiclePhysics> physicsRegistry = new ();
-    private Transform physicsContainer;
+    private readonly VehiclePhysicsRoot physicsRoot;
+    private List<VehiclePhysicsRig> physicsRegistry = new ();
 
-    public VehicleService(Transform physicsContainer, int operationalLayer = 0) {
-        this.physicsContainer = physicsContainer;
-        this.operationalLayer = operationalLayer;
+    public VehicleService(VehiclePhysicsRoot physicsRoot) {
+        this.physicsRoot = physicsRoot;
     }
 
     public int CreateVehicle(Vector3 baseSize, WheelAxisData[] wheels, TowingWheelAxisData? towingWheel = null, Vector3 position = default, float mass = 100) {
-        var vehiclePhysics = new VehiclePhysics(position, physicsContainer, mass, operationalLayer);
+        var vehiclePhysics = physicsRoot.CreateRig(position, mass);
         vehiclePhysics.ConfigureBase(baseSize);
         
         foreach (var wheelAxis in wheels)
@@ -41,21 +39,6 @@ public class VehicleService {
         physicsRegistry.Add(vehiclePhysics);
         var lastVehicleIndex = physicsRegistry.Count - 1;
         return lastVehicleIndex;
-    }
-
-    public void UpdateVehicles() {
-        foreach (var vehiclePhysics in physicsRegistry) {
-            vehiclePhysics.UpdateTowingWheelAxis();
-            
-            var towingConnector = vehiclePhysics.GetTowingConnector();
-            if (towingConnector.rigidbody.TryGetComponent<ConfigurableJoint>(out var towingJoint)) {
-                var towingTip = towingJoint.transform.TransformPoint(towingJoint.anchor);
-                var pullingTip = towingJoint.connectedBody.transform.TransformPoint(towingJoint.connectedAnchor);
-                if (Vector3.Distance(towingTip, pullingTip) < 0.1f) {
-                    towingJoint.zMotion = ConfigurableJointMotion.Locked;
-                }
-            }
-        }
     }
 
     public void SetVehicleSteer(int vehicleIndex, float steerDegrees) {

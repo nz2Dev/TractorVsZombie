@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "NewFolder",
-        "ORCAHelper"
+        "ORCAHelper",
+        "VehiclePhysics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

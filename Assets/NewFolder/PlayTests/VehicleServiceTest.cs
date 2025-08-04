@@ -36,8 +36,9 @@ public class VehicleServiceTest : IPrebuildSetup, IPostBuildCleanup {
     public IEnumerator SetUpUnityTest() {
         originalScene = SceneManager.GetActiveScene().path;
         SceneManager.LoadScene(TestEnvironmentScenePath);
+        var physicsRoot = new GameObject("test vehicle physics root", typeof(VehiclePhysicsRoot)).GetComponent<VehiclePhysicsRoot>();
         yield return null;
-        vehicleService = new VehicleService(physicsContainer: null);
+        vehicleService = new VehicleService(physicsRoot);
     }
     
     [UnityTest]

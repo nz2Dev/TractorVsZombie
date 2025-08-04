@@ -7,13 +7,13 @@ using UnityEngine;
 public class GameBootstrapper : MonoBehaviour {
     
     [SerializeField] private string combatServiceLayer;
-    [SerializeField] private string vehicleServiceLayer;
     [SerializeField] private string physicsServiceLayer;
     [SerializeField] int unitsCount = 10;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform targetPoint;
     [SerializeField] private FlowFieldsSurface flowFieldsSurface;
     [SerializeField] private ORCAEnvironment orcaEnvironment;
+    [SerializeField] private VehiclePhysicsRoot vehiclePhysicsRoot;
     [SerializeField] private GameObject unitVisualsPrefab;
     [Space]
     [SerializeField] private VehicleBlueprint driveVehicle;
@@ -25,7 +25,7 @@ public class GameBootstrapper : MonoBehaviour {
     private UnitController unitController;
 
     private void Start() {
-        var vehicleService = new VehicleService(null, LayerMask.NameToLayer(vehicleServiceLayer));
+        var vehicleService = new VehicleService(vehiclePhysicsRoot);
         var vehicleView = new VehicleView(null);
         var cameraService = new CameraService(Camera.main);
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);

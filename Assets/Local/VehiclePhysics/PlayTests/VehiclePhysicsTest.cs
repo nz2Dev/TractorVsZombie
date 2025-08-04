@@ -22,7 +22,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     
     private static readonly Vector3 InitVehicleGroundPosition = new (0, 0, 0);
     private static readonly Vector3 DefaultBaseSize = new (0.5f, 0.2f, 1.0f);
-    private VehiclePhysics vehiclePhysics;
+    private VehiclePhysicsRig vehiclePhysics;
 
     public void Setup() {
 #if UNITY_EDITOR
@@ -124,7 +124,7 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
             yield return new WaitForFixedUpdate();
     }
 
-    private void JointForAnglePulling(VehiclePhysics.VehicleConnector towingConnector, Rigidbody targetRigidbody) {
+    private void JointForAnglePulling(VehiclePhysicsRig.VehicleConnector towingConnector, Rigidbody targetRigidbody) {
         var towingJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
         towingJoint.anchor = towingConnector.anchorOffset;
         towingJoint.autoConfigureConnectedAnchor = false;

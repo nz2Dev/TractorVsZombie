@@ -7,7 +7,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class VehiclePhysics {
+public class VehiclePhysicsRig {
 
     struct WheelAxis {
         public WheelCollider leftWheel;    
@@ -33,7 +33,7 @@ public class VehiclePhysics {
     public Vector3 Position => root.transform.position;
     public Quaternion Rotation => root.transform.rotation;
 
-    public VehiclePhysics(Vector3 position, Transform container, float mass, int operationLayer = 0) {
+    internal VehiclePhysicsRig(Vector3 position, Transform container, float mass, int operationLayer = 0) {
         this.operationLayer = operationLayer;
         root = new GameObject("Vehicle Physics (New)", typeof(Rigidbody));
         root.layer = operationLayer;
@@ -101,7 +101,7 @@ public class VehiclePhysics {
         rigidbody.centerOfMass = new Vector3(0, -radius * 1.5f, 0);
     }
 
-    public void UpdateTowingWheelAxis() {
+    internal void UpdateTowingWheelAxis() {
         var rigidbodyForward = root.GetComponent<Rigidbody>().rotation * Vector3.forward;
         foreach (var axis in wheelAxes) {
             if (axis.turningBody != null) {
