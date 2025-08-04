@@ -52,4 +52,28 @@ public class VehiclePhysicsRoot : MonoBehaviour {
         return rig;
     }
 
+    public void MakeTowingConnection(VehiclePhysicsRig headRig, VehiclePhysicsRig tailRig, float anchorsOffset = 0) {
+        var towingConnector = tailRig.GetTowingConnector();
+        var pullingConnector = headRig.GetPullingConnector();
+
+        var pullJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
+        pullJoint.xMotion = ConfigurableJointMotion.Locked;
+        pullJoint.yMotion = ConfigurableJointMotion.Locked;
+        pullJoint.zMotion = ConfigurableJointMotion.Free;
+        pullJoint.angularXMotion = ConfigurableJointMotion.Limited;
+        pullJoint.angularYMotion = ConfigurableJointMotion.Free;
+        pullJoint.angularZMotion = ConfigurableJointMotion.Locked;
+        pullJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
+        pullJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
+        pullJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
+        pullJoint.autoConfigureConnectedAnchor = false;
+        pullJoint.connectedBody = pullingConnector.rigidbody;
+        var pullingOffset = anchorsOffset * 0.5f * Vector3.back;
+        pullJoint.connectedAnchor = pullingConnector.anchorOffset + pullingOffset;
+        var towingOffset = anchorsOffset * 0.5f * Vector3.forward;
+        pullJoint.anchor = towingConnector.anchorOffset + towingOffset;
+
+        tailRig.BreakWheelsFrictionWithConstantTorque();
+    }
+
 }

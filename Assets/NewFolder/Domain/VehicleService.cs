@@ -70,30 +70,9 @@ public class VehicleService {
     }
 
     public void MakeTowingConnection(int headVehicleIndex, int tailVehicleIndex, float anchorsOffset = 0) {
-        var headPhysics = physicsRegistry[headVehicleIndex];
-        var tailPhysics = physicsRegistry[tailVehicleIndex];
-        
-        var towingConnector = tailPhysics.GetTowingConnector();
-        var pullingConnector = headPhysics.GetPullingConnector();
-
-        var pullJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
-        pullJoint.xMotion = ConfigurableJointMotion.Locked;
-        pullJoint.yMotion = ConfigurableJointMotion.Locked;
-        pullJoint.zMotion = ConfigurableJointMotion.Free;
-        pullJoint.angularXMotion = ConfigurableJointMotion.Limited;
-        pullJoint.angularYMotion = ConfigurableJointMotion.Free;
-        pullJoint.angularZMotion = ConfigurableJointMotion.Locked;
-        pullJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
-        pullJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
-        pullJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
-        pullJoint.autoConfigureConnectedAnchor = false;
-        pullJoint.connectedBody = pullingConnector.rigidbody;
-        var pullingOffset = anchorsOffset * 0.5f * Vector3.back;
-        pullJoint.connectedAnchor = pullingConnector.anchorOffset + pullingOffset;
-        var towingOffset = anchorsOffset * 0.5f * Vector3.forward;
-        pullJoint.anchor = towingConnector.anchorOffset + towingOffset;
-
-        tailPhysics.BreakWheelsFrictionWithConstantTorque();
+        var headRig = physicsRegistry[headVehicleIndex];
+        var tailRig = physicsRegistry[tailVehicleIndex];
+        physicsRoot.MakeTowingConnection(headRig, tailRig, anchorsOffset);
     }
 
     public VehiclePose GetVehiclePose(int vehicleIndex) {
