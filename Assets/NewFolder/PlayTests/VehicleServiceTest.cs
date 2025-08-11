@@ -48,7 +48,11 @@ public class VehicleServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var frontAxis = new WheelAxisData { drive = false, halfLength = 0.15f, forwardOffset = 0.15f, upOffset = 0f, radius = 0.1f};
         var position = new Vector3(0, 0.15f, -2);
         
-        vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis, frontAxis}, position: position);
+        vehicleService.CreateVehicle(position, new VehiclePhysicsData {
+            mass = 100,
+            baseSize = baseSize,
+            wheelAxisDatas = new WheelAxisData[] {backAxis, frontAxis},
+        });
         yield return DebugWaitForFixedUpdates(1);
 
         var backAxisPose = vehicleService.GetVehicleWheelAxisPose(vehicleIndex: 0, axisIndex: 0);
@@ -171,13 +175,21 @@ public class VehicleServiceTest : IPrebuildSetup, IPostBuildCleanup {
     private int Create2WheelsTrailerVehicle(Vector3 position) {
         Vector3 baseSize = new (0.5f, 0.4f, 1.0f);
         var backAxis = new WheelAxisData { drive = true, halfLength = 0.15f, forwardOffset = -0.15f, upOffset = 0f, radius = 0.1f};
-        return vehicleService.CreateVehicle(baseSize, new WheelAxisData[] {backAxis}, position: position);
+        return vehicleService.CreateVehicle(position, new VehiclePhysicsData {
+            mass = 100,
+            baseSize = baseSize, 
+            wheelAxisDatas = new WheelAxisData[] {backAxis},
+        });
     }
 
     private int CreateDefault4WheelsVehicle(Vector3 position, float halfLength = 0.15f, float forwardDistance = 0.15f, float wheelRadius = 0.1f) {
         var backAxis = new WheelAxisData { drive = true, halfLength = halfLength, forwardOffset = -forwardDistance, upOffset = 0f, radius = wheelRadius};
         var frontAxis = new WheelAxisData { stear = true, halfLength = halfLength, forwardOffset = forwardDistance, upOffset = 0f, radius = wheelRadius};
-        return vehicleService.CreateVehicle(DefaultBaseSize, new WheelAxisData[] {backAxis, frontAxis}, position: position);
+        return vehicleService.CreateVehicle(position, new VehiclePhysicsData {
+            mass = 100,
+            baseSize = DefaultBaseSize,
+            wheelAxisDatas = new WheelAxisData[] {backAxis, frontAxis}
+        });
     }
 
     float NormalizeEuqler(float angleDegrees) {

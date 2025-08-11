@@ -4,6 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
+public struct VehiclePhysicsData {
+    public float mass;
+    public Vector3 baseSize;
+    public WheelAxisData[] wheelAxisDatas;
+    public float towingTongueLength;
+}
+
+[Serializable]
 public struct WheelAxisData {
     public float forwardOffset;
     public float upOffset;
@@ -14,30 +22,14 @@ public struct WheelAxisData {
 }
 
 [Serializable]
-public struct TowingWheelAxisData {
-    public float forwardOffset;
-    public float upOffset;
-    public float halfLength;
-    public float radius;
-    public float towingBodyLength;
+public struct VehicleVisualsData {
+    public GameObject baseGeometry;
+    public GameObject wheelGeometry;
+    public GameObject towingBodyGeometry;
 }
 
 [CreateAssetMenu(fileName = "VehicleBlueprint", menuName = "VehicleBlueprint")]
 public class VehicleBlueprint : ScriptableObject {
-    [SerializeField] public float mass = 100;
-    [SerializeField] public Vector3 baseSize = new Vector3(0.5f, 0.4f, 1.0f);
-    [SerializeField] public GameObject baseGeometry;
-    [SerializeField] public GameObject wheelGeometry;
-    [SerializeField] public GameObject towingBodyGeometry;
-    [SerializeField] public WheelAxisData[] wheelAxisDatas;
-    [SerializeField] public TowingWheelAxisData towingWheelAxisData;
-    [SerializeField] public bool towingWheel;
-
-    public TowingWheelAxisData? GetTowingWheelAxisData() {
-        if (towingWheel) {
-            return towingWheelAxisData;
-        } else {
-            return null;
-        }
-    }
+    public VehicleVisualsData visualsId;
+    public VehiclePhysicsData physicsData;
 }

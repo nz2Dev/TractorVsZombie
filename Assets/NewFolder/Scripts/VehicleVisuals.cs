@@ -62,7 +62,7 @@ public class VehicleVisuals {
         });
     }
 
-    public void SetPositionAndRotation(VehiclePose vehiclePose) {
+    public void SetPositionAndRotation(VehicleBodyPose vehiclePose) {
         root.transform.SetPositionAndRotation(vehiclePose.position, vehiclePose.rotation);
     }
 
@@ -72,11 +72,9 @@ public class VehicleVisuals {
         wheelAxis.rightWheel.transform.SetPositionAndRotation(axisPose.positionR, axisPose.rotationR);
     }
 
-    internal void SetTowingAxisPositionAndRotation(TowingWheelAxisPose axisPose) {
+    internal void SetTowingTongueRotation(Quaternion tongueRotation) {
         var wheelAxis = wheelsAxes.Single(axis => axis.towingBody != null);
-        wheelAxis.leftWheel.transform.SetPositionAndRotation(axisPose.positionL, axisPose.rotationL);
-        wheelAxis.rightWheel.transform.SetPositionAndRotation(axisPose.positionR, axisPose.rotationR);
-        wheelAxis.towingBody.transform.rotation = axisPose.tipRotation;
+        wheelAxis.towingBody.transform.rotation = tongueRotation;
     }
 
 }

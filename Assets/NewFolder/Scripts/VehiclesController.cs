@@ -28,7 +28,7 @@ public class VehiclesController : MonoBehaviour {
     }
 
     public void Init() {
-        SpawnDriveVehicle();
+        SpawnDriveVehicle(Vector3.zero);
 
         for (int i = 0; i < trailersCount; i++) {
             SpawnTrailerVehicle(new Vector3(0, 0, -2f + i * -2f));
@@ -52,29 +52,27 @@ public class VehiclesController : MonoBehaviour {
     }
 
     private void UpdateVehicleCombat() {
-        combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehicle.Position);
+        combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehicle.BodyPose.position);
         if (combatService.ApplyPushDamage(driveVehicleCombatId, Vector3.one)) {
             Debug.Log("Vehicle applied push damage");
         }
     }
 
-    private void SpawnDriveVehicle() {
-        var driveVehiclePosition = Vector3.zero;
-        driveVehicle = new Vehicle(driveVehicleBlueprint.wheelAxisDatas.Length, driveVehicleBlueprint.towingWheel);
-        vehicles.Add(driveVehicle);
-        vehicleService.CreateVehicle(driveVehicleBlueprint.baseSize, driveVehicleBlueprint.wheelAxisDatas, driveVehicleBlueprint.GetTowingWheelAxisData(), mass: driveVehicleBlueprint.mass);
-        vehicleView.AddVehicle(driveVehiclePosition, driveVehicleBlueprint.baseGeometry, driveVehicleBlueprint.wheelGeometry, driveVehicleBlueprint.towingBodyGeometry, driveVehicleBlueprint.wheelAxisDatas, driveVehicleBlueprint.GetTowingWheelAxisData());
+    private void SpawnDriveVehicle(Vector3 driveVehiclePosition) {
+        driveVehicle = new Vehicle(driveVehicleBlueprint.physicsData);
+        vehicleService.CreateVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData);
+        vehicleView.AddVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData, driveVehicleBlueprint.visualsId);
         
+        vehicles.Add(driveVehicle);
         driveVehicleCombatId = combatService.RegisterCombatant(1, driveVehiclePosition, 10);
     }
 
     private void SpawnTrailerVehicle(Vector3 position) {
-        var trailerVehiclePosition = position;
-        var vehicle = new Vehicle(trailerVehicleBlueprint.wheelAxisDatas.Length, trailerVehicleBlueprint.towingWheel);
-        vehicles.Add(vehicle);
-        vehicleService.CreateVehicle(trailerVehicleBlueprint.baseSize, trailerVehicleBlueprint.wheelAxisDatas, trailerVehicleBlueprint.GetTowingWheelAxisData(), trailerVehiclePosition, mass: driveVehicleBlueprint.mass);
-        vehicleView.AddVehicle(trailerVehiclePosition, trailerVehicleBlueprint.baseGeometry, trailerVehicleBlueprint.wheelGeometry, trailerVehicleBlueprint.towingBodyGeometry, trailerVehicleBlueprint.wheelAxisDatas, trailerVehicleBlueprint.GetTowingWheelAxisData());
+        var trailerVehicle = new Vehicle(trailerVehicleBlueprint.physicsData);
+        vehicleService.CreateVehicle(position, trailerVehicleBlueprint.physicsData);
+        vehicleView.AddVehicle(position, trailerVehicleBlueprint.physicsData, trailerVehicleBlueprint.visualsId);
 
+        vehicles.Add(trailerVehicle);
         var lastIndex = vehicles.Count - 1;
         vehicleService.MakeTowingConnection(
             headVehicleIndex: lastIndex - 1, 
@@ -87,16 +85,16 @@ public class VehiclesController : MonoBehaviour {
             var vehiclePhysicsRigIndex = vehicleIndex;
             
             var vehiclePose = vehicleService.GetVehiclePose(vehiclePhysicsRigIndex);
-            vehicle.Orient(vehiclePose.position, vehiclePose.rotation);
+            vehicle.OrientBody(vehiclePose);
 
             for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
                 var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(vehiclePhysicsRigIndex, wheelAxisIndex);
                 vehicle.OrientWheelAxis(wheelAxisIndex, wheelAxisPose);
             }   
 
-            if (vehicle.TowingWheelAxisPose.HasValue) {
-                var towingWheelAxisPose = vehicleService.GetVehicleTowingWheelAxisPose(vehiclePhysicsRigIndex);
-                vehicle.OrientTowingWheelAxis(towingWheelAxisPose);
+            if (vehicle.TowingTonqueRotation.HasValue) {
+                var towingTonguePose = vehicleService.GetTowingTonguePose(vehiclePhysicsRigIndex);
+                vehicle.OrientTowingTonque(towingTonguePose);
             }
         }
     }
@@ -105,17 +103,14 @@ public class VehiclesController : MonoBehaviour {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
             var vehicleViewIndex = vehicleIndex;
-            vehicleView.UpdateVehiclePose(vehicleViewIndex, new VehiclePose {
-                position = vehicle.Position,
-                rotation = vehicle.Rotation
-            });
+            vehicleView.UpdateVehiclePose(vehicleViewIndex, vehicle.BodyPose);
 
             for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
                 vehicleView.UpdateWheelAxisPose(vehicleViewIndex, wheelAxisIndex, vehicle.WheelAxisPoses[wheelAxisIndex]);
             }   
 
-            if (vehicle.TowingWheelAxisPose.HasValue) {
-                vehicleView.UpdateTowingWheelAxisPose(vehicleViewIndex, vehicle.TowingWheelAxisPose.Value);
+            if (vehicle.TowingTonqueRotation.HasValue) {
+                vehicleView.UpdateTowingTonguePose(vehicleViewIndex, vehicle.TowingTonqueRotation.Value);
             }
         }
     }

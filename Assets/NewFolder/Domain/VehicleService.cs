@@ -12,28 +12,32 @@ public class VehicleService {
         this.physicsRoot = physicsRoot;
     }
 
-    public int CreateVehicle(Vector3 baseSize, WheelAxisData[] wheels, TowingWheelAxisData? towingWheel = null, Vector3 position = default, float mass = 100) {
-        var vehiclePhysics = physicsRoot.CreateRig(position, mass);
-        vehiclePhysics.ConfigureBase(baseSize);
+    public int CreateVehicle(Vector3 position, VehiclePhysicsData physicsData) {
+        var vehiclePhysics = physicsRoot.CreateRig(position, physicsData.mass);
+        vehiclePhysics.ConfigureBase(physicsData.baseSize);
         
-        foreach (var wheelAxis in wheels)
-            vehiclePhysics.CreateWheelAxis(
-                wheelAxis.halfLength * 2, 
-                wheelAxis.upOffset, 
-                wheelAxis.forwardOffset, 
-                wheelAxis.radius, 
-                wheelAxis.drive, 
-                wheelAxis.stear
-            );
-        
-        if (towingWheel.HasValue) {
-            vehiclePhysics.CreateTowingWheelAxis(
-                towingWheel.Value.halfLength * 2,
-                towingWheel.Value.upOffset,
-                towingWheel.Value.forwardOffset,
-                towingWheel.Value.radius,
-                towingWheel.Value.towingBodyLength
-            );
+        var hasTowingTongue = physicsData.towingTongueLength > 0;
+        for (int i = 0; i < physicsData.wheelAxisDatas.Length; i++) {
+            bool isLastAxis = i == physicsData.wheelAxisDatas.Length - 1;
+            var wheelAxis = physicsData.wheelAxisDatas[i];
+            if (hasTowingTongue && isLastAxis) {
+                vehiclePhysics.CreateTowingWheelAxis(
+                    wheelAxis.halfLength * 2,
+                    wheelAxis.upOffset,
+                    wheelAxis.forwardOffset,
+                    wheelAxis.radius,
+                    physicsData.towingTongueLength
+                ); 
+            } else {
+                vehiclePhysics.CreateWheelAxis(
+                    wheelAxis.halfLength * 2, 
+                    wheelAxis.upOffset, 
+                    wheelAxis.forwardOffset, 
+                    wheelAxis.radius, 
+                    wheelAxis.drive, 
+                    wheelAxis.stear
+                );
+            }
         }
 
         physicsRegistry.Add(vehiclePhysics);
@@ -75,9 +79,9 @@ public class VehicleService {
         physicsRoot.MakeTowingConnection(headRig, tailRig, anchorsOffset);
     }
 
-    public VehiclePose GetVehiclePose(int vehicleIndex) {
+    public VehicleBodyPose GetVehiclePose(int vehicleIndex) {
         var vehiclePhysics = physicsRegistry[vehicleIndex];
-        return new VehiclePose {
+        return new VehicleBodyPose {
             position = vehiclePhysics.Position,
             rotation = vehiclePhysics.Rotation
         };
@@ -94,16 +98,10 @@ public class VehicleService {
         };
     }
 
-    public TowingWheelAxisPose GetVehicleTowingWheelAxisPose(int vehicleIndex) {
+    public Quaternion GetTowingTonguePose(int vehicleIndex) {
         var vehiclePhysics = physicsRegistry[vehicleIndex];
         vehiclePhysics.GetTowingAxisPose(out var positionL, out var rotationL, out var positionR, out var rotationR, out var tipRotation);
-        return new TowingWheelAxisPose {
-            positionL = positionL,
-            rotationL = rotationL,
-            positionR = positionR,
-            rotationR = rotationR,
-            tipRotation = tipRotation
-        };
+        return tipRotation;
     }
 
 }
