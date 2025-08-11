@@ -60,8 +60,7 @@ public class VehiclesController : MonoBehaviour {
 
     private void SpawnDriveVehicle() {
         var driveVehiclePosition = Vector3.zero;
-        driveVehicle = new Vehicle();
-        driveVehicle.Configure(driveVehicleBlueprint.wheelAxisDatas.Length, driveVehicleBlueprint.towingWheel);
+        driveVehicle = new Vehicle(driveVehicleBlueprint.wheelAxisDatas.Length, driveVehicleBlueprint.towingWheel);
         vehicles.Add(driveVehicle);
         vehicleService.CreateVehicle(driveVehicleBlueprint.baseSize, driveVehicleBlueprint.wheelAxisDatas, driveVehicleBlueprint.GetTowingWheelAxisData(), mass: driveVehicleBlueprint.mass);
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicleBlueprint.baseGeometry, driveVehicleBlueprint.wheelGeometry, driveVehicleBlueprint.towingBodyGeometry, driveVehicleBlueprint.wheelAxisDatas, driveVehicleBlueprint.GetTowingWheelAxisData());
@@ -71,8 +70,7 @@ public class VehiclesController : MonoBehaviour {
 
     private void SpawnTrailerVehicle(Vector3 position) {
         var trailerVehiclePosition = position;
-        var vehicle = new Vehicle();
-        vehicle.Configure(trailerVehicleBlueprint.wheelAxisDatas.Length, trailerVehicleBlueprint.towingWheel);
+        var vehicle = new Vehicle(trailerVehicleBlueprint.wheelAxisDatas.Length, trailerVehicleBlueprint.towingWheel);
         vehicles.Add(vehicle);
         vehicleService.CreateVehicle(trailerVehicleBlueprint.baseSize, trailerVehicleBlueprint.wheelAxisDatas, trailerVehicleBlueprint.GetTowingWheelAxisData(), trailerVehiclePosition, mass: driveVehicleBlueprint.mass);
         vehicleView.AddVehicle(trailerVehiclePosition, trailerVehicleBlueprint.baseGeometry, trailerVehicleBlueprint.wheelGeometry, trailerVehicleBlueprint.towingBodyGeometry, trailerVehicleBlueprint.wheelAxisDatas, trailerVehicleBlueprint.GetTowingWheelAxisData());

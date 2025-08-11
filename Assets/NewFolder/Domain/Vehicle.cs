@@ -8,7 +8,7 @@ public class Vehicle {
     public WheelAxisPose[] WheelAxisPoses { get; private set; }
     public TowingWheelAxisPose? TowingWheelAxisPose { get; private set; }
 
-    public void Configure(int wheelAxisCount, bool hasTowingWheelAxis) {
+    public Vehicle(int wheelAxisCount, bool hasTowingWheelAxis) {
         WheelAxisPoses = new WheelAxisPose[wheelAxisCount];
         TowingWheelAxisPose = hasTowingWheelAxis ? default(TowingWheelAxisPose) : null;
     }
