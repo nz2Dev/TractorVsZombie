@@ -44,6 +44,10 @@ public class Unit {
         return true;
     }
 
+    public void TakeProjectileDamage(int damage) {
+        TakeDamage(damage);
+    }
+
     public void SetFlying() {
         Grouned = false;
     }

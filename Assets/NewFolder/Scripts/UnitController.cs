@@ -152,6 +152,10 @@ public class UnitController {
                 physicsService.AddExplosionForce(unitPhysicsId, 10, combatAgentState.damageSourcePosition, 1f, 1, ForceMode.Impulse);
             }
 
+            if (combatAgentState.projectiled) {
+                unit.TakeProjectileDamage(combatAgentState.damage);
+            }
+
             combatService.ClearAgentState(combatId);
         }
     }
