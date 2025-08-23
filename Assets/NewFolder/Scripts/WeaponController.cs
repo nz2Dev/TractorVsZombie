@@ -6,21 +6,22 @@ using UnityEngine;
 
 public class WeaponController {
     
+    private readonly WeaponView view;
     private readonly ICombatService combatService;
-    private readonly TurelVisuals view;
     
     private Turel turel;
     private int combatAgentId;
     private List<Projectile> projectiles = new List<Projectile>();
 
-    public WeaponController(TurelVisuals visuals, ICombatService interactionService) {
-        this.view = visuals;
+    public WeaponController(WeaponView weaponView, ICombatService interactionService) {
+        this.view = weaponView;
         this.combatService = interactionService;
     }
 
     public void Init() {
         turel = new Turel(1);
         combatAgentId = combatService.RegisterAgent(turel.Position);
+        view.AddTurel(turel.Position);
     }
 
     public void FixedUpdate() {
@@ -47,14 +48,14 @@ public class WeaponController {
     private void SpawnTurelBullet(RayDamage rayDamage) {
         projectiles.Add(new Projectile { position = rayDamage.sourcePosition, velocity = rayDamage.rayDirection });
         int projectileOrderNumber = combatService.RegisterProjectile(combatAgentId, rayDamage.sourcePosition, rayDamage.amount);
-        view.ShowShootEffect(projectileOrderNumber);
+        view.ShowBulletShoot(projectileOrderNumber);
     }
 
     private void FilterDestroyedBullets() {
         var destroyedProjectileEvents = combatService.GetDestroyedProjectilesEventsCount(combatAgentId);
         for (int eventIndex = 0; eventIndex < destroyedProjectileEvents; eventIndex++) {
             var projectileIndex = combatService.GetDestroyedProjectileIndex(combatAgentId, eventIndex);
-            view.KillShootBullet(projectileIndex);
+            view.ShowBulletCrash(projectileIndex);
         }
     }
 

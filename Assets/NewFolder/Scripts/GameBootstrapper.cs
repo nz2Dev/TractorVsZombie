@@ -1,5 +1,7 @@
 using System.Collections;
 
+using Codice.Client.Common;
+
 using Unity.Profiling;
 
 using UnityEngine;
@@ -19,10 +21,13 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private VehicleBlueprint driveVehicle;
     [SerializeField] private VehicleBlueprint trailerVehicle;
     [SerializeField] private int trailersCount = 3;
+    [Space]
+    [SerializeField] private TurelVisuals turelVisualsPrefab;
 
     private VehiclesController vehiclesController;
     private CameraController cameraController;
     private UnitController unitController;
+    private WeaponController weaponController;
 
     private void Start() {
         var vehicleService = new VehicleService(vehiclePhysicsRoot);
@@ -33,6 +38,7 @@ public class GameBootstrapper : MonoBehaviour {
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         var combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer));
         var unitView = new UnitView(unitVisualsPrefab);
+        var weaponView = new WeaponView(turelVisualsPrefab);
 
         vehiclesController = new VehiclesController(
             vehicleService, vehicleView,
@@ -53,15 +59,26 @@ public class GameBootstrapper : MonoBehaviour {
             combatService,
             physicsService);
 
+        weaponController = new WeaponController(
+            weaponView, 
+            combatService);
+
         unitController.Init();
         vehiclesController.Init();
         cameraController.Init();
+        weaponController.Init();
     }
 
     private static readonly ProfilerMarker cameraUpdateMarker = new ProfilerMarker("Game.CameraController");
     private static readonly ProfilerMarker unitUpdateMarker = new ProfilerMarker("Game.UnitController");
     private static readonly ProfilerMarker vehicleUpdateMarker = new ProfilerMarker("Game.VehicleController");
+    private static readonly ProfilerMarker weaponUpdateMarker = new ProfilerMarker("Game.WeaponController");
+    private static readonly ProfilerMarker fixedWeaponUpdateMarker = new ProfilerMarker("Game.Fixed.WeaponController");
 
+    private void FixedUpdate() {
+        using (fixedWeaponUpdateMarker.Auto())
+            weaponController.FixedUpdate();
+    }
 
     private void Update() {
         using (cameraUpdateMarker.Auto())
@@ -70,6 +87,8 @@ public class GameBootstrapper : MonoBehaviour {
             unitController.Update();
         using (vehicleUpdateMarker.Auto())
             vehiclesController.Update();
+        using (weaponUpdateMarker.Auto())
+            weaponController.Update();
     }
 
 }
