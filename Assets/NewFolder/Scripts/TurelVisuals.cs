@@ -26,9 +26,9 @@ public class TurelVisuals : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(aimForward, Vector3.up);
     }
 
-    public void ShowShootEffect(int shootId) {
+    public void ShowShootEffect(int shootId, Vector3 velocity) {
         animator.SetTrigger("Shoot");
-        EmitShootProjectile(shootId, transform.forward);
+        EmitShootProjectile(shootId, velocity);
     }
 
     public void KillShootBullet(int bulletIndex) {
@@ -39,15 +39,15 @@ public class TurelVisuals : MonoBehaviour {
         bool isNextActiveCount = orderNumber == _activeCount + 1;
         Assert.IsTrue(isNextActiveCount);
         
-        var particle = new ParticleSystem.Particle { velocity = velocity };
-        projectileParticles[_activeCount] = particle;
         _activeCount++;
-
-        projectileParticlesSystem.SetParticles(projectileParticles, _activeCount);
+        projectileParticlesSystem.Emit(new ParticleSystem.EmitParams {
+            velocity = velocity
+        }, 1);
     }
 
     private void DestroyShootProjectile(int index) {
         _activeCount--;
+        projectileParticles[_activeCount].remainingLifetime = -1;
         projectileParticles[index] = projectileParticles[_activeCount];
 
         projectileParticlesSystem.SetParticles(projectileParticles, _activeCount);

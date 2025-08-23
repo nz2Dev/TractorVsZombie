@@ -28,6 +28,25 @@ public class WeaponController {
     public void FixedUpdate() {
         UpdateProjectilesMovement(Time.fixedDeltaTime);
         UpdateProjectilesCombat();
+        turel.Aim(new Vector3(0, 1, 10));
+        if (turel.Shoot(Time.time, out var shootRay)) {
+            SpawnTurelBullet(shootRay);
+        }
+    }
+
+    public void Update() {}
+
+    private void SpawnTurelBullet(RayDamage rayDamage) {
+        var projectile = new Projectile { position = rayDamage.sourcePosition, velocity = rayDamage.velocity };
+        projectiles.Add(projectile);
+        view.ShowBulletShoot(projectiles.Count, projectile.velocity);
+    }
+
+    private void UpdateProjectilesMovement(float deltaTime) {
+        for (int turelProjectileIndex = 0; turelProjectileIndex < projectiles.Count; turelProjectileIndex++) {
+            var projectile = projectiles[turelProjectileIndex];
+            projectile.Move(deltaTime);
+        }
     }
 
     private List<int> hitProjectileIndexesBuffer = new List<int>();
@@ -47,23 +66,13 @@ public class WeaponController {
         }
     }
 
-    private void UpdateProjectilesMovement(float deltaTime) {
-        for (int turelProjectileIndex = 0; turelProjectileIndex < projectiles.Count; turelProjectileIndex++) {
-            var projectile = projectiles[turelProjectileIndex];
-            projectile.Move(deltaTime);
+#if UNITY_EDITOR
+    public void OnDrawGizmos() {
+        Gizmos.color = Color.blue;
+        foreach (var projectile in projectiles) {
+            Gizmos.DrawWireSphere(projectile.position, 0.3f);
         }
     }
-
-    public void Update() {
-        turel.Aim(new Vector3(0, 1, 10));
-        if (turel.Shoot(Time.time, out var shootRay)) {
-            SpawnTurelBullet(shootRay);
-        }
-    }
-
-    private void SpawnTurelBullet(RayDamage rayDamage) {
-        projectiles.Add(new Projectile { position = rayDamage.sourcePosition, velocity = rayDamage.rayDirection });
-        view.ShowBulletShoot(projectiles.Count);
-    }
+#endif
 
 }

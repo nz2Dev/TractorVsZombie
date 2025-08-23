@@ -91,4 +91,10 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController.Update();
     }
 
+#if UNITY_EDITOR
+    private void OnDrawGizmos() {
+        weaponController?.OnDrawGizmos();
+    }
+#endif
+
 }
