@@ -53,7 +53,7 @@ public class CombatService : ICombatService {
         var agent = agents[agentId];
         return new AgentState {
             pushed = agent.pushed,
-            projectiled = false,
+            projectiled = agent.projectiled,
             damage = agent.damageReceived,
             damageSourceAgentId = -1,
             damageSourcePosition = agent.damageSourcePosition
