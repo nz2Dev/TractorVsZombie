@@ -6,6 +6,7 @@ using UnityEngine;
 public class CombatAgent {
     public int agentId;
     public bool pushed;
+    public bool projectiled;
     public int damageReceived;
     public Vector3 damageSourcePosition;
     public SphereCollider spatialMarker;
@@ -82,20 +83,16 @@ public class CombatService : ICombatService {
         }
     }
 
-    public int RegisterProjectile(int parentAgentId, Vector3 position, int damage) {
-        throw new NotImplementedException();
-    }
-
-    public void UpdateProjectile(int parentAgentId, int projectileId, Vector3 position) {
-        throw new NotImplementedException();
-    }
-
-    public int GetDestroyedProjectilesEventsCount(int parentAgentId) {
-        throw new NotImplementedException();
-    }
-
-    public int GetDestroyedProjectileIndex(int parentAgentId, int destroyedEventIndex) {
-        throw new NotImplementedException();
+    public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage) {
+        if (Physics.Raycast(position, direction, out var hitInfo, 1f, queryMask)) {
+            if (markerToAgent.TryGetValue(hitInfo.collider, out var hitAgent) && hitAgent.agentId != agentId) {
+                hitAgent.projectiled = true;
+                hitAgent.damageReceived = damage;
+                hitAgent.damageSourcePosition = position;
+                return true;
+            }
+        }
+        return false;
     }
 
     private SphereCollider CreateSpatialMarker(int id, Vector3 position, float radius) {

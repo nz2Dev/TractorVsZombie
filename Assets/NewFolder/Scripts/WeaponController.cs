@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -26,13 +27,30 @@ public class WeaponController {
 
     public void FixedUpdate() {
         UpdateProjectilesMovement(Time.fixedDeltaTime);
+        UpdateProjectilesCombat();
+    }
+
+    private List<int> hitProjectileIndexesBuffer = new List<int>();
+
+    private void UpdateProjectilesCombat() {   
+        hitProjectileIndexesBuffer.Clear();
+        for (int turelProjectileIndex = 0; turelProjectileIndex < projectiles.Count; turelProjectileIndex++) {
+            var projectile = projectiles[turelProjectileIndex];
+            if (combatService.ApplyProjectileDamage(combatAgentId, projectile.position, projectile.velocity, turel.Damage)) {
+                hitProjectileIndexesBuffer.Add(turelProjectileIndex);
+            }
+        }
+
+        foreach (var crashedBullet in hitProjectileIndexesBuffer) {
+            projectiles.RemoveAt(crashedBullet);
+            view.ShowBulletCrash(crashedBullet);
+        }
     }
 
     private void UpdateProjectilesMovement(float deltaTime) {
         for (int turelProjectileIndex = 0; turelProjectileIndex < projectiles.Count; turelProjectileIndex++) {
             var projectile = projectiles[turelProjectileIndex];
             projectile.Move(deltaTime);
-            combatService.UpdateProjectile(combatAgentId, turelProjectileIndex, projectile.position);
         }
     }
 
@@ -41,22 +59,11 @@ public class WeaponController {
         if (turel.Shoot(Time.time, out var shootRay)) {
             SpawnTurelBullet(shootRay);
         }
-
-        FilterDestroyedBullets();
     }
 
     private void SpawnTurelBullet(RayDamage rayDamage) {
         projectiles.Add(new Projectile { position = rayDamage.sourcePosition, velocity = rayDamage.rayDirection });
-        int projectileOrderNumber = combatService.RegisterProjectile(combatAgentId, rayDamage.sourcePosition, rayDamage.amount);
-        view.ShowBulletShoot(projectileOrderNumber);
-    }
-
-    private void FilterDestroyedBullets() {
-        var destroyedProjectileEvents = combatService.GetDestroyedProjectilesEventsCount(combatAgentId);
-        for (int eventIndex = 0; eventIndex < destroyedProjectileEvents; eventIndex++) {
-            var projectileIndex = combatService.GetDestroyedProjectileIndex(combatAgentId, eventIndex);
-            view.ShowBulletCrash(projectileIndex);
-        }
+        view.ShowBulletShoot(projectiles.Count);
     }
 
 }

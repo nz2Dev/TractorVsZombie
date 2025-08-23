@@ -20,8 +20,5 @@ public interface ICombatService {
     void ClearAgentState(int agentId);
     void UpdateAgentPosition(int agentId, Vector3 position);
     void ApplyPushDamage(int agentId, Vector3 size, int damage);
-    int RegisterProjectile(int parentAgentId, Vector3 position, int damage);
-    void UpdateProjectile(int parentAgentId, int projectileId, Vector3 position);
-    int GetDestroyedProjectilesEventsCount(int parentAgentId);
-    int GetDestroyedProjectileIndex(int parentAgentId, int destroyedEventIndex);
+    bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage);
 }
