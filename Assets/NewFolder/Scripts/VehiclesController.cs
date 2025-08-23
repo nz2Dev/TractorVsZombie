@@ -53,9 +53,7 @@ public class VehiclesController : MonoBehaviour {
 
     private void UpdateVehicleCombat() {
         combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehicle.BodyPose.position);
-        if (combatService.ApplyPushDamage(driveVehicleCombatId, Vector3.one)) {
-            Debug.Log("Vehicle applied push damage");
-        }
+        combatService.ApplyPushDamage(driveVehicleCombatId, Vector3.one, 1);
     }
 
     private void SpawnDriveVehicle(Vector3 driveVehiclePosition) {
@@ -64,7 +62,7 @@ public class VehiclesController : MonoBehaviour {
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData, driveVehicleBlueprint.visualsId);
         
         vehicles.Add(driveVehicle);
-        driveVehicleCombatId = combatService.RegisterCombatant(1, driveVehiclePosition, 10);
+        driveVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition);
     }
 
     private void SpawnTrailerVehicle(Vector3 position) {

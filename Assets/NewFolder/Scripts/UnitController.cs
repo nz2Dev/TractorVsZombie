@@ -9,7 +9,7 @@ public class UnitController {
     private readonly UnitView unitView;
     private readonly LocalAvoidanceService localAvoidanceService;
     private readonly NavigationService navigationService;
-    private readonly CombatService combatService;
+    private readonly ICombatService combatService;
     private readonly PhysicsService physicsService;
 
     private Transform[] spawnPoints;
@@ -23,7 +23,7 @@ public class UnitController {
     private readonly Dictionary<int, int> unitIdToPhysicsId = new Dictionary<int, int>();
 
     public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
-        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService) {
+        Transform[] spawnPoints, Transform targetPoint, int unitsCount, ICombatService combatService, PhysicsService physicsService) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.unitView = crowdView;
@@ -60,7 +60,7 @@ public class UnitController {
         var agentId = localAvoidanceService.AddAgent(position);
         unitIdToAvoidanceId[newUnit.Id] = agentId;
         
-        var combatAgentId = combatService.RegisterCombatant(0.3f, position, physicalDamage: 10);
+        var combatAgentId = combatService.RegisterAgent(position);
         unitIdToCombatId[newUnit.Id] = combatAgentId;
 
         var physicsAgentId = physicsService.RegisterPhysicsEntity(position, .5f, 0.15f);
@@ -143,17 +143,16 @@ public class UnitController {
     private void ReadCombatServiceInput() {
         foreach (var unit in units) {
             var combatId = unitIdToCombatId[unit.Id];
-            var combatState = combatService.GetState(combatId);
+            var combatAgentState = combatService.GetAgentState(combatId);
             
-            if (unit.Grouned && combatState.pushed) {
+            if (combatAgentState.pushed && unit.TryPush(Time.time, combatAgentState.damage)) {
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
-                physicsService.AddExplosionForce(unitPhysicsId, 10, combatState.pushEpicenter, 1f, 1, ForceMode.Impulse);
-                unit.TakeDamage(1);
+                physicsService.AddExplosionForce(unitPhysicsId, 10, combatAgentState.damageSourcePosition, 1f, 1, ForceMode.Impulse);
             }
 
-            combatService.ClearState(combatId);
+            combatService.ClearAgentState(combatId);
         }
     }
 
@@ -161,7 +160,6 @@ public class UnitController {
         foreach (var unit in units) {
             var combatId = unitIdToCombatId[unit.Id];
             combatService.UpdateAgentPosition(combatId, unit.Position);
-            combatService.UpdateAgentAOEDiscoverable(combatId, unit.Grouned);
         }
     }
 

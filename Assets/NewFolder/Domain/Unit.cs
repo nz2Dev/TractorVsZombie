@@ -3,6 +3,8 @@ using System;
 using UnityEngine;
 
 public class Unit {
+
+    const float PushCooldown = 0.25f;
     
     public int Id { get; set; }
     public Vector3 Position { get; set; }
@@ -13,6 +15,8 @@ public class Unit {
     public int Health { get; private set; }
     public bool IsAlive => Health >= 0;
     public bool Grouned { get; private set; }
+
+    private float lastTimePushed;
 
     public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 1) {
         Id = id;
@@ -28,8 +32,16 @@ public class Unit {
         Health = 0;
     }
 
-    public void TakeDamage(int damageReceived) {
-        Health -= damageReceived;
+    public bool TryPush(float time, int damage) {
+         if (!Grouned) 
+            return false;
+                
+        if (lastTimePushed + PushCooldown > time) 
+            return false;
+
+        lastTimePushed = time;
+        TakeDamage(damage);
+        return true;
     }
 
     public void SetFlying() {
@@ -38,5 +50,9 @@ public class Unit {
 
     internal void SetGrounded() {
         Grouned = true;
+    }
+
+    private void TakeDamage(int damageReceived) {
+        Health -= damageReceived;
     }
 } 
