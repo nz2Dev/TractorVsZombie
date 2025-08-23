@@ -105,12 +105,4 @@ public class CombatService : ICombatService {
         return collider;
     }
 
-    private bool CheckRegisteredMarker(Collider overlapCollider) {
-        if (!markerToAgent.ContainsKey(overlapCollider)) {
-            Debug.LogWarning($"overlapping collider {overlapCollider} that has no entry in markerToAgent");
-            return false;
-        }
-        return true;
-    }
-
 }
