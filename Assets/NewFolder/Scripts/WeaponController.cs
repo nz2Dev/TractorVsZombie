@@ -25,8 +25,10 @@ public class WeaponController {
         view.AddTurel(turel.Position);
     }
 
-    public void FixedUpdate() {
-        UpdateProjectilesMovement(Time.fixedDeltaTime);
+    public void FixedUpdate() {}
+
+    public void Update() {
+        UpdateProjectilesMovement(Time.deltaTime);
         UpdateProjectilesCombat();
         turel.Aim(new Vector3(0, 1, 10));
         if (turel.Shoot(Time.time, out var shootRay)) {
@@ -34,12 +36,12 @@ public class WeaponController {
         }
     }
 
-    public void Update() {}
+    private int nextProjectileId = 1;
 
     private void SpawnTurelBullet(RayDamage rayDamage) {
-        var projectile = new Projectile { position = rayDamage.sourcePosition, velocity = rayDamage.velocity };
+        var projectile = new Projectile { id = nextProjectileId++, position = rayDamage.sourcePosition, velocity = rayDamage.velocity };
         projectiles.Add(projectile);
-        view.ShowBulletShoot(projectiles.Count, projectile.velocity);
+        view.ShowBulletShoot(projectile.id, projectile.velocity);
     }
 
     private void UpdateProjectilesMovement(float deltaTime) {
@@ -49,20 +51,21 @@ public class WeaponController {
         }
     }
 
-    private List<int> hitProjectileIndexesBuffer = new List<int>();
+    private List<int> crashedProjectileIndexes = new List<int>();
 
     private void UpdateProjectilesCombat() {   
-        hitProjectileIndexesBuffer.Clear();
+        crashedProjectileIndexes.Clear();
         for (int turelProjectileIndex = 0; turelProjectileIndex < projectiles.Count; turelProjectileIndex++) {
             var projectile = projectiles[turelProjectileIndex];
             if (combatService.ApplyProjectileDamage(combatAgentId, projectile.position, projectile.velocity, turel.Damage)) {
-                hitProjectileIndexesBuffer.Add(turelProjectileIndex);
+                crashedProjectileIndexes.Add(turelProjectileIndex);
             }
         }
 
-        foreach (var crashedBullet in hitProjectileIndexesBuffer) {
-            projectiles.RemoveAt(crashedBullet);
-            view.ShowBulletCrash(crashedBullet);
+        foreach (var projectileIndex in crashedProjectileIndexes) {
+            var projectile = projectiles[projectileIndex];
+            projectiles.RemoveAt(projectileIndex);
+            view.ShowBulletCrash(projectile.id);
         }
     }
 

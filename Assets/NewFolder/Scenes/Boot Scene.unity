@@ -200,12 +200,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatServiceLayer: Combat
   physicsServiceLayer: UnitPhysics
-  unitsCount: 40
+  unitsCount: 400
   spawnPoints:
   - {fileID: 186795255}
-  - {fileID: 1856700855}
-  - {fileID: 424987304}
-  - {fileID: 1987231530}
   targetPoint: {fileID: 650734648}
   flowFieldsSurface: {fileID: 804724243}
   orcaEnvironment: {fileID: 851369242}

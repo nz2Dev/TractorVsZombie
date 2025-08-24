@@ -9898,7 +9898,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cannoParticlesSystem: {fileID: 7382700801562275363}
-  projectileParticlesSystem: {fileID: 7456198559616359926}
+  bulletSystem: {fileID: 7456198559616359926}
 --- !u!95 &8974148101544137458
 Animator:
   serializedVersion: 5

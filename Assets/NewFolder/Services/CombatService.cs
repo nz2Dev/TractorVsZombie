@@ -84,7 +84,7 @@ public class CombatService : ICombatService {
     }
 
     public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage) {
-        if (Physics.Raycast(position, direction, out var hitInfo, 1f, queryMask)) {
+        if (Physics.Raycast(position, direction, out var hitInfo, 0.25f, queryMask)) {
             if (markerToAgent.TryGetValue(hitInfo.collider, out var hitAgent) && hitAgent.agentId != agentId) {
                 hitAgent.projectiled = true;
                 hitAgent.damageReceived = damage;
