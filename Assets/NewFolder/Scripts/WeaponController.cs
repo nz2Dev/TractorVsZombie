@@ -30,7 +30,11 @@ public class WeaponController {
     public void Update() {
         UpdateProjectilesMovement(Time.deltaTime);
         UpdateProjectilesCombat();
-        turel.Aim(new Vector3(0, 1, 10));
+
+        if (combatService.GetClosestEnemyAgentInRange(combatAgentId, 20, out var closestEnemyAgent)) {
+            turel.Aim(Time.deltaTime, closestEnemyAgent.position);
+        }
+
         if (turel.Shoot(Time.time, out var shootRay)) {
             SpawnTurelBullet(shootRay);
         }

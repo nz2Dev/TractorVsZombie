@@ -27,10 +27,14 @@ public class Turel {
         Position = position;
     }
 
-    public void Aim(Vector3 aimTarget) {
+    public void Aim(float deltaTime, Vector3 aimTarget) {
         aimTarget.y = Position.y;
         var positionToAimTarget = aimTarget - Position;
-        AimForward = Vector3.Slerp(AimForward, positionToAimTarget.normalized, Time.time * AimSpeed);
+        AimForward = Vector3.Slerp(AimForward, positionToAimTarget.normalized, deltaTime * AimSpeed);
+    }
+
+    public bool IsAligned(Vector3 point) {
+        return Vector3.Dot(AimForward, (point - Position).normalized) > 0.98f;
     }
 
     public bool Shoot(float time, out RayDamage damage) {

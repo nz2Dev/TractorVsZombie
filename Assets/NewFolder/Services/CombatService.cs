@@ -95,6 +95,36 @@ public class CombatService : ICombatService {
         return false;
     }
 
+    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo) {
+        var sourceAgent = agents[combatAgentId];
+        var sourceAgentPosition = sourceAgent.spatialMarker.transform.position;
+        var overlapCount = Physics.OverlapSphereNonAlloc(sourceAgentPosition, radius, overlapBuffer);
+        CombatAgent closestAgent = null;
+        float closestDistance = float.PositiveInfinity;
+        for (int i = 0; i < overlapCount; i++) {
+            if (!markerToAgent.TryGetValue(overlapBuffer[i], out var overlapAgent) || overlapAgent.agentId == combatAgentId)
+                continue;
+            
+            var overlapAgentPosition = overlapAgent.spatialMarker.transform.position;
+            var indexDistance = Vector3.Distance(overlapAgentPosition, sourceAgentPosition);
+            if (indexDistance < closestDistance) {
+                closestDistance = indexDistance;
+                closestAgent = overlapAgent;
+            }
+        }
+        
+        if (closestAgent != null) {
+            agentInfo = new AgentInfo {
+                id = closestAgent.agentId,
+                position = closestAgent.spatialMarker.transform.position
+            };
+            return true;
+        }
+
+        agentInfo = default;
+        return false;
+    }
+
     private SphereCollider CreateSpatialMarker(int id, Vector3 position, float radius) {
         var go = new GameObject("Combat Agent (New) " + id, typeof(SphereCollider));
         go.transform.position = position;
