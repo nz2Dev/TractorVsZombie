@@ -25,6 +25,7 @@ public class Turel {
     public float LastShootTime { get; private set; }
 
     public int BulletDamage => config.bulletDamage;
+    public float BulletLifetime => config.bulletLifetime;
 
     public void Move(Vector3 position) {
         Position = position;

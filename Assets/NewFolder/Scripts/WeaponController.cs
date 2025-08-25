@@ -14,7 +14,7 @@ public class WeaponController {
     private int combatAgentId;
     private int nextProjectileId = 1;
     private List<Projectile> bulletProjectiles = new List<Projectile>();
-    private List<int> crashedProjectileIndexes = new List<int>();
+    private List<int> projectileRemovalIndexBuffer = new List<int>();
 
     public WeaponController(WeaponView weaponView, ICombatService interactionService, TurelConfig turelConfig) {
         this.view = weaponView;
@@ -30,7 +30,8 @@ public class WeaponController {
 
     public void Update() {
         UpdateProjectilesMovement(Time.deltaTime);
-        UpdateProjectilesCombat();
+        FilterDeadProjectiles();
+        UpdateProjectileHits();
         OperateTurel();
         UpdateTurelView();
     }
@@ -51,7 +52,13 @@ public class WeaponController {
     }
 
     private void SpawnBulletProjectile(Bullet bullet) {
-        var projectile = new Projectile { id = nextProjectileId++, position = bullet.firePoint, velocity = bullet.velocity };
+        var projectile = new Projectile { 
+            id = nextProjectileId++, 
+            position = bullet.firePoint, 
+            velocity = bullet.velocity,
+            spawnTime = Time.time,
+            lifetime = turel.BulletLifetime
+        };
         bulletProjectiles.Add(projectile);
         view.ShowBulletShoot(projectile.id, projectile.velocity);
     }
@@ -63,16 +70,32 @@ public class WeaponController {
         }
     }
 
-    private void UpdateProjectilesCombat() {   
-        crashedProjectileIndexes.Clear();
+    private void FilterDeadProjectiles() {
+        projectileRemovalIndexBuffer.Clear();
         for (int i = 0; i < bulletProjectiles.Count; i++) {
             var projectile = bulletProjectiles[i];
-            if (combatService.ApplyProjectileDamage(combatAgentId, projectile.position, projectile.velocity, turel.BulletDamage)) {
-                crashedProjectileIndexes.Add(i);
+            if (projectile.IsDeadTime(Time.time)) {
+                projectileRemovalIndexBuffer.Add(i);
             }
         }
 
-        foreach (var projectileIndex in crashedProjectileIndexes) {
+        foreach (var projectileIndex in projectileRemovalIndexBuffer) {
+            var projectile = bulletProjectiles[projectileIndex];
+            bulletProjectiles.RemoveAt(projectileIndex);
+            view.ShowBulletDisappear(projectile.id);
+        }
+    }
+
+    private void UpdateProjectileHits() {   
+        projectileRemovalIndexBuffer.Clear();
+        for (int i = 0; i < bulletProjectiles.Count; i++) {
+            var projectile = bulletProjectiles[i];
+            if (combatService.ApplyProjectileDamage(combatAgentId, projectile.position, projectile.velocity, turel.BulletDamage)) {
+                projectileRemovalIndexBuffer.Add(i);
+            }
+        }
+
+        foreach (var projectileIndex in projectileRemovalIndexBuffer) {
             var projectile = bulletProjectiles[projectileIndex];
             bulletProjectiles.RemoveAt(projectileIndex);
             view.ShowBulletCrash(projectile.id);

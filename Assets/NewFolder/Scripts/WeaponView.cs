@@ -27,4 +27,8 @@ public class WeaponView {
     internal void ShowBulletCrash(int projectileIndex) {
         turelVisuals.KillBulletFire(projectileIndex);
     }
+
+    internal void ShowBulletDisappear(int id) {
+        turelVisuals.KillBulletFire(id);
+    }
 }

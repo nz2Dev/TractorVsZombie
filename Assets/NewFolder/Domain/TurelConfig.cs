@@ -7,4 +7,5 @@ public class TurelConfig : ScriptableObject {
     public int bulletDamage = 1;
     public float bulletSpeed = 15f;
     public float gunHeight = 0.5f;
+    public float bulletLifetime = 3;
 }
