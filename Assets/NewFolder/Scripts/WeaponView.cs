@@ -16,6 +16,10 @@ public class WeaponView {
         turelVisuals = GameObject.Instantiate(turelVisualsPrefab, position, Quaternion.identity);
     }
 
+    public void UpdateTurelOrientation(Vector3 lookVector) {
+        turelVisuals.UpdateAim(lookVector);
+    }
+
     internal void ShowBulletShoot(int projectileId, Vector3 velocity) {
         turelVisuals.ShowShootEffect(projectileId, velocity);
     }

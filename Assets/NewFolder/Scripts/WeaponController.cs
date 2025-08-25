@@ -32,6 +32,7 @@ public class WeaponController {
         UpdateProjectilesMovement(Time.deltaTime);
         UpdateProjectilesCombat();
         OperateTurel();
+        UpdateTurelView();
     }
 
     private void OperateTurel() {
@@ -42,6 +43,10 @@ public class WeaponController {
         if (turel.Fire(Time.time, out var bullet)) {
             SpawnBulletProjectile(bullet);
         }
+    }
+
+    private void UpdateTurelView() {
+        view.UpdateTurelOrientation(turel.AimForward);
     }
 
     private void SpawnBulletProjectile(Bullet bullet) {
