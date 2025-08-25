@@ -2,26 +2,29 @@ using System;
 
 using UnityEngine;
 
-public struct RayDamage {
-    public int amount;
-    public Vector3 sourcePosition;
+public struct Bullet {
+    public Vector3 firePoint;
     public Vector3 velocity;
 }
 
 public class Turel {
 
-    public Turel(int id) {
+    private readonly TurelConfig config;
+
+    public Turel(int id, Vector3 position, TurelConfig data) {
         Id = id;
+        Position = position;
+        AimForward = Vector3.forward;
+        LastShootTime = float.NegativeInfinity;
+        this.config = data;
     }
 
     public int Id { get; private set; }
     public Vector3 Position { get; private set; }
-    public Vector3 AimForward { get; private set; } = Vector3.forward;
-    public float AimSpeed { get; private set; } = 1;
-    public int Ammo { get; private set; }
-    public int Damage { get; private set; } = 5;
+    public Vector3 AimForward { get; private set; }
     public float LastShootTime { get; private set; }
-    public float ShootColdown { get; private set; } = .25f;
+
+    public int BulletDamage => config.bulletDamage;
 
     public void Move(Vector3 position) {
         Position = position;
@@ -30,25 +33,20 @@ public class Turel {
     public void Aim(float deltaTime, Vector3 aimTarget) {
         aimTarget.y = Position.y;
         var positionToAimTarget = aimTarget - Position;
-        AimForward = Vector3.Slerp(AimForward, positionToAimTarget.normalized, deltaTime * AimSpeed);
+        AimForward = Vector3.Slerp(AimForward, positionToAimTarget.normalized, deltaTime * config.aimSpeed);
     }
 
-    public bool IsAligned(Vector3 point) {
-        return Vector3.Dot(AimForward, (point - Position).normalized) > 0.98f;
-    }
-
-    public bool Shoot(float time, out RayDamage damage) {
-        if (LastShootTime + ShootColdown < time) {
+    public bool Fire(float time, out Bullet bullet) {
+        if (LastShootTime + config.fireCooldown < time) {
             LastShootTime = time;
-            damage = new RayDamage {
-                amount = Damage,
-                sourcePosition = Position,
-                velocity = AimForward * 15
+            bullet = new Bullet {
+                firePoint = Position,
+                velocity = AimForward * config.bulletSpeed
             };
             return true;
         }
         
-        damage = default;
+        bullet = default;
         return false;
     }
 }
