@@ -13,11 +13,6 @@ public struct AgentInfo {
     public Vector3 position;
 }
 
-public struct ProjectileState {
-    public bool destroyed;
-    public bool hit;
-}
-
 public interface ICombatService {
     int RegisterAgent(Vector3 position);
     void UnregisterAgent(int agentId);
