@@ -21,10 +21,10 @@ public class WeaponView {
     }
 
     internal void ShowBulletShoot(int projectileId, Vector3 velocity) {
-        turelVisuals.ShowShootEffect(projectileId, velocity);
+        turelVisuals.ShowBulletFire(projectileId, velocity);
     }
 
     internal void ShowBulletCrash(int projectileIndex) {
-        turelVisuals.KillShootBullet(projectileIndex);
+        turelVisuals.KillBulletFire(projectileIndex);
     }
 }

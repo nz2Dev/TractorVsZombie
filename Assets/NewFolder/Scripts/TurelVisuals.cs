@@ -29,21 +29,21 @@ public class TurelVisuals : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(aimForward, Vector3.up);
     }
 
-    public void ShowShootEffect(int shootId, Vector3 velocity) {
+    public void ShowBulletFire(int shootId, Vector3 velocity) {
         animator.SetTrigger("Fire");
-        EmitWithId(shootId, velocity);
-        EmitCanno();
+        EmitBulletParticle(shootId, velocity);
+        EmitCannoParticle();
     }
 
-    private void EmitCanno() {
+    private void EmitCannoParticle() {
         cannoParticlesSystem.Emit(1);
     }
 
-    public void KillShootBullet(int shootId) {
-        KillParticleById(shootId);
+    public void KillBulletFire(int shootId) {
+        KillBuletParticleById(shootId);
     }
 
-    public void EmitWithId(int id, Vector3 velocity) {
+    public void EmitBulletParticle(int id, Vector3 velocity) {
         var emitParams = new ParticleSystem.EmitParams { velocity = velocity };
         bulletSystem.Emit(emitParams, 1);
 
@@ -53,13 +53,13 @@ public class TurelVisuals : MonoBehaviour {
         bulletSystem.SetCustomParticleData(customData, ParticleSystemCustomData.Custom1);
     }
 
-    public void KillParticleById(int targetId) {
+    public void KillBuletParticleById(int shootId) {
         var count = bulletSystem.GetParticles(bulletParticles);
         bulletSystem.GetCustomParticleData(customData, ParticleSystemCustomData.Custom1);
 
         for (int i = 0; i < count; i++) {
             int id = (int) customData[i].x;
-            if (id == targetId) {
+            if (id == shootId) {
                 bulletParticles[i].remainingLifetime = -1f;
                 break;
             }
