@@ -115,7 +115,7 @@ public class UnitController {
                 unit.Rotation = physicsPose.Rotation;
             } else if (becomeGrounded) {
                 unit.SetGrounded();
-                unit.Position = physicsService.GetGroundPosition(physicsPose.Position);
+                unit.Position = physicsService.GetGroundPosition(unit.Position);
                 unit.Rotation = Quaternion.identity;
                 // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, true);
                 physicsService.SetPhysicsActive(physicsAgentId, false);
