@@ -8,13 +8,14 @@ public struct AgentState {
     public int damageSourceAgentId;
 }
 
-public struct AgentInfo {
+public struct AgentInfo { 
     public int id;
     public Vector3 position;
+    public float height;
 }
 
 public interface ICombatService {
-    int RegisterAgent(Vector3 position);
+    int RegisterAgent(Vector3 position, float height = 1f);
     void UnregisterAgent(int agentId);
     AgentState GetAgentState(int agentId);
     void ClearAgentState(int agentId);

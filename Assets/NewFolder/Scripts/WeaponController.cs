@@ -37,7 +37,8 @@ public class WeaponController {
 
     private void OperateTurel() {
         if (combatService.GetClosestEnemyAgentInRange(combatAgentId, 20, out var closestEnemyAgent)) {
-            turel.Aim(Time.deltaTime, closestEnemyAgent.position);
+            var aimPoint = closestEnemyAgent.position + 0.5f * closestEnemyAgent.height * Vector3.up;
+            turel.Aim(Time.deltaTime, aimPoint);
         }
 
         if (turel.Fire(Time.time, out var bullet)) {
@@ -46,7 +47,7 @@ public class WeaponController {
     }
 
     private void UpdateTurelView() {
-        view.UpdateTurelOrientation(turel.AimForward);
+        view.UpdateTurelOrientation(turel.GunForward);
     }
 
     private void SpawnBulletProjectile(Bullet bullet) {

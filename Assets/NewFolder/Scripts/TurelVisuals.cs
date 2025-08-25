@@ -26,7 +26,8 @@ public class TurelVisuals : MonoBehaviour {
     }
 
     public void UpdateAim(Vector3 aimForward) {
-        transform.rotation = Quaternion.LookRotation(aimForward, Vector3.up);
+        var aimForwardFlat = Vector3.ProjectOnPlane(aimForward, Vector3.up);
+        transform.rotation = Quaternion.LookRotation(aimForwardFlat, Vector3.up);
     }
 
     public void ShowBulletFire(int shootId, Vector3 velocity) {

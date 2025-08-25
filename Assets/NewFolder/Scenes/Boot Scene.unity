@@ -208,6 +208,7 @@ MonoBehaviour:
   flowFieldsSurface: {fileID: 804724243}
   orcaEnvironment: {fileID: 851369242}
   unitVisualsPrefab: {fileID: 4786345494800347938, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+  cameraComponent: 0
   vehicleComponent: 0
   vehiclePhysicsRoot: {fileID: 1745157901}
   driveVehicle: {fileID: 11400000, guid: 7dc24518fd78948c0b8769c94a6cb051, type: 2}
@@ -216,7 +217,6 @@ MonoBehaviour:
   weaponsComponent: 1
   turelVisualsPrefab: {fileID: 6612075636814393942, guid: 38a51415f5cb44888a2da5af59f4c6a8, type: 3}
   turelData: {fileID: 11400000, guid: f1440898271324ef08ca9ef0f40484d2, type: 2}
-  cameraComponent: 0
 --- !u!1 &424987303
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +364,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 650734647}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.21, y: 0, z: 0.04}
+  m_LocalPosition: {x: 9.09, y: 0, z: 1.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class CombatAgent {
     public int agentId;
+    public float height;
     public bool pushed;
     public bool projectiled;
     public int damageReceived;
     public Vector3 damageSourcePosition;
-    public SphereCollider spatialMarker;
+    public CapsuleCollider spatialMarker;
 
     internal void ClearState() {
         pushed = false;
@@ -33,10 +34,13 @@ public class CombatService : ICombatService {
     
     private readonly Collider[] overlapBuffer = new Collider[64];
 
-    public int RegisterAgent(Vector3 position) {
+    public int RegisterAgent(Vector3 position, float height = 1f) {
         var agentId = idCounter++;
-        var spatialMarker = CreateSpatialMarker(agentId, position, 0.3f);
-        var agent = new CombatAgent { agentId = agentId, spatialMarker = spatialMarker, };
+        var spatialMarker = CreateSpatialMarker(agentId, position, height, 0.3f);
+        var agent = new CombatAgent { 
+            agentId = agentId, 
+            spatialMarker = spatialMarker, 
+        };
         markerToAgent[spatialMarker] = agent;
         agents[agentId] = agent;
         return agentId;
@@ -114,10 +118,7 @@ public class CombatService : ICombatService {
         }
         
         if (closestAgent != null) {
-            agentInfo = new AgentInfo {
-                id = closestAgent.agentId,
-                position = closestAgent.spatialMarker.transform.position
-            };
+            agentInfo = GetAgentInfo(closestAgent);
             return true;
         }
 
@@ -125,13 +126,23 @@ public class CombatService : ICombatService {
         return false;
     }
 
-    private SphereCollider CreateSpatialMarker(int id, Vector3 position, float radius) {
-        var go = new GameObject("Combat Agent (New) " + id, typeof(SphereCollider));
+    private AgentInfo GetAgentInfo(CombatAgent agent) {
+        return new AgentInfo {
+            id = agent.agentId,
+            position = agent.spatialMarker.transform.position,
+            height = agent.spatialMarker.height
+        };
+    }
+
+    private CapsuleCollider CreateSpatialMarker(int id, Vector3 position, float height, float radius) {
+        var go = new GameObject("Combat Agent (New) " + id, typeof(CapsuleCollider));
         go.transform.position = position;
         go.layer = layer;
-        var collider = go.GetComponent<SphereCollider>();
+        var collider = go.GetComponent<CapsuleCollider>();
         collider.isTrigger = true;
+        collider.height = height;
         collider.radius = radius;
+        collider.center = new Vector3(0, height * 0.5f, 0);
         return collider;
     }
 
