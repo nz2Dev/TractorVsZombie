@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -11,11 +12,13 @@ public class TurelVisuals : MonoBehaviour {
     private Animator animator;
 
     private ParticleSystem.Particle[] bulletParticles;
+    private List<Vector4> customData;
     private int _activeCount;
 
     private void Awake() {
         animator = GetComponent<Animator>();
         bulletParticles = new ParticleSystem.Particle[bulletSystem.main.maxParticles];
+        customData = new List<Vector4>(bulletSystem.main.maxParticles);
     }
 
     public void UpdatePosition(Vector3 position) {
@@ -27,48 +30,27 @@ public class TurelVisuals : MonoBehaviour {
     }
 
     public void ShowShootEffect(int shootId, Vector3 velocity) {
-        animator.SetTrigger("Shoot");
+        animator.SetTrigger("Fire");
         EmitWithId(shootId, velocity);
+        EmitCanno();
+    }
+
+    private void EmitCanno() {
+        cannoParticlesSystem.Emit(1);
     }
 
     public void KillShootBullet(int shootId) {
         KillParticleById(shootId);
     }
 
-    private void EmitShootProjectile(int shootId, Vector3 velocity) {
-        _activeCount++;
-        bulletSystem.Emit(new ParticleSystem.EmitParams {
-            velocity = velocity
-        }, 1);
-    }
-
-    private List<Vector4> customData = new List<Vector4>();
-
     public void EmitWithId(int id, Vector3 velocity) {
-        // Emit one particle
-        var emitParams = new ParticleSystem.EmitParams {
-            velocity = velocity
-        };
+        var emitParams = new ParticleSystem.EmitParams { velocity = velocity };
         bulletSystem.Emit(emitParams, 1);
 
         var count = bulletSystem.GetParticles(bulletParticles);
-
-        // Get custom data
         bulletSystem.GetCustomParticleData(customData, ParticleSystemCustomData.Custom1);
         customData[count - 1] = new Vector4(id, 0, 0, 0);
-
-        // Write back
         bulletSystem.SetCustomParticleData(customData, ParticleSystemCustomData.Custom1);
-    }
-
-    private void DestroyShootProjectile(int index) {
-        _activeCount--;
-
-        bulletSystem.GetParticles(bulletParticles);
-        bulletParticles[index].remainingLifetime = -1;
-        bulletParticles[index] = bulletParticles[_activeCount];
-
-        bulletSystem.SetParticles(bulletParticles, _activeCount);
     }
 
     public void KillParticleById(int targetId) {
@@ -78,7 +60,7 @@ public class TurelVisuals : MonoBehaviour {
         for (int i = 0; i < count; i++) {
             int id = (int) customData[i].x;
             if (id == targetId) {
-                bulletParticles[i].remainingLifetime = -1f; // mark dead
+                bulletParticles[i].remainingLifetime = -1f;
                 break;
             }
         }
