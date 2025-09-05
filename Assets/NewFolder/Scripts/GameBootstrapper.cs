@@ -1,7 +1,3 @@
-using System.Collections;
-
-using Codice.Client.Common;
-
 using Unity.Profiling;
 
 using UnityEngine;
@@ -32,6 +28,8 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private ProjectileService projectileServiceImpl;
     [SerializeField] private TurelVisuals turelVisualsPrefab;
     [SerializeField] private TurelConfig turelData;
+    [SerializeField] private RocketLauncherVisuals rocketLauncherVisualsPrefab;
+    [SerializeField] private RocketLauncherConfig rocketLauncherConfig;
 
     private VehiclesController vehiclesController;
     private CameraController cameraController;
@@ -49,7 +47,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         var vehicleView = new VehicleView(null);
         var unitView = new UnitView(unitVisualsPrefab);
-        var weaponView = new WeaponView(turelVisualsPrefab);
+        var weaponView = new WeaponView(turelVisualsPrefab, rocketLauncherVisualsPrefab);
 
         vehiclesController = new VehiclesController(
             vehicleService, vehicleView,
@@ -74,7 +72,8 @@ public class GameBootstrapper : MonoBehaviour {
             weaponView, 
             combatService,
             turelData,
-            projectileService);
+            projectileService,
+            rocketLauncherConfig);
 
         if (unitsComponent) unitController.Init();
         if (vehicleComponent) vehiclesController.Init();
