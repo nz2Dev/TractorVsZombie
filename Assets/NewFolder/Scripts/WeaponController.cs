@@ -68,7 +68,7 @@ public class WeaponController {
         var rocketLauncher = new RocketLauncher(launcherId, position, launcherConfig);
         rocketLaunchers.Add(rocketLauncher);
 
-        var rocketLauncherCombatId = combatService.RegisterAgent(position);
+        var rocketLauncherCombatId = combatService.RegisterAgent(position, turelsCombatGroupId);
         rocketLauncherToCombatId[launcherId] = rocketLauncherCombatId;
 
         rocketLauncherRocketsRegistry[launcherId] = new List<Rocket>();
@@ -79,7 +79,7 @@ public class WeaponController {
     private void OperateRocketLaunchers() {
         foreach (var rocketLauncher in rocketLaunchers) {
             var launcherCombatId = rocketLauncherToCombatId[rocketLauncher.Id];
-            if (combatService.GetClosestEnemyAgentInRange(launcherCombatId, rocketLauncher.Radius, out var agentInfo)) {
+            if (combatService.GetClosestEnemyAgentInRange(launcherCombatId, rocketLauncher.Radius, out var agentInfo, excludeGroup: turelsCombatGroupId)) {
                 rocketLauncher.Aim(agentInfo.position);
             }
             
