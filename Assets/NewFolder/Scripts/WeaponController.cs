@@ -8,109 +8,105 @@ public class WeaponController {
     
     private readonly WeaponView view;
     private readonly ICombatService combatService;
+    private readonly IProjectileService projectileService;
     private readonly TurelConfig turelConfig;
     
-    private Turel turel;
-    private int combatAgentId;
-    private int nextProjectileId = 1;
-    private List<Projectile> bulletProjectiles = new List<Projectile>();
-    private List<int> projectileRemovalIndexBuffer = new List<int>();
+    private int turelIdCounter;
+    private readonly List<Turel> turels = new ();
+    private readonly Dictionary<int, int> turelToCombatId = new ();
+    private readonly Dictionary<int, int> turelToProjectileGroupId = new ();
+    private readonly List<ProjectileState> projectilesStateBuffer = new (64);
 
-    public WeaponController(WeaponView weaponView, ICombatService interactionService, TurelConfig turelConfig) {
+    public WeaponController(WeaponView weaponView, ICombatService interactionService, TurelConfig turelConfig, IProjectileService projectileService) {
         this.view = weaponView;
         this.combatService = interactionService;
         this.turelConfig = turelConfig;
+        this.projectileService = projectileService;
     }
 
     public void Init() {
-        turel = new Turel(1, Vector3.zero, turelConfig);
-        combatAgentId = combatService.RegisterAgent(turel.Position);
-        view.AddTurel(turel.Position);
+        SpawnTurel(Vector3.zero, turelConfig);
+        SpawnTurel(new Vector3(18, 0, 18), turelConfig);
     }
 
     public void Update() {
-        UpdateProjectilesMovement(Time.deltaTime);
         FilterDeadProjectiles();
         UpdateProjectileHits();
-        OperateTurel();
+        OperateTurels();
         UpdateTurelView();
     }
 
-    private void OperateTurel() {
-        if (combatService.GetClosestEnemyAgentInRange(combatAgentId, 20, out var closestEnemyAgent)) {
-            var aimPoint = closestEnemyAgent.position + 0.5f * closestEnemyAgent.height * Vector3.up;
-            turel.Aim(Time.deltaTime, aimPoint);
-        }
+    private void SpawnTurel(Vector3 position, TurelConfig turelConfig) {
+        var turelId = turelIdCounter++;
+        var turel = new Turel(turelId, position, turelConfig);
+        turels.Add(turel);
+        
+        var turelCombatId = combatService.RegisterAgent(turel.Position);
+        turelToCombatId[turel.Id] = turelCombatId;
 
-        if (turel.Fire(Time.time, out var bullet)) {
-            SpawnBulletProjectile(bullet);
+        var turelProjectilesGroupId = projectileService.AddGroup();
+        turelToProjectileGroupId[turel.Id] = turelProjectilesGroupId;
+        
+        view.AddTurel(turelId, turel.Position);
+    }
+
+    private void OperateTurels() {
+        foreach (var turel in turels) {    
+            var turelCombatId = turelToCombatId[turel.Id];
+            
+            if (combatService.GetClosestEnemyAgentInRange(turelCombatId, 20, out var closestEnemyAgent)) {
+                var aimPoint = closestEnemyAgent.position + 0.5f * closestEnemyAgent.height * Vector3.up;
+                turel.Aim(Time.deltaTime, aimPoint);
+            }
+
+            if (turel.Fire(Time.time, out var bullet)) {
+                SpawnBulletProjectile(turel, bullet);
+            }
         }
     }
 
     private void UpdateTurelView() {
-        view.UpdateTurelOrientation(turel.GunForward);
-    }
-
-    private void SpawnBulletProjectile(Bullet bullet) {
-        var projectile = new Projectile { 
-            id = nextProjectileId++, 
-            position = bullet.firePoint, 
-            velocity = bullet.velocity,
-            spawnTime = Time.time,
-            lifetime = turel.BulletLifetime
-        };
-        bulletProjectiles.Add(projectile);
-        view.ShowBulletShoot(projectile.id, projectile.velocity);
-    }
-
-    private void UpdateProjectilesMovement(float deltaTime) {
-        for (int turelProjectileIndex = 0; turelProjectileIndex < bulletProjectiles.Count; turelProjectileIndex++) {
-            var projectile = bulletProjectiles[turelProjectileIndex];
-            projectile.Move(deltaTime);
+        foreach (var turel in turels) {
+            view.UpdateTurelOrientation(turel.Id, turel.GunForward);
         }
+    }
+
+    private void SpawnBulletProjectile(Turel turel, Bullet bullet) {
+        var projectileGroupId = turelToProjectileGroupId[turel.Id];
+        var projectileId = projectileService.CreateProjectile(projectileGroupId, bullet.firePoint, bullet.velocity, 5f);
+        view.ShowBulletShoot(turel.Id, projectileId, bullet.velocity);
     }
 
     private void FilterDeadProjectiles() {
-        projectileRemovalIndexBuffer.Clear();
-        for (int i = 0; i < bulletProjectiles.Count; i++) {
-            var projectile = bulletProjectiles[i];
-            if (projectile.IsDeadTime(Time.time)) {
-                projectileRemovalIndexBuffer.Add(i);
+        foreach (var turel in turels) {
+            var projectileGroup = turelToProjectileGroupId[turel.Id];
+            projectilesStateBuffer.Clear();
+            projectileService.GetGroupProjectiles(projectileGroup, projectilesStateBuffer);
+            
+            foreach (var projectileState in projectilesStateBuffer) {
+                if (projectileState.isAged) {
+                    view.ShowBulletDisappear(turel.Id, projectileState.id);
+                }
             }
-        }
-
-        foreach (var projectileIndex in projectileRemovalIndexBuffer) {
-            var projectile = bulletProjectiles[projectileIndex];
-            bulletProjectiles.RemoveAt(projectileIndex);
-            view.ShowBulletDisappear(projectile.id);
         }
     }
 
     private void UpdateProjectileHits() {   
-        projectileRemovalIndexBuffer.Clear();
-        for (int i = 0; i < bulletProjectiles.Count; i++) {
-            var projectile = bulletProjectiles[i];
-            if (combatService.ApplyProjectileDamage(combatAgentId, projectile.position, projectile.velocity, turel.BulletDamage)) {
-                projectileRemovalIndexBuffer.Add(i);
+        foreach (var turel in turels) {
+            var projectileGroup = turelToProjectileGroupId[turel.Id];
+            projectilesStateBuffer.Clear();
+            projectileService.GetGroupProjectiles(projectileGroup, projectilesStateBuffer);
+
+            var combatId = turelToCombatId[turel.Id];
+            foreach (var projectileState in projectilesStateBuffer) {
+                if (projectileState.isAged)
+                    continue;
+
+                if (combatService.ApplyProjectileDamage(combatId, projectileState.position, projectileState.velocity, turel.BulletDamage)) {
+                    projectileService.KillProjectile(projectileState.id);
+                    view.ShowBulletCrash(turel.Id, projectileState.id);
+                }
             }
         }
-
-        foreach (var projectileIndex in projectileRemovalIndexBuffer) {
-            var projectile = bulletProjectiles[projectileIndex];
-            bulletProjectiles.RemoveAt(projectileIndex);
-            view.ShowBulletCrash(projectile.id);
-        }
     }
-
-#region debug
-#if UNITY_EDITOR
-    public void OnDrawGizmos() {
-        Gizmos.color = Color.white;
-        foreach (var projectile in bulletProjectiles) {
-            Gizmos.DrawWireSphere(projectile.position, 0.3f);
-        }
-    }
-#endif
-#endregion
-
 }

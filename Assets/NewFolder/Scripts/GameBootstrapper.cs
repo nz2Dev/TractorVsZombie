@@ -28,6 +28,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private int trailersCount = 3;
     [Space]
     [SerializeField] private bool weaponsComponent = true;
+    [SerializeField] private ProjectileService projectileServiceImpl;
     [SerializeField] private TurelVisuals turelVisualsPrefab;
     [SerializeField] private TurelConfig turelData;
 
@@ -38,12 +39,14 @@ public class GameBootstrapper : MonoBehaviour {
 
     private void Start() {
         var vehicleService = new VehicleService(vehiclePhysicsRoot);
-        var vehicleView = new VehicleView(null);
         var cameraService = new CameraService(Camera.main);
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         var combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer));
+        var projectileService = projectileServiceImpl;
+
+        var vehicleView = new VehicleView(null);
         var unitView = new UnitView(unitVisualsPrefab);
         var weaponView = new WeaponView(turelVisualsPrefab);
 
@@ -69,7 +72,8 @@ public class GameBootstrapper : MonoBehaviour {
         weaponController = new WeaponController(
             weaponView, 
             combatService,
-            turelData);
+            turelData,
+            projectileService);
 
         if (unitsComponent) unitController.Init();
         if (vehicleComponent) vehiclesController.Init();
@@ -99,11 +103,5 @@ public class GameBootstrapper : MonoBehaviour {
             using (weaponUpdateMarker.Auto())
                 weaponController.Update();
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmos() {
-        if (weaponsComponent) weaponController?.OnDrawGizmos();
-    }
-#endif
 
 }
