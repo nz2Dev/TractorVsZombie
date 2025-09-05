@@ -26,7 +26,15 @@ public class WeaponController {
 
     public void Init() {
         SpawnTurel(Vector3.zero, turelConfig);
-        SpawnTurel(new Vector3(18, 0, 18), turelConfig);
+        
+        int maxTurels = 10;
+        float radius = 15;
+        for (int i = 0; i < maxTurels; i++) {
+            var placementAngle = (float) i / maxTurels * Mathf.PI * 2;
+            
+            Vector3 position = new Vector3(Mathf.Cos(placementAngle) * radius, 0, Mathf.Sin(placementAngle) * radius);
+            SpawnTurel(position, turelConfig);
+        }
     }
 
     public void Update() {
