@@ -16,6 +16,8 @@ public struct AgentInfo {
 }
 
 public interface ICombatService {
+    const int UnspecifiedGroupId = -1;
+
     int AddGroup();
     int RegisterAgent(Vector3 position, int groupId = -1, float height = 1f);
     void UnregisterAgent(int agentId);
@@ -24,5 +26,5 @@ public interface ICombatService {
     void UpdateAgentPosition(int agentId, Vector3 position);
     void ApplyPushDamage(int agentId, Vector3 size, int damage);
     bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage);
-    bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo);
+    bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = UnspecifiedGroupId);
 }

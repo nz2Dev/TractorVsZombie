@@ -41,7 +41,7 @@ public class CombatServiceTest {
         var foeAgent = combatService.RegisterAgent(new Vector3(0, 0, 2));
 
         yield return new WaitForFixedUpdate();
-        var enemyFound = combatService.GetClosestEnemyAgentInRange(friendlyAgent1, radius: 3, out var agentInfo);
+        var enemyFound = combatService.GetClosestEnemyAgentInRange(friendlyAgent1, radius: 3, out var agentInfo, excludeGroup: group1);
         Assert.That(enemyFound, Is.True);
         Assert.That(agentInfo.id, Is.Not.EqualTo(friendlyAgent2));
         Assert.That(agentInfo.groupId, Is.Not.EqualTo(group1));

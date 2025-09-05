@@ -121,14 +121,18 @@ public class CombatService : ICombatService {
         return false;
     }
 
-    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo) {
+    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = ICombatService.UnspecifiedGroupId) {
         var sourceAgent = agents[combatAgentId];
         var sourceAgentPosition = sourceAgent.spatialMarker.transform.position;
         var overlapCount = Physics.OverlapSphereNonAlloc(sourceAgentPosition, radius, overlapBuffer);
+        bool checkGroup = excludeGroup != ICombatService.UnspecifiedGroupId;
+        
         CombatAgent closestAgent = null;
         float closestDistance = float.PositiveInfinity;
         for (int i = 0; i < overlapCount; i++) {
-            if (!markerToAgent.TryGetValue(overlapBuffer[i], out var overlapAgent) || overlapAgent.agentId == combatAgentId)
+            if (!markerToAgent.TryGetValue(overlapBuffer[i], out var overlapAgent) 
+                || (checkGroup && overlapAgent.groupId == excludeGroup)
+                || overlapAgent.agentId == combatAgentId)
                 continue;
             
             var overlapAgentPosition = overlapAgent.spatialMarker.transform.position;
