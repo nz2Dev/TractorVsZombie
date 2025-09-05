@@ -9,6 +9,7 @@ public class CombatAgent {
     public float height;
     public bool pushed;
     public bool projectiled;
+    public bool exploded;
     public int damageReceived;
     public Vector3 damageSourcePosition;
     public CapsuleCollider spatialMarker;
@@ -82,6 +83,7 @@ public class CombatService : ICombatService {
         return new AgentState {
             pushed = agent.pushed,
             projectiled = agent.projectiled,
+            exploded = agent.exploded,
             damage = agent.damageReceived,
             damageSourceAgentId = -1,
             damageSourcePosition = agent.damageSourcePosition
@@ -122,6 +124,20 @@ public class CombatService : ICombatService {
             hitAgent.damageSourcePosition = position;
         }
         return true;
+    }
+
+    public void ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage) {
+        var sourceAgent = agents[sourceAgentId];
+        var overlapCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, agentsMask);
+        
+        for (int i = 0; i < overlapCount; i++) {
+            var overlapCollider = overlapBuffer[i];
+            if (markerToAgent.TryGetValue(overlapCollider, out var overlapAgent) && overlapAgent.agentId != sourceAgentId) {
+                overlapAgent.exploded = true;
+                overlapAgent.damageReceived = damage;
+                overlapAgent.damageSourcePosition = sourceAgent.spatialMarker.transform.position;
+            }            
+        }
     }
 
     public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = ICombatService.UnspecifiedGroupId) {

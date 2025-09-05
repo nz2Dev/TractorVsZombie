@@ -3,6 +3,7 @@ using UnityEngine;
 public struct AgentState {
     public bool pushed;
     public bool projectiled;
+    public bool exploded;
     public int damage;
     public Vector3 damageSourcePosition;
     public int damageSourceAgentId;
