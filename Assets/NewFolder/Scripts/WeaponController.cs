@@ -12,6 +12,7 @@ public class WeaponController {
     private readonly TurelConfig turelConfig;
     
     private int turelIdCounter;
+    private int turelsCombatGroupId;
     private readonly List<Turel> turels = new ();
     private readonly Dictionary<int, int> turelToCombatId = new ();
     private readonly Dictionary<int, int> turelToProjectileGroupId = new ();
@@ -25,10 +26,12 @@ public class WeaponController {
     }
 
     public void Init() {
+        turelsCombatGroupId = combatService.AddGroup();
+
         SpawnTurel(Vector3.zero, turelConfig);
         
-        int maxTurels = 10;
-        float radius = 15;
+        int maxTurels = 5;
+        float radius = 5;
         for (int i = 0; i < maxTurels; i++) {
             var placementAngle = (float) i / maxTurels * Mathf.PI * 2;
             
@@ -49,7 +52,7 @@ public class WeaponController {
         var turel = new Turel(turelId, position, turelConfig);
         turels.Add(turel);
         
-        var turelCombatId = combatService.RegisterAgent(turel.Position);
+        var turelCombatId = combatService.RegisterAgent(turel.Position, groupId: turelsCombatGroupId);
         turelToCombatId[turel.Id] = turelCombatId;
 
         var turelProjectilesGroupId = projectileService.AddGroup();
@@ -62,7 +65,7 @@ public class WeaponController {
         foreach (var turel in turels) {    
             var turelCombatId = turelToCombatId[turel.Id];
             
-            if (combatService.GetClosestEnemyAgentInRange(turelCombatId, 20, out var closestEnemyAgent)) {
+            if (combatService.GetClosestEnemyAgentInRange(turelCombatId, 20, out var closestEnemyAgent, excludeGroup: turelsCombatGroupId)) {
                 var aimPoint = closestEnemyAgent.position + 0.5f * closestEnemyAgent.height * Vector3.up;
                 turel.Aim(Time.deltaTime, aimPoint);
             }

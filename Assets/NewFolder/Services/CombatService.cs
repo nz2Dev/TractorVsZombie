@@ -68,11 +68,11 @@ public class CombatService : ICombatService {
 
     public void UnregisterAgent(int agentId) {
         var agent = agents[agentId];
+        var agentGroupRegistry = GetGroupRegistry(agent.groupId);
+        agentGroupRegistry.Remove(agentId);
         markerToAgent.Remove(agent.spatialMarker);
         GameObject.Destroy(agent.spatialMarker.gameObject);
         agents.Remove(agentId);
-        var agentGroupRegistry = GetAgentGroupRegistry(agentId);
-        agentGroupRegistry.Remove(agentId);
     }
 
     public AgentState GetAgentState(int agentId) {
@@ -164,11 +164,6 @@ public class CombatService : ICombatService {
     private List<int> GetGroupRegistry(int groupId) {
         var defaultCheckedGroupId = groupId == -1 ? registeredDefaultGroupId : groupId;
         return agentToGroupRegistry[defaultCheckedGroupId];
-    }
-
-    private List<int> GetAgentGroupRegistry(int agentId) {
-        var agent = agents[agentId];
-        return GetGroupRegistry(agent.groupId);
     }
 
     private CapsuleCollider CreateSpatialMarker(int id, Vector3 position, float height, float radius) {
