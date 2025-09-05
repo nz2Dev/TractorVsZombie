@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CombatAgent {
     public int agentId;
+    public int groupId;
     public float height;
     public bool pushed;
     public bool projectiled;
@@ -23,26 +24,45 @@ public class CombatService : ICombatService {
     private readonly int layer;
     private readonly LayerMask queryMask;
 
+    private readonly int registeredDefaultGroupId;
+
     public CombatService(int layer) {
         this.layer = layer;
         this.queryMask = 1 << layer;
+
+        registeredDefaultGroupId = AddGroup();
     }
 
     private int idCounter;
+    private int groupIdCounter = 1;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
+    private readonly Dictionary<int, List<int>> agentToGroupRegistry = new ();
     private readonly Dictionary<Collider, CombatAgent> markerToAgent = new Dictionary<Collider, CombatAgent>();
     
     private readonly Collider[] overlapBuffer = new Collider[64];
 
-    public int RegisterAgent(Vector3 position, float height = 1f) {
+    public int AddGroup() {
+        var nextGroupId = groupIdCounter++;
+        var agentsList = new List<int>(128);
+        agentToGroupRegistry[nextGroupId] = agentsList;
+        return nextGroupId;
+    }
+
+    public int RegisterAgent(Vector3 position, int groupId = -1, float height = 1f) {
         var agentId = idCounter++;
         var spatialMarker = CreateSpatialMarker(agentId, position, height, 0.3f);
         var agent = new CombatAgent { 
             agentId = agentId, 
+            groupId = groupId,
             spatialMarker = spatialMarker, 
         };
+        
         markerToAgent[spatialMarker] = agent;
         agents[agentId] = agent;
+
+        var groupRegistry = GetGroupRegistry(groupId);
+        groupRegistry.Add(agentId);
+        
         return agentId;
     }
 
@@ -51,6 +71,8 @@ public class CombatService : ICombatService {
         markerToAgent.Remove(agent.spatialMarker);
         GameObject.Destroy(agent.spatialMarker.gameObject);
         agents.Remove(agentId);
+        var agentGroupRegistry = GetAgentGroupRegistry(agentId);
+        agentGroupRegistry.Remove(agentId);
     }
 
     public AgentState GetAgentState(int agentId) {
@@ -129,9 +151,20 @@ public class CombatService : ICombatService {
     private AgentInfo GetAgentInfo(CombatAgent agent) {
         return new AgentInfo {
             id = agent.agentId,
+            groupId = agent.groupId,
             position = agent.spatialMarker.transform.position,
             height = agent.spatialMarker.height
         };
+    }
+
+    private List<int> GetGroupRegistry(int groupId) {
+        var defaultCheckedGroupId = groupId == -1 ? registeredDefaultGroupId : groupId;
+        return agentToGroupRegistry[defaultCheckedGroupId];
+    }
+
+    private List<int> GetAgentGroupRegistry(int agentId) {
+        var agent = agents[agentId];
+        return GetGroupRegistry(agent.groupId);
     }
 
     private CapsuleCollider CreateSpatialMarker(int id, Vector3 position, float height, float radius) {
