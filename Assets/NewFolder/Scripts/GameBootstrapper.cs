@@ -8,8 +8,9 @@ using UnityEngine;
 
 public class GameBootstrapper : MonoBehaviour {
     
-    [SerializeField] private string combatServiceLayer;
     [SerializeField] private string physicsServiceLayer;
+    [SerializeField] private string combatServiceLayer;
+    [SerializeField] private LayerMask combatServiceEnvironmentMask;
     [Space]
     [SerializeField] private bool unitsComponent = true;
     [SerializeField] int unitsCount = 10;
@@ -43,7 +44,7 @@ public class GameBootstrapper : MonoBehaviour {
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
-        var combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer));
+        var combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), combatServiceEnvironmentMask);
         var projectileService = projectileServiceImpl;
 
         var vehicleView = new VehicleView(null);

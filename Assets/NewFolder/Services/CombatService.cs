@@ -22,13 +22,15 @@ public class CombatAgent {
 public class CombatService : ICombatService {
 
     private readonly int layer;
-    private readonly LayerMask queryMask;
+    private readonly LayerMask agentsMask;
+    private readonly LayerMask agentsAndObstaclesMask;
 
     private readonly int registeredDefaultGroupId;
 
-    public CombatService(int layer) {
-        this.layer = layer;
-        this.queryMask = 1 << layer;
+    public CombatService(int agentsLayer, LayerMask obstaclesMask) {
+        this.layer = agentsLayer;
+        this.agentsMask = 1 << agentsLayer;
+        this.agentsAndObstaclesMask = agentsMask | obstaclesMask;
 
         registeredDefaultGroupId = AddGroup();
     }
@@ -97,7 +99,7 @@ public class CombatService : ICombatService {
 
     public void ApplyPushDamage(int agentId, Vector3 size, int damage) {
         var sourceAgent = agents[agentId];
-        var overlapCount = Physics.OverlapBoxNonAlloc(sourceAgent.spatialMarker.transform.position, size * 0.5f, overlapBuffer, Quaternion.identity, queryMask);
+        var overlapCount = Physics.OverlapBoxNonAlloc(sourceAgent.spatialMarker.transform.position, size * 0.5f, overlapBuffer, Quaternion.identity, agentsMask);
         
         for (int i = 0; i < overlapCount; i++) {
             var overlapCollider = overlapBuffer[i];
@@ -110,15 +112,16 @@ public class CombatService : ICombatService {
     }
 
     public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage) {
-        if (Physics.Raycast(position, direction, out var hitInfo, 0.25f, queryMask)) {
-            if (markerToAgent.TryGetValue(hitInfo.collider, out var hitAgent) && hitAgent.agentId != agentId) {
-                hitAgent.projectiled = true;
-                hitAgent.damageReceived = damage;
-                hitAgent.damageSourcePosition = position;
-                return true;
-            }
+        if (!Physics.Raycast(position, direction, out var hitInfo, 0.25f, agentsAndObstaclesMask)) {
+            return false;
         }
-        return false;
+        
+        if (markerToAgent.TryGetValue(hitInfo.collider, out var hitAgent) && hitAgent.agentId != agentId) {
+            hitAgent.projectiled = true;
+            hitAgent.damageReceived = damage;
+            hitAgent.damageSourcePosition = position;
+        }
+        return true;
     }
 
     public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = ICombatService.UnspecifiedGroupId) {

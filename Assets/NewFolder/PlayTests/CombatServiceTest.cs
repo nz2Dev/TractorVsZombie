@@ -11,7 +11,7 @@ public class CombatServiceTest {
 
     [SetUp]
     public void SetUp() {
-        combatService = new CombatService(LayerMask.NameToLayer("Default"));
+        combatService = new CombatService(LayerMask.NameToLayer("Default"), 1 << LayerMask.NameToLayer("Default"));
     }
 
     [UnityTest]
