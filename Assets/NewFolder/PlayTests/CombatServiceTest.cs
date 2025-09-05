@@ -33,4 +33,18 @@ public class CombatServiceTest {
         Assert.That(combatService.GetAgentState(agent2).projectiled, Is.True);
     }
 
+    [UnityTest]
+    public IEnumerator TestGetClosestFoeOfDifferentGroup_DoNotIncludeFriendlyAgentId() {
+        var group1 = combatService.AddGroup();
+        var friendlyAgent1 = combatService.RegisterAgent(new Vector3(0, 0, 0), group1);
+        var friendlyAgent2 = combatService.RegisterAgent(new Vector3(0, 0, 1), group1);
+        var foeAgent = combatService.RegisterAgent(new Vector3(0, 0, 2));
+
+        yield return new WaitForFixedUpdate();
+        var enemyFound = combatService.GetClosestEnemyAgentInRange(friendlyAgent1, radius: 3, out var agentInfo);
+        Assert.That(enemyFound, Is.True);
+        Assert.That(agentInfo.id, Is.Not.EqualTo(friendlyAgent2));
+        Assert.That(agentInfo.groupId, Is.Not.EqualTo(group1));
+    }
+
 }
