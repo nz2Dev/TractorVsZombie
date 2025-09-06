@@ -172,16 +172,12 @@ public class UnitController {
     }
 
     private void FilterDeadUnits() {
-        var unitsIndexToRemove = new List<int>();
         for (int i = 0; i < units.Count; i++) {
             var unit = units[i];
             if (!unit.IsAlive && unit.Grouned) {
-                unitsIndexToRemove.Add(i);
+                DespawnUnitAt(i);
+                i--;
             }
-        }
-
-        foreach (var index in unitsIndexToRemove) {
-            DespawnUnitAt(index);
         }
     }
 
