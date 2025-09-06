@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1bc096bdfbb844f9999c26529f9981a, type: 3}
   m_Name: DefaultRocketLauncherConfig
   m_EditorClassIdentifier: 
-  radius: 10
+  radius: 15
   launchIntervalSec: 3
-  rocketAmplitude: 10
-  flyDuration: 2
-  damage: 1
+  rocketAmplitude: 1.98
+  flyDuration: 1.8
+  damage: 21

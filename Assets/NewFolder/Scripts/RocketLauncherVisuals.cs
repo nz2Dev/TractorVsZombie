@@ -31,32 +31,29 @@ public class RocketLauncherVisuals : MonoBehaviour {
             var visualsTransform = rocketFly.visuals.transform;
 
             var progress = (Time.time - rocketFly.startTime) / rocketFly.flyDuration;
-            var height = flyCurve.Evaluate(progress);
-            var startToEnd = rocketFly.landPoint - rocketFly.launchPoint;
-            visualsTransform.position = rocketFly.launchPoint + startToEnd * progress + Vector3.up * height * rocketFly.flyHeight;
+            visualsTransform.position = GetPointOnCurve(rocketFly.launchPoint, rocketFly.landPoint, flyCurve, rocketFly.flyHeight, progress);
 
-            var slopeVector = GetFlyDirection(startToEnd, rocketFly.flyHeight, flyCurve, progress);
-            visualsTransform.rotation = Quaternion.LookRotation(slopeVector, Vector3.up);
+            var flyTangent = GetTangent(rocketFly.launchPoint, rocketFly.landPoint, flyCurve, rocketFly.flyHeight, progress);
+            visualsTransform.rotation = Quaternion.LookRotation(flyTangent, Vector3.up);
         }
     }
 
     public void OrientLauncherTowardAim(Vector3 aimPoint, float aimHeight) {
-        var launcerToAim = aimPoint - transform.position;
-        var slopeDirection = GetFlyDirection(launcerToAim, aimHeight, flyCurve, time: 0f);
-        launcher.rotation = Quaternion.LookRotation(slopeDirection, Vector3.up);
+        var flyTangent = GetTangent(launcher.position, aimPoint, flyCurve, aimHeight, 0);
+        launcher.rotation = Quaternion.LookRotation(flyTangent, Vector3.up);
     }
 
-    private Vector3 GetFlyDirection(Vector3 groundDirection, float maxHeight, AnimationCurve curve, float time, float delta = 0.01f) {
-        var lookVector = groundDirection.normalized;
-        var slopeVector = GetSlopeVectorNormalized(curve, time, delta) * maxHeight;
-        lookVector.y = slopeVector.y;
-        return lookVector;
+    Vector3 GetPointOnCurve(Vector3 start, Vector3 end, AnimationCurve curve, float curveScale, float t) {
+        Vector3 horizontal = Vector3.Lerp(start, end, t);
+        float height = curve.Evaluate(t) * curveScale;
+        return new Vector3(horizontal.x, horizontal.y + height, horizontal.z);
     }
 
-    private static Vector2 GetSlopeVectorNormalized(AnimationCurve curve, float t, float delta = 0.01f) {
-        float y1 = curve.Evaluate(t);
-        float y2 = curve.Evaluate(t + delta);
-        return new Vector2(delta, y2 - y1).normalized;
+    Vector3 GetTangent(Vector3 start, Vector3 end, AnimationCurve curve, float curveScale, float t) {
+        float delta = 0.01f;
+        Vector3 p1 = GetPointOnCurve(start, end, curve, curveScale, t);
+        Vector3 p2 = GetPointOnCurve(start, end, curve, curveScale, Mathf.Min(t + delta, 1f));
+        return (p2 - p1).normalized;
     }
 
     internal void ShowRocketFly(int rocketId, RocketTrajectory trajectory, float rocketFlyDuration) {
