@@ -214,8 +214,8 @@ MonoBehaviour:
   flowFieldsSurface: {fileID: 804724243}
   orcaEnvironment: {fileID: 851369242}
   unitVisualsPrefab: {fileID: 4786345494800347938, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
-  cameraComponent: 0
-  vehicleComponent: 0
+  cameraComponent: 1
+  vehicleComponent: 1
   vehiclePhysicsRoot: {fileID: 1745157901}
   driveVehicle: {fileID: 11400000, guid: 7dc24518fd78948c0b8769c94a6cb051, type: 2}
   trailerVehicle: {fileID: 11400000, guid: 1dbd68138503c4d99b4eba6949b1331d, type: 2}

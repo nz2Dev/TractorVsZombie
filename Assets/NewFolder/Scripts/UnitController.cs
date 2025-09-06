@@ -156,6 +156,10 @@ public class UnitController {
                 unit.TakeProjectileDamage(combatAgentState.damage);
             }
 
+            if (combatAgentState.exploded) {
+                unit.TakeExplosionDamage(combatAgentState.damage);
+            }
+
             combatService.ClearAgentState(combatId);
         }
     }

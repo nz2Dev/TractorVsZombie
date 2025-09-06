@@ -59,4 +59,8 @@ public class Unit {
     private void TakeDamage(int damageReceived) {
         Health -= damageReceived;
     }
+
+    internal void TakeExplosionDamage(int damage) {
+        TakeDamage(damage);
+    }
 } 

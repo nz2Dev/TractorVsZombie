@@ -104,6 +104,14 @@ public class WeaponController {
             foreach (var rocket in rocketLauncherRocketsRegistry[rocketLauncher.Id]) {
                 if (rocket.ForwardLandingTime(Time.time)) {
                     combatService.ApplyExplosionDamage(launcherCombatId, rocket.Trajectory.landPoint, 3, rocketLauncher.RocketDamage);
+                    var center = rocket.Trajectory.landPoint;
+                    var color = Color.red;
+                    var duration = 1f;
+                    var radius = 3;
+                    Debug.DrawLine(center, center + Vector3.right * radius, color, duration);
+                    Debug.DrawLine(center, center + Vector3.left * radius, color, duration);
+                    Debug.DrawLine(center, center + Vector3.forward * radius, color, duration);
+                    Debug.DrawLine(center, center + Vector3.back * radius, color, duration);
                     view.ShowRocketExplosion(rocketLauncher.Id, rocket.Id);
                 }
             }   
