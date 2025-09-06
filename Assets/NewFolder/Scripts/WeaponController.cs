@@ -46,9 +46,10 @@ public class WeaponController {
             
             Vector3 position = new Vector3(Mathf.Cos(placementAngle) * radius, 0, Mathf.Sin(placementAngle) * radius);
             SpawnTurel(position, turelConfig);
+            
+            SpawnRocketLauncher(position + new Vector3(2, 0, 2), launcherConfig);
         }
 
-        SpawnRocketLauncher(new Vector3(2, 0, 2), launcherConfig);
     }
 
     public void Update() {
