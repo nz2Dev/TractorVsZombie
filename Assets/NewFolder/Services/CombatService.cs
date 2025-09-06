@@ -135,7 +135,7 @@ public class CombatService : ICombatService {
             if (markerToAgent.TryGetValue(overlapCollider, out var overlapAgent) && overlapAgent.agentId != sourceAgentId) {
                 overlapAgent.exploded = true;
                 overlapAgent.damageReceived = damage;
-                overlapAgent.damageSourcePosition = sourceAgent.spatialMarker.transform.position;
+                overlapAgent.damageSourcePosition = position;
             }            
         }
     }
