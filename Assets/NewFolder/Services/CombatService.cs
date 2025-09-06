@@ -16,6 +16,8 @@ public class CombatAgent {
 
     internal void ClearState() {
         pushed = false;
+        projectiled = false;
+        exploded = false;
         damageReceived = 0;
     }
 }
@@ -42,7 +44,7 @@ public class CombatService : ICombatService {
     private readonly Dictionary<int, List<int>> agentToGroupRegistry = new ();
     private readonly Dictionary<Collider, CombatAgent> markerToAgent = new Dictionary<Collider, CombatAgent>();
     
-    private readonly Collider[] overlapBuffer = new Collider[64];
+    private readonly Collider[] overlapBuffer = new Collider[256];
 
     public int AddGroup() {
         var nextGroupId = groupIdCounter++;
