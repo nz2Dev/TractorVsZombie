@@ -158,6 +158,10 @@ public class UnitController {
 
             if (combatAgentState.exploded) {
                 unit.TakeExplosionDamage(combatAgentState.damage);
+                var unitPhysicsId = unitIdToPhysicsId[unit.Id];
+                physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
+                physicsService.SetPhysicsActive(unitPhysicsId, true);
+                physicsService.AddExplosionForce(unitPhysicsId, 15, combatAgentState.damageSourcePosition, 5f, 1, ForceMode.Impulse);
             }
 
             combatService.ClearAgentState(combatId);
