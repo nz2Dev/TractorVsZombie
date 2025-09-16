@@ -38,6 +38,10 @@ public class RocketLauncherVisuals : MonoBehaviour {
         }
     }
 
+    public void UpdatePosition(Vector3 position) {
+        transform.position = position;
+    }
+
     public void OrientLauncherTowardAim(Vector3 aimPoint, float aimHeight) {
         var flyTangent = GetTangent(launcher.position, aimPoint, flyCurve, aimHeight, 0);
         launcher.rotation = Quaternion.LookRotation(flyTangent, Vector3.up);
@@ -80,5 +84,4 @@ public class RocketLauncherVisuals : MonoBehaviour {
         }
     }
 
-    
 }

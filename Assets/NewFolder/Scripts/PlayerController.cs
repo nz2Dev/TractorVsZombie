@@ -25,12 +25,14 @@ public class PlayerController {
     private int turelsCombatGroupId;
     private readonly List<Turel> turels = new ();
     private readonly Dictionary<int, int> turelToCombatId = new ();
+    private readonly Dictionary<int, Vehicle> turelToVehicle = new ();
     private readonly Dictionary<int, int> turelToProjectileGroupId = new ();
     private readonly List<ProjectileState> projectilesStateBuffer = new (64);
 
     private int rocketLauncherIdCounter;
     private readonly List<RocketLauncher> rocketLaunchers = new ();
     private readonly Dictionary<int, int> rocketLauncherToCombatId = new ();
+    private readonly Dictionary<int, Vehicle> rocketLauncherToVehicle = new ();
 
     private int rocketIdCounter;
     private readonly Dictionary<int, List<Rocket>> rocketLauncherRocketsRegistry = new ();
@@ -53,24 +55,23 @@ public class PlayerController {
     }
 
     public void Init() {
+        turelsCombatGroupId = combatService.AddGroup();
         SpawnDriveVehicle(Vector3.zero);
 
         for (int i = 0; i < trailersCount; i++) {
             SpawnTrailerVehicle(new Vector3(0, 0, -2f + i * -2f));
         }
 
-        turelsCombatGroupId = combatService.AddGroup();
-        SpawnTurel(Vector3.zero, turelConfig);
-        
-        int maxTurels = 5;
-        float radius = 5;
-        for (int i = 0; i < maxTurels; i++) {
-            var placementAngle = (float) i / maxTurels * Mathf.PI * 2;
-            
-            Vector3 position = new Vector3(Mathf.Cos(placementAngle) * radius, 0, Mathf.Sin(placementAngle) * radius);
-            SpawnTurel(position, turelConfig);
-            
-            SpawnRocketLauncher(position + new Vector3(2, 0, 2), launcherConfig);
+        bool flipFlop = false;
+        foreach (var vehicle in vehicles) {
+            if (!vehicle.TowingTonqueRotation.HasValue)
+                continue;
+
+            if (flipFlop = !flipFlop) {
+                SpawnTurel(vehicle, turelConfig);
+            } else {
+                SpawnRocketLauncher(vehicle, launcherConfig);
+            }
         }
     }
 
@@ -82,11 +83,13 @@ public class PlayerController {
 
         UpdateRocketLandingCombat();
         FilterElapsedRockets();
+        UpdateRocketLauncherOrientation();
         OperateRocketLaunchers();
         UpdateRocketLauncherView();
 
         UpdateProjectileHits();
         FilterDeadProjectiles();
+        UpdateTurelsOrientation();
         OperateTurels();
         UpdateTurelView();
     }
@@ -162,17 +165,26 @@ public class PlayerController {
         }
     }
 
-    private void SpawnRocketLauncher(Vector3 position, RocketLauncherConfig launcherConfig) {
+    private void SpawnRocketLauncher(Vehicle host, RocketLauncherConfig launcherConfig) {
         var launcherId = rocketLauncherIdCounter++;
-        var rocketLauncher = new RocketLauncher(launcherId, position, launcherConfig);
+        var rocketLauncher = new RocketLauncher(launcherId, host.BodyPose.position, launcherConfig);
         rocketLaunchers.Add(rocketLauncher);
 
-        var rocketLauncherCombatId = combatService.RegisterAgent(position, turelsCombatGroupId);
+        rocketLauncherToVehicle[rocketLauncher.Id] = host;
+
+        var rocketLauncherCombatId = combatService.RegisterAgent(rocketLauncher.Position, turelsCombatGroupId);
         rocketLauncherToCombatId[launcherId] = rocketLauncherCombatId;
 
         rocketLauncherRocketsRegistry[launcherId] = new List<Rocket>();
         
-        view.AddRocketLauncher(launcherId, position);
+        view.AddRocketLauncher(launcherId, rocketLauncher.Position);
+    }
+
+    private void UpdateRocketLauncherOrientation() {
+        foreach (var rocketLauncher in rocketLaunchers) {
+            var rocketLauncherHost = rocketLauncherToVehicle[rocketLauncher.Id];
+            rocketLauncher.Translate(rocketLauncherHost.BodyPose.position); 
+        }
     }
 
     private void OperateRocketLaunchers() {
@@ -231,14 +243,16 @@ public class PlayerController {
 
     private void UpdateRocketLauncherView() {
         foreach (var rocketLauncher in rocketLaunchers) {
-            view.UpdateRocketLauncherOrientation(rocketLauncher.Id, rocketLauncher.AimPoint, rocketLauncher.RocketAmplitude);
+            view.UpdateRocketLauncherOrientation(rocketLauncher.Id, rocketLauncher.Position, rocketLauncher.AimPoint, rocketLauncher.RocketAmplitude);
         }
     }
 
-    private void SpawnTurel(Vector3 position, TurelConfig turelConfig) {
+    private void SpawnTurel(Vehicle host, TurelConfig turelConfig) {
         var turelId = turelIdCounter++;
-        var turel = new Turel(turelId, position, turelConfig);
+        var turel = new Turel(turelId, host.BodyPose.position, turelConfig);
         turels.Add(turel);
+
+        turelToVehicle[turel.Id] = host;
         
         var turelCombatId = combatService.RegisterAgent(turel.Position, groupId: turelsCombatGroupId);
         turelToCombatId[turel.Id] = turelCombatId;
@@ -247,6 +261,13 @@ public class PlayerController {
         turelToProjectileGroupId[turel.Id] = turelProjectilesGroupId;
         
         view.AddTurel(turelId, turel.Position);
+    }
+
+    private void UpdateTurelsOrientation() {
+        foreach (var turel in turels) {
+            var turelHost = turelToVehicle[turel.Id];
+            turel.Move(turelHost.BodyPose.position);
+        }
     }
 
     private void OperateTurels() {
@@ -266,7 +287,7 @@ public class PlayerController {
 
     private void UpdateTurelView() {
         foreach (var turel in turels) {
-            view.UpdateTurelOrientation(turel.Id, turel.GunForward);
+            view.UpdateTurelOrientation(turel.Id, turel.Position, turel.GunForward);
         }
     }
 

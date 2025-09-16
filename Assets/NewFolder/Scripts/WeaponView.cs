@@ -20,8 +20,9 @@ public class WeaponView {
         turelVisualRegistry[turelId] = GameObject.Instantiate(turelVisualsPrefab, position, Quaternion.identity);
     }
 
-    public void UpdateTurelOrientation(int turelId, Vector3 lookVector) {
+    public void UpdateTurelOrientation(int turelId, Vector3 position, Vector3 lookVector) {
         var turelVisuals = turelVisualRegistry[turelId];
+        turelVisuals.UpdatePosition(position);
         turelVisuals.UpdateAim(lookVector);
     }
 
@@ -54,8 +55,9 @@ public class WeaponView {
         launcherVisuals.ShowRocketExplosion(rocketId);
     }
 
-    internal void UpdateRocketLauncherOrientation(int launcherId, Vector3 aimPoint, float aimHeight) {
+    internal void UpdateRocketLauncherOrientation(int launcherId, Vector3 position, Vector3 aimPoint, float aimHeight) {
         var launcherVisuals = launcherVisualsRegistry[launcherId];
+        launcherVisuals.UpdatePosition(position);
         launcherVisuals.OrientLauncherTowardAim(aimPoint, aimHeight);
     }
 

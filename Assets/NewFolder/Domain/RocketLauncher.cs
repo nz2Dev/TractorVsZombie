@@ -26,6 +26,10 @@ public class RocketLauncher {
     public int RocketDamage => config.damage;
     public float Radius => config.radius;
 
+    public void Translate(Vector3 position) {
+        Position = position;
+    }
+
     public void Aim(Vector3 point) {
         AimPoint = point;
     }
