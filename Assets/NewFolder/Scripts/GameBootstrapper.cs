@@ -18,23 +18,21 @@ public class GameBootstrapper : MonoBehaviour {
     [Space]
     [SerializeField] private bool cameraComponent = true;
     [Space]
-    [SerializeField] private bool vehicleComponent = true;
+    [SerializeField] private bool playerComponent = true;
     [SerializeField] private VehiclePhysicsRoot vehiclePhysicsRoot;
     [SerializeField] private VehicleBlueprint driveVehicle;
     [SerializeField] private VehicleBlueprint trailerVehicle;
     [SerializeField] private int trailersCount = 3;
     [Space]
-    [SerializeField] private bool weaponsComponent = true;
     [SerializeField] private ProjectileService projectileServiceImpl;
     [SerializeField] private TurelVisuals turelVisualsPrefab;
     [SerializeField] private TurelConfig turelData;
     [SerializeField] private RocketLauncherVisuals rocketLauncherVisualsPrefab;
     [SerializeField] private RocketLauncherConfig rocketLauncherConfig;
 
-    private VehiclesController vehiclesController;
+    private PlayerController playerController;
     private CameraController cameraController;
     private UnitController unitController;
-    private WeaponController weaponController;
 
     private void Start() {
         var vehicleService = new VehicleService(vehiclePhysicsRoot);
@@ -49,11 +47,17 @@ public class GameBootstrapper : MonoBehaviour {
         var unitView = new UnitView(unitVisualsPrefab);
         var weaponView = new WeaponView(turelVisualsPrefab, rocketLauncherVisualsPrefab);
 
-        vehiclesController = new VehiclesController(
+        playerController = new PlayerController(
             vehicleService, vehicleView,
             driveVehicle, trailerVehicle,
             trailersCount,
-            combatService);
+            combatService, 
+            
+            weaponView, 
+            combatService,
+            turelData,
+            projectileService,
+            rocketLauncherConfig);
         
         cameraController = new CameraController(
             cameraService, vehicleService);
@@ -68,23 +72,14 @@ public class GameBootstrapper : MonoBehaviour {
             combatService,
             physicsService);
 
-        weaponController = new WeaponController(
-            weaponView, 
-            combatService,
-            turelData,
-            projectileService,
-            rocketLauncherConfig);
-
+        if (playerComponent) playerController.Init();
         if (unitsComponent) unitController.Init();
-        if (vehicleComponent) vehiclesController.Init();
-        if (weaponsComponent) weaponController.Init();
         if (cameraComponent) cameraController.Init();
     }
 
     private static readonly ProfilerMarker cameraUpdateMarker = new ProfilerMarker("Game.CameraController");
     private static readonly ProfilerMarker unitUpdateMarker = new ProfilerMarker("Game.UnitController");
-    private static readonly ProfilerMarker vehicleUpdateMarker = new ProfilerMarker("Game.VehicleController");
-    private static readonly ProfilerMarker weaponUpdateMarker = new ProfilerMarker("Game.WeaponController");
+    private static readonly ProfilerMarker playerUpdateMarker = new ProfilerMarker("Game.PlayerController");
 
     private void Update() {
         if (cameraComponent)
@@ -95,13 +90,9 @@ public class GameBootstrapper : MonoBehaviour {
             using (unitUpdateMarker.Auto()) 
                 unitController.Update();
 
-        if (vehicleComponent)
-            using (vehicleUpdateMarker.Auto())
-                vehiclesController.Update();
-        
-        if (weaponsComponent)
-            using (weaponUpdateMarker.Auto())
-                weaponController.Update();
+        if (playerComponent)
+            using (playerUpdateMarker.Auto())
+                playerController.Update();
     }
 
 }
