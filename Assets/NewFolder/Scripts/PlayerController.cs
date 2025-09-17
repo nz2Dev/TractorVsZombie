@@ -85,12 +85,14 @@ public class PlayerController {
         FilterElapsedRockets();
         UpdateRocketLauncherOrientation();
         OperateRocketLaunchers();
+        UpdateRocketLauncherCombatState();
         UpdateRocketLauncherView();
 
         UpdateProjectileHits();
         FilterDeadProjectiles();
         UpdateTurelsOrientation();
         OperateTurels();
+        UpdateTurelsCombatState();
         UpdateTurelView();
     }
 
@@ -114,7 +116,7 @@ public class PlayerController {
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData, driveVehicleBlueprint.visualsId);
         
         vehicles.Add(driveVehicle);
-        driveVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition);
+        driveVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, turelsCombatGroupId);
     }
 
     private void SpawnTrailerVehicle(Vector3 position) {
@@ -200,6 +202,13 @@ public class PlayerController {
         }
     }
 
+    private void UpdateRocketLauncherCombatState() {
+        foreach (var rocketLauncher in rocketLaunchers) {
+            var rocketLauncherCombatId = rocketLauncherToCombatId[rocketLauncher.Id];
+            combatService.UpdateAgentPosition(rocketLauncherCombatId, rocketLauncher.Position);
+        }
+    }
+
     private void SpawnRocket(RocketLauncher rocketLauncher, RocketTrajectory trajectory) {
         var nextRocketId = rocketIdCounter++;
         var rocket = new Rocket(nextRocketId, trajectory, Time.time, rocketLauncher.RocketFlyDuration);
@@ -282,6 +291,13 @@ public class PlayerController {
             if (turel.Fire(Time.time, out var bullet)) {
                 SpawnBulletProjectile(turel, bullet);
             }
+        }
+    }
+
+    private void UpdateTurelsCombatState() {
+        foreach (var turel in turels) {    
+            var turelCombatId = turelToCombatId[turel.Id];
+            combatService.UpdateAgentPosition(turelCombatId, turel.Position);
         }
     }
 
