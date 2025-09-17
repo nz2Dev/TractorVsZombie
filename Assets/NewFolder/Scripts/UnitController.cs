@@ -174,6 +174,9 @@ public class UnitController {
 
             if (combatAgentState.projectiled) {
                 unit.TakeProjectileDamage(combatAgentState.damage);
+                if (!unit.IsAlive) {
+                    unitView.ShowFinalBlow(unit.Id, combatAgentState.damageSourcePosition);
+                }
             }
 
             if (combatAgentState.exploded) {

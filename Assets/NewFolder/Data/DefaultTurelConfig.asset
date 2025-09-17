@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimSpeed: 1
   fireCooldown: 0.2
-  bulletDamage: 1
+  bulletDamage: 10
   bulletSpeed: 15
   gunHeight: 0.41
+  bulletLifetime: 3
