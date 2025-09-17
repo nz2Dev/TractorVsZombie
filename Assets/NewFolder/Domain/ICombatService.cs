@@ -28,5 +28,6 @@ public interface ICombatService {
     void ApplyPushDamage(int agentId, Vector3 size, int damage);
     bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage);
     void ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage);
+    void ApplyDirectDamage(int agentId, int targetId, int damage);
     bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = UnspecifiedGroupId);
 }

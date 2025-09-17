@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 using Unity.Profiling;
+using PlasticGui.WorkspaceWindow.Diff;
 
 public class UnitController {
 
@@ -14,6 +15,7 @@ public class UnitController {
 
     private Transform[] spawnPoints;
     private Transform targetPoint;
+    private int unitsCombatGroup;
     private int unitsCount;
     private int idCounter;
 
@@ -38,6 +40,7 @@ public class UnitController {
 
     public void Init() {
         navigationService.SetGoal(targetPoint.position);
+        unitsCombatGroup = combatService.AddGroup();
     }
 
     private void ProduceNewUnits() {
@@ -60,7 +63,7 @@ public class UnitController {
         var agentId = localAvoidanceService.AddAgent(position);
         unitIdToAvoidanceId[newUnit.Id] = agentId;
         
-        var combatAgentId = combatService.RegisterAgent(position);
+        var combatAgentId = combatService.RegisterAgent(position, groupId: unitsCombatGroup);
         unitIdToCombatId[newUnit.Id] = combatAgentId;
 
         var physicsAgentId = physicsService.RegisterPhysicsEntity(position, .5f, 0.15f);
@@ -83,6 +86,7 @@ public class UnitController {
             FilterDeadUnits();
         
         ProduceNewUnits();
+        OperateUnits();
 
         using (readCombatServiceInputMarker.Auto())
             ReadCombatServiceInput();
@@ -92,6 +96,22 @@ public class UnitController {
             UpdateUnitsOrientation();
         using (updateViewPoseMarker.Auto())
             UpdateViewPose();
+    }
+
+    private void OperateUnits() {
+        foreach (var unit in units) {
+            if (!unit.Grouned)
+                continue;
+            
+            var unitCombatId = unitIdToCombatId[unit.Id];
+            if (!combatService.GetClosestEnemyAgentInRange(unitCombatId, 2, out var closestFoe, excludeGroup: unitsCombatGroup))
+                continue;
+                
+            if (unit.TryDirectFrontAttack(Time.time, out var damage)) {
+                combatService.ApplyDirectDamage(unitCombatId, closestFoe.id, damage);
+                unitView.ShowDirectFrontAttack(unit.Id);
+            }
+        }
     }
 
     private void ReadUnitOrientation() {

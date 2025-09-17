@@ -19,6 +19,8 @@ public class UnitView {
         GameObject visual;
         if (visualsPrefab != null) {
             visual = Object.Instantiate(visualsPrefab, position, Quaternion.identity);
+            var renderer = visual.GetComponentInChildren<Renderer>();
+            renderer.material = new Material(renderer.sharedMaterial);
         } else {
             visual = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             Object.Destroy(visual.GetComponent<SphereCollider>());
@@ -31,6 +33,14 @@ public class UnitView {
     public void UpdateUnitPositionAndRotation(int id, Vector3 position, Quaternion rotation) {
         if (unitVisuals.TryGetValue(id, out var visual)) {
             visual.transform.SetPositionAndRotation(position, rotation);
+        }
+    }
+
+    public void ShowDirectFrontAttack(int unitId) {
+        if (unitVisuals.TryGetValue(unitId, out var visuals)) {
+            var animation = visuals.GetComponent<Animation>();
+            animation.Play("Attack Animation");
+            animation.PlayQueued("Walk Animation");
         }
     }
 

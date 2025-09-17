@@ -17,6 +17,7 @@ public class Unit {
     public bool Grouned { get; private set; }
 
     private float lastTimePushed;
+    private float lastTimeAttacked;
 
     public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 1) {
         Id = id;
@@ -26,6 +27,17 @@ public class Unit {
         Velocity = Vector3.zero;
         TargetPosition = position;
         Health = health;
+    }
+
+    public bool TryDirectFrontAttack(float atTime, out int damage) {
+        bool lastTimeAttackIsInThePast = lastTimeAttacked + 1 < atTime;
+        if (lastTimeAttackIsInThePast) {
+            lastTimeAttacked = atTime;
+            damage = 10;
+            return true;
+        }
+        damage = 0;
+        return false;
     }
 
     public void ForceKill() {
@@ -63,4 +75,5 @@ public class Unit {
     internal void TakeExplosionDamage(int damage) {
         TakeDamage(damage);
     }
+
 } 

@@ -993,7 +993,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.37827015
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1001,7 +1001,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.24380875
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2275971776316823654, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1032,21 +1032,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3665074424517810180, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 1.2990875
+      objectReference: {fileID: 0}
+    - target: {fileID: 3665074424517810180, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -14.868
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4786345494800347938, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
       propertyPath: m_Name
       value: Default Unit Geometry
       objectReference: {fileID: 0}
-    - target: {fileID: 6046352368037803833, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
-      propertyPath: m_Animations.Array.size
-      value: 2
+    - target: {fileID: 4786345494800347938, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6046352368037803833, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
-      propertyPath: m_Animations.Array.data[1]
+    - target: {fileID: 7920502370528447102, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 7400000, guid: c6561f4a207a1401da483bcad113cf6b, type: 2}
+      objectReference: {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -10,6 +10,7 @@ public class CombatAgent {
     public bool pushed;
     public bool projectiled;
     public bool exploded;
+    public bool physicaly;
     public int damageReceived;
     public Vector3 damageSourcePosition;
     public CapsuleCollider spatialMarker;
@@ -18,6 +19,7 @@ public class CombatAgent {
         pushed = false;
         projectiled = false;
         exploded = false;
+        physicaly = false;
         damageReceived = 0;
     }
 }
@@ -140,6 +142,14 @@ public class CombatService : ICombatService {
                 overlapAgent.damageSourcePosition = position;
             }            
         }
+    }
+
+    public void ApplyDirectDamage(int agentId, int targetId, int damage) {
+        var sourceAgent = agents[agentId];
+        var targetAgent = agents[targetId];
+        targetAgent.damageReceived = damage;
+        targetAgent.physicaly = true;
+        targetAgent.damageSourcePosition = sourceAgent.spatialMarker.transform.position;
     }
 
     public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = ICombatService.UnspecifiedGroupId) {
