@@ -5,41 +5,48 @@ using UnityEditor.MPE;
 
 using UnityEngine;
 
-internal class ProjectileEntity {
-    
-    public ProjectileEntity(int id, Vector3 position, Vector3 velocity, float spawnTime, float lifetime) {
-        Id = id;
-        Position = position;
-        Velocity = velocity;
-        SpawnTime = spawnTime;
-        Lifetime = lifetime;
-    }
-
-    internal int Id { get; private set; }
-    internal Vector3 Position { get; private set; }
-    internal Vector3 Velocity { get; private set; }
-    internal float SpawnTime { get; private set; }
-    internal float Lifetime { get; private set; }
-    internal bool IsAged { get; private set; }
-    internal bool Killed { get; private set; }
-
-    internal void Move(float deltaTime) {
-        Position += Velocity * deltaTime;
-    }
-
-    internal void Age(float time) {
-        if (!IsAged)
-            return;
-        
-        IsAged = SpawnTime + Lifetime < time;
-    }
-
-    internal void Kill() {
-        Killed = true;
-    }
+public struct ProjectileState {
+    public int id;
+    public Vector3 position;
+    public Vector3 velocity;
+    public bool isAged;
 }
 
-public class ProjectileService : MonoBehaviour, IProjectileService {
+public class ProjectileService : MonoBehaviour {
+
+    internal class ProjectileEntity {
+    
+        public ProjectileEntity(int id, Vector3 position, Vector3 velocity, float spawnTime, float lifetime) {
+            Id = id;
+            Position = position;
+            Velocity = velocity;
+            SpawnTime = spawnTime;
+            Lifetime = lifetime;
+        }
+
+        internal int Id { get; private set; }
+        internal Vector3 Position { get; private set; }
+        internal Vector3 Velocity { get; private set; }
+        internal float SpawnTime { get; private set; }
+        internal float Lifetime { get; private set; }
+        internal bool IsAged { get; private set; }
+        internal bool Killed { get; private set; }
+
+        internal void Move(float deltaTime) {
+            Position += Velocity * deltaTime;
+        }
+
+        internal void Age(float time) {
+            if (!IsAged)
+                return;
+            
+            IsAged = SpawnTime + Lifetime < time;
+        }
+
+        internal void Kill() {
+            Killed = true;
+        }
+    }
 
     private int idCounter = 1;
     private int groupIdCounter = 1;

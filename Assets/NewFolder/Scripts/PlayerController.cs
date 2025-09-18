@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerController {
 
-    private readonly ICombatService combatService;
+    private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
-    private readonly IProjectileService projectileService;
+    private readonly ProjectileService projectileService;
     private readonly VehicleView vehicleView;
     private readonly WeaponView view;
 
@@ -38,7 +38,7 @@ public class PlayerController {
     private readonly Dictionary<int, List<Rocket>> rocketLauncherRocketsRegistry = new ();
 
     public PlayerController(VehicleService vehicleService, VehicleView vehicleView, VehicleBlueprint driveVehicle, VehicleBlueprint trailerVehicle, int trailersCount, 
-        CombatService combatService, WeaponView weaponView, ICombatService interactionService, TurelConfig turelConfig, IProjectileService projectileService, 
+        CombatService combatService, WeaponView weaponView, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService, 
         RocketLauncherConfig launcherConfig) {
         this.view = weaponView;
         this.combatService = interactionService;

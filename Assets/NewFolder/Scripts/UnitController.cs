@@ -10,7 +10,7 @@ public class UnitController {
     private readonly UnitView unitView;
     private readonly LocalAvoidanceService localAvoidanceService;
     private readonly NavigationService navigationService;
-    private readonly ICombatService combatService;
+    private readonly CombatService combatService;
     private readonly PhysicsService physicsService;
 
     private Transform[] spawnPoints;
@@ -25,7 +25,7 @@ public class UnitController {
     private readonly Dictionary<int, int> unitIdToPhysicsId = new Dictionary<int, int>();
 
     public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
-        Transform[] spawnPoints, Transform targetPoint, int unitsCount, ICombatService combatService, PhysicsService physicsService) {
+        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.unitView = crowdView;

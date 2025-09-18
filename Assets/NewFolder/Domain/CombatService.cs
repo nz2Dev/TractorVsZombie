@@ -3,26 +3,43 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class CombatAgent {
-    public int agentId;
-    public int groupId;
-    public float height;
-    public bool projectiled;
+public struct AgentState {
     public bool exploded;
-    public bool physicaly;
-    public int damageReceived;
+    public bool projectiled;
+    public int damage;
     public Vector3 damageSourcePosition;
-    public CapsuleCollider spatialMarker;
-
-    internal void ClearState() {
-        projectiled = false;
-        exploded = false;
-        physicaly = false;
-        damageReceived = 0;
-    }
+    public int damageSourceAgentId;
 }
 
-public class CombatService : ICombatService {
+public struct AgentInfo { 
+    public int id;
+    public int groupId;
+    public Vector3 position;
+    public float height;
+}
+
+public class CombatService {
+
+    internal class CombatAgent {
+        public int agentId;
+        public int groupId;
+        public float height;
+        public bool projectiled;
+        public bool exploded;
+        public bool physicaly;
+        public int damageReceived;
+        public Vector3 damageSourcePosition;
+        public CapsuleCollider spatialMarker;
+
+        internal void ClearState() {
+            projectiled = false;
+            exploded = false;
+            physicaly = false;
+            damageReceived = 0;
+        }
+    }
+
+    const int UnspecifiedGroupId = -1;
 
     private readonly int layer;
     private readonly LayerMask agentsMask;
@@ -135,11 +152,11 @@ public class CombatService : ICombatService {
         targetAgent.damageSourcePosition = sourceAgent.spatialMarker.transform.position;
     }
 
-    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = ICombatService.UnspecifiedGroupId) {
+    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = UnspecifiedGroupId) {
         var sourceAgent = agents[combatAgentId];
         var sourceAgentPosition = sourceAgent.spatialMarker.transform.position;
         var overlapCount = Physics.OverlapSphereNonAlloc(sourceAgentPosition, radius, overlapBuffer);
-        bool checkGroup = excludeGroup != ICombatService.UnspecifiedGroupId;
+        bool checkGroup = excludeGroup != UnspecifiedGroupId;
         
         CombatAgent closestAgent = null;
         float closestDistance = float.PositiveInfinity;
