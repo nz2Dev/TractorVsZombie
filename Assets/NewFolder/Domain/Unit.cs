@@ -56,6 +56,11 @@ public class Unit {
         return true;
     }
 
+    public void Projectile(int damage, out bool finalBlow) {
+        TakeDamage(damage);
+        finalBlow = Grouned && !IsAlive;
+    }
+
     public void TakeProjectileDamage(int damage) {
         TakeDamage(damage);
     }

@@ -173,8 +173,8 @@ public class UnitController {
             }
 
             if (combatAgentState.projectiled) {
-                unit.TakeProjectileDamage(combatAgentState.damage);
-                if (!unit.IsAlive) {
+                unit.Projectile(combatAgentState.damage, out bool finalBlow);
+                if (finalBlow) {
                     unitView.ShowFinalBlow(unit.Id, combatAgentState.damageSourcePosition);
                 }
             }
