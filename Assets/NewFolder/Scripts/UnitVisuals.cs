@@ -13,7 +13,7 @@ public class UnitVisuals : MonoBehaviour {
     }
 
     void LateUpdate() {
-        if (sheduledForDestruction && !animations.isPlaying) {
+        if (sheduledForDestruction && !animations.IsPlaying("Death Animation")) {
             Destroy(gameObject);
         }
     }
