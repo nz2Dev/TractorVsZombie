@@ -7,7 +7,6 @@ public class CombatAgent {
     public int agentId;
     public int groupId;
     public float height;
-    public bool pushed;
     public bool projectiled;
     public bool exploded;
     public bool physicaly;
@@ -16,7 +15,6 @@ public class CombatAgent {
     public CapsuleCollider spatialMarker;
 
     internal void ClearState() {
-        pushed = false;
         projectiled = false;
         exploded = false;
         physicaly = false;
@@ -85,9 +83,8 @@ public class CombatService : ICombatService {
     public AgentState GetAgentState(int agentId) {
         var agent = agents[agentId];
         return new AgentState {
-            pushed = agent.pushed,
-            projectiled = agent.projectiled,
             exploded = agent.exploded,
+            projectiled = agent.projectiled,
             damage = agent.damageReceived,
             damageSourceAgentId = -1,
             damageSourcePosition = agent.damageSourcePosition
@@ -101,20 +98,6 @@ public class CombatService : ICombatService {
 
     public void UpdateAgentPosition(int agentId, Vector3 position) {
         agents[agentId].spatialMarker.transform.position = position;
-    }
-
-    public void ApplyPushDamage(int agentId, Vector3 size, int damage) {
-        var sourceAgent = agents[agentId];
-        var overlapCount = Physics.OverlapBoxNonAlloc(sourceAgent.spatialMarker.transform.position, size * 0.5f, overlapBuffer, Quaternion.identity, agentsMask);
-        
-        for (int i = 0; i < overlapCount; i++) {
-            var overlapCollider = overlapBuffer[i];
-            if (markerToAgent.TryGetValue(overlapCollider, out var overlapAgent) && overlapAgent.agentId != agentId) {
-                overlapAgent.pushed = true;
-                overlapAgent.damageReceived = damage;
-                overlapAgent.damageSourcePosition = sourceAgent.spatialMarker.transform.position;
-            }            
-        }
     }
 
     public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage) {

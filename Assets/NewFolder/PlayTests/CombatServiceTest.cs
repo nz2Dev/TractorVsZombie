@@ -18,7 +18,7 @@ public class CombatServiceTest {
     public IEnumerator TestRegisterAgent_EmptyState() {
         var agent = combatService.RegisterAgent(new Vector3(0, 0, 0));
         yield return null;
-        Assert.That(combatService.GetAgentState(agent).pushed, Is.False);
+        Assert.That(combatService.GetAgentState(agent).exploded, Is.False);
         Assert.That(combatService.GetAgentState(agent).projectiled, Is.False);
         Assert.That(combatService.GetAgentState(agent).damage, Is.EqualTo(0));
     }

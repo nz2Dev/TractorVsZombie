@@ -165,26 +165,17 @@ public class UnitController {
             var combatId = unitIdToCombatId[unit.Id];
             var combatAgentState = combatService.GetAgentState(combatId);
             
-            if (combatAgentState.pushed && unit.TryTakePushHit(Time.time, combatAgentState.damage, combatAgentState.damageSourcePosition)) {
+            if (combatAgentState.exploded && unit.TryTakeExplosionHit(Time.time, combatAgentState.damage, combatAgentState.damageSourcePosition)) {
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
-                physicsService.AddExplosionForce(unitPhysicsId, 10, combatAgentState.damageSourcePosition, 1f, 1, ForceMode.Impulse);
-                // unitView.ShowTakePushHit(unit.Id);
+                physicsService.AddExplosionForce(unitPhysicsId, 10, combatAgentState.damageSourcePosition, 4f, 1, ForceMode.Impulse);
+                // unitView.ShowTakeExplosionHit(unit.Id);
             }
 
             if (combatAgentState.projectiled) {
                 unit.TakeProjectileHit(combatAgentState.damage, combatAgentState.damageSourcePosition);
                 // unitView.ShowTakeProjectileHit(unit.Id, combatAgentState.damageSourcePosition);
-            }
-
-            if (combatAgentState.exploded) {
-                unit.TakeExplosionDamage(combatAgentState.damage, combatAgentState.damageSourcePosition);
-                var unitPhysicsId = unitIdToPhysicsId[unit.Id];
-                physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
-                physicsService.SetPhysicsActive(unitPhysicsId, true);
-                physicsService.AddExplosionForce(unitPhysicsId, 15, combatAgentState.damageSourcePosition, 5f, 1, ForceMode.Impulse);
-                // unitView.ShowTakeExplosionHit(unit.Id);
             }
 
             combatService.ClearAgentState(combatId);

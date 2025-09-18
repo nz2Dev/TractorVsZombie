@@ -11,7 +11,6 @@ public class Unit {
     }
 
     public enum DamageType {
-        Pushing,
         Physical,
         Explosion,
         Projectile
@@ -31,7 +30,7 @@ public class Unit {
     public Damage DeathCause { get; private set; }
     public bool ToBeRemoved { get; private set; }
 
-    private float lastTimePushed;
+    private float lastTimeExploded;
     private float lastTimeAttacked;
 
     public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 1) {
@@ -79,28 +78,20 @@ public class Unit {
         });
     }
 
-    public bool TryTakePushHit(float time, int damage, Vector3 pushEpicentr) {
+    public bool TryTakeExplosionHit(float time, int damage, Vector3 explosionEpicentr) {
          if (!Grouned) 
             return false;
                 
-        if (lastTimePushed + PushCooldown > time) 
+        if (lastTimeExploded + PushCooldown > time) 
             return false;
 
-        lastTimePushed = time;
+        lastTimeExploded = time;
         TakeDamage(damage, new Damage {
             amount = damage,
-            damageSource = pushEpicentr,
-            type = DamageType.Pushing
-        });
-        return true;
-    }
-
-    internal void TakeExplosionDamage(int damage, Vector3 explosionSource) {
-        TakeDamage(damage, new Damage {
-            amount = damage,
-            damageSource = explosionSource,
+            damageSource = explosionEpicentr,
             type = DamageType.Explosion
         });
+        return true;
     }
 
     private void TakeDamage(int damageReceived, Damage damage) {

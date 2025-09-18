@@ -107,7 +107,7 @@ public class PlayerController {
 
     private void UpdateVehicleCombat() {
         combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehicle.BodyPose.position);
-        combatService.ApplyPushDamage(driveVehicleCombatId, Vector3.one, 1);
+        combatService.ApplyExplosionDamage(driveVehicleCombatId, driveVehicle.BodyPose.position, radius: 1, damage: 0);
     }
 
     private void SpawnDriveVehicle(Vector3 driveVehiclePosition) {
