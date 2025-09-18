@@ -120,31 +120,18 @@ public class UnitController {
             var avoidanceAgentId = unitIdToAvoidanceId[unit.Id];
             
             var physicsPose = physicsService.GetEntityPose(physicsAgentId);
-            var isStartsFlying = unit.Grouned && (physicsPose.InMotion || physicsPose.Pending);
             var keepFlying = !unit.Grouned && physicsPose.InMotion;
             var becomeGrounded = !unit.Grouned && !physicsPose.InMotion;
             var keepsGrouned = unit.Grouned && !physicsPose.InMotion;
             
-            if (isStartsFlying) {
-                unit.SetFlying();
-                unit.Position = physicsPose.Position;
-                unit.Rotation = physicsPose.Rotation;
-                // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, false);
-            } else if (keepFlying) {
-                unit.Position = physicsPose.Position;
-                unit.Rotation = physicsPose.Rotation;
+            if (keepFlying) {
+                unit.Fly(physicsPose.Position, physicsPose.Rotation);
             } else if (becomeGrounded) {
-                unit.SetGrounded();
-                unit.Position = physicsService.GetGroundPosition(unit.Position);
-                unit.Rotation = Quaternion.identity;
-                // localAvoidanceService.SetAgentCollisionEnabled(avoidanceAgentId, true);
+                unit.Stand(physicsService.GetGroundPosition(unit.Position));
                 physicsService.SetPhysicsActive(physicsAgentId, false);
             } else if (keepsGrouned && unit.IsAlive) {
-                // unit.Position = localAvoidanceService.GetAgentPosition(avoidanceAgentId);
-                // unit.Rotation = localAvoidanceService.GetAgentRotation(avoidanceAgentId);
                 localAvoidanceService.GetAgentPositionAndRotation(avoidanceAgentId, out var pos, out var rot);
-                unit.Position = pos;
-                unit.Rotation = rot;
+                unit.Move(pos, rot);
             }
         }
     }
