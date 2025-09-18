@@ -14,7 +14,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] Transform targetPoint;
     [SerializeField] private FlowFieldsSurface flowFieldsSurface;
     [SerializeField] private ORCAEnvironment orcaEnvironment;
-    [SerializeField] private GameObject unitVisualsPrefab;
+    [SerializeField] private UnitVisuals unitVisualsPrefab;
     [Space]
     [SerializeField] private bool cameraComponent = true;
     [Space]
