@@ -83,7 +83,7 @@ public class UnitController {
         using (readUnitOrientationMarker.Auto())
             ReadUnitOrientation();
         using (filterDeadUnitsMarker.Auto())
-            FilterDeadUnits();
+            FilterRemovedUnits();
         
         ProduceNewUnits();
         OperateUnits();
@@ -165,29 +165,35 @@ public class UnitController {
             var combatId = unitIdToCombatId[unit.Id];
             var combatAgentState = combatService.GetAgentState(combatId);
             
-            if (combatAgentState.pushed && unit.TryPush(Time.time, combatAgentState.damage)) {
+            if (combatAgentState.pushed && unit.TryTakePushHit(Time.time, combatAgentState.damage, combatAgentState.damageSourcePosition)) {
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
                 physicsService.AddExplosionForce(unitPhysicsId, 10, combatAgentState.damageSourcePosition, 1f, 1, ForceMode.Impulse);
+                // unitView.ShowTakePushHit(unit.Id);
             }
 
             if (combatAgentState.projectiled) {
-                unit.Projectile(combatAgentState.damage, out bool finalBlow);
-                if (finalBlow) {
-                    unitView.ShowFinalBlow(unit.Id, combatAgentState.damageSourcePosition);
-                }
+                unit.TakeProjectileHit(combatAgentState.damage, combatAgentState.damageSourcePosition);
+                // unitView.ShowTakeProjectileHit(unit.Id, combatAgentState.damageSourcePosition);
             }
 
             if (combatAgentState.exploded) {
-                unit.TakeExplosionDamage(combatAgentState.damage);
+                unit.TakeExplosionDamage(combatAgentState.damage, combatAgentState.damageSourcePosition);
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
                 physicsService.AddExplosionForce(unitPhysicsId, 15, combatAgentState.damageSourcePosition, 5f, 1, ForceMode.Impulse);
+                // unitView.ShowTakeExplosionHit(unit.Id);
             }
 
             combatService.ClearAgentState(combatId);
+
+            if (!unit.IsAlive) {
+                if (unit.DeathCause.type == Unit.DamageType.Projectile) {
+                    unitView.ShowDeathByProjectile(unit.Id, unit.DeathCause.damageSource, blownAway: unit.Grouned);
+                }
+            }
         }
     }
 
@@ -198,10 +204,10 @@ public class UnitController {
         }
     }
 
-    private void FilterDeadUnits() {
+    private void FilterRemovedUnits() {
         for (int i = 0; i < units.Count; i++) {
             var unit = units[i];
-            if (!unit.IsAlive && unit.Grouned) {
+            if (unit.ToBeRemoved) {
                 DespawnUnitAt(i);
                 i--;
             }

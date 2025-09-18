@@ -27,10 +27,14 @@ public class UnitView {
         unitVisuals[unitId].PlayDirectAttackAnimation();
     }
 
-    public void ShowFinalBlow(int unitId, Vector3 damageSourcePosition) {
+    public void ShowDeathByProjectile(int unitId, Vector3 damageSourcePosition, bool blownAway) {
         var visuals = unitVisuals[unitId];
-        visuals.RotateAway(damageSourcePosition);
-        visuals.PlayFinalBlowAnimation();
+        if (blownAway) {
+            visuals.RotateAway(damageSourcePosition);
+            visuals.PlayPushedAwayDeathAnimation();
+        } else {
+            visuals.PlayDisolveAnimation();
+        }
     }
 
     public void RemoveUnit(int unitId) {

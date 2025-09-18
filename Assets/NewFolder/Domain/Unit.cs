@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class Unit {
 
+    public struct Damage {
+        public DamageType type;
+        public Vector3 damageSource;
+        public int amount;
+    }
+
+    public enum DamageType {
+        Pushing,
+        Physical,
+        Explosion,
+        Projectile
+    }
+
     const float PushCooldown = 0.25f;
     
     public int Id { get; set; }
@@ -13,8 +26,10 @@ public class Unit {
     public float MaxSpeed { get; set; }
     public Vector3 TargetPosition { get; set; }
     public int Health { get; private set; }
-    public bool IsAlive => Health >= 0;
+    public bool IsAlive { get; private set; }
     public bool Grouned { get; private set; }
+    public Damage DeathCause { get; private set; }
+    public bool ToBeRemoved { get; private set; }
 
     private float lastTimePushed;
     private float lastTimeAttacked;
@@ -27,6 +42,7 @@ public class Unit {
         Velocity = Vector3.zero;
         TargetPosition = position;
         Health = health;
+        IsAlive = true;
     }
 
     public bool TryDirectFrontAttack(float atTime, out int damage) {
@@ -44,7 +60,26 @@ public class Unit {
         Health = 0;
     }
 
-    public bool TryPush(float time, int damage) {
+    public void SetFlying() {
+        Grouned = false;
+    }
+
+    internal void SetGrounded() {
+        Grouned = true;
+        if (!IsAlive) {
+            ToBeRemoved = true;
+        }
+    }
+
+    public void TakeProjectileHit(int damage, Vector3 projectilePosition) {
+        TakeDamage(damage, new Damage {
+            amount = damage,
+            damageSource = projectilePosition,
+            type = DamageType.Projectile
+        });
+    }
+
+    public bool TryTakePushHit(float time, int damage, Vector3 pushEpicentr) {
          if (!Grouned) 
             return false;
                 
@@ -52,33 +87,31 @@ public class Unit {
             return false;
 
         lastTimePushed = time;
-        TakeDamage(damage);
+        TakeDamage(damage, new Damage {
+            amount = damage,
+            damageSource = pushEpicentr,
+            type = DamageType.Pushing
+        });
         return true;
     }
 
-    public void Projectile(int damage, out bool finalBlow) {
-        TakeDamage(damage);
-        finalBlow = Grouned && !IsAlive;
+    internal void TakeExplosionDamage(int damage, Vector3 explosionSource) {
+        TakeDamage(damage, new Damage {
+            amount = damage,
+            damageSource = explosionSource,
+            type = DamageType.Explosion
+        });
     }
 
-    public void TakeProjectileDamage(int damage) {
-        TakeDamage(damage);
-    }
-
-    public void SetFlying() {
-        Grouned = false;
-    }
-
-    internal void SetGrounded() {
-        Grouned = true;
-    }
-
-    private void TakeDamage(int damageReceived) {
+    private void TakeDamage(int damageReceived, Damage damage) {
         Health -= damageReceived;
-    }
-
-    internal void TakeExplosionDamage(int damage) {
-        TakeDamage(damage);
+        
+        if (Health <= 0) {
+            Health = 0;
+            IsAlive = false;
+            DeathCause = damage;
+            ToBeRemoved = true && Grouned; 
+        }
     }
 
 } 

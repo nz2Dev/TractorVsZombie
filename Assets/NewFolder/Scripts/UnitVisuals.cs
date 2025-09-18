@@ -37,11 +37,15 @@ public class UnitVisuals : MonoBehaviour {
         animations.PlayQueued("Walk Animation");
     }
 
-    internal void PlayFinalBlowAnimation() {
+    internal void PlayPushedAwayDeathAnimation() {
         animations.Play("Death Animation", PlayMode.StopAll);
     }
 
     internal void DestroySelfOnIdle() {
         sheduledForDestruction = true;
+    }
+
+    internal void PlayDisolveAnimation() {
+        Debug.Log("disolve animation not implemented");
     }
 }
