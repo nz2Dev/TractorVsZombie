@@ -19,8 +19,8 @@ public class UnitVisuals : MonoBehaviour {
     }
 
     private bool IsAnimatorPlaying() {
-        var defaultLayerStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        return animator.IsInTransition(0) || defaultLayerStateInfo.length < defaultLayerStateInfo.normalizedTime;
+        var curentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        return animator.IsInTransition(0) || curentStateInfo.normalizedTime < curentStateInfo.length;
     }
 
     private void Start() {

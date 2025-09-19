@@ -224,7 +224,7 @@ MonoBehaviour:
   turelVisualsPrefab: {fileID: 6612075636814393942, guid: 38a51415f5cb44888a2da5af59f4c6a8, type: 3}
   turelData: {fileID: 11400000, guid: f1440898271324ef08ca9ef0f40484d2, type: 2}
   rocketLauncherVisualsPrefab: {fileID: 1316527391638112582, guid: 0e844153ea0174c5fbac85707d3d96c6, type: 3}
-  rocketLauncherConfig: {fileID: 0}
+  rocketLauncherConfig: {fileID: 11400000, guid: 241538f52fcdf49d48f52b7c7405a924, type: 2}
 --- !u!1 &424987303
 GameObject:
   m_ObjectHideFlags: 0
