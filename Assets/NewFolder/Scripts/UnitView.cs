@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 
@@ -35,6 +36,11 @@ public class UnitView {
         } else {
             visuals.PlayDisolveAnimation();
         }
+    }
+
+    internal void ShowDisolveDeath(int unitId) {
+        var visuals = unitVisuals[unitId];
+        visuals.PlayDisolveAnimation();
     }
 
     public void RemoveUnit(int unitId) {

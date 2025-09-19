@@ -16,4 +16,4 @@ MonoBehaviour:
   launchIntervalSec: 3
   rocketAmplitude: 2.82
   flyDuration: 1.8
-  damage: 0
+  damage: 1

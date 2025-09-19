@@ -170,6 +170,8 @@ public class UnitController {
             if (!unit.IsAlive) {
                 if (unit.DeathCause.type == Unit.DamageType.Projectile) {
                     unitView.ShowDeathByProjectile(unit.Id, unit.DeathCause.damageSource, blownAway: unit.Grouned);
+                } else {
+                    unitView.ShowDisolveDeath(unit.Id);
                 }
             }
         }

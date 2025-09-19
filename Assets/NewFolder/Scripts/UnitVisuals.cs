@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class UnitVisuals : MonoBehaviour {
     
-    private Animation animations;
+    private Animator animator;
 
     private bool sheduledForDestruction;
 
     private void Awake() {
-        animations = GetComponent<Animation>();
+        animator = GetComponent<Animator>();
     }
 
     void LateUpdate() {
-        if (sheduledForDestruction && !animations.IsPlaying("Death Animation")) {
+        if (sheduledForDestruction && !IsAnimatorPlaying()) {
             Destroy(gameObject);
         }
+    }
+
+    private bool IsAnimatorPlaying() {
+        var defaultLayerStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        return animator.IsInTransition(0) || defaultLayerStateInfo.length < defaultLayerStateInfo.normalizedTime;
     }
 
     private void Start() {
@@ -29,23 +34,24 @@ public class UnitVisuals : MonoBehaviour {
 
     internal void RotateAway(Vector3 sourcePosition) {
         var sourceToPosition = transform.position - sourcePosition;
+        sourceToPosition.y = 0;
         transform.rotation = Quaternion.LookRotation(-sourceToPosition.normalized, Vector3.up);
     }
 
     internal void PlayDirectAttackAnimation() {
-        animations.Play("Attack Animation");
-        animations.PlayQueued("Walk Animation");
+        animator.SetTrigger("Attack");
     }
 
     internal void PlayPushedAwayDeathAnimation() {
-        animations.Play("Death Animation", PlayMode.StopAll);
+        animator.SetTrigger("Throw Death");
+    }
+
+    internal void PlayDisolveAnimation() {
+        animator.SetTrigger("Disolve Death");
     }
 
     internal void DestroySelfOnIdle() {
         sheduledForDestruction = true;
     }
 
-    internal void PlayDisolveAnimation() {
-        Debug.Log("disolve animation not implemented");
-    }
 }
