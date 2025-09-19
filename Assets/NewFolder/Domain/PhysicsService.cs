@@ -77,9 +77,7 @@ public class PhysicsService {
     }
 
     public void AddExplosionForce(int id, float force, Vector3 position, float radius, float upwardsModifier = 0, ForceMode mode = ForceMode.Force) {
-        if (entities.TryGetValue(id, out var entity)) {
-            entity.Rigidbody.AddExplosionForce(force, position, radius, upwardsModifier, mode);
-        }
+        entities[id].Rigidbody.AddExplosionForce(force, position, radius, upwardsModifier, mode);
     }
 
     public void UpdatePhysicsEntityShape(int id, float height, float radius) {
