@@ -47,4 +47,17 @@ public class CombatServiceTest {
         Assert.That(agentInfo.groupId, Is.Not.EqualTo(group1));
     }
 
+    [UnityTest]
+    public IEnumerator TestGetClosestEnemyInRadius_ReturnClosestByDistance() {
+        var agent0 = combatService.RegisterAgent(new Vector3(0, 0, 0));
+        var agent1 = combatService.RegisterAgent(new Vector3(1, 0, 1));
+        var agent2 = combatService.RegisterAgent(new Vector3(2, 0, 1));
+        var agent3 = combatService.RegisterAgent(new Vector3(2, 0, 2));
+
+        yield return new WaitForFixedUpdate();
+        var isRegistered = combatService.GetClosestEnemyAgentInRange(agent0, 3, out var closestAgent);
+        Assert.That(isRegistered, Is.True);
+        Assert.That(closestAgent.id, Is.EqualTo(agent1));
+    }
+
 }
