@@ -1,14 +1,40 @@
 using NUnit.Framework;
 using UnityEngine;
-using NUnit.Framework.Constraints;
 using UnityEngine.TestTools;
 using System.Collections;
+using System.IO;
+using UnityEditor;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 [TestFixture]
-public class PhysicsServiceTest {
+public class PhysicsServiceTest : IPrebuildSetup, IPostBuildCleanup {
+
+    private string originalScene;
+    private PhysicsService physicsService;
+    private readonly string TestEnvironmentScenePath = Path.Combine(
+        "Assets", "NewFolder", "Scenes", "Physics Test Environment.unity");
+
+    public void Setup() {
+#if UNITY_EDITOR
+        if (EditorBuildSettings.scenes.Any(scene => scene.path == TestEnvironmentScenePath))
+            return;
+        var includedScenes = EditorBuildSettings.scenes.ToList();
+        includedScenes.Add(new EditorBuildSettingsScene(TestEnvironmentScenePath, true));
+        EditorBuildSettings.scenes = includedScenes.ToArray();
+#endif
+    }
+
+    [UnitySetUp]
+    public IEnumerator SetUpUnityTest() {
+        originalScene = SceneManager.GetActiveScene().path;
+        SceneManager.LoadScene(TestEnvironmentScenePath);
+        yield return null;
+        physicsService = new PhysicsService();
+    }
+
     [Test]
     public void TestRegisterPhysicsEntity() {
-        var physicsService = new PhysicsService();
         var id = physicsService.RegisterPhysicsEntity(new Vector3(0, 0, 0), 1, 1);
         var pose = physicsService.GetEntityPose(id);
         Assert.That(pose.Position, Is.EqualTo(new Vector3(0, 0, 0)));
@@ -18,7 +44,6 @@ public class PhysicsServiceTest {
 
     [UnityTest]
     public IEnumerator TestUpdatePhysicsEntityPosition() {
-        var physicsService = new PhysicsService();
         var id = physicsService.RegisterPhysicsEntity(new Vector3(0, 0, 0), 1, 1);
         physicsService.UpdatePhysicsEntityPosition(id, new Vector3(1, 0, 0));
         yield return new WaitForFixedUpdate();
@@ -28,7 +53,6 @@ public class PhysicsServiceTest {
 
     [UnityTest]
     public IEnumerator TestQuerySphere() {
-        var physicsService = new PhysicsService();
         var id1 = physicsService.RegisterPhysicsEntity(new Vector3(0, 0, 0), 1, 1);
         var id2 = physicsService.RegisterPhysicsEntity(new Vector3(2, 0, 0), 1, 1);
         var id3 = physicsService.RegisterPhysicsEntity(new Vector3(10, 0, 0), 1, 1);
@@ -41,7 +65,6 @@ public class PhysicsServiceTest {
 
     [UnityTest]
     public IEnumerator TestEntityDoesNotDropByGravity() {
-        var physicsService = new PhysicsService();
         var startPosition = new Vector3(0, 10, 0);
         var id = physicsService.RegisterPhysicsEntity(startPosition, 1, 1);
         // Wait for several physics steps
@@ -52,5 +75,15 @@ public class PhysicsServiceTest {
         Assert.That(pose.Position, Is.EqualTo(startPosition));
     }
 
+    [TearDown]
+    public void TearDownUnityTest() {
+        SceneManager.LoadScene(originalScene, LoadSceneMode.Single);
+    }
 
+    public void Cleanup() {
+#if UNITY_EDITOR
+        EditorBuildSettings.scenes = EditorBuildSettings.scenes.Where(scene => scene.path != TestEnvironmentScenePath).ToArray();
+#endif
+    }
+    
 }
