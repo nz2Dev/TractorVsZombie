@@ -149,6 +149,9 @@ public class UnitController {
 
     private void ReadCombatServiceInput() {
         foreach (var unit in units) {
+            if (!unit.IsAlive)
+                continue;
+                
             var combatId = unitIdToCombatId[unit.Id];
             var combatAgentState = combatService.GetAgentState(combatId);
             
