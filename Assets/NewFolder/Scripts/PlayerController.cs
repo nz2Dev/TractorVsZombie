@@ -68,9 +68,13 @@ public class PlayerController {
                 continue;
 
             if (flipFlop = !flipFlop) {
-                SpawnTurel(vehicle, turelConfig);
+                if (turelConfig != null) {
+                    SpawnTurel(vehicle, turelConfig);
+                }
             } else {
-                SpawnRocketLauncher(vehicle, launcherConfig);
+                if (launcherConfig != null) {
+                    SpawnRocketLauncher(vehicle, launcherConfig);
+                }
             }
         }
     }
