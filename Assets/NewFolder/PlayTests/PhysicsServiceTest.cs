@@ -33,13 +33,20 @@ public class PhysicsServiceTest : IPrebuildSetup, IPostBuildCleanup {
         physicsService = new PhysicsService();
     }
 
-    [Test]
-    public void TestRegisterPhysicsEntity() {
-        var id = physicsService.RegisterPhysicsEntity(new Vector3(0, 0, 0), 1, 1);
-        var pose = physicsService.GetEntityPose(id);
-        Assert.That(pose.Position, Is.EqualTo(new Vector3(0, 0, 0)));
-        Assert.That(pose.Rotation, Is.EqualTo(Quaternion.identity));
-        Assert.That(pose.Velocity, Is.EqualTo(Vector3.zero));
+    [UnityTest]
+    public IEnumerator TestExplosionWithinReach_AffectsTheBody() {
+        var initPosition = new Vector3(1, 0, 0);
+        var id = physicsService.RegisterPhysicsEntity(initPosition, height: 1, radius: 0.5f);
+        yield return new WaitForFixedUpdate();
+        
+        physicsService.SetPhysicsActive(id, true);
+        physicsService.AddExplosionForce(id, 10, Vector3.zero, radius: 1, upwardsModifier: 1, ForceMode.Impulse);
+        
+        Debug.Break();
+        for (int i = 0; i < 5; i++)
+            yield return new WaitForFixedUpdate();
+
+        Assert.That(physicsService.GetEntityPose(id).Position, Is.Not.EqualTo(initPosition).Within(0.1f));
     }
 
     [UnityTest]
