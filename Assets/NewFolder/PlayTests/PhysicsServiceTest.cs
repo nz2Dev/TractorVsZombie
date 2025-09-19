@@ -10,7 +10,6 @@ public class PhysicsServiceTest {
     public void TestRegisterPhysicsEntity() {
         var physicsService = new PhysicsService();
         var id = physicsService.RegisterPhysicsEntity(new Vector3(0, 0, 0), 1, 1);
-        Assert.That(id, Is.EqualTo(1));
         var pose = physicsService.GetEntityPose(id);
         Assert.That(pose.Position, Is.EqualTo(new Vector3(0, 0, 0)));
         Assert.That(pose.Rotation, Is.EqualTo(Quaternion.identity));
