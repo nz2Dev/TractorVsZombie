@@ -92,6 +92,7 @@ public class PhysicsService {
     public void UpdatePhysicsEntityPosition(int id, Vector3 position) {
         if (entities.TryGetValue(id, out var entity)) {
             entity.GameObject.transform.position = position;
+            entity.Rigidbody.position = position;
         }
     }
 

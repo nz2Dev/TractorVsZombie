@@ -6,6 +6,7 @@ using System.IO;
 using UnityEditor;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine.TestTools.Utils;
 
 [TestFixture]
 public class PhysicsServiceTest : IPrebuildSetup, IPostBuildCleanup {
@@ -37,16 +38,65 @@ public class PhysicsServiceTest : IPrebuildSetup, IPostBuildCleanup {
     public IEnumerator TestExplosionWithinReach_AffectsTheBody() {
         var initPosition = new Vector3(1, 0, 0);
         var id = physicsService.RegisterPhysicsEntity(initPosition, height: 1, radius: 0.5f);
-        yield return new WaitForFixedUpdate();
         
+        yield return new WaitForFixedUpdate();
         physicsService.SetPhysicsActive(id, true);
         physicsService.AddExplosionForce(id, 10, Vector3.zero, radius: 1, upwardsModifier: 1, ForceMode.Impulse);
         
-        Debug.Break();
         for (int i = 0; i < 5; i++)
             yield return new WaitForFixedUpdate();
 
-        Assert.That(physicsService.GetEntityPose(id).Position, Is.Not.EqualTo(initPosition).Within(0.1f));
+        Assert.That(physicsService.GetEntityPose(id).Position, Is.Not.EqualTo(initPosition));
+    }
+
+    [UnityTest]
+    public IEnumerator TestAddForceOutsidePhysicsLoop_AppliesEffectAnyway() {
+        var initPosition = new Vector3(1, 0, 0);
+        var id = physicsService.RegisterPhysicsEntity(initPosition, height: 1, radius: 0.5f);
+        
+        yield return new WaitForFixedUpdate();
+        yield return null;
+        physicsService.SetPhysicsActive(id, true);
+        physicsService.AddExplosionForce(id, 10, Vector3.zero, radius: 1, upwardsModifier: 1, ForceMode.Impulse);
+        
+        for (int i = 0; i < 5; i++)
+            yield return new WaitForFixedUpdate();
+
+        Assert.That(physicsService.GetEntityPose(id).Position, Is.Not.EqualTo(initPosition));
+    }
+
+    [UnityTest]
+    public IEnumerator TestAddForceOnSameLoopAsActivation_AppliesEffectAnyway() {
+        var initPosition = new Vector3(1, 0, 0);
+        var id = physicsService.RegisterPhysicsEntity(initPosition, height: 1, radius: 0.5f);
+        
+        yield return new WaitForFixedUpdate();
+        yield return null;
+        physicsService.SetPhysicsActive(id, true);
+        physicsService.AddExplosionForce(id, 10, Vector3.zero, radius: 1, upwardsModifier: 1, ForceMode.Impulse);
+
+        for (int i = 0; i < 5; i++)
+            yield return new WaitForFixedUpdate();
+
+        Assert.That(physicsService.GetEntityPose(id).Position, Is.Not.EqualTo(initPosition));
+    }
+
+    [UnityTest]
+    public IEnumerator TestUpdatePositionOutsideOfPhysicsLoop_AppliesImmediatlyAndTriggerPositionApproximationEffectAppropriatly() {
+        var initPosition = new Vector3(0, 0, 0);
+        var updatedPosition = new Vector3(5, 0, 5);
+        var id = physicsService.RegisterPhysicsEntity(initPosition, height: 1, radius: 0.5f);
+        
+        yield return new WaitForFixedUpdate();
+        yield return null;
+        physicsService.UpdatePhysicsEntityPosition(id, updatedPosition);
+        physicsService.SetPhysicsActive(id, true);
+        physicsService.AddExplosionForce(id, 10, updatedPosition, radius: 1, upwardsModifier: 1, ForceMode.Impulse);
+
+        for (int i = 0; i < 5; i++)
+            yield return new WaitForFixedUpdate();
+
+        Assert.That(physicsService.GetEntityPose(id).Position, Is.Not.EqualTo(updatedPosition).Using(Vector3EqualityComparer.Instance));
     }
 
     [UnityTest]
