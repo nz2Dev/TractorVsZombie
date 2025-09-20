@@ -99,7 +99,7 @@ public class UnitController {
 
     private void OperateUnits() {
         foreach (var unit in units) {
-            if (!unit.Grouned)
+            if (!unit.Grouned || !unit.IsAlive)
                 continue;
             
             var unitCombatId = unitIdToCombatId[unit.Id];
@@ -175,12 +175,18 @@ public class UnitController {
                 } else {
                     unitView.ShowDisolveDeath(unit.Id);
                 }
+                
+                combatService.UnregisterAgent(combatId);
+                unitIdToCombatId.Remove(unit.Id);
             }
         }
     }
 
     private void SetCombatStateFromUnit() {
         foreach (var unit in units) {
+            if (!unit.IsAlive)
+                continue;
+
             var combatId = unitIdToCombatId[unit.Id];
             combatService.UpdateAgentPosition(combatId, unit.Position);
         }
@@ -201,8 +207,8 @@ public class UnitController {
         units.RemoveAt(unitIndex);
         localAvoidanceService.RemoveAgent(unitIdToAvoidanceId[unitId]);
         unitIdToAvoidanceId.Remove(unitId);
-        combatService.UnregisterAgent(unitIdToCombatId[unitId]);
-        unitIdToCombatId.Remove(unitId);
+        // combatService.UnregisterAgent(unitIdToCombatId[unitId]);
+        // unitIdToCombatId.Remove(unitId);
         physicsService.UnregisterPhysicsEntity(unitIdToPhysicsId[unitId]);
         unitIdToPhysicsId.Remove(unitId);
         unitView.RemoveUnit(unitId);
