@@ -1,15 +1,16 @@
 {
   "dependencies": {
     "com.akb.knn": {
-      "version": "file:/Users/nazarpinonzik/Documents/GitHub/KNN",
+      "version": "https://github.com/nz2Dev/KNN.git",
       "depth": 0,
-      "source": "local",
+      "source": "git",
       "dependencies": {
         "com.unity.burst": "1.1.2",
         "com.unity.collections": "0.1.1-preview",
         "com.unity.mathematics": "1.1.0",
         "com.unity.jobs": "0.1.1-preview"
-      }
+      },
+      "hash": "e93fdb5a843764047fdf1c75126f03bdeac180d7"
     },
     "com.coffee.git-dependency-resolver": {
       "version": "https://github.com/mob-sakai/GitDependencyResolverForUnity.git",
