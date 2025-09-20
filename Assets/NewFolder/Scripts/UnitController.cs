@@ -40,7 +40,6 @@ public class UnitController {
 
     public void Init() {
         navigationService.SetGoal(targetPoint.position);
-        unitsCombatGroup = combatService.AddGroup();
     }
 
     private void ProduceNewUnits() {
@@ -63,7 +62,7 @@ public class UnitController {
         var agentId = localAvoidanceService.AddAgent(position);
         unitIdToAvoidanceId[newUnit.Id] = agentId;
         
-        var combatAgentId = combatService.RegisterAgent(position, groupId: unitsCombatGroup);
+        var combatAgentId = combatService.RegisterAgent(position, alie: false);
         unitIdToCombatId[newUnit.Id] = combatAgentId;
 
         var physicsAgentId = physicsService.RegisterPhysicsEntity(position, .5f, 0.15f);
@@ -104,7 +103,7 @@ public class UnitController {
                 continue;
             
             var unitCombatId = unitIdToCombatId[unit.Id];
-            if (!combatService.GetClosestEnemyAgentInRange(unitCombatId, 2, out var closestFoe, excludeGroup: unitsCombatGroup))
+            if (!combatService.GetClosestEnemyAgentInRange(unitCombatId, 2, out var closestFoe))
                 continue;
                 
             if (unit.TryDirectFrontAttack(Time.time, out var damage)) {

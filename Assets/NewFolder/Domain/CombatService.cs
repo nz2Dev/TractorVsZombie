@@ -21,16 +21,18 @@ public struct AgentState {
 
 public struct AgentInfo { 
     public int id;
-    public int groupId;
+    public bool alie;
     public Vector3 position;
     public float height;
 }
 
 public class CombatService {
 
+    const int kNearestQueryMax = 5;
+
     internal class CombatAgent {
         public int agentId;
-        public int groupId;
+        public bool alie;
         public float height;
         public bool projectiled;
         public bool exploded;
@@ -38,8 +40,8 @@ public class CombatService {
         public int damageReceived;
         public Vector3 damageSourcePosition;
         public CapsuleCollider spatialMarker;
-        public CombatAgent[] closestAgents = new CombatAgent[25];
-        public int closestAgentsCount;
+        public CombatAgent[] closestFoes = new CombatAgent[kNearestQueryMax];
+        public int closestFoesCount;
 
         internal void ClearState() {
             projectiled = false;
@@ -49,100 +51,124 @@ public class CombatService {
         }
     }
 
-    const int UnspecifiedGroupId = -1;
-
     private readonly int layer;
     private readonly LayerMask agentsMask;
     private readonly LayerMask agentsAndObstaclesMask;
-
-    private readonly int registeredDefaultGroupId;
 
     public CombatService(int agentsLayer, LayerMask obstaclesMask) {
         this.layer = agentsLayer;
         this.agentsMask = 1 << agentsLayer;
         this.agentsAndObstaclesMask = agentsMask | obstaclesMask;
 
-        registeredDefaultGroupId = AddGroup();
     }
 
     private int idCounter;
-    private int groupIdCounter = 1;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
-    private readonly Dictionary<int, List<int>> agentToGroupRegistry = new ();
     private readonly Dictionary<Collider, CombatAgent> markerToAgent = new Dictionary<Collider, CombatAgent>();
+    private readonly List<int> alies = new (512);
+    private readonly List<int> foes = new (512);
     
     private readonly Collider[] overlapBuffer = new Collider[256];
 
-    private CombatAgent[] agentsAsPoints = new CombatAgent[512];
-    private int agentsCalculated;
+    private CombatAgent[] agentsAsAliePoints = new CombatAgent[64];
+    private CombatAgent[] agentsAsFoePoints = new CombatAgent[512];
 
     public void UpdateSpatialTree() {
-        var points = new NativeArray<float3>(agents.Count, Allocator.TempJob);
-        agentsCalculated = agents.Count;
+        if (foes.Count == 0 || alies.Count == 0)
+            return;
 
-        int index = 0;
+        var foesPoints = new NativeArray<float3>(foes.Count, Allocator.TempJob);
+        var aliesPoints = new NativeArray<float3>(alies.Count, Allocator.TempJob);
+
+        int alieIndex = 0;
+        int foeIndex = 0;
         foreach (var agent in agents.Values) {
-            points[index] = agent.spatialMarker.transform.position;
-            agentsAsPoints[index] = agent;
-            index++;
+            if (agent.alie) {
+                aliesPoints[alieIndex] = agent.spatialMarker.transform.position;
+                agentsAsAliePoints[alieIndex] = agent;
+                alieIndex++;
+            } else {
+                foesPoints[foeIndex] = agent.spatialMarker.transform.position;
+                agentsAsFoePoints[foeIndex] = agent;
+                foeIndex++;
+            }
         }
         
-        var kdTreeContainer = new KnnContainer(points, false, Allocator.TempJob);
-        var rebuildJob = new KnnRebuildJob(kdTreeContainer);
-        rebuildJob.Schedule().Complete();
+        var foeKdTreeContainer = new KnnContainer(foesPoints, false, Allocator.TempJob);
+        var foeRebuildHandle = new KnnRebuildJob(foeKdTreeContainer).Schedule();
 
-        var kNearest = Mathf.Min(points.Length, 25);
-        var results = new NativeArray<int>(points.Length * kNearest, Allocator.TempJob);
-        var queryPositions = new NativeArray<float3>(points, Allocator.TempJob);
+        var alieKdTreeContainer = new KnnContainer(aliesPoints, false, Allocator.TempJob);
+        var alieRebuildHandle = new KnnRebuildJob(alieKdTreeContainer).Schedule();
+        JobHandle.CombineDependencies(alieRebuildHandle, foeRebuildHandle).Complete();
 
-        var batchQueryJob = new QueryKNearestBatchJob(kdTreeContainer, queryPositions, results);
-        batchQueryJob.ScheduleBatch(queryPositions.Length, queryPositions.Length / 32).Complete();
+        var kNearestFoes = Mathf.Min(foesPoints.Length, kNearestQueryMax);
+        var foesResults = new NativeArray<int>(aliesPoints.Length * kNearestFoes, Allocator.TempJob);
+        var alieQueryPositions = new NativeArray<float3>(aliesPoints, Allocator.TempJob);
 
-        for (int i = 0; i < agentsCalculated; i++) {
-            var agent = agentsAsPoints[i];
-            agent.closestAgentsCount = kNearest;
-            for (int j = 0; j < kNearest; j++) {
-                var agentIndex = results[i * kNearest + j];
-                var nextAgent = agentsAsPoints[agentIndex];
-                agent.closestAgents[j] = nextAgent;    
+        var foeBatchQueryJob = new QueryKNearestBatchJob(foeKdTreeContainer, alieQueryPositions, foesResults);
+        foeBatchQueryJob.ScheduleBatch(alieQueryPositions.Length, Mathf.Min(alieQueryPositions.Length / 32, 16)).Complete();
+
+        for (int i = 0; i < aliesPoints.Length; i++) {
+            var agent = agentsAsAliePoints[i];
+            agent.closestFoesCount = kNearestFoes;
+            for (int j = 0; j < kNearestFoes; j++) {
+                var agentIndex = foesResults[i * kNearestFoes + j];
+                var nextAgent = agentsAsFoePoints[agentIndex];
+                agent.closestFoes[j] = nextAgent;    
             }
         }
 
-        points.Dispose();
-        kdTreeContainer.Dispose();
-        results.Dispose();
-        queryPositions.Dispose();
+        var KNearestAlies = Mathf.Min(aliesPoints.Length, kNearestQueryMax);
+        var aliesResults = new NativeArray<int>(foesPoints.Length * KNearestAlies, Allocator.TempJob);
+        var foesQueryPositions = new NativeArray<float3>(foesPoints, Allocator.TempJob);
+
+        var aliesBatchQueryJob = new QueryKNearestBatchJob(alieKdTreeContainer, foesQueryPositions, aliesResults);
+        aliesBatchQueryJob.ScheduleBatch(foesQueryPositions.Length, foesQueryPositions.Length / 32).Complete();
+
+        for (int i = 0; i < foesPoints.Length; i++) {
+            var agent = agentsAsFoePoints[i];
+            agent.closestFoesCount = KNearestAlies;
+            for (int j = 0; j < KNearestAlies; j++) {
+                var agentIndex = aliesResults[i * KNearestAlies + j];
+                var nextAgent = agentsAsAliePoints[agentIndex];
+                agent.closestFoes[j] = nextAgent;
+            }
+        }
+
+        foesPoints.Dispose();
+        aliesPoints.Dispose();
+        foeKdTreeContainer.Dispose();
+        alieKdTreeContainer.Dispose();
+        foesResults.Dispose();
+        aliesResults.Dispose();
+        alieQueryPositions.Dispose();
+        foesQueryPositions.Dispose();
     }
 
-    public int AddGroup() {
-        var nextGroupId = groupIdCounter++;
-        var agentsList = new List<int>(128);
-        agentToGroupRegistry[nextGroupId] = agentsList;
-        return nextGroupId;
-    }
-
-    public int RegisterAgent(Vector3 position, int groupId = -1, float height = 1f) {
+    public int RegisterAgent(Vector3 position, bool alie, float height = 1f) {
         var agentId = idCounter++;
         var spatialMarker = CreateSpatialMarker(agentId, position, height, 0.3f);
         var agent = new CombatAgent { 
             agentId = agentId, 
-            groupId = groupId,
+            alie = alie,
             spatialMarker = spatialMarker, 
         };
         
         markerToAgent[spatialMarker] = agent;
         agents[agentId] = agent;
-
-        var groupRegistry = GetGroupRegistry(groupId);
-        groupRegistry.Add(agentId);
+        
+        if (alie) alies.Add(agentId);
+        else foes.Add(agentId);
         
         return agentId;
     }
 
     public void UnregisterAgent(int agentId) {
         var agent = agents[agentId];
-        var agentGroupRegistry = GetGroupRegistry(agent.groupId);
-        agentGroupRegistry.Remove(agentId);
+        
+        if (agent.alie) alies.Remove(agentId);
+        else foes.Remove(agentId);
+            
         markerToAgent.Remove(agent.spatialMarker);
         GameObject.Destroy(agent.spatialMarker.gameObject);
         agents.Remove(agentId);
@@ -203,26 +229,24 @@ public class CombatService {
         targetAgent.damageSourcePosition = sourceAgent.spatialMarker.transform.position;
     }
 
-    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = UnspecifiedGroupId) {
+    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo) {
         var sourceAgent = agents[combatAgentId];
         var sourceAgentPosition = sourceAgent.spatialMarker.transform.position;
-        bool checkGroup = excludeGroup != UnspecifiedGroupId;
-        CombatAgent closestAgent = null;
+        CombatAgent closestFoe = null;
 
-        for (int i = sourceAgent.closestAgentsCount - 1; i >= 0; i--) {
-            var nextAgent = sourceAgent.closestAgents[i];
-            if ((checkGroup && nextAgent.groupId == excludeGroup)
-                || nextAgent.agentId == combatAgentId)
+        for (int i = sourceAgent.closestFoesCount - 1; i >= 0; i--) {
+            var nextAgent = sourceAgent.closestFoes[i];
+            if (nextAgent.agentId == combatAgentId)
                 continue;
             
             if (Vector3.Distance(nextAgent.spatialMarker.transform.position, sourceAgentPosition) < radius)
-                closestAgent = nextAgent;
+                closestFoe = nextAgent;
             
             break;
         }
         
-        if (closestAgent != null) {
-            agentInfo = GetAgentInfo(closestAgent);
+        if (closestFoe != null) {
+            agentInfo = GetAgentInfo(closestFoe);
             return true;
         }
 
@@ -233,15 +257,10 @@ public class CombatService {
     private AgentInfo GetAgentInfo(CombatAgent agent) {
         return new AgentInfo {
             id = agent.agentId,
-            groupId = agent.groupId,
+            alie = agent.alie,
             position = agent.spatialMarker.transform.position,
             height = agent.spatialMarker.height
         };
-    }
-
-    private List<int> GetGroupRegistry(int groupId) {
-        var defaultCheckedGroupId = groupId == -1 ? registeredDefaultGroupId : groupId;
-        return agentToGroupRegistry[defaultCheckedGroupId];
     }
 
     private CapsuleCollider CreateSpatialMarker(int id, Vector3 position, float height, float radius) {

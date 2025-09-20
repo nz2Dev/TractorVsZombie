@@ -16,7 +16,7 @@ public class CombatServiceTest {
 
     [UnityTest]
     public IEnumerator TestRegisterAgent_EmptyState() {
-        var agent = combatService.RegisterAgent(new Vector3(0, 0, 0));
+        var agent = combatService.RegisterAgent(new Vector3(0, 0, 0), alie: true);
         yield return null;
         Assert.That(combatService.GetAgentState(agent).exploded, Is.False);
         Assert.That(combatService.GetAgentState(agent).projectiled, Is.False);
@@ -25,8 +25,8 @@ public class CombatServiceTest {
 
     [UnityTest]
     public IEnumerator TestApplyProjectile_RegisterProjectiledDamage() {
-        var agent1 = combatService.RegisterAgent(new Vector3(0, 0, 0));
-        var agent2 = combatService.RegisterAgent(new Vector3(0, 0, 2));
+        var agent1 = combatService.RegisterAgent(new Vector3(0, 0, 0), alie: true);
+        var agent2 = combatService.RegisterAgent(new Vector3(0, 0, 2), alie: true);
         yield return new WaitForFixedUpdate();
         var applyResult = combatService.ApplyProjectileDamage(agent1, new Vector3(0, 0, 1.9f), Vector3.forward, 1);
         Assert.That(applyResult, Is.True);
@@ -35,31 +35,41 @@ public class CombatServiceTest {
 
     [UnityTest]
     public IEnumerator TestGetClosestFoeOfDifferentGroup_DoNotIncludeFriendlyAgentId() {
-        var group1 = combatService.AddGroup();
-        var friendlyAgent1 = combatService.RegisterAgent(new Vector3(0, 0, 0), group1);
-        var friendlyAgent2 = combatService.RegisterAgent(new Vector3(0, 0, 1), group1);
-        var foeAgent = combatService.RegisterAgent(new Vector3(0, 0, 2));
+        var friendlyAgent1 = combatService.RegisterAgent(new Vector3(0, 0, 0), alie: true);
+        var friendlyAgent2 = combatService.RegisterAgent(new Vector3(0, 0, 1), alie: true);
+        var foeAgent = combatService.RegisterAgent(new Vector3(0, 0, 2), alie: false);
 
         yield return new WaitForFixedUpdate();
         combatService.UpdateSpatialTree();
-        var enemyFound = combatService.GetClosestEnemyAgentInRange(friendlyAgent1, radius: 3, out var agentInfo, excludeGroup: group1);
+        var enemyFound = combatService.GetClosestEnemyAgentInRange(friendlyAgent1, radius: 3, out var agentInfo);
         Assert.That(enemyFound, Is.True);
         Assert.That(agentInfo.id, Is.Not.EqualTo(friendlyAgent2));
-        Assert.That(agentInfo.groupId, Is.Not.EqualTo(group1));
+        Assert.That(agentInfo.id, Is.EqualTo(foeAgent));
     }
 
     [UnityTest]
     public IEnumerator TestGetClosestEnemyInRadius_ReturnClosestByDistance() {
-        var agent3 = combatService.RegisterAgent(new Vector3(2, 0, 2));
-        var agent0 = combatService.RegisterAgent(new Vector3(0, 0, 0));
-        var agent2 = combatService.RegisterAgent(new Vector3(2, 0, 1));
-        var agent1 = combatService.RegisterAgent(new Vector3(1, 0, 1));
+        var agent3 = combatService.RegisterAgent(new Vector3(2, 0, 2), alie: false);
+        var alie = combatService.RegisterAgent(new Vector3(0, 0, 0), alie: true);
+        var agent2 = combatService.RegisterAgent(new Vector3(2, 0, 1), alie: false);
+        var agent1 = combatService.RegisterAgent(new Vector3(1, 0, 1), alie: false);
 
         yield return new WaitForFixedUpdate();
         combatService.UpdateSpatialTree();
-        var isRegistered = combatService.GetClosestEnemyAgentInRange(agent0, 3, out var closestAgent);
+        var isRegistered = combatService.GetClosestEnemyAgentInRange(alie, 3, out var closestAgent);
         Assert.That(isRegistered, Is.True);
         Assert.That(closestAgent.id, Is.EqualTo(agent1));
+    }
+
+    [UnityTest]
+    public IEnumerator TestGetClosestEnemyOnEmpty_ReturnFalse() {
+        var alie = combatService.RegisterAgent(new Vector3(2, 0, 2), alie: true);
+        
+        yield return new WaitForFixedUpdate();
+        combatService.UpdateSpatialTree();
+        var hasClosest = combatService.GetClosestEnemyAgentInRange(alie, 3, out var closest);
+        
+        Assert.That(hasClosest, Is.False);
     }
 
 }

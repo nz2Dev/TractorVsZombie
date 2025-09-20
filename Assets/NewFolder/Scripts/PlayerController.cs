@@ -22,7 +22,6 @@ public class PlayerController {
     private readonly RocketLauncherConfig launcherConfig;
     
     private int turelIdCounter;
-    private int turelsCombatGroupId;
     private readonly List<Turel> turels = new ();
     private readonly Dictionary<int, int> turelToCombatId = new ();
     private readonly Dictionary<int, Vehicle> turelToVehicle = new ();
@@ -55,7 +54,6 @@ public class PlayerController {
     }
 
     public void Init() {
-        turelsCombatGroupId = combatService.AddGroup();
         SpawnDriveVehicle(Vector3.zero);
 
         for (int i = 0; i < trailersCount; i++) {
@@ -120,7 +118,7 @@ public class PlayerController {
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData, driveVehicleBlueprint.visualsId);
         
         vehicles.Add(driveVehicle);
-        driveVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, turelsCombatGroupId);
+        driveVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
     }
 
     private void SpawnTrailerVehicle(Vector3 position) {
@@ -178,7 +176,7 @@ public class PlayerController {
 
         rocketLauncherToVehicle[rocketLauncher.Id] = host;
 
-        var rocketLauncherCombatId = combatService.RegisterAgent(rocketLauncher.Position, turelsCombatGroupId);
+        var rocketLauncherCombatId = combatService.RegisterAgent(rocketLauncher.Position, alie: true);
         rocketLauncherToCombatId[launcherId] = rocketLauncherCombatId;
 
         rocketLauncherRocketsRegistry[launcherId] = new List<Rocket>();
@@ -196,7 +194,7 @@ public class PlayerController {
     private void OperateRocketLaunchers() {
         foreach (var rocketLauncher in rocketLaunchers) {
             var launcherCombatId = rocketLauncherToCombatId[rocketLauncher.Id];
-            if (combatService.GetClosestEnemyAgentInRange(launcherCombatId, rocketLauncher.Radius, out var agentInfo, excludeGroup: turelsCombatGroupId)) {
+            if (combatService.GetClosestEnemyAgentInRange(launcherCombatId, rocketLauncher.Radius, out var agentInfo)) {
                 rocketLauncher.Aim(agentInfo.position);
             }
             
@@ -267,7 +265,7 @@ public class PlayerController {
 
         turelToVehicle[turel.Id] = host;
         
-        var turelCombatId = combatService.RegisterAgent(turel.Position, groupId: turelsCombatGroupId);
+        var turelCombatId = combatService.RegisterAgent(turel.Position, alie: true);
         turelToCombatId[turel.Id] = turelCombatId;
 
         var turelProjectilesGroupId = projectileService.AddGroup();
@@ -287,7 +285,7 @@ public class PlayerController {
         foreach (var turel in turels) {    
             var turelCombatId = turelToCombatId[turel.Id];
             
-            if (combatService.GetClosestEnemyAgentInRange(turelCombatId, 20, out var closestEnemyAgent, excludeGroup: turelsCombatGroupId)) {
+            if (combatService.GetClosestEnemyAgentInRange(turelCombatId, 20, out var closestEnemyAgent)) {
                 var aimPoint = closestEnemyAgent.position + 0.5f * closestEnemyAgent.height * Vector3.up;
                 turel.Aim(Time.deltaTime, aimPoint);
             }
