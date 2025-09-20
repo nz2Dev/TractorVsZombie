@@ -30,6 +30,8 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private RocketLauncherVisuals rocketLauncherVisualsPrefab;
     [SerializeField] private RocketLauncherConfig rocketLauncherConfig;
 
+    private CombatService combatService;
+
     private PlayerController playerController;
     private CameraController cameraController;
     private UnitController unitController;
@@ -40,7 +42,7 @@ public class GameBootstrapper : MonoBehaviour {
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
-        var combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), combatServiceEnvironmentMask);
+        combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), combatServiceEnvironmentMask);
         var projectileService = projectileServiceImpl;
 
         var vehicleView = new VehicleView(null);
@@ -82,6 +84,8 @@ public class GameBootstrapper : MonoBehaviour {
     private static readonly ProfilerMarker playerUpdateMarker = new ProfilerMarker("Game.PlayerController");
 
     private void Update() {
+        combatService.UpdateSpatialTree();
+        
         if (cameraComponent)
             using (cameraUpdateMarker.Auto())
                 cameraController.Update();

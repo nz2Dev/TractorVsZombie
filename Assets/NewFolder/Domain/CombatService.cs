@@ -1,5 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
+using KNN;
+using KNN.Jobs;
+
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
 
 using UnityEngine;
 
@@ -30,6 +38,8 @@ public class CombatService {
         public int damageReceived;
         public Vector3 damageSourcePosition;
         public CapsuleCollider spatialMarker;
+        public CombatAgent[] closestAgents = new CombatAgent[25];
+        public int closestAgentsCount;
 
         internal void ClearState() {
             projectiled = false;
@@ -62,6 +72,47 @@ public class CombatService {
     private readonly Dictionary<Collider, CombatAgent> markerToAgent = new Dictionary<Collider, CombatAgent>();
     
     private readonly Collider[] overlapBuffer = new Collider[256];
+
+    private CombatAgent[] agentsAsPoints = new CombatAgent[512];
+    private int agentsCalculated;
+
+    public void UpdateSpatialTree() {
+        var points = new NativeArray<float3>(agents.Count, Allocator.TempJob);
+        agentsCalculated = agents.Count;
+
+        int index = 0;
+        foreach (var agent in agents.Values) {
+            points[index] = agent.spatialMarker.transform.position;
+            agentsAsPoints[index] = agent;
+            index++;
+        }
+        
+        var kdTreeContainer = new KnnContainer(points, false, Allocator.TempJob);
+        var rebuildJob = new KnnRebuildJob(kdTreeContainer);
+        rebuildJob.Schedule().Complete();
+
+        var kNearest = Mathf.Min(points.Length, 25);
+        var results = new NativeArray<int>(points.Length * kNearest, Allocator.TempJob);
+        var queryPositions = new NativeArray<float3>(points, Allocator.TempJob);
+
+        var batchQueryJob = new QueryKNearestBatchJob(kdTreeContainer, queryPositions, results);
+        batchQueryJob.ScheduleBatch(queryPositions.Length, queryPositions.Length / 32).Complete();
+
+        for (int i = 0; i < agentsCalculated; i++) {
+            var agent = agentsAsPoints[i];
+            agent.closestAgentsCount = kNearest;
+            for (int j = 0; j < kNearest; j++) {
+                var agentIndex = results[i * kNearest + j];
+                var nextAgent = agentsAsPoints[agentIndex];
+                agent.closestAgents[j] = nextAgent;    
+            }
+        }
+
+        points.Dispose();
+        kdTreeContainer.Dispose();
+        results.Dispose();
+        queryPositions.Dispose();
+    }
 
     public int AddGroup() {
         var nextGroupId = groupIdCounter++;
@@ -155,23 +206,19 @@ public class CombatService {
     public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo, int excludeGroup = UnspecifiedGroupId) {
         var sourceAgent = agents[combatAgentId];
         var sourceAgentPosition = sourceAgent.spatialMarker.transform.position;
-        var overlapCount = Physics.OverlapSphereNonAlloc(sourceAgentPosition, radius, overlapBuffer);
         bool checkGroup = excludeGroup != UnspecifiedGroupId;
-        
         CombatAgent closestAgent = null;
-        float closestDistance = float.PositiveInfinity;
-        for (int i = 0; i < overlapCount; i++) {
-            if (!markerToAgent.TryGetValue(overlapBuffer[i], out var overlapAgent) 
-                || (checkGroup && overlapAgent.groupId == excludeGroup)
-                || overlapAgent.agentId == combatAgentId)
+
+        for (int i = sourceAgent.closestAgentsCount - 1; i >= 0; i--) {
+            var nextAgent = sourceAgent.closestAgents[i];
+            if ((checkGroup && nextAgent.groupId == excludeGroup)
+                || nextAgent.agentId == combatAgentId)
                 continue;
             
-            var overlapAgentPosition = overlapAgent.spatialMarker.transform.position;
-            var indexDistance = Vector3.Distance(overlapAgentPosition, sourceAgentPosition);
-            if (indexDistance < closestDistance) {
-                closestDistance = indexDistance;
-                closestAgent = overlapAgent;
-            }
+            if (Vector3.Distance(nextAgent.spatialMarker.transform.position, sourceAgentPosition) < radius)
+                closestAgent = nextAgent;
+            
+            break;
         }
         
         if (closestAgent != null) {

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.akb.knn": "file:/Users/nazarpinonzik/Documents/GitHub/KNN",
     "com.coffee.git-dependency-resolver": "https://github.com/mob-sakai/GitDependencyResolverForUnity.git",
     "com.nebukam.orca": "https://github.com/Nebukam/com.nebukam.orca.git",
     "com.unity.ai.navigation": "1.1.5",
