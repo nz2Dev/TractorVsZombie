@@ -66,12 +66,12 @@ public class CombatService {
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
     private readonly Dictionary<Collider, CombatAgent> markerToAgent = new Dictionary<Collider, CombatAgent>();
     private readonly List<int> alies = new (512);
-    private readonly List<int> foes = new (512);
+    private readonly List<int> foes = new (1024);
     
     private readonly Collider[] overlapBuffer = new Collider[256];
 
     private CombatAgent[] agentsAsAliePoints = new CombatAgent[64];
-    private CombatAgent[] agentsAsFoePoints = new CombatAgent[512];
+    private CombatAgent[] agentsAsFoePoints = new CombatAgent[1024];
 
     public void UpdateSpatialTree() {
         if (foes.Count == 0 || alies.Count == 0)

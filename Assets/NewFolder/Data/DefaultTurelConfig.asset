@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf5c5ce42b234954b10e959488689cf, type: 3}
   m_Name: DefaultTurelConfig
   m_EditorClassIdentifier: 
-  aimSpeed: 1
-  fireCooldown: 0.2
+  aimSpeed: 5
+  fireCooldown: 0.1
   bulletDamage: 10
   bulletSpeed: 15
   gunHeight: 0.41
