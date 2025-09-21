@@ -26,6 +26,7 @@ public class Turel {
 
     public int BulletDamage => config.bulletDamage;
     public float BulletLifetime => config.bulletLifetime;
+    public AudioClip[] BulletShootAudioClips => config.bulletShootAudioClips;
 
     public void Move(Vector3 position) {
         Position = position;

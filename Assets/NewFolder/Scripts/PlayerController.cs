@@ -9,6 +9,7 @@ public class PlayerController {
     private readonly ProjectileService projectileService;
     private readonly VehicleView vehicleView;
     private readonly WeaponView view;
+    private readonly SoundManager soundManager;
 
     private readonly int trailersCount;
     private readonly VehicleBlueprint driveVehicleBlueprint;
@@ -36,21 +37,22 @@ public class PlayerController {
     private int rocketIdCounter;
     private readonly Dictionary<int, List<Rocket>> rocketLauncherRocketsRegistry = new ();
 
-    public PlayerController(VehicleService vehicleService, VehicleView vehicleView, VehicleBlueprint driveVehicle, VehicleBlueprint trailerVehicle, int trailersCount, 
-        CombatService combatService, WeaponView weaponView, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService, 
-        RocketLauncherConfig launcherConfig) {
+    public PlayerController(VehicleService vehicleService, VehicleView vehicleView, VehicleBlueprint driveVehicle, VehicleBlueprint trailerVehicle, int trailersCount,
+        CombatService combatService, WeaponView weaponView, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService,
+        RocketLauncherConfig launcherConfig, SoundManager soundManager) {
         this.view = weaponView;
         this.combatService = interactionService;
         this.turelConfig = turelConfig;
         this.projectileService = projectileService;
         this.launcherConfig = launcherConfig;
-    
+
         this.vehicleService = vehicleService;
         this.vehicleView = vehicleView;
         this.driveVehicleBlueprint = driveVehicle;
         this.trailerVehicleBlueprint = trailerVehicle;
         this.trailersCount = trailersCount;
         this.combatService = combatService;
+        this.soundManager = soundManager;
     }
 
     public void Init() {
@@ -313,6 +315,7 @@ public class PlayerController {
         var projectileGroupId = turelToProjectileGroupId[turel.Id];
         var projectileId = projectileService.CreateProjectile(projectileGroupId, bullet.firePoint, bullet.velocity, 5f);
         view.ShowBulletShoot(turel.Id, projectileId, bullet.velocity);
+        soundManager.PlayEffect(bullet.firePoint, turel.BulletShootAudioClips);
     }
 
     private void FilterDeadProjectiles() {

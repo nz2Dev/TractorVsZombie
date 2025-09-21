@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameBootstrapper : MonoBehaviour {
     
+    [SerializeField] private SoundManager soundManager;
+    [Space]
     [SerializeField] private string physicsServiceLayer;
     [SerializeField] private string combatServiceLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
@@ -59,7 +61,8 @@ public class GameBootstrapper : MonoBehaviour {
             combatService,
             turelData,
             projectileService,
-            rocketLauncherConfig);
+            rocketLauncherConfig,
+            soundManager);
         
         cameraController = new CameraController(
             cameraService, vehicleService);
