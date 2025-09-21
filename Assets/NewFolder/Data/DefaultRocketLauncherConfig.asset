@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 15
   launchIntervalSec: 3
+  launchEffectClips:
+  - {fileID: 8300000, guid: ad1ce12a189764290b3ff989693f1a3a, type: 3}
   rocketAmplitude: 2.82
   flyDuration: 1.8
   damage: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultTurelConfig
   m_EditorClassIdentifier: 
   aimSpeed: 5
-  fireCooldown: 0.3
+  fireCooldown: 0.2
   bulletDamage: 10
   bulletSpeed: 15
   bulletShootAudioClips:

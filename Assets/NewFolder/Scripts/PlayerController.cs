@@ -218,6 +218,7 @@ public class PlayerController {
         var rocket = new Rocket(nextRocketId, trajectory, Time.time, rocketLauncher.RocketFlyDuration);
         rocketLauncherRocketsRegistry[rocketLauncher.Id].Add(rocket);
         view.ShowRocketFly(rocketLauncher.Id, nextRocketId, trajectory, rocketLauncher.RocketFlyDuration);
+        soundManager.PlayEffect(trajectory.launchPoint, rocketLauncher.RocketLaunchEffects);
     }
 
     private void UpdateRocketLandingCombat() {
