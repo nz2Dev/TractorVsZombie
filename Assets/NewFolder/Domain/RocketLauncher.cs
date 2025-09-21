@@ -24,6 +24,7 @@ public class RocketLauncher {
     public float RocketAmplitude => config.rocketAmplitude;
     public float RocketFlyDuration => config.flyDuration;
     public AudioClip[] RocketLaunchEffects => config.launchEffectClips;
+    public AudioClip[] ExplodeEffectClips => config.explodeEffectClips;
     public int RocketDamage => config.damage;
     public float Radius => config.radius;
 

@@ -16,6 +16,10 @@ MonoBehaviour:
   launchIntervalSec: 3
   launchEffectClips:
   - {fileID: 8300000, guid: ad1ce12a189764290b3ff989693f1a3a, type: 3}
+  explodeEffectClips:
+  - {fileID: 8300000, guid: 3bdce37eb726244ce9175f91824613c8, type: 3}
+  - {fileID: 8300000, guid: 8cb278cd2f7d84ecdb86a26931d0bf02, type: 3}
+  - {fileID: 8300000, guid: 927e710ce94cf4e42b6a0602fdce3155, type: 3}
   rocketAmplitude: 2.82
   flyDuration: 1.8
   damage: 1

@@ -237,6 +237,7 @@ public class PlayerController {
                     Debug.DrawLine(center, center + Vector3.forward * radius, color, duration);
                     Debug.DrawLine(center, center + Vector3.back * radius, color, duration);
                     view.ShowRocketExplosion(rocketLauncher.Id, rocket.Id);
+                    soundManager.PlayEffect(rocket.Trajectory.landPoint, rocketLauncher.ExplodeEffectClips);
                 }
             }   
         }
