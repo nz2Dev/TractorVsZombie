@@ -53,15 +53,13 @@ public class VehicleService {
         }
     }
 
-    public void SetVehicleGasThrottle(int vehicleIndex, float v) {
-        const float maxTorque = 1000;
+    public void SetVehicleEngineTorque(int vehicleIndex, float engineTorque) {
         const float minTorqueToEaseFriction = 0.1f;
         
-        var engineTorque = v * maxTorque;
         var construction = physicsRegistry[vehicleIndex];
         for (int axisIndex = 0; axisIndex < construction.AxisCount; axisIndex++) {
-            var torque = construction.IsDriveAxis(axisIndex) ? engineTorque : minTorqueToEaseFriction;
-            construction.SetAxisMotorTorque(axisIndex, torque);
+            var axisTorque = construction.IsDriveAxis(axisIndex) ? engineTorque : minTorqueToEaseFriction;
+            construction.SetAxisMotorTorque(axisIndex, axisTorque);
         }
     }
 

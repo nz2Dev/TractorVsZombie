@@ -100,12 +100,26 @@ public class PlayerController {
         UpdateTurelView();
     }
 
+    private float drivePower;
+
     private void ReadDriveVehicleInput() {
         const float maxSteerAngle = 35;
         var gasInput = Input.GetAxis("Vertical");
         var steerInput = Input.GetAxis("Horizontal");
+        var boost = Input.GetKey(KeyCode.Space);
+        var maxPower = boost ? 2 : 1;
 
-        vehicleService.SetVehicleGasThrottle(vehicleIndex: 0, gasInput);
+        var accelerationSpeed = boost ? driveVehicle.PowerAccelerationSpeed * 2 : driveVehicle.PowerAccelerationSpeed;
+        if (gasInput > 0) {
+            drivePower = Mathf.Lerp(drivePower, maxPower, Time.deltaTime * accelerationSpeed);
+        } else {
+            drivePower = 0;
+        }
+
+        var motorTorque = driveVehicle.MaxMotorTorque * drivePower;
+        Debug.Log("motor torque: " + motorTorque);
+
+        vehicleService.SetVehicleEngineTorque(vehicleIndex: 0, motorTorque);
         vehicleService.SetVehicleSteer(vehicleIndex: 0, steerInput * maxSteerAngle);
     }
 
@@ -115,7 +129,7 @@ public class PlayerController {
     }
 
     private void SpawnDriveVehicle(Vector3 driveVehiclePosition) {
-        driveVehicle = new Vehicle(driveVehicleBlueprint.physicsData);
+        driveVehicle = new Vehicle(driveVehicleBlueprint);
         vehicleService.CreateVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData);
         vehicleView.AddVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData, driveVehicleBlueprint.visualsId);
         
@@ -124,7 +138,7 @@ public class PlayerController {
     }
 
     private void SpawnTrailerVehicle(Vector3 position) {
-        var trailerVehicle = new Vehicle(trailerVehicleBlueprint.physicsData);
+        var trailerVehicle = new Vehicle(trailerVehicleBlueprint);
         vehicleService.CreateVehicle(position, trailerVehicleBlueprint.physicsData);
         vehicleView.AddVehicle(position, trailerVehicleBlueprint.physicsData, trailerVehicleBlueprint.visualsId);
 

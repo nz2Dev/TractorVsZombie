@@ -120,7 +120,7 @@ public class VehicleServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var createdPose = vehicleService.GetVehiclePose(vehicleIndex);
 
         vehicleService.SetVehicleSteer(vehicleIndex, steerDegrees);
-        vehicleService.SetVehicleGasThrottle(vehicleIndex, 0.1f);
+        vehicleService.SetVehicleEngineTorque(vehicleIndex, 100f);
         yield return DebugWaitForFixedUpdates(15);
 
         var simulatedPose = vehicleService.GetVehiclePose(vehicleIndex);
@@ -136,7 +136,7 @@ public class VehicleServiceTest : IPrebuildSetup, IPostBuildCleanup {
         var vehicleIndex = CreateDefault4WheelsVehicle(Vector3.zero);
         yield return new WaitForFixedUpdate();
         
-        vehicleService.SetVehicleGasThrottle(vehicleIndex, 0.5f);
+        vehicleService.SetVehicleEngineTorque(vehicleIndex, 500f);
         yield return new WaitForFixedUpdate();
         
         var previousPose = vehicleService.GetVehiclePose(vehicleIndex);

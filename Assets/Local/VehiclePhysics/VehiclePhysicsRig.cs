@@ -264,7 +264,7 @@ public class VehiclePhysicsRig {
             asymptoteValue = 1,
             extremumSlip = 0.8f,
             extremumValue = 0.5f,
-            stiffness = 1,
+            stiffness = 4,
         };
         wheelCollider.sidewaysFriction = new WheelFrictionCurve {
             asymptoteSlip = 0.2f,

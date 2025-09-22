@@ -32,4 +32,6 @@ public struct VehicleVisualsData {
 public class VehicleBlueprint : ScriptableObject {
     public VehicleVisualsData visualsId;
     public VehiclePhysicsData physicsData;
+    public float powerAccelerationSpeed = 1;
+    public float maxTorque = 1000;
 }
