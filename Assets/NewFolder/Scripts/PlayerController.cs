@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -10,6 +11,7 @@ public class PlayerController {
     private readonly VehicleView vehicleView;
     private readonly WeaponView view;
     private readonly SoundManager soundManager;
+    private readonly CameraManager cameraManager;
 
     private readonly int trailersCount;
     private readonly VehicleBlueprint driveVehicleBlueprint;
@@ -39,7 +41,7 @@ public class PlayerController {
 
     public PlayerController(VehicleService vehicleService, VehicleView vehicleView, VehicleBlueprint driveVehicle, VehicleBlueprint trailerVehicle, int trailersCount,
         CombatService combatService, WeaponView weaponView, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService,
-        RocketLauncherConfig launcherConfig, SoundManager soundManager) {
+        RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager) {
         this.view = weaponView;
         this.combatService = interactionService;
         this.turelConfig = turelConfig;
@@ -53,9 +55,12 @@ public class PlayerController {
         this.trailersCount = trailersCount;
         this.combatService = combatService;
         this.soundManager = soundManager;
+        this.cameraManager = cameraManager;
     }
 
     public void Init() {
+        cameraManager.InitTopDownFollowTarget(Vector3.zero);
+        
         SpawnDriveVehicle(Vector3.zero);
 
         for (int i = 0; i < trailersCount; i++) {
@@ -87,6 +92,8 @@ public class PlayerController {
         UpdateVehiclesView();
         UpdateDriveVehicleCombat();
 
+        UpdateCamera();
+
         UpdateRocketLandingCombat();
         FilterElapsedRockets();
         UpdateRocketLauncherOrientation();
@@ -100,6 +107,10 @@ public class PlayerController {
         OperateTurels();
         UpdateTurelsCombatState();
         UpdateTurelView();
+    }
+
+    private void UpdateCamera() {
+        cameraManager.UpdateTopDownFollowPosition(driveVehicle.BodyPose.position);
     }
 
     private void ReadDriveVehicleInput() {

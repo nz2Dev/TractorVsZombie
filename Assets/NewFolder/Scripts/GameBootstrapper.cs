@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameBootstrapper : MonoBehaviour {
     
     [SerializeField] private SoundManager soundManager;
+    [SerializeField] private CameraManager cameraManager;
     [Space]
     [SerializeField] private string physicsServiceLayer;
     [SerializeField] private string combatServiceLayer;
@@ -17,8 +18,6 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private FlowFieldsSurface flowFieldsSurface;
     [SerializeField] private ORCAEnvironment orcaEnvironment;
     [SerializeField] private UnitVisuals unitVisualsPrefab;
-    [Space]
-    [SerializeField] private bool cameraComponent = true;
     [Space]
     [SerializeField] private bool playerComponent = true;
     [SerializeField] private VehiclePhysicsRoot vehiclePhysicsRoot;
@@ -35,12 +34,10 @@ public class GameBootstrapper : MonoBehaviour {
     private CombatService combatService;
 
     private PlayerController playerController;
-    private CameraController cameraController;
     private UnitController unitController;
 
     private void Start() {
         var vehicleService = new VehicleService(vehiclePhysicsRoot);
-        var cameraService = new CameraService(Camera.main);
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
@@ -62,10 +59,9 @@ public class GameBootstrapper : MonoBehaviour {
             turelData,
             projectileService,
             rocketLauncherConfig,
-            soundManager);
-        
-        cameraController = new CameraController(
-            cameraService, vehicleService);
+
+            soundManager,
+            cameraManager);
 
         unitController = new UnitController(
             localAvoidanceService,
@@ -79,7 +75,6 @@ public class GameBootstrapper : MonoBehaviour {
 
         if (playerComponent) playerController.Init();
         if (unitsComponent) unitController.Init();
-        if (cameraComponent) cameraController.Init();
     }
 
     private static readonly ProfilerMarker cameraUpdateMarker = new ProfilerMarker("Game.CameraController");
@@ -88,10 +83,6 @@ public class GameBootstrapper : MonoBehaviour {
 
     private void Update() {
         combatService.UpdateSpatialTree();
-        
-        if (cameraComponent)
-            using (cameraUpdateMarker.Auto())
-                cameraController.Update();
         
         if (unitsComponent) 
             using (unitUpdateMarker.Auto()) 
