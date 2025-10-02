@@ -82,8 +82,10 @@ public class PlayerController {
     public void Update() {
         ReadVehiclesOrientation();
         ReadDriveVehicleInput();
+        UpdateDriveVehiclePhysics();
+        UpdateDriveVehicleSounds();
         UpdateVehiclesView();
-        UpdateVehicleCombat();
+        UpdateDriveVehicleCombat();
 
         UpdateRocketLandingCombat();
         FilterElapsedRockets();
@@ -100,34 +102,27 @@ public class PlayerController {
         UpdateTurelView();
     }
 
-    private float drivePower;
-
     private void ReadDriveVehicleInput() {
-        const float maxSteerAngle = 35;
-        var gasInput = Input.GetAxis("Vertical");
         var steerInput = Input.GetAxis("Horizontal");
+        driveVehicle.Steer(steerInput);
+
+        var gasInput = Input.GetAxis("Vertical");
         var boost = Input.GetKey(KeyCode.Space);
-        var maxPower = boost ? 2 : 1;
+        driveVehicle.Throttle(gasInput, Time.deltaTime, boost);
+    }
 
-        var accelerationSpeed = boost ? driveVehicle.PowerAccelerationSpeed * 2 : driveVehicle.PowerAccelerationSpeed;
-        if (gasInput > 0) {
-            drivePower = Mathf.Lerp(drivePower, maxPower, Time.deltaTime * accelerationSpeed);
-        } else {
-            drivePower = 0;
-        }
+    private void UpdateDriveVehiclePhysics() {
+        vehicleService.SetVehicleEngineTorque(vehicleIndex: 0, driveVehicle.MotorTorque);
+        vehicleService.SetVehicleSteer(vehicleIndex: 0, driveVehicle.SteerDegrees);
+    }
 
-        var motorTorque = driveVehicle.MaxMotorTorque * drivePower;
-        Debug.Log("motor torque: " + motorTorque);
-
-        vehicleService.SetVehicleEngineTorque(vehicleIndex: 0, motorTorque);
-        vehicleService.SetVehicleSteer(vehicleIndex: 0, steerInput * maxSteerAngle);
-
-        var enginePitch = 0.5f + gasInput;
-        var engineVolume = 0.5f + gasInput;
+    private void UpdateDriveVehicleSounds() {
+        var enginePitch = 0.5f + driveVehicle.DrivePower;
+        var engineVolume = 0.5f + driveVehicle.DrivePower;
         soundManager.UpdateLoop(driveVehicleEngineSoundId, driveVehicle.BodyPose.position, enginePitch, engineVolume);
     }
 
-    private void UpdateVehicleCombat() {
+    private void UpdateDriveVehicleCombat() {
         combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehicle.BodyPose.position);
         combatService.ApplyExplosionDamage(driveVehicleCombatId, driveVehicle.BodyPose.position, radius: 1, damage: 0);
     }

@@ -21,14 +21,33 @@ public class Vehicle {
     public WheelAxisPose[] WheelAxisPoses { get; private set; }
     public Quaternion? TowingTonqueRotation { get; private set; }
 
-    public float PowerAccelerationSpeed => blueprint.powerAccelerationSpeed;
-    public float MaxMotorTorque => blueprint.maxTorque;
-    public AudioClip EngineIdleSound => blueprint.engineIdleSound;
+    private float drivePower;
+    private float steeringDegrees;
 
     public Vehicle(VehicleBlueprint blueprint) {
         WheelAxisPoses = new WheelAxisPose[blueprint.physicsData.wheelAxisDatas.Length];
         TowingTonqueRotation = blueprint.physicsData.towingTongueLength > 0 ? default(Quaternion) : null;
         this.blueprint = blueprint;
+    }
+
+    public AudioClip EngineIdleSound => blueprint.engineIdleSound;
+    public float DrivePower => drivePower;
+    public float MotorTorque => drivePower * blueprint.maxTorque;
+    public float SteerDegrees => steeringDegrees;
+
+    public void Steer(float steerAmount) {
+        const float maxSteerAngle = 35;
+        this.steeringDegrees = steerAmount * maxSteerAngle;
+    }
+
+    public void Throttle(float gas, float deltaTime, bool boost) {
+        var maxPower = boost ? 2 : 1;
+        var accelerationSpeed = boost ? blueprint.powerAccelerationSpeed * 2 : blueprint.powerAccelerationSpeed;
+        if (gas > 0) {
+            drivePower = Mathf.Lerp(drivePower, maxPower, deltaTime * accelerationSpeed);
+        } else {
+            drivePower = 0;
+        }
     }
 
     public void OrientBody(VehicleBodyPose bodyPose) {
