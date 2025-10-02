@@ -18,7 +18,7 @@ public class PlayerController {
     private readonly List<Vehicle> vehicles = new ();
     private Vehicle driveVehicle;
     private int driveVehicleCombatId;
-
+    private int driveVehicleEngineSoundId;
     private readonly TurelConfig turelConfig;
     private readonly RocketLauncherConfig launcherConfig;
     
@@ -121,6 +121,10 @@ public class PlayerController {
 
         vehicleService.SetVehicleEngineTorque(vehicleIndex: 0, motorTorque);
         vehicleService.SetVehicleSteer(vehicleIndex: 0, steerInput * maxSteerAngle);
+
+        var enginePitch = 0.5f + gasInput;
+        var engineVolume = 0.5f + gasInput;
+        soundManager.UpdateLoop(driveVehicleEngineSoundId, driveVehicle.BodyPose.position, enginePitch, engineVolume);
     }
 
     private void UpdateVehicleCombat() {
@@ -135,6 +139,8 @@ public class PlayerController {
         
         vehicles.Add(driveVehicle);
         driveVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
+
+        driveVehicleEngineSoundId = soundManager.StartLoop(driveVehicle.BodyPose.position, driveVehicle.EngineIdleSound);
     }
 
     private void SpawnTrailerVehicle(Vector3 position) {

@@ -23,6 +23,7 @@ public class Vehicle {
 
     public float PowerAccelerationSpeed => blueprint.powerAccelerationSpeed;
     public float MaxMotorTorque => blueprint.maxTorque;
+    public AudioClip EngineIdleSound => blueprint.engineIdleSound;
 
     public Vehicle(VehicleBlueprint blueprint) {
         WheelAxisPoses = new WheelAxisPose[blueprint.physicsData.wheelAxisDatas.Length];
