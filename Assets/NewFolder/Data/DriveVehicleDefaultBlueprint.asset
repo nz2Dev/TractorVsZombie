@@ -33,5 +33,5 @@ MonoBehaviour:
       drive: 0
       stear: 1
     towingTongueLength: 0
-  powerAccelerationSpeed: 10
-  maxTorque: 1000
+  powerAccelerationSpeed: 1
+  maxTorque: 100
