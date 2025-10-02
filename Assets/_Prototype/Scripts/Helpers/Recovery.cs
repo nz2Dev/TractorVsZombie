@@ -22,7 +22,7 @@ public class Recovery : MonoBehaviour {
 
             var attachedRigidbody = GetComponent<Rigidbody>();
             if (attachedRigidbody != null) {
-                attachedRigidbody.velocity = Vector3.zero;
+                attachedRigidbody.linearVelocity = Vector3.zero;
                 attachedRigidbody.angularVelocity = Vector3.zero;
             }
         }

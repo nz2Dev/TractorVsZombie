@@ -45,9 +45,9 @@ public class PhysicsForceTest : IPrebuildSetup, IPostBuildCleanup {
             if (i < 1) {
                 cubeRigidbody.AddForce(Vector3.forward * 10, ForceMode.VelocityChange);
             }
-            Debug.Log($"{i} [ acc F {cubeRigidbody.GetAccumulatedForce()}, velocity: {cubeRigidbody.velocity}");
+            Debug.Log($"{i} [ acc F {cubeRigidbody.GetAccumulatedForce()}, velocity: {cubeRigidbody.linearVelocity}");
             yield return new WaitForFixedUpdate();
-            Debug.Log($"{i} ] acc F {cubeRigidbody.GetAccumulatedForce()}, velocity: {cubeRigidbody.velocity}");
+            Debug.Log($"{i} ] acc F {cubeRigidbody.GetAccumulatedForce()}, velocity: {cubeRigidbody.linearVelocity}");
         }
 
         Assert.That(cubeRigidbody.transform.position, Is.Not.EqualTo(initiPosition));

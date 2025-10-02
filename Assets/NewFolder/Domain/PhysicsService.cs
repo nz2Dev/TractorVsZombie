@@ -130,8 +130,8 @@ public class PhysicsService {
             return new PhysicsEntityPose(
                 rb.position,
                 rb.rotation,
-                rb.velocity,
-                inMotion: rb.velocity.sqrMagnitude > 0.75f,
+                rb.linearVelocity,
+                inMotion: rb.linearVelocity.sqrMagnitude > 0.75f,
                 pending: !rb.isKinematic
             );
         }

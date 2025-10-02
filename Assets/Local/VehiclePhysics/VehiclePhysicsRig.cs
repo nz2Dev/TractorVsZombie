@@ -58,12 +58,12 @@ public class VehiclePhysicsRig {
         var baseCollider = baseGameObject.GetComponent<BoxCollider>();
         baseCollider.center = new Vector3(0, baseSize.y * 0.5f, 0);
         baseCollider.size = baseSize;
-        baseCollider.material = new PhysicMaterial {
+        baseCollider.material = new PhysicsMaterial {
             dynamicFriction = 0,
             staticFriction = 0,
             bounciness = 0.1f,
-            bounceCombine = PhysicMaterialCombine.Average,
-            frictionCombine = PhysicMaterialCombine.Minimum,
+            bounceCombine = PhysicsMaterialCombine.Average,
+            frictionCombine = PhysicsMaterialCombine.Minimum,
         };
     }
 
