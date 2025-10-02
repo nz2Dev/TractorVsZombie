@@ -23,6 +23,7 @@ public class PhysicsService {
         public GameObject GameObject { get; }
         public CapsuleCollider Collider { get; }
         public Rigidbody Rigidbody { get; }
+        public float ExplosionTime { get; set; } = float.NegativeInfinity;
 
         public PhysicsEntity(int id, GameObject go, CapsuleCollider collider, Rigidbody rb) {
             Id = id;
@@ -77,7 +78,9 @@ public class PhysicsService {
     }
 
     public void AddExplosionForce(int id, float force, Vector3 position, float radius, float upwardsModifier = 0, ForceMode mode = ForceMode.Force) {
-        entities[id].Rigidbody.AddExplosionForce(force, position, radius, upwardsModifier, mode);
+        var entity = entities[id];
+        entity.Rigidbody.AddExplosionForce(force, position, radius, upwardsModifier, mode);
+        entity.ExplosionTime = Time.time;
     }
 
     public void UpdatePhysicsEntityShape(int id, float height, float radius) {
@@ -127,11 +130,13 @@ public class PhysicsService {
     public PhysicsEntityPose GetEntityPose(int id) {
         if (entities.TryGetValue(id, out var entity)) {
             var rb = entity.Rigidbody;
+            const float minFlyTime = 0.5f;
+            var isInMotion = entity.ExplosionTime + minFlyTime > Time.time || rb.linearVelocity.sqrMagnitude > 0.75f;
             return new PhysicsEntityPose(
                 rb.position,
                 rb.rotation,
                 rb.linearVelocity,
-                inMotion: rb.linearVelocity.sqrMagnitude > 0.75f,
+                inMotion: isInMotion,
                 pending: !rb.isKinematic
             );
         }
