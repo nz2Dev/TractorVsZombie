@@ -34,6 +34,7 @@ public class Vehicle {
     public float DrivePower => drivePower;
     public float MotorTorque => drivePower * blueprint.maxTorque;
     public float SteerDegrees => steeringDegrees;
+    public float RamRadius => blueprint.ramRadius;
 
     public void Steer(float steerAmount) {
         const float maxSteerAngle = 35;
