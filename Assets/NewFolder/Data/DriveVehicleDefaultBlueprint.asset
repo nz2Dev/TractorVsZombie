@@ -43,3 +43,4 @@ MonoBehaviour:
   hitImpactSounds:
   - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
   ramRadius: 0.5
+  rewardCollectRadius: 0.5

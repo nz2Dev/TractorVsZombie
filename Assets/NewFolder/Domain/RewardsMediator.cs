@@ -12,6 +12,7 @@ public class RewardsMediator {
     private class Reward {
         public int id;
         public SphereCollider marker;
+        public int spawnFrame;
     }
     
     private readonly int rewardLayer;
@@ -37,7 +38,7 @@ public class RewardsMediator {
         int nextRewardId = rewardIdCounter++;
         
         var marker = CreateRewardMarker(nextRewardId, position, radius);
-        var reward = new Reward {id = nextRewardId, marker = marker};
+        var reward = new Reward {id = nextRewardId, marker = marker, spawnFrame = Time.frameCount };
         rewards.Add(reward);
         colliderToReward[marker] = reward;
         
@@ -52,7 +53,7 @@ public class RewardsMediator {
         int collectedRewardsCount = 0;
         for (int i = 0; i < rewardsCount; i++) {
             var overlappedCollider = overlapBuffer[i];
-            if (colliderToReward.TryGetValue(overlappedCollider, out var reward)) {
+            if (colliderToReward.TryGetValue(overlappedCollider, out var reward) && reward.spawnFrame != Time.frameCount) {
                 RemoveReward(reward);
                 collectedRewardsCount++;
             }
