@@ -19,6 +19,9 @@ MonoBehaviour:
   physicsData:
     mass: 30
     baseSize: {x: 0.5, y: 0.1, z: 1}
+    wheelMass: 5
+    forwardFrictionStiffness: 1
+    sidewayFrictionStiffness: 1
     wheelAxisDatas:
     - forwardOffset: -0.25
       upOffset: 0
@@ -35,3 +38,7 @@ MonoBehaviour:
     towingTongueLength: 0.7
   powerAccelerationSpeed: 1
   maxTorque: 0
+  maxSteerDegrees: 45
+  engineIdleSound: {fileID: 0}
+  hitImpactSounds: []
+  ramRadius: 0.5

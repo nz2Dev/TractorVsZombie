@@ -49,8 +49,8 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     [UnityTest]
     public IEnumerator CreateHingeWheelAxis_KeepVehicleAtPlace() {
         vehiclePhysics.ConfigureBase(DefaultBaseSize);
-        vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
-        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, 0.25f, 0.1f, 0.7f);
+        vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, 5, false, false);
+        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, 0.25f, 0.1f, 5, 0.7f);
         yield return WaitForSleepState("Vehicle Physics (New)");
 
         Assert.That(vehiclePhysics.Position.XZ(), Is.EqualTo(Vector3.zero.XZ())
@@ -63,8 +63,8 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
         var towingAxisForwardOffset = 0.25f;
         
         vehiclePhysics.ConfigureBase(DefaultBaseSize);
-        vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
-        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, towingBodyLength);
+        vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, 5, false, false);
+        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, 5, towingBodyLength);
         yield return WaitForSleepState("Vehicle Physics (New)");
 
         var towingConnector = vehiclePhysics.GetTowingConnector();
@@ -83,8 +83,8 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
         var targetRigidbody = CreateKinematicRigidbody(targetPosition);
 
         vehiclePhysics.ConfigureBase(DefaultBaseSize);
-        vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, false, false);
-        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, towingBodyLength);
+        vehiclePhysics.CreateWheelAxis(0.4f, 0, -0.25f, 0.1f, 5, false, false);
+        vehiclePhysics.CreateTowingWheelAxis(0.4f, 0, towingAxisForwardOffset, 0.1f, 5, towingBodyLength);
 
         yield return new WaitForFixedUpdate();
         var towingConnector = vehiclePhysics.GetTowingConnector();

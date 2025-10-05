@@ -14,7 +14,7 @@ public struct VehicleBodyPose {
 
 public class Vehicle {
 
-    private VehicleBlueprint blueprint;
+    private readonly VehicleBlueprint blueprint;
 
     public int Id { get; set; }
     public VehicleBodyPose BodyPose { get; private set; }
@@ -30,6 +30,7 @@ public class Vehicle {
         this.blueprint = blueprint;
     }
 
+    public VehiclePhysicsData PhysicsData => blueprint.physicsData;
     public AudioClip EngineIdleSound => blueprint.engineIdleSound;
     public AudioClip[] HitImpactSounds => blueprint.hitImpactSounds;
     public float DrivePower => drivePower;

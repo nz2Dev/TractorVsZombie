@@ -67,10 +67,14 @@ public class VehiclePhysicsRig {
         };
     }
 
-    public void CreateWheelAxis(float length, float upOffset, float forwardOffset, float radius, bool drive, bool steer) {
-        var wheelL = CreateDefaultWheel(radius);
+    public void UpdateBase(float mass) {
+        root.GetComponent<Rigidbody>().mass = mass;
+    }
+
+    public void CreateWheelAxis(float length, float upOffset, float forwardOffset, float radius, float wheelMass, bool drive, bool steer) {
+        var wheelL = CreateDefaultWheel(radius, wheelMass);
         wheelL.transform.localPosition = new Vector3(-length / 2f, upOffset, forwardOffset);
-        var wheelR = CreateDefaultWheel(radius);
+        var wheelR = CreateDefaultWheel(radius, wheelMass);
         wheelR.transform.localPosition = new Vector3(+length / 2f, upOffset, forwardOffset);
         wheelAxes.Add(new WheelAxis {
             leftWheel = wheelL,
@@ -83,10 +87,10 @@ public class VehiclePhysicsRig {
         rigidbody.centerOfMass = new Vector3(0, -radius * 1.5f, 0);
     }
 
-    public void CreateTowingWheelAxis(float axisLength, float upOffset, float forwardOffset, float radius, float hingeLength) {
-        var wheelL = CreateDefaultWheel(radius);
+    public void CreateTowingWheelAxis(float axisLength, float upOffset, float forwardOffset, float radius, float wheelMass, float hingeLength) {
+        var wheelL = CreateDefaultWheel(radius, wheelMass);
         wheelL.transform.localPosition = new Vector3(-axisLength / 2f, upOffset, forwardOffset);
-        var wheelR = CreateDefaultWheel(radius);
+        var wheelR = CreateDefaultWheel(radius, wheelMass);
         wheelR.transform.localPosition = new Vector3(+axisLength / 2f, upOffset, forwardOffset);
         var turningBody = CreateDefaultTurningBody(upOffset - (/*half of suspension distance*/0.05f), forwardOffset, hingeLength);
         
@@ -99,6 +103,15 @@ public class VehiclePhysicsRig {
 
         var rigidbody = root.GetComponent<Rigidbody>();
         rigidbody.centerOfMass = new Vector3(0, -radius * 1.5f, 0);
+    }
+
+    public void UpdateWheels(float mass, WheelFrictionCurve forwardFrictionCurve, WheelFrictionCurve sidewayFrictionCurve) {
+        foreach (var axis in wheelAxes) {
+            axis.leftWheel.mass = mass;
+            axis.leftWheel.forwardFriction = forwardFrictionCurve;
+            axis.rightWheel.mass = mass;
+            axis.leftWheel.sidewaysFriction = sidewayFrictionCurve;
+        }
     }
 
     internal void UpdateTowingWheelAxis() {
@@ -250,7 +263,7 @@ public class VehiclePhysicsRig {
         return rigidbody;
     }
 
-    private WheelCollider CreateDefaultWheel(float radius) {
+    private WheelCollider CreateDefaultWheel(float radius, float mass) {
         var wheel = new GameObject("Default Wheel (New)", typeof(WheelCollider), typeof(WheelDebug));
         wheel.layer = operationLayer;
         wheel.transform.hideFlags = DefaultHideFlag;
@@ -274,7 +287,7 @@ public class VehiclePhysicsRig {
             stiffness = 1.5f,
         };
         wheelCollider.radius = radius;
-        wheelCollider.mass = 5;
+        wheelCollider.mass = mass;
         return wheelCollider;
     }
 

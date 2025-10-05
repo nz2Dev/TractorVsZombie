@@ -26,6 +26,7 @@ public class VehicleService {
                     wheelAxis.upOffset,
                     wheelAxis.forwardOffset,
                     wheelAxis.radius,
+                    physicsData.wheelMass,
                     physicsData.towingTongueLength
                 ); 
             } else {
@@ -34,6 +35,7 @@ public class VehicleService {
                     wheelAxis.upOffset, 
                     wheelAxis.forwardOffset, 
                     wheelAxis.radius, 
+                    physicsData.wheelMass,
                     wheelAxis.drive, 
                     wheelAxis.stear
                 );
@@ -43,6 +45,31 @@ public class VehicleService {
         physicsRegistry.Add(vehiclePhysics);
         var lastVehicleIndex = physicsRegistry.Count - 1;
         return lastVehicleIndex;
+    }
+
+    public void UpdateBase(int vehicleIndex, float mass) {
+        var vehiclePhysics = physicsRegistry[vehicleIndex];
+        vehiclePhysics.UpdateBase(mass);
+    }
+
+    public void UpdateWheels(int vehicleIndex, float mass, float forwardFrictionStiffness, float sidewayFrictionStiffness) {
+        var vehiclePhysics = physicsRegistry[vehicleIndex];
+        vehiclePhysics.UpdateWheels(
+            mass,
+            new WheelFrictionCurve {
+                asymptoteSlip = 0.4f,
+                asymptoteValue = 1,
+                extremumSlip = 0.8f,
+                extremumValue = 0.5f,
+                stiffness = forwardFrictionStiffness,
+            }, 
+            new WheelFrictionCurve {
+                asymptoteSlip = 0.2f,
+                asymptoteValue = 1,
+                extremumSlip = 0.5f,
+                extremumValue = 0.75f,
+                stiffness = sidewayFrictionStiffness,
+            });
     }
 
     public void SetVehicleSteer(int vehicleIndex, float steerDegrees) {

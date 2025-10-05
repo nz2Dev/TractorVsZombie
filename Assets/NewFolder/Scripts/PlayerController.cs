@@ -91,6 +91,7 @@ public class PlayerController {
         UpdateDriveVehicleSounds();
         UpdateVehiclesView();
         UpdateDriveVehicleCombat();
+        UpdateVehiclePhysics();
 
         UpdateCamera();
 
@@ -107,6 +108,15 @@ public class PlayerController {
         OperateTurels();
         UpdateTurelsCombatState();
         UpdateTurelView();
+    }
+
+    private void UpdateVehiclePhysics() {
+        for (int i = 0; i < vehicles.Count; i++) {
+            var vehicle = vehicles[i];
+            var physicsData = vehicle.PhysicsData;
+            vehicleService.UpdateBase(i, physicsData.mass);
+            vehicleService.UpdateWheels(i, physicsData.wheelMass, physicsData.forwardFrictionStiffness, physicsData.sidewayFrictionStiffness);
+        }
     }
 
     private void UpdateCamera() {

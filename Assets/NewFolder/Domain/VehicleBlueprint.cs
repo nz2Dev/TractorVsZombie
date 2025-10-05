@@ -7,6 +7,9 @@ using UnityEngine;
 public struct VehiclePhysicsData {
     public float mass;
     public Vector3 baseSize;
+    public float wheelMass;
+    public float forwardFrictionStiffness;
+    public float sidewayFrictionStiffness;
     public WheelAxisData[] wheelAxisDatas;
     public float towingTongueLength;
 }
