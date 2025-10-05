@@ -30,6 +30,9 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private TurelConfig turelData;
     [SerializeField] private RocketLauncherVisuals rocketLauncherVisualsPrefab;
     [SerializeField] private RocketLauncherConfig rocketLauncherConfig;
+    [Space]
+    [SerializeField] private string rewardsLayerName;
+    [SerializeField] private GameObject rewardVisualsPrefab;
 
     private CombatService combatService;
 
@@ -43,10 +46,12 @@ public class GameBootstrapper : MonoBehaviour {
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), combatServiceEnvironmentMask);
         var projectileService = projectileServiceImpl;
+        var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var vehicleView = new VehicleView(null);
         var unitView = new UnitView(unitVisualsPrefab);
         var weaponView = new WeaponView(turelVisualsPrefab, rocketLauncherVisualsPrefab);
+        var rewardsView = new RewardsView(rewardVisualsPrefab);
 
         playerController = new PlayerController(
             vehicleService, vehicleView,
@@ -61,7 +66,10 @@ public class GameBootstrapper : MonoBehaviour {
             rocketLauncherConfig,
 
             soundManager,
-            cameraManager);
+            cameraManager,
+            
+            rewardsView,
+            rewardsMediator);
 
         unitController = new UnitController(
             localAvoidanceService,
@@ -71,7 +79,8 @@ public class GameBootstrapper : MonoBehaviour {
             targetPoint,
             unitsCount,
             combatService,
-            physicsService);
+            physicsService,
+            rewardsMediator);
 
         if (playerComponent) playerController.Init();
         if (unitsComponent) unitController.Init();

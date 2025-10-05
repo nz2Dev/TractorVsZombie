@@ -8,8 +8,10 @@ public class PlayerController {
     private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
     private readonly ProjectileService projectileService;
+    private readonly RewardsMediator rewardsMediator;
     private readonly VehicleView vehicleView;
     private readonly WeaponView view;
+    private readonly RewardsView rewardsView;
     private readonly SoundManager soundManager;
     private readonly CameraManager cameraManager;
 
@@ -41,7 +43,7 @@ public class PlayerController {
 
     public PlayerController(VehicleService vehicleService, VehicleView vehicleView, VehicleBlueprint driveVehicle, VehicleBlueprint trailerVehicle, int trailersCount,
         CombatService combatService, WeaponView weaponView, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService,
-        RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager) {
+        RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager, RewardsView rewardsView, RewardsMediator rewardsMediator) {
         this.view = weaponView;
         this.combatService = interactionService;
         this.turelConfig = turelConfig;
@@ -56,6 +58,8 @@ public class PlayerController {
         this.combatService = combatService;
         this.soundManager = soundManager;
         this.cameraManager = cameraManager;
+        this.rewardsView = rewardsView;
+        this.rewardsMediator = rewardsMediator;
     }
 
     public void Init() {
@@ -93,6 +97,11 @@ public class PlayerController {
         UpdateDriveVehicleCombat();
         UpdateVehiclePhysics();
 
+        DiscoverRewards();
+        CollectRewards();
+        FilterRemovedRewards();
+        ClearRewardsEvents();
+
         UpdateCamera();
 
         UpdateRocketLandingCombat();
@@ -108,6 +117,28 @@ public class PlayerController {
         OperateTurels();
         UpdateTurelsCombatState();
         UpdateTurelView();
+    }
+
+    private void DiscoverRewards() {
+        foreach (var rewardState in rewardsMediator.RewardAddedEvents) {
+            Debug.Log("spawn reward at : " + rewardState.position);
+            rewardsView.SpawnReward(rewardState.id, rewardState.position);
+        }
+    }
+
+    private void CollectRewards() {
+        rewardsMediator.CollectRewards(driveVehicle.BodyPose.position, driveVehicle.RewardCollectRadius);
+    }
+
+    private void FilterRemovedRewards() {
+        foreach (var rewardState in rewardsMediator.RewardRemovedEvents) {
+            Debug.Log("remove reward at : " + rewardState.position);
+            rewardsView.DespawnReward(rewardState.id);
+        }
+    }
+
+    private void ClearRewardsEvents() {
+        rewardsMediator.ClearEvents();
     }
 
     private void UpdateVehiclePhysics() {

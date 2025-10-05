@@ -41,4 +41,5 @@ public class VehicleBlueprint : ScriptableObject {
     public AudioClip engineIdleSound;
     public AudioClip[] hitImpactSounds;
     public float ramRadius = 0.5f;
+    public float rewardCollectRadius = 2;
 }

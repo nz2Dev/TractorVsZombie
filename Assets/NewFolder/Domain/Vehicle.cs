@@ -37,6 +37,7 @@ public class Vehicle {
     public float MotorTorque => drivePower * blueprint.maxTorque;
     public float SteerDegrees => steeringDegrees;
     public float RamRadius => blueprint.ramRadius;
+    public float RewardCollectRadius => blueprint.rewardCollectRadius;
 
     public void Steer(float steerAmount) {
         this.steeringDegrees = steerAmount * blueprint.maxSteerDegrees;

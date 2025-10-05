@@ -12,6 +12,7 @@ public class UnitController {
     private readonly NavigationService navigationService;
     private readonly CombatService combatService;
     private readonly PhysicsService physicsService;
+    private readonly RewardsMediator rewardsMediator;
 
     private Transform[] spawnPoints;
     private Transform targetPoint;
@@ -25,7 +26,7 @@ public class UnitController {
     private readonly Dictionary<int, int> unitIdToPhysicsId = new Dictionary<int, int>();
 
     public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
-        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService) {
+        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService, RewardsMediator rewardsMediator) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.unitView = crowdView;
@@ -34,6 +35,7 @@ public class UnitController {
         this.unitsCount = unitsCount;
         this.combatService = combatService;
         this.physicsService = physicsService;
+        this.rewardsMediator = rewardsMediator;
     }
 
     private float lastTimeProduced = float.MinValue;
@@ -178,6 +180,8 @@ public class UnitController {
                 
                 combatService.UnregisterAgent(combatId);
                 unitIdToCombatId.Remove(unit.Id);
+
+                rewardsMediator.AddReward(unit.Position, radius: 1);
             }
         }
     }

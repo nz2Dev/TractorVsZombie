@@ -14,6 +14,7 @@ public class RewardsMediator {
         public SphereCollider marker;
     }
     
+    private readonly int rewardLayer;
     private readonly LayerMask rewardsMask;
 
     private int rewardIdCounter;
@@ -25,8 +26,12 @@ public class RewardsMediator {
     private readonly List<RewardState> rewardRemovedEvents = new();
 
     public RewardsMediator(int markersLayer) {
+        this.rewardLayer = markersLayer;
         rewardsMask = 1 << markersLayer;
     }
+
+    public List<RewardState> RewardAddedEvents => rewardSpawnedEvents;
+    public List<RewardState> RewardRemovedEvents => rewardRemovedEvents;
 
     public void AddReward(Vector3 position, float radius) {
         int nextRewardId = rewardIdCounter++;
@@ -72,6 +77,7 @@ public class RewardsMediator {
 
     private SphereCollider CreateRewardMarker(int nextRewardId, Vector3 position, float radius) {
         var gameObject = new GameObject("reward " + nextRewardId, typeof(SphereCollider));
+        gameObject.layer = rewardLayer;
         gameObject.transform.position = position;
         var collider = gameObject.GetComponent<SphereCollider>();
         collider.isTrigger = true;
