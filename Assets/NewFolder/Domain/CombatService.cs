@@ -207,18 +207,20 @@ public class CombatService {
         return true;
     }
 
-    public void ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage) {
+    public int ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage) {
         var sourceAgent = agents[sourceAgentId];
         var overlapCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, agentsMask);
-        
+        int affectedCount = 0;
         for (int i = 0; i < overlapCount; i++) {
             var overlapCollider = overlapBuffer[i];
             if (markerToAgent.TryGetValue(overlapCollider, out var overlapAgent) && overlapAgent.agentId != sourceAgentId) {
                 overlapAgent.exploded = true;
                 overlapAgent.damageReceived = damage;
                 overlapAgent.damageSourcePosition = position;
+                affectedCount++;
             }            
         }
+        return affectedCount;
     }
 
     public void ApplyDirectDamage(int agentId, int targetId, int damage) {

@@ -14,9 +14,7 @@ public class CameraManager : MonoBehaviour {
         if (sceneCamera.GetComponent<CinemachineBrain>() == null) {
             sceneCamera.gameObject.AddComponent<CinemachineBrain>();
         }
-    }
-
-    private void Start() {
+        
         var followGameObject = new GameObject("Camera Follow Target (New)");
         followTransform = followGameObject.transform;
         topDownCamera.m_Follow = followTransform;

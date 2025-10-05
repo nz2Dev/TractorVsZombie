@@ -31,6 +31,7 @@ public class Vehicle {
     }
 
     public AudioClip EngineIdleSound => blueprint.engineIdleSound;
+    public AudioClip[] HitImpactSounds => blueprint.hitImpactSounds;
     public float DrivePower => drivePower;
     public float MotorTorque => drivePower * blueprint.maxTorque;
     public float SteerDegrees => steeringDegrees;

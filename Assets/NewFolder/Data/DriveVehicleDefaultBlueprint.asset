@@ -36,3 +36,6 @@ MonoBehaviour:
   powerAccelerationSpeed: 1
   maxTorque: 100
   engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+  hitImpactSounds:
+  - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
+  ramRadius: 0.5

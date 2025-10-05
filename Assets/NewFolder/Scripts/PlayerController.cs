@@ -135,7 +135,11 @@ public class PlayerController {
 
     private void UpdateDriveVehicleCombat() {
         combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehicle.BodyPose.position);
-        combatService.ApplyExplosionDamage(driveVehicleCombatId, driveVehicle.BodyPose.position, radius: driveVehicle.RamRadius, damage: 0);
+        var affectedCount = combatService.ApplyExplosionDamage(driveVehicleCombatId, driveVehicle.BodyPose.position, radius: driveVehicle.RamRadius, damage: 0);
+        for (int i = 0; i < affectedCount; i++) {
+            var position = driveVehicle.BodyPose.position + UnityEngine.Random.onUnitSphere * driveVehicle.RamRadius;
+            soundManager.PlayEffectDelayed(position, i * 0.05f, driveVehicle.HitImpactSounds);
+        }
     }
 
     private void SpawnDriveVehicle(Vector3 driveVehiclePosition) {
