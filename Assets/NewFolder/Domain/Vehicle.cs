@@ -38,8 +38,7 @@ public class Vehicle {
     public float RamRadius => blueprint.ramRadius;
 
     public void Steer(float steerAmount) {
-        const float maxSteerAngle = 35;
-        this.steeringDegrees = steerAmount * maxSteerAngle;
+        this.steeringDegrees = steerAmount * blueprint.maxSteerDegrees;
     }
 
     public void Throttle(float gas, float deltaTime, bool boost) {
