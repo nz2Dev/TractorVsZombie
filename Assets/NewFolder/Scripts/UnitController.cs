@@ -32,6 +32,8 @@ public class UnitController {
     private float lastTimeProducedVehicle;
     private Transform[] vehiclesSpawnPoints;
     private int maxVehiclesCount;
+    private int lastSpawnIndex;
+
 
     private readonly List<Vehicle> vehicles = new List<Vehicle>();
     private readonly List<int> vehiclePhysics = new List<int>();
@@ -76,16 +78,15 @@ public class UnitController {
     }
 
     private void ProduceNewVehicleUnits() {
+        if (vehicles.Count > maxVehiclesCount)
+            return;
+
         if (lastTimeProducedVehicle + 1f > Time.time)
             return;
 
         lastTimeProducedVehicle = Time.time;
-        for (int i = 0; i < vehiclesSpawnPoints.Length; i += 2) {
-            if (vehicles.Count > maxVehiclesCount)
-                return;
-            
-            SpawnVehicle(vehiclesSpawnPoints[i].position);
-        }
+        var nextSpawnIndex = lastSpawnIndex++ % vehiclesSpawnPoints.Length;
+        SpawnVehicle(vehiclesSpawnPoints[nextSpawnIndex].position);
     }
 
     private void SpawnUnit(Vector3 position) {
