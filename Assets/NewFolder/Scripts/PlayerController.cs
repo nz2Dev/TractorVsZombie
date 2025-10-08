@@ -121,7 +121,6 @@ public class PlayerController {
 
     private void DiscoverRewards() {
         foreach (var rewardState in rewardsMediator.RewardAddedEvents) {
-            Debug.Log("spawn reward at : " + rewardState.position);
             rewardsView.SpawnReward(rewardState.id, rewardState.position);
         }
     }
@@ -132,7 +131,6 @@ public class PlayerController {
 
     private void FilterRemovedRewards() {
         foreach (var rewardState in rewardsMediator.RewardRemovedEvents) {
-            Debug.Log("remove reward at : " + rewardState.position);
             rewardsView.DespawnReward(rewardState.id);
         }
     }
