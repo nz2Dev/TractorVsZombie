@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 public struct WheelAxisPose {
@@ -31,6 +33,7 @@ public class Vehicle {
     }
 
     public VehiclePhysicsData PhysicsData => blueprint.physicsData;
+    public VehicleVisualsData VisualsData => blueprint.visualsId;
     public AudioClip EngineIdleSound => blueprint.engineIdleSound;
     public AudioClip[] HitImpactSounds => blueprint.hitImpactSounds;
     public float DrivePower => drivePower;
@@ -41,6 +44,13 @@ public class Vehicle {
 
     public void Steer(float steerAmount) {
         this.steeringDegrees = steerAmount * blueprint.maxSteerDegrees;
+    }
+
+    public void SteerToward(Vector3 direction) {
+        var rotation = BodyPose.rotation;
+        var forward = rotation * Vector3.forward;
+        var forwardToDirectionDegrees = Vector3.SignedAngle(forward, direction, Vector3.up);
+        this.steeringDegrees = Mathf.Clamp(forwardToDirectionDegrees, -blueprint.maxSteerDegrees, blueprint.maxSteerDegrees);
     }
 
     public void Throttle(float gas, float deltaTime, bool boost) {

@@ -1,3 +1,5 @@
+using Codice.Client.Common.GameUI;
+
 using Unity.Profiling;
 
 using UnityEngine;
@@ -18,6 +20,9 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private FlowFieldsSurface flowFieldsSurface;
     [SerializeField] private ORCAEnvironment orcaEnvironment;
     [SerializeField] private UnitVisuals unitVisualsPrefab;
+    [Space]
+    [SerializeField] private int maxVehicelCount = 10;
+    [SerializeField] private VehicleBlueprint foeVehicle;
     [Space]
     [SerializeField] private bool playerComponent = true;
     [SerializeField] private VehiclePhysicsRoot vehiclePhysicsRoot;
@@ -71,6 +76,7 @@ public class GameBootstrapper : MonoBehaviour {
             rewardsView,
             rewardsMediator);
 
+        var foeVehicelView = new VehicleView(null);
         unitController = new UnitController(
             localAvoidanceService,
             navigationService,
@@ -80,7 +86,13 @@ public class GameBootstrapper : MonoBehaviour {
             unitsCount,
             combatService,
             physicsService,
-            rewardsMediator);
+            rewardsMediator,
+            
+            vehicleService,
+            foeVehicle,
+            maxVehicelCount,
+            foeVehicelView,
+            soundManager);
 
         if (playerComponent) playerController.Init();
         if (unitsComponent) unitController.Init();

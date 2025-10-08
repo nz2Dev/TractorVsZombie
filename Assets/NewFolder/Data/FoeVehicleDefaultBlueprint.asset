@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1285681b6c6549cbb1825d079f7b2b9, type: 3}
+  m_Name: FoeVehicleDefaultBlueprint
+  m_EditorClassIdentifier: 
+  visualsId:
+    baseGeometry: {fileID: 4058983013609224398, guid: f628f9ac28b08472693b1c5f7856da92, type: 3}
+    wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
+    towingBodyGeometry: {fileID: 0}
+  physicsData:
+    mass: 500
+    baseSize: {x: 0.5, y: 0.4, z: 1}
+    wheelMass: 25
+    forwardFrictionStiffness: 2
+    sidewayFrictionStiffness: 1
+    wheelAxisDatas:
+    - forwardOffset: -0.25
+      upOffset: 0.05
+      halfLength: 0.25
+      radius: 0.15
+      drive: 1
+      stear: 0
+    - forwardOffset: 0.25
+      upOffset: 0.05
+      halfLength: 0.25
+      radius: 0.15
+      drive: 1
+      stear: 1
+    towingTongueLength: 0
+  powerAccelerationSpeed: 1
+  maxTorque: 20
+  maxSteerDegrees: 40
+  engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+  hitImpactSounds:
+  - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
+  ramRadius: 0.5
+  rewardCollectRadius: 0.5

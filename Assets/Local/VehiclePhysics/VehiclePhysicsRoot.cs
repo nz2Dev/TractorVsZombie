@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+[ExecuteInEditMode]
 public class VehiclePhysicsRoot : MonoBehaviour { 
 
     [SerializeField] private Transform container;
