@@ -25,6 +25,7 @@ public class Vehicle {
 
     private float drivePower;
     private float steeringDegrees;
+    private float breaksPower;
 
     public Vehicle(VehicleBlueprint blueprint) {
         WheelAxisPoses = new WheelAxisPose[blueprint.physicsData.wheelAxisDatas.Length];
@@ -37,6 +38,7 @@ public class Vehicle {
     public AudioClip EngineIdleSound => blueprint.engineIdleSound;
     public AudioClip[] HitImpactSounds => blueprint.hitImpactSounds;
     public float DrivePower => drivePower;
+    public float BreaksTorque => breaksPower * blueprint.maxBreaksTorque;
     public float MotorTorque => drivePower * blueprint.maxTorque;
     public float SteerDegrees => steeringDegrees;
     public float RamRadius => blueprint.ramRadius;
@@ -61,6 +63,10 @@ public class Vehicle {
         } else {
             drivePower = 0;
         }
+    }
+
+    public void Breaks(float breakingAmount) {
+        this.breaksPower = breakingAmount;
     }
 
     public void OrientBody(VehicleBodyPose bodyPose) {

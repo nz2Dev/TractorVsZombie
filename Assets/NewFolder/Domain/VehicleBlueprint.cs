@@ -36,7 +36,8 @@ public class VehicleBlueprint : ScriptableObject {
     public VehicleVisualsData visualsId;
     public VehiclePhysicsData physicsData;
     public float powerAccelerationSpeed = 1;
-    public float maxTorque = 1000;
+    public float maxTorque = 50;
+    public float maxBreaksTorque = 50;
     public float maxSteerDegrees = 45;
     public AudioClip engineIdleSound;
     public AudioClip[] hitImpactSounds;

@@ -38,6 +38,7 @@ MonoBehaviour:
     towingTongueLength: 0
   powerAccelerationSpeed: 1
   maxTorque: 20
+  maxBreaksTorque: 20
   maxSteerDegrees: 40
   engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   hitImpactSounds:

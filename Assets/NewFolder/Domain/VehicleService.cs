@@ -90,11 +90,10 @@ public class VehicleService {
         }
     }
 
-    public void SetVehicleBreaks(int vehicleIndex, float v) {
-        const float maxBreaksTorque = 400;
+    public void SetVehicleBreaks(int vehicleIndex, float breaksTorque) {
         var construction = physicsRegistry[vehicleIndex];
         for (int axisIndex = 0; axisIndex < construction.AxisCount; axisIndex++) {
-            construction.SetAxisBreaksTorque(axisIndex, v * maxBreaksTorque);
+            construction.SetAxisBreaksTorque(axisIndex, breaksTorque);
         }
     }
 

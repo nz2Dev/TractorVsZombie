@@ -11,7 +11,7 @@ public class UnitController {
     private readonly CombatService combatService;
     private readonly PhysicsService physicsService;
     private readonly RewardsMediator rewardsMediator;
-    
+
     private readonly VehicleService vehicleService;
     private readonly VehicleBlueprint foeVehicleBlueprint;
     private readonly VehicleView vehicleView;
@@ -301,8 +301,14 @@ public class UnitController {
     private void UpdateVehicleNavigation() {
         foreach (var vehicle in vehicles) {
             var distance = Vector3.Distance(targetPoint.position, vehicle.BodyPose.position);
-            var stopDistance = Mathf.Clamp(distance, 0f, 5f) / 5f;
-            vehicle.Throttle(stopDistance, Time.deltaTime, false);
+
+            var gasDistance = 10;
+            var gas = Mathf.Floor(Mathf.Clamp(distance, 0, gasDistance) / gasDistance);
+            vehicle.Throttle(gas, Time.deltaTime, false);
+            
+            var stopDistance = 5f;
+            var breaks = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
+            vehicle.Breaks(breaks);
             var flowVector = navigationService.GetFlowVector(vehicle.BodyPose.position);
             vehicle.SteerToward(flowVector);
         }
@@ -328,6 +334,7 @@ public class UnitController {
             var vehiclePhysicId = vehiclePhysics[vehicleIndex];
             vehicleService.SetVehicleEngineTorque(vehiclePhysicId, vehicle.MotorTorque);
             vehicleService.SetVehicleSteer(vehiclePhysicId, vehicle.SteerDegrees);
+            vehicleService.SetVehicleBreaks(vehiclePhysicId, vehicle.BreaksTorque);
         }
     }
 
