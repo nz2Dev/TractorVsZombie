@@ -203,7 +203,7 @@ public class PlayerController {
         trailerPhysicIds.Add(trailerPhysicsId);
 
         bool isFirstTrailer = trailerVehicles.Count == 1;
-        var headPhysicsId = isFirstTrailer ? driverVehiclePhysicsId : trailerPhysicIds[^1];
+        var headPhysicsId = isFirstTrailer ? driverVehiclePhysicsId : trailerPhysicIds[^2];
         vehicleService.MakeTowingConnection(headPhysicsId, trailerPhysicsId);
         
         var trailerViewId = vehicleView.AddTrailerVehicle(position, trailerVehicle.PhysicsData, trailerVehicle.VisualsData);
