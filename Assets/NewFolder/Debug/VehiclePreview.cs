@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class VehiclePreview : MonoBehaviour {
-    [SerializeField] private VehicleBlueprint vehicleEntity;
+    
+    [SerializeField] private TrailerVehicleData vehicleEntity;
 
     [ContextMenu("Preview")]
     private void Preview() {
@@ -14,7 +15,7 @@ public class VehiclePreview : MonoBehaviour {
         vehicleService.CreateVehicle(Vector3.zero, vehicleEntity.physicsData);
         
         var vehicleView = new VehicleView(container: transform);
-        vehicleView.AddVehicle(Vector3.zero, vehicleEntity.physicsData, vehicleEntity.visualsId);
+        vehicleView.AddTrailerVehicle(Vector3.zero, vehicleEntity.physicsData, vehicleEntity.visualsData);
     }
 
     private VehiclePhysicsRoot CreatePreviewPhysicsRoot() {

@@ -22,12 +22,12 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private UnitVisuals unitVisualsPrefab;
     [Space]
     [SerializeField] private int maxVehicelCount = 10;
-    [SerializeField] private VehicleBlueprint foeVehicle;
+    [SerializeField] private UnitVehicleData foeVehicle;
     [Space]
     [SerializeField] private bool playerComponent = true;
     [SerializeField] private VehiclePhysicsRoot vehiclePhysicsRoot;
-    [SerializeField] private VehicleBlueprint driveVehicle;
-    [SerializeField] private VehicleBlueprint trailerVehicle;
+    [SerializeField] private DriverVehicleData driveVehicle;
+    [SerializeField] private TrailerVehicleData trailerVehicle;
     [SerializeField] private int trailersCount = 3;
     [Space]
     [SerializeField] private ProjectileService projectileServiceImpl;

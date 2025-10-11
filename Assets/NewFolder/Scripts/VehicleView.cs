@@ -13,15 +13,52 @@ public class VehicleView {
         this.container = container;
     }
 
-    public void AddVehicle(Vector3 position, VehiclePhysicsData physicsData, VehicleVisualsData visualsData) {
+    public int AddDriverVehicle(Vector3 position, VehiclePhysicsData physicsData, DriverVehicleData.VisualsData visualsData) {
         var vehicleVisuals = new VehicleVisuals(position, container);
         vehicleVisuals.AddBaseGeometry(visualsData.baseGeometry);
         
-        var hasTowingTongue = physicsData.towingTongueLength > 0;
+        for (int i = 0; i < physicsData.wheelAxisDatas.Length; i++) {
+            var wheelAxis = physicsData.wheelAxisDatas[i];
+            vehicleVisuals.AddWheelAxisGeometries(
+                visualsData.wheelGeometry, 
+                wheelAxis.forwardOffset,
+                wheelAxis.upOffset,
+                wheelAxis.halfLength,
+                wheelAxis.radius
+            );
+        }
+        
+        visualsRegistry.Add(vehicleVisuals);
+        return visualsRegistry.Count - 1;
+    }
+
+    public int AddUnitVehicle(Vector3 position, VehiclePhysicsData physicsData, UnitVehicleData.VisualsData visualsData) {
+        var vehicleVisuals = new VehicleVisuals(position, container);
+        vehicleVisuals.AddBaseGeometry(visualsData.baseGeometry);
+        
+        for (int i = 0; i < physicsData.wheelAxisDatas.Length; i++) {
+            var wheelAxis = physicsData.wheelAxisDatas[i];
+            vehicleVisuals.AddWheelAxisGeometries(
+                visualsData.wheelGeometry, 
+                wheelAxis.forwardOffset,
+                wheelAxis.upOffset,
+                wheelAxis.halfLength,
+                wheelAxis.radius
+            );
+        }
+        
+        visualsRegistry.Add(vehicleVisuals);
+        return visualsRegistry.Count - 1;
+    }
+
+    public int AddTrailerVehicle(Vector3 position, VehiclePhysicsData physicsData, TrailerVehicleData.VisualsData visualsData) {
+        var vehicleVisuals = new VehicleVisuals(position, container);
+        vehicleVisuals.AddBaseGeometry(visualsData.baseGeometry);
+        
         for (int i = 0; i < physicsData.wheelAxisDatas.Length; i++) {
             bool isLastAxis = i == physicsData.wheelAxisDatas.Length - 1;
             var wheelAxis = physicsData.wheelAxisDatas[i];
-            if (hasTowingTongue && isLastAxis) {
+            if (isLastAxis) {
                 vehicleVisuals.AddTowingWheelAxisGeometries(
                     visualsData.wheelGeometry, 
                     visualsData.towingBodyGeometry,
@@ -43,6 +80,7 @@ public class VehicleView {
         }
         
         visualsRegistry.Add(vehicleVisuals);
+        return visualsRegistry.Count - 1;
     }
 
     public void UpdateVehiclePose(int vehicleIndex, VehicleBodyPose vehiclePose) {

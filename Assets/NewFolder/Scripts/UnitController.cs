@@ -13,7 +13,7 @@ public class UnitController {
     private readonly RewardsMediator rewardsMediator;
 
     private readonly VehicleService vehicleService;
-    private readonly VehicleBlueprint foeVehicleBlueprint;
+    private readonly UnitVehicleData foeVehicleData;
     private readonly VehicleView vehicleView;
     private readonly SoundManager soundManager;
 
@@ -34,14 +34,15 @@ public class UnitController {
     private int maxVehiclesCount;
     private int lastSpawnIndex;
 
-
-    private readonly List<Vehicle> vehicles = new List<Vehicle>();
-    private readonly List<int> vehiclePhysics = new List<int>();
-    private readonly List<int> vehicleCombats = new List<int>();
-    private readonly List<int> vehicleSoundLoop = new List<int>();
+    private readonly List<UnitVehicle> vehicles = new ();
+    private readonly List<int> vehiclePhysics = new ();
+    private readonly List<int> vehicleCombats = new();
+    private readonly List<int> vehicleSoundLoop = new();
+    private readonly List<int> vehicleViewIds = new();
 
     public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
-        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService, RewardsMediator rewardsMediator, VehicleService vehicleService, VehicleBlueprint foeVehicle, int maxVehiclesCount, VehicleView vehicleView, SoundManager soundManager) {
+        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService, 
+        RewardsMediator rewardsMediator, VehicleService vehicleService, UnitVehicleData foeVehicle, int maxVehiclesCount, VehicleView vehicleView, SoundManager soundManager) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.unitView = crowdView;
@@ -53,7 +54,7 @@ public class UnitController {
         this.rewardsMediator = rewardsMediator;
 
         this.vehicleService = vehicleService;
-        this.foeVehicleBlueprint = foeVehicle;
+        this.foeVehicleData = foeVehicle;
         this.vehiclesSpawnPoints = spawnPoints; // reusing
         this.maxVehiclesCount = maxVehiclesCount;
         this.vehicleView = vehicleView;
@@ -265,9 +266,11 @@ public class UnitController {
     }
 
     private void SpawnVehicle(Vector3 position) {
-        var vehicle = new Vehicle(foeVehicleBlueprint);
+        var vehicle = new UnitVehicle(foeVehicleData);
         vehicles.Add(vehicle);
-        vehicleView.AddVehicle(position, vehicle.PhysicsData, vehicle.VisualsData);
+        
+        var viewId = vehicleView.AddUnitVehicle(position, vehicle.PhysicsData, vehicle.VisualsData);
+        vehicleViewIds.Add(viewId);
 
         var combatAgentId = combatService.RegisterAgent(position, alie: false);
         vehicleCombats.Add(combatAgentId);
@@ -282,20 +285,15 @@ public class UnitController {
     private void ReadVehiclesOrientation() {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
-            var vehiclePhysicsRigIndex = vehiclePhysics[vehicleIndex];
+            var physicsId = vehiclePhysics[vehicleIndex];
             
-            var vehiclePose = vehicleService.GetVehiclePose(vehiclePhysicsRigIndex);
+            var vehiclePose = vehicleService.GetVehiclePose(physicsId);
             vehicle.OrientBody(vehiclePose);
 
             for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
-                var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(vehiclePhysicsRigIndex, wheelAxisIndex);
+                var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(physicsId, wheelAxisIndex);
                 vehicle.OrientWheelAxis(wheelAxisIndex, wheelAxisPose);
             }   
-
-            if (vehicle.TowingTonqueRotation.HasValue) {
-                var towingTonguePose = vehicleService.GetTowingTonguePose(vehiclePhysicsRigIndex);
-                vehicle.OrientTowingTonque(towingTonguePose);
-            }
         }
     }
 
@@ -350,15 +348,11 @@ public class UnitController {
     private void UpdateVehiclesView() {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
-            var vehicleViewIndex = vehicleIndex;
+            var vehicleViewIndex = vehicleViewIds[vehicleIndex];
             vehicleView.UpdateVehiclePose(vehicleViewIndex, vehicle.BodyPose);
 
             for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
                 vehicleView.UpdateWheelAxisPose(vehicleViewIndex, wheelAxisIndex, vehicle.WheelAxisPoses[wheelAxisIndex]);
-            }   
-
-            if (vehicle.TowingTonqueRotation.HasValue) {
-                vehicleView.UpdateTowingTonguePose(vehicleViewIndex, vehicle.TowingTonqueRotation.Value);
             }
         }
     }

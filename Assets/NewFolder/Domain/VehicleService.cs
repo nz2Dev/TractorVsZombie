@@ -3,6 +3,39 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+public struct WheelAxisPose {
+    public Vector3 positionL;
+    public Quaternion rotationL;
+    public Vector3 positionR;
+    public Quaternion rotationR;
+}
+
+public struct VehicleBodyPose {
+    public Vector3 position;
+    public Quaternion rotation;
+}
+
+[Serializable]
+public struct VehiclePhysicsData {
+    public float mass;
+    public Vector3 baseSize;
+    public float wheelMass;
+    public float forwardFrictionStiffness;
+    public float sidewayFrictionStiffness;
+    public WheelAxisData[] wheelAxisDatas;
+    public float towingTongueLength;
+}
+
+[Serializable]
+public struct WheelAxisData {
+    public float forwardOffset;
+    public float upOffset;
+    public float halfLength;
+    public float radius;
+    public bool drive;
+    public bool stear;
+}
+
 public class VehicleService {
     
     private readonly VehiclePhysicsRoot physicsRoot;

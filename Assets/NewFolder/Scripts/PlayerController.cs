@@ -15,33 +15,37 @@ public class PlayerController {
     private readonly SoundManager soundManager;
     private readonly CameraManager cameraManager;
 
-    private readonly int trailersCount;
-    private readonly VehicleBlueprint driveVehicleBlueprint;
-    private readonly VehicleBlueprint trailerVehicleBlueprint;
-
-    private readonly List<Vehicle> vehicles = new ();
-    private Vehicle driveVehicle;
-    private int driveVehicleCombatId;
-    private int driveVehicleEngineSoundId;
-    private readonly TurelConfig turelConfig;
-    private readonly RocketLauncherConfig launcherConfig;
+    private DriverVehicle driverVehicle;
+    private readonly DriverVehicleData driverVehicleData;
+    private int driverVehicleCombatId;
+    private int driverVehiclePhysicsId;
+    private int driverVehicleEngineSoundId;
+    private int driverVehicleViewId;
+    
+    private readonly int maxTrailersCount;
+    private readonly TrailerVehicleData trailerVehicleData;
+    private readonly List<TrailerVehicle> trailerVehicles = new ();
+    private readonly List<int> trailerPhysicIds = new ();
+    private readonly List<int> trailerViewIds = new ();
     
     private int turelIdCounter;
+    private readonly TurelConfig turelConfig;
     private readonly List<Turel> turels = new ();
     private readonly Dictionary<int, int> turelToCombatId = new ();
-    private readonly Dictionary<int, Vehicle> turelToVehicle = new ();
+    private readonly Dictionary<int, TrailerVehicle> turelToVehicle = new ();
     private readonly Dictionary<int, int> turelToProjectileGroupId = new ();
     private readonly List<ProjectileState> projectilesStateBuffer = new (64);
 
     private int rocketLauncherIdCounter;
+    private readonly RocketLauncherConfig launcherConfig;
     private readonly List<RocketLauncher> rocketLaunchers = new ();
     private readonly Dictionary<int, int> rocketLauncherToCombatId = new ();
-    private readonly Dictionary<int, Vehicle> rocketLauncherToVehicle = new ();
+    private readonly Dictionary<int, TrailerVehicle> rocketLauncherToVehicle = new ();
 
     private int rocketIdCounter;
     private readonly Dictionary<int, List<Rocket>> rocketLauncherRocketsRegistry = new ();
 
-    public PlayerController(VehicleService vehicleService, VehicleView vehicleView, VehicleBlueprint driveVehicle, VehicleBlueprint trailerVehicle, int trailersCount,
+    public PlayerController(VehicleService vehicleService, VehicleView vehicleView, DriverVehicleData driverVehicleData, TrailerVehicleData trailerVehicleData, int trailersCount,
         CombatService combatService, WeaponView weaponView, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService,
         RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager, RewardsView rewardsView, RewardsMediator rewardsMediator) {
         this.view = weaponView;
@@ -52,9 +56,9 @@ public class PlayerController {
 
         this.vehicleService = vehicleService;
         this.vehicleView = vehicleView;
-        this.driveVehicleBlueprint = driveVehicle;
-        this.trailerVehicleBlueprint = trailerVehicle;
-        this.trailersCount = trailersCount;
+        this.driverVehicleData = driverVehicleData;
+        this.trailerVehicleData = trailerVehicleData;
+        this.maxTrailersCount = trailersCount;
         this.combatService = combatService;
         this.soundManager = soundManager;
         this.cameraManager = cameraManager;
@@ -65,24 +69,21 @@ public class PlayerController {
     public void Init() {
         cameraManager.InitTopDownFollowTarget(Vector3.zero);
         
-        SpawnDriveVehicle(Vector3.zero);
+        SpawnDriverVehicle(Vector3.zero);
 
-        for (int i = 0; i < trailersCount; i++) {
+        for (int i = 0; i < maxTrailersCount; i++) {
             SpawnTrailerVehicle(new Vector3(0, 0, -2f + i * -2f));
         }
 
         bool flipFlop = false;
-        foreach (var vehicle in vehicles) {
-            if (!vehicle.TowingTonqueRotation.HasValue)
-                continue;
-
+        foreach (var trailerVehicle in trailerVehicles) {
             if (flipFlop = !flipFlop) {
                 if (turelConfig != null) {
-                    SpawnTurel(vehicle, turelConfig);
+                    SpawnTurel(trailerVehicle, turelConfig);
                 }
             } else {
                 if (launcherConfig != null) {
-                    SpawnRocketLauncher(vehicle, launcherConfig);
+                    SpawnRocketLauncher(trailerVehicle, launcherConfig);
                 }
             }
         }
@@ -126,7 +127,7 @@ public class PlayerController {
     }
 
     private void CollectRewards() {
-        rewardsMediator.CollectRewards(driveVehicle.BodyPose.position, driveVehicle.RewardCollectRadius);
+        rewardsMediator.CollectRewards(driverVehicle.BodyPose.position, driverVehicle.RewardCollectRadius);
     }
 
     private void FilterRemovedRewards() {
@@ -140,107 +141,120 @@ public class PlayerController {
     }
 
     private void UpdateVehiclePhysics() {
-        for (int i = 0; i < vehicles.Count; i++) {
-            var vehicle = vehicles[i];
-            var physicsData = vehicle.PhysicsData;
-            vehicleService.UpdateBase(i, physicsData.mass);
-            vehicleService.UpdateWheels(i, physicsData.wheelMass, physicsData.forwardFrictionStiffness, physicsData.sidewayFrictionStiffness);
+        var driverPhysicsData = driverVehicle.PhysicsData;
+        vehicleService.UpdateBase(driverVehiclePhysicsId, driverVehicle.PhysicsData.mass);
+        vehicleService.UpdateWheels(driverVehiclePhysicsId, driverPhysicsData.wheelMass, driverPhysicsData.forwardFrictionStiffness, driverPhysicsData.sidewayFrictionStiffness);
+
+        for (int i = 0; i < trailerVehicles.Count; i++) {
+            var trailerVehicle = trailerVehicles[i];
+            var trailerPhysicsId = trailerPhysicIds[i];
+            var physicsData = trailerVehicle.PhysicsData;
+            vehicleService.UpdateBase(trailerPhysicsId, physicsData.mass);
+            vehicleService.UpdateWheels(trailerPhysicsId, physicsData.wheelMass, physicsData.forwardFrictionStiffness, physicsData.sidewayFrictionStiffness);
         }
     }
 
     private void UpdateCamera() {
-        cameraManager.UpdateTopDownFollowPosition(driveVehicle.BodyPose.position);
+        cameraManager.UpdateTopDownFollowPosition(driverVehicle.BodyPose.position);
+    }
+
+    private void SpawnDriverVehicle(Vector3 driveVehiclePosition) {
+        driverVehicle = new DriverVehicle(driverVehicleData);
+        driverVehiclePhysicsId = vehicleService.CreateVehicle(driveVehiclePosition, driverVehicleData.physicsData);
+        driverVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
+        driverVehicleEngineSoundId = soundManager.StartLoop(driverVehicle.BodyPose.position, driverVehicle.EngineIdleSound);
+        driverVehicleViewId = vehicleView.AddDriverVehicle(driveVehiclePosition, driverVehicle.PhysicsData, driverVehicle.VisualsData);
     }
 
     private void ReadDriveVehicleInput() {
         var steerInput = Input.GetAxis("Horizontal");
-        driveVehicle.Steer(steerInput);
+        driverVehicle.Steer(steerInput);
 
         var gasInput = Input.GetAxis("Vertical");
         var boost = Input.GetKey(KeyCode.Space);
-        driveVehicle.Throttle(gasInput, Time.deltaTime, boost);
+        driverVehicle.Throttle(gasInput, Time.deltaTime, boost);
     }
 
     private void UpdateDriveVehiclePhysics() {
-        vehicleService.SetVehicleEngineTorque(vehicleIndex: 0, driveVehicle.MotorTorque);
-        vehicleService.SetVehicleSteer(vehicleIndex: 0, driveVehicle.SteerDegrees);
+        vehicleService.SetVehicleEngineTorque(driverVehiclePhysicsId, driverVehicle.MotorTorque);
+        vehicleService.SetVehicleSteer(driverVehiclePhysicsId, driverVehicle.SteerDegrees);
     }
 
     private void UpdateDriveVehicleSounds() {
-        var enginePitch = 0.5f + driveVehicle.DrivePower;
-        var engineVolume = 0.5f + driveVehicle.DrivePower;
-        soundManager.UpdateLoop(driveVehicleEngineSoundId, driveVehicle.BodyPose.position, enginePitch, engineVolume);
+        var enginePitch = 0.5f + driverVehicle.DrivePower;
+        var engineVolume = 0.5f + driverVehicle.DrivePower;
+        soundManager.UpdateLoop(driverVehicleEngineSoundId, driverVehicle.BodyPose.position, enginePitch, engineVolume);
     }
 
     private void UpdateDriveVehicleCombat() {
-        combatService.UpdateAgentPosition(driveVehicleCombatId, driveVehicle.BodyPose.position);
-        var affectedCount = combatService.ApplyExplosionDamage(driveVehicleCombatId, driveVehicle.BodyPose.position, radius: driveVehicle.RamRadius, damage: 0);
+        combatService.UpdateAgentPosition(driverVehicleCombatId, driverVehicle.BodyPose.position);
+        var affectedCount = combatService.ApplyExplosionDamage(driverVehicleCombatId, driverVehicle.BodyPose.position, radius: driverVehicle.RamRadius, damage: 0);
         for (int i = 0; i < affectedCount; i++) {
-            var position = driveVehicle.BodyPose.position + UnityEngine.Random.onUnitSphere * driveVehicle.RamRadius;
-            soundManager.PlayEffectDelayed(position, i * 0.05f, driveVehicle.HitImpactSounds);
+            var position = driverVehicle.BodyPose.position + UnityEngine.Random.onUnitSphere * driverVehicle.RamRadius;
+            soundManager.PlayEffectDelayed(position, i * 0.05f, driverVehicle.HitImpactSounds);
         }
     }
 
-    private void SpawnDriveVehicle(Vector3 driveVehiclePosition) {
-        driveVehicle = new Vehicle(driveVehicleBlueprint);
-        vehicleService.CreateVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData);
-        vehicleView.AddVehicle(driveVehiclePosition, driveVehicleBlueprint.physicsData, driveVehicleBlueprint.visualsId);
-        
-        vehicles.Add(driveVehicle);
-        driveVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
-
-        driveVehicleEngineSoundId = soundManager.StartLoop(driveVehicle.BodyPose.position, driveVehicle.EngineIdleSound);
-    }
-
     private void SpawnTrailerVehicle(Vector3 position) {
-        var trailerVehicle = new Vehicle(trailerVehicleBlueprint);
-        vehicleService.CreateVehicle(position, trailerVehicleBlueprint.physicsData);
-        vehicleView.AddVehicle(position, trailerVehicleBlueprint.physicsData, trailerVehicleBlueprint.visualsId);
+        var trailerVehicle = new TrailerVehicle(trailerVehicleData);
+        trailerVehicles.Add(trailerVehicle);
 
-        vehicles.Add(trailerVehicle);
-        var lastIndex = vehicles.Count - 1;
-        vehicleService.MakeTowingConnection(
-            headVehicleIndex: lastIndex - 1, 
-            tailVehicleIndex: lastIndex);
+        var trailerPhysicsId = vehicleService.CreateVehicle(position, trailerVehicle.PhysicsData);
+        trailerPhysicIds.Add(trailerPhysicsId);
+
+        bool isFirstTrailer = trailerVehicles.Count == 1;
+        var headPhysicsId = isFirstTrailer ? driverVehiclePhysicsId : trailerPhysicIds[^1];
+        vehicleService.MakeTowingConnection(headPhysicsId, trailerPhysicsId);
+        
+        var trailerViewId = vehicleView.AddTrailerVehicle(position, trailerVehicle.PhysicsData, trailerVehicle.VisualsData);
+        trailerViewIds.Add(trailerViewId);
     }
 
     private void ReadVehiclesOrientation() {
-        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
-            var vehicle = vehicles[vehicleIndex];
-            var vehiclePhysicsRigIndex = vehicleIndex;
+        var driverVehiclePose = vehicleService.GetVehiclePose(driverVehiclePhysicsId);
+        driverVehicle.OrientBody(driverVehiclePose);
+        for (int wheelAxisIndex = 0; wheelAxisIndex < driverVehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
+            var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(driverVehiclePhysicsId, wheelAxisIndex);
+            driverVehicle.OrientWheelAxis(wheelAxisIndex, wheelAxisPose);
+        }
+
+        for (int trailerIndex = 0; trailerIndex < trailerVehicles.Count; trailerIndex++) {
+            var trailerVehicle = trailerVehicles[trailerIndex];
+            var trailerPhysicsId = trailerPhysicIds[trailerIndex];
             
-            var vehiclePose = vehicleService.GetVehiclePose(vehiclePhysicsRigIndex);
-            vehicle.OrientBody(vehiclePose);
+            var vehiclePose = vehicleService.GetVehiclePose(trailerPhysicsId);
+            trailerVehicle.OrientBody(vehiclePose);
 
-            for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
-                var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(vehiclePhysicsRigIndex, wheelAxisIndex);
-                vehicle.OrientWheelAxis(wheelAxisIndex, wheelAxisPose);
+            var towingTonguePose = vehicleService.GetTowingTonguePose(trailerPhysicsId);
+            trailerVehicle.OrientTowingTonque(towingTonguePose);
+
+            for (int wheelAxisIndex = 0; wheelAxisIndex < trailerVehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
+                var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(trailerPhysicsId, wheelAxisIndex);
+                trailerVehicle.OrientWheelAxis(wheelAxisIndex, wheelAxisPose);
             }   
-
-            if (vehicle.TowingTonqueRotation.HasValue) {
-                var towingTonguePose = vehicleService.GetTowingTonguePose(vehiclePhysicsRigIndex);
-                vehicle.OrientTowingTonque(towingTonguePose);
-            }
         }
     }
 
     private void UpdateVehiclesView() {
-        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
-            var vehicle = vehicles[vehicleIndex];
-            var vehicleViewIndex = vehicleIndex;
+        vehicleView.UpdateVehiclePose(driverVehicleViewId, driverVehicle.BodyPose);
+        for (int wheelAxisIndex = 0; wheelAxisIndex < driverVehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
+            vehicleView.UpdateWheelAxisPose(driverVehicleViewId, wheelAxisIndex, driverVehicle.WheelAxisPoses[wheelAxisIndex]);
+        }
+
+        for (int trailerIndex = 0; trailerIndex < trailerVehicles.Count; trailerIndex++) {
+            var vehicle = trailerVehicles[trailerIndex];
+            var vehicleViewIndex = trailerViewIds[trailerIndex];
+            
             vehicleView.UpdateVehiclePose(vehicleViewIndex, vehicle.BodyPose);
+            vehicleView.UpdateTowingTonguePose(vehicleViewIndex, vehicle.TowingTonqueRotation);
 
             for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
                 vehicleView.UpdateWheelAxisPose(vehicleViewIndex, wheelAxisIndex, vehicle.WheelAxisPoses[wheelAxisIndex]);
             }   
-
-            if (vehicle.TowingTonqueRotation.HasValue) {
-                vehicleView.UpdateTowingTonguePose(vehicleViewIndex, vehicle.TowingTonqueRotation.Value);
-            }
         }
     }
 
-    private void SpawnRocketLauncher(Vehicle host, RocketLauncherConfig launcherConfig) {
+    private void SpawnRocketLauncher(TrailerVehicle host, RocketLauncherConfig launcherConfig) {
         var launcherId = rocketLauncherIdCounter++;
         var rocketLauncher = new RocketLauncher(launcherId, host.BodyPose.position, launcherConfig);
         rocketLaunchers.Add(rocketLauncher);
@@ -331,7 +345,7 @@ public class PlayerController {
         }
     }
 
-    private void SpawnTurel(Vehicle host, TurelConfig turelConfig) {
+    private void SpawnTurel(TrailerVehicle host, TurelConfig turelConfig) {
         var turelId = turelIdCounter++;
         var turel = new Turel(turelId, host.BodyPose.position, turelConfig);
         turels.Add(turel);
