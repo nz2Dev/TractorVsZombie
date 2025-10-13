@@ -54,7 +54,7 @@ public class GameBootstrapper : MonoBehaviour {
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var vehicleView = new VehicleView(null);
-        var unitView = new UnitView(unitVisualsPrefab);
+        var unitView = new UnitView(unitVisualsPrefab, null, turelVisualsPrefab, rocketLauncherVisualsPrefab);
         var weaponView = new WeaponView(turelVisualsPrefab, rocketLauncherVisualsPrefab);
         var rewardsView = new RewardsView(rewardVisualsPrefab);
 
@@ -91,8 +91,8 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleService,
             foeVehicle,
             maxVehicelCount,
-            foeVehicelView,
-            soundManager);
+            soundManager,
+            projectileService);
 
         if (playerComponent) playerController.Init();
         if (unitsComponent) unitController.Init();

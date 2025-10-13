@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.Profiling;
 using System.Linq;
+using UnityEngine.Assertions;
 
 public class UnitController {
 
@@ -11,10 +12,10 @@ public class UnitController {
     private readonly CombatService combatService;
     private readonly PhysicsService physicsService;
     private readonly RewardsMediator rewardsMediator;
+    private readonly ProjectileService projectileService;
 
     private readonly VehicleService vehicleService;
     private readonly UnitVehicleData foeVehicleData;
-    private readonly VehicleView vehicleView;
     private readonly SoundManager soundManager;
 
     private float lastTimeProduced = float.MinValue;
@@ -39,10 +40,17 @@ public class UnitController {
     private readonly List<int> vehicleCombats = new();
     private readonly List<int> vehicleSoundLoop = new();
     private readonly List<int> vehicleViewIds = new();
+    private readonly List<Turel> vehicleTurels = new ();
+    private readonly List<int> vehicleTurelProjectileGroupIds = new ();
+    private readonly List<ProjectileState> projectilesStateBuffer = new (64);
+    private int rocketIdCounter;
+    private readonly List<RocketLauncher> vehicleRocketLaunchers = new ();
+    private readonly List<List<Rocket>> vehicleRocketsRegistry = new ();
 
     public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
-        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService, 
-        RewardsMediator rewardsMediator, VehicleService vehicleService, UnitVehicleData foeVehicle, int maxVehiclesCount, VehicleView vehicleView, SoundManager soundManager) {
+        Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService,
+        RewardsMediator rewardsMediator, VehicleService vehicleService, UnitVehicleData foeVehicle, int maxVehiclesCount, 
+        SoundManager soundManager, ProjectileService projectileService) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.unitView = crowdView;
@@ -57,8 +65,8 @@ public class UnitController {
         this.foeVehicleData = foeVehicle;
         this.vehiclesSpawnPoints = spawnPoints; // reusing
         this.maxVehiclesCount = maxVehiclesCount;
-        this.vehicleView = vehicleView;
         this.soundManager = soundManager;
+        this.projectileService = projectileService;
     }
 
     public void Init() {
@@ -138,6 +146,12 @@ public class UnitController {
         UpdateVehiclePhysics();
         UpdateVehiclesSounds();
         UpdateVehiclesView();
+
+        OperateWeapons();
+        FilterDeadProjectiles();
+        UpdateProjectileHits();
+        UpdateRocketLandingCombat();
+        FilterElapsedRockets();
     }
 
     private void OperateUnits() {
@@ -269,7 +283,7 @@ public class UnitController {
         var vehicle = new UnitVehicle(foeVehicleData);
         vehicles.Add(vehicle);
         
-        var viewId = vehicleView.AddUnitVehicle(position, vehicle.PhysicsData, vehicle.VisualsData);
+        var viewId = unitView.AddUnitVehicle(position, vehicle.PhysicsData, vehicle.VisualsData);
         vehicleViewIds.Add(viewId);
 
         var combatAgentId = combatService.RegisterAgent(position, alie: false);
@@ -280,6 +294,33 @@ public class UnitController {
 
         var soundLoopId = soundManager.StartLoop(position, vehicle.EngineIdleSound);
         vehicleSoundLoop.Add(soundLoopId);
+
+        if (vehicle.WeaponsData.rocketLauncherConfig != null) {
+            unitView.SetRocketLauncherWeapon(viewId, vehicle.Position);
+
+            var vehicleRocketLauncher = new RocketLauncher(-1, vehicle.Position, vehicle.WeaponsData.rocketLauncherConfig);
+            vehicleRocketLaunchers.Add(vehicleRocketLauncher);
+
+            var rocketRegistry = new List<Rocket>();
+            vehicleRocketsRegistry.Add(rocketRegistry);
+        } else {
+            vehicleRocketLaunchers.Add(null);
+            vehicleRocketsRegistry.Add(null);
+        }
+
+        if (vehicle.WeaponsData.turelConfig != null) {
+            Assert.IsNull(vehicleRocketLaunchers[vehicles.Count - 1]);
+            unitView.SetTurelWeapon(viewId, vehicle.Position);
+
+            var turel = new Turel(-1, vehicle.Position, vehicle.WeaponsData.turelConfig);
+            vehicleTurels.Add(turel);
+
+            var turelProjectileGroupId = projectileService.AddGroup();
+            vehicleTurelProjectileGroupIds.Add(turelProjectileGroupId);
+        } else {
+            vehicleTurels.Add(null);
+            vehicleTurelProjectileGroupIds.Add(-1);
+        }
     }
 
     private void ReadVehiclesOrientation() {
@@ -293,7 +334,13 @@ public class UnitController {
             for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
                 var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(physicsId, wheelAxisIndex);
                 vehicle.OrientWheelAxis(wheelAxisIndex, wheelAxisPose);
-            }   
+            }
+
+            var vehicleTurel = vehicleTurels[vehicleIndex];
+            vehicleTurel?.Move(vehicle.Position);
+            
+            var vehicleRocketLauncher = vehicleRocketLaunchers[vehicleIndex];
+            vehicleRocketLauncher?.Translate(vehicle.Position);
         }
     }
 
@@ -316,6 +363,36 @@ public class UnitController {
     private void ReadCombatState() {
         foreach (var vehicle in vehicles) {
             // no health or alive state for vehicle
+        }
+    }
+
+    private void OperateWeapons() {
+        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
+            var vehicel = vehicles[vehicleIndex];
+            var vehicleCombatId = vehicleCombats[vehicleIndex];
+
+            var turel = vehicleTurels[vehicleIndex];
+            var rocketLauncher = vehicleRocketLaunchers[vehicleIndex];
+            
+            if (combatService.GetClosestEnemyAgentInRange(vehicleCombatId, 20, out var agentInfo)) {
+                if (turel != null) {
+                    Assert.IsNull(rocketLauncher);
+
+                    turel.Aim(Time.deltaTime, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
+                    if (turel.Fire(Time.time, out var bullet)) {
+                        SpawnBulletProjectile(vehicleIndex, turel, bullet);
+                    }
+                }
+
+                if (rocketLauncher != null) {
+                    Assert.IsNull(turel);
+
+                    rocketLauncher.Aim(agentInfo.position);
+                    if (rocketLauncher.Launch(Time.time, out var rocketTrajectory)) {
+                        SpawnRocket(vehicleIndex, rocketLauncher, rocketTrajectory);
+                    }
+                }
+            }
         }
     }
 
@@ -349,10 +426,112 @@ public class UnitController {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
             var vehicleViewIndex = vehicleViewIds[vehicleIndex];
-            vehicleView.UpdateVehiclePose(vehicleViewIndex, vehicle.BodyPose);
+            unitView.UpdateVehiclePose(vehicleViewIndex, vehicle.BodyPose);
 
             for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
-                vehicleView.UpdateWheelAxisPose(vehicleViewIndex, wheelAxisIndex, vehicle.WheelAxisPoses[wheelAxisIndex]);
+                unitView.UpdateWheelAxisPose(vehicleViewIndex, wheelAxisIndex, vehicle.WheelAxisPoses[wheelAxisIndex]);
+            }
+
+            var vehicleViewId = vehicleViewIds[vehicleIndex];
+            var turel = vehicleTurels[vehicleIndex];
+            if (turel != null) {
+                unitView.UpdateTurelOrientation(vehicleViewId, turel.Position, turel.GunForward);
+            }
+            var rocketLauncher = vehicleRocketLaunchers[vehicleIndex];
+            if (rocketLauncher != null) {
+                unitView.UpdateRocketLauncherOrientation(vehicleViewId, rocketLauncher.Position, rocketLauncher.AimPoint, rocketLauncher.RocketAmplitude);
+            }
+        }
+    }
+
+    private void SpawnBulletProjectile(int vehicleIndex, Turel turel, Bullet bullet) {
+        var projectileGroupId = vehicleTurelProjectileGroupIds[vehicleIndex];
+        var projectileId = projectileService.CreateProjectile(projectileGroupId, bullet.firePoint, bullet.velocity, 5f);
+        unitView.ShowBulletShoot(vehicleIndex, projectileId, bullet.velocity);
+        soundManager.PlayEffect(bullet.firePoint, turel.BulletShootAudioClips);
+    }
+
+    private void FilterDeadProjectiles() {
+        for (int i = 0; i < vehicles.Count; i++) {      
+            if (vehicleTurels[i] == null)
+                continue;
+
+            var projectileGroup = vehicleTurelProjectileGroupIds[i];
+            projectilesStateBuffer.Clear();
+            projectileService.GetGroupProjectiles(projectileGroup, projectilesStateBuffer);
+            
+            foreach (var projectileState in projectilesStateBuffer) {
+                if (projectileState.isAged) {
+                    unitView.ShowBulletDisappear(i, projectileState.id);
+                }
+            }
+        }
+    }
+
+    private void UpdateProjectileHits() {   
+        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {      
+            var turel = vehicleTurels[vehicleIndex];
+            if (turel == null)
+                continue;
+
+            var projectileGroup = vehicleTurelProjectileGroupIds[vehicleIndex];
+            projectilesStateBuffer.Clear();
+            projectileService.GetGroupProjectiles(projectileGroup, projectilesStateBuffer);
+
+            var combatId = vehicleCombats[vehicleIndex];
+            foreach (var projectileState in projectilesStateBuffer) {
+                if (projectileState.isAged)
+                    continue;
+
+                if (combatService.ApplyProjectileDamage(combatId, projectileState.position, projectileState.velocity, turel.BulletDamage)) {
+                    projectileService.KillProjectile(projectileState.id);
+                    unitView.ShowBulletCrash(vehicleIndex, projectileState.id);
+                }
+            }
+        }
+    }
+
+    private void SpawnRocket(int vehicleIndex, RocketLauncher rocketLauncher, RocketTrajectory trajectory) {
+        var nextRocketId = rocketIdCounter++;
+        var rocket = new Rocket(nextRocketId, trajectory, Time.time, rocketLauncher.RocketFlyDuration);
+        var rocketsRegistry = vehicleRocketsRegistry[vehicleIndex];
+        rocketsRegistry.Add(rocket);
+        unitView.ShowRocketFly(vehicleIndex, nextRocketId, trajectory, rocketLauncher.RocketFlyDuration);
+        soundManager.PlayEffect(trajectory.launchPoint, rocketLauncher.RocketLaunchEffects);
+    }
+
+    private void UpdateRocketLandingCombat() {
+        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {      
+            var rocketLauncher = vehicleRocketLaunchers[vehicleIndex];
+            if (rocketLauncher == null)
+                continue;
+            
+            var vehicleViewId = vehicleViewIds[vehicleIndex];
+            var vehicleCombatId = vehicleCombats[vehicleIndex];
+            var rocketLauncherRockets = vehicleRocketsRegistry[vehicleIndex];
+            foreach (var rocket in rocketLauncherRockets) {
+                if (rocket.ForwardLandingTime(Time.time)) {
+                    combatService.ApplyExplosionDamage(vehicleCombatId, rocket.Trajectory.landPoint, 3, rocketLauncher.RocketDamage);
+                    unitView.ShowRocketExplosion(vehicleViewId, rocket.Id);
+                    soundManager.PlayEffect(rocket.Trajectory.landPoint, rocketLauncher.ExplodeEffectClips);
+                }
+            }   
+        }
+    }
+
+    private void FilterElapsedRockets() {
+        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {      
+            var rocketLauncher = vehicleRocketLaunchers[vehicleIndex];
+            if (rocketLauncher == null)
+                continue;
+            
+            var rocketLauncherRockets = vehicleRocketsRegistry[vehicleIndex];
+            for (int i = 0; i < rocketLauncherRockets.Count; i++) {
+                var rocket = rocketLauncherRockets[i];
+                if (rocket.Landed) {
+                    rocketLauncherRockets.RemoveAt(i);
+                    i--;
+                }
             }
         }
     }

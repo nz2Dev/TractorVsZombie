@@ -24,6 +24,13 @@ public class UnitVehicleData : ScriptableObject {
         public AudioClip engineIdleSound;
     }
 
+    [Serializable]
+    public struct WeaponsData {
+        public RocketLauncherConfig rocketLauncherConfig;
+        public TurelConfig turelConfig;
+    }
+
+    public WeaponsData weaponsData;
     public DrivingData drivingData;
     public SoundData soundData;
     public VisualsData visualsData;

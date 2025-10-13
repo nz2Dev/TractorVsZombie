@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 public class UnitVehicle {
@@ -19,7 +21,9 @@ public class UnitVehicle {
     public VehiclePhysicsData PhysicsData => data.physicsData;
     public UnitVehicleData.VisualsData VisualsData => data.visualsData;
     public AudioClip EngineIdleSound => data.soundData.engineIdleSound;
-    
+    public UnitVehicleData.WeaponsData WeaponsData => data.weaponsData;
+
+    public Vector3 Position => BodyPose.position;    
     public float DrivePower => drivePower;
     public float BreaksTorque => breaksPower * data.drivingData.maxBreaksTorque;
     public float MotorTorque => drivePower * data.drivingData.maxTorque;

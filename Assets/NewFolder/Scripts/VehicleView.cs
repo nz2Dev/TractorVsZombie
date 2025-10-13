@@ -32,24 +32,7 @@ public class VehicleView {
         return visualsRegistry.Count - 1;
     }
 
-    public int AddUnitVehicle(Vector3 position, VehiclePhysicsData physicsData, UnitVehicleData.VisualsData visualsData) {
-        var vehicleVisuals = new VehicleVisuals(position, container);
-        vehicleVisuals.AddBaseGeometry(visualsData.baseGeometry);
-        
-        for (int i = 0; i < physicsData.wheelAxisDatas.Length; i++) {
-            var wheelAxis = physicsData.wheelAxisDatas[i];
-            vehicleVisuals.AddWheelAxisGeometries(
-                visualsData.wheelGeometry, 
-                wheelAxis.forwardOffset,
-                wheelAxis.upOffset,
-                wheelAxis.halfLength,
-                wheelAxis.radius
-            );
-        }
-        
-        visualsRegistry.Add(vehicleVisuals);
-        return visualsRegistry.Count - 1;
-    }
+    
 
     public int AddTrailerVehicle(Vector3 position, VehiclePhysicsData physicsData, TrailerVehicleData.VisualsData visualsData) {
         var vehicleVisuals = new VehicleVisuals(position, container);
