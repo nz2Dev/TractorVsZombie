@@ -59,6 +59,59 @@ public class FlowFields {
         cells[x, y].cost = blocked ? 255 : 0;
     }
 
+    private static Vector2Int[] RadiusCorners = new Vector2Int[] {
+        new (-1, -1),
+        new (0, -1),
+        new (1, -1),
+        new (1, 0),
+        new (1, 1),
+        new (0, 1),
+        new (-1, 1),
+        new (-1, 0)
+    };
+    
+    // private static Vector2Int[] RadiusCorners = new Vector2Int[] {
+    //     new (0, -1),
+    //     new (1, 0),
+    //     new (0, 1),
+    //     new (-1, 0)
+    // };
+
+    private static Vector2Int[] RadiusDirections = new Vector2Int[] {
+        new (1, 0),
+        new (1, 0),
+        new (0, 1),
+        new (0, 1),
+        new (-1, 0),
+        new (-1, 0),
+        new (0, -1),
+        new (0, -1),
+    };
+    
+    // private static Vector2Int[] RadiusDirections = new Vector2Int[] {
+    //     new (1, 1),
+    //     new (-1, 1),
+    //     new (-1, -1),
+    //     new (1, -1),
+    // };
+
+    public void RaiseNeighborsCost(int x, int y, int radius, int cost) {
+        Assert.IsFalse(radius == 0);
+        var location = new Vector2Int(x, y);
+        for (int segment = 0; segment < RadiusCorners.Length * radius; segment++) {
+            var corner = segment / radius;
+            var step = segment % radius;
+            var offset = RadiusCorners[corner] * radius + RadiusDirections[corner] * step;
+            var neighborLocation = location + offset;
+            
+            if (IsLocationOutsideBounds(neighborLocation) || IsCellBlocked(neighborLocation.x, neighborLocation.y))
+                continue;
+
+            var neighborCell = cells[neighborLocation.x, neighborLocation.y];
+            neighborCell.cost = Mathf.Max(neighborCell.cost, cost);
+        }
+    }
+
     public bool IsCellBlocked(int x, int y) {
         var cellCost = cells[x, y].cost;
         return cellCost == 255;
@@ -97,6 +150,10 @@ public class FlowFields {
     private bool IsLocationOutsideBounds(Vector2Int gridLocation) {
         return gridLocation.x < 0 || gridLocation.x >= size
             || gridLocation.y < 0 || gridLocation.y >= size;
+    }
+
+    public int GetCost(int x, int y) {
+        return cells[x, y].cost;
     }
 
     public int GetIntegratedCost(int x, int y) {

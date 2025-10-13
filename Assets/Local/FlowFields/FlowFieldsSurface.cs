@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +19,7 @@ public class FlowFieldsSurface : MonoBehaviour {
     [SerializeField] private bool displayBlockers = true;
     [SerializeField] private bool displayComputations = true;
     [SerializeField] private bool costOrFieldsDisplay = true;
+    [SerializeField] private bool integratedOrSetCost = true;
     [SerializeField] private bool updateGoalInEditor = true;
 
     private FlowFieldsSpace space;
@@ -31,6 +33,7 @@ public class FlowFieldsSurface : MonoBehaviour {
     public bool DisplayBlockers => displayBlockers;
     public bool DisplayComputations => displayComputations;
     public bool CostOrFieldsDisplay => costOrFieldsDisplay;
+    public bool IntegratedOrSetCost => integratedOrSetCost;
     public bool UpdateGoalInEditor => updateGoalInEditor;
 
     private void OnValidate() {
@@ -87,6 +90,10 @@ public class FlowFieldsSurface : MonoBehaviour {
         return flowFields.GetIntegratedCost(x, y);
     }
 
+    public int GetCost(int row, int column) {
+        return flowFields.GetCost(row, column);
+    }
+
     public Vector3 GetFlowVectorClamped(Vector3 worldPos) {
         var gridPos = ClampGridPositionInBounds(space.ConvertToGrid(worldPos));
         return GetFlowVector(gridPos.x, gridPos.y);
@@ -110,6 +117,11 @@ public class FlowFieldsSurface : MonoBehaviour {
 
         foreach (var blocked in blockedCells) {
             flowFields.SetCellBlocked(blocked.x, blocked.y, true);
+        }
+
+        foreach (var blocked in blockedCells) {
+            flowFields.RaiseNeighborsCost(blocked.x, blocked.y, radius: 1, cost: 3);
+            flowFields.RaiseNeighborsCost(blocked.x, blocked.y, radius: 2, cost: 2);
         }
     }
 

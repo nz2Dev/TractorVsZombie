@@ -49,7 +49,7 @@ public class FlowFieldsSurfaceEditor : Editor {
 
         if (surface.DisplayComputations) {
             if (surface.CostOrFieldsDisplay) {
-                DrawCosts(surface);
+                DrawCosts(surface, surface.IntegratedOrSetCost);
             } else {
                 DrawFields(surface);
             }
@@ -75,13 +75,13 @@ public class FlowFieldsSurfaceEditor : Editor {
         }
     }
 
-    private void DrawCosts(FlowFieldsSurface surface) {
+    private void DrawCosts(FlowFieldsSurface surface, bool integratedOrSet) {
         Handles.color = Color.white;
         for (int row = 0; row < surface.Size; row++) {
             for (int column = 0; column < surface.Size; column++) {
                 var worldPos = surface.GetGridPosition(row, column, atCenter: true);
-                var integratedCost = surface.GetIntegratedCost(row, column);
-                Handles.Label(worldPos, $"{integratedCost}");
+                var costValue = integratedOrSet ? surface.GetIntegratedCost(row, column) : surface.GetCost(row, column);
+                Handles.Label(worldPos, $"{costValue}");
             }
         }
     }

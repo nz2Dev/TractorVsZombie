@@ -1185,7 +1185,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2177
   unitsComponent: 1
-  unitsCount: 200
+  unitsCount: 400
   spawnPoints:
   - {fileID: 186795255}
   - {fileID: 1856700855}
@@ -1199,7 +1199,7 @@ MonoBehaviour:
   flowFieldsSurface: {fileID: 804724243}
   orcaEnvironment: {fileID: 851369242}
   unitVisualsPrefab: {fileID: 4683619999828752191, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
-  maxVehicelCount: 8
+  maxVehicelCount: 4
   foeVehicle: {fileID: 11400000, guid: 322db09d7936e41adb890f0b3801cd2d, type: 2}
   playerComponent: 1
   vehiclePhysicsRoot: {fileID: 1745157901}
@@ -2770,7 +2770,7 @@ Transform:
   m_GameObject: {fileID: 618815298}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4184007, y: 0.5700358, z: -0.4184008, w: 0.5700359}
-  m_LocalPosition: {x: -0.2, y: 19.3, z: -1.3}
+  m_LocalPosition: {x: -5.3957324, y: 17.371248, z: -0.0005919186}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2936,27 +2936,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   blockedCells:
-  - {x: 24, y: 8}
-  - {x: 24, y: 9}
-  - {x: 24, y: 10}
-  - {x: 24, y: 11}
-  - {x: 24, y: 12}
-  - {x: 24, y: 13}
-  - {x: 24, y: 14}
-  - {x: 25, y: 8}
-  - {x: 25, y: 9}
-  - {x: 25, y: 10}
-  - {x: 25, y: 11}
-  - {x: 25, y: 12}
-  - {x: 25, y: 13}
-  - {x: 25, y: 14}
-  - {x: 26, y: 8}
-  - {x: 26, y: 9}
-  - {x: 26, y: 10}
-  - {x: 26, y: 11}
-  - {x: 26, y: 12}
-  - {x: 26, y: 13}
-  - {x: 26, y: 14}
   - {x: 24, y: 35}
   - {x: 24, y: 36}
   - {x: 24, y: 37}
@@ -2999,6 +2978,27 @@ MonoBehaviour:
   - {x: 15, y: 12}
   - {x: 15, y: 13}
   - {x: 15, y: 14}
+  - {x: 34, y: 35}
+  - {x: 34, y: 36}
+  - {x: 34, y: 37}
+  - {x: 34, y: 38}
+  - {x: 34, y: 39}
+  - {x: 34, y: 40}
+  - {x: 34, y: 41}
+  - {x: 35, y: 35}
+  - {x: 35, y: 36}
+  - {x: 35, y: 37}
+  - {x: 35, y: 38}
+  - {x: 35, y: 39}
+  - {x: 35, y: 40}
+  - {x: 35, y: 41}
+  - {x: 36, y: 35}
+  - {x: 36, y: 36}
+  - {x: 36, y: 37}
+  - {x: 36, y: 38}
+  - {x: 36, y: 39}
+  - {x: 36, y: 40}
+  - {x: 36, y: 41}
   - {x: 12, y: 22}
   - {x: 12, y: 23}
   - {x: 12, y: 24}
@@ -3017,6 +3017,27 @@ MonoBehaviour:
   - {x: 14, y: 25}
   - {x: 14, y: 26}
   - {x: 14, y: 27}
+  - {x: 24, y: 8}
+  - {x: 24, y: 9}
+  - {x: 24, y: 10}
+  - {x: 24, y: 11}
+  - {x: 24, y: 12}
+  - {x: 24, y: 13}
+  - {x: 24, y: 14}
+  - {x: 25, y: 8}
+  - {x: 25, y: 9}
+  - {x: 25, y: 10}
+  - {x: 25, y: 11}
+  - {x: 25, y: 12}
+  - {x: 25, y: 13}
+  - {x: 25, y: 14}
+  - {x: 26, y: 8}
+  - {x: 26, y: 9}
+  - {x: 26, y: 10}
+  - {x: 26, y: 11}
+  - {x: 26, y: 12}
+  - {x: 26, y: 13}
+  - {x: 26, y: 14}
   - {x: 35, y: 21}
   - {x: 35, y: 22}
   - {x: 35, y: 23}
@@ -3059,27 +3080,6 @@ MonoBehaviour:
   - {x: 17, y: 39}
   - {x: 17, y: 40}
   - {x: 17, y: 41}
-  - {x: 34, y: 35}
-  - {x: 34, y: 36}
-  - {x: 34, y: 37}
-  - {x: 34, y: 38}
-  - {x: 34, y: 39}
-  - {x: 34, y: 40}
-  - {x: 34, y: 41}
-  - {x: 35, y: 35}
-  - {x: 35, y: 36}
-  - {x: 35, y: 37}
-  - {x: 35, y: 38}
-  - {x: 35, y: 39}
-  - {x: 35, y: 40}
-  - {x: 35, y: 41}
-  - {x: 36, y: 35}
-  - {x: 36, y: 36}
-  - {x: 36, y: 37}
-  - {x: 36, y: 38}
-  - {x: 36, y: 39}
-  - {x: 36, y: 40}
-  - {x: 36, y: 41}
   - {x: 34, y: 8}
   - {x: 34, y: 9}
   - {x: 34, y: 10}
@@ -3105,6 +3105,7 @@ MonoBehaviour:
   displayBlockers: 1
   displayComputations: 1
   costOrFieldsDisplay: 0
+  integratedOrSetCost: 1
   updateGoalInEditor: 0
 --- !u!1 &814481606
 GameObject:
@@ -6063,7 +6064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 976c923ea23da4fa2ac71b1a6dbe0b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::VehiclePreview
-  vehicleEntity: {fileID: 11400000, guid: 322db09d7936e41adb890f0b3801cd2d, type: 2}
+  vehicleEntity: {fileID: 0}
 --- !u!4 &1058276556
 Transform:
   m_ObjectHideFlags: 0

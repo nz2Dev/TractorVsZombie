@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -113,5 +114,85 @@ public class FlowFieldsTests {
         Assert.That(flowFields.GetFlowVector(1, 1), Is.EqualTo(Vector2Int.zero));
         Assert.That(flowFields.GetFlowVector(0, 0), Is.Not.EqualTo(new Vector2Int(1, 1)));
     }
+
+    [Test]
+    public void RaiseNeighborsCostOfOneUnit_SetAllNeighborsInCirclePaternToSpecifiedCost() {
+        int size = 3;
+        int cost = 1;
+        var flowFields = new FlowFields();
+        flowFields.SetGrid(size);
+        flowFields.RaiseNeighborsCost(1, 1, radius: 1, cost);
+
+        foreach (var segment in oneUnitCirclePattern) {
+            var testCell = segment + new Vector2Int(1, 1);
+            Assert.That(flowFields.GetCost(testCell.x, testCell.y), Is.EqualTo(cost));
+        }
+    }
+
+    [Test]
+    public void RaiseNeighborsCostOfTwoUnit_SetAllNeighborsInCirclePaternToSpecifiedCost() {
+        int size = 5;
+        int cost = 1;
+        var flowFields = new FlowFields();
+        var center = new Vector2Int(2, 2);
+        flowFields.SetGrid(size);
+        flowFields.RaiseNeighborsCost(center.x, center.y, radius: 2, cost);
+        var pattern = twoUnitCirclePattern;
+
+        foreach (var segment in pattern) {
+            var testCell = segment + center;
+            Assert.That(flowFields.GetCost(testCell.x, testCell.y), Is.EqualTo(cost));
+        }
+
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                var location = new Vector2Int(x, y);
+                
+                bool isLocationInPatern = false;
+                foreach (var segment in pattern) {
+                    var testCell = segment + center;
+                    if (testCell == location) {
+                        isLocationInPatern = true;
+                        break;
+                    }
+                }
+
+                if (!isLocationInPatern) {
+                    Debug.Log("testing: " + location);
+                    Assert.That(flowFields.GetCost(location.x, location.y), Is.EqualTo(0));
+                }
+            }
+        }
+    }
+
+    private static Vector2Int[] oneUnitCirclePattern = new Vector2Int[] {
+        new (-1, -1),
+        new (0, -1),
+        new (1, -1),
+        new (1, 0),
+        new (1, 1),
+        new (0, 1),
+        new (-1, 1),
+        new (-1, 0),
+    };
+    
+    private static Vector2Int[] twoUnitCirclePattern = new Vector2Int[] {
+        new (-2, -2),
+        new (-1, -2),
+        new (0, -2),
+        new (1, -2),
+        new (2, -2),
+        new (2, -1),
+        new (2, 0),
+        new (2, 1),
+        new (2, 2),
+        new (1, 2),
+        new (0, 2),
+        new (-1, 2),
+        new (-2, 2),
+        new (-2, 1),
+        new (-2, 0),
+        new (-2, 1),
+    };
 
 }
