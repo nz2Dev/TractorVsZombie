@@ -120,8 +120,8 @@ public class FlowFieldsSurface : MonoBehaviour {
         }
 
         foreach (var blocked in blockedCells) {
-            flowFields.RaiseNeighborsCost(blocked.x, blocked.y, radius: 1, cost: 3);
-            flowFields.RaiseNeighborsCost(blocked.x, blocked.y, radius: 2, cost: 2);
+            // flowFields.RaiseNeighborsCost(blocked.x, blocked.y, radius: 1, cost: 3);
+            // flowFields.RaiseNeighborsCost(blocked.x, blocked.y, radius: 2, cost: 2);
         }
     }
 
