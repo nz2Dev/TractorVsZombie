@@ -122,6 +122,8 @@ public class UnitController {
     private static readonly ProfilerMarker updateViewPoseMarker = new ProfilerMarker("UpdateViewPose");
 
     public void Update() {
+        UpdateGoal();
+
         using (readUnitOrientationMarker.Auto())
             ReadUnitOrientation();
         using (filterDeadUnitsMarker.Auto())
@@ -152,6 +154,13 @@ public class UnitController {
         UpdateProjectileHits();
         UpdateRocketLandingCombat();
         FilterElapsedRockets();
+    }
+
+    private void UpdateGoal() {
+        var tractor = vehicleService.GetVehiclePose(0);
+        targetPoint.position = tractor.position;
+        
+        navigationService.SetGoal(tractor.position);
     }
 
     private void OperateUnits() {
