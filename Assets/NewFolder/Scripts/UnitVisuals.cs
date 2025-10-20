@@ -38,6 +38,10 @@ public class UnitVisuals : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(-sourceToPosition.normalized, Vector3.up);
     }
 
+    internal void PlayTakeHit() {
+        animator.SetTrigger("Take Hit");
+    }
+
     internal void PlayDirectAttackAnimation() {
         animator.SetTrigger("Attack");
     }

@@ -28,7 +28,7 @@ public class Unit {
 
     private float lastTimeAttacked;
 
-    public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 1) {
+    public Unit(int id, Vector3 position, Quaternion rotation, float maxSpeed, int health = 2) {
         Id = id;
         Position = position;
         Rotation = rotation;

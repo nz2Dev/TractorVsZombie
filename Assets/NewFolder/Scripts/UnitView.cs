@@ -34,6 +34,10 @@ public class UnitView {
         unitVisuals[unitId].UpdatePositionAndRotation(position, rotation);
     }
 
+    internal void ShowTakeHit(int unitId) {
+        unitVisuals[unitId].PlayTakeHit();
+    }
+
     public void ShowDirectFrontAttack(int unitId) {
         unitVisuals[unitId].PlayDirectAttackAnimation();
     }

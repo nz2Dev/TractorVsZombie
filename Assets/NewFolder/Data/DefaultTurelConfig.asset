@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimSpeed: 5
   fireCooldown: 0.2
-  bulletDamage: 10
+  bulletDamage: 1
   bulletSpeed: 15
   bulletShootAudioClips:
   - {fileID: 8300000, guid: 63e582df7ac9f47728c689a10aa7ce66, type: 3}

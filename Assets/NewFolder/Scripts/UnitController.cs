@@ -223,20 +223,27 @@ public class UnitController {
             var combatId = unitIdToCombatId[unit.Id];
             var combatAgentState = combatService.GetAgentState(combatId);
             
+            bool anyDamage = false;
             if (combatAgentState.exploded && unit.TryTakeExplosionHit(Time.time, combatAgentState.damage, combatAgentState.damageSourcePosition)) {
                 var unitPhysicsId = unitIdToPhysicsId[unit.Id];
                 physicsService.UpdatePhysicsEntityPosition(unitPhysicsId, unit.Position);
                 physicsService.SetPhysicsActive(unitPhysicsId, true);
                 physicsService.AddExplosionForce(unitPhysicsId, 10, combatAgentState.damageSourcePosition, 4f, 1, ForceMode.Impulse);
                 // unitView.ShowTakeExplosionHit(unit.Id);
+                anyDamage = true;
             }
 
             if (combatAgentState.projectiled) {
                 unit.TakeProjectileHit(combatAgentState.damage, combatAgentState.damageSourcePosition);
                 // unitView.ShowTakeProjectileHit(unit.Id, combatAgentState.damageSourcePosition);
+                anyDamage = true;
             }
 
             combatService.ClearAgentState(combatId);
+
+            if (anyDamage) {
+                unitView.ShowTakeHit(unit.Id);
+            }
 
             if (!unit.IsAlive) {
                 if (unit.DeathCause.type == Unit.DamageType.Projectile) {
