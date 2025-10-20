@@ -71,6 +71,10 @@ public class VehiclePhysicsRig {
         root.GetComponent<Rigidbody>().mass = mass;
     }
 
+    public void Destroy() {
+        GameObject.Destroy(root);
+    }
+
     public void CreateWheelAxis(float length, float upOffset, float forwardOffset, float radius, float wheelMass, bool drive, bool steer) {
         var wheelL = CreateDefaultWheel(radius, wheelMass);
         wheelL.transform.localPosition = new Vector3(-length / 2f, upOffset, forwardOffset);

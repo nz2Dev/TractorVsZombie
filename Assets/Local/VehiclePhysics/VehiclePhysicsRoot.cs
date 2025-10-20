@@ -53,6 +53,11 @@ public class VehiclePhysicsRoot : MonoBehaviour {
         return rig;
     }
 
+    public void DestroyRig(VehiclePhysicsRig rig) {
+        rigs.Remove(rig);
+        rig.Destroy();
+    }
+
     public void MakeTowingConnection(VehiclePhysicsRig headRig, VehiclePhysicsRig tailRig, float anchorsOffset = 0) {
         var towingConnector = tailRig.GetTowingConnector();
         var pullingConnector = headRig.GetPullingConnector();

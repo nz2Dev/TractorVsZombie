@@ -7,8 +7,9 @@ using UnityEngine.Assertions;
 
 public class UnitView {
 
-    private Dictionary<int, UnitVisuals> unitVisuals = new Dictionary<int, UnitVisuals>();
-    private readonly List<VehicleVisuals> visualsRegistry = new ();
+    private readonly Dictionary<int, UnitVisuals> unitVisuals = new Dictionary<int, UnitVisuals>();
+    int vehicleViewIdCounter;
+    private readonly Dictionary<int, VehicleVisuals> visualsRegistry = new ();
     private readonly Dictionary<int, TurelVisuals> turelVisualRegistry = new ();
     private readonly Dictionary<int, RocketLauncherVisuals> launcherVisualsRegistry = new ();
 
@@ -73,8 +74,23 @@ public class UnitView {
             );
         }
         
-        visualsRegistry.Add(vehicleVisuals);
-        return visualsRegistry.Count - 1;
+        var nextVehicleViewId = vehicleViewIdCounter++;
+        visualsRegistry[nextVehicleViewId] = vehicleVisuals;
+        return nextVehicleViewId;
+    }
+
+    internal void RemoveVehicleView(int viewId) {
+        var vehicleVisuals = visualsRegistry[viewId];
+        vehicleVisuals.DestroySelf();
+        visualsRegistry.Remove(viewId);
+        if (turelVisualRegistry.TryGetValue(viewId, out var turelVisuals)) {
+            turelVisuals.DestroySelf();
+            turelVisualRegistry.Remove(viewId);
+        }
+        if (launcherVisualsRegistry.TryGetValue(viewId, out var launcherVisuals)) {
+            launcherVisuals.DestroySelf();
+            launcherVisualsRegistry.Remove(viewId);
+        }
     }
 
     public void UpdateVehiclePose(int vehicleIndex, VehicleBodyPose vehiclePose) {

@@ -21,6 +21,10 @@ public class TurelVisuals : MonoBehaviour {
         customData = new List<Vector4>(bulletSystem.main.maxParticles);
     }
 
+    public void DestroySelf() {
+        GameObject.Destroy(gameObject);
+    }
+
     public void UpdatePosition(Vector3 position) {
         transform.position = position;
     }

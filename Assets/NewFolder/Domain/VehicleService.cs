@@ -39,7 +39,8 @@ public struct WheelAxisData {
 public class VehicleService {
     
     private readonly VehiclePhysicsRoot physicsRoot;
-    private List<VehiclePhysicsRig> physicsRegistry = new ();
+    private int idCounter;
+    private Dictionary<int, VehiclePhysicsRig> physicsRegistry = new ();
 
     public VehicleService(VehiclePhysicsRoot physicsRoot) {
         this.physicsRoot = physicsRoot;
@@ -75,9 +76,15 @@ public class VehicleService {
             }
         }
 
-        physicsRegistry.Add(vehiclePhysics);
-        var lastVehicleIndex = physicsRegistry.Count - 1;
-        return lastVehicleIndex;
+        var nextRigId = idCounter++;
+        physicsRegistry[nextRigId] = vehiclePhysics;
+        return nextRigId;
+    }
+
+    public void DeleteVehicle(int vehicleId) {
+        var vehiclePhysics = physicsRegistry[vehicleId];
+        physicsRoot.DestroyRig(vehiclePhysics);
+        physicsRegistry.Remove(vehicleId);
     }
 
     public void UpdateBase(int vehicleIndex, float mass) {

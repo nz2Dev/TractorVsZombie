@@ -25,6 +25,15 @@ public class RocketLauncherVisuals : MonoBehaviour {
         rocketFlies = new ();
     }
 
+    public void DestroySelf() {
+        for (int i = 0; i < rocketFlies.Count; i++) {
+            GameObject.Destroy(rocketFlies[i].visuals);
+            rocketFlies.RemoveAt(i);
+            i--;
+        }
+        GameObject.Destroy(gameObject);
+    }
+
     private void Update() {
         for (int i = 0; i < rocketFlies.Count; i++) {
             var rocketFly = rocketFlies[i];

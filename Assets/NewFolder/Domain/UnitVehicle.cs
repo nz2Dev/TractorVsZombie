@@ -16,8 +16,11 @@ public class UnitVehicle {
     public UnitVehicle(UnitVehicleData data) {
         WheelAxisPoses = new WheelAxisPose[data.physicsData.wheelAxisDatas.Length];
         this.data = data;
+        Health = 5;
     }
 
+    public int Health { get; private set; }    
+    public bool IsAlive => Health > 0;
     public VehiclePhysicsData PhysicsData => data.physicsData;
     public UnitVehicleData.VisualsData VisualsData => data.visualsData;
     public AudioClip EngineIdleSound => data.soundData.engineIdleSound;
@@ -58,4 +61,7 @@ public class UnitVehicle {
         WheelAxisPoses[index] = pose;
     }
 
+    internal void TakeDamage(int damage) {
+        Health -= damage;
+    }
 }

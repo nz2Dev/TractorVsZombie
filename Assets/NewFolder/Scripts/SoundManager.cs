@@ -41,6 +41,12 @@ public class SoundManager : MonoBehaviour {
         audioSource.volume = volume;
     }
 
+    public void StopLoop(int loopId) {
+        var audioSource = loopSources[loopId];
+        GameObject.Destroy(audioSource.gameObject);
+        loopSources.Remove(loopId);
+    }
+
     public void PlayEffectDelayed(Vector3 position, float delay, params AudioClip[] audioClipVariants) {
         var audioSource = GetNextNonPlaying();
         if (audioSource == null) {

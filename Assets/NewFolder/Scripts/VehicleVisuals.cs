@@ -21,6 +21,9 @@ public class VehicleVisuals {
         root.transform.SetParent(container, worldPositionStays: false);
         root.transform.position = position;
     }
+    public void DestroySelf() {
+        GameObject.Destroy(root);
+    }
 
     public void AddBaseGeometry(GameObject baseGeometryPrefab) {
         var baseGeometry = Object.Instantiate(baseGeometryPrefab, Vector3.zero, Quaternion.identity);

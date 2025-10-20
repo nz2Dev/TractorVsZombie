@@ -143,6 +143,9 @@ public class UnitController {
 
         ProduceNewVehicleUnits();
         ReadVehiclesOrientation();
+        ReadVehiclesCombat();
+        FilterDeadVehicles();
+
         UpdateVehicleNavigation();
         UpdateVehicleCombat();
         UpdateVehiclePhysics();
@@ -332,6 +335,32 @@ public class UnitController {
         }
     }
 
+    private void DespawnVehicleAt(int vehicleIndex) {
+        vehicles.RemoveAt(vehicleIndex);
+
+        unitView.RemoveVehicleView(vehicleViewIds[vehicleIndex]);
+        vehicleViewIds.RemoveAt(vehicleIndex);
+
+        combatService.UnregisterAgent(vehicleCombats[vehicleIndex]);
+        vehicleCombats.RemoveAt(vehicleIndex);
+
+        vehicleService.DeleteVehicle(vehiclePhysics[vehicleIndex]);
+        vehiclePhysics.RemoveAt(vehicleIndex);
+
+        soundManager.StopLoop(vehicleSoundLoop[vehicleIndex]);
+        vehicleSoundLoop.RemoveAt(vehicleIndex);
+
+        vehicleRocketLaunchers.RemoveAt(vehicleIndex);
+        vehicleRocketsRegistry.RemoveAt(vehicleIndex);
+
+        if (vehicleTurels[vehicleIndex] != null) {
+            var projectileGroupId = vehicleTurelProjectileGroupIds[vehicleIndex];
+            projectileService.RemoveGroup(projectileGroupId);
+        }
+        vehicleTurels.RemoveAt(vehicleIndex);
+        vehicleTurelProjectileGroupIds.RemoveAt(vehicleIndex);
+    }
+
     private void ReadVehiclesOrientation() {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
@@ -350,6 +379,30 @@ public class UnitController {
             
             var vehicleRocketLauncher = vehicleRocketLaunchers[vehicleIndex];
             vehicleRocketLauncher?.Translate(vehicle.Position);
+        }
+    }
+
+    private void ReadVehiclesCombat() {
+        for (int i = 0; i < vehicles.Count; i++) {
+            var vehicle = vehicles[i];
+            var vehicleCombatId = vehicleCombats[i];
+
+            var vehicleCombatState = combatService.GetAgentState(vehicleCombatId);
+            if (vehicleCombatState.projectiled || vehicleCombatState.exploded) {
+                vehicle.TakeDamage(vehicleCombatState.damage);
+            }
+
+            combatService.ClearAgentState(vehicleCombatId);
+        }
+    }
+
+    private void FilterDeadVehicles() {
+        for (int i = 0; i < vehicles.Count; i++) {
+            var vehicle = vehicles[i];
+            if (!vehicle.IsAlive) {
+                DespawnVehicleAt(i);
+                i--;
+            }
         }
     }
 
@@ -456,7 +509,8 @@ public class UnitController {
     private void SpawnBulletProjectile(int vehicleIndex, Turel turel, Bullet bullet) {
         var projectileGroupId = vehicleTurelProjectileGroupIds[vehicleIndex];
         var projectileId = projectileService.CreateProjectile(projectileGroupId, bullet.firePoint, bullet.velocity, 5f);
-        unitView.ShowBulletShoot(vehicleIndex, projectileId, bullet.velocity);
+        var vehicleViewId = vehicleViewIds[vehicleIndex];
+        unitView.ShowBulletShoot(vehicleViewId, projectileId, bullet.velocity);
         soundManager.PlayEffect(bullet.firePoint, turel.BulletShootAudioClips);
     }
 
@@ -494,7 +548,8 @@ public class UnitController {
 
                 if (combatService.ApplyProjectileDamage(combatId, projectileState.position, projectileState.velocity, turel.BulletDamage)) {
                     projectileService.KillProjectile(projectileState.id);
-                    unitView.ShowBulletCrash(vehicleIndex, projectileState.id);
+                    var vehicleViewId = vehicleViewIds[vehicleIndex];
+                    unitView.ShowBulletCrash(vehicleViewId, projectileState.id);
                 }
             }
         }

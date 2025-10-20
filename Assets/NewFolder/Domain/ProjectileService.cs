@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -82,6 +83,10 @@ public class ProjectileService : MonoBehaviour {
         var nextGroupId = groupIdCounter++;
         groupRegistry[nextGroupId] = new List<ProjectileEntity>(64);
         return nextGroupId;
+    }
+
+    public void RemoveGroup(int projectileGroupId) {
+        groupRegistry.Remove(projectileGroupId);
     }
 
     public int CreateProjectile(int groupId, Vector3 position, Vector3 velocity, float lifetime) {
