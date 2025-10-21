@@ -5,19 +5,14 @@ using UnityEngine;
 
 public class WeaponView {
     
-    private readonly TurelVisuals turelVisualsPrefab;
-    private readonly RocketLauncherVisuals rocketLauncherVisualsPrefab;
-
     private readonly Dictionary<int, TurelVisuals> turelVisualRegistry = new ();
     private readonly Dictionary<int, RocketLauncherVisuals> launcherVisualsRegistry = new ();
 
-    public WeaponView(TurelVisuals turelVisualsPrefab, RocketLauncherVisuals rocketLauncherVisualsPrefab) {
-        this.turelVisualsPrefab = turelVisualsPrefab;
-        this.rocketLauncherVisualsPrefab = rocketLauncherVisualsPrefab;
+    public WeaponView() {
     }
 
-    public void AddTurel(int turelId, Vector3 position) {
-        turelVisualRegistry[turelId] = GameObject.Instantiate(turelVisualsPrefab, position, Quaternion.identity);
+    public void AddTurel(int turelId, Vector3 position, TurelVisuals visualsPrefab) {
+        turelVisualRegistry[turelId] = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
     }
 
     public void UpdateTurelOrientation(int turelId, Vector3 position, Vector3 lookVector) {
@@ -41,8 +36,8 @@ public class WeaponView {
         turelVisuals.KillBulletFire(id);
     }
 
-    internal void AddRocketLauncher(int launcherId, Vector3 position) {
-        launcherVisualsRegistry[launcherId] = GameObject.Instantiate(rocketLauncherVisualsPrefab, position, Quaternion.identity);
+    internal void AddRocketLauncher(int launcherId, Vector3 position, RocketLauncherVisuals visualsPrefab) {
+        launcherVisualsRegistry[launcherId] = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
     }
 
     internal void ShowRocketFly(int launcherId, int rocketId, RocketTrajectory trajectory, float rocketFlyDuration) {

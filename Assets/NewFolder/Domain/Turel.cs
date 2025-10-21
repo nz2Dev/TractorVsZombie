@@ -24,6 +24,7 @@ public class Turel {
     public Vector3 GunForward { get; private set; }
     public float LastShootTime { get; private set; }
 
+    public TurelVisuals Visuals => config.visualsPrefab;
     public int BulletDamage => config.bulletDamage;
     public float BulletLifetime => config.bulletLifetime;
     public AudioClip[] BulletShootAudioClips => config.bulletShootAudioClips;

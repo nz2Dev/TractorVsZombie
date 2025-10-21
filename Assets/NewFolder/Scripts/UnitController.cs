@@ -315,7 +315,7 @@ public class UnitController {
         vehicleSoundLoop.Add(soundLoopId);
 
         if (vehicle.WeaponsData.rocketLauncherConfig != null) {
-            unitView.SetRocketLauncherWeapon(viewId, vehicle.Position);
+            unitView.SetRocketLauncherWeapon(viewId, vehicle.Position, vehicle.WeaponsData.rocketLauncherConfig.visualsPrefab);
 
             var vehicleRocketLauncher = new RocketLauncher(-1, vehicle.Position, vehicle.WeaponsData.rocketLauncherConfig);
             vehicleRocketLaunchers.Add(vehicleRocketLauncher);
@@ -329,7 +329,7 @@ public class UnitController {
 
         if (vehicle.WeaponsData.turelConfig != null) {
             Assert.IsNull(vehicleRocketLaunchers[vehicles.Count - 1]);
-            unitView.SetTurelWeapon(viewId, vehicle.Position);
+            unitView.SetTurelWeapon(viewId, vehicle.Position, vehicle.WeaponsData.turelConfig.visualsPrefab);
 
             var turel = new Turel(-1, vehicle.Position, vehicle.WeaponsData.turelConfig);
             vehicleTurels.Add(turel);

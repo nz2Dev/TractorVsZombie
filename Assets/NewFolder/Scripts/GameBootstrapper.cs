@@ -31,9 +31,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private int trailersCount = 3;
     [Space]
     [SerializeField] private ProjectileService projectileServiceImpl;
-    [SerializeField] private TurelVisuals turelVisualsPrefab;
     [SerializeField] private TurelConfig turelData;
-    [SerializeField] private RocketLauncherVisuals rocketLauncherVisualsPrefab;
     [SerializeField] private RocketLauncherConfig rocketLauncherConfig;
     [Space]
     [SerializeField] private string rewardsLayerName;
@@ -54,8 +52,8 @@ public class GameBootstrapper : MonoBehaviour {
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var vehicleView = new VehicleView(null);
-        var unitView = new UnitView(unitVisualsPrefab, null, turelVisualsPrefab, rocketLauncherVisualsPrefab);
-        var weaponView = new WeaponView(turelVisualsPrefab, rocketLauncherVisualsPrefab);
+        var unitView = new UnitView(unitVisualsPrefab, null);
+        var weaponView = new WeaponView();
         var rewardsView = new RewardsView(rewardVisualsPrefab);
 
         playerController = new PlayerController(

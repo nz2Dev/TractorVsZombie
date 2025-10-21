@@ -15,14 +15,10 @@ public class UnitView {
 
     private readonly Transform container;
     private readonly UnitVisuals visualsPrefab;
-    private readonly TurelVisuals turelVisualsPrefab;
-    private readonly RocketLauncherVisuals rocketLauncherVisualsPrefab;
 
-    public UnitView(UnitVisuals visualsPrefab, Transform container, TurelVisuals turelVisualsPrefab, RocketLauncherVisuals rocketLauncherVisualsPrefab) {
+    public UnitView(UnitVisuals visualsPrefab, Transform container) {
         this.visualsPrefab = visualsPrefab;
         this.container = container;
-        this.turelVisualsPrefab = turelVisualsPrefab;
-        this.rocketLauncherVisualsPrefab = rocketLauncherVisualsPrefab;
     }
 
     public void AddUnit(int unitId, Vector3 position) {
@@ -107,8 +103,8 @@ public class UnitView {
         vehicleVisuals.SetAxisPositionAndRotation(axisIndex, wheelAxisPose);
     }
 
-    internal void SetTurelWeapon(int viewId, Vector3 position) {
-        turelVisualRegistry[viewId] = GameObject.Instantiate(turelVisualsPrefab, position, Quaternion.identity);
+    internal void SetTurelWeapon(int viewId, Vector3 position, TurelVisuals visualsPrefab) {
+        turelVisualRegistry[viewId] = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
     }
 
     public void UpdateTurelOrientation(int turelId, Vector3 position, Vector3 lookVector) {
@@ -132,8 +128,8 @@ public class UnitView {
         turelVisuals.KillBulletFire(id);
     }
 
-    internal void SetRocketLauncherWeapon(int viewId, Vector3 position) {
-        launcherVisualsRegistry[viewId] = GameObject.Instantiate(rocketLauncherVisualsPrefab, position, Quaternion.identity);
+    internal void SetRocketLauncherWeapon(int viewId, Vector3 position, RocketLauncherVisuals visualsPrefab) {
+        launcherVisualsRegistry[viewId] = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
     }
 
     internal void ShowRocketFly(int launcherId, int rocketId, RocketTrajectory trajectory, float rocketFlyDuration) {

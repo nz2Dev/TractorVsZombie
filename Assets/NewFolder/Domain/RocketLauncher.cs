@@ -21,6 +21,7 @@ public class RocketLauncher {
     public Vector3 Position { get; private set; }
     public Vector3 AimPoint { get; private set; }
 
+    public RocketLauncherVisuals Visuals => config.visualsPrefab;
     public float RocketAmplitude => config.rocketAmplitude;
     public float RocketFlyDuration => config.flyDuration;
     public AudioClip[] RocketLaunchEffects => config.launchEffectClips;

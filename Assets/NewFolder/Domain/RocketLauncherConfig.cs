@@ -9,4 +9,5 @@ public class RocketLauncherConfig : ScriptableObject {
     public float rocketAmplitude = 10;
     public float flyDuration = 4;
     public int damage = 1;
+    public RocketLauncherVisuals visualsPrefab;
 }

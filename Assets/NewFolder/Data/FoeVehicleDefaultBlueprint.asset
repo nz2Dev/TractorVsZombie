@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponsData:
     rocketLauncherConfig: {fileID: 0}
-    turelConfig: {fileID: 11400000, guid: f1440898271324ef08ca9ef0f40484d2, type: 2}
+    turelConfig: {fileID: 11400000, guid: 58a96b7c497c64729943378411e5aa57, type: 2}
   drivingData:
     maxTorque: 20
     maxBreaksTorque: 20

@@ -9,4 +9,5 @@ public class TurelConfig : ScriptableObject {
     public AudioClip[] bulletShootAudioClips;
     public float gunHeight = 0.5f;
     public float bulletLifetime = 3;
+    public TurelVisuals visualsPrefab;
 }

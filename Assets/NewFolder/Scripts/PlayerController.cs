@@ -266,7 +266,7 @@ public class PlayerController {
 
         rocketLauncherRocketsRegistry[launcherId] = new List<Rocket>();
         
-        view.AddRocketLauncher(launcherId, rocketLauncher.Position);
+        view.AddRocketLauncher(launcherId, rocketLauncher.Position, rocketLauncher.Visuals);
     }
 
     private void UpdateRocketLauncherOrientation() {
@@ -358,7 +358,7 @@ public class PlayerController {
         var turelProjectilesGroupId = projectileService.AddGroup();
         turelToProjectileGroupId[turel.Id] = turelProjectilesGroupId;
         
-        view.AddTurel(turelId, turel.Position);
+        view.AddTurel(turelId, turel.Position, turel.Visuals);
     }
 
     private void UpdateTurelsOrientation() {
