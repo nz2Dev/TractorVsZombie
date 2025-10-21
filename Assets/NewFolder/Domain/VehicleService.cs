@@ -12,6 +12,7 @@ public struct WheelAxisPose {
 
 public struct VehicleBodyPose {
     public Vector3 position;
+    public Vector3 velocity;
     public Quaternion rotation;
 }
 
@@ -147,7 +148,8 @@ public class VehicleService {
         var vehiclePhysics = physicsRegistry[vehicleIndex];
         return new VehicleBodyPose {
             position = vehiclePhysics.Position,
-            rotation = vehiclePhysics.Rotation
+            rotation = vehiclePhysics.Rotation,
+            velocity = vehiclePhysics.Velocity
         };
     }
 

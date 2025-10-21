@@ -16,6 +16,9 @@ public class DriverVehicleData : ScriptableObject {
         public float maxTorque;
         public float maxBreaksTorque;
         public float maxSteerDegrees;
+        public float minStterAmount;
+        public float speedCeilingForSteering;
+        public float speedKFactor;
         public float powerAccelerationSpeed;
     }
 

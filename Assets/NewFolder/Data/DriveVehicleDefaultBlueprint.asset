@@ -18,10 +18,13 @@ MonoBehaviour:
     maxTorque: 50
     maxBreaksTorque: 50
     maxSteerDegrees: 40
+    minStterAmount: 0.2
+    speedCeilingForSteering: 5
+    speedKFactor: 2
     powerAccelerationSpeed: 1
   soundData:
     engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
-    hitImpactSounds: 
+    hitImpactSounds:
     - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
   visualsData:
     baseGeometry: {fileID: 6437747089859687489, guid: c0a65a2b06cc04f75af45a58b851557f, type: 3}
@@ -45,3 +48,4 @@ MonoBehaviour:
       radius: 0.15
       drive: 1
       stear: 1
+    towingTongueLength: 0

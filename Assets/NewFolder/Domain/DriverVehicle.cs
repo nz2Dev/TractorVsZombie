@@ -10,7 +10,8 @@ public class DriverVehicle {
     public WheelAxisPose[] WheelAxisPoses { get; private set; }
 
     private float drivePower;
-    private float steeringDegrees;
+    private float steering;
+    private float steerLimit;
     private float breaksPower;
 
     public DriverVehicle(DriverVehicleData data) {
@@ -26,19 +27,15 @@ public class DriverVehicle {
     public float DrivePower => drivePower;
     public float BreaksTorque => breaksPower * data.drivingData.maxBreaksTorque;
     public float MotorTorque => drivePower * data.drivingData.maxTorque;
-    public float SteerDegrees => steeringDegrees;
+    public float SteerDegrees => steering * (data.drivingData.maxSteerDegrees * steerLimit);
     public float RamRadius => data.ramRadius;
     public float RewardCollectRadius => data.rewardCollectRadius;
 
     public void Steer(float steerAmount) {
-        this.steeringDegrees = steerAmount * data.drivingData.maxSteerDegrees;
-    }
-
-    public void SteerToward(Vector3 direction) {
-        var rotation = BodyPose.rotation;
-        var forward = rotation * Vector3.forward;
-        var forwardToDirectionDegrees = Vector3.SignedAngle(forward, direction, Vector3.up);
-        this.steeringDegrees = Mathf.Clamp(forwardToDirectionDegrees, -data.drivingData.maxSteerDegrees, data.drivingData.maxSteerDegrees);
+        float t = Mathf.Clamp01(BodyPose.velocity.magnitude / data.drivingData.speedCeilingForSteering);
+        float steerFactor = 1f - Mathf.Pow(t, data.drivingData.speedKFactor); // k > 1 makes the falloff sharper near top speed
+        steerLimit = Mathf.Max(data.drivingData.minStterAmount, steerFactor);
+        this.steering = steerAmount;
     }
 
     public void Throttle(float gas, float deltaTime, bool boost) {

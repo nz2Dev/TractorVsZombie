@@ -27,11 +27,13 @@ public class VehiclePhysicsRig {
     
     private readonly int operationLayer;
     private readonly GameObject root;
+    private readonly Rigidbody rootRigidbody;
     private readonly List<WheelAxis> wheelAxes = new ();
 
     public int AxisCount => wheelAxes.Count;
     public Vector3 Position => root.transform.position;
     public Quaternion Rotation => root.transform.rotation;
+    public Vector3 Velocity => rootRigidbody.linearVelocity;
 
     internal VehiclePhysicsRig(Vector3 position, Transform container, float mass, int operationLayer = 0) {
         this.operationLayer = operationLayer;
@@ -39,15 +41,15 @@ public class VehiclePhysicsRig {
         root.layer = operationLayer;
         root.transform.SetParent(container, worldPositionStays: false);
         root.transform.position = position;
-        var rigidbody = root.GetComponent<Rigidbody>();
-        rigidbody.position = position;
-        rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-        rigidbody.automaticCenterOfMass = false;
-        rigidbody.centerOfMass = Vector3.zero;
-        rigidbody.hideFlags = DefaultHideFlag;
-        rigidbody.isKinematic = false;
-        rigidbody.useGravity = true;
-        rigidbody.mass = mass;
+        rootRigidbody = root.GetComponent<Rigidbody>();
+        rootRigidbody.position = position;
+        rootRigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+        rootRigidbody.automaticCenterOfMass = false;
+        rootRigidbody.centerOfMass = Vector3.zero;
+        rootRigidbody.hideFlags = DefaultHideFlag;
+        rootRigidbody.isKinematic = false;
+        rootRigidbody.useGravity = true;
+        rootRigidbody.mass = mass;
     }
 
     public void ConfigureBase(Vector3 baseSize) {
