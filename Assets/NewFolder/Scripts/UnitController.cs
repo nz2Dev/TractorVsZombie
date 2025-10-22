@@ -429,12 +429,6 @@ public class UnitController {
         }
     }
 
-    private void ReadCombatState() {
-        foreach (var vehicle in vehicles) {
-            // no health or alive state for vehicle
-        }
-    }
-
     private void OperateWeapons() {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicel = vehicles[vehicleIndex];
