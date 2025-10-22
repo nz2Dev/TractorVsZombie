@@ -1205,7 +1205,7 @@ MonoBehaviour:
   vehiclePhysicsRoot: {fileID: 1745157901}
   driveVehicle: {fileID: 11400000, guid: 7dc24518fd78948c0b8769c94a6cb051, type: 2}
   trailerVehicle: {fileID: 11400000, guid: 1dbd68138503c4d99b4eba6949b1331d, type: 2}
-  trailersCount: 0
+  trailersCount: 2
   projectileServiceImpl: {fileID: 910901572}
   turelData: {fileID: 11400000, guid: f1440898271324ef08ca9ef0f40484d2, type: 2}
   rocketLauncherConfig: {fileID: 11400000, guid: 241538f52fcdf49d48f52b7c7405a924, type: 2}
@@ -2768,7 +2768,7 @@ Transform:
   m_GameObject: {fileID: 618815298}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4184007, y: 0.5700358, z: -0.4184008, w: 0.5700359}
-  m_LocalPosition: {x: -5.395744, y: 17.386757, z: -0.012057687}
+  m_LocalPosition: {x: -5.3956237, y: 17.372473, z: -0.0000141954}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

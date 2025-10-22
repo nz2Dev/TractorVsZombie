@@ -54,7 +54,7 @@ public class GameBootstrapper : MonoBehaviour {
         var vehicleView = new VehicleView(null);
         var unitView = new UnitView(unitVisualsPrefab, null);
         var weaponView = new WeaponView();
-        var rewardsView = new RewardsView(rewardVisualsPrefab);
+        var rewardsView = new RewardsView();
 
         playerController = new PlayerController(
             vehicleService, vehicleView,
@@ -90,7 +90,9 @@ public class GameBootstrapper : MonoBehaviour {
             foeVehicle,
             maxVehicelCount,
             soundManager,
-            projectileService);
+            projectileService,
+            
+            rewardVisualsPrefab);
 
         if (playerComponent) playerController.Init();
         if (unitsComponent) unitController.Init();

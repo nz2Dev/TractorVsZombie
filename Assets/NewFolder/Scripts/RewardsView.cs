@@ -4,22 +4,20 @@ using UnityEngine;
 
 public class RewardsView {
     
-    private readonly GameObject rewardVisualsPrefab;
-    private readonly Dictionary<int, GameObject> rewardVisuals = new ();
+    private readonly Dictionary<int, GameObject> rewardVisualsRegistry = new ();
     
-    public RewardsView(GameObject rewardVisualsPrefab) {
-        this.rewardVisualsPrefab = rewardVisualsPrefab;
+    public RewardsView() {
     }
 
-    public void SpawnReward(int id, Vector3 position) {
+    public void SpawnReward(int id, Vector3 position, GameObject rewardVisualsPrefab) {
         var visuals = GameObject.Instantiate(rewardVisualsPrefab, position, Quaternion.identity);
-        rewardVisuals[id] = visuals;
+        rewardVisualsRegistry[id] = visuals;
     }
 
     public void DespawnReward(int id) {
-        var visuals = rewardVisuals[id];
+        var visuals = rewardVisualsRegistry[id];
         Object.Destroy(visuals);
-        rewardVisuals.Remove(id);
+        rewardVisualsRegistry.Remove(id);
     }
 
 }

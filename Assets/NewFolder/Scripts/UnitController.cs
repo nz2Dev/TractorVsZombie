@@ -14,6 +14,8 @@ public class UnitController {
     private readonly RewardsMediator rewardsMediator;
     private readonly ProjectileService projectileService;
 
+    private readonly GameObject pointsRewardVisualsPrefab;
+
     private readonly VehicleService vehicleService;
     private readonly UnitVehicleData foeVehicleData;
     private readonly SoundManager soundManager;
@@ -49,8 +51,8 @@ public class UnitController {
 
     public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
         Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService,
-        RewardsMediator rewardsMediator, VehicleService vehicleService, UnitVehicleData foeVehicle, int maxVehiclesCount, 
-        SoundManager soundManager, ProjectileService projectileService) {
+        RewardsMediator rewardsMediator, VehicleService vehicleService, UnitVehicleData foeVehicle, int maxVehiclesCount,
+        SoundManager soundManager, ProjectileService projectileService, GameObject pointsRewardVisualsPrefab) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.unitView = crowdView;
@@ -67,6 +69,7 @@ public class UnitController {
         this.maxVehiclesCount = maxVehiclesCount;
         this.soundManager = soundManager;
         this.projectileService = projectileService;
+        this.pointsRewardVisualsPrefab = pointsRewardVisualsPrefab;
     }
 
     public void Init() {
@@ -255,7 +258,7 @@ public class UnitController {
                 combatService.UnregisterAgent(combatId);
                 unitIdToCombatId.Remove(unit.Id);
 
-                rewardsMediator.AddReward(unit.Position, radius: 1);
+                rewardsMediator.AddReward(unit.Position, radius: 1, RewardType.Points, pointsRewardVisualsPrefab, new RewardConfigs {});
             }
         }
     }
@@ -400,6 +403,12 @@ public class UnitController {
             }
 
             combatService.ClearAgentState(vehicleCombatId);
+
+            if (!vehicle.IsAlive) {
+                rewardsMediator.AddReward(vehicle.Position, 3, RewardType.TurelWeapon, vehicle.WeaponsData.turelConfig.visualsPrefab.gameObject, new RewardConfigs {
+                    turelConfig = vehicle.WeaponsData.turelConfig
+                });
+            }
         }
     }
 

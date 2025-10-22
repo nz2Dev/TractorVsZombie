@@ -122,12 +122,21 @@ public class PlayerController {
 
     private void DiscoverRewards() {
         foreach (var rewardState in rewardsMediator.RewardAddedEvents) {
-            rewardsView.SpawnReward(rewardState.id, rewardState.position);
+            rewardsView.SpawnReward(rewardState.id, rewardState.position, rewardState.rewardVisuals);
         }
     }
 
+    private List<RewardState> rewardsBuffer = new (10);
+
     private void CollectRewards() {
-        rewardsMediator.CollectRewards(driverVehicle.BodyPose.position, driverVehicle.RewardCollectRadius);
+        if (rewardsMediator.CollectRewards(driverVehicle.BodyPose.position, driverVehicle.RewardCollectRadius, rewardsBuffer)) {
+            foreach (var reward in rewardsBuffer) {
+                if (reward.rewardType == RewardType.TurelWeapon) {
+                    var trailerVehicle = SpawnTrailerVehicle(reward.position);
+                    SpawnTurel(trailerVehicle, reward.configs.turelConfig);
+                }
+            }
+        }
     }
 
     private void FilterRemovedRewards() {
@@ -195,7 +204,7 @@ public class PlayerController {
         }
     }
 
-    private void SpawnTrailerVehicle(Vector3 position) {
+    private TrailerVehicle SpawnTrailerVehicle(Vector3 position) {
         var trailerVehicle = new TrailerVehicle(trailerVehicleData);
         trailerVehicles.Add(trailerVehicle);
 
@@ -208,6 +217,8 @@ public class PlayerController {
         
         var trailerViewId = vehicleView.AddTrailerVehicle(position, trailerVehicle.PhysicsData, trailerVehicle.VisualsData);
         trailerViewIds.Add(trailerViewId);
+        
+        return trailerVehicle;
     }
 
     private void ReadVehiclesOrientation() {
