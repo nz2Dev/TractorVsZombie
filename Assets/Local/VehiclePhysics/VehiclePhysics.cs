@@ -33,6 +33,12 @@ public class VehiclePhysics : MonoBehaviour {
         }
     }
 
+    public struct VehicleConnector {
+        public Rigidbody rigidbody;
+        public Vector3 anchorOffset;
+        public Vector3 worldAnchorRestPoint;
+    }
+
     private Rigidbody rootRigidbody;
 
     [SerializeField] private BoxCollider baseCollider;
@@ -43,6 +49,7 @@ public class VehiclePhysics : MonoBehaviour {
     [Space]
     [SerializeField] private ConfigurableJoint turningBodyJoint;
     [SerializeField] private Rigidbody turningRigidbody;
+    [SerializeField] private BoxCollider turningBoxCollider;
 
     internal BoxCollider BaseCollider => baseCollider;
     internal WheelAxis FrontAxis => frontAxis;
@@ -100,6 +107,52 @@ public class VehiclePhysics : MonoBehaviour {
         baseCollider = boxCollider;
     }
 
+    public VehicleConnector GetTowingConnector() {
+        if (towingFrontAxis) {
+            return GetTurningBodyTowingConnector();
+        } else {
+            return GetBaseVehicleTowingConnector();
+        }
+    }
+
+    private VehicleConnector GetBaseVehicleTowingConnector() {
+        var baseSize = baseCollider.size;
+        
+        var inFrontOfBoxCollider = new Vector3(0, 0, baseSize.z * 0.5f);
+        var worldAnchorRestPoint = transform.TransformPoint(inFrontOfBoxCollider);
+        
+        return new VehicleConnector {
+            rigidbody = rootRigidbody,
+            anchorOffset = inFrontOfBoxCollider,
+            worldAnchorRestPoint = worldAnchorRestPoint,
+        };
+    }
+
+    private VehicleConnector GetTurningBodyTowingConnector() {
+        var inFrontOfTurningBodyCollider = new Vector3(0, 0, turningBoxCollider.size.z);
+        var wheelAxisCenter = new Vector3(0, frontAxis.FindUpOffset(), frontAxis.FindFrontOffset());
+        var worldAnchorRestPoint = transform.TransformPoint(wheelAxisCenter + inFrontOfTurningBodyCollider);
+
+        return new VehicleConnector {
+            rigidbody = turningRigidbody,
+            anchorOffset = inFrontOfTurningBodyCollider,
+            worldAnchorRestPoint = worldAnchorRestPoint,
+        };
+    }
+
+    public VehicleConnector GetPullingConnector() {
+        var baseSize = baseCollider.size;
+        
+        var inBackOfBoxCollider = new Vector3(0, 0, -baseSize.z * 0.5f);
+        var worldAnchorRestPoint = transform.TransformPoint(inBackOfBoxCollider);
+        
+        return new VehicleConnector {
+            rigidbody = rootRigidbody,
+            anchorOffset = inBackOfBoxCollider,
+            worldAnchorRestPoint = worldAnchorRestPoint,
+        };
+    }
+
     internal bool IsComponentsSet() {
         return frontAxis.IsCreated() && rearAxis.IsCreated();
     }
@@ -116,6 +169,8 @@ public class VehiclePhysics : MonoBehaviour {
 
         turningRigidbody = turningBodyGO.GetComponent<Rigidbody>();
         turningRigidbody.mass = 1;
+
+        turningBoxCollider = turningBodyGO.GetComponent<BoxCollider>();
     }
 
     private void UpdateTurningBodyDimensions(float upOffset, float forwardOffset, float length) {
