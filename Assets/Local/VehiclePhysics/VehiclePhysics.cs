@@ -43,8 +43,6 @@ public class VehiclePhysics : MonoBehaviour {
 
     [SerializeField] private BoxCollider baseCollider;
     [SerializeField] private WheelAxis frontAxis;
-    [SerializeField] private bool towingFrontAxis;
-    [SerializeField] private float towingBodyLength = 1f;
     [SerializeField] private WheelAxis rearAxis;
     [Space]
     [SerializeField] private ConfigurableJoint turningBodyJoint;
@@ -54,39 +52,10 @@ public class VehiclePhysics : MonoBehaviour {
     internal BoxCollider BaseCollider => baseCollider;
     internal WheelAxis FrontAxis => frontAxis;
     internal WheelAxis RearAxis => rearAxis;
+    internal BoxCollider TurningBodyCollider => turningBoxCollider;
 
     private void Awake() {
         rootRigidbody = GetComponent<Rigidbody>();
-    }
-
-    [ContextMenu("Update Structural Changes")]
-    private void UpdateStructuralChanges() {
-        if (IsComponentsSet()) {
-            if (towingFrontAxis) {
-                if (turningRigidbody == null) {
-                    SetDefaultTurningBody();
-                    UpdateTurningBodyDimensions(frontAxis.FindUpOffset(), frontAxis.FindFrontOffset(), towingBodyLength);
-                }
-                if (turningBodyJoint == null) {
-                    JointTurningBody();
-                    UpdateTurningBodyJointAnchors();
-                }
-            } else {
-                DestroyImmediate(turningBodyJoint);
-                turningBodyJoint = null;
-                DestroyImmediate(turningRigidbody.gameObject);
-                turningRigidbody = null;
-            }
-        }
-    }
-
-    private void OnValidate() {
-        if (IsComponentsSet()) {
-            if (turningRigidbody != null && turningBodyJoint != null) {
-                UpdateTurningBodyDimensions(frontAxis.FindUpOffset(), frontAxis.FindFrontOffset(), towingBodyLength);
-                UpdateTurningBodyJointAnchors();
-            }
-        }
     }
 
     public void SetFrontAxis(WheelCollider leftWheel, WheelCollider rightWheel) {
@@ -107,8 +76,30 @@ public class VehiclePhysics : MonoBehaviour {
         baseCollider = boxCollider;
     }
 
+    public void SetTurningBody(GameObject turningBody) {
+        turningBoxCollider = turningBody.GetComponent<BoxCollider>();
+        turningRigidbody = turningBody.GetComponent<Rigidbody>();
+        if (turningBodyJoint == null) {
+            AddTurningBodyJoint();
+        }
+    }
+
+    public void OnStrcutureChanged() {
+        if (turningRigidbody == null && turningBodyJoint != null) {
+            DestroyImmediate(turningBodyJoint);
+            turningBodyJoint = null;
+        }
+    }
+
+    public void OnComponentsChanged() {
+        CalculateCenterOfMass();
+        if (turningRigidbody != null) {
+            UpdateTurningBodyPlacement();
+        }
+    }
+
     public VehicleConnector GetTowingConnector() {
-        if (towingFrontAxis) {
+        if (turningRigidbody != null) {
             return GetTurningBodyTowingConnector();
         } else {
             return GetBaseVehicleTowingConnector();
@@ -162,25 +153,7 @@ public class VehiclePhysics : MonoBehaviour {
         rootRigidbody.centerOfMass = new Vector3(0, -maxAxisWheelRadius * 1.5f, 0);
     }
 
-    private void SetDefaultTurningBody() {
-        var turningBodyGO = new GameObject("Turning Body (New)", typeof(Rigidbody), typeof(BoxCollider));
-        turningBodyGO.layer = gameObject.layer;
-        turningBodyGO.transform.SetParent(transform, worldPositionStays: false);
-
-        turningRigidbody = turningBodyGO.GetComponent<Rigidbody>();
-        turningRigidbody.mass = 1;
-
-        turningBoxCollider = turningBodyGO.GetComponent<BoxCollider>();
-    }
-
-    private void UpdateTurningBodyDimensions(float upOffset, float forwardOffset, float length) {
-        turningRigidbody.transform.localPosition = new Vector3(0, upOffset, forwardOffset);
-        var collider = turningRigidbody.GetComponent<BoxCollider>();
-        collider.center = new Vector3(0, 0, length * 0.5f);
-        collider.size = new Vector3(0.025f, 0.025f, length);
-    }
-
-    private void JointTurningBody() {
+    private void AddTurningBodyJoint() {
         var joint = gameObject.AddComponent<ConfigurableJoint>();
         joint.xMotion = ConfigurableJointMotion.Locked;
         joint.yMotion = ConfigurableJointMotion.Locked;
@@ -191,13 +164,17 @@ public class VehiclePhysics : MonoBehaviour {
         joint.angularYMotion = ConfigurableJointMotion.Limited;
         joint.angularYLimit = new SoftJointLimit { limit = 120 };
         joint.angularZMotion = ConfigurableJointMotion.Locked;
+        joint.autoConfigureConnectedAnchor = false;
         turningBodyJoint = joint;
     }
 
-    private void UpdateTurningBodyJointAnchors() {
+    private void UpdateTurningBodyPlacement() {
+        var upOffset = frontAxis.FindUpOffset();
+        var forwardOffset = frontAxis.FindFrontOffset();
+        turningRigidbody.transform.localPosition = new Vector3(0, upOffset, forwardOffset);
+
         var joint = turningBodyJoint;
         joint.anchor = transform.InverseTransformPoint(turningRigidbody.transform.position);
-        joint.autoConfigureConnectedAnchor = false;
         joint.connectedBody = turningRigidbody;
         joint.connectedAnchor = Vector3.zero;
     }

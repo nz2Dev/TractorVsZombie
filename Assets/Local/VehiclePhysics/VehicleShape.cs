@@ -16,9 +16,16 @@ public class VehicleShape : MonoBehaviour {
         public float wheelMass;
         public float wheelRadius;
     }
+
+    [Serializable]
+    public struct TurningBodyBlueprint {
+        public float length;
+    }
     
     [SerializeField] private WheelAxisBlueprint frontAxisBlueprint;
     [SerializeField] private WheelAxisBlueprint rearAxisBlueprint;
+    [SerializeField] private bool hasTurningBody = false;
+    [SerializeField] private TurningBodyBlueprint turningBodyBlueprint;
     
     private VehiclePhysics vehiclePhysics;
 
@@ -32,6 +39,9 @@ public class VehicleShape : MonoBehaviour {
             DestroyImmediate(transform.GetChild(0).gameObject);
         
         SpawnComponents();
+        vehiclePhysics.OnStrcutureChanged();
+
+        OnValidate();
     }
     
     private void SpawnComponents() {
@@ -48,12 +58,22 @@ public class VehicleShape : MonoBehaviour {
         vehiclePhysics.SetBaseCollider(
             CreateDefaultBaseCollider()
         );
+
+        if (hasTurningBody) {
+            vehiclePhysics.SetTurningBody(
+                CreateDefaultTurningBody()
+            );
+        }
     }
 
     private void OnValidate() {
         if (vehiclePhysics != null && vehiclePhysics.IsComponentsSet()) {
             UpdateWheelAxis(vehiclePhysics.FrontAxis, frontAxisBlueprint);
             UpdateWheelAxis(vehiclePhysics.RearAxis, rearAxisBlueprint);
+            if (vehiclePhysics.TurningBodyCollider != null) {
+                UpdateTurningBody(vehiclePhysics.TurningBodyCollider, turningBodyBlueprint);
+            }
+            vehiclePhysics.OnComponentsChanged();
         }
     }
 
@@ -67,6 +87,12 @@ public class VehicleShape : MonoBehaviour {
     private void UpdateWheel(WheelCollider wheelCollider, WheelAxisBlueprint blueprint) {
         wheelCollider.radius = blueprint.wheelRadius;
         wheelCollider.mass = blueprint.wheelMass;
+    }
+
+    private void UpdateTurningBody(BoxCollider turningBoxCollider, TurningBodyBlueprint blueprint) {
+        var collider = turningBoxCollider;
+        collider.center = new Vector3(0, 0, blueprint.length * 0.5f);
+        collider.size = new Vector3(0.025f, 0.025f, blueprint.length);
     }
 
     private BoxCollider CreateDefaultBaseCollider() {
@@ -121,4 +147,15 @@ public class VehicleShape : MonoBehaviour {
             damper = 450,
         };
     }
+
+    private GameObject CreateDefaultTurningBody() {
+        var turningBodyGO = new GameObject("Turning Body (New)", typeof(Rigidbody), typeof(BoxCollider));
+        turningBodyGO.layer = gameObject.layer;
+        turningBodyGO.transform.SetParent(transform, worldPositionStays: false);
+        var turningRigidbody = turningBodyGO.GetComponent<Rigidbody>();
+        turningRigidbody.mass = 1;
+        return turningBodyGO;
+    }
+
+    
 }
