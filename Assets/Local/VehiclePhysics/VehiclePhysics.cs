@@ -33,6 +33,7 @@ public class VehiclePhysics : MonoBehaviour {
         }
     }
 
+    [Serializable]
     public struct VehicleConnector {
         public Rigidbody rigidbody;
         public Vector3 anchorOffset;
@@ -48,6 +49,9 @@ public class VehiclePhysics : MonoBehaviour {
     [SerializeField] private ConfigurableJoint turningBodyJoint;
     [SerializeField] private Rigidbody turningRigidbody;
     [SerializeField] private BoxCollider turningBoxCollider;
+    [Space]
+    [SerializeField] private Rigidbody pullingGrabRigidbody;
+    [SerializeField] private ConfigurableJoint pullingGrabJoint;
 
     internal BoxCollider BaseCollider => baseCollider;
     internal WheelAxis FrontAxis => frontAxis;
@@ -89,6 +93,18 @@ public class VehiclePhysics : MonoBehaviour {
             DestroyImmediate(turningBodyJoint);
             turningBodyJoint = null;
         }
+
+        var pullingConnector = GetTowingConnector();
+        if (pullingGrabRigidbody != null && pullingConnector.rigidbody != pullingGrabRigidbody) {
+            DestroyImmediate(pullingGrabJoint);
+            pullingGrabRigidbody = null;
+            pullingGrabJoint = null;
+        }
+
+        if (pullingGrabJoint == null) {
+            pullingGrabRigidbody = pullingConnector.rigidbody;
+            pullingGrabJoint = MakeTowingGrabJoint(pullingConnector);
+        }
     }
 
     public void OnComponentsChanged() {
@@ -96,9 +112,33 @@ public class VehiclePhysics : MonoBehaviour {
         if (turningRigidbody != null) {
             UpdateTurningBodyPlacement();
         }
+        UpdateGrabJointAnchors();
     }
 
-    public VehicleConnector GetTowingConnector() {
+    private ConfigurableJoint MakeTowingGrabJoint(VehicleConnector towingConnector) {
+        var grabJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
+        grabJoint.xMotion = ConfigurableJointMotion.Locked;
+        grabJoint.yMotion = ConfigurableJointMotion.Locked;
+        grabJoint.zMotion = ConfigurableJointMotion.Free;
+        grabJoint.angularXMotion = ConfigurableJointMotion.Limited;
+        grabJoint.angularYMotion = ConfigurableJointMotion.Free;
+        grabJoint.angularZMotion = ConfigurableJointMotion.Locked;
+        grabJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };
+        grabJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
+        // grabJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
+        grabJoint.autoConfigureConnectedAnchor = false;
+        // grabJoint.connectedBody = pullingConnector.rigidbody;
+        // grabJoint.connectedAnchor = pullingConnector.anchorOffset;
+        // grabJoint.anchor = towingConnector.anchorOffset;
+        return grabJoint;
+    }
+
+    private void UpdateGrabJointAnchors() {
+        var connector = GetTowingConnector();
+        pullingGrabJoint.anchor = connector.anchorOffset;
+    }
+
+    private VehicleConnector GetTowingConnector() {
         if (turningRigidbody != null) {
             return GetTurningBodyTowingConnector();
         } else {
