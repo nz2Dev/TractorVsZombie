@@ -108,6 +108,12 @@ public class VehiclePhysics : MonoBehaviour {
         pullingGrabJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
     }
 
+    [ContextMenu("Collapse Towing Connection")]
+    public void CollapseTowingConnection() {
+        pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
+    }
+
     [ContextMenu("Lock Towing Connection")]
     public void LockTowingConnection() {
         pullingGrabJoint.zMotion = ConfigurableJointMotion.Locked;   
