@@ -279,7 +279,7 @@ public class VehiclePhysics : MonoBehaviour {
         joint.connectedAnchor = Vector3.zero;
     }
     
-    private void OnDrawGizmosSelected() {
+    private void OnDrawGizmos() {
         if (!IsComponentsSet())
             return;
 

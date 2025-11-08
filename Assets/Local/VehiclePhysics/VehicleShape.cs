@@ -127,14 +127,14 @@ public class VehicleShape : MonoBehaviour {
             asymptoteValue = 1,
             extremumSlip = 0.8f,
             extremumValue = 0.5f,
-            stiffness = 4,
+            stiffness = 1f,
         };
         wheelCollider.sidewaysFriction = new WheelFrictionCurve {
             asymptoteSlip = 0.2f,
             asymptoteValue = 1,
             extremumSlip = 0.5f,
             extremumValue = 0.75f,
-            stiffness = 1.5f,
+            stiffness = 1f,
         };
 
         return wheelCollider;
@@ -152,8 +152,6 @@ public class VehicleShape : MonoBehaviour {
         var turningBodyGO = new GameObject("Turning Body (New)", typeof(Rigidbody), typeof(BoxCollider));
         turningBodyGO.layer = gameObject.layer;
         turningBodyGO.transform.SetParent(transform, worldPositionStays: false);
-        var turningRigidbody = turningBodyGO.GetComponent<Rigidbody>();
-        turningRigidbody.mass = 1;
         return turningBodyGO;
     }
 
