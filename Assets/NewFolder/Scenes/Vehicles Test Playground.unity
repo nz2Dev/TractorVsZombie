@@ -3219,8 +3219,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.25, z: 1}
-  m_Center: {x: 0, y: 0.125, z: 0}
+  m_Size: {x: 0.5, y: 0.1, z: 1}
+  m_Center: {x: 0, y: 0.05, z: 0}
 --- !u!1 &311828982
 GameObject:
   m_ObjectHideFlags: 0
@@ -4520,7 +4520,7 @@ WheelCollider:
   m_GameObject: {fileID: 335537958}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.2
+  m_Radius: 0.1
   m_SuspensionSpring:
     spring: 3500
     damper: 450
@@ -10162,7 +10162,7 @@ WheelCollider:
   m_GameObject: {fileID: 651630971}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.2
+  m_Radius: 0.1
   m_SuspensionSpring:
     spring: 3500
     damper: 450
@@ -11991,7 +11991,7 @@ WheelCollider:
   m_GameObject: {fileID: 921826317}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.2
+  m_Radius: 0.1
   m_SuspensionSpring:
     spring: 3500
     damper: 450
@@ -15481,7 +15481,7 @@ ConfigurableJoint:
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_EnableCollision: 0
-  m_EnablePreprocessing: 1
+  m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!65 &1251187369
@@ -20783,7 +20783,7 @@ MonoBehaviour:
     drive: 0
     steer: 0
     wheelMass: 5
-    wheelRadius: 0.2
+    wheelRadius: 0.1
   rearAxisBlueprint:
     length: 0.5
     forwardOffset: -0.24
@@ -20791,7 +20791,7 @@ MonoBehaviour:
     drive: 0
     steer: 0
     wheelMass: 5
-    wheelRadius: 0.2
+    wheelRadius: 0.1
   hasTurningBody: 1
   turningBodyBlueprint:
     length: 0.78
@@ -20828,10 +20828,10 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1858497547}
   serializedVersion: 5
-  m_Mass: 100
-  m_LinearDamping: 0
+  m_Mass: 500
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: -0.3, z: 0}
+  m_CenterOfMass: {x: 0, y: -0.15, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -20845,7 +20845,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!153 &1858497553
 ConfigurableJoint:
@@ -20946,7 +20946,7 @@ ConfigurableJoint:
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_EnableCollision: 0
-  m_EnablePreprocessing: 1
+  m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!1 &1889847461
@@ -21038,7 +21038,7 @@ WheelCollider:
   m_GameObject: {fileID: 1892147629}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.2
+  m_Radius: 0.1
   m_SuspensionSpring:
     spring: 3500
     damper: 450

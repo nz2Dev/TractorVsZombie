@@ -93,6 +93,13 @@ public class VehiclePhysics : MonoBehaviour {
         pullingVehicle = vehiclePhysics;
     }
 
+    private void SetConstantGlideTorque() {
+        frontAxis.leftWheel.motorTorque = -0.1f;
+        frontAxis.rightWheel.motorTorque = -0.1f;
+        rearAxis.leftWheel.motorTorque = 0.1f;
+        rearAxis.rightWheel.motorTorque = 0.1f;
+    }
+
     [ContextMenu("Make Towing Connection")]
     public void MakeLooseTowingConnection() {
         var pullingConnector = pullingVehicle.GetPullingConnector();
@@ -150,12 +157,17 @@ public class VehiclePhysics : MonoBehaviour {
         if (turningRigidbody != null) {
             SteerWithTurningBody();
         }
+        if (pullingVehicle != null) {
+            SetConstantGlideTorque();
+        }
     }
 
     private ConfigurableJoint MakeTowingGrabJoint(VehicleConnector towingConnector) {
         var grabJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
         // grabJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
         grabJoint.autoConfigureConnectedAnchor = false;
+        grabJoint.enablePreprocessing = false;
+        grabJoint.connectedMassScale = 0.1f;
         // grabJoint.connectedBody = pullingConnector.rigidbody;
         // grabJoint.connectedAnchor = pullingConnector.anchorOffset;
         // grabJoint.anchor = towingConnector.anchorOffset;
@@ -237,9 +249,10 @@ public class VehiclePhysics : MonoBehaviour {
         joint.highAngularXLimit = new SoftJointLimit { limit = 20 };
         joint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
         joint.angularYMotion = ConfigurableJointMotion.Limited;
-        joint.angularYLimit = new SoftJointLimit { limit = 120 };
+        joint.angularYLimit = new SoftJointLimit { limit = 180 };
         joint.angularZMotion = ConfigurableJointMotion.Locked;
         joint.autoConfigureConnectedAnchor = false;
+        joint.enablePreprocessing = false;
         turningBodyJoint = joint;
     }
 
