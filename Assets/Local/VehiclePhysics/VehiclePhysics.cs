@@ -146,6 +146,12 @@ public class VehiclePhysics : MonoBehaviour {
         UpdateGrabJointAnchors();
     }
 
+    private void FixedUpdate() {
+        if (turningRigidbody != null) {
+            SteerWithTurningBody();
+        }
+    }
+
     private ConfigurableJoint MakeTowingGrabJoint(VehicleConnector towingConnector) {
         var grabJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
         // grabJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
@@ -214,6 +220,12 @@ public class VehiclePhysics : MonoBehaviour {
     public void CalculateCenterOfMass() {
         var maxAxisWheelRadius = Mathf.Max(frontAxis.AnyWheelRadius(), rearAxis.AnyWheelRadius());
         rootRigidbody.centerOfMass = new Vector3(0, -maxAxisWheelRadius * 1.5f, 0);
+    }
+
+    private void SteerWithTurningBody() {
+        var turningBodyAngle = Vector3.SignedAngle(rootRigidbody.transform.forward, turningRigidbody.transform.forward, Vector3.up);
+        frontAxis.leftWheel.steerAngle = turningBodyAngle;
+        frontAxis.rightWheel.steerAngle = turningBodyAngle;
     }
 
     private void AddTurningBodyJoint() {
