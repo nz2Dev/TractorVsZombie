@@ -111,7 +111,7 @@ public class VehiclePhysics : MonoBehaviour {
     [ContextMenu("Collapse Towing Connection")]
     public void CollapseTowingConnection() {
         pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
-        pullingGrabJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
+        pullingGrabJoint.zDrive = new JointDrive { positionSpring = 30_000,  positionDamper = 15_000, maximumForce = float.MaxValue, useAcceleration = true };
     }
 
     [ContextMenu("Lock Towing Connection")]
