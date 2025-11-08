@@ -126,6 +126,18 @@ public class VehiclePhysics : MonoBehaviour {
         pullingGrabJoint.zMotion = ConfigurableJointMotion.Locked;   
     }
 
+    [ContextMenu("Clear Towing Connection")]
+    private void ClearTowingConnection() {
+        pullingGrabJoint.connectedBody = null;
+        pullingGrabJoint.connectedAnchor = Vector3.zero;
+        pullingGrabJoint.xMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.yMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.angularXMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.angularYMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.angularZMotion = ConfigurableJointMotion.Free;
+    }
+
     public void OnStrcutureChanged() {
         if (turningRigidbody == null && turningBodyJoint != null) {
             DestroyImmediate(turningBodyJoint);

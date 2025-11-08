@@ -2824,7 +2824,7 @@ WheelCollider:
   m_GameObject: {fileID: 234694883}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.2
+  m_Radius: 0.15
   m_SuspensionSpring:
     spring: 3500
     damper: 450
@@ -2878,7 +2878,7 @@ Transform:
   m_GameObject: {fileID: 234694883}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.25, y: 0, z: -0.24}
+  m_LocalPosition: {x: 0.25, y: 0.05, z: -0.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4731,7 +4731,7 @@ WheelCollider:
   m_GameObject: {fileID: 398111013}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.2
+  m_Radius: 0.15
   m_SuspensionSpring:
     spring: 3500
     damper: 450
@@ -4785,7 +4785,7 @@ Transform:
   m_GameObject: {fileID: 398111013}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25, y: 0, z: 0.24}
+  m_LocalPosition: {x: -0.25, y: 0.05, z: 0.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12652,7 +12652,7 @@ WheelCollider:
   m_GameObject: {fileID: 1123580536}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.2
+  m_Radius: 0.15
   m_SuspensionSpring:
     spring: 3500
     damper: 450
@@ -12706,7 +12706,7 @@ Transform:
   m_GameObject: {fileID: 1123580536}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25, y: 0, z: -0.24}
+  m_LocalPosition: {x: -0.25, y: 0.05, z: -0.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15514,7 +15514,7 @@ Rigidbody:
   m_GameObject: {fileID: 1251187366}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -23032,10 +23032,10 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2058538454}
   serializedVersion: 5
-  m_Mass: 100
-  m_LinearDamping: 0
+  m_Mass: 1000
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: -0.3, z: 0}
+  m_CenterOfMass: {x: 0, y: -0.22500001, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -23066,19 +23066,19 @@ MonoBehaviour:
   frontAxisBlueprint:
     length: 0.5
     forwardOffset: 0.24
-    upOffset: 0
+    upOffset: 0.05
     drive: 0
     steer: 0
     wheelMass: 5
-    wheelRadius: 0.2
+    wheelRadius: 0.15
   rearAxisBlueprint:
     length: 0.5
     forwardOffset: -0.24
-    upOffset: 0
+    upOffset: 0.05
     drive: 0
     steer: 0
     wheelMass: 5
-    wheelRadius: 0.2
+    wheelRadius: 0.15
   hasTurningBody: 0
   turningBodyBlueprint:
     length: 0.78
@@ -23211,7 +23211,7 @@ WheelCollider:
   m_GameObject: {fileID: 2064695222}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.2
+  m_Radius: 0.15
   m_SuspensionSpring:
     spring: 3500
     damper: 450
@@ -23265,7 +23265,7 @@ Transform:
   m_GameObject: {fileID: 2064695222}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.25, y: 0, z: 0.24}
+  m_LocalPosition: {x: 0.25, y: 0.05, z: 0.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
