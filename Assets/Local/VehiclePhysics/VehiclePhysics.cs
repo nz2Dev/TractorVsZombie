@@ -278,22 +278,5 @@ public class VehiclePhysics : MonoBehaviour {
         joint.connectedBody = turningRigidbody;
         joint.connectedAnchor = Vector3.zero;
     }
-    
-    private void OnDrawGizmos() {
-        if (!IsComponentsSet())
-            return;
-
-        DrawAxis(frontAxis);
-        DrawAxis(rearAxis);
-    }
-
-    private void DrawAxis(WheelAxis axis) {
-        DrawWheel(axis.leftWheel);
-        DrawWheel(axis.rightWheel);
-    }
-
-    private void DrawWheel(WheelCollider collider) {
-        Handles.DrawWireDisc(collider.transform.position, collider.transform.right, collider.radius);
-    }
 
 }
