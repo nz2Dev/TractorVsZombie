@@ -158,7 +158,6 @@ public class VehiclePhysics : MonoBehaviour {
     }
 
     public void OnComponentsChanged() {
-        CalculateCenterOfMass();
         if (turningRigidbody != null) {
             UpdateTurningBodyPlacement();
         }
@@ -179,7 +178,7 @@ public class VehiclePhysics : MonoBehaviour {
         // grabJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
         grabJoint.autoConfigureConnectedAnchor = false;
         grabJoint.enablePreprocessing = false;
-        grabJoint.connectedMassScale = 0.1f;
+        // grabJoint.connectedMassScale = 0.1f;
         // grabJoint.connectedBody = pullingConnector.rigidbody;
         // grabJoint.connectedAnchor = pullingConnector.anchorOffset;
         // grabJoint.anchor = towingConnector.anchorOffset;
@@ -241,11 +240,6 @@ public class VehiclePhysics : MonoBehaviour {
         return frontAxis.IsCreated() && rearAxis.IsCreated();
     }
 
-    public void CalculateCenterOfMass() {
-        var maxAxisWheelRadius = Mathf.Max(frontAxis.AnyWheelRadius(), rearAxis.AnyWheelRadius());
-        rootRigidbody.centerOfMass = new Vector3(0, -maxAxisWheelRadius * 1.5f, 0);
-    }
-
     private void SteerWithTurningBody() {
         var turningBodyAngle = Vector3.SignedAngle(rootRigidbody.transform.forward, turningRigidbody.transform.forward, Vector3.up);
         frontAxis.leftWheel.steerAngle = turningBodyAngle;
@@ -269,7 +263,7 @@ public class VehiclePhysics : MonoBehaviour {
     }
 
     private void UpdateTurningBodyPlacement() {
-        var upOffset = frontAxis.FindUpOffset();
+        var upOffset = 0;
         var forwardOffset = frontAxis.FindFrontOffset();
         turningRigidbody.transform.localPosition = new Vector3(0, upOffset, forwardOffset);
 
