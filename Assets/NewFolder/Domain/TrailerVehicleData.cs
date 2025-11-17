@@ -13,5 +13,5 @@ public class TrailerVehicleData : ScriptableObject {
     }
 
     public VisualsData visualsData;
-    public VehiclePhysicsData physicsData;
+    public VehiclePhysics physicsPrefab;
 }

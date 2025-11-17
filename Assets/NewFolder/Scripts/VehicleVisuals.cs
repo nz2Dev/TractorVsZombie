@@ -65,8 +65,8 @@ public class VehicleVisuals {
         });
     }
 
-    public void SetPositionAndRotation(VehicleBodyPose vehiclePose) {
-        root.transform.SetPositionAndRotation(vehiclePose.position, vehiclePose.rotation);
+    public void SetPositionAndRotation(Vector3 pos, Quaternion rot) {
+        root.transform.SetPositionAndRotation(pos, rot);
     }
 
     public void SetAxisPositionAndRotation(int axisIndex, WheelAxisPose axisPose) {

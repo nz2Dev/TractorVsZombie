@@ -163,7 +163,7 @@ public class UnitController {
     }
 
     private void UpdateGoal() {
-        var tractor = vehicleService.GetVehiclePose(0);
+        var tractor = vehicleService.GetVehicleState(0);
         targetPoint.position = tractor.position;
         
         navigationService.SetGoal(tractor.position);
@@ -305,13 +305,13 @@ public class UnitController {
         var vehicle = new UnitVehicle(foeVehicleData);
         vehicles.Add(vehicle);
         
-        var viewId = unitView.AddUnitVehicle(position, vehicle.PhysicsData, vehicle.VisualsData);
+        var viewId = unitView.AddUnitVehicle(position, vehicle.VisualsData.baseGeometry, vehicle.VisualsData.wheelGeometry);
         vehicleViewIds.Add(viewId);
 
         var combatAgentId = combatService.RegisterAgent(position, alie: false);
         vehicleCombats.Add(combatAgentId);
 
-        var physicsAgentId = vehicleService.CreateVehicle(position, vehicle.PhysicsData);
+        var physicsAgentId = vehicleService.CreateVehicle(position, vehicle.PhysicsPrefab);
         vehiclePhysics.Add(physicsAgentId);
 
         var soundLoopId = soundManager.StartLoop(position, vehicle.EngineIdleSound);
@@ -376,13 +376,8 @@ public class UnitController {
             var vehicle = vehicles[vehicleIndex];
             var physicsId = vehiclePhysics[vehicleIndex];
             
-            var vehiclePose = vehicleService.GetVehiclePose(physicsId);
-            vehicle.OrientBody(vehiclePose);
-
-            for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
-                var wheelAxisPose = vehicleService.GetVehicleWheelAxisPose(physicsId, wheelAxisIndex);
-                vehicle.OrientWheelAxis(wheelAxisIndex, wheelAxisPose);
-            }
+            var vehiclePose = vehicleService.GetVehicleState(physicsId);
+            vehicle.UpdatePhysicsState(vehiclePose);
 
             var vehicleTurel = vehicleTurels[vehicleIndex];
             vehicleTurel?.Move(vehicle.Position);
@@ -424,7 +419,7 @@ public class UnitController {
 
     private void UpdateVehicleNavigation() {
         foreach (var vehicle in vehicles) {
-            var distance = Vector3.Distance(targetPoint.position, vehicle.BodyPose.position);
+            var distance = Vector3.Distance(targetPoint.position, vehicle.Position);
 
             var gasDistance = 10;
             var gas = Mathf.Floor(Mathf.Clamp(distance, 0, gasDistance) / gasDistance);
@@ -433,7 +428,7 @@ public class UnitController {
             var stopDistance = 5f;
             var breaks = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
             vehicle.Breaks(breaks);
-            var flowVector = navigationService.GetFlowVector(vehicle.BodyPose.position);
+            var flowVector = navigationService.GetFlowVector(vehicle.Position);
             vehicle.SteerToward(flowVector);
         }
     }
@@ -472,7 +467,7 @@ public class UnitController {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
             var vehicelCombatId = vehicleCombats[vehicleIndex];
-            combatService.UpdateAgentPosition(vehicelCombatId, vehicle.BodyPose.position);
+            combatService.UpdateAgentPosition(vehicelCombatId, vehicle.Position);
         }
     }
 
@@ -490,7 +485,7 @@ public class UnitController {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
             var vehicleLoopId = vehicleSoundLoop[vehicleIndex];
-            soundManager.UpdateLoop(vehicleLoopId, vehicle.BodyPose.position, vehicle.DrivePower, vehicle.DrivePower);
+            soundManager.UpdateLoop(vehicleLoopId, vehicle.Position, vehicle.DrivePower, vehicle.DrivePower);
         }
     }
 
@@ -498,11 +493,7 @@ public class UnitController {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
             var vehicleViewIndex = vehicleViewIds[vehicleIndex];
-            unitView.UpdateVehiclePose(vehicleViewIndex, vehicle.BodyPose);
-
-            for (int wheelAxisIndex = 0; wheelAxisIndex < vehicle.WheelAxisPoses.Length; wheelAxisIndex++) {
-                unitView.UpdateWheelAxisPose(vehicleViewIndex, wheelAxisIndex, vehicle.WheelAxisPoses[wheelAxisIndex]);
-            }
+            unitView.UpdateVehiclePose(vehicleViewIndex, vehicle.PhysicsState);
 
             var vehicleViewId = vehicleViewIds[vehicleIndex];
             var turel = vehicleTurels[vehicleIndex];

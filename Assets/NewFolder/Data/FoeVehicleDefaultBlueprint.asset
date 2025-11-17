@@ -25,23 +25,4 @@ MonoBehaviour:
   visualsData:
     baseGeometry: {fileID: 4058983013609224398, guid: f628f9ac28b08472693b1c5f7856da92, type: 3}
     wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
-  physicsData:
-    mass: 500
-    baseSize: {x: 0.5, y: 0.4, z: 1}
-    wheelMass: 25
-    forwardFrictionStiffness: 2
-    sidewayFrictionStiffness: 1
-    wheelAxisDatas:
-    - forwardOffset: -0.25
-      upOffset: 0.05
-      halfLength: 0.25
-      radius: 0.15
-      drive: 1
-      stear: 0
-    - forwardOffset: 0.25
-      upOffset: 0.05
-      halfLength: 0.25
-      radius: 0.15
-      drive: 1
-      stear: 1
-    towingTongueLength: 0
+  physicsPrefab: {fileID: 5571881020198792173, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}

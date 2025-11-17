@@ -33,5 +33,5 @@ public class DriverVehicleData : ScriptableObject {
     public DrivingData drivingData;
     public SoundData soundData;
     public VisualsData visualsData;
-    public VehiclePhysicsData physicsData;
+    public VehiclePhysics physicsPrefab;
 }

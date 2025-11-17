@@ -16,6 +16,14 @@ public class VehiclePhysics : MonoBehaviour {
         public WheelCollider leftWheel;    
         public WheelCollider rightWheel;
 
+        public readonly void GetLeftWheelPose(out Vector3 pos, out Quaternion rot) {
+            leftWheel.GetWorldPose(out pos, out rot);
+        }
+
+        public readonly void GetRightWheelPose(out Vector3 pos, out Quaternion rot) {
+            rightWheel.GetWorldPose(out pos, out rot);
+        }
+
         public readonly bool IsCreated() {
             return leftWheel != null && rightWheel != null;
         }
@@ -54,10 +62,13 @@ public class VehiclePhysics : MonoBehaviour {
     [SerializeField] private Rigidbody pullingGrabRigidbody;
     [SerializeField] private ConfigurableJoint pullingGrabJoint;
 
+    public Vector3 Position => transform.position;
+    public Quaternion Rotation => transform.rotation;
+    public Vector3 Velocity => rootRigidbody.linearVelocity;
     internal BoxCollider BaseCollider => baseCollider;
-    internal WheelAxis FrontAxis => frontAxis;
-    internal WheelAxis RearAxis => rearAxis;
-    internal BoxCollider TurningBodyCollider => turningBoxCollider;
+    public WheelAxis FrontAxis => frontAxis;
+    public WheelAxis RearAxis => rearAxis;
+    public BoxCollider TurningBodyCollider => turningBoxCollider;
 
     private void Awake() {
         rootRigidbody = GetComponent<Rigidbody>();
@@ -91,6 +102,25 @@ public class VehiclePhysics : MonoBehaviour {
 
     public void SetPullingVehicle(VehiclePhysics vehiclePhysics) {
         pullingVehicle = vehiclePhysics;
+    }
+
+    public void SetMotorTorque(float engineTorque) {
+        frontAxis.leftWheel.motorTorque = engineTorque;
+        frontAxis.rightWheel.motorTorque = engineTorque;
+        rearAxis.leftWheel.motorTorque = engineTorque;
+        rearAxis.rightWheel.motorTorque = engineTorque;
+    }
+
+    public void SetBreaksTorque(float breaksTorque) {
+        frontAxis.leftWheel.motorTorque = breaksTorque;
+        frontAxis.rightWheel.motorTorque = breaksTorque;
+        rearAxis.leftWheel.motorTorque = breaksTorque;
+        rearAxis.rightWheel.motorTorque = breaksTorque;
+    }
+
+    public void SetSteerAngle(float angleInDegrees) {
+        frontAxis.leftWheel.steerAngle = angleInDegrees;
+        frontAxis.rightWheel.steerAngle = angleInDegrees;
     }
 
     private void SetConstantGlideTorque() {

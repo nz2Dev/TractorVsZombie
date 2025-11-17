@@ -11,11 +11,11 @@ public class VehiclePreview : MonoBehaviour {
         while (transform.childCount > 0)
             DestroyImmediate(transform.GetChild(0).gameObject);
 
-        var vehicleService = new VehicleService(CreatePreviewPhysicsRoot());
-        vehicleService.CreateVehicle(Vector3.zero, vehicleEntity.physicsData);
+        // var vehicleService = new VehicleService(CreatePreviewPhysicsRoot());
+        // vehicleService.CreateVehicle(Vector3.zero, vehicleEntity.physicsPrefab);
         
-        var vehicleView = new VehicleView(container: transform);
-        vehicleView.AddTrailerVehicle(Vector3.zero, vehicleEntity.physicsData, vehicleEntity.visualsData);
+        // var vehicleView = new VehicleView(container: transform);
+        // vehicleView.AddTrailerVehicle(Vector3.zero, vehicleEntity.physicsPrefab, vehicleEntity.visualsData);
     }
 
     private VehiclePhysicsRoot CreatePreviewPhysicsRoot() {

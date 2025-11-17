@@ -59,20 +59,12 @@ public class UnitView {
         unitVisuals.Remove(unitId);
     }
 
-    public int AddUnitVehicle(Vector3 position, VehiclePhysicsData physicsData, UnitVehicleData.VisualsData visualsData) {
+    public int AddUnitVehicle(Vector3 position, GameObject baseGeometry, GameObject wheelGeometry) {
         var vehicleVisuals = new VehicleVisuals(position, container);
-        vehicleVisuals.AddBaseGeometry(visualsData.baseGeometry);
+        vehicleVisuals.AddBaseGeometry(baseGeometry);
         
-        for (int i = 0; i < physicsData.wheelAxisDatas.Length; i++) {
-            var wheelAxis = physicsData.wheelAxisDatas[i];
-            vehicleVisuals.AddWheelAxisGeometries(
-                visualsData.wheelGeometry, 
-                wheelAxis.forwardOffset,
-                wheelAxis.upOffset,
-                wheelAxis.halfLength,
-                wheelAxis.radius
-            );
-        }
+        vehicleVisuals.AddWheelAxisGeometries(wheelGeometry, .3f, .15f, .2f, .15f);
+        vehicleVisuals.AddWheelAxisGeometries(wheelGeometry, -.3f, .15f, .2f, .15f);
         
         var nextVehicleViewId = vehicleViewIdCounter++;
         visualsRegistry[nextVehicleViewId] = vehicleVisuals;
@@ -93,14 +85,11 @@ public class UnitView {
         }
     }
 
-    public void UpdateVehiclePose(int vehicleIndex, VehicleBodyPose vehiclePose) {
+    public void UpdateVehiclePose(int vehicleIndex, VehicleState vehiclePose) {
         var vehicleVisuals = visualsRegistry[vehicleIndex];
-        vehicleVisuals.SetPositionAndRotation(vehiclePose);
-    }
-
-    public void UpdateWheelAxisPose(int vehicleIndex, int axisIndex, WheelAxisPose wheelAxisPose) {
-        var vehicleVisuals = visualsRegistry[vehicleIndex];
-        vehicleVisuals.SetAxisPositionAndRotation(axisIndex, wheelAxisPose);
+        vehicleVisuals.SetPositionAndRotation(vehiclePose.position, vehiclePose.rotation);
+        vehicleVisuals.SetAxisPositionAndRotation(0, vehiclePose.frontAxis);
+        vehicleVisuals.SetAxisPositionAndRotation(1, vehiclePose.rearAxis);
     }
 
     internal void SetTurelWeapon(int viewId, Vector3 position, TurelVisuals visualsPrefab) {

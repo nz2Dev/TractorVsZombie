@@ -25,7 +25,6 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private UnitVehicleData foeVehicle;
     [Space]
     [SerializeField] private bool playerComponent = true;
-    [SerializeField] private VehiclePhysicsRoot vehiclePhysicsRoot;
     [SerializeField] private DriverVehicleData driveVehicle;
     [SerializeField] private TrailerVehicleData trailerVehicle;
     [SerializeField] private int trailersCount = 3;
@@ -43,7 +42,7 @@ public class GameBootstrapper : MonoBehaviour {
     private UnitController unitController;
 
     private void Start() {
-        var vehicleService = new VehicleService(vehiclePhysicsRoot);
+        var vehicleService = new VehicleService();
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));

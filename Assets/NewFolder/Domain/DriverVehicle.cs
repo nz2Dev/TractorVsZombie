@@ -6,24 +6,23 @@ public class DriverVehicle {
 
     private readonly DriverVehicleData data;
 
-    public VehicleBodyPose BodyPose { get; private set; }
-    public WheelAxisPose[] WheelAxisPoses { get; private set; }
-
+    private VehicleState vehicleState;
     private float drivePower;
     private float steering;
     private float steerLimit;
     private float breaksPower;
 
     public DriverVehicle(DriverVehicleData data) {
-        WheelAxisPoses = new WheelAxisPose[data.physicsData.wheelAxisDatas.Length];
         this.data = data;
     }
 
-    public VehiclePhysicsData PhysicsData => data.physicsData;
+    public VehiclePhysics PhysicsPrefab => data.physicsPrefab;
+    public VehicleState PhysicsState => vehicleState;
     public DriverVehicleData.VisualsData VisualsData => data.visualsData;
     public AudioClip EngineIdleSound => data.soundData.engineIdleSound;
     public AudioClip[] HitImpactSounds => data.soundData.hitImpactSounds;
     
+    public Vector3 Position => vehicleState.position;
     public float DrivePower => drivePower;
     public float BreaksTorque => breaksPower * data.drivingData.maxBreaksTorque;
     public float MotorTorque => drivePower * data.drivingData.maxTorque;
@@ -31,8 +30,12 @@ public class DriverVehicle {
     public float RamRadius => data.ramRadius;
     public float RewardCollectRadius => data.rewardCollectRadius;
 
+    public void UpdatePhysicsState(VehicleState vehicleState) {
+        this.vehicleState = vehicleState;
+    }
+
     public void Steer(float steerAmount) {
-        float t = Mathf.Clamp01(BodyPose.velocity.magnitude / data.drivingData.speedCeilingForSteering);
+        float t = Mathf.Clamp01(vehicleState.velocity.magnitude / data.drivingData.speedCeilingForSteering);
         float steerFactor = 1f - Mathf.Pow(t, data.drivingData.speedKFactor); // k > 1 makes the falloff sharper near top speed
         steerLimit = Mathf.Max(data.drivingData.minStterAmount, steerFactor);
         this.steering = steerAmount;
@@ -50,14 +53,6 @@ public class DriverVehicle {
 
     public void Breaks(float breakingAmount) {
         this.breaksPower = breakingAmount;
-    }
-
-    public void OrientBody(VehicleBodyPose bodyPose) {
-        BodyPose = bodyPose;
-    }
-
-    public void OrientWheelAxis(int index, WheelAxisPose pose) {
-        WheelAxisPoses[index] = pose;
     }
 
 }
