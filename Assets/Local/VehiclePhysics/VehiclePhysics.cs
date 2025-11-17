@@ -1,11 +1,6 @@
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
-
-using UnityEditor;
 
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.UIElements;
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(Rigidbody))]
@@ -205,13 +200,8 @@ public class VehiclePhysics : MonoBehaviour {
 
     private ConfigurableJoint MakeTowingGrabJoint(VehicleConnector towingConnector) {
         var grabJoint = towingConnector.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
-        // grabJoint.zDrive = new JointDrive { positionSpring = 50_000,  positionDamper = 15_000, maximumForce = float.MaxValue };
         grabJoint.autoConfigureConnectedAnchor = false;
         grabJoint.enablePreprocessing = false;
-        // grabJoint.connectedMassScale = 0.1f;
-        // grabJoint.connectedBody = pullingConnector.rigidbody;
-        // grabJoint.connectedAnchor = pullingConnector.anchorOffset;
-        // grabJoint.anchor = towingConnector.anchorOffset;
         return grabJoint;
     }
 
