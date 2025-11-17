@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Data.Common;
 
 using UnityEngine;
-using UnityEngine.Assertions;
 
-public class UnitView {
+public class EnemyView {
 
     private readonly Dictionary<int, UnitVisuals> unitVisuals = new Dictionary<int, UnitVisuals>();
     int vehicleViewIdCounter;
@@ -16,7 +13,7 @@ public class UnitView {
     private readonly Transform container;
     private readonly UnitVisuals visualsPrefab;
 
-    public UnitView(UnitVisuals visualsPrefab, Transform container) {
+    public EnemyView(UnitVisuals visualsPrefab, Transform container) {
         this.visualsPrefab = visualsPrefab;
         this.container = container;
     }

@@ -4,9 +4,9 @@ using Unity.Profiling;
 using System.Linq;
 using UnityEngine.Assertions;
 
-public class UnitController {
+public class EnemyController {
 
-    private readonly UnitView unitView;
+    private readonly EnemyView enemyView;
     private readonly LocalAvoidanceService localAvoidanceService;
     private readonly NavigationService navigationService;
     private readonly CombatService combatService;
@@ -49,13 +49,13 @@ public class UnitController {
     private readonly List<RocketLauncher> vehicleRocketLaunchers = new ();
     private readonly List<List<Rocket>> vehicleRocketsRegistry = new ();
 
-    public UnitController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, UnitView crowdView,
+    public EnemyController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, EnemyView crowdView,
         Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService,
         RewardsMediator rewardsMediator, VehicleService vehicleService, UnitVehicleData foeVehicle, int maxVehiclesCount,
         SoundManager soundManager, ProjectileService projectileService, GameObject pointsRewardVisualsPrefab) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
-        this.unitView = crowdView;
+        this.enemyView = crowdView;
         this.spawnPoints = spawnPoints;
         this.targetPoint = targetPoint;
         this.unitsCount = unitsCount;
@@ -114,7 +114,7 @@ public class UnitController {
         var physicsAgentId = physicsService.RegisterPhysicsEntity(position, .5f, 0.15f);
         unitIdToPhysicsId[newUnit.Id] = physicsAgentId;
         
-        unitView.AddUnit(newUnit.Id, position);
+        enemyView.AddUnit(newUnit.Id, position);
     }
 
     private static readonly ProfilerMarker readUnitOrientationMarker = new ProfilerMarker("ReadOrientation");
@@ -180,7 +180,7 @@ public class UnitController {
                 
             if (unit.TryDirectFrontAttack(Time.time, out var damage)) {
                 combatService.ApplyDirectDamage(unitCombatId, closestFoe.id, damage);
-                unitView.ShowDirectFrontAttack(unit.Id);
+                enemyView.ShowDirectFrontAttack(unit.Id);
             }
         }
     }
@@ -245,14 +245,14 @@ public class UnitController {
             combatService.ClearAgentState(combatId);
 
             if (anyDamage) {
-                unitView.ShowTakeHit(unit.Id);
+                enemyView.ShowTakeHit(unit.Id);
             }
 
             if (!unit.IsAlive) {
                 if (unit.DeathCause.type == Unit.DamageType.Projectile) {
-                    unitView.ShowDeathByProjectile(unit.Id, unit.DeathCause.damageSource, blownAway: unit.Grouned);
+                    enemyView.ShowDeathByProjectile(unit.Id, unit.DeathCause.damageSource, blownAway: unit.Grouned);
                 } else {
-                    unitView.ShowDisolveDeath(unit.Id);
+                    enemyView.ShowDisolveDeath(unit.Id);
                 }
                 
                 combatService.UnregisterAgent(combatId);
@@ -292,12 +292,12 @@ public class UnitController {
         // unitIdToCombatId.Remove(unitId);
         physicsService.UnregisterPhysicsEntity(unitIdToPhysicsId[unitId]);
         unitIdToPhysicsId.Remove(unitId);
-        unitView.RemoveUnit(unitId);
+        enemyView.RemoveUnit(unitId);
     }
 
     private void UpdateViewPose() {
         foreach (var unit in units) {
-            unitView.UpdateUnitPositionAndRotation(unit.Id, unit.Position, unit.Rotation);
+            enemyView.UpdateUnitPositionAndRotation(unit.Id, unit.Position, unit.Rotation);
         }
     }
 
@@ -305,7 +305,7 @@ public class UnitController {
         var vehicle = new UnitVehicle(foeVehicleData);
         vehicles.Add(vehicle);
         
-        var viewId = unitView.AddUnitVehicle(position, vehicle.VisualsPrefab);
+        var viewId = enemyView.AddUnitVehicle(position, vehicle.VisualsPrefab);
         vehicleViewIds.Add(viewId);
 
         var combatAgentId = combatService.RegisterAgent(position, alie: false);
@@ -318,7 +318,7 @@ public class UnitController {
         vehicleSoundLoop.Add(soundLoopId);
 
         if (vehicle.WeaponsData.rocketLauncherConfig != null) {
-            unitView.SetRocketLauncherWeapon(viewId, vehicle.Position, vehicle.WeaponsData.rocketLauncherConfig.visualsPrefab);
+            enemyView.SetRocketLauncherWeapon(viewId, vehicle.Position, vehicle.WeaponsData.rocketLauncherConfig.visualsPrefab);
 
             var vehicleRocketLauncher = new RocketLauncher(-1, vehicle.Position, vehicle.WeaponsData.rocketLauncherConfig);
             vehicleRocketLaunchers.Add(vehicleRocketLauncher);
@@ -332,7 +332,7 @@ public class UnitController {
 
         if (vehicle.WeaponsData.turelConfig != null) {
             Assert.IsNull(vehicleRocketLaunchers[vehicles.Count - 1]);
-            unitView.SetTurelWeapon(viewId, vehicle.Position, vehicle.WeaponsData.turelConfig.visualsPrefab);
+            enemyView.SetTurelWeapon(viewId, vehicle.Position, vehicle.WeaponsData.turelConfig.visualsPrefab);
 
             var turel = new Turel(-1, vehicle.Position, vehicle.WeaponsData.turelConfig);
             vehicleTurels.Add(turel);
@@ -348,7 +348,7 @@ public class UnitController {
     private void DespawnVehicleAt(int vehicleIndex) {
         vehicles.RemoveAt(vehicleIndex);
 
-        unitView.RemoveVehicleView(vehicleViewIds[vehicleIndex]);
+        enemyView.RemoveVehicleView(vehicleViewIds[vehicleIndex]);
         vehicleViewIds.RemoveAt(vehicleIndex);
 
         combatService.UnregisterAgent(vehicleCombats[vehicleIndex]);
@@ -493,16 +493,16 @@ public class UnitController {
         for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
             var vehicle = vehicles[vehicleIndex];
             var vehicleViewIndex = vehicleViewIds[vehicleIndex];
-            unitView.UpdateVehiclePose(vehicleViewIndex, vehicle.PhysicsState);
+            enemyView.UpdateVehiclePose(vehicleViewIndex, vehicle.PhysicsState);
 
             var vehicleViewId = vehicleViewIds[vehicleIndex];
             var turel = vehicleTurels[vehicleIndex];
             if (turel != null) {
-                unitView.UpdateTurelOrientation(vehicleViewId, turel.Position, turel.GunForward);
+                enemyView.UpdateTurelOrientation(vehicleViewId, turel.Position, turel.GunForward);
             }
             var rocketLauncher = vehicleRocketLaunchers[vehicleIndex];
             if (rocketLauncher != null) {
-                unitView.UpdateRocketLauncherOrientation(vehicleViewId, rocketLauncher.Position, rocketLauncher.AimPoint, rocketLauncher.RocketAmplitude);
+                enemyView.UpdateRocketLauncherOrientation(vehicleViewId, rocketLauncher.Position, rocketLauncher.AimPoint, rocketLauncher.RocketAmplitude);
             }
         }
     }
@@ -511,7 +511,7 @@ public class UnitController {
         var projectileGroupId = vehicleTurelProjectileGroupIds[vehicleIndex];
         var projectileId = projectileService.CreateProjectile(projectileGroupId, bullet.firePoint, bullet.velocity, 5f);
         var vehicleViewId = vehicleViewIds[vehicleIndex];
-        unitView.ShowBulletShoot(vehicleViewId, projectileId, bullet.velocity);
+        enemyView.ShowBulletShoot(vehicleViewId, projectileId, bullet.velocity);
         soundManager.PlayEffect(bullet.firePoint, turel.BulletShootAudioClips);
     }
 
@@ -526,7 +526,7 @@ public class UnitController {
             
             foreach (var projectileState in projectilesStateBuffer) {
                 if (projectileState.isAged) {
-                    unitView.ShowBulletDisappear(i, projectileState.id);
+                    enemyView.ShowBulletDisappear(i, projectileState.id);
                 }
             }
         }
@@ -550,7 +550,7 @@ public class UnitController {
                 if (combatService.ApplyProjectileDamage(combatId, projectileState.position, projectileState.velocity, turel.BulletDamage)) {
                     projectileService.KillProjectile(projectileState.id);
                     var vehicleViewId = vehicleViewIds[vehicleIndex];
-                    unitView.ShowBulletCrash(vehicleViewId, projectileState.id);
+                    enemyView.ShowBulletCrash(vehicleViewId, projectileState.id);
                 }
             }
         }
@@ -561,7 +561,7 @@ public class UnitController {
         var rocket = new Rocket(nextRocketId, trajectory, Time.time, rocketLauncher.RocketFlyDuration);
         var rocketsRegistry = vehicleRocketsRegistry[vehicleIndex];
         rocketsRegistry.Add(rocket);
-        unitView.ShowRocketFly(vehicleIndex, nextRocketId, trajectory, rocketLauncher.RocketFlyDuration);
+        enemyView.ShowRocketFly(vehicleIndex, nextRocketId, trajectory, rocketLauncher.RocketFlyDuration);
         soundManager.PlayEffect(trajectory.launchPoint, rocketLauncher.RocketLaunchEffects);
     }
 
@@ -577,7 +577,7 @@ public class UnitController {
             foreach (var rocket in rocketLauncherRockets) {
                 if (rocket.ForwardLandingTime(Time.time)) {
                     combatService.ApplyExplosionDamage(vehicleCombatId, rocket.Trajectory.landPoint, 3, rocketLauncher.RocketDamage);
-                    unitView.ShowRocketExplosion(vehicleViewId, rocket.Id);
+                    enemyView.ShowRocketExplosion(vehicleViewId, rocket.Id);
                     soundManager.PlayEffect(rocket.Trajectory.landPoint, rocketLauncher.ExplodeEffectClips);
                 }
             }   

@@ -13,7 +13,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private string combatServiceLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
     [Space]
-    [SerializeField] private bool unitsComponent = true;
+    [SerializeField] private bool enemyComponent = true;
     [SerializeField] int unitsCount = 10;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform targetPoint;
@@ -39,7 +39,7 @@ public class GameBootstrapper : MonoBehaviour {
     private CombatService combatService;
 
     private PlayerController playerController;
-    private UnitController unitController;
+    private EnemyController enemyController;
 
     private void Start() {
         var vehicleService = new VehicleService();
@@ -51,7 +51,7 @@ public class GameBootstrapper : MonoBehaviour {
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var playerView = new PlayerView();
-        var unitView = new UnitView(unitVisualsPrefab, null);
+        var unitView = new EnemyView(unitVisualsPrefab, null);
 
         playerController = new PlayerController(
             vehicleService, playerView,
@@ -69,7 +69,7 @@ public class GameBootstrapper : MonoBehaviour {
             
             rewardsMediator);
 
-        unitController = new UnitController(
+        enemyController = new EnemyController(
             localAvoidanceService,
             navigationService,
             unitView,
@@ -89,7 +89,7 @@ public class GameBootstrapper : MonoBehaviour {
             rewardVisualsPrefab);
 
         if (playerComponent) playerController.Init();
-        if (unitsComponent) unitController.Init();
+        if (enemyComponent) enemyController.Init();
     }
 
     private static readonly ProfilerMarker cameraUpdateMarker = new ProfilerMarker("Game.CameraController");
@@ -99,9 +99,9 @@ public class GameBootstrapper : MonoBehaviour {
     private void Update() {
         combatService.UpdateSpatialTree();
         
-        if (unitsComponent) 
+        if (enemyComponent) 
             using (unitUpdateMarker.Auto()) 
-                unitController.Update();
+                enemyController.Update();
 
         if (playerComponent)
             using (playerUpdateMarker.Auto())
