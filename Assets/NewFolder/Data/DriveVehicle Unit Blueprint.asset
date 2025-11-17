@@ -16,8 +16,8 @@ MonoBehaviour:
     rocketLauncherConfig: {fileID: 0}
     turelConfig: {fileID: 11400000, guid: 58a96b7c497c64729943378411e5aa57, type: 2}
   drivingData:
-    maxTorque: 20
-    maxBreaksTorque: 20
+    maxTorque: 150
+    maxBreaksTorque: 50
     maxSteerDegrees: 40
     powerAccelerationSpeed: 1
   soundData:

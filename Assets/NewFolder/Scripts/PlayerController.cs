@@ -9,9 +9,7 @@ public class PlayerController {
     private readonly VehicleService vehicleService;
     private readonly ProjectileService projectileService;
     private readonly RewardsMediator rewardsMediator;
-    private readonly VehicleView vehicleView;
-    private readonly WeaponView view;
-    private readonly RewardsView rewardsView;
+    private readonly PlayerView playerView;
     private readonly SoundManager soundManager;
     private readonly CameraManager cameraManager;
 
@@ -45,24 +43,22 @@ public class PlayerController {
     private int rocketIdCounter;
     private readonly Dictionary<int, List<Rocket>> rocketLauncherRocketsRegistry = new ();
 
-    public PlayerController(VehicleService vehicleService, VehicleView vehicleView, DriverVehicleData driverVehicleData, TrailerVehicleData trailerVehicleData, int trailersCount,
-        CombatService combatService, WeaponView weaponView, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService,
-        RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager, RewardsView rewardsView, RewardsMediator rewardsMediator) {
-        this.view = weaponView;
+    public PlayerController(VehicleService vehicleService, PlayerView vehicleView, DriverVehicleData driverVehicleData, TrailerVehicleData trailerVehicleData, int trailersCount,
+        CombatService combatService, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService,
+        RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager, RewardsMediator rewardsMediator) {
         this.combatService = interactionService;
         this.turelConfig = turelConfig;
         this.projectileService = projectileService;
         this.launcherConfig = launcherConfig;
 
         this.vehicleService = vehicleService;
-        this.vehicleView = vehicleView;
+        this.playerView = vehicleView;
         this.driverVehicleData = driverVehicleData;
         this.trailerVehicleData = trailerVehicleData;
         this.maxTrailersCount = trailersCount;
         this.combatService = combatService;
         this.soundManager = soundManager;
         this.cameraManager = cameraManager;
-        this.rewardsView = rewardsView;
         this.rewardsMediator = rewardsMediator;
     }
 
@@ -121,7 +117,7 @@ public class PlayerController {
 
     private void DiscoverRewards() {
         foreach (var rewardState in rewardsMediator.RewardAddedEvents) {
-            rewardsView.SpawnReward(rewardState.id, rewardState.position, rewardState.rewardVisuals);
+            playerView.SpawnReward(rewardState.id, rewardState.position, rewardState.rewardVisuals);
         }
     }
 
@@ -140,7 +136,7 @@ public class PlayerController {
 
     private void FilterRemovedRewards() {
         foreach (var rewardState in rewardsMediator.RewardRemovedEvents) {
-            rewardsView.DespawnReward(rewardState.id);
+            playerView.DespawnReward(rewardState.id);
         }
     }
 
@@ -157,7 +153,7 @@ public class PlayerController {
         driverVehiclePhysicsId = vehicleService.CreateVehicle(driveVehiclePosition, driverVehicleData.physicsPrefab);
         driverVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
         driverVehicleEngineSoundId = soundManager.StartLoop(driverVehicle.Position, driverVehicle.EngineIdleSound);
-        driverVehicleViewId = vehicleView.AddVehicle(driveVehiclePosition, driverVehicle.VisualsPrefab);
+        driverVehicleViewId = playerView.AddVehicle(driveVehiclePosition, driverVehicle.VisualsPrefab);
     }
 
     private void ReadDriveVehicleInput() {
@@ -200,7 +196,7 @@ public class PlayerController {
         var headPhysicsId = isFirstTrailer ? driverVehiclePhysicsId : trailerPhysicIds[^2];
         vehicleService.MakeTowingConnection(headPhysicsId, trailerPhysicsId);
         
-        var trailerViewId = vehicleView.AddVehicle(position, trailerVehicle.VisualsData);
+        var trailerViewId = playerView.AddVehicle(position, trailerVehicle.VisualsData);
         trailerViewIds.Add(trailerViewId);
         
         return trailerVehicle;
@@ -219,13 +215,13 @@ public class PlayerController {
     }
 
     private void UpdateVehiclesView() {
-        vehicleView.UpdateVehiclePose(driverVehicleViewId, driverVehicle.PhysicsState);
+        playerView.UpdateVehiclePose(driverVehicleViewId, driverVehicle.PhysicsState);
         
         for (int trailerIndex = 0; trailerIndex < trailerVehicles.Count; trailerIndex++) {
             var vehicle = trailerVehicles[trailerIndex];
             var vehicleViewIndex = trailerViewIds[trailerIndex];
             
-            vehicleView.UpdateVehiclePose(vehicleViewIndex, vehicle.PhysicsState);   
+            playerView.UpdateVehiclePose(vehicleViewIndex, vehicle.PhysicsState);   
         }
     }
 
@@ -241,7 +237,7 @@ public class PlayerController {
 
         rocketLauncherRocketsRegistry[launcherId] = new List<Rocket>();
         
-        view.AddRocketLauncher(launcherId, rocketLauncher.Position, rocketLauncher.Visuals);
+        playerView.AddRocketLauncher(launcherId, rocketLauncher.Position, rocketLauncher.Visuals);
     }
 
     private void UpdateRocketLauncherOrientation() {
@@ -275,7 +271,7 @@ public class PlayerController {
         var nextRocketId = rocketIdCounter++;
         var rocket = new Rocket(nextRocketId, trajectory, Time.time, rocketLauncher.RocketFlyDuration);
         rocketLauncherRocketsRegistry[rocketLauncher.Id].Add(rocket);
-        view.ShowRocketFly(rocketLauncher.Id, nextRocketId, trajectory, rocketLauncher.RocketFlyDuration);
+        playerView.ShowRocketFly(rocketLauncher.Id, nextRocketId, trajectory, rocketLauncher.RocketFlyDuration);
         soundManager.PlayEffect(trajectory.launchPoint, rocketLauncher.RocketLaunchEffects);
     }
 
@@ -294,7 +290,7 @@ public class PlayerController {
                     Debug.DrawLine(center, center + Vector3.left * radius, color, duration);
                     Debug.DrawLine(center, center + Vector3.forward * radius, color, duration);
                     Debug.DrawLine(center, center + Vector3.back * radius, color, duration);
-                    view.ShowRocketExplosion(rocketLauncher.Id, rocket.Id);
+                    playerView.ShowRocketExplosion(rocketLauncher.Id, rocket.Id);
                     soundManager.PlayEffect(rocket.Trajectory.landPoint, rocketLauncher.ExplodeEffectClips);
                 }
             }   
@@ -316,7 +312,7 @@ public class PlayerController {
 
     private void UpdateRocketLauncherView() {
         foreach (var rocketLauncher in rocketLaunchers) {
-            view.UpdateRocketLauncherOrientation(rocketLauncher.Id, rocketLauncher.Position, rocketLauncher.AimPoint, rocketLauncher.RocketAmplitude);
+            playerView.UpdateRocketLauncherOrientation(rocketLauncher.Id, rocketLauncher.Position, rocketLauncher.AimPoint, rocketLauncher.RocketAmplitude);
         }
     }
 
@@ -333,7 +329,7 @@ public class PlayerController {
         var turelProjectilesGroupId = projectileService.AddGroup();
         turelToProjectileGroupId[turel.Id] = turelProjectilesGroupId;
         
-        view.AddTurel(turelId, turel.Position, turel.Visuals);
+        playerView.AddTurel(turelId, turel.Position, turel.Visuals);
     }
 
     private void UpdateTurelsOrientation() {
@@ -367,14 +363,14 @@ public class PlayerController {
 
     private void UpdateTurelView() {
         foreach (var turel in turels) {
-            view.UpdateTurelOrientation(turel.Id, turel.Position, turel.GunForward);
+            playerView.UpdateTurelOrientation(turel.Id, turel.Position, turel.GunForward);
         }
     }
 
     private void SpawnBulletProjectile(Turel turel, Bullet bullet) {
         var projectileGroupId = turelToProjectileGroupId[turel.Id];
         var projectileId = projectileService.CreateProjectile(projectileGroupId, bullet.firePoint, bullet.velocity, 5f);
-        view.ShowBulletShoot(turel.Id, projectileId, bullet.velocity);
+        playerView.ShowBulletShoot(turel.Id, projectileId, bullet.velocity);
         soundManager.PlayEffect(bullet.firePoint, turel.BulletShootAudioClips);
     }
 
@@ -386,7 +382,7 @@ public class PlayerController {
             
             foreach (var projectileState in projectilesStateBuffer) {
                 if (projectileState.isAged) {
-                    view.ShowBulletDisappear(turel.Id, projectileState.id);
+                    playerView.ShowBulletDisappear(turel.Id, projectileState.id);
                 }
             }
         }
@@ -405,7 +401,7 @@ public class PlayerController {
 
                 if (combatService.ApplyProjectileDamage(combatId, projectileState.position, projectileState.velocity, turel.BulletDamage)) {
                     projectileService.KillProjectile(projectileState.id);
-                    view.ShowBulletCrash(turel.Id, projectileState.id);
+                    playerView.ShowBulletCrash(turel.Id, projectileState.id);
                 }
             }
         }
