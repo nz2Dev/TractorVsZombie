@@ -50,18 +50,15 @@ public class GameBootstrapper : MonoBehaviour {
         var projectileService = projectileServiceImpl;
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
-        var vehicleView = new PlayerView();
+        var playerView = new PlayerView();
         var unitView = new UnitView(unitVisualsPrefab, null);
-        var weaponView = new WeaponView();
-        var rewardsView = new RewardsView();
 
         playerController = new PlayerController(
-            vehicleService, vehicleView,
+            vehicleService, playerView,
             driveVehicle, trailerVehicle,
             trailersCount,
             combatService, 
             
-            weaponView, 
             combatService,
             turelData,
             projectileService,
@@ -70,7 +67,6 @@ public class GameBootstrapper : MonoBehaviour {
             soundManager,
             cameraManager,
             
-            rewardsView,
             rewardsMediator);
 
         unitController = new UnitController(
