@@ -4,12 +4,6 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "UnitVehicleData", menuName = "UnitVehicleData", order = 0)]
 public class UnitVehicleData : ScriptableObject {
-    
-    [Serializable]
-    public struct VisualsData {
-        public GameObject baseGeometry;
-        public GameObject wheelGeometry;
-    }
 
     [Serializable]
     public struct DrivingData {
@@ -33,6 +27,6 @@ public class UnitVehicleData : ScriptableObject {
     public WeaponsData weaponsData;
     public DrivingData drivingData;
     public SoundData soundData;
-    public VisualsData visualsData;
+    public VehicleVisuals visualsPrefab;
     public VehiclePhysics physicsPrefab;
 }

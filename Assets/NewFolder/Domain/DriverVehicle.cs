@@ -17,8 +17,8 @@ public class DriverVehicle {
     }
 
     public VehiclePhysics PhysicsPrefab => data.physicsPrefab;
+    public VehicleVisuals VisualsPrefab => data.visualsPrefab;
     public VehicleState PhysicsState => vehicleState;
-    public DriverVehicleData.VisualsData VisualsData => data.visualsData;
     public AudioClip EngineIdleSound => data.soundData.engineIdleSound;
     public AudioClip[] HitImpactSounds => data.soundData.hitImpactSounds;
     

@@ -15,7 +15,7 @@ MonoBehaviour:
   ramRadius: 0.5
   rewardCollectRadius: 0.5
   drivingData:
-    maxTorque: 50
+    maxTorque: 150
     maxBreaksTorque: 50
     maxSteerDegrees: 40
     minStterAmount: 1
@@ -26,7 +26,5 @@ MonoBehaviour:
     engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
     hitImpactSounds:
     - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
-  visualsData:
-    baseGeometry: {fileID: 6437747089859687489, guid: c0a65a2b06cc04f75af45a58b851557f, type: 3}
-    wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
+  visualsPrefab: {fileID: 1637476159873997548, guid: fd94b10e864364e73ba7ddb91581b065, type: 3}
   physicsPrefab: {fileID: 5571881020198792173, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}

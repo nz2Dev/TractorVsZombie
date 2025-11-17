@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 5571881020198792173}
   - component: {fileID: 1441506342663817163}
   - component: {fileID: 4653705079595236385}
-  m_Layer: 0
-  m_Name: DriverVehiclePhysics
+  m_Layer: 13
+  m_Name: Driver Vehicle Physics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

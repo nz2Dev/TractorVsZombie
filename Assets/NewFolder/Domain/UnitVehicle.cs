@@ -20,7 +20,7 @@ public class UnitVehicle {
     public int Health { get; private set; }    
     public bool IsAlive => Health > 0;
     public VehiclePhysics PhysicsPrefab => data.physicsPrefab;
-    public UnitVehicleData.VisualsData VisualsData => data.visualsData;
+    public VehicleVisuals VisualsPrefab => data.visualsPrefab;
     public AudioClip EngineIdleSound => data.soundData.engineIdleSound;
     public UnitVehicleData.WeaponsData WeaponsData => data.weaponsData;
 

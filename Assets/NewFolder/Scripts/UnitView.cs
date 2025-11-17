@@ -59,13 +59,8 @@ public class UnitView {
         unitVisuals.Remove(unitId);
     }
 
-    public int AddUnitVehicle(Vector3 position, GameObject baseGeometry, GameObject wheelGeometry) {
-        var vehicleVisuals = new VehicleVisuals(position, container);
-        vehicleVisuals.AddBaseGeometry(baseGeometry);
-        
-        vehicleVisuals.AddWheelAxisGeometries(wheelGeometry, .3f, .15f, .2f, .15f);
-        vehicleVisuals.AddWheelAxisGeometries(wheelGeometry, -.3f, .15f, .2f, .15f);
-        
+    public int AddUnitVehicle(Vector3 position, VehicleVisuals visualsPrefab) {
+        var vehicleVisuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
         var nextVehicleViewId = vehicleViewIdCounter++;
         visualsRegistry[nextVehicleViewId] = vehicleVisuals;
         return nextVehicleViewId;
@@ -88,8 +83,8 @@ public class UnitView {
     public void UpdateVehiclePose(int vehicleIndex, VehicleState vehiclePose) {
         var vehicleVisuals = visualsRegistry[vehicleIndex];
         vehicleVisuals.SetPositionAndRotation(vehiclePose.position, vehiclePose.rotation);
-        vehicleVisuals.SetAxisPositionAndRotation(0, vehiclePose.frontAxis);
-        vehicleVisuals.SetAxisPositionAndRotation(1, vehiclePose.rearAxis);
+        vehicleVisuals.SetFrontAxis(vehiclePose.frontAxis);
+        vehicleVisuals.SetRearAxis(vehiclePose.rearAxis);
     }
 
     internal void SetTurelWeapon(int viewId, Vector3 position, TurelVisuals visualsPrefab) {

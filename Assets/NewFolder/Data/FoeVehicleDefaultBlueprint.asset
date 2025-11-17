@@ -22,7 +22,5 @@ MonoBehaviour:
     powerAccelerationSpeed: 1
   soundData:
     engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
-  visualsData:
-    baseGeometry: {fileID: 4058983013609224398, guid: f628f9ac28b08472693b1c5f7856da92, type: 3}
-    wheelGeometry: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
+  visualsPrefab: {fileID: 1664023645614263282, guid: 6f70d5b01ead64a469c9d608dc4bd4ad, type: 3}
   physicsPrefab: {fileID: 5571881020198792173, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}

@@ -14,7 +14,7 @@ public class TrailerVehicle {
     public Vector3 Position => vehicleState.position;
     public VehicleState PhysicsState => vehicleState;
     public VehiclePhysics PhysicsPrefab => data.physicsPrefab;
-    public TrailerVehicleData.VisualsData VisualsData => data.visualsData;
+    public VehicleVisuals VisualsData => data.visualsPrefab;
 
     public void UpdatePhysicsState(VehicleState state) {
         vehicleState = state;

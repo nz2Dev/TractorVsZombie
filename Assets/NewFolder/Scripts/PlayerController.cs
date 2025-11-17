@@ -157,7 +157,7 @@ public class PlayerController {
         driverVehiclePhysicsId = vehicleService.CreateVehicle(driveVehiclePosition, driverVehicleData.physicsPrefab);
         driverVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
         driverVehicleEngineSoundId = soundManager.StartLoop(driverVehicle.Position, driverVehicle.EngineIdleSound);
-        driverVehicleViewId = vehicleView.AddVehicle(driveVehiclePosition, driverVehicle.VisualsData.baseGeometry, driverVehicle.VisualsData.wheelGeometry);
+        driverVehicleViewId = vehicleView.AddVehicle(driveVehiclePosition, driverVehicle.VisualsPrefab);
     }
 
     private void ReadDriveVehicleInput() {
@@ -200,7 +200,7 @@ public class PlayerController {
         var headPhysicsId = isFirstTrailer ? driverVehiclePhysicsId : trailerPhysicIds[^2];
         vehicleService.MakeTowingConnection(headPhysicsId, trailerPhysicsId);
         
-        var trailerViewId = vehicleView.AddVehicle(position, trailerVehicle.VisualsData.baseGeometry, trailerVehicle.VisualsData.wheelGeometry);
+        var trailerViewId = vehicleView.AddVehicle(position, trailerVehicle.VisualsData);
         trailerViewIds.Add(trailerViewId);
         
         return trailerVehicle;

@@ -6,12 +6,6 @@ using UnityEngine;
 public class DriverVehicleData : ScriptableObject {
     
     [Serializable]
-    public struct VisualsData {
-        public GameObject baseGeometry;
-        public GameObject wheelGeometry;
-    }
-
-    [Serializable]
     public struct DrivingData {
         public float maxTorque;
         public float maxBreaksTorque;
@@ -32,6 +26,6 @@ public class DriverVehicleData : ScriptableObject {
     public float rewardCollectRadius;
     public DrivingData drivingData;
     public SoundData soundData;
-    public VisualsData visualsData;
+    public VehicleVisuals visualsPrefab;
     public VehiclePhysics physicsPrefab;
 }

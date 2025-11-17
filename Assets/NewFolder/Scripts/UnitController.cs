@@ -305,7 +305,7 @@ public class UnitController {
         var vehicle = new UnitVehicle(foeVehicleData);
         vehicles.Add(vehicle);
         
-        var viewId = unitView.AddUnitVehicle(position, vehicle.VisualsData.baseGeometry, vehicle.VisualsData.wheelGeometry);
+        var viewId = unitView.AddUnitVehicle(position, vehicle.VisualsPrefab);
         vehicleViewIds.Add(viewId);
 
         var combatAgentId = combatService.RegisterAgent(position, alie: false);
