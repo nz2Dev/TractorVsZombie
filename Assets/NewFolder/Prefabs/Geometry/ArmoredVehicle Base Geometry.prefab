@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8548820677546744771}
   - component: {fileID: 2600958482467249831}
   m_Layer: 0
-  m_Name: Default Armored Vehicle Geometry
+  m_Name: ArmoredVehicle Base Geometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

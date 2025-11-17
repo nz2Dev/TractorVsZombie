@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2865639922742056815}
   - component: {fileID: 5566654071868748526}
   m_Layer: 0
-  m_Name: Default Trailer Base Geometry
+  m_Name: Trailer Base Geometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
