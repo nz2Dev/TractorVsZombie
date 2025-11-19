@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController {
 
     private readonly ProjectileController projectileController;
+    private readonly RocketController rocketController;
 
     private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
@@ -40,14 +41,12 @@ public class PlayerController {
     private readonly Dictionary<int, int> rocketLauncherToCombatId = new ();
     private readonly Dictionary<int, TrailerVehicle> rocketLauncherToVehicle = new ();
 
-    private int rocketIdCounter;
-    private readonly Dictionary<int, List<Rocket>> rocketLauncherRocketsRegistry = new ();
-
     public PlayerController(VehicleService vehicleService, PlayerView vehicleView, DriverVehicleData driverVehicleData, TrailerVehicleData trailerVehicleData, int trailersCount,
         CombatService combatService, CombatService interactionService, TurelConfig turelConfig,
         RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager, RewardsMediator rewardsMediator,
-        ProjectileController projectileController) {
+        ProjectileController projectileController, RocketController rocketController) {
         this.projectileController = projectileController;
+        this.rocketController = rocketController;
 
         this.combatService = interactionService;
         this.turelConfig = turelConfig;
@@ -102,8 +101,6 @@ public class PlayerController {
 
         UpdateCamera();
 
-        UpdateRocketLandingCombat();
-        FilterElapsedRockets();
         UpdateRocketLauncherOrientation();
         OperateRocketLaunchers();
         UpdateRocketLauncherCombatState();
@@ -234,8 +231,6 @@ public class PlayerController {
 
         var rocketLauncherCombatId = combatService.RegisterAgent(rocketLauncher.Position, alie: true);
         rocketLauncherToCombatId[launcherId] = rocketLauncherCombatId;
-
-        rocketLauncherRocketsRegistry[launcherId] = new List<Rocket>();
         
         playerView.AddRocketLauncher(launcherId, rocketLauncher.Position, rocketLauncher.Visuals);
     }
@@ -255,7 +250,7 @@ public class PlayerController {
             }
             
             if (rocketLauncher.Launch(Time.time, out var trajectory)) {
-                SpawnRocket(rocketLauncher, trajectory);
+                rocketController.SpawnRocket(launcherCombatId, trajectory);
             }
         }
     }
@@ -264,49 +259,6 @@ public class PlayerController {
         foreach (var rocketLauncher in rocketLaunchers) {
             var rocketLauncherCombatId = rocketLauncherToCombatId[rocketLauncher.Id];
             combatService.UpdateAgentPosition(rocketLauncherCombatId, rocketLauncher.Position);
-        }
-    }
-
-    private void SpawnRocket(RocketLauncher rocketLauncher, RocketTrajectory trajectory) {
-        var nextRocketId = rocketIdCounter++;
-        var rocket = new Rocket(nextRocketId, trajectory, Time.time, rocketLauncher.RocketFlyDuration);
-        rocketLauncherRocketsRegistry[rocketLauncher.Id].Add(rocket);
-        playerView.ShowRocketFly(rocketLauncher.Id, nextRocketId, trajectory, rocketLauncher.RocketFlyDuration);
-        soundManager.PlayEffect(trajectory.launchPoint, rocketLauncher.RocketLaunchEffects);
-    }
-
-    private void UpdateRocketLandingCombat() {
-        foreach (var rocketLauncher in rocketLaunchers) {
-            var launcherCombatId = rocketLauncherToCombatId[rocketLauncher.Id];
-            
-            foreach (var rocket in rocketLauncherRocketsRegistry[rocketLauncher.Id]) {
-                if (rocket.ForwardLandingTime(Time.time)) {
-                    combatService.ApplyExplosionDamage(launcherCombatId, rocket.Trajectory.landPoint, 3, rocketLauncher.RocketDamage);
-                    var center = rocket.Trajectory.landPoint;
-                    var color = Color.red;
-                    var duration = 1f;
-                    var radius = 3;
-                    Debug.DrawLine(center, center + Vector3.right * radius, color, duration);
-                    Debug.DrawLine(center, center + Vector3.left * radius, color, duration);
-                    Debug.DrawLine(center, center + Vector3.forward * radius, color, duration);
-                    Debug.DrawLine(center, center + Vector3.back * radius, color, duration);
-                    playerView.ShowRocketExplosion(rocketLauncher.Id, rocket.Id);
-                    soundManager.PlayEffect(rocket.Trajectory.landPoint, rocketLauncher.ExplodeEffectClips);
-                }
-            }   
-        }
-    }
-
-    private void FilterElapsedRockets() {
-        foreach (var rocketLauncher in rocketLaunchers) {
-            var launcherRockets = rocketLauncherRocketsRegistry[rocketLauncher.Id];
-            for (int i = 0; i < launcherRockets.Count; i++) {
-                var rocket = launcherRockets[i];
-                if (rocket.Landed) {
-                    launcherRockets.RemoveAt(i);
-                    i--;
-                }
-            }
         }
     }
 

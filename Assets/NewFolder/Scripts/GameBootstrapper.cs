@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class GameBootstrapper : MonoBehaviour {
     
+    [SerializeField] private RocketView rocketView;
     [SerializeField] private ParticleSystem bulletSystemPrefab;
     [Space]
     [SerializeField] private SoundManager soundManager;
@@ -44,6 +45,7 @@ public class GameBootstrapper : MonoBehaviour {
     private EnemyController enemyController;
 
     private ProjectileController projectileController;
+    private RocketController rocketController;
 
     private void Start() {
         var vehicleService = new VehicleService();
@@ -65,6 +67,12 @@ public class GameBootstrapper : MonoBehaviour {
         );
         projectileController.Init();
 
+        rocketController = new RocketController(
+            rocketView, 
+            soundManager, 
+            combatService
+        );
+
         playerController = new PlayerController(
             vehicleService, playerView,
             driveVehicle, trailerVehicle,
@@ -79,7 +87,8 @@ public class GameBootstrapper : MonoBehaviour {
             cameraManager,
             rewardsMediator,
             
-            projectileController);
+            projectileController,
+            rocketController);
 
         enemyController = new EnemyController(
             localAvoidanceService,
@@ -112,6 +121,7 @@ public class GameBootstrapper : MonoBehaviour {
         combatService.UpdateSpatialTree();
 
         projectileController.Update();
+        rocketController.Update();
         
         if (enemyComponent) 
             using (unitUpdateMarker.Auto()) 

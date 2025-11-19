@@ -1,9 +1,12 @@
 using UnityEngine;
 
-public struct RocketTrajectory {
+public struct RocketTrajectory { //
     public Vector3 launchPoint;
     public Vector3 landPoint;
-    public float height;
+    public float flyDuration;
+    public AudioClip[] launchEffectClips;
+    public AudioClip[] explodeEffectClips;
+    public float height; //
 }
 
 public class RocketLauncher {
@@ -47,7 +50,10 @@ public class RocketLauncher {
         trajectory = new RocketTrajectory {
             launchPoint = Position,
             landPoint = AimPoint,
-            height = config.rocketAmplitude
+            height = config.rocketAmplitude,
+            flyDuration = 1,
+            launchEffectClips = config.launchEffectClips,
+            explodeEffectClips = config.explodeEffectClips
         };
         return true;
     }
