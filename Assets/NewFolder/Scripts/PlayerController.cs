@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class PlayerController {
 
+    private readonly ProjectileController projectileController;
+
     private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
-    private readonly ProjectileService projectileService;
     private readonly RewardsMediator rewardsMediator;
     private readonly PlayerView playerView;
     private readonly SoundManager soundManager;
@@ -31,7 +32,6 @@ public class PlayerController {
     private readonly List<Turel> turels = new ();
     private readonly Dictionary<int, int> turelToCombatId = new ();
     private readonly Dictionary<int, TrailerVehicle> turelToVehicle = new ();
-    private readonly Dictionary<int, int> turelToProjectileGroupId = new ();
     private readonly List<ProjectileState> projectilesStateBuffer = new (64);
 
     private int rocketLauncherIdCounter;
@@ -44,11 +44,13 @@ public class PlayerController {
     private readonly Dictionary<int, List<Rocket>> rocketLauncherRocketsRegistry = new ();
 
     public PlayerController(VehicleService vehicleService, PlayerView vehicleView, DriverVehicleData driverVehicleData, TrailerVehicleData trailerVehicleData, int trailersCount,
-        CombatService combatService, CombatService interactionService, TurelConfig turelConfig, ProjectileService projectileService,
-        RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager, RewardsMediator rewardsMediator) {
+        CombatService combatService, CombatService interactionService, TurelConfig turelConfig,
+        RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager, RewardsMediator rewardsMediator,
+        ProjectileController projectileController) {
+        this.projectileController = projectileController;
+
         this.combatService = interactionService;
         this.turelConfig = turelConfig;
-        this.projectileService = projectileService;
         this.launcherConfig = launcherConfig;
 
         this.vehicleService = vehicleService;
@@ -107,8 +109,6 @@ public class PlayerController {
         UpdateRocketLauncherCombatState();
         UpdateRocketLauncherView();
 
-        UpdateProjectileHits();
-        FilterDeadProjectiles();
         UpdateTurelsOrientation();
         OperateTurels();
         UpdateTurelsCombatState();
@@ -325,9 +325,6 @@ public class PlayerController {
         
         var turelCombatId = combatService.RegisterAgent(turel.Position, alie: true);
         turelToCombatId[turel.Id] = turelCombatId;
-
-        var turelProjectilesGroupId = projectileService.AddGroup();
-        turelToProjectileGroupId[turel.Id] = turelProjectilesGroupId;
         
         playerView.AddTurel(turelId, turel.Position, turel.Visuals);
     }
@@ -349,7 +346,7 @@ public class PlayerController {
             }
 
             if (turel.Fire(Time.time, out var bullet)) {
-                SpawnBulletProjectile(turel, bullet);
+                projectileController.SpawnBulletProjectile(turelCombatId, bullet, turel.BulletShootAudioClips);
             }
         }
     }
@@ -367,43 +364,4 @@ public class PlayerController {
         }
     }
 
-    private void SpawnBulletProjectile(Turel turel, Bullet bullet) {
-        var projectileGroupId = turelToProjectileGroupId[turel.Id];
-        var projectileId = projectileService.CreateProjectile(projectileGroupId, bullet.firePoint, bullet.velocity, 5f);
-        playerView.ShowBulletShoot(turel.Id, projectileId, bullet.velocity);
-        soundManager.PlayEffect(bullet.firePoint, turel.BulletShootAudioClips);
-    }
-
-    private void FilterDeadProjectiles() {
-        foreach (var turel in turels) {
-            var projectileGroup = turelToProjectileGroupId[turel.Id];
-            projectilesStateBuffer.Clear();
-            projectileService.GetGroupProjectiles(projectileGroup, projectilesStateBuffer);
-            
-            foreach (var projectileState in projectilesStateBuffer) {
-                if (projectileState.isAged) {
-                    playerView.ShowBulletDisappear(turel.Id, projectileState.id);
-                }
-            }
-        }
-    }
-
-    private void UpdateProjectileHits() {   
-        foreach (var turel in turels) {
-            var projectileGroup = turelToProjectileGroupId[turel.Id];
-            projectilesStateBuffer.Clear();
-            projectileService.GetGroupProjectiles(projectileGroup, projectilesStateBuffer);
-
-            var combatId = turelToCombatId[turel.Id];
-            foreach (var projectileState in projectilesStateBuffer) {
-                if (projectileState.isAged)
-                    continue;
-
-                if (combatService.ApplyProjectileDamage(combatId, projectileState.position, projectileState.velocity, turel.BulletDamage)) {
-                    projectileService.KillProjectile(projectileState.id);
-                    playerView.ShowBulletCrash(turel.Id, projectileState.id);
-                }
-            }
-        }
-    }
 }

@@ -194,6 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972a34e951a0e4d95acb2ae214840102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletSystemPrefab: {fileID: 6041597005441802573, guid: 4765aa487c36945419c3803376646ae1, type: 3}
   soundManager: {fileID: 1012605277}
   cameraManager: {fileID: 618815303}
   physicsServiceLayer: UnitPhysics
@@ -201,7 +202,7 @@ MonoBehaviour:
   combatServiceEnvironmentMask:
     serializedVersion: 2
     m_Bits: 2177
-  unitsComponent: 1
+  enemyComponent: 1
   unitsCount: 400
   spawnPoints:
   - {fileID: 186795255}

@@ -38,21 +38,6 @@ public class PlayerView {
         turelVisuals.UpdateAim(lookVector);
     }
 
-    internal void ShowBulletShoot(int turelId, int projectileId, Vector3 velocity) {
-        var turelVisuals = turelVisualRegistry[turelId];
-        turelVisuals.ShowBulletFire(projectileId, velocity);
-    }
-
-    internal void ShowBulletCrash(int turelId, int projectileIndex) {
-        var turelVisuals = turelVisualRegistry[turelId];
-        turelVisuals.KillBulletFire(projectileIndex);
-    }
-
-    internal void ShowBulletDisappear(int turelId, int id) {
-        var turelVisuals = turelVisualRegistry[turelId];
-        turelVisuals.KillBulletFire(id);
-    }
-
     internal void AddRocketLauncher(int launcherId, Vector3 position, RocketLauncherVisuals visualsPrefab) {
         launcherVisualsRegistry[launcherId] = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
     }

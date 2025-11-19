@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameBootstrapper : MonoBehaviour {
     
+    [SerializeField] private ParticleSystem bulletSystemPrefab;
+    [Space]
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
     [Space]
@@ -41,6 +43,8 @@ public class GameBootstrapper : MonoBehaviour {
     private PlayerController playerController;
     private EnemyController enemyController;
 
+    private ProjectileController projectileController;
+
     private void Start() {
         var vehicleService = new VehicleService();
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
@@ -52,6 +56,14 @@ public class GameBootstrapper : MonoBehaviour {
 
         var playerView = new PlayerView();
         var unitView = new EnemyView(unitVisualsPrefab, null);
+        var projectileView = new ProjectileView(bulletSystemPrefab);
+
+        projectileController = new ProjectileController(
+            combatService,
+            soundManager,
+            projectileView
+        );
+        projectileController.Init();
 
         playerController = new PlayerController(
             vehicleService, playerView,
@@ -61,13 +73,13 @@ public class GameBootstrapper : MonoBehaviour {
             
             combatService,
             turelData,
-            projectileService,
             rocketLauncherConfig,
 
             soundManager,
             cameraManager,
+            rewardsMediator,
             
-            rewardsMediator);
+            projectileController);
 
         enemyController = new EnemyController(
             localAvoidanceService,
@@ -98,6 +110,8 @@ public class GameBootstrapper : MonoBehaviour {
 
     private void Update() {
         combatService.UpdateSpatialTree();
+
+        projectileController.Update();
         
         if (enemyComponent) 
             using (unitUpdateMarker.Auto()) 
