@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85e24520461b4eb2adef6d54d69e801, type: 3}
+  m_Name: Turel Weapon Config
+  m_EditorClassIdentifier: NewFolder::WeaponConfig
+  cooldownSec: 0.25
+  launchPoint: {x: 0, y: 0.5, z: 0}
+  aimConfig:
+    type: 1
+    range: 20
+    speed: 5
+  ballisticConfig:
+    type: 0
+    bulletDamage: 1
+    bulletSpeed: 5
+    bulletShootAudioClips: []
+    bulletLifetime: 5
+    bulletTravelDistance: 100
+    rocketFlyDistance: 0
+    launchEffectClips: []
+    explodeEffectClips: []
+    rocketFlyCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    rocketAmplitude: 0
+    rocketFlyDuration: 0
+    rocketDamage: 0
+  visualsPrefab: {fileID: 0}
