@@ -18,4 +18,10 @@ public class VehicleView {
         vehicleVisuals.SetFrontAxis(vehicleState.frontAxis);
         vehicleVisuals.SetRearAxis(vehicleState.rearAxis);
     }
+
+    public void RemoveVehicle(int vehicleId) {
+        var visuals = visualsRegistry[vehicleId];
+        GameObject.Destroy(visuals.gameObject);
+        visualsRegistry.Remove(vehicleId);
+    }
 }

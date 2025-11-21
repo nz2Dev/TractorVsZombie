@@ -25,7 +25,8 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private UnitVisuals unitVisualsPrefab;
     [Space]
     [SerializeField] private int maxVehicelCount = 10;
-    [SerializeField] private UnitVehicleData foeVehicle;
+    [SerializeField] private VehicleConfig foeVehicle;
+    [SerializeField] private WeaponConfig foeVehicleWeapon;
     [Space]
     [SerializeField] private bool playerComponent = true;
     [SerializeField] private PlayerConfig playerConfig;
@@ -52,7 +53,7 @@ public class GameBootstrapper : MonoBehaviour {
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var playerView = new PlayerView();
-        var unitView = new EnemyView(unitVisualsPrefab, null);
+        var unitView = new EnemyView(unitVisualsPrefab);
         var projectileView = new ProjectileView(bulletSystemPrefab);
         var weaponView = new WeaponView();
         var vehicleView = new VehicleView();
@@ -105,13 +106,12 @@ public class GameBootstrapper : MonoBehaviour {
             physicsService,
             rewardsMediator,
             
-            vehicleService,
-            foeVehicle,
             maxVehicelCount,
-            soundManager,
-            
             rewardVisualsPrefab,
-            weaponController)
+            weaponController,
+            vehicleController,
+            foeVehicle,
+            foeVehicleWeapon)
         ;
 
         if (playerComponent) playerController.Init();

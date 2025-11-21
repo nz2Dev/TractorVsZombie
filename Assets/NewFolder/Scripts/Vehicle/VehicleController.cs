@@ -35,13 +35,38 @@ public class VehicleController {
         return model.Id;
     }
 
+    public void DeleteVehicle(int vehicleId) {
+        var model = registry[vehicleId];
+        vehicleService.DeleteVehicle(model.PhysicsId);
+        if (model.EngineIdleSound != null) {
+            soundManager.StopLoop(model.SoundSourceId);
+        }
+        view.RemoveVehicle(model.Id);
+        registry.Remove(model.Id);
+    }
+
     public Vector3 GetVehiclePosition(int vehicleId) {
         return registry[vehicleId].Position;
+    }
+
+    public void BrakeVehicle(int vehicleId, float brakes) {
+        var model = registry[vehicleId];
+        model.BreaksPower = brakes;
     }
 
     public void DriveVehicle(int vehicleId, float gasInput, bool boost) {
         var model = registry[vehicleId];
         model.MotorPower = Throttle(gasInput, Time.deltaTime, boost, model.MotorPower, model.DrivingData);
+    }
+
+    private float Throttle(float gas, float deltaTime, bool boost, float lastDrivePower, DrivingData drivingData) {
+        var maxPower = boost ? 2 : 1;
+        var accelerationSpeed = boost ? drivingData.powerAccelerationSpeed * 2 : drivingData.powerAccelerationSpeed;
+        if (gas > 0) {
+            return Mathf.Lerp(lastDrivePower, maxPower, deltaTime * accelerationSpeed);
+        } else {
+            return 0;
+        }
     }
 
     public void SteerVehicle(int vehicleId, float steerInput) {
@@ -57,16 +82,6 @@ public class VehicleController {
         var forward = model.Rotation * Vector3.forward;
         var forwardToDirectionDegrees = Vector3.SignedAngle(forward, direction, Vector3.up);
         model.SteeringDegrees = Mathf.Clamp(forwardToDirectionDegrees, -model.DrivingData.maxSteerDegrees, model.DrivingData.maxSteerDegrees);
-    }
-
-    private float Throttle(float gas, float deltaTime, bool boost, float lastDrivePower, DrivingData drivingData) {
-        var maxPower = boost ? 2 : 1;
-        var accelerationSpeed = boost ? drivingData.powerAccelerationSpeed * 2 : drivingData.powerAccelerationSpeed;
-        if (gas > 0) {
-            return Mathf.Lerp(lastDrivePower, maxPower, deltaTime * accelerationSpeed);
-        } else {
-            return 0;
-        }
     }
 
     public void ConnectVehicles(int headVehicleId, int tailVehicleId) {

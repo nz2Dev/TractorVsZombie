@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4619508763653925669}
   - component: {fileID: 1637476159873997548}
   m_Layer: 0
-  m_Name: Driver Vehicle Visuals
+  m_Name: Tractor Vehicle Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

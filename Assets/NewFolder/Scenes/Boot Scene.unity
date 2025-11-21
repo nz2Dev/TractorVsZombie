@@ -309,7 +309,8 @@ MonoBehaviour:
   orcaEnvironment: {fileID: 851369242}
   unitVisualsPrefab: {fileID: 4683619999828752191, guid: 65448fe19a80b4a7daa044ff06b82dcf, type: 3}
   maxVehicelCount: 1
-  foeVehicle: {fileID: 11400000, guid: 322db09d7936e41adb890f0b3801cd2d, type: 2}
+  foeVehicle: {fileID: 11400000, guid: cc75ee6029df940998a13a6d5602305a, type: 2}
+  foeVehicleWeapon: {fileID: 11400000, guid: 6c348206c4e5046d4bde12b5c4a3cd9d, type: 2}
   playerComponent: 1
   playerConfig: {fileID: 11400000, guid: 15c1c417b54044a6b9ea2acbda4d6876, type: 2}
   rewardsLayerName: Rewards

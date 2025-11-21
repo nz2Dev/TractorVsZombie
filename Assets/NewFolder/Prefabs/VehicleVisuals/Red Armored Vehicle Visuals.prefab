@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5477145149991968147}
   - component: {fileID: 1664023645614263282}
   m_Layer: 0
-  m_Name: Unit Vehicle Visuals
+  m_Name: Red Armored Vehicle Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

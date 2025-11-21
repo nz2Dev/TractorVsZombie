@@ -5,15 +5,10 @@ using UnityEngine;
 public class EnemyView {
 
     private readonly Dictionary<int, UnitVisuals> unitVisuals = new Dictionary<int, UnitVisuals>();
-    int vehicleViewIdCounter;
-    private readonly Dictionary<int, VehicleVisuals> visualsRegistry = new ();
-
-    private readonly Transform container;
     private readonly UnitVisuals visualsPrefab;
 
-    public EnemyView(UnitVisuals visualsPrefab, Transform container) {
+    public EnemyView(UnitVisuals visualsPrefab) {
         this.visualsPrefab = visualsPrefab;
-        this.container = container;
     }
 
     public void AddUnit(int unitId, Vector3 position) {
@@ -52,26 +47,6 @@ public class EnemyView {
         var visuals = unitVisuals[unitId];
         visuals.DestroySelfOnIdle();
         unitVisuals.Remove(unitId);
-    }
-
-    public int AddUnitVehicle(Vector3 position, VehicleVisuals visualsPrefab) {
-        var vehicleVisuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
-        var nextVehicleViewId = vehicleViewIdCounter++;
-        visualsRegistry[nextVehicleViewId] = vehicleVisuals;
-        return nextVehicleViewId;
-    }
-
-    internal void RemoveVehicleView(int viewId) {
-        var vehicleVisuals = visualsRegistry[viewId];
-        vehicleVisuals.DestroySelf();
-        visualsRegistry.Remove(viewId);
-    }
-
-    public void UpdateVehiclePose(int vehicleIndex, VehicleState vehiclePose) {
-        var vehicleVisuals = visualsRegistry[vehicleIndex];
-        vehicleVisuals.SetPositionAndRotation(vehiclePose.position, vehiclePose.rotation);
-        vehicleVisuals.SetFrontAxis(vehiclePose.frontAxis);
-        vehicleVisuals.SetRearAxis(vehiclePose.rearAxis);
     }
 
 }

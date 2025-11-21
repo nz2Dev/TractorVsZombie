@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85e24520461b4eb2adef6d54d69e801, type: 3}
+  m_Name: Red Turel Weapon Config
+  m_EditorClassIdentifier: NewFolder::WeaponConfig
+  cooldownSec: 0.25
+  launchOffset: {x: 0, y: 0.41, z: 0}
+  aimConfig:
+    type: 1
+    range: 20
+    speed: 15
+  ballisticConfig:
+    type: 0
+    bullet:
+      damage: 1
+      speed: 15
+      shootAudioClips:
+      - {fileID: 8300000, guid: 63e582df7ac9f47728c689a10aa7ce66, type: 3}
+      - {fileID: 8300000, guid: 794deb703e8f44644b4f27d9bf53e223, type: 3}
+      lifetime: 5
+    rocket:
+      launchEffectClips: []
+      explodeEffectClips: []
+      flyCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      amplitude: 0
+      flyDuration: 0
+      damage: 0
+  visualsPrefab: {fileID: 5158388582320969347, guid: c6da62660cdb141f984a797360695798, type: 3}

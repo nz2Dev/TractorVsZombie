@@ -7,6 +7,7 @@ using UnityEngine.Assertions;
 public class EnemyController {
 
     private readonly WeaponController weaponController;
+    private readonly VehicleController vehicleController;
 
     private readonly EnemyView enemyView;
     private readonly LocalAvoidanceService localAvoidanceService;
@@ -14,17 +15,11 @@ public class EnemyController {
     private readonly CombatService combatService;
     private readonly PhysicsService physicsService;
     private readonly RewardsMediator rewardsMediator;
-
     private readonly GameObject pointsRewardVisualsPrefab;
-
-    private readonly VehicleService vehicleService;
-    private readonly UnitVehicleData foeVehicleData;
-    private readonly SoundManager soundManager;
 
     private float lastTimeProduced = float.MinValue;
     private Transform[] spawnPoints;
     private Transform targetPoint;
-    private int unitsCombatGroup;
     private int unitsCount;
     private int idCounter;
 
@@ -38,17 +33,15 @@ public class EnemyController {
     private int maxVehiclesCount;
     private int lastSpawnIndex;
 
-    private readonly List<UnitVehicle> vehicles = new ();
-    private readonly List<int> vehiclePhysics = new ();
-    private readonly List<int> vehicleCombats = new();
-    private readonly List<int> vehicleSoundLoop = new();
-    private readonly List<int> vehicleViewIds = new();
-    private readonly List<int> vehicleWeaponIds = new();
+    private readonly VehicleConfig vehicleConfig;
+    private readonly WeaponConfig vehicleWeaponConfig;
+    private readonly List<EnemyVehicleModel> vehicleModels = new ();
 
     public EnemyController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, EnemyView crowdView,
         Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService,
-        RewardsMediator rewardsMediator, VehicleService vehicleService, UnitVehicleData foeVehicle, int maxVehiclesCount,
-        SoundManager soundManager, GameObject pointsRewardVisualsPrefab, WeaponController weaponController) {
+        RewardsMediator rewardsMediator, int maxVehiclesCount,
+        GameObject pointsRewardVisualsPrefab, WeaponController weaponController, 
+        VehicleController vehicleController, VehicleConfig vehicleConfig, WeaponConfig vehicleWeaponConfig) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
         this.enemyView = crowdView;
@@ -59,14 +52,14 @@ public class EnemyController {
         this.physicsService = physicsService;
         this.rewardsMediator = rewardsMediator;
 
-        this.vehicleService = vehicleService;
-        this.foeVehicleData = foeVehicle;
         this.vehiclesSpawnPoints = spawnPoints; // reusing
         this.maxVehiclesCount = maxVehiclesCount;
-        this.soundManager = soundManager;
         this.pointsRewardVisualsPrefab = pointsRewardVisualsPrefab;
 
         this.weaponController = weaponController;
+        this.vehicleController = vehicleController;
+        this.vehicleConfig = vehicleConfig;
+        this.vehicleWeaponConfig = vehicleWeaponConfig;
     }
 
     public void Init() {
@@ -87,7 +80,7 @@ public class EnemyController {
     }
 
     private void ProduceNewVehicleUnits() {
-        if (vehicles.Count > maxVehiclesCount)
+        if (vehicleModels.Count > maxVehiclesCount)
             return;
 
         if (lastTimeProducedVehicle + 1f > Time.time)
@@ -142,22 +135,16 @@ public class EnemyController {
             UpdateViewPose();
 
         ProduceNewVehicleUnits();
-        ReadVehiclesOrientation();
+        UpdateVehicleNavigation();
+        SyncVehiclesPositions();
         ReadVehiclesCombat();
         FilterDeadVehicles();
-
-        UpdateVehicleNavigation();
-        UpdateVehicleCombat();
-        UpdateVehiclePhysics();
-        UpdateVehiclesSounds();
-        UpdateVehiclesView();
     }
 
     private void UpdateGoal() {
-        var tractor = vehicleService.GetVehicleState(0);
-        targetPoint.position = tractor.position;
-        
-        navigationService.SetGoal(tractor.position);
+        var tractorPosition = vehicleController.GetVehiclePosition(1);
+        targetPoint.position = tractorPosition;
+        navigationService.SetGoal(tractorPosition);
     }
 
     private void OperateUnits() {
@@ -293,81 +280,55 @@ public class EnemyController {
     }
 
     private void SpawnVehicle(Vector3 position) {
-        var vehicle = new UnitVehicle(foeVehicleData);
-        vehicles.Add(vehicle);
-        
-        var viewId = enemyView.AddUnitVehicle(position, vehicle.VisualsPrefab);
-        vehicleViewIds.Add(viewId);
-
         var combatAgentId = combatService.RegisterAgent(position, alie: false);
-        vehicleCombats.Add(combatAgentId);
-
-        var physicsAgentId = vehicleService.CreateVehicle(position, vehicle.PhysicsPrefab);
-        vehiclePhysics.Add(physicsAgentId);
-
-        var soundLoopId = soundManager.StartLoop(position, vehicle.EngineIdleSound);
-        vehicleSoundLoop.Add(soundLoopId);
-
-        var weaponId = weaponController.SpawnWeapon(combatAgentId, position, vehicle.WeaponsConfig);
-        vehicleWeaponIds.Add(weaponId);
+        var model = new EnemyVehicleModel {
+            Health = 5,
+            Position = position,
+            VehicleId = vehicleController.SpawnVehicle(position, vehicleConfig),
+            CombatId = combatAgentId,
+            WeaponId = weaponController.SpawnWeapon(combatAgentId, position, vehicleWeaponConfig)
+        };
+        vehicleModels.Add(model);
     }
 
     private void DespawnVehicleAt(int vehicleIndex) {
-        vehicles.RemoveAt(vehicleIndex);
-
-        enemyView.RemoveVehicleView(vehicleViewIds[vehicleIndex]);
-        vehicleViewIds.RemoveAt(vehicleIndex);
-
-        combatService.UnregisterAgent(vehicleCombats[vehicleIndex]);
-        vehicleCombats.RemoveAt(vehicleIndex);
-
-        vehicleService.DeleteVehicle(vehiclePhysics[vehicleIndex]);
-        vehiclePhysics.RemoveAt(vehicleIndex);
-
-        soundManager.StopLoop(vehicleSoundLoop[vehicleIndex]);
-        vehicleSoundLoop.RemoveAt(vehicleIndex);
-
-        weaponController.DeleteWeapon(vehicleWeaponIds[vehicleIndex]);
-        vehicleWeaponIds.RemoveAt(vehicleIndex);
+        var model = vehicleModels[vehicleIndex];
+        vehicleController.DeleteVehicle(model.VehicleId);
+        combatService.UnregisterAgent(model.CombatId);
+        weaponController.DeleteWeapon(model.WeaponId);
+        vehicleModels.RemoveAt(vehicleIndex);
     }
 
-    private void ReadVehiclesOrientation() {
-        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
-            var vehicle = vehicles[vehicleIndex];
-            var physicsId = vehiclePhysics[vehicleIndex];
-            
-            var vehiclePose = vehicleService.GetVehicleState(physicsId);
-            vehicle.UpdatePhysicsState(vehiclePose);
-
-            var weaponId = vehicleWeaponIds[vehicleIndex];
-            weaponController.MoveWeapon(weaponId, vehicle.Position);
+    private void SyncVehiclesPositions() {
+        foreach (var model in vehicleModels) {
+            model.Position = vehicleController.GetVehiclePosition(model.VehicleId);
+            weaponController.MoveWeapon(model.WeaponId, model.Position);
+            combatService.UpdateAgentPosition(model.CombatId, model.Position);
         }
     }
 
     private void ReadVehiclesCombat() {
-        for (int i = 0; i < vehicles.Count; i++) {
-            var vehicle = vehicles[i];
-            var vehicleCombatId = vehicleCombats[i];
-
-            var vehicleCombatState = combatService.GetAgentState(vehicleCombatId);
-            if (vehicleCombatState.projectiled || vehicleCombatState.exploded) {
-                vehicle.TakeDamage(vehicleCombatState.damage);
+        foreach (var model in vehicleModels) {
+            var vehicleCombatState = combatService.GetAgentState(model.CombatId);
+            
+            if (vehicleCombatState.projectiled || vehicleCombatState.exploded) {    
+                model.Health -= vehicleCombatState.damage;
             }
 
-            combatService.ClearAgentState(vehicleCombatId);
+            combatService.ClearAgentState(model.CombatId);
 
-            if (!vehicle.IsAlive) {
-                rewardsMediator.AddReward(vehicle.Position, 3, RewardType.TurelWeapon, vehicle.WeaponsConfig.visualsPrefab.gameObject, new RewardConfigs {
-                    weaponConfig = vehicle.WeaponsConfig
+            if (model.Health <= 0) {
+                rewardsMediator.AddReward(model.Position, 3, RewardType.TurelWeapon, vehicleWeaponConfig.visualsPrefab.gameObject, new RewardConfigs {
+                    weaponConfig = vehicleWeaponConfig
                 });
             }
         }
     }
 
     private void FilterDeadVehicles() {
-        for (int i = 0; i < vehicles.Count; i++) {
-            var vehicle = vehicles[i];
-            if (!vehicle.IsAlive) {
+        for (int i = 0; i < vehicleModels.Count; i++) {
+            var model = vehicleModels[i];
+            if (model.Health <= 0) {
                 DespawnVehicleAt(i);
                 i--;
             }
@@ -375,52 +336,19 @@ public class EnemyController {
     }
 
     private void UpdateVehicleNavigation() {
-        foreach (var vehicle in vehicles) {
-            var distance = Vector3.Distance(targetPoint.position, vehicle.Position);
+        foreach (var model in vehicleModels) {
+            var distance = Vector3.Distance(targetPoint.position, model.Position);
 
             var gasDistance = 10;
             var gas = Mathf.Floor(Mathf.Clamp(distance, 0, gasDistance) / gasDistance);
-            vehicle.Throttle(gas, Time.deltaTime, false);
+            vehicleController.DriveVehicle(model.VehicleId, gas, false);
             
             var stopDistance = 5f;
-            var breaks = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
-            vehicle.Breaks(breaks);
-            var flowVector = navigationService.GetFlowVector(vehicle.Position);
-            vehicle.SteerToward(flowVector);
-        }
-    }
+            var brakes = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
+            vehicleController.BrakeVehicle(model.VehicleId, brakes);
 
-    private void UpdateVehicleCombat() {
-        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
-            var vehicle = vehicles[vehicleIndex];
-            var vehicelCombatId = vehicleCombats[vehicleIndex];
-            combatService.UpdateAgentPosition(vehicelCombatId, vehicle.Position);
-        }
-    }
-
-    private void UpdateVehiclePhysics() {
-        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
-            var vehicle = vehicles[vehicleIndex];
-            var vehiclePhysicId = vehiclePhysics[vehicleIndex];
-            vehicleService.SetVehicleEngineTorque(vehiclePhysicId, vehicle.MotorTorque);
-            vehicleService.SetVehicleSteer(vehiclePhysicId, vehicle.SteerDegrees);
-            vehicleService.SetVehicleBreaks(vehiclePhysicId, vehicle.BreaksTorque);
-        }
-    }
-
-    private void UpdateVehiclesSounds() {
-        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
-            var vehicle = vehicles[vehicleIndex];
-            var vehicleLoopId = vehicleSoundLoop[vehicleIndex];
-            soundManager.UpdateLoop(vehicleLoopId, vehicle.Position, vehicle.DrivePower, vehicle.DrivePower);
-        }
-    }
-
-    private void UpdateVehiclesView() {
-        for (int vehicleIndex = 0; vehicleIndex < vehicles.Count; vehicleIndex++) {
-            var vehicle = vehicles[vehicleIndex];
-            var vehicleViewIndex = vehicleViewIds[vehicleIndex];
-            enemyView.UpdateVehiclePose(vehicleViewIndex, vehicle.PhysicsState);
+            var flowVector = navigationService.GetFlowVector(model.Position);
+            vehicleController.SteerVehicleToward(model.VehicleId, flowVector);
         }
     }
 
