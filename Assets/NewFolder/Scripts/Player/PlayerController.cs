@@ -5,52 +5,30 @@ using UnityEngine;
 
 public class PlayerController {
 
+    private readonly PlayerView view;
     private readonly WeaponController weaponController;
+    private readonly VehicleController vehicleController;
 
     private readonly CombatService combatService;
-    private readonly VehicleService vehicleService;
     private readonly RewardsMediator rewardsMediator;
-    private readonly PlayerView playerView;
-    private readonly SoundManager soundManager;
     private readonly CameraManager cameraManager;
+    private readonly SoundManager soundManager;
 
-    private DriverVehicle driverVehicle;
-    private readonly DriverVehicleData driverVehicleData;
-    private int driverVehicleCombatId;
-    private int driverVehiclePhysicsId;
-    private int driverVehicleEngineSoundId;
-    private int driverVehicleViewId;
-    
-    private readonly int maxTrailersCount;
-    private readonly TrailerVehicleData trailerVehicleData;
-    private readonly List<TrailerVehicle> trailerVehicles = new ();
-    private readonly List<int> trailerPhysicIds = new ();
-    private readonly List<int> trailerViewIds = new ();
+    private readonly PlayerModel model;
 
-    private readonly List<int> weaponIds = new ();
-    private readonly List<int> weaponCombatIds = new ();
-    private readonly List<TrailerVehicle> weaponVehicleRefs = new ();
-    
-    private readonly WeaponConfig firstWeaponConfig;
-    private readonly WeaponConfig secondWeaponConfig;
-
-    public PlayerController(VehicleService vehicleService, PlayerView vehicleView, DriverVehicleData driverVehicleData, TrailerVehicleData trailerVehicleData, int trailersCount,
-        CombatService combatService, CombatService interactionService, SoundManager soundManager, CameraManager cameraManager, RewardsMediator rewardsMediator, 
-        WeaponController weaponController, WeaponConfig firstWeaponConfig, WeaponConfig secondWeaponConfig) {
-        this.combatService = interactionService;
-        this.vehicleService = vehicleService;
-        this.playerView = vehicleView;
-        this.driverVehicleData = driverVehicleData;
-        this.trailerVehicleData = trailerVehicleData;
-        this.maxTrailersCount = trailersCount;
+    public PlayerController(PlayerView view, CombatService combatService, CameraManager cameraManager, 
+        SoundManager soundManager, RewardsMediator rewardsMediator, WeaponController weaponController, 
+        PlayerConfig config, VehicleController vehicleController) {
         this.combatService = combatService;
-        this.soundManager = soundManager;
+        this.view = view;
+        this.combatService = combatService;
         this.cameraManager = cameraManager;
+        this.soundManager = soundManager;
         this.rewardsMediator = rewardsMediator;
 
         this.weaponController = weaponController;
-        this.firstWeaponConfig = firstWeaponConfig;
-        this.secondWeaponConfig = secondWeaponConfig;
+        this.vehicleController = vehicleController;
+        model = new PlayerModel(config);
     }
 
     public void Init() {
@@ -58,25 +36,22 @@ public class PlayerController {
         
         SpawnDriverVehicle(Vector3.zero);
 
-        for (int i = 0; i < maxTrailersCount; i++) {
-            SpawnTrailerVehicle(new Vector3(0, 0, -2f + i * -2f));
+        for (int i = 0; i < model.MaxTrailersCount; i++) {
+            SpawnHostVehicle(new Vector3(0, 0, -2f + i * -2f));
         }
 
         bool flipFlop = false;
-        foreach (var trailerVehicle in trailerVehicles) {
+        foreach (var trailerHost in model.HostVehicles) {
             flipFlop = !flipFlop;
-            var weaponConfig = flipFlop ? firstWeaponConfig : secondWeaponConfig;
-            AttackWeaponOnTrailer(trailerVehicle, weaponConfig);
+            var weaponConfig = flipFlop ? model.FirstWeaponConfig : model.SecondWeaponConfig;
+            PutWeaponOnHost(trailerHost, weaponConfig);
         }
     }
 
     public void Update() {
-        ReadVehiclesOrientation();
-        ReadDriveVehicleInput();
-        UpdateDriveVehiclePhysics();
-        UpdateDriveVehicleSounds();
-        UpdateVehiclesView();
-        UpdateDriveVehicleCombat();
+        SyncVehiclePositions();
+        DriveHeadVehicle();
+        UpdateDriverRamCombat();
 
         DiscoverRewards();
         CollectRewards();
@@ -84,23 +59,22 @@ public class PlayerController {
         ClearRewardsEvents();
 
         UpdateCamera();
-        SyncWeaponsWithTrailers();
     }
 
     private void DiscoverRewards() {
         foreach (var rewardState in rewardsMediator.RewardAddedEvents) {
-            playerView.SpawnReward(rewardState.id, rewardState.position, rewardState.rewardVisuals);
+            view.SpawnReward(rewardState.id, rewardState.position, rewardState.rewardVisuals);
         }
     }
 
     private List<RewardState> rewardsBuffer = new (10);
 
     private void CollectRewards() {
-        if (rewardsMediator.CollectRewards(driverVehicle.Position, driverVehicle.RewardCollectRadius, rewardsBuffer)) {
+        if (rewardsMediator.CollectRewards(model.DriverPosition, model.DriverRewardCollectRadius, rewardsBuffer)) {
             foreach (var reward in rewardsBuffer) {
                 if (reward.rewardType == RewardType.TurelWeapon) {
-                    var trailerVehicle = SpawnTrailerVehicle(reward.position);
-                    AttackWeaponOnTrailer(trailerVehicle, firstWeaponConfig);
+                    var trailerVehicle = SpawnHostVehicle(reward.position);
+                    PutWeaponOnHost(trailerVehicle, model.FirstWeaponConfig);
                 }
             }
         }
@@ -108,7 +82,7 @@ public class PlayerController {
 
     private void FilterRemovedRewards() {
         foreach (var rewardState in rewardsMediator.RewardRemovedEvents) {
-            playerView.DespawnReward(rewardState.id);
+            view.DespawnReward(rewardState.id);
         }
     }
 
@@ -117,102 +91,57 @@ public class PlayerController {
     }
 
     private void UpdateCamera() {
-        cameraManager.UpdateTopDownFollowPosition(driverVehicle.Position);
+        cameraManager.UpdateTopDownFollowPosition(model.DriverPosition);
+    }
+
+    private void SyncVehiclePositions() {
+        model.DriverPosition = vehicleController.GetVehiclePosition(model.DriverVehicleId);
+        combatService.UpdateAgentPosition(model.DriverCombatId, model.DriverPosition);
+
+        foreach (var host in model.HostVehicles) {
+            host.Position = vehicleController.GetVehiclePosition(host.VehicleId);
+            weaponController.MoveWeapon(host.WeaponId, host.Position);
+            combatService.UpdateAgentPosition(host.CombatId, host.Position);
+        }
     }
 
     private void SpawnDriverVehicle(Vector3 driveVehiclePosition) {
-        driverVehicle = new DriverVehicle(driverVehicleData);
-        driverVehiclePhysicsId = vehicleService.CreateVehicle(driveVehiclePosition, driverVehicleData.physicsPrefab);
-        driverVehicleCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
-        driverVehicleEngineSoundId = soundManager.StartLoop(driverVehicle.Position, driverVehicle.EngineIdleSound);
-        driverVehicleViewId = playerView.AddVehicle(driveVehiclePosition, driverVehicle.VisualsPrefab);
+        model.DriverVehicleId = vehicleController.SpawnVehicle(driveVehiclePosition, model.DriverVehicleConfig);
+        model.DriverCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
     }
 
-    private void ReadDriveVehicleInput() {
+    private void DriveHeadVehicle() {
         var steerInput = Input.GetAxis("Horizontal");
-        driverVehicle.Steer(steerInput);
+        vehicleController.SteerVehicle(model.DriverVehicleId, steerInput);
 
         var gasInput = Input.GetAxis("Vertical");
         var boost = Input.GetKey(KeyCode.Space);
-        driverVehicle.Throttle(gasInput, Time.deltaTime, boost);
+        vehicleController.DriveVehicle(model.DriverVehicleId, gasInput, boost);
     }
 
-    private void UpdateDriveVehiclePhysics() {
-        vehicleService.SetVehicleEngineTorque(driverVehiclePhysicsId, driverVehicle.MotorTorque);
-        vehicleService.SetVehicleSteer(driverVehiclePhysicsId, driverVehicle.SteerDegrees);
-    }
-
-    private void UpdateDriveVehicleSounds() {
-        var enginePitch = 0.5f + driverVehicle.DrivePower;
-        var engineVolume = 0.5f + driverVehicle.DrivePower;
-        soundManager.UpdateLoop(driverVehicleEngineSoundId, driverVehicle.Position, enginePitch, engineVolume);
-    }
-
-    private void UpdateDriveVehicleCombat() {
-        combatService.UpdateAgentPosition(driverVehicleCombatId, driverVehicle.Position);
-        var affectedCount = combatService.ApplyExplosionDamage(driverVehicleCombatId, driverVehicle.Position, radius: driverVehicle.RamRadius, damage: 0);
+    private void UpdateDriverRamCombat() {
+        var affectedCount = combatService.ApplyExplosionDamage(model.DriverCombatId, model.DriverPosition, model.DriverRamRadius, damage: 0);
         for (int i = 0; i < affectedCount; i++) {
-            var position = driverVehicle.Position + UnityEngine.Random.onUnitSphere * driverVehicle.RamRadius;
-            soundManager.PlayEffectDelayed(position, i * 0.05f, driverVehicle.HitImpactSounds);
+            var position = model.DriverPosition + UnityEngine.Random.onUnitSphere * model.DriverRamRadius;
+            soundManager.PlayEffectDelayed(position, i * 0.05f, model.DriverRamImpactSound);
         }
     }
 
-    private TrailerVehicle SpawnTrailerVehicle(Vector3 position) {
-        var trailerVehicle = new TrailerVehicle(trailerVehicleData);
-        trailerVehicles.Add(trailerVehicle);
+    private HostVehicle SpawnHostVehicle(Vector3 position) {
+        var combatAgentId = combatService.RegisterAgent(position, alie: true);
+        var vehicleId = vehicleController.SpawnVehicle(position, model.TrailerVehicleConfig);
+        var hostVehicle = new HostVehicle { Position = position, CombatId = combatAgentId, VehicleId = vehicleId };
+        model.HostVehicles.Add(hostVehicle);
 
-        var trailerPhysicsId = vehicleService.CreateVehicle(position, trailerVehicle.PhysicsPrefab);
-        trailerPhysicIds.Add(trailerPhysicsId);
-
-        bool isFirstTrailer = trailerVehicles.Count == 1;
-        var headPhysicsId = isFirstTrailer ? driverVehiclePhysicsId : trailerPhysicIds[^2];
-        vehicleService.MakeTowingConnection(headPhysicsId, trailerPhysicsId);
-        
-        var trailerViewId = playerView.AddVehicle(position, trailerVehicle.VisualsData);
-        trailerViewIds.Add(trailerViewId);
-        
-        return trailerVehicle;
+        bool isFirstTrailer = model.HostVehicles.Count == 1;
+        var headVehicleId = isFirstTrailer ? model.DriverVehicleId : model.HostVehicles[^2].VehicleId;
+        vehicleController.ConnectVehicles(headVehicleId, vehicleId);
+        return hostVehicle;
     }
-
-    private void ReadVehiclesOrientation() {
-        var driverVehiclePose = vehicleService.GetVehicleState(driverVehiclePhysicsId);
-        driverVehicle.UpdatePhysicsState(driverVehiclePose);
-        
-        for (int trailerIndex = 0; trailerIndex < trailerVehicles.Count; trailerIndex++) {
-            var trailerVehicle = trailerVehicles[trailerIndex];
-            var trailerPhysicsId = trailerPhysicIds[trailerIndex];
-            var trailerPose = vehicleService.GetVehicleState(trailerPhysicsId);
-            trailerVehicle.UpdatePhysicsState(trailerPose);   
-        }
-    }
-
-    private void UpdateVehiclesView() {
-        playerView.UpdateVehiclePose(driverVehicleViewId, driverVehicle.PhysicsState);
-        
-        for (int trailerIndex = 0; trailerIndex < trailerVehicles.Count; trailerIndex++) {
-            var vehicle = trailerVehicles[trailerIndex];
-            var vehicleViewIndex = trailerViewIds[trailerIndex];
-            
-            playerView.UpdateVehiclePose(vehicleViewIndex, vehicle.PhysicsState);   
-        }
-    }
-
-    private void AttackWeaponOnTrailer(TrailerVehicle host, WeaponConfig weaponConfig) {
-        var weaponCombatId = combatService.RegisterAgent(host.Position, alie: true);
-        var weaponId = weaponController.SpawnWeapon(weaponCombatId, host.Position, weaponConfig);
-        weaponIds.Add(weaponId);
-        weaponCombatIds.Add(weaponCombatId);
-        weaponVehicleRefs.Add(host);
-    }
-
-    private void SyncWeaponsWithTrailers() {
-        for (int i = 0; i < weaponIds.Count; i++) {
-            var weaponId = weaponIds[i];
-            var weaponCombatId = weaponCombatIds[i];
-            var weaponHost = weaponVehicleRefs[i];
-            weaponController.MoveWeapon(weaponId, weaponHost.Position);
-            combatService.UpdateAgentPosition(weaponCombatId, weaponHost.Position);
-        }        
+    
+    private void PutWeaponOnHost(HostVehicle host, WeaponConfig weaponConfig) {
+        host.CombatId = combatService.RegisterAgent(host.Position, alie: true);
+        host.WeaponId = weaponController.SpawnWeapon(host.CombatId, host.Position, weaponConfig);
     }
 
 }

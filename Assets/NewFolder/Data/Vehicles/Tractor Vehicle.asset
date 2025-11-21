@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285d6c200e8e14d27b11009ebaef32ed, type: 3}
+  m_Name: Tractor Vehicle
+  m_EditorClassIdentifier: NewFolder::VehicleConfig
+  soundData:
+    engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+  drivingData:
+    maxTorque: 150
+    maxBreaksTorque: 50
+    maxSteerDegrees: 40
+    minStterAmount: 1
+    speedCeilingForSteering: 5
+    speedKFactor: 2
+    powerAccelerationSpeed: 1
+  visualsPrefab: {fileID: 1637476159873997548, guid: fd94b10e864364e73ba7ddb91581b065, type: 3}
+  physicsPrefab: {fileID: 5571881020198792173, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}

@@ -28,12 +28,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private UnitVehicleData foeVehicle;
     [Space]
     [SerializeField] private bool playerComponent = true;
-    [SerializeField] private DriverVehicleData driveVehicle;
-    [SerializeField] private TrailerVehicleData trailerVehicle;
-    [SerializeField] private int trailersCount = 3;
-    [Space]
-    [SerializeField] private WeaponConfig firstWeaponConfig;
-    [SerializeField] private WeaponConfig secondWeaponConfig;
+    [SerializeField] private PlayerConfig playerConfig;
     [Space]
     [SerializeField] private string rewardsLayerName;
     [SerializeField] private GameObject rewardVisualsPrefab;
@@ -46,6 +41,7 @@ public class GameBootstrapper : MonoBehaviour {
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
+    private VehicleController vehicleController;
 
     private void Start() {
         var vehicleService = new VehicleService();
@@ -59,6 +55,7 @@ public class GameBootstrapper : MonoBehaviour {
         var unitView = new EnemyView(unitVisualsPrefab, null);
         var projectileView = new ProjectileView(bulletSystemPrefab);
         var weaponView = new WeaponView();
+        var vehicleView = new VehicleView();
 
         projectileController = new ProjectileController(
             combatService,
@@ -80,21 +77,22 @@ public class GameBootstrapper : MonoBehaviour {
             combatService
         );
 
-        playerController = new PlayerController(
-            vehicleService, 
-            playerView,
-            driveVehicle, 
-            trailerVehicle,
-            trailersCount,
-            combatService, 
-            combatService,
+        vehicleController = new VehicleController(
+            vehicleService,
             soundManager,
+            vehicleView
+        );
+
+        playerController = new PlayerController(
+            playerView, 
+            combatService,
             cameraManager,
+            soundManager,
             rewardsMediator,
-            
             weaponController,
-            firstWeaponConfig,
-            secondWeaponConfig);
+            playerConfig,
+            vehicleController
+        );
 
         enemyController = new EnemyController(
             localAvoidanceService,
@@ -113,7 +111,8 @@ public class GameBootstrapper : MonoBehaviour {
             soundManager,
             
             rewardVisualsPrefab,
-            weaponController);
+            weaponController)
+        ;
 
         if (playerComponent) playerController.Init();
         if (enemyComponent) enemyController.Init();
@@ -129,6 +128,7 @@ public class GameBootstrapper : MonoBehaviour {
         projectileController.Update();
         rocketController.Update();
         weaponController.Update();
+        vehicleController.Update();
         
         if (enemyComponent) 
             using (unitUpdateMarker.Auto()) 

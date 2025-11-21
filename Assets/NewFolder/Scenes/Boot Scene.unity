@@ -311,11 +311,7 @@ MonoBehaviour:
   maxVehicelCount: 1
   foeVehicle: {fileID: 11400000, guid: 322db09d7936e41adb890f0b3801cd2d, type: 2}
   playerComponent: 1
-  driveVehicle: {fileID: 11400000, guid: 7dc24518fd78948c0b8769c94a6cb051, type: 2}
-  trailerVehicle: {fileID: 11400000, guid: 1dbd68138503c4d99b4eba6949b1331d, type: 2}
-  trailersCount: 2
-  firstWeaponConfig: {fileID: 11400000, guid: bbf335660863d4142b04746d3fe8217a, type: 2}
-  secondWeaponConfig: {fileID: 11400000, guid: 79f33a2489ade46cf8e5621936488dc7, type: 2}
+  playerConfig: {fileID: 11400000, guid: 15c1c417b54044a6b9ea2acbda4d6876, type: 2}
   rewardsLayerName: Rewards
   rewardVisualsPrefab: {fileID: 3547344186677869774, guid: 4ecebdb845241478384bef7f7ba9e450, type: 3}
 --- !u!1 &424987303
@@ -616,7 +612,7 @@ Transform:
   m_GameObject: {fileID: 618815298}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4184007, y: 0.5700358, z: -0.4184008, w: 0.5700359}
-  m_LocalPosition: {x: 9.41224, y: 17.173937, z: 12.859798}
+  m_LocalPosition: {x: -0.2, y: 19.3, z: -1.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1133,6 +1129,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7532d2adffbe411e8e8bc2d72be5aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idCounter: 1
+  groupIdCounter: 1
+  projectileRemovalBuffer: 
 --- !u!1 &958139873
 GameObject:
   m_ObjectHideFlags: 0

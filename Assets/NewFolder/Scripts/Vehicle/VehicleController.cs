@@ -11,8 +11,10 @@ public class VehicleController {
     private int idCounter;
     private Dictionary<int, VehicleModel> registry = new ();
 
-    public VehicleController(VehicleService vehicleService) {
+    public VehicleController(VehicleService vehicleService, SoundManager soundManager, VehicleView view) {
         this.vehicleService = vehicleService;
+        this.soundManager = soundManager;
+        this.view = view;
     }
 
     public void Update() {
@@ -21,7 +23,7 @@ public class VehicleController {
         UpdateVehicleOrientation();
     }
 
-    public void SpawnVehicle(Vector3 position, VehicleConfig vehicleConfig) {
+    public int SpawnVehicle(Vector3 position, VehicleConfig vehicleConfig) {
         var nextId = ++idCounter;
         var model = new VehicleModel(nextId, position, vehicleConfig);
         registry[nextId] = model;
@@ -30,6 +32,11 @@ public class VehicleController {
             model.SoundSourceId = soundManager.StartLoop(model.Position, model.EngineIdleSound);
         }
         view.AddVehicle(model.Id, model.Position, model.VisualsPrefab);
+        return model.Id;
+    }
+
+    public Vector3 GetVehiclePosition(int vehicleId) {
+        return registry[vehicleId].Position;
     }
 
     public void DriveVehicle(int vehicleId, float gasInput, bool boost) {
