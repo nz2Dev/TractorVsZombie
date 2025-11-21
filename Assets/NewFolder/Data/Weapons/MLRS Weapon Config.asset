@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d85e24520461b4eb2adef6d54d69e801, type: 3}
   m_Name: MLRS Weapon Config
   m_EditorClassIdentifier: NewFolder::WeaponConfig
-  cooldownSec: 0.25
-  launchPoint: {x: 0, y: 0.41, z: 0}
+  cooldownSec: 4
+  launchOffset: {x: 0, y: 0.5, z: 0}
   aimConfig:
     type: 0
     range: 30

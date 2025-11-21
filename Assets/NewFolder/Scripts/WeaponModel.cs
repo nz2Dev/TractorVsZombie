@@ -20,7 +20,7 @@ public class WeaponModel {
     public AimConfig AimConfig => config.aimConfig;
     public BallisticConfig BallisticConfig => config.ballisticConfig;  
     public WeaponVisuals VisualsPrefab => config.visualsPrefab;
-    public Vector3 LaunchPoint => config.launchPoint;
+    public Vector3 LaunchPoint => Position + config.launchOffset;
     public float CooldownSec => config.cooldownSec;
     
 }

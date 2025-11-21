@@ -36,7 +36,7 @@ public struct RocketConfig {
 [CreateAssetMenu(fileName = "WeaponData", menuName = "WeaponData", order = 0)]
 public class WeaponConfig : ScriptableObject {
     public float cooldownSec;
-    public Vector3 launchPoint;
+    public Vector3 launchOffset;
     public AimConfig aimConfig;
     public BallisticConfig ballisticConfig;
     public WeaponVisuals visualsPrefab;

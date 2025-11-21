@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Turel Weapon Config
   m_EditorClassIdentifier: NewFolder::WeaponConfig
   cooldownSec: 0.25
-  launchPoint: {x: 0, y: 0.41, z: 0}
+  launchOffset: {x: 0, y: 0.41, z: 0}
   aimConfig:
     type: 1
     range: 20
