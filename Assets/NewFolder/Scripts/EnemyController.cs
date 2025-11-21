@@ -328,6 +328,7 @@ public class EnemyController {
         vehicleSoundLoop.RemoveAt(vehicleIndex);
 
         weaponController.DeleteWeapon(vehicleWeaponIds[vehicleIndex]);
+        vehicleWeaponIds.RemoveAt(vehicleIndex);
     }
 
     private void ReadVehiclesOrientation() {
