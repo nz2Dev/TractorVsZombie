@@ -107,10 +107,10 @@ public class VehiclePhysics : MonoBehaviour {
     }
 
     public void SetBreaksTorque(float breaksTorque) {
-        frontAxis.leftWheel.motorTorque = breaksTorque;
-        frontAxis.rightWheel.motorTorque = breaksTorque;
-        rearAxis.leftWheel.motorTorque = breaksTorque;
-        rearAxis.rightWheel.motorTorque = breaksTorque;
+        frontAxis.leftWheel.brakeTorque = breaksTorque;
+        frontAxis.rightWheel.brakeTorque = breaksTorque;
+        rearAxis.leftWheel.brakeTorque = breaksTorque;
+        rearAxis.rightWheel.brakeTorque = breaksTorque;
     }
 
     public void SetSteerAngle(float angleInDegrees) {
