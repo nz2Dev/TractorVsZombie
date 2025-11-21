@@ -10,33 +10,6 @@ public struct WheelAxisPose {
     public Quaternion rotationR;
 }
 
-public struct VehicleBodyPose {
-    public Vector3 position;
-    public Vector3 velocity;
-    public Quaternion rotation;
-}
-
-[Serializable]
-public struct VehiclePhysicsData {
-    public float mass;
-    public Vector3 baseSize;
-    public float wheelMass;
-    public float forwardFrictionStiffness;
-    public float sidewayFrictionStiffness;
-    public WheelAxisData[] wheelAxisDatas;
-    public float towingTongueLength;
-}
-
-[Serializable]
-public struct WheelAxisData {
-    public float forwardOffset;
-    public float upOffset;
-    public float halfLength;
-    public float radius;
-    public bool drive;
-    public bool stear;
-}
-
 public struct VehicleState {
     public Vector3 velocity;
     public Vector3 position;
