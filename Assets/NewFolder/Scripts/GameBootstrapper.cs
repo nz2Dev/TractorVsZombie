@@ -32,7 +32,6 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private TrailerVehicleData trailerVehicle;
     [SerializeField] private int trailersCount = 3;
     [Space]
-    [SerializeField] private ProjectileService projectileServiceImpl;
     [SerializeField] private WeaponConfig firstWeaponConfig;
     [SerializeField] private WeaponConfig secondWeaponConfig;
     [Space]
@@ -54,7 +53,6 @@ public class GameBootstrapper : MonoBehaviour {
         var navigationService = new NavigationService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), combatServiceEnvironmentMask);
-        var projectileService = projectileServiceImpl;
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var playerView = new PlayerView();
@@ -113,9 +111,9 @@ public class GameBootstrapper : MonoBehaviour {
             foeVehicle,
             maxVehicelCount,
             soundManager,
-            projectileService,
             
-            rewardVisualsPrefab);
+            rewardVisualsPrefab,
+            weaponController);
 
         if (playerComponent) playerController.Init();
         if (enemyComponent) enemyController.Init();

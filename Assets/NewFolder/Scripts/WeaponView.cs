@@ -26,4 +26,10 @@ public class WeaponView {
         var visuals = visualsRegistry[weaponId];
         visuals.ShowActivation(ballisticType);
     }
+
+    internal void RemoveWeapon(int weaponId) {
+        var visuals = visualsRegistry[weaponId];
+        GameObject.Destroy(visuals.gameObject);
+        visualsRegistry.Remove(weaponId);
+    }
 }

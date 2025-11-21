@@ -16,7 +16,7 @@ public struct RewardState {
 }
 
 public struct RewardConfigs {
-    public TurelConfig turelConfig;
+    public WeaponConfig weaponConfig;
 }
 
 public class RewardsMediator {

@@ -22,7 +22,7 @@ MonoBehaviour:
     type: 0
     bullet:
       damage: 1
-      speed: 5
+      speed: 15
       shootAudioClips:
       - {fileID: 8300000, guid: 63e582df7ac9f47728c689a10aa7ce66, type: 3}
       - {fileID: 8300000, guid: 794deb703e8f44644b4f27d9bf53e223, type: 3}

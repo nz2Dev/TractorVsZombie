@@ -22,7 +22,7 @@ public class UnitVehicle {
     public VehiclePhysics PhysicsPrefab => data.physicsPrefab;
     public VehicleVisuals VisualsPrefab => data.visualsPrefab;
     public AudioClip EngineIdleSound => data.soundData.engineIdleSound;
-    public UnitVehicleData.WeaponsData WeaponsData => data.weaponsData;
+    public WeaponConfig WeaponsConfig => data.weaponConfig;
 
     public Vector3 Position => vehicleState.position;    
     public VehicleState PhysicsState => vehicleState;

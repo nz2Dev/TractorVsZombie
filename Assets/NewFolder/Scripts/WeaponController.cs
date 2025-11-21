@@ -39,6 +39,11 @@ public class WeaponController {
         view.UpdatePosition(weaponId, weapon.Position);
     }
 
+    public void DeleteWeapon(int weaponId) {
+        view.RemoveWeapon(weaponId);
+        registry.Remove(weaponId);
+    }
+
     private void OperateWeapons() {
         foreach (var model in registry.Values) {
             var enemySearchRadius = model.AimConfig.range;
