@@ -5,6 +5,7 @@ using UnityEngine;
 public class WeaponVisuals : MonoBehaviour {
     
     [SerializeField] private ParticleSystem cannoParticlesSystem;
+    [SerializeField] private Transform rotationBase;
 
     private Animator animator;
 
@@ -19,23 +20,23 @@ public class WeaponVisuals : MonoBehaviour {
     internal void UpdateAimPoint(Vector3 aimPoint, BallisticConfig config) {
         switch (config.type) {
             case BallisticType.Bullet:
-                RotateGunAim(aimPoint, config);
+                RotateGunAim(aimPoint, config.bullet);
                 break;
             case BallisticType.Rocket:
-                RotateRocketAim(aimPoint, config);
+                RotateRocketAim(aimPoint, config.rocket);
                 break;
         }
     }
 
-    internal void RotateRocketAim(Vector3 aimPoint, BallisticConfig config) {
-        var flyTangent = GetTangent(transform.position, aimPoint, config.rocketFlyCurve, config.rocketAmplitude, 0);
-        transform.rotation = Quaternion.LookRotation(flyTangent, Vector3.up);
+    private void RotateRocketAim(Vector3 aimPoint, RocketConfig config) {
+        var flyTangent = GetTangent(transform.position, aimPoint, config.flyCurve, config.amplitude, 0);
+        rotationBase.rotation = Quaternion.LookRotation(flyTangent, Vector3.up);
     }
 
-    internal void RotateGunAim(Vector3 aimPoint, BallisticConfig config) {
+    private void RotateGunAim(Vector3 aimPoint, BulletConfig config) {
         var aimForward = (aimPoint - transform.position).normalized;
         var aimForwardFlat = Vector3.ProjectOnPlane(aimForward, Vector3.up);
-        transform.rotation = Quaternion.LookRotation(aimForwardFlat, Vector3.up);
+        rotationBase.rotation = Quaternion.LookRotation(aimForwardFlat, Vector3.up);
     }
 
     internal void ShowActivation(BallisticType ballisticType) {

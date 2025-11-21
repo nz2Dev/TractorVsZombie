@@ -11,20 +11,26 @@ public enum BallisticType {
 [Serializable]
 public struct BallisticConfig {
     public BallisticType type;
+    public BulletConfig bullet;
+    public RocketConfig rocket;
+}
 
-    public int bulletDamage;
-    public float bulletSpeed;
-    public AudioClip[] bulletShootAudioClips;
-    public float bulletLifetime;
-    public float bulletTravelDistance;
-    
-    public float rocketFlyDistance;
+[Serializable]
+public struct BulletConfig {
+    public int damage;
+    public float speed;
+    public AudioClip[] shootAudioClips;
+    public float lifetime;
+}
+
+[Serializable]
+public struct RocketConfig {
     public AudioClip[] launchEffectClips;
     public AudioClip[] explodeEffectClips;
-    public AnimationCurve rocketFlyCurve;
-    public float rocketAmplitude;
-    public float rocketFlyDuration;
-    public int rocketDamage;
+    public AnimationCurve flyCurve;
+    public float amplitude;
+    public float flyDuration;
+    public int damage;
 }
 
 [CreateAssetMenu(fileName = "WeaponData", menuName = "WeaponData", order = 0)]

@@ -225,8 +225,8 @@ MonoBehaviour:
   trailerVehicle: {fileID: 11400000, guid: 1dbd68138503c4d99b4eba6949b1331d, type: 2}
   trailersCount: 2
   projectileServiceImpl: {fileID: 910901572}
-  turelData: {fileID: 11400000, guid: f1440898271324ef08ca9ef0f40484d2, type: 2}
-  rocketLauncherConfig: {fileID: 11400000, guid: 241538f52fcdf49d48f52b7c7405a924, type: 2}
+  firstWeaponConfig: {fileID: 11400000, guid: bbf335660863d4142b04746d3fe8217a, type: 2}
+  secondWeaponConfig: {fileID: 11400000, guid: 79f33a2489ade46cf8e5621936488dc7, type: 2}
   rewardsLayerName: Rewards
   rewardVisualsPrefab: {fileID: 3547344186677869774, guid: 4ecebdb845241478384bef7f7ba9e450, type: 3}
 --- !u!1 &424987303

@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class PlayerController {
 
-    private readonly ProjectileController projectileController;
-    private readonly RocketController rocketController;
+    private readonly WeaponController weaponController;
 
     private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
@@ -27,31 +26,18 @@ public class PlayerController {
     private readonly List<TrailerVehicle> trailerVehicles = new ();
     private readonly List<int> trailerPhysicIds = new ();
     private readonly List<int> trailerViewIds = new ();
-    
-    private int turelIdCounter;
-    private readonly TurelConfig turelConfig;
-    private readonly List<Turel> turels = new ();
-    private readonly Dictionary<int, int> turelToCombatId = new ();
-    private readonly Dictionary<int, TrailerVehicle> turelToVehicle = new ();
-    private readonly List<ProjectileState> projectilesStateBuffer = new (64);
 
-    private int rocketLauncherIdCounter;
-    private readonly RocketLauncherConfig launcherConfig;
-    private readonly List<RocketLauncher> rocketLaunchers = new ();
-    private readonly Dictionary<int, int> rocketLauncherToCombatId = new ();
-    private readonly Dictionary<int, TrailerVehicle> rocketLauncherToVehicle = new ();
+    private readonly List<int> weaponIds = new ();
+    private readonly List<int> weaponCombatIds = new ();
+    private readonly List<TrailerVehicle> weaponVehicleRefs = new ();
+    
+    private readonly WeaponConfig firstWeaponConfig;
+    private readonly WeaponConfig secondWeaponConfig;
 
     public PlayerController(VehicleService vehicleService, PlayerView vehicleView, DriverVehicleData driverVehicleData, TrailerVehicleData trailerVehicleData, int trailersCount,
-        CombatService combatService, CombatService interactionService, TurelConfig turelConfig,
-        RocketLauncherConfig launcherConfig, SoundManager soundManager, CameraManager cameraManager, RewardsMediator rewardsMediator,
-        ProjectileController projectileController, RocketController rocketController) {
-        this.projectileController = projectileController;
-        this.rocketController = rocketController;
-
+        CombatService combatService, CombatService interactionService, SoundManager soundManager, CameraManager cameraManager, RewardsMediator rewardsMediator, 
+        WeaponController weaponController, WeaponConfig firstWeaponConfig, WeaponConfig secondWeaponConfig) {
         this.combatService = interactionService;
-        this.turelConfig = turelConfig;
-        this.launcherConfig = launcherConfig;
-
         this.vehicleService = vehicleService;
         this.playerView = vehicleView;
         this.driverVehicleData = driverVehicleData;
@@ -61,6 +47,10 @@ public class PlayerController {
         this.soundManager = soundManager;
         this.cameraManager = cameraManager;
         this.rewardsMediator = rewardsMediator;
+
+        this.weaponController = weaponController;
+        this.firstWeaponConfig = firstWeaponConfig;
+        this.secondWeaponConfig = secondWeaponConfig;
     }
 
     public void Init() {
@@ -74,15 +64,9 @@ public class PlayerController {
 
         bool flipFlop = false;
         foreach (var trailerVehicle in trailerVehicles) {
-            if (flipFlop = !flipFlop) {
-                if (turelConfig != null) {
-                    SpawnTurel(trailerVehicle, turelConfig);
-                }
-            } else {
-                if (launcherConfig != null) {
-                    SpawnRocketLauncher(trailerVehicle, launcherConfig);
-                }
-            }
+            flipFlop = !flipFlop;
+            var weaponConfig = flipFlop ? firstWeaponConfig : secondWeaponConfig;
+            AttackWeaponOnTrailer(trailerVehicle, weaponConfig);
         }
     }
 
@@ -100,16 +84,7 @@ public class PlayerController {
         ClearRewardsEvents();
 
         UpdateCamera();
-
-        UpdateRocketLauncherOrientation();
-        OperateRocketLaunchers();
-        UpdateRocketLauncherCombatState();
-        UpdateRocketLauncherView();
-
-        UpdateTurelsOrientation();
-        OperateTurels();
-        UpdateTurelsCombatState();
-        UpdateTurelView();
+        SyncWeaponsWithTrailers();
     }
 
     private void DiscoverRewards() {
@@ -125,7 +100,7 @@ public class PlayerController {
             foreach (var reward in rewardsBuffer) {
                 if (reward.rewardType == RewardType.TurelWeapon) {
                     var trailerVehicle = SpawnTrailerVehicle(reward.position);
-                    SpawnTurel(trailerVehicle, reward.configs.turelConfig);
+                    AttackWeaponOnTrailer(trailerVehicle, firstWeaponConfig);
                 }
             }
         }
@@ -222,98 +197,22 @@ public class PlayerController {
         }
     }
 
-    private void SpawnRocketLauncher(TrailerVehicle host, RocketLauncherConfig launcherConfig) {
-        var launcherId = rocketLauncherIdCounter++;
-        var rocketLauncher = new RocketLauncher(launcherId, host.Position, launcherConfig);
-        rocketLaunchers.Add(rocketLauncher);
-
-        rocketLauncherToVehicle[rocketLauncher.Id] = host;
-
-        var rocketLauncherCombatId = combatService.RegisterAgent(rocketLauncher.Position, alie: true);
-        rocketLauncherToCombatId[launcherId] = rocketLauncherCombatId;
-        
-        playerView.AddRocketLauncher(launcherId, rocketLauncher.Position, rocketLauncher.Visuals);
+    private void AttackWeaponOnTrailer(TrailerVehicle host, WeaponConfig weaponConfig) {
+        var weaponCombatId = combatService.RegisterAgent(host.Position, alie: true);
+        var weaponId = weaponController.SpawnWeapon(weaponCombatId, host.Position, weaponConfig);
+        weaponIds.Add(weaponId);
+        weaponCombatIds.Add(weaponCombatId);
+        weaponVehicleRefs.Add(host);
     }
 
-    private void UpdateRocketLauncherOrientation() {
-        foreach (var rocketLauncher in rocketLaunchers) {
-            var rocketLauncherHost = rocketLauncherToVehicle[rocketLauncher.Id];
-            rocketLauncher.Translate(rocketLauncherHost.Position); 
-        }
-    }
-
-    private void OperateRocketLaunchers() {
-        foreach (var rocketLauncher in rocketLaunchers) {
-            var launcherCombatId = rocketLauncherToCombatId[rocketLauncher.Id];
-            if (combatService.GetClosestEnemyAgentInRange(launcherCombatId, rocketLauncher.Radius, out var agentInfo)) {
-                rocketLauncher.Aim(agentInfo.position);
-            }
-            
-            if (rocketLauncher.Launch(Time.time, out var trajectory)) {
-                rocketController.SpawnRocket(launcherCombatId, trajectory);
-            }
-        }
-    }
-
-    private void UpdateRocketLauncherCombatState() {
-        foreach (var rocketLauncher in rocketLaunchers) {
-            var rocketLauncherCombatId = rocketLauncherToCombatId[rocketLauncher.Id];
-            combatService.UpdateAgentPosition(rocketLauncherCombatId, rocketLauncher.Position);
-        }
-    }
-
-    private void UpdateRocketLauncherView() {
-        foreach (var rocketLauncher in rocketLaunchers) {
-            playerView.UpdateRocketLauncherOrientation(rocketLauncher.Id, rocketLauncher.Position, rocketLauncher.AimPoint, rocketLauncher.RocketAmplitude);
-        }
-    }
-
-    private void SpawnTurel(TrailerVehicle host, TurelConfig turelConfig) {
-        var turelId = turelIdCounter++;
-        var turel = new Turel(turelId, host.Position, turelConfig);
-        turels.Add(turel);
-
-        turelToVehicle[turel.Id] = host;
-        
-        var turelCombatId = combatService.RegisterAgent(turel.Position, alie: true);
-        turelToCombatId[turel.Id] = turelCombatId;
-        
-        playerView.AddTurel(turelId, turel.Position, turel.Visuals);
-    }
-
-    private void UpdateTurelsOrientation() {
-        foreach (var turel in turels) {
-            var turelHost = turelToVehicle[turel.Id];
-            turel.Move(turelHost.Position);
-        }
-    }
-
-    private void OperateTurels() {
-        foreach (var turel in turels) {    
-            var turelCombatId = turelToCombatId[turel.Id];
-            
-            if (combatService.GetClosestEnemyAgentInRange(turelCombatId, 20, out var closestEnemyAgent)) {
-                var aimPoint = closestEnemyAgent.position + 0.5f * closestEnemyAgent.height * Vector3.up;
-                turel.Aim(Time.deltaTime, aimPoint);
-            }
-
-            if (turel.Fire(Time.time, out var bullet)) {
-                projectileController.SpawnBulletProjectile(turelCombatId, bullet, turel.BulletShootAudioClips);
-            }
-        }
-    }
-
-    private void UpdateTurelsCombatState() {
-        foreach (var turel in turels) {    
-            var turelCombatId = turelToCombatId[turel.Id];
-            combatService.UpdateAgentPosition(turelCombatId, turel.Position);
-        }
-    }
-
-    private void UpdateTurelView() {
-        foreach (var turel in turels) {
-            playerView.UpdateTurelOrientation(turel.Id, turel.Position, turel.GunForward);
-        }
+    private void SyncWeaponsWithTrailers() {
+        for (int i = 0; i < weaponIds.Count; i++) {
+            var weaponId = weaponIds[i];
+            var weaponCombatId = weaponCombatIds[i];
+            var weaponHost = weaponVehicleRefs[i];
+            weaponController.MoveWeapon(weaponId, weaponHost.Position);
+            combatService.UpdateAgentPosition(weaponCombatId, weaponHost.Position);
+        }        
     }
 
 }

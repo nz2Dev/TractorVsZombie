@@ -13,28 +13,30 @@ MonoBehaviour:
   m_Name: Turel Weapon Config
   m_EditorClassIdentifier: NewFolder::WeaponConfig
   cooldownSec: 0.25
-  launchPoint: {x: 0, y: 0.5, z: 0}
+  launchPoint: {x: 0, y: 0.41, z: 0}
   aimConfig:
     type: 1
     range: 20
-    speed: 5
+    speed: 15
   ballisticConfig:
     type: 0
-    bulletDamage: 1
-    bulletSpeed: 5
-    bulletShootAudioClips: []
-    bulletLifetime: 5
-    bulletTravelDistance: 100
-    rocketFlyDistance: 0
-    launchEffectClips: []
-    explodeEffectClips: []
-    rocketFlyCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    rocketAmplitude: 0
-    rocketFlyDuration: 0
-    rocketDamage: 0
-  visualsPrefab: {fileID: 0}
+    bullet:
+      damage: 1
+      speed: 5
+      shootAudioClips:
+      - {fileID: 8300000, guid: 63e582df7ac9f47728c689a10aa7ce66, type: 3}
+      - {fileID: 8300000, guid: 794deb703e8f44644b4f27d9bf53e223, type: 3}
+      lifetime: 5
+    rocket:
+      launchEffectClips: []
+      explodeEffectClips: []
+      flyCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      amplitude: 0
+      flyDuration: 0
+      damage: 0
+  visualsPrefab: {fileID: 3359016675382166588, guid: aab1ca365e95c4cc2a4bfedf772d0bee, type: 3}

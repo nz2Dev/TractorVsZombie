@@ -14,6 +14,13 @@ public class WeaponController {
     private int idCounter;
     private Dictionary<int, WeaponModel> registry = new ();
 
+    public WeaponController(WeaponView view, RocketController rocketController, ProjectileController projectileController, CombatService combatService) {
+        this.view = view;
+        this.rocketController = rocketController;
+        this.projectileController = projectileController;
+        this.combatService = combatService;
+    }
+
     public void Update() {
         OperateWeapons();
     }
@@ -62,11 +69,11 @@ public class WeaponController {
     }
 
     private void FireBullet(WeaponModel weapon) {
-        var bulletVelocity = (weapon.AimPoint - weapon.LaunchPoint).normalized * weapon.BallisticConfig.bulletSpeed;
+        var bulletVelocity = (weapon.AimPoint - weapon.LaunchPoint).normalized * weapon.BallisticConfig.bullet.speed;
         projectileController.SpawnBulletProjectile(
             weapon.CombatId, 
             new Bullet { firePoint = weapon.LaunchPoint, velocity = bulletVelocity},
-            weapon.BallisticConfig.bulletShootAudioClips
+            weapon.BallisticConfig.bullet.shootAudioClips
         );
     }
 
@@ -76,10 +83,10 @@ public class WeaponController {
             new RocketTrajectory {
                 launchPoint = weapon.LaunchPoint,
                 landPoint = weapon.AimPoint,
-                flyDuration = weapon.BallisticConfig.rocketFlyDuration,
-                height = weapon.BallisticConfig.rocketAmplitude,
-                launchEffectClips = weapon.BallisticConfig.launchEffectClips,
-                explodeEffectClips = weapon.BallisticConfig.explodeEffectClips,
+                flyDuration = weapon.BallisticConfig.rocket.flyDuration,
+                height = weapon.BallisticConfig.rocket.amplitude,
+                launchEffectClips = weapon.BallisticConfig.rocket.launchEffectClips,
+                explodeEffectClips = weapon.BallisticConfig.rocket.explodeEffectClips,
             }
         );
     }

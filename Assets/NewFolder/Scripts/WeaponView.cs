@@ -3,13 +3,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class WeaponView : MonoBehaviour {
+public class WeaponView {
 
-    private Dictionary<int, WeaponVisuals> visualsRegistry;
-
-    private void Awake() {
-        visualsRegistry = new ();
-    }
+    private Dictionary<int, WeaponVisuals> visualsRegistry = new ();
 
     internal void AddWeapon(int weaponId, Vector3 position, WeaponVisuals visualsPrefab) {
         var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
