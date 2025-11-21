@@ -1,5 +1,10 @@
 using UnityEngine;
 
+public struct Bullet {
+    public Vector3 firePoint;
+    public Vector3 velocity;
+}
+
 internal class ProjectileModel {
     
     internal ProjectileModel(int id, int shooterId, Vector3 position, Vector3 velocity, float spawnTime, float lifetime) {

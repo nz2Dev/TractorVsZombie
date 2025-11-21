@@ -7,8 +7,6 @@ using UnityEngine;
 public class PlayerView {
 
     private readonly List<VehicleVisuals> vehicleVisualsRegistry = new ();
-    private readonly Dictionary<int, TurelVisuals> turelVisualRegistry = new ();
-    private readonly Dictionary<int, RocketLauncherVisuals> launcherVisualsRegistry = new ();
     private readonly Dictionary<int, GameObject> rewardVisualsRegistry = new ();
 
     public PlayerView() {
@@ -26,36 +24,6 @@ public class PlayerView {
         vehicleVisuals.SetFrontAxis(vehicleState.frontAxis);
         vehicleVisuals.SetRearAxis(vehicleState.rearAxis);
         // vehicleVisuals.SetTowingTongueRotation(towingTonguePose);
-    }
-
-    public void AddTurel(int turelId, Vector3 position, TurelVisuals visualsPrefab) {
-        turelVisualRegistry[turelId] = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
-    }
-
-    public void UpdateTurelOrientation(int turelId, Vector3 position, Vector3 lookVector) {
-        var turelVisuals = turelVisualRegistry[turelId];
-        turelVisuals.UpdatePosition(position);
-        turelVisuals.UpdateAim(lookVector);
-    }
-
-    internal void AddRocketLauncher(int launcherId, Vector3 position, RocketLauncherVisuals visualsPrefab) {
-        launcherVisualsRegistry[launcherId] = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
-    }
-
-    internal void ShowRocketFly(int launcherId, int rocketId, RocketTrajectory trajectory, float rocketFlyDuration) {
-        var launcherVisuals = launcherVisualsRegistry[launcherId];
-        launcherVisuals.ShowRocketFly(rocketId, trajectory, rocketFlyDuration);
-    }
-
-    internal void ShowRocketExplosion(int launcherId, int rocketId) {
-        var launcherVisuals = launcherVisualsRegistry[launcherId];
-        launcherVisuals.ShowRocketExplosion(rocketId);
-    }
-
-    internal void UpdateRocketLauncherOrientation(int launcherId, Vector3 position, Vector3 aimPoint, float aimHeight) {
-        var launcherVisuals = launcherVisualsRegistry[launcherId];
-        launcherVisuals.UpdatePosition(position);
-        launcherVisuals.OrientLauncherTowardAim(aimPoint, aimHeight);
     }
 
     public void SpawnReward(int id, Vector3 position, GameObject rewardVisualsPrefab) {

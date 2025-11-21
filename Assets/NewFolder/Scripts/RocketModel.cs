@@ -1,3 +1,14 @@
+using UnityEngine;
+
+public struct RocketTrajectory { //
+    public Vector3 launchPoint;
+    public Vector3 landPoint;
+    public float flyDuration;
+    public AudioClip[] launchEffectClips;
+    public AudioClip[] explodeEffectClips;
+    public float height; //
+}
+
 public class RocketModel {
     
     internal int Id { get; private set; }
