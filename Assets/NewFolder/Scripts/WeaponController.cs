@@ -42,7 +42,7 @@ public class WeaponController {
                 view.UpdateAim(model.Id, model.AimPoint, model.BallisticConfig);
             }
             
-            if (Time.time + model.CooldownSec > Time.time) {
+            if (model.LastShootTime + model.CooldownSec < Time.time) {
                 model.LastShootTime = Time.time;
                 FireBallistic(model);
                 view.ShowActivation(model.Id, model.BallisticConfig.type);
