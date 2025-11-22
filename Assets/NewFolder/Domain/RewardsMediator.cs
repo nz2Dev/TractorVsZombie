@@ -2,110 +2,64 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public enum RewardType {
-    Points,
-    TurelWeapon,
-}
-
-public struct RewardState {
-    public int id;
-    public Vector3 position;
-    public RewardType rewardType;
-    public GameObject rewardVisuals;
-    public RewardConfigs configs;
-}
-
-public struct RewardConfigs {
-    public WeaponConfig weaponConfig;
-}
-
 public class RewardsMediator {
 
-    private class Reward {
+    private class SpatialPoint {
         public int id;
         public SphereCollider marker;
         public int spawnFrame;
-        public RewardType type;
-        public GameObject visualsPrefab;
-        public RewardConfigs configs;
     }
     
     private readonly int rewardLayer;
     private readonly LayerMask rewardsMask;
 
     private int rewardIdCounter;
-    private readonly List<Reward> rewards = new ();
-    private readonly Dictionary<Collider, Reward> colliderToReward = new ();
+    private readonly List<SpatialPoint> points = new ();
+    private readonly Dictionary<Collider, SpatialPoint> colliderToPoint = new ();
     private readonly Collider[] overlapBuffer = new Collider[512];
-
-    private readonly List<RewardState> rewardSpawnedEvents = new();
-    private readonly List<RewardState> rewardRemovedEvents = new();
 
     public RewardsMediator(int markersLayer) {
         this.rewardLayer = markersLayer;
         rewardsMask = 1 << markersLayer;
     }
 
-    public List<RewardState> RewardAddedEvents => rewardSpawnedEvents;
-    public List<RewardState> RewardRemovedEvents => rewardRemovedEvents;
-
-    public void AddReward(Vector3 position, float radius, RewardType rewardType, GameObject visualsPrefab, RewardConfigs configs) {
+    public int AddRewardPoint(Vector3 position, float radius) {
         int nextRewardId = rewardIdCounter++;
         
-        var marker = CreateRewardMarker(nextRewardId, position, radius);
-        var reward = new Reward {
+        var marker = CreateColliderMarker(nextRewardId, position, radius);
+        var spatialPoint = new SpatialPoint {
             id = nextRewardId, 
             marker = marker, 
             spawnFrame = Time.frameCount,
-            type = rewardType,
-            visualsPrefab = visualsPrefab,
-            configs = configs,
         };
         
-        rewards.Add(reward);
-        colliderToReward[marker] = reward;
-        
-        rewardSpawnedEvents.Add(GetRewardState(reward));
+        points.Add(spatialPoint);
+        colliderToPoint[marker] = spatialPoint;
+        return spatialPoint.id;
     }
 
-    public bool CollectRewards(Vector3 position, float radius, List<RewardState> rewards) {
-        var rewardsCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, rewardsMask);
+    public bool CollectRewardsPoints(Vector3 position, float radius, List<int> spatialPointIds) {
+        var pointsCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, rewardsMask);
         
-        rewards.Clear();
-        for (int i = 0; i < rewardsCount; i++) {
+        spatialPointIds.Clear();
+        for (int i = 0; i < pointsCount; i++) {
             var overlappedCollider = overlapBuffer[i];
-            if (colliderToReward.TryGetValue(overlappedCollider, out var reward) && reward.spawnFrame != Time.frameCount) {
-                rewards.Add(GetRewardState(reward));
-                RemoveReward(reward);
+            if (colliderToPoint.TryGetValue(overlappedCollider, out var point) && point.spawnFrame != Time.frameCount) {
+                spatialPointIds.Add(point.id);
+                RemoveReward(point);
             }
         }
         
-        return rewards.Count > 0;
+        return spatialPointIds.Count > 0;
     }
 
-    private void RemoveReward(Reward reward) {
-        colliderToReward.Remove(reward.marker);
+    private void RemoveReward(SpatialPoint reward) {
+        colliderToPoint.Remove(reward.marker);
         Object.Destroy(reward.marker.gameObject);
-        rewards.Remove(reward);
-        rewardRemovedEvents.Add(GetRewardState(reward));
+        points.Remove(reward);
     }
 
-    public void ClearEvents() {
-        rewardSpawnedEvents.Clear();
-        rewardRemovedEvents.Clear();
-    }
-
-    private RewardState GetRewardState(Reward reward) {
-        return new RewardState {
-            id = reward.id,
-            position = reward.marker.transform.position,
-            rewardType = reward.type,
-            rewardVisuals = reward.visualsPrefab,
-            configs = reward.configs,
-        };
-    }
-
-    private SphereCollider CreateRewardMarker(int nextRewardId, Vector3 position, float radius) {
+    private SphereCollider CreateColliderMarker(int nextRewardId, Vector3 position, float radius) {
         var gameObject = new GameObject("reward " + nextRewardId, typeof(SphereCollider));
         gameObject.layer = rewardLayer;
         gameObject.transform.position = position;

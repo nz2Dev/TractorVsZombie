@@ -14,8 +14,6 @@ public class EnemyController {
     private readonly NavigationService navigationService;
     private readonly CombatService combatService;
     private readonly PhysicsService physicsService;
-    private readonly RewardsMediator rewardsMediator;
-    private readonly GameObject pointsRewardVisualsPrefab;
 
     private float lastTimeProduced = float.MinValue;
     private Transform[] spawnPoints;
@@ -37,10 +35,12 @@ public class EnemyController {
     private readonly WeaponConfig vehicleWeaponConfig;
     private readonly List<EnemyVehicleModel> vehicleModels = new ();
 
+    private readonly List<EnemyVehicleModel> diedVehicles = new ();
+    private readonly List<Unit> diedUnits = new ();
+
     public EnemyController(LocalAvoidanceService localAvoidanceService, NavigationService navigationService, EnemyView crowdView,
         Transform[] spawnPoints, Transform targetPoint, int unitsCount, CombatService combatService, PhysicsService physicsService,
-        RewardsMediator rewardsMediator, int maxVehiclesCount,
-        GameObject pointsRewardVisualsPrefab, WeaponController weaponController, 
+        int maxVehiclesCount, WeaponController weaponController, 
         VehicleController vehicleController, VehicleConfig vehicleConfig, WeaponConfig vehicleWeaponConfig) {
         this.localAvoidanceService = localAvoidanceService;
         this.navigationService = navigationService;
@@ -50,16 +50,27 @@ public class EnemyController {
         this.unitsCount = unitsCount;
         this.combatService = combatService;
         this.physicsService = physicsService;
-        this.rewardsMediator = rewardsMediator;
 
         this.vehiclesSpawnPoints = spawnPoints; // reusing
         this.maxVehiclesCount = maxVehiclesCount;
-        this.pointsRewardVisualsPrefab = pointsRewardVisualsPrefab;
 
         this.weaponController = weaponController;
         this.vehicleController = vehicleController;
         this.vehicleConfig = vehicleConfig;
         this.vehicleWeaponConfig = vehicleWeaponConfig;
+    }
+
+    public IReadOnlyList<Unit> GetDiedUnits() {
+        return diedUnits;
+    }
+
+    public IReadOnlyList<EnemyVehicleModel> GetDiedVehicles() {
+        return diedVehicles;
+    }
+
+    public void ClearDiedRegistry() {
+        diedUnits.Clear();
+        diedVehicles.Clear();
     }
 
     public void Init() {
@@ -236,7 +247,7 @@ public class EnemyController {
                 combatService.UnregisterAgent(combatId);
                 unitIdToCombatId.Remove(unit.Id);
 
-                rewardsMediator.AddReward(unit.Position, radius: 1, RewardType.Points, pointsRewardVisualsPrefab, new RewardConfigs {});
+                diedUnits.Add(unit);
             }
         }
     }
@@ -318,9 +329,7 @@ public class EnemyController {
             combatService.ClearAgentState(model.CombatId);
 
             if (model.Health <= 0) {
-                rewardsMediator.AddReward(model.Position, 3, RewardType.TurelWeapon, vehicleWeaponConfig.visualsPrefab.gameObject, new RewardConfigs {
-                    weaponConfig = vehicleWeaponConfig
-                });
+                diedVehicles.Add(model);
             }
         }
     }

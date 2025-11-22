@@ -38,7 +38,7 @@ public class GameBootstrapper : MonoBehaviour {
 
     private PlayerController playerController;
     private EnemyController enemyController;
-
+    private RewardController rewardController;
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
@@ -57,6 +57,7 @@ public class GameBootstrapper : MonoBehaviour {
         var projectileView = new ProjectileView(bulletSystemPrefab);
         var weaponView = new WeaponView();
         var vehicleView = new VehicleView();
+        var rewardView = new RewardView(rewardVisualsPrefab);
 
         projectileController = new ProjectileController(
             combatService,
@@ -89,7 +90,6 @@ public class GameBootstrapper : MonoBehaviour {
             combatService,
             cameraManager,
             soundManager,
-            rewardsMediator,
             weaponController,
             playerConfig,
             vehicleController
@@ -104,15 +104,21 @@ public class GameBootstrapper : MonoBehaviour {
             unitsCount,
             combatService,
             physicsService,
-            rewardsMediator,
             
             maxVehicelCount,
-            rewardVisualsPrefab,
             weaponController,
             vehicleController,
             foeVehicle,
-            foeVehicleWeapon)
-        ;
+            foeVehicleWeapon
+        );
+
+        rewardController = new RewardController(
+            rewardsMediator,
+            playerController,
+            enemyController,
+            foeVehicleWeapon,
+            rewardView
+        );
 
         if (playerComponent) playerController.Init();
         if (enemyComponent) enemyController.Init();
@@ -137,6 +143,8 @@ public class GameBootstrapper : MonoBehaviour {
         if (playerComponent)
             using (playerUpdateMarker.Auto())
                 playerController.Update();
+
+        rewardController.Update();
     }
 
 }

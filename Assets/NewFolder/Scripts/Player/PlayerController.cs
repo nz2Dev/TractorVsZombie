@@ -10,21 +10,19 @@ public class PlayerController {
     private readonly VehicleController vehicleController;
 
     private readonly CombatService combatService;
-    private readonly RewardsMediator rewardsMediator;
     private readonly CameraManager cameraManager;
     private readonly SoundManager soundManager;
 
     private readonly PlayerModel model;
 
     public PlayerController(PlayerView view, CombatService combatService, CameraManager cameraManager, 
-        SoundManager soundManager, RewardsMediator rewardsMediator, WeaponController weaponController, 
+        SoundManager soundManager, WeaponController weaponController, 
         PlayerConfig config, VehicleController vehicleController) {
         this.combatService = combatService;
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
         this.soundManager = soundManager;
-        this.rewardsMediator = rewardsMediator;
 
         this.weaponController = weaponController;
         this.vehicleController = vehicleController;
@@ -52,42 +50,16 @@ public class PlayerController {
         SyncVehiclePositions();
         DriveHeadVehicle();
         UpdateDriverRamCombat();
-
-        DiscoverRewards();
-        CollectRewards();
-        FilterRemovedRewards();
-        ClearRewardsEvents();
-
         UpdateCamera();
     }
 
-    private void DiscoverRewards() {
-        foreach (var rewardState in rewardsMediator.RewardAddedEvents) {
-            view.SpawnReward(rewardState.id, rewardState.position, rewardState.rewardVisuals);
-        }
+    public void SpawnHostWithWeapon(Vector3 position, WeaponConfig weaponConfig) {
+        var host = SpawnHostVehicle(position);
+        PutWeaponOnHost(host, weaponConfig);
     }
 
-    private List<RewardState> rewardsBuffer = new (10);
-
-    private void CollectRewards() {
-        if (rewardsMediator.CollectRewards(model.DriverPosition, model.DriverRewardCollectRadius, rewardsBuffer)) {
-            foreach (var reward in rewardsBuffer) {
-                if (reward.rewardType == RewardType.TurelWeapon) {
-                    var trailerVehicle = SpawnHostVehicle(reward.position);
-                    PutWeaponOnHost(trailerVehicle, model.FirstWeaponConfig);
-                }
-            }
-        }
-    }
-
-    private void FilterRemovedRewards() {
-        foreach (var rewardState in rewardsMediator.RewardRemovedEvents) {
-            view.DespawnReward(rewardState.id);
-        }
-    }
-
-    private void ClearRewardsEvents() {
-        rewardsMediator.ClearEvents();
+    public Vector3 GetPlayerPosition() {
+        return model.DriverPosition;
     }
 
     private void UpdateCamera() {

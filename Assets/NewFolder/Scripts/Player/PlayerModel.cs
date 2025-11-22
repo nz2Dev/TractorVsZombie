@@ -23,7 +23,7 @@ public class PlayerModel {
 
     public VehicleConfig DriverVehicleConfig => config.driverConfig;
     public float DriverRamRadius => config.driverRamRadius;
-    public float DriverRewardCollectRadius => config.driverRewardCollectRadius;
+    
     public AudioClip[] DriverRamImpactSound => config.driverRamImpactSound;
     public VehicleConfig TrailerVehicleConfig => config.trailerConfig;
     public WeaponConfig FirstWeaponConfig => config.firstWeaponConfig;
