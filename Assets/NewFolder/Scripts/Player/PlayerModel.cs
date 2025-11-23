@@ -7,6 +7,7 @@ public class HostVehicle {
     public int VehicleId { get; set; }
     public int CombatId { get; set; }
     public int WeaponId { get; set; }
+    public WeaponConfig WeaponConfig { get; set; }
 }
 
 public class PlayerModel {

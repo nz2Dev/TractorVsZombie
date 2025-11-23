@@ -50,6 +50,7 @@ public class PlayerController {
         SyncVehiclePositions();
         DriveHeadVehicle();
         UpdateDriverRamCombat();
+        OperateTrailerWeapons();
         UpdateCamera();
     }
 
@@ -114,6 +115,16 @@ public class PlayerController {
     private void PutWeaponOnHost(HostVehicle host, WeaponConfig weaponConfig) {
         host.CombatId = combatService.RegisterAgent(host.Position, alie: true);
         host.WeaponId = weaponController.SpawnWeapon(host.CombatId, host.Position, weaponConfig);
+        host.WeaponConfig = weaponConfig;
+    }
+
+    private void OperateTrailerWeapons() {
+        foreach (var model in model.HostVehicles) {
+            var enemySearchRadius = model.WeaponConfig.aimConfig.range;
+            if (combatService.GetClosestEnemyAgentInRange(model.CombatId, enemySearchRadius, out var agentInfo)) {
+                weaponController.AimWeapon(model.WeaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
+            }
+        }
     }
 
 }
