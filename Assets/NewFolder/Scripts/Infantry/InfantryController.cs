@@ -158,6 +158,7 @@ public class InfantryController {
                 continue;
                 
             if (model.LastAttackTime + model.AttackCooldown < Time.time) {
+                model.LastAttackTime = Time.time;
                 combatService.ApplyDirectDamage(model.CombatId, closestFoe.id, model.Damage);
                 view.ShowDirectFrontAttack(model.Id);
             }
