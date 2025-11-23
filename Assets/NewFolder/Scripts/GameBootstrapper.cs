@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameBootstrapper : MonoBehaviour {
     
-    [SerializeField] private RocketView rocketView;
+    [SerializeField] private RocketView rocketView; // todo remove monobehaviour inheritance
     [SerializeField] private ParticleSystem bulletSystemPrefab;
     [Space]
     [SerializeField] private SoundManager soundManager;
@@ -16,7 +16,8 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private string combatServiceLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
     [Space]
-    [SerializeField] private bool enemyComponent = true;
+    [SerializeField] private bool enemyComponent = true; // todo remove
+    [SerializeField] private InfantryConfig enemyInfantryConfig;
     [SerializeField] int unitsCount = 10;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform targetPoint;
@@ -28,7 +29,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private VehicleConfig foeVehicle;
     [SerializeField] private WeaponConfig foeVehicleWeapon;
     [Space]
-    [SerializeField] private bool playerComponent = true;
+    [SerializeField] private bool playerComponent = true; // todo remove
     [SerializeField] private PlayerConfig playerConfig;
     [Space]
     [SerializeField] private string rewardsLayerName;
@@ -43,6 +44,7 @@ public class GameBootstrapper : MonoBehaviour {
     private RocketController rocketController;
     private WeaponController weaponController;
     private VehicleController vehicleController;
+    private InfantryController infantryController;
 
     private void Start() {
         var vehicleService = new VehicleService();
@@ -53,18 +55,19 @@ public class GameBootstrapper : MonoBehaviour {
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var playerView = new PlayerView();
-        var unitView = new EnemyView(unitVisualsPrefab);
+        var unitView = new EnemyView();
         var projectileView = new ProjectileView(bulletSystemPrefab);
         var weaponView = new WeaponView();
         var vehicleView = new VehicleView();
         var rewardView = new RewardView(rewardVisualsPrefab);
+        var infantryView = new InfantryView();
 
         projectileController = new ProjectileController(
             combatService,
             soundManager,
             projectileView
         );
-        projectileController.Init();
+        projectileController.Init(); // todo remove
 
         rocketController = new RocketController(
             rocketView, 
@@ -85,6 +88,14 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleView
         );
 
+        infantryController = new InfantryController(
+            infantryView,
+            combatService,
+            navigationService,
+            localAvoidanceService,
+            physicsService
+        );
+
         playerController = new PlayerController(
             playerView, 
             combatService,
@@ -96,26 +107,27 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         enemyController = new EnemyController(
-            localAvoidanceService,
-            navigationService,
             unitView,
+            navigationService,
             spawnPoints,
             targetPoint,
             unitsCount,
             combatService,
-            physicsService,
             
             maxVehicelCount,
             weaponController,
             vehicleController,
             foeVehicle,
-            foeVehicleWeapon
+            foeVehicleWeapon,
+            enemyInfantryConfig,
+            infantryController
         );
 
         rewardController = new RewardController(
             rewardsMediator,
             playerController,
             enemyController,
+            infantryController,
             foeVehicleWeapon,
             rewardView
         );
@@ -135,6 +147,7 @@ public class GameBootstrapper : MonoBehaviour {
         rocketController.Update();
         weaponController.Update();
         vehicleController.Update();
+        infantryController.Update();
         
         if (enemyComponent) 
             using (unitUpdateMarker.Auto()) 

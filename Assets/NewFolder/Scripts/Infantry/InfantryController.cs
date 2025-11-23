@@ -16,10 +16,12 @@ public class InfantryController {
 
     private List<InfantryModel> diedInfantry = new();
 
-    public InfantryController(InfantryView view, CombatService combatService, NavigationService navigationService) {
+    public InfantryController(InfantryView view, CombatService combatService, NavigationService navigationService, LocalAvoidanceService localAvoidanceService, PhysicsService physicsService) {
         this.view = view;
         this.combatService = combatService;
         this.navigationService = navigationService;
+        this.localAvoidanceService = localAvoidanceService;
+        this.physicsService = physicsService;
     }
 
     public IReadOnlyList<InfantryModel> DiedInfantry => diedInfantry;
@@ -35,7 +37,7 @@ public class InfantryController {
         OperateInfantry();
     }
 
-    public void SpawnInfantry(Vector3 position, bool alie, InfantryConfig config) {
+    public int SpawnInfantry(Vector3 position, bool alie, InfantryConfig config) {
         var nextId = ++idCounter;
         var model = new InfantryModel(nextId, position, config);
         registry[model.Id] = model;
@@ -44,6 +46,7 @@ public class InfantryController {
         model.AvoidanceId = localAvoidanceService.AddAgent(model.Position);
         model.PhysicsId = physicsService.RegisterPhysicsEntity(model.Position, model.PhysicsConfig.height, model.PhysicsConfig.radius);
         view.AddVisuals(model.Id, model.Position, model.VisualsPrefab);
+        return model.Id;
     }
 
     private void DeleteInfantry(InfantryModel model) {

@@ -6,16 +6,18 @@ public class RewardController {
     private readonly WeaponConfig weaponConfig;
     private readonly PlayerController playerController;
     private readonly EnemyController enemyController;
+    private readonly InfantryController infantryController;
     private readonly RewardsMediator rewardsMediator;
     private readonly RewardView view;
 
     private int idCounter;
     private Dictionary<int, RewardModel> registry = new ();
 
-    public RewardController(RewardsMediator rewardsMediator, PlayerController playerController, EnemyController enemyController, WeaponConfig weaponConfig, RewardView view) {
+    public RewardController(RewardsMediator rewardsMediator, PlayerController playerController, EnemyController enemyController, InfantryController infantryController, WeaponConfig weaponConfig, RewardView view) {
         this.rewardsMediator = rewardsMediator;
         this.playerController = playerController;
         this.enemyController = enemyController;
+        this.infantryController = infantryController;
         this.weaponConfig = weaponConfig;
         this.view = view;
     }
@@ -26,18 +28,20 @@ public class RewardController {
     }
 
     private void DiscoverRewards() {
-        foreach (var diedUnit in enemyController.GetDiedUnits()) {
-            SpawnPointReward(diedUnit);
+        foreach (var infantry in infantryController.DiedInfantry) {
+            SpawnPointReward(infantry);
         }
+        infantryController.ClearDiedRegistry();
+        
         foreach (var diedVehicle in enemyController.GetDiedVehicles()) {
             SpawnWeaponReward(diedVehicle);
         }
-        enemyController.ClearDiedRegistry();
+        infantryController.ClearDiedRegistry();
     }
 
-    private void SpawnPointReward(Unit diedUnit) {
+    private void SpawnPointReward(InfantryModel diedInfantry) {
         var nextId = ++idCounter;
-        var reward = new RewardModel { Id = nextId, Position = diedUnit.Position, RewardType = RewardType.Points, WeaponConfig = null };
+        var reward = new RewardModel { Id = nextId, Position = diedInfantry.Position, RewardType = RewardType.Points, WeaponConfig = null };
         reward.SpatialId = rewardsMediator.AddRewardPoint(reward.Position, 2f);
         registry[reward.SpatialId] = reward;
         view.SpawnPointReward(reward.Id, reward.Position);

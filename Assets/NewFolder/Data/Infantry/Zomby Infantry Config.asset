@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01f54c4dc44e4f5fb2082850f217b1c, type: 3}
+  m_Name: Zomby Infantry Config
+  m_EditorClassIdentifier: NewFolder::InfantryConfig
+  maxHealth: 5
+  attackCooldown: 1
+  damage: 1
+  visualsPrefab: {fileID: 414806356285922434, guid: 6d206294f353a4dba8c27126d4edce39, type: 3}
+  physicsConfig:
+    height: 0.5
+    radius: 0.15
