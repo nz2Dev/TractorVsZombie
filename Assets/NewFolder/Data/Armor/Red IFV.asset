@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d2be9bf000544240ba611352d0bc16b, type: 3}
+  m_Name: Red IFV
+  m_EditorClassIdentifier: NewFolder::ArmorConfig
+  maxHealth: 5
+  vehicleConfig: {fileID: 11400000, guid: cc75ee6029df940998a13a6d5602305a, type: 2}
+  weaponConfig: {fileID: 11400000, guid: bbf335660863d4142b04746d3fe8217a, type: 2}

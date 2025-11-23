@@ -25,6 +25,7 @@ public class InfantryController {
     }
 
     public IReadOnlyList<InfantryModel> DiedInfantry => diedInfantry;
+    public int InfantryCount => registry.Count;
 
     public void ClearDiedRegistry() => diedInfantry.Clear();
 

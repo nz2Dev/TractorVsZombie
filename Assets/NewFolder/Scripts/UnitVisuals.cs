@@ -2,6 +2,7 @@ using System;
 
 using UnityEngine;
 
+// todo delete
 public class UnitVisuals : MonoBehaviour {
     
     private Animator animator;

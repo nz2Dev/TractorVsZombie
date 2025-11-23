@@ -26,8 +26,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private UnitVisuals unitVisualsPrefab;
     [Space]
     [SerializeField] private int maxVehicelCount = 10;
-    [SerializeField] private VehicleConfig foeVehicle;
-    [SerializeField] private WeaponConfig foeVehicleWeapon;
+    [SerializeField] private ArmorConfig enemyArmorConfig;
     [Space]
     [SerializeField] private bool playerComponent = true; // todo remove
     [SerializeField] private PlayerConfig playerConfig;
@@ -45,6 +44,7 @@ public class GameBootstrapper : MonoBehaviour {
     private WeaponController weaponController;
     private VehicleController vehicleController;
     private InfantryController infantryController;
+    private ArmorController armorController;
 
     private void Start() {
         var vehicleService = new VehicleService();
@@ -96,6 +96,13 @@ public class GameBootstrapper : MonoBehaviour {
             physicsService
         );
 
+        armorController = new ArmorController(
+            combatService,
+            navigationService,
+            weaponController,
+            vehicleController
+        );
+
         playerController = new PlayerController(
             playerView, 
             combatService,
@@ -112,24 +119,20 @@ public class GameBootstrapper : MonoBehaviour {
             spawnPoints,
             targetPoint,
             unitsCount,
-            combatService,
-            
-            maxVehicelCount,
-            weaponController,
-            vehicleController,
-            foeVehicle,
-            foeVehicleWeapon,
             enemyInfantryConfig,
-            infantryController
+            infantryController,
+            maxVehicelCount,
+            enemyArmorConfig,
+            armorController,
+            vehicleController
         );
 
         rewardController = new RewardController(
+            rewardView,
             rewardsMediator,
             playerController,
-            enemyController,
             infantryController,
-            foeVehicleWeapon,
-            rewardView
+            armorController
         );
 
         if (playerComponent) playerController.Init();
@@ -148,6 +151,7 @@ public class GameBootstrapper : MonoBehaviour {
         weaponController.Update();
         vehicleController.Update();
         infantryController.Update();
+        armorController.Update();
         
         if (enemyComponent) 
             using (unitUpdateMarker.Auto()) 
