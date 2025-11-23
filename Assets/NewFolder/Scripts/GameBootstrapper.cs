@@ -7,28 +7,25 @@ using UnityEngine;
 public class GameBootstrapper : MonoBehaviour {
     
     [SerializeField] private RocketView rocketView; // todo remove monobehaviour inheritance
-    [SerializeField] private ParticleSystem bulletSystemPrefab;
+    [SerializeField] private ProjectileView projectileView;
     [Space]
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
+    [SerializeField] private FlowFieldsSurface flowFieldsSurface;
+    [SerializeField] private ORCAEnvironment orcaEnvironment;
     [Space]
     [SerializeField] private string physicsServiceLayer;
     [SerializeField] private string combatServiceLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
     [Space]
-    [SerializeField] private bool enemyComponent = true; // todo remove
     [SerializeField] private InfantryConfig enemyInfantryConfig;
     [SerializeField] int unitsCount = 10;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform targetPoint;
-    [SerializeField] private FlowFieldsSurface flowFieldsSurface;
-    [SerializeField] private ORCAEnvironment orcaEnvironment;
-    [SerializeField] private UnitVisuals unitVisualsPrefab;
     [Space]
     [SerializeField] private int maxVehicelCount = 10;
     [SerializeField] private ArmorConfig enemyArmorConfig;
     [Space]
-    [SerializeField] private bool playerComponent = true; // todo remove
     [SerializeField] private PlayerConfig playerConfig;
     [Space]
     [SerializeField] private string rewardsLayerName;
@@ -47,16 +44,20 @@ public class GameBootstrapper : MonoBehaviour {
     private ArmorController armorController;
 
     private void Start() {
+        Build();
+        Init();
+    }
+
+    private void Build() {
+        combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), combatServiceEnvironmentMask);
         var vehicleService = new VehicleService();
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
-        combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), combatServiceEnvironmentMask);
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var playerView = new PlayerView();
         var unitView = new EnemyView();
-        var projectileView = new ProjectileView(bulletSystemPrefab);
         var weaponView = new WeaponView();
         var vehicleView = new VehicleView();
         var rewardView = new RewardView(rewardVisualsPrefab);
@@ -67,7 +68,6 @@ public class GameBootstrapper : MonoBehaviour {
             soundManager,
             projectileView
         );
-        projectileController.Init(); // todo remove
 
         rocketController = new RocketController(
             rocketView, 
@@ -134,14 +134,12 @@ public class GameBootstrapper : MonoBehaviour {
             infantryController,
             armorController
         );
-
-        if (playerComponent) playerController.Init();
-        if (enemyComponent) enemyController.Init();
     }
 
-    private static readonly ProfilerMarker cameraUpdateMarker = new ProfilerMarker("Game.CameraController");
-    private static readonly ProfilerMarker unitUpdateMarker = new ProfilerMarker("Game.UnitController");
-    private static readonly ProfilerMarker playerUpdateMarker = new ProfilerMarker("Game.PlayerController");
+    private void Init() {
+        playerController.Init();
+        enemyController.Init();
+    }
 
     private void Update() {
         combatService.UpdateSpatialTree();
@@ -153,13 +151,8 @@ public class GameBootstrapper : MonoBehaviour {
         infantryController.Update();
         armorController.Update();
         
-        if (enemyComponent) 
-            using (unitUpdateMarker.Auto()) 
-                enemyController.Update();
-
-        if (playerComponent)
-            using (playerUpdateMarker.Auto())
-                playerController.Update();
+        enemyController.Update();
+        playerController.Update();
 
         rewardController.Update();
     }

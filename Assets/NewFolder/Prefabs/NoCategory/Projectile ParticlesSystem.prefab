@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6041597005441802573}
   - component: {fileID: 2566709565796128965}
   m_Layer: 0
-  m_Name: TurelBulletProjectiles
+  m_Name: Projectile ParticlesSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -3,17 +3,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class ProjectileView {
+public class ProjectileView : MonoBehaviour {
+
+    [SerializeField] private ParticleSystem bulletSystemPrefab;
 
     private ParticleSystem bulletSystem;
-
-    private ParticleSystem bulletSystemPrefab;
     private ParticleSystem.Particle[] bulletParticles;
     private List<Vector4> customData;
-
-    public ProjectileView(ParticleSystem bulletSystemPrefab) {
-        this.bulletSystemPrefab = bulletSystemPrefab;
-    }
 
     internal void Start() {
         bulletSystem = GameObject.Instantiate(bulletSystemPrefab);
