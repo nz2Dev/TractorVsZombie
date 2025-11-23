@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::ArmorConfig
   maxHealth: 5
   vehicleConfig: {fileID: 11400000, guid: cc75ee6029df940998a13a6d5602305a, type: 2}
-  weaponConfig: {fileID: 11400000, guid: bbf335660863d4142b04746d3fe8217a, type: 2}
+  weaponConfig: {fileID: 11400000, guid: 6c348206c4e5046d4bde12b5c4a3cd9d, type: 2}

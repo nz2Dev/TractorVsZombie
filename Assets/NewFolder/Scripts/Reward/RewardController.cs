@@ -34,7 +34,7 @@ public class RewardController {
         foreach (var diedArmor in armorController.DiedArmor) {
             SpawnWeaponReward(diedArmor);
         }
-        infantryController.ClearDiedRegistry();
+        armorController.ClearDiedRegistry();
     }
 
     private void SpawnPointReward(InfantryModel diedInfantry) {
