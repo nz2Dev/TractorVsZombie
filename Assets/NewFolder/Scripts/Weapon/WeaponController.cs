@@ -9,7 +9,6 @@ public class WeaponController {
     private readonly WeaponView view;
     private readonly RocketController rocketController;
     private readonly ProjectileController projectileController;
-    private readonly CombatService combatService;
 
     private int idCounter;
     private Dictionary<int, WeaponModel> registry = new ();
@@ -18,11 +17,10 @@ public class WeaponController {
         this.view = view;
         this.rocketController = rocketController;
         this.projectileController = projectileController;
-        this.combatService = combatService;
     }
 
     public void Update() {
-        OperateWeapons();
+        UpdateFire();
     }
 
     public int SpawnWeapon(int combatId, Vector3 position, WeaponConfig config) {
@@ -31,6 +29,13 @@ public class WeaponController {
         registry[nextId] = model;
         view.AddWeapon(model.Id, position, model.VisualsPrefab);
         return model.Id;
+    }
+
+    public void AimWeapon(int weaponId, Vector3 target) {
+        var weapon = registry[weaponId];
+        var aimInput = new AimInput { deltaTime = Time.deltaTime, position = weapon.Position, previousAim = weapon.AimPoint, targetAim = target };
+        weapon.AimPoint = AimStrategy.Evaluate(weapon.AimConfig, aimInput);
+        view.UpdateAim(weapon.Id, weapon.AimPoint, weapon.BallisticConfig);
     }
 
     public void MoveWeapon(int weaponId, Vector3 position) {
@@ -44,16 +49,8 @@ public class WeaponController {
         registry.Remove(weaponId);
     }
 
-    private void OperateWeapons() {
+    private void UpdateFire() {
         foreach (var model in registry.Values) {
-            var enemySearchRadius = model.AimConfig.range;
-            
-            if (combatService.GetClosestEnemyAgentInRange(model.CombatId, enemySearchRadius, out var agentInfo)) {
-                var aimInput = new AimInput { deltaTime = Time.deltaTime, position = model.Position, previousAim = model.AimPoint, targetAim = agentInfo.position };
-                model.AimPoint = AimStrategy.Evaluate(model.AimConfig, aimInput);
-                view.UpdateAim(model.Id, model.AimPoint, model.BallisticConfig);
-            }
-            
             if (model.LastShootTime + model.CooldownSec < Time.time) {
                 model.LastShootTime = Time.time;
                 FireBallistic(model);

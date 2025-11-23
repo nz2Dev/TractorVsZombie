@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -28,8 +29,8 @@ public class ArmorController {
         ReadVehiclesCombat();
         RemoveDeadArmor();
         SyncVehiclesPositions();
-        // todo implemet operate weapons here and remove from weapons controller
         UpdateVehicleNavigation();
+        OperateCombat();
     }
 
     public int SpawnArmor(Vector3 position, ArmorConfig armorConfig) {
@@ -100,6 +101,15 @@ public class ArmorController {
 
             var flowVector = navigationService.GetFlowVector(model.Position);
             vehicleController.SteerVehicleToward(model.VehicleId, flowVector);
+        }
+    }
+
+    private void OperateCombat() {
+        foreach (var model in registry.Values) {
+            var enemySearchRadius = model.WeaponConfig.aimConfig.range;
+            if (combatService.GetClosestEnemyAgentInRange(model.CombatId, enemySearchRadius, out var agentInfo)) {
+                weaponController.AimWeapon(model.WeaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
+            }
         }
     }
 }
