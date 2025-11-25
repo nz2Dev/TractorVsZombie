@@ -117,7 +117,8 @@ public class GameBootstrapper : MonoBehaviour {
             soundManager,
             playerConfig,
             vehicleController,
-            platformController
+            platformController,
+            weaponController
         );
 
         enemyController = new EnemyController(

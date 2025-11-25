@@ -20,7 +20,6 @@ public class PlatformController {
 
     public void Update() {
         SyncPositions();
-        OperateWeapons();
     }
     
     public int SpawnPlatform(Vector3 position, PlatformConfig config, int headVehicleId) {
@@ -35,8 +34,15 @@ public class PlatformController {
         return platform.Id;
     }
 
-    public int GetPlatformVehicleId(int platformId) {
-        return registry[platformId].VehicleId;
+    public PlatformState ReadPlatformState(int platformId) {
+        var platform = registry[platformId];
+        return new PlatformState {
+            position = platform.Position,
+            combatId = platform.CombatId,
+            vehicleId = platform.VehicleId,
+            weaponId = platform.WeaponId,
+            weaponConfig = platform.WeaponConfig
+        };
     }
 
     public void SetWeapon(int platformId, WeaponConfig weaponConfig) {
@@ -50,15 +56,6 @@ public class PlatformController {
             host.Position = vehicleController.GetVehiclePosition(host.VehicleId);
             weaponController.MoveWeapon(host.WeaponId, host.Position);
             combatService.UpdateAgentPosition(host.CombatId, host.Position);
-        }
-    }
-
-    private void OperateWeapons() {
-        foreach (var platform in registry.Values) {
-            var enemySearchRadius = platform.WeaponConfig.aimConfig.range;
-            if (combatService.GetClosestEnemyAgentInRange(platform.CombatId, enemySearchRadius, out var agentInfo)) {
-                weaponController.AimWeapon(platform.WeaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
-            }
         }
     }
 

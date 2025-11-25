@@ -8,7 +8,7 @@ public class PlayerModel {
     public int DriverVehicleId;
     public int DriverCombatId;
     public Vector3 DriverPosition;
-    public List<int> AttachedPlatforms { get; private set; } = new ();
+    public List<int> AttachedPlatformIds { get; private set; } = new ();
 
     public PlayerModel(PlayerConfig config) {
         this.config = config;
