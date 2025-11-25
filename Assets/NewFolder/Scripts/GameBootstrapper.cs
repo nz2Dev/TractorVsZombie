@@ -43,6 +43,7 @@ public class GameBootstrapper : MonoBehaviour {
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
+    private DriverController driverController;
     private ArmorAIController armorAIController;
 
     private void Start() {
@@ -111,6 +112,11 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController
         );
 
+        driverController = new DriverController(
+            combatService,
+            vehicleController
+        );
+
         armorAIController = new ArmorAIController(
             combatService,
             navigationService,
@@ -121,12 +127,12 @@ public class GameBootstrapper : MonoBehaviour {
 
         playerController = new PlayerController(
             playerView, 
+            playerConfig,
             combatService,
             cameraManager,
-            playerConfig,
-            vehicleController,
+            weaponController,
             platformController,
-            weaponController
+            driverController
         );
 
         enemyController = new EnemyController(
@@ -165,6 +171,7 @@ public class GameBootstrapper : MonoBehaviour {
         infantryController.Update();
         armorController.Update();
         platformController.Update();
+        driverController.Update();
         
         armorAIController.Update();
 

@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 285d6c200e8e14d27b11009ebaef32ed, type: 3}
   m_Name: Tractor Vehicle
   m_EditorClassIdentifier: NewFolder::VehicleConfig
+  ramData:
+    enabled: 1
+    impactSFX:
+    - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
+    radius: 0.5
   soundData:
     engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   drivingData:
