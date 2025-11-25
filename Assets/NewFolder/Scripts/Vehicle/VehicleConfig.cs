@@ -18,8 +18,16 @@ public struct DrivingData {
     public float powerAccelerationSpeed;
 }
 
+[Serializable]
+public struct RamData {
+    public bool enabled;
+    public AudioClip[] impactSFX;
+    public float radius;
+}
+
 [CreateAssetMenu(fileName = "VehicleConfig", menuName = "VehicleConfig", order = 0)]
 public class VehicleConfig : ScriptableObject {
+    public RamData ramData;
     public SoundData soundData;
     public DrivingData drivingData;
     public VehicleVisuals visualsPrefab;

@@ -86,6 +86,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         vehicleController = new VehicleController(
             vehicleService,
+            combatService,
             soundManager,
             vehicleView
         );
@@ -99,7 +100,6 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         armorController = new ArmorController(
-            soundManager,
             combatService,
             weaponController,
             vehicleController
@@ -123,7 +123,6 @@ public class GameBootstrapper : MonoBehaviour {
             playerView, 
             combatService,
             cameraManager,
-            soundManager,
             playerConfig,
             vehicleController,
             platformController,

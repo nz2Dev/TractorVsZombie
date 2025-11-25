@@ -5,28 +5,32 @@ using UnityEngine;
 public class VehicleController {
 
     private readonly VehicleView view;
+    private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
     private readonly SoundManager soundManager;
 
     private int idCounter;
     private Dictionary<int, VehicleModel> registry = new ();
 
-    public VehicleController(VehicleService vehicleService, SoundManager soundManager, VehicleView view) {
+    public VehicleController(VehicleService vehicleService, CombatService combatService, SoundManager soundManager, VehicleView view) {
         this.vehicleService = vehicleService;
+        this.combatService = combatService;
         this.soundManager = soundManager;
         this.view = view;
     }
 
     public void Update() {
+        UpdateVehicleOrientation();
         UpdateVehiclePhysics();
         UpdateVehicleSounds();
-        UpdateVehicleOrientation();
+        ComputeRamDamage();
     }
 
-    public int SpawnVehicle(Vector3 position, VehicleConfig vehicleConfig) {
+    public int SpawnVehicle(Vector3 position, int ramCombatId, VehicleConfig vehicleConfig) {
         var nextId = ++idCounter;
         var model = new VehicleModel(nextId, position, vehicleConfig);
         registry[nextId] = model;
+        model.RamCombatId = ramCombatId;
         model.PhysicsId = vehicleService.CreateVehicle(model.Position, model.PhysicsPrefab);
         if (model.EngineIdleSound != null) {
             model.SoundSourceId = soundManager.StartLoop(model.Position, model.EngineIdleSound);
@@ -88,6 +92,19 @@ public class VehicleController {
         var headModel = registry[headVehicleId];
         var tailModel = registry[tailVehicleId];
         vehicleService.MakeTowingConnection(headModel.PhysicsId, tailModel.PhysicsId);
+    }
+
+    private void ComputeRamDamage() {
+        foreach (var vehicle in registry.Values) {
+            if (!vehicle.RamData.enabled)
+                continue;
+
+            var affectedCount = combatService.ApplyExplosionDamage(vehicle.RamCombatId, vehicle.Position, vehicle.RamData.radius, damage: 0);
+            for (int i = 0; i < affectedCount; i++) {
+                var position = vehicle.Position + Random.onUnitSphere * vehicle.RamData.radius;
+                soundManager.PlayEffectDelayed(position, i * 0.05f, vehicle.RamData.impactSFX);
+            }    
+        }
     }
 
     private void UpdateVehiclePhysics() {

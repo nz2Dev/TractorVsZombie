@@ -12,17 +12,15 @@ public class PlayerController {
 
     private readonly CombatService combatService;
     private readonly CameraManager cameraManager;
-    private readonly SoundManager soundManager;
 
     private readonly PlayerModel model;
 
     public PlayerController(PlayerView view, CombatService combatService, CameraManager cameraManager,
-        SoundManager soundManager, PlayerConfig config, VehicleController vehicleController, PlatformController platformController, WeaponController weaponController) {
+        PlayerConfig config, VehicleController vehicleController, PlatformController platformController, WeaponController weaponController) {
         this.combatService = combatService;
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
-        this.soundManager = soundManager;
 
         this.vehicleController = vehicleController;
         model = new PlayerModel(config);
@@ -50,7 +48,6 @@ public class PlayerController {
     public void Update() {
         SyncDriveVehiclePositions();
         DriveHeadVehicle();
-        UpdateDriverRamCombat();
         OperatePlatforms();
         UpdateCamera();
     }
@@ -69,8 +66,8 @@ public class PlayerController {
     }
 
     private void SpawnDriverVehicle(Vector3 driveVehiclePosition) {
-        model.DriverVehicleId = vehicleController.SpawnVehicle(driveVehiclePosition, model.DriverVehicleConfig);
         model.DriverCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
+        model.DriverVehicleId = vehicleController.SpawnVehicle(driveVehiclePosition, model.DriverCombatId, model.DriverVehicleConfig);
     }
 
     private void SyncDriveVehiclePositions() {
@@ -85,14 +82,6 @@ public class PlayerController {
         var gasInput = Input.GetAxis("Vertical");
         var boost = Input.GetKey(KeyCode.Space);
         vehicleController.DriveVehicle(model.DriverVehicleId, gasInput, boost);
-    }
-
-    private void UpdateDriverRamCombat() {
-        var affectedCount = combatService.ApplyExplosionDamage(model.DriverCombatId, model.DriverPosition, model.DriverRamRadius, damage: 0);
-        for (int i = 0; i < affectedCount; i++) {
-            var position = model.DriverPosition + UnityEngine.Random.onUnitSphere * model.DriverRamRadius;
-            soundManager.PlayEffectDelayed(position, i * 0.05f, model.DriverRamImpactSound);
-        }
     }
 
     private int SpawnPlatform(Vector3 position, PlatformConfig config) {

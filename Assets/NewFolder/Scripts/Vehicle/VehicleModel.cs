@@ -6,6 +6,7 @@ public class VehicleModel {
 
     public int Id { get; }
     public int PhysicsId { get; set; }
+    public int RamCombatId { get; set; }
     public int SoundSourceId { get; set; } = -1;
     public VehicleState PhysicsPose { get; set; }
     public float MotorPower { get; set; }
@@ -25,5 +26,6 @@ public class VehicleModel {
     public VehicleVisuals VisualsPrefab => config.visualsPrefab;
     public AudioClip EngineIdleSound => config.soundData.engineIdleSound;
     public DrivingData DrivingData => config.drivingData;
+    public RamData RamData => config.ramData;
         
 }

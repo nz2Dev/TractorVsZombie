@@ -28,7 +28,7 @@ public class PlatformController {
         registry[platform.Id] = platform;
         
         platform.CombatId = combatService.RegisterAgent(position, alie: true);
-        platform.VehicleId = vehicleController.SpawnVehicle(position, platform.VehicleConfig);
+        platform.VehicleId = vehicleController.SpawnVehicle(position, platform.CombatId, platform.VehicleConfig);
         vehicleController.ConnectVehicles(headVehicleId, platform.VehicleId);
 
         return platform.Id;
