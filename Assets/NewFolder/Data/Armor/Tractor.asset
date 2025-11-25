@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d2be9bf000544240ba611352d0bc16b, type: 3}
-  m_Name: Red IFV
+  m_Name: Tractor
   m_EditorClassIdentifier: NewFolder::ArmorConfig
   maxHealth: 5
-  vehicleConfig: {fileID: 11400000, guid: cc75ee6029df940998a13a6d5602305a, type: 2}
-  weaponConfig: {fileID: 11400000, guid: 6c348206c4e5046d4bde12b5c4a3cd9d, type: 2}
+  vehicleConfig: {fileID: 11400000, guid: 017779e2fdfce455a9125f5278b4a93c, type: 2}
+  weaponConfig: {fileID: 0}
   applyRamDamage: 1
   ramImpactSFX:
   - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}

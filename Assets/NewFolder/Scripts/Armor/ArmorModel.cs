@@ -18,8 +18,11 @@ public class ArmorModel {
     public int WeaponId { get; set; }
     public int Health { get; set; }
 
+    public int MaxHealth => config.maxHealth;
     public VehicleConfig VehicleConfig => config.vehicleConfig;
     public WeaponConfig WeaponConfig => config.weaponConfig;
-    public int MaxHealth => config.maxHealth;
+    public bool CanApplyRamDamage => config.applyRamDamage;
+    public float RamRadius => config.ramRadius;
+    public AudioClip[] RamImpactSFX => config.ramImpactSFX;
 
 }

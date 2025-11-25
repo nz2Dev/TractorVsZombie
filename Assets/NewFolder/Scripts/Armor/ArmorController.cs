@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ArmorController {
 
+    private readonly SoundManager soundManager;
     private readonly CombatService combatService;
     private readonly WeaponController weaponController;
     private readonly VehicleController vehicleController;
@@ -13,10 +14,11 @@ public class ArmorController {
     private readonly Dictionary<int, ArmorModel> registry = new ();
     private readonly List<ArmorModel> diedArmor = new ();
 
-    public ArmorController(CombatService combatService, WeaponController weaponController, VehicleController vehicleController) {
+    public ArmorController(SoundManager soundManager, CombatService combatService, WeaponController weaponController, VehicleController vehicleController) {
         this.combatService = combatService;
         this.weaponController = weaponController;
         this.vehicleController = vehicleController;
+        this.soundManager = soundManager;
     }
 
     public int ArmorCount => registry.Count;
@@ -27,6 +29,7 @@ public class ArmorController {
         ReadVehiclesCombat();
         RemoveDeadArmor();
         SyncVehiclesPositions();
+        ComputeRamDamage();
     }
 
     public int SpawnArmor(Vector3 position, ArmorConfig armorConfig) {
@@ -95,6 +98,19 @@ public class ArmorController {
             model.Position = vehicleController.GetVehiclePosition(model.VehicleId);
             weaponController.MoveWeapon(model.WeaponId, model.Position);
             combatService.UpdateAgentPosition(model.CombatId, model.Position);
+        }
+    }
+
+    private void ComputeRamDamage() {
+        foreach (var armor in registry.Values) {
+            if (!armor.CanApplyRamDamage)
+                continue;
+
+            var affectedCount = combatService.ApplyExplosionDamage(armor.CombatId, armor.Position, armor.RamRadius, damage: 0);
+            for (int i = 0; i < affectedCount; i++) {
+                var position = armor.Position + UnityEngine.Random.onUnitSphere * armor.RamRadius;
+                soundManager.PlayEffectDelayed(position, i * 0.05f, armor.RamImpactSFX);
+            }    
         }
     }
 

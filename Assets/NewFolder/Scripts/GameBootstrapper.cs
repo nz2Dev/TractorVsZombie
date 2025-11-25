@@ -99,6 +99,7 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         armorController = new ArmorController(
+            soundManager,
             combatService,
             weaponController,
             vehicleController
