@@ -43,6 +43,7 @@ public class GameBootstrapper : MonoBehaviour {
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
+    private ArmorAIController armorAIController;
 
     private void Start() {
         Build();
@@ -99,13 +100,20 @@ public class GameBootstrapper : MonoBehaviour {
 
         armorController = new ArmorController(
             combatService,
-            navigationService,
             weaponController,
             vehicleController
         );
 
         platformController = new PlatformController(
             combatService,
+            vehicleController,
+            weaponController
+        );
+
+        armorAIController = new ArmorAIController(
+            combatService,
+            navigationService,
+            armorController,
             vehicleController,
             weaponController
         );
@@ -123,7 +131,6 @@ public class GameBootstrapper : MonoBehaviour {
 
         enemyController = new EnemyController(
             unitView,
-            navigationService,
             spawnPoints,
             targetPoint,
             unitsCount,
@@ -132,7 +139,7 @@ public class GameBootstrapper : MonoBehaviour {
             maxVehicelCount,
             enemyArmorConfig,
             armorController,
-            vehicleController
+            armorAIController
         );
 
         rewardController = new RewardController(
@@ -146,7 +153,6 @@ public class GameBootstrapper : MonoBehaviour {
 
     private void Init() {
         playerController.Init();
-        enemyController.Init();
     }
 
     private void Update() {
@@ -160,6 +166,8 @@ public class GameBootstrapper : MonoBehaviour {
         armorController.Update();
         platformController.Update();
         
+        armorAIController.Update();
+
         enemyController.Update();
         playerController.Update();
 

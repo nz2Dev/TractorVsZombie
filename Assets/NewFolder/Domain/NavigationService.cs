@@ -17,7 +17,6 @@ public class NavigationService {
         new Vector3(-0.71f, 0, 0.71f),
     };
 
-    private Vector3 goal;
     private readonly FlowFieldsSurface surface;
 
     public NavigationService(FlowFieldsSurface surface) {
@@ -29,12 +28,7 @@ public class NavigationService {
     }
 
     public void SetGoal(Vector3 worldSpacePosition) {
-        this.goal = worldSpacePosition;
         surface.SetGoal(worldSpacePosition);
-    }
-
-    public Vector3 GetGoal() {
-        return this.goal;
     }
 
     private Vector3 MultiSampleFlowVector(Vector3 worldPos) {

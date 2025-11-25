@@ -6,7 +6,6 @@ using UnityEngine;
 public class ArmorController {
 
     private readonly CombatService combatService;
-    private readonly NavigationService navigationService;
     private readonly WeaponController weaponController;
     private readonly VehicleController vehicleController;
 
@@ -14,9 +13,8 @@ public class ArmorController {
     private readonly Dictionary<int, ArmorModel> registry = new ();
     private readonly List<ArmorModel> diedArmor = new ();
 
-    public ArmorController(CombatService combatService, NavigationService navigationService, WeaponController weaponController, VehicleController vehicleController) {
+    public ArmorController(CombatService combatService, WeaponController weaponController, VehicleController vehicleController) {
         this.combatService = combatService;
-        this.navigationService = navigationService;
         this.weaponController = weaponController;
         this.vehicleController = vehicleController;
     }
@@ -29,8 +27,6 @@ public class ArmorController {
         ReadVehiclesCombat();
         RemoveDeadArmor();
         SyncVehiclesPositions();
-        UpdateVehicleNavigation();
-        OperateCombat();
     }
 
     public int SpawnArmor(Vector3 position, ArmorConfig armorConfig) {
@@ -49,6 +45,21 @@ public class ArmorController {
         combatService.UnregisterAgent(model.CombatId);
         weaponController.DeleteWeapon(model.WeaponId);
         registry.Remove(model.Id);
+    }
+
+    public void WriteDeadArmorFiltered(List<int> armorIds) {
+        armorIds.RemoveAll(id => !registry.ContainsKey(id));
+    }
+    
+    public ArmorState ReadArmorState(int armorId) {
+        var armor = registry[armorId];
+        return new ArmorState {
+            position = armor.Position,
+            combatId = armor.CombatId,
+            vehicleId = armor.VehicleId,
+            weaponId = armor.WeaponId,
+            weaponConfig = armor.WeaponConfig
+        };
     }
 
     private void ReadVehiclesCombat() {
@@ -87,29 +98,4 @@ public class ArmorController {
         }
     }
 
-    private void UpdateVehicleNavigation() {
-        foreach (var model in registry.Values) {
-            var distance = Vector3.Distance(navigationService.GetGoal(), model.Position);
-
-            var gasDistance = 10;
-            var gas = Mathf.Floor(Mathf.Clamp(distance, 0, gasDistance) / gasDistance);
-            vehicleController.DriveVehicle(model.VehicleId, gas, false);
-            
-            var stopDistance = 5f;
-            var brakes = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
-            vehicleController.BrakeVehicle(model.VehicleId, brakes);
-
-            var flowVector = navigationService.GetFlowVector(model.Position);
-            vehicleController.SteerVehicleToward(model.VehicleId, flowVector);
-        }
-    }
-
-    private void OperateCombat() {
-        foreach (var model in registry.Values) {
-            var enemySearchRadius = model.WeaponConfig.aimConfig.range;
-            if (combatService.GetClosestEnemyAgentInRange(model.CombatId, enemySearchRadius, out var agentInfo)) {
-                weaponController.AimWeapon(model.WeaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
-            }
-        }
-    }
 }

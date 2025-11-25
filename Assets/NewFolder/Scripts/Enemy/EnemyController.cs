@@ -10,8 +10,7 @@ public class EnemyController {
     private readonly EnemyView enemyView;
     private readonly InfantryController infantryController;
     private readonly ArmorController armorController;
-    private readonly NavigationService navigationService;
-    private readonly VehicleController vehicleController;
+    private readonly ArmorAIController armorAIController;
 
     private float lastTimeProduced = float.MinValue;
     private Transform[] spawnPoints;
@@ -25,11 +24,10 @@ public class EnemyController {
     private int lastSpawnIndex;
     private readonly ArmorConfig armorConfig;
 
-    public EnemyController(EnemyView crowdView, NavigationService navigationService,
+    public EnemyController(EnemyView crowdView,
         Transform[] spawnPoints, Transform targetPoint, int unitsCount, InfantryConfig infantryConfig, InfantryController infantryController,
-        int maxVehiclesCount, ArmorConfig armorConfig, ArmorController armorController, VehicleController vehicleController) {
+        int maxVehiclesCount, ArmorConfig armorConfig, ArmorController armorController, ArmorAIController armorAIController) {
         this.enemyView = crowdView;
-        this.navigationService = navigationService;
         this.spawnPoints = spawnPoints;
         this.targetPoint = targetPoint;
         this.maxInfantryCount = unitsCount;
@@ -40,17 +38,14 @@ public class EnemyController {
         this.maxArmorCount = maxVehiclesCount;
         this.armorConfig = armorConfig;
         this.armorController = armorController;
-        this.vehicleController = vehicleController;
-    }
-
-    public void Init() {
-        navigationService.SetGoal(targetPoint.position);
+        this.armorAIController = armorAIController;
     }
 
     public void Update() {
-        UpdateGoal();
         ProduceNewInfantry();
+        
         ProduceNewArmor();
+        UpdateAI();
     }
 
     private void ProduceNewInfantry() {
@@ -76,13 +71,12 @@ public class EnemyController {
         lastTimeProducedVehicle = Time.time;
         var nextSpawnIndex = lastSpawnIndex++ % vehiclesSpawnPoints.Length;
         var nextSpawnPoint = vehiclesSpawnPoints[nextSpawnIndex].position;
-        armorController.SpawnArmor(nextSpawnPoint, armorConfig);
+        var armorId = armorController.SpawnArmor(nextSpawnPoint, armorConfig);
+        armorAIController.TakeUnderControl(armorId);
     }
 
-    private void UpdateGoal() {
-        var tractorPosition = vehicleController.GetVehiclePosition(1);
-        targetPoint.position = tractorPosition;
-        navigationService.SetGoal(tractorPosition);
+    private void UpdateAI() {
+        armorAIController.SetGoal(targetPoint.position);
     }
 
 }
