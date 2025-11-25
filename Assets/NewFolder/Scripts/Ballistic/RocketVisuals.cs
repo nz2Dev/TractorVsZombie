@@ -19,7 +19,6 @@ public class RocketVisuals : MonoBehaviour {
 
     private void Update() {
         var progress = (Time.time - startTime) / flyDuration;
-        Debug.Log("l: " + launchPoint + " f: " + landPoint + " p: " + progress);
         transform.position = GetPointOnCurve(launchPoint, landPoint, flyCurve, flyHeight, progress);
 
         var flyTangent = GetTangent(launchPoint, landPoint, flyCurve, flyHeight, progress);
