@@ -6,32 +6,31 @@ using UnityEngine;
 public class PlayerController {
 
     private readonly PlayerView view;
-    private readonly WeaponController weaponController;
-    private readonly VehicleController vehicleController;
-    private readonly PlatformController platformController;
-
     private readonly CombatService combatService;
     private readonly CameraManager cameraManager;
+    private readonly WeaponController weaponController;
+    private readonly PlatformController platformController;
+    private readonly DriverController driverController;
 
     private readonly PlayerModel model;
 
-    public PlayerController(PlayerView view, CombatService combatService, CameraManager cameraManager,
-        PlayerConfig config, VehicleController vehicleController, PlatformController platformController, WeaponController weaponController) {
-        this.combatService = combatService;
+    public PlayerController(PlayerView view, PlayerConfig config, 
+        CombatService combatService, CameraManager cameraManager,
+        WeaponController weaponController, PlatformController platformController, DriverController driverController) {
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
-        this.vehicleController = vehicleController;
         this.platformController = platformController;
+        this.driverController = driverController;
         this.weaponController = weaponController;
         model = new PlayerModel(config);
     }
 
-    public Vector3 ReadPosition() => model.Position;
+    public Vector3 ReadPosition() => driverController.ReadVehiclePosition();
 
-    public void Init() {
-        cameraManager.InitTopDownFollowTarget(Vector3.zero);
-        
+    public void Init() {     
+        CreateCamera();
+
         SpawnDriver(Vector3.zero);
         for (int i = 0; i < model.MaxPlatformsCount; i++) {
             SpawnPlatform(new Vector3(0, 0, -2f + i * -2f), model.DefaultPlatformConfig);
@@ -46,38 +45,29 @@ public class PlayerController {
     }
 
     public void Update() {
-        SyncDriverPositions();
-        ControlDriverVehicle();
+        ReadDrivingInput();
         OperatePlatforms();
         UpdateCamera();
     }
 
-    public void ExtendConvoy(Vector3 position, WeaponConfig equipment) {
+    private void SpawnDriver(Vector3 position) {
+        driverController.Spawn(position, model.DriverConfig);
+    }
+
+    private void ReadDrivingInput() {
+        var steerInput = Input.GetAxis("Horizontal");
+        var gasInput = Input.GetAxis("Vertical");
+        var boost = Input.GetKey(KeyCode.Space);
+        driverController.Control(steerInput, gasInput, boost);
+    }
+
+    public void AddPlatform(Vector3 position, WeaponConfig equipment) {
         var platformId = SpawnPlatform(position, model.DefaultPlatformConfig);
         EquipePlatform(platformId, equipment);
     }
 
-    private void SpawnDriver(Vector3 driveVehiclePosition) {
-        model.DriverCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
-        model.DriverVehicleId = vehicleController.SpawnVehicle(driveVehiclePosition, model.DriverCombatId, model.DriverVehicleConfig);
-    }
-
-    private void SyncDriverPositions() {
-        model.Position = vehicleController.GetVehiclePosition(model.DriverVehicleId);
-        combatService.UpdateAgentPosition(model.DriverCombatId, model.Position);
-    }
-
-    private void ControlDriverVehicle() {
-        var steerInput = Input.GetAxis("Horizontal");
-        vehicleController.SteerVehicle(model.DriverVehicleId, steerInput);
-
-        var gasInput = Input.GetAxis("Vertical");
-        var boost = Input.GetKey(KeyCode.Space);
-        vehicleController.DriveVehicle(model.DriverVehicleId, gasInput, boost);
-    }
-
     private int SpawnPlatform(Vector3 position, PlatformConfig config) {
-        var headVehicleId = model.DriverVehicleId;
+        var headVehicleId = driverController.ReadVehicleId();
         if (model.AttachedPlatformIds.Count > 0) {
             var lastPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[^1]);
             headVehicleId = lastPlatformState.vehicleId;
@@ -103,8 +93,12 @@ public class PlayerController {
         }
     }
 
+    private void CreateCamera() {
+        cameraManager.InitTopDownFollowTarget(Vector3.zero);
+    }
+
     private void UpdateCamera() {
-        cameraManager.UpdateTopDownFollowPosition(model.Position);
+        cameraManager.UpdateTopDownFollowPosition(driverController.ReadVehiclePosition());
     }
 
 }
