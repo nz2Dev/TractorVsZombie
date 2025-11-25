@@ -61,7 +61,7 @@ public class RewardController {
             foreach (var spatialId in rewardsBuffer) {
                 var reward = registry[spatialId];
                 if (reward.RewardType == RewardType.Weapon) {
-                    playerController.SpawnHostWithWeapon(reward.Position, reward.WeaponConfig);
+                    playerController.ExtendConvoy(reward.Position, reward.WeaponConfig);
                 }
                 DeleteReward(spatialId);
             }

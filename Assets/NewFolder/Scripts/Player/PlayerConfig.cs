@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerConfig : ScriptableObject {
     public int maxTrailersCount;
     public VehicleConfig driverConfig;
-    public VehicleConfig trailerConfig;
+    public PlatformConfig platformConfig;
 
     public WeaponConfig firstWeaponConfig;
     public WeaponConfig secondWeaponConfig;

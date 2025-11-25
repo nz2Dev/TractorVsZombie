@@ -6,8 +6,8 @@ using UnityEngine;
 public class PlayerController {
 
     private readonly PlayerView view;
-    private readonly WeaponController weaponController;
     private readonly VehicleController vehicleController;
+    private readonly PlatformController platformController;
 
     private readonly CombatService combatService;
     private readonly CameraManager cameraManager;
@@ -15,18 +15,17 @@ public class PlayerController {
 
     private readonly PlayerModel model;
 
-    public PlayerController(PlayerView view, CombatService combatService, CameraManager cameraManager, 
-        SoundManager soundManager, WeaponController weaponController, 
-        PlayerConfig config, VehicleController vehicleController) {
+    public PlayerController(PlayerView view, CombatService combatService, CameraManager cameraManager,
+        SoundManager soundManager, PlayerConfig config, VehicleController vehicleController, PlatformController platformController) {
         this.combatService = combatService;
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
         this.soundManager = soundManager;
 
-        this.weaponController = weaponController;
         this.vehicleController = vehicleController;
         model = new PlayerModel(config);
+        this.platformController = platformController;
     }
 
     public void Init() {
@@ -35,28 +34,27 @@ public class PlayerController {
         SpawnDriverVehicle(Vector3.zero);
 
         for (int i = 0; i < model.MaxTrailersCount; i++) {
-            SpawnHostVehicle(new Vector3(0, 0, -2f + i * -2f));
+            SpawnPlatform(new Vector3(0, 0, -2f + i * -2f), model.DefaultPlatformConfig);
         }
 
         bool flipFlop = false;
-        foreach (var trailerHost in model.HostVehicles) {
+        foreach (var platformId in model.AttachedPlatforms) {
             flipFlop = !flipFlop;
             var weaponConfig = flipFlop ? model.FirstWeaponConfig : model.SecondWeaponConfig;
-            PutWeaponOnHost(trailerHost, weaponConfig);
+            EquipePlatform(platformId, weaponConfig);
         }
     }
 
     public void Update() {
-        SyncVehiclePositions();
+        SyncDriveVehiclePositions();
         DriveHeadVehicle();
         UpdateDriverRamCombat();
-        OperateTrailerWeapons();
         UpdateCamera();
     }
 
-    public void SpawnHostWithWeapon(Vector3 position, WeaponConfig weaponConfig) {
-        var host = SpawnHostVehicle(position);
-        PutWeaponOnHost(host, weaponConfig);
+    public void ExtendConvoy(Vector3 position, WeaponConfig equipment) {
+        var platformId = SpawnPlatform(position, model.DefaultPlatformConfig);
+        EquipePlatform(platformId, equipment);
     }
 
     public Vector3 GetPlayerPosition() {
@@ -67,20 +65,14 @@ public class PlayerController {
         cameraManager.UpdateTopDownFollowPosition(model.DriverPosition);
     }
 
-    private void SyncVehiclePositions() {
-        model.DriverPosition = vehicleController.GetVehiclePosition(model.DriverVehicleId);
-        combatService.UpdateAgentPosition(model.DriverCombatId, model.DriverPosition);
-
-        foreach (var host in model.HostVehicles) {
-            host.Position = vehicleController.GetVehiclePosition(host.VehicleId);
-            weaponController.MoveWeapon(host.WeaponId, host.Position);
-            combatService.UpdateAgentPosition(host.CombatId, host.Position);
-        }
-    }
-
     private void SpawnDriverVehicle(Vector3 driveVehiclePosition) {
         model.DriverVehicleId = vehicleController.SpawnVehicle(driveVehiclePosition, model.DriverVehicleConfig);
         model.DriverCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
+    }
+
+    private void SyncDriveVehiclePositions() {
+        model.DriverPosition = vehicleController.GetVehiclePosition(model.DriverVehicleId);
+        combatService.UpdateAgentPosition(model.DriverCombatId, model.DriverPosition);
     }
 
     private void DriveHeadVehicle() {
@@ -100,31 +92,17 @@ public class PlayerController {
         }
     }
 
-    private HostVehicle SpawnHostVehicle(Vector3 position) {
-        var combatAgentId = combatService.RegisterAgent(position, alie: true);
-        var vehicleId = vehicleController.SpawnVehicle(position, model.TrailerVehicleConfig);
-        var hostVehicle = new HostVehicle { Position = position, CombatId = combatAgentId, VehicleId = vehicleId };
-        model.HostVehicles.Add(hostVehicle);
+    private int SpawnPlatform(Vector3 position, PlatformConfig config) {
+        var headVehicleId = model.AttachedPlatforms.Count == 0 ? model.DriverVehicleId
+            : platformController.GetPlatformVehicleId(model.AttachedPlatforms[^1]);
 
-        bool isFirstTrailer = model.HostVehicles.Count == 1;
-        var headVehicleId = isFirstTrailer ? model.DriverVehicleId : model.HostVehicles[^2].VehicleId;
-        vehicleController.ConnectVehicles(headVehicleId, vehicleId);
-        return hostVehicle;
-    }
-    
-    private void PutWeaponOnHost(HostVehicle host, WeaponConfig weaponConfig) {
-        host.CombatId = combatService.RegisterAgent(host.Position, alie: true);
-        host.WeaponId = weaponController.SpawnWeapon(host.CombatId, host.Position, weaponConfig);
-        host.WeaponConfig = weaponConfig;
+        var platformId = platformController.SpawnPlatform(position, config, headVehicleId);
+        model.AttachedPlatforms.Add(platformId);
+        return platformId;
     }
 
-    private void OperateTrailerWeapons() {
-        foreach (var model in model.HostVehicles) {
-            var enemySearchRadius = model.WeaponConfig.aimConfig.range;
-            if (combatService.GetClosestEnemyAgentInRange(model.CombatId, enemySearchRadius, out var agentInfo)) {
-                weaponController.AimWeapon(model.WeaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
-            }
-        }
+    private void EquipePlatform(int platformId, WeaponConfig weaponConfig) {
+        platformController.SetWeapon(platformId, weaponConfig);
     }
 
 }
