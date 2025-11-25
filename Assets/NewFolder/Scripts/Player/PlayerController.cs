@@ -21,19 +21,19 @@ public class PlayerController {
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
-
         this.vehicleController = vehicleController;
-        model = new PlayerModel(config);
         this.platformController = platformController;
         this.weaponController = weaponController;
+        model = new PlayerModel(config);
     }
+
+    public Vector3 ReadPosition() => model.Position;
 
     public void Init() {
         cameraManager.InitTopDownFollowTarget(Vector3.zero);
         
-        SpawnDriverVehicle(Vector3.zero);
-
-        for (int i = 0; i < model.MaxTrailersCount; i++) {
+        SpawnDriver(Vector3.zero);
+        for (int i = 0; i < model.MaxPlatformsCount; i++) {
             SpawnPlatform(new Vector3(0, 0, -2f + i * -2f), model.DefaultPlatformConfig);
         }
 
@@ -46,8 +46,8 @@ public class PlayerController {
     }
 
     public void Update() {
-        SyncDriveVehiclePositions();
-        DriveHeadVehicle();
+        SyncDriverPositions();
+        ControlDriverVehicle();
         OperatePlatforms();
         UpdateCamera();
     }
@@ -57,25 +57,17 @@ public class PlayerController {
         EquipePlatform(platformId, equipment);
     }
 
-    public Vector3 GetPlayerPosition() {
-        return model.DriverPosition;
-    }
-
-    private void UpdateCamera() {
-        cameraManager.UpdateTopDownFollowPosition(model.DriverPosition);
-    }
-
-    private void SpawnDriverVehicle(Vector3 driveVehiclePosition) {
+    private void SpawnDriver(Vector3 driveVehiclePosition) {
         model.DriverCombatId = combatService.RegisterAgent(driveVehiclePosition, alie: true);
         model.DriverVehicleId = vehicleController.SpawnVehicle(driveVehiclePosition, model.DriverCombatId, model.DriverVehicleConfig);
     }
 
-    private void SyncDriveVehiclePositions() {
-        model.DriverPosition = vehicleController.GetVehiclePosition(model.DriverVehicleId);
-        combatService.UpdateAgentPosition(model.DriverCombatId, model.DriverPosition);
+    private void SyncDriverPositions() {
+        model.Position = vehicleController.GetVehiclePosition(model.DriverVehicleId);
+        combatService.UpdateAgentPosition(model.DriverCombatId, model.Position);
     }
 
-    private void DriveHeadVehicle() {
+    private void ControlDriverVehicle() {
         var steerInput = Input.GetAxis("Horizontal");
         vehicleController.SteerVehicle(model.DriverVehicleId, steerInput);
 
@@ -109,6 +101,10 @@ public class PlayerController {
                 weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
             }
         }
+    }
+
+    private void UpdateCamera() {
+        cameraManager.UpdateTopDownFollowPosition(model.Position);
     }
 
 }

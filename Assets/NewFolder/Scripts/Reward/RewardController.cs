@@ -56,7 +56,7 @@ public class RewardController {
     private List<int> rewardsBuffer = new (10);
 
     private void CollectRewards() {
-        var playerPosition = playerController.GetPlayerPosition();
+        var playerPosition = playerController.ReadPosition();
         if (rewardsMediator.CollectRewardsPoints(playerPosition, 0.5f, rewardsBuffer)) {
             foreach (var spatialId in rewardsBuffer) {
                 var reward = registry[spatialId];

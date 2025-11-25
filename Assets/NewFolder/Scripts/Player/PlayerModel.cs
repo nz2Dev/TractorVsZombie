@@ -5,22 +5,20 @@ using UnityEngine;
 public class PlayerModel {
     
     private readonly PlayerConfig config;
-    public int DriverVehicleId;
+
+    public Vector3 Position;
     public int DriverCombatId;
-    public Vector3 DriverPosition;
+    public int DriverVehicleId;
     public List<int> AttachedPlatformIds { get; private set; } = new ();
 
     public PlayerModel(PlayerConfig config) {
         this.config = config;
     }
 
-    public VehicleConfig DriverVehicleConfig => config.driverConfig;
+    public VehicleConfig DriverVehicleConfig => config.driverVehicleConfig;
+    public int MaxPlatformsCount => config.maxPlatformCount;
     public PlatformConfig DefaultPlatformConfig => config.platformConfig;
-    public float DriverRamRadius => config.driverRamRadius;
-    
-    public AudioClip[] DriverRamImpactSound => config.driverRamImpactSound;
     public WeaponConfig FirstWeaponConfig => config.firstWeaponConfig;
     public WeaponConfig SecondWeaponConfig => config.secondWeaponConfig;
-    public int MaxTrailersCount => config.maxTrailersCount;
 
 }
