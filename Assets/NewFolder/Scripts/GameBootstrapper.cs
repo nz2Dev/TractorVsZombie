@@ -162,7 +162,7 @@ public class GameBootstrapper : MonoBehaviour {
         playerController.Init();
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         combatService.UpdateSpatialTree();
 
         projectileController.Update();
