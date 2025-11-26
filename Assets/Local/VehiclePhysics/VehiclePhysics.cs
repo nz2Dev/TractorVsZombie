@@ -152,7 +152,7 @@ public class VehiclePhysics : MonoBehaviour {
     }
 
     [ContextMenu("Clear Towing Connection")]
-    private void ClearTowingConnection() {
+    public void ClearTowingConnection() {
         pullingGrabJoint.connectedBody = null;
         pullingGrabJoint.connectedAnchor = Vector3.zero;
         pullingGrabJoint.xMotion = ConfigurableJointMotion.Free;

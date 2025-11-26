@@ -94,6 +94,11 @@ public class VehicleController {
         vehicleService.MakeTowingConnection(headModel.PhysicsId, tailModel.PhysicsId);
     }
 
+    public void DisconnectVehicle(int vehicleId) {
+        var vehicle = registry[vehicleId];
+        vehicleService.ClearTowingConnection(vehicle.PhysicsId);
+    }
+
     private void ComputeRamDamage() {
         foreach (var vehicle in registry.Values) {
             if (!vehicle.RamData.enabled)

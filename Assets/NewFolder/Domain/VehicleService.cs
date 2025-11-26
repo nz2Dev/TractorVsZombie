@@ -62,6 +62,11 @@ public class VehicleService {
         tailRig.CollapseTowingConnection();
     }
 
+    public void ClearTowingConnection(int vehicleIndex) {
+        var physics = physicsRegistry[vehicleIndex];
+        physics.ClearTowingConnection();
+    }
+
     public VehicleState GetVehicleState(int vehicleId) {
         var vehiclePhysics = physicsRegistry[vehicleId];
         vehiclePhysics.FrontAxis.GetLeftWheelPose(out var fLeftPos, out var fLeftRot);

@@ -35,10 +35,10 @@ public class PlayerController {
         SpawnDriver(Vector3.zero);
 
         bool flipFlop = false;
-        for (int i = 0; i < model.MaxPlatformsCount; i++) {
+        for (int i = 0; i < model.InitPlatformCount; i++) {
             flipFlop = !flipFlop;
             var weaponConfig = flipFlop ? model.FirstWeaponConfig : model.SecondWeaponConfig;
-            SpawnPlatform(new Vector3(0, 0, -2f + i * -2f), model.DefaultPlatformConfig, weaponConfig);
+            AddPlatformToTheEnd(new Vector3(0, 0, -2f + i * -2f), model.DefaultPlatformConfig, weaponConfig);
         }
     }
 
@@ -58,7 +58,9 @@ public class PlayerController {
         var collectedRewardStates = rewardController.CollectRewards(model.Position, 0.5f);
         foreach (var rewardState in collectedRewardStates) {
             if (rewardState.RewardType == RewardType.Weapon) {
-                SpawnPlatform(rewardState.Position, model.DefaultPlatformConfig, rewardState.WeaponConfig);
+                var groundedPosition = rewardState.Position;
+                groundedPosition.y = 0;
+                PickUpPlatform(groundedPosition, model.DefaultPlatformConfig, rewardState.WeaponConfig);
             }
         }
     }
@@ -74,19 +76,38 @@ public class PlayerController {
         driverController.Control(steerInput, gasInput, boost);
     }
 
-    private void SpawnPlatform(Vector3 position, PlatformConfig config, WeaponConfig weaponConfig) {
+    private void AddPlatformToTheEnd(Vector3 position, PlatformConfig config, WeaponConfig weaponConfig) {
         var platformId = platformController.SpawnPlatform(position, config);
         platformController.SetWeapon(platformId, weaponConfig);
+        var newPlatformState = platformController.ReadPlatformState(platformId);
 
-        var headVehicleId = driverController.ReadVehicleId();
-        if (model.AttachedPlatformIds.Count > 0) {
+        int lastVehicleId;
+        if (model.AttachedPlatformIds.Count != 0) {
             var lastAttachedPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[^1]);
-            headVehicleId = lastAttachedPlatformState.vehicleId;
+            lastVehicleId = lastAttachedPlatformState.vehicleId;
+        } else {
+            lastVehicleId = driverController.ReadVehicleId();
         }
 
-        var newPlatformState = platformController.ReadPlatformState(platformId);
-        vehicleController.ConnectVehicles(headVehicleId, newPlatformState.vehicleId);
+        vehicleController.ConnectVehicles(lastVehicleId, newPlatformState.vehicleId);
         model.AttachedPlatformIds.Add(platformId);
+    }
+
+    private void PickUpPlatform(Vector3 position, PlatformConfig config, WeaponConfig weaponConfig) {
+        var platformId = platformController.SpawnPlatform(position, config);
+        platformController.SetWeapon(platformId, weaponConfig);
+        var newPlatformState = platformController.ReadPlatformState(platformId);
+
+        if (model.AttachedPlatformIds.Count > 0) {
+            var firstAttachedPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[0]);
+            var previouslyAttachedVehicleId = firstAttachedPlatformState.vehicleId;
+            vehicleController.DisconnectVehicle(previouslyAttachedVehicleId);
+            vehicleController.ConnectVehicles(newPlatformState.vehicleId, previouslyAttachedVehicleId);
+        }
+
+        var headVehicleId = driverController.ReadVehicleId();
+        vehicleController.ConnectVehicles(headVehicleId, newPlatformState.vehicleId);
+        model.AttachedPlatformIds.Insert(0, platformId);
     }
 
     private void OperatePlatforms() {

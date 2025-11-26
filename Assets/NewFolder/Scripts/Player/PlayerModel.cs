@@ -14,7 +14,7 @@ public class PlayerModel {
     }
 
     public DriverConfig DriverConfig => config.driverConfig;
-    public int MaxPlatformsCount => config.maxPlatformCount;
+    public int InitPlatformCount => config.initPlatformCount;
     public PlatformConfig DefaultPlatformConfig => config.platformConfig;
     public WeaponConfig FirstWeaponConfig => config.firstWeaponConfig;
     public WeaponConfig SecondWeaponConfig => config.secondWeaponConfig;
