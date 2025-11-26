@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c01f54c4dc44e4f5fb2082850f217b1c, type: 3}
   m_Name: Zomby Infantry Config
   m_EditorClassIdentifier: NewFolder::InfantryConfig
-  maxHealth: 5
+  maxHealth: 2
   attackCooldown: 1
   damage: 1
   visualsPrefab: {fileID: 414806356285922434, guid: 6d206294f353a4dba8c27126d4edce39, type: 3}

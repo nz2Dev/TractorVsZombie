@@ -8,46 +8,57 @@ public class PlayerController {
     private readonly PlayerView view;
     private readonly CombatService combatService;
     private readonly CameraManager cameraManager;
+    private readonly RewardController rewardController;
     private readonly WeaponController weaponController;
     private readonly PlatformController platformController;
     private readonly DriverController driverController;
 
     private readonly PlayerModel model;
 
-    public PlayerController(PlayerView view, PlayerConfig config, 
-        CombatService combatService, CameraManager cameraManager,
+    public PlayerController(PlayerView view, PlayerConfig config,
+        CombatService combatService, CameraManager cameraManager, RewardController rewardController,
         WeaponController weaponController, PlatformController platformController, DriverController driverController) {
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
+        this.rewardController = rewardController;
         this.platformController = platformController;
         this.driverController = driverController;
         this.weaponController = weaponController;
         model = new PlayerModel(config);
     }
 
-    public Vector3 ReadPosition() => driverController.ReadVehiclePosition();
-
     public void Init() {     
         CreateCamera();
-
         SpawnDriver(Vector3.zero);
-        for (int i = 0; i < model.MaxPlatformsCount; i++) {
-            SpawnPlatform(new Vector3(0, 0, -2f + i * -2f), model.DefaultPlatformConfig);
-        }
 
         bool flipFlop = false;
-        foreach (var platformId in model.AttachedPlatformIds) {
+        for (int i = 0; i < model.MaxPlatformsCount; i++) {
             flipFlop = !flipFlop;
             var weaponConfig = flipFlop ? model.FirstWeaponConfig : model.SecondWeaponConfig;
-            EquipePlatform(platformId, weaponConfig);
+            SpawnPlatform(new Vector3(0, 0, -2f + i * -2f), model.DefaultPlatformConfig, weaponConfig);
         }
     }
 
     public void Update() {
+        SyncPositions();
+        CollectRewards();
         ReadDrivingInput();
         OperatePlatforms();
         UpdateCamera();
+    }
+
+    private void SyncPositions() {
+        model.Position = driverController.ReadVehiclePosition();
+    }
+
+    private void CollectRewards() {
+        var collectedRewardStates = rewardController.CollectRewards(model.Position, 0.5f);
+        foreach (var rewardState in collectedRewardStates) {
+            if (rewardState.RewardType == RewardType.Weapon) {
+                SpawnPlatform(rewardState.Position, model.DefaultPlatformConfig, rewardState.WeaponConfig);
+            }
+        }
     }
 
     private void SpawnDriver(Vector3 position) {
@@ -61,12 +72,7 @@ public class PlayerController {
         driverController.Control(steerInput, gasInput, boost);
     }
 
-    public void AddPlatform(Vector3 position, WeaponConfig equipment) {
-        var platformId = SpawnPlatform(position, model.DefaultPlatformConfig);
-        EquipePlatform(platformId, equipment);
-    }
-
-    private int SpawnPlatform(Vector3 position, PlatformConfig config) {
+    private int SpawnPlatform(Vector3 position, PlatformConfig config, WeaponConfig weaponConfig) {
         var headVehicleId = driverController.ReadVehicleId();
         if (model.AttachedPlatformIds.Count > 0) {
             var lastPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[^1]);
@@ -75,11 +81,8 @@ public class PlayerController {
 
         var platformId = platformController.SpawnPlatform(position, config, headVehicleId);
         model.AttachedPlatformIds.Add(platformId);
-        return platformId;
-    }
-
-    private void EquipePlatform(int platformId, WeaponConfig weaponConfig) {
         platformController.SetWeapon(platformId, weaponConfig);
+        return platformId;
     }
 
     private void OperatePlatforms() {
@@ -98,7 +101,7 @@ public class PlayerController {
     }
 
     private void UpdateCamera() {
-        cameraManager.UpdateTopDownFollowPosition(driverController.ReadVehiclePosition());
+        cameraManager.UpdateTopDownFollowPosition(model.Position);
     }
 
 }

@@ -6,6 +6,7 @@ public class PlayerModel {
     
     private readonly PlayerConfig config;
 
+    public Vector3 Position { get; set; }
     public List<int> AttachedPlatformIds { get; private set; } = new ();
 
     public PlayerModel(PlayerConfig config) {

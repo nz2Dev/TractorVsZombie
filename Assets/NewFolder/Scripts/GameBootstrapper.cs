@@ -116,6 +116,13 @@ public class GameBootstrapper : MonoBehaviour {
             combatService,
             vehicleController
         );
+        
+        rewardController = new RewardController(
+            rewardView,
+            rewardsMediator,
+            infantryController,
+            armorController
+        );
 
         armorAIController = new ArmorAIController(
             combatService,
@@ -130,6 +137,7 @@ public class GameBootstrapper : MonoBehaviour {
             playerConfig,
             combatService,
             cameraManager,
+            rewardController,
             weaponController,
             platformController,
             driverController
@@ -146,14 +154,6 @@ public class GameBootstrapper : MonoBehaviour {
             enemyArmorConfig,
             armorController,
             armorAIController
-        );
-
-        rewardController = new RewardController(
-            rewardView,
-            rewardsMediator,
-            playerController,
-            infantryController,
-            armorController
         );
     }
 

@@ -1,28 +1,49 @@
 using System;
 using System.Collections.Generic;
 
+using UnityEngine;
+
 public class RewardController {
     
     private readonly RewardView view;
     private readonly RewardsMediator rewardsMediator;
-    private readonly PlayerController playerController;
     private readonly InfantryController infantryController;
     private readonly ArmorController armorController;
 
     private int idCounter;
-    private Dictionary<int, RewardModel> registry = new ();
+    private readonly Dictionary<int, RewardModel> registry = new ();
+    private readonly List<int> rewardsSpatialIdBuffer = new (10);
+    private readonly List<RewardState> rewardsStatesBuffer = new(10);
 
-    public RewardController(RewardView view, RewardsMediator rewardsMediator, PlayerController playerController, InfantryController infantryController, ArmorController armorController) {
+    public RewardController(RewardView view, RewardsMediator rewardsMediator, InfantryController infantryController, ArmorController armorController) {
         this.view = view;
         this.rewardsMediator = rewardsMediator;
-        this.playerController = playerController;
         this.infantryController = infantryController;
         this.armorController = armorController;
     }
 
     public void Update() {
         DiscoverRewards();
-        CollectRewards();
+    }
+
+    public IReadOnlyList<RewardState> CollectRewards(Vector3 position, float radius) {
+        rewardsStatesBuffer.Clear();
+        if (rewardsMediator.CollectRewardsPoints(position, radius, rewardsSpatialIdBuffer)) {
+            foreach (var spatialId in rewardsSpatialIdBuffer) {
+                var reward = registry[spatialId];
+                rewardsStatesBuffer.Add(GetRewardState(reward));
+                DeleteReward(spatialId);
+            }
+        }
+        return rewardsStatesBuffer;
+    }
+
+    private RewardState GetRewardState(RewardModel model) {
+        return new RewardState {
+            Position = model.Position,
+            RewardType = model.RewardType,
+            WeaponConfig = model.WeaponConfig
+        };
     }
 
     private void DiscoverRewards() {
@@ -51,21 +72,6 @@ public class RewardController {
         reward.SpatialId = rewardsMediator.AddRewardPoint(reward.Position, 2f);
         registry[reward.SpatialId] = reward;
         view.SpawnReward(reward.Id, reward.Position, reward.WeaponConfig.visualsPrefab.gameObject);
-    }
-
-    private List<int> rewardsBuffer = new (10);
-
-    private void CollectRewards() {
-        var playerPosition = playerController.ReadPosition();
-        if (rewardsMediator.CollectRewardsPoints(playerPosition, 0.5f, rewardsBuffer)) {
-            foreach (var spatialId in rewardsBuffer) {
-                var reward = registry[spatialId];
-                if (reward.RewardType == RewardType.Weapon) {
-                    playerController.AddPlatform(reward.Position, reward.WeaponConfig);
-                }
-                DeleteReward(spatialId);
-            }
-        }
     }
 
     private void DeleteReward(int spatialId) {
