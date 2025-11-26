@@ -22,15 +22,13 @@ public class PlatformController {
         SyncPositions();
     }
     
-    public int SpawnPlatform(Vector3 position, PlatformConfig config, int headVehicleId) {
+    public int SpawnPlatform(Vector3 position, PlatformConfig config) {
         var nextId = ++idCounter;
         var platform = new PlatformModel(nextId, position, config);
         registry[platform.Id] = platform;
         
         platform.CombatId = combatService.RegisterAgent(position, alie: true);
         platform.VehicleId = vehicleController.SpawnVehicle(position, platform.CombatId, platform.VehicleConfig);
-        vehicleController.ConnectVehicles(headVehicleId, platform.VehicleId);
-
         return platform.Id;
     }
 

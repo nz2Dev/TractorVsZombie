@@ -139,6 +139,7 @@ public class GameBootstrapper : MonoBehaviour {
             cameraManager,
             rewardController,
             weaponController,
+            vehicleController,
             platformController,
             driverController
         );

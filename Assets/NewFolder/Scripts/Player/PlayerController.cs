@@ -10,21 +10,23 @@ public class PlayerController {
     private readonly CameraManager cameraManager;
     private readonly RewardController rewardController;
     private readonly WeaponController weaponController;
+    private readonly VehicleController vehicleController;
     private readonly PlatformController platformController;
     private readonly DriverController driverController;
 
     private readonly PlayerModel model;
 
-    public PlayerController(PlayerView view, PlayerConfig config,
-        CombatService combatService, CameraManager cameraManager, RewardController rewardController,
-        WeaponController weaponController, PlatformController platformController, DriverController driverController) {
+    public PlayerController(PlayerView view, PlayerConfig config, CombatService combatService, CameraManager cameraManager, 
+        RewardController rewardController, WeaponController weaponController, VehicleController vehicleController,
+        PlatformController platformController, DriverController driverController) {
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
         this.rewardController = rewardController;
+        this.weaponController = weaponController;
+        this.vehicleController = vehicleController;
         this.platformController = platformController;
         this.driverController = driverController;
-        this.weaponController = weaponController;
         model = new PlayerModel(config);
     }
 
@@ -72,17 +74,19 @@ public class PlayerController {
         driverController.Control(steerInput, gasInput, boost);
     }
 
-    private int SpawnPlatform(Vector3 position, PlatformConfig config, WeaponConfig weaponConfig) {
+    private void SpawnPlatform(Vector3 position, PlatformConfig config, WeaponConfig weaponConfig) {
+        var platformId = platformController.SpawnPlatform(position, config);
+        platformController.SetWeapon(platformId, weaponConfig);
+
         var headVehicleId = driverController.ReadVehicleId();
         if (model.AttachedPlatformIds.Count > 0) {
-            var lastPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[^1]);
-            headVehicleId = lastPlatformState.vehicleId;
+            var lastAttachedPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[^1]);
+            headVehicleId = lastAttachedPlatformState.vehicleId;
         }
 
-        var platformId = platformController.SpawnPlatform(position, config, headVehicleId);
+        var newPlatformState = platformController.ReadPlatformState(platformId);
+        vehicleController.ConnectVehicles(headVehicleId, newPlatformState.vehicleId);
         model.AttachedPlatformIds.Add(platformId);
-        platformController.SetWeapon(platformId, weaponConfig);
-        return platformId;
     }
 
     private void OperatePlatforms() {
