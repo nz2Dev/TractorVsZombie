@@ -46,6 +46,7 @@ public class GameBootstrapper : MonoBehaviour {
     private PlatformController platformController;
     private DriverController driverController;
     private ArmorAIController armorAIController;
+    private CouplingController couplingController;
 
     private void Start() {
         Build();
@@ -139,6 +140,11 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController
         );
 
+        couplingController = new CouplingController(
+            motorVehicleController,
+            towableVehicleController
+        );
+
         playerController = new PlayerController(
             playerView, 
             playerConfig,
@@ -146,10 +152,9 @@ public class GameBootstrapper : MonoBehaviour {
             cameraManager,
             rewardController,
             weaponController,
-            motorVehicleController,
-            towableVehicleController,
             platformController,
-            driverController
+            driverController,
+            couplingController
         );
 
         enemyController = new EnemyController(

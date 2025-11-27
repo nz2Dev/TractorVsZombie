@@ -10,45 +10,45 @@ public class PlayerController {
     private readonly CameraManager cameraManager;
     private readonly RewardController rewardController;
     private readonly WeaponController weaponController;
-    private readonly MotorVehicleController motorVehicleController;
-    private readonly TowableVehicleController towableVehicleController;
     private readonly PlatformController platformController;
     private readonly DriverController driverController;
+    private readonly CouplingController couplingController;
 
     private readonly PlayerModel model;
 
     public PlayerController(PlayerView view, PlayerConfig config, CombatService combatService, CameraManager cameraManager, 
-        RewardController rewardController, WeaponController weaponController, 
-        MotorVehicleController vehicleController, TowableVehicleController towableVehicleController,
-        PlatformController platformController, DriverController driverController) {
+        RewardController rewardController, WeaponController weaponController,
+        PlatformController platformController, DriverController driverController,
+        CouplingController couplingController) {
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
         this.rewardController = rewardController;
         this.weaponController = weaponController;
-        this.motorVehicleController = vehicleController;
-        this.towableVehicleController = towableVehicleController;
         this.platformController = platformController;
         this.driverController = driverController;
+        this.couplingController = couplingController;
         model = new PlayerModel(config);
     }
 
     public void Init() {     
         CreateCamera();
         SpawnDriver(Vector3.zero);
+        CreateCoupling();
 
         bool flipFlop = false;
         for (int i = 0; i < model.InitPlatformCount; i++) {
-            flipFlop = !flipFlop;
-            var weaponConfig = flipFlop ? model.FirstWeaponConfig : model.SecondWeaponConfig;
-            AddPlatformToTheEnd(new Vector3(0, 0, -2f + i * -2f), model.DefaultPlatformConfig, weaponConfig);
+            var weaponConfig = (flipFlop = !flipFlop) ? model.FirstWeaponConfig : model.SecondWeaponConfig;
+            SpawnPlatform(new Vector3(0, 0, -2f + i * -2f), out var platformId);
+            EquipePlatform(platformId, weaponConfig);
+            CouplePlatformToTheEnd(platformId);
         }
     }
 
     public void Update() {
         SyncPositions();
         CollectRewards();
-        ReadDrivingInput();
+        OperateDriver();
         OperatePlatforms();
         UpdateCamera();
     }
@@ -61,9 +61,9 @@ public class PlayerController {
         var collectedRewardStates = rewardController.CollectRewards(model.Position, 0.5f);
         foreach (var rewardState in collectedRewardStates) {
             if (rewardState.RewardType == RewardType.Weapon) {
-                var groundedPosition = rewardState.Position;
-                groundedPosition.y = 0;
-                PickUpPlatform(groundedPosition, model.DefaultPlatformConfig, rewardState.WeaponConfig);
+                SpawnPlatform(rewardState.Position, out var platformId);
+                EquipePlatform(platformId, rewardState.WeaponConfig);
+                CouplePlatformInFront(platformId);
             }
         }
     }
@@ -72,54 +72,24 @@ public class PlayerController {
         driverController.Spawn(position, model.DriverConfig);
     }
 
-    private void ReadDrivingInput() {
+    private void OperateDriver() {
+        var boost = Input.GetKey(KeyCode.Space);
         var steerInput = Input.GetAxis("Horizontal");
         var gasInput = Input.GetAxis("Vertical");
-        var boost = Input.GetKey(KeyCode.Space);
         driverController.Control(steerInput, gasInput, boost);
     }
 
-    private void AddPlatformToTheEnd(Vector3 position, PlatformConfig config, WeaponConfig weaponConfig) {
-        var platformId = platformController.SpawnPlatform(position, config);
-        platformController.SetWeapon(platformId, weaponConfig);
-        var newPlatformState = platformController.ReadPlatformState(platformId);
-
-        int lastVehiclePhysicsId;
-        if (model.AttachedPlatformIds.Count != 0) {
-            var lastAttachedPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[^1]);
-            var lastAttachedTowableVehiclePhysicsId = towableVehicleController.ReadVehiclePhysicsId(lastAttachedPlatformState.vehicleId);
-            lastVehiclePhysicsId = lastAttachedTowableVehiclePhysicsId;
-        } else {
-            var driverMotorVehicleId = driverController.ReadVehicleId();
-            lastVehiclePhysicsId = motorVehicleController.ReadVehiclePhysicsId(driverMotorVehicleId);
-        }
-
-        towableVehicleController.ConnectVehicle(newPlatformState.vehicleId, lastVehiclePhysicsId);
-        model.AttachedPlatformIds.Add(platformId);
+    private void SpawnPlatform(Vector3 position, out int platformId) {
+        platformId = platformController.SpawnPlatform(position, model.DefaultPlatformConfig);
+        model.ControlledPlatformIds.Add(platformId);
     }
 
-    private void PickUpPlatform(Vector3 position, PlatformConfig config, WeaponConfig weaponConfig) {
-        var platformId = platformController.SpawnPlatform(position, config);
+    private void EquipePlatform(int platformId, WeaponConfig weaponConfig) {
         platformController.SetWeapon(platformId, weaponConfig);
-        var newPlatformState = platformController.ReadPlatformState(platformId);
-
-        if (model.AttachedPlatformIds.Count > 0) {
-            var firstAttachedPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[0]);
-            var previouslyAttachedTowableVehicleId = firstAttachedPlatformState.vehicleId;
-            towableVehicleController.DisconnectVehicle(previouslyAttachedTowableVehicleId);
-
-            var newPlatformVehiclePhysicsId = towableVehicleController.ReadVehiclePhysicsId(newPlatformState.vehicleId);
-            towableVehicleController.ConnectVehicle(previouslyAttachedTowableVehicleId, newPlatformVehiclePhysicsId);
-        }
-
-        var headVehicleId = driverController.ReadVehicleId();
-        var headVehiclePhysicsId = motorVehicleController.ReadVehiclePhysicsId(headVehicleId);
-        towableVehicleController.ConnectVehicle(newPlatformState.vehicleId, headVehiclePhysicsId);
-        model.AttachedPlatformIds.Insert(0, platformId);
     }
 
     private void OperatePlatforms() {
-        foreach (var platformId in model.AttachedPlatformIds) {
+        foreach (var platformId in model.ControlledPlatformIds) {
             var platformState = platformController.ReadPlatformState(platformId);
             var searchRadius = platformState.weaponConfig.aimConfig.range;
             
@@ -127,6 +97,20 @@ public class PlayerController {
                 weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
             }
         }
+    }
+
+    private void CreateCoupling() {
+        couplingController.Create(driverController.ReadVehicleId());
+    }
+
+    private void CouplePlatformToTheEnd(int platformId) {
+        var platformState = platformController.ReadPlatformState(platformId);
+        couplingController.AddTowable(platformState.vehicleId);
+    }
+
+    private void CouplePlatformInFront(int platformId) {
+        var platformState = platformController.ReadPlatformState(platformId);
+        couplingController.InsertTowable(platformState.vehicleId);
     }
 
     private void CreateCamera() {
