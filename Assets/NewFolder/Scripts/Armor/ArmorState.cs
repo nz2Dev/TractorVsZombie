@@ -5,5 +5,5 @@ public struct ArmorState {
     public int combatId;
     public int weaponId;
     public WeaponConfig weaponConfig;
-    public int vehicleId;
+    public MotorVehicleId vehicleId;
 }

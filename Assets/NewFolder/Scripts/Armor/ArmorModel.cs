@@ -13,13 +13,13 @@ public class ArmorModel {
 
     public int Id { get; private set; }
     public Vector3 Position { get; set; }
-    public int VehicleId { get; set; }
+    public MotorVehicleId VehicleId { get; set; }
     public int CombatId { get; set; }
     public int WeaponId { get; set; }
     public int Health { get; set; }
 
     public int MaxHealth => config.maxHealth;
-    public VehicleConfig VehicleConfig => config.vehicleConfig;
+    public MotorVehicleConfig VehicleConfig => config.vehicleConfig;
     public WeaponConfig WeaponConfig => config.weaponConfig;
 
 }

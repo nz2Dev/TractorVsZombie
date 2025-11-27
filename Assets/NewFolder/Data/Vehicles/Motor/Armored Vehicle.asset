@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 285d6c200e8e14d27b11009ebaef32ed, type: 3}
-  m_Name: Red Armored Vehicle
+  m_Script: {fileID: 11500000, guid: bfcb5b2e1988940ebbb4614a74dc70d7, type: 3}
+  m_Name: Armored Vehicle
   m_EditorClassIdentifier: NewFolder::VehicleConfig
-  soundData:
-    engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+  ramData:
+    enabled: 1
+    impactSFX:
+    - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
+    radius: 0.5
   drivingData:
     maxTorque: 150
     maxBreaksTorque: 50
@@ -22,5 +25,6 @@ MonoBehaviour:
     speedCeilingForSteering: 5
     speedKFactor: 2
     powerAccelerationSpeed: 1
-  visualsPrefab: {fileID: 1664023645614263282, guid: 6f70d5b01ead64a469c9d608dc4bd4ad, type: 3}
+    engineIdleSound: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+  visualsPrefab: {fileID: 3497351247700678174, guid: 6f70d5b01ead64a469c9d608dc4bd4ad, type: 3}
   physicsPrefab: {fileID: 5571881020198792173, guid: ba97d4c15eca54b7d89645b70bfd43f9, type: 3}

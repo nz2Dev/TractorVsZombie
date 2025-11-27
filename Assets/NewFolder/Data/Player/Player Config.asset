@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player Config
   m_EditorClassIdentifier: NewFolder::PlayerConfig
   driverConfig: {fileID: 11400000, guid: 5c5c652bb42114a53953275970513d28, type: 2}
-  initPlatformCount: 1
+  initPlatformCount: 2
   platformConfig: {fileID: 11400000, guid: 843bbae72c8f446c18439515cba7be86, type: 2}
   firstWeaponConfig: {fileID: 11400000, guid: bbf335660863d4142b04746d3fe8217a, type: 2}
   secondWeaponConfig: {fileID: 11400000, guid: 79f33a2489ade46cf8e5621936488dc7, type: 2}

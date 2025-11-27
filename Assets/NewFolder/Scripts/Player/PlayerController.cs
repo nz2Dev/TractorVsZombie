@@ -10,21 +10,24 @@ public class PlayerController {
     private readonly CameraManager cameraManager;
     private readonly RewardController rewardController;
     private readonly WeaponController weaponController;
-    private readonly VehicleController vehicleController;
+    private readonly MotorVehicleController motorVehicleController;
+    private readonly TowableVehicleController towableVehicleController;
     private readonly PlatformController platformController;
     private readonly DriverController driverController;
 
     private readonly PlayerModel model;
 
     public PlayerController(PlayerView view, PlayerConfig config, CombatService combatService, CameraManager cameraManager, 
-        RewardController rewardController, WeaponController weaponController, VehicleController vehicleController,
+        RewardController rewardController, WeaponController weaponController, 
+        MotorVehicleController vehicleController, TowableVehicleController towableVehicleController,
         PlatformController platformController, DriverController driverController) {
         this.view = view;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
         this.rewardController = rewardController;
         this.weaponController = weaponController;
-        this.vehicleController = vehicleController;
+        this.motorVehicleController = vehicleController;
+        this.towableVehicleController = towableVehicleController;
         this.platformController = platformController;
         this.driverController = driverController;
         model = new PlayerModel(config);
@@ -81,15 +84,17 @@ public class PlayerController {
         platformController.SetWeapon(platformId, weaponConfig);
         var newPlatformState = platformController.ReadPlatformState(platformId);
 
-        int lastVehicleId;
+        int lastVehiclePhysicsId;
         if (model.AttachedPlatformIds.Count != 0) {
             var lastAttachedPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[^1]);
-            lastVehicleId = lastAttachedPlatformState.vehicleId;
+            var lastAttachedTowableVehiclePhysicsId = towableVehicleController.ReadVehiclePhysicsId(lastAttachedPlatformState.vehicleId);
+            lastVehiclePhysicsId = lastAttachedTowableVehiclePhysicsId;
         } else {
-            lastVehicleId = driverController.ReadVehicleId();
+            var driverMotorVehicleId = driverController.ReadVehicleId();
+            lastVehiclePhysicsId = motorVehicleController.ReadVehiclePhysicsId(driverMotorVehicleId);
         }
 
-        vehicleController.ConnectVehicles(lastVehicleId, newPlatformState.vehicleId);
+        towableVehicleController.ConnectVehicle(newPlatformState.vehicleId, lastVehiclePhysicsId);
         model.AttachedPlatformIds.Add(platformId);
     }
 
@@ -100,13 +105,16 @@ public class PlayerController {
 
         if (model.AttachedPlatformIds.Count > 0) {
             var firstAttachedPlatformState = platformController.ReadPlatformState(model.AttachedPlatformIds[0]);
-            var previouslyAttachedVehicleId = firstAttachedPlatformState.vehicleId;
-            vehicleController.DisconnectVehicle(previouslyAttachedVehicleId);
-            vehicleController.ConnectVehicles(newPlatformState.vehicleId, previouslyAttachedVehicleId);
+            var previouslyAttachedTowableVehicleId = firstAttachedPlatformState.vehicleId;
+            towableVehicleController.DisconnectVehicle(previouslyAttachedTowableVehicleId);
+
+            var newPlatformVehiclePhysicsId = towableVehicleController.ReadVehiclePhysicsId(newPlatformState.vehicleId);
+            towableVehicleController.ConnectVehicle(previouslyAttachedTowableVehicleId, newPlatformVehiclePhysicsId);
         }
 
         var headVehicleId = driverController.ReadVehicleId();
-        vehicleController.ConnectVehicles(headVehicleId, newPlatformState.vehicleId);
+        var headVehiclePhysicsId = motorVehicleController.ReadVehiclePhysicsId(headVehicleId);
+        towableVehicleController.ConnectVehicle(newPlatformState.vehicleId, headVehiclePhysicsId);
         model.AttachedPlatformIds.Insert(0, platformId);
     }
 

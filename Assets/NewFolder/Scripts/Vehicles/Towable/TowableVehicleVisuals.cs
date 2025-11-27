@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class VehicleVisuals : MonoBehaviour {
-
+public class TowableVehicleVisuals : MonoBehaviour {
+    
     [Serializable]
     public struct WheelAxis {
         public GameObject leftWheel;
@@ -39,5 +35,4 @@ public class VehicleVisuals : MonoBehaviour {
     public void SetShaftRotation(Quaternion shaftRotation) {
         shaftGeometry.transform.rotation = shaftRotation;
     }
-
 }

@@ -39,7 +39,8 @@ public class GameBootstrapper : MonoBehaviour {
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
-    private VehicleController vehicleController;
+    private MotorVehicleController motorVehicleController;
+    private TowableVehicleController towableVehicleController;
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
@@ -62,7 +63,8 @@ public class GameBootstrapper : MonoBehaviour {
         var playerView = new PlayerView();
         var unitView = new EnemyView();
         var weaponView = new WeaponView();
-        var vehicleView = new VehicleView();
+        var motorVehicleView = new MotorVehicleView();
+        var towableVehicleView = new TowableVehicleView();
         var rewardView = new RewardView(rewardVisualsPrefab);
         var infantryView = new InfantryView();
 
@@ -85,11 +87,16 @@ public class GameBootstrapper : MonoBehaviour {
             combatService
         );
 
-        vehicleController = new VehicleController(
+        motorVehicleController = new MotorVehicleController(
+            motorVehicleView,
             vehicleService,
             combatService,
-            soundManager,
-            vehicleView
+            soundManager
+        );
+
+        towableVehicleController = new TowableVehicleController(
+            towableVehicleView,
+            vehicleService
         );
 
         infantryController = new InfantryController(
@@ -103,18 +110,18 @@ public class GameBootstrapper : MonoBehaviour {
         armorController = new ArmorController(
             combatService,
             weaponController,
-            vehicleController
+            motorVehicleController
         );
 
         platformController = new PlatformController(
             combatService,
-            vehicleController,
+            towableVehicleController,
             weaponController
         );
 
         driverController = new DriverController(
             combatService,
-            vehicleController
+            motorVehicleController
         );
         
         rewardController = new RewardController(
@@ -128,7 +135,7 @@ public class GameBootstrapper : MonoBehaviour {
             combatService,
             navigationService,
             armorController,
-            vehicleController,
+            motorVehicleController,
             weaponController
         );
 
@@ -139,7 +146,8 @@ public class GameBootstrapper : MonoBehaviour {
             cameraManager,
             rewardController,
             weaponController,
-            vehicleController,
+            motorVehicleController,
+            towableVehicleController,
             platformController,
             driverController
         );
@@ -168,7 +176,8 @@ public class GameBootstrapper : MonoBehaviour {
         projectileController.Update();
         rocketController.Update();
         weaponController.Update();
-        vehicleController.Update();
+        motorVehicleController.Update();
+        towableVehicleController.Update();
         infantryController.Update();
         armorController.Update();
         platformController.Update();

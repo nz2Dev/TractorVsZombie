@@ -5,5 +5,5 @@ public struct PlatformState {
     public int combatId;
     public int weaponId;
     public WeaponConfig weaponConfig;
-    public int vehicleId;
+    public TowableVehicleId vehicleId;
 }

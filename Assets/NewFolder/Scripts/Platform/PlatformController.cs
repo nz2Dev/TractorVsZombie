@@ -6,15 +6,15 @@ using UnityEngine;
 public class PlatformController {
 
     private readonly CombatService combatService;
-    private readonly VehicleController vehicleController;
+    private readonly TowableVehicleController towableVehicleController;
     private readonly WeaponController weaponController;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatService combatService, VehicleController vehicleController, WeaponController weaponController) {
+    public PlatformController(CombatService combatService, TowableVehicleController towableVehicleController, WeaponController weaponController) {
         this.combatService = combatService;
-        this.vehicleController = vehicleController;
+        this.towableVehicleController = towableVehicleController;
         this.weaponController = weaponController;
     }
 
@@ -28,7 +28,7 @@ public class PlatformController {
         registry[platform.Id] = platform;
         
         platform.CombatId = combatService.RegisterAgent(position, alie: true);
-        platform.VehicleId = vehicleController.SpawnVehicle(position, platform.CombatId, platform.VehicleConfig);
+        platform.VehicleId = towableVehicleController.SpawnVehicle(position, platform.VehicleConfig);
         return platform.Id;
     }
 
@@ -51,7 +51,7 @@ public class PlatformController {
 
     private void SyncPositions() {
         foreach (var host in registry.Values) {
-            host.Position = vehicleController.GetVehiclePosition(host.VehicleId);
+            host.Position = towableVehicleController.GetVehiclePosition(host.VehicleId);
             weaponController.MoveWeapon(host.WeaponId, host.Position);
             combatService.UpdateAgentPosition(host.CombatId, host.Position);
         }

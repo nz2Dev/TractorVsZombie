@@ -7,16 +7,16 @@ public class ArmorController {
 
     private readonly CombatService combatService;
     private readonly WeaponController weaponController;
-    private readonly VehicleController vehicleController;
+    private readonly MotorVehicleController motorVehicleController;
 
     private int idCounter;    
     private readonly Dictionary<int, ArmorModel> registry = new ();
     private readonly List<ArmorModel> diedArmor = new ();
 
-    public ArmorController(CombatService combatService, WeaponController weaponController, VehicleController vehicleController) {
+    public ArmorController(CombatService combatService, WeaponController weaponController, MotorVehicleController motorVehicleController) {
         this.combatService = combatService;
         this.weaponController = weaponController;
-        this.vehicleController = vehicleController;
+        this.motorVehicleController = motorVehicleController;
     }
 
     public int ArmorCount => registry.Count;
@@ -34,14 +34,14 @@ public class ArmorController {
         var model = new ArmorModel(nextId, position, armorConfig);
         registry[model.Id] = model;
         model.CombatId = combatService.RegisterAgent(position, alie: false);
-        model.VehicleId = vehicleController.SpawnVehicle(position, model.CombatId, model.VehicleConfig);
+        model.VehicleId = motorVehicleController.SpawnVehicle(position, model.CombatId, model.VehicleConfig);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position, model.WeaponConfig);
         model.Health = model.MaxHealth;
         return model.Id;
     }
 
     private void DeleteArmor(ArmorModel model) {
-        vehicleController.DeleteVehicle(model.VehicleId);
+        motorVehicleController.DeleteVehicle(model.VehicleId);
         combatService.UnregisterAgent(model.CombatId);
         weaponController.DeleteWeapon(model.WeaponId);
         registry.Remove(model.Id);
@@ -92,7 +92,7 @@ public class ArmorController {
 
     private void SyncVehiclesPositions() {
         foreach (var model in registry.Values) {
-            model.Position = vehicleController.GetVehiclePosition(model.VehicleId);
+            model.Position = motorVehicleController.GetVehiclePosition(model.VehicleId);
             weaponController.MoveWeapon(model.WeaponId, model.Position);
             combatService.UpdateAgentPosition(model.CombatId, model.Position);
         }

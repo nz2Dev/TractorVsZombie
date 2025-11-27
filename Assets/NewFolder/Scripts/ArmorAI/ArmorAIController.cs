@@ -8,17 +8,17 @@ public class ArmorAIController {
     private readonly CombatService combatService;
     private readonly NavigationService navigationService;
     private readonly ArmorController armorController;
-    private readonly VehicleController vehicleController;
+    private readonly MotorVehicleController motorVehicleController;
     private readonly WeaponController weaponController;
 
     private Vector3 goal;
     private readonly List<int> controlledArmorIds = new();
 
-    public ArmorAIController(CombatService combatService, NavigationService navigationService, ArmorController armorController, VehicleController vehicleController, WeaponController weaponController) {
+    public ArmorAIController(CombatService combatService, NavigationService navigationService, ArmorController armorController, MotorVehicleController motorVehicleController, WeaponController weaponController) {
         this.combatService = combatService;
         this.navigationService = navigationService;
         this.armorController = armorController;
-        this.vehicleController = vehicleController;
+        this.motorVehicleController = motorVehicleController;
         this.weaponController = weaponController;
     }
 
@@ -53,14 +53,14 @@ public class ArmorAIController {
 
         var gasDistance = 10;
         var gas = Mathf.Floor(Mathf.Clamp(distance, 0, gasDistance) / gasDistance);
-        vehicleController.DriveVehicle(state.vehicleId, gas, false);
+        motorVehicleController.DriveVehicle(state.vehicleId, gas, false);
         
         var stopDistance = 5f;
         var brakes = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
-        vehicleController.BrakeVehicle(state.vehicleId, brakes);
+        motorVehicleController.BrakeVehicle(state.vehicleId, brakes);
 
         var flowVector = navigationService.GetFlowVector(state.position);
-        vehicleController.SteerVehicleToward(state.vehicleId, flowVector);
+        motorVehicleController.SteerVehicleToward(state.vehicleId, flowVector);
     }
 
     private void OperateArmorCombat(ArmorState state) {
