@@ -51,6 +51,13 @@
       },
       "hash": "703ec434f4a5a56863991c8954015c3a3150ec37"
     },
+    "com.needle.compilation-visualizer": {
+      "version": "1.8.8",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.unity.ai.assistant": {
       "version": "1.0.0-pre.12",
       "depth": 0,
