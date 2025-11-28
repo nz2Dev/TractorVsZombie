@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3da5733ab56a044d3879b1c7061207ca, type: 3}
   m_Name: Trailer Platform Config
   m_EditorClassIdentifier: NewFolder::PlatformConfig
-  vehicleConfig: {fileID: 11400000, guid: 021df6087bb9b4bcaaafde96a1952809, type: 2}
+  vehicleConfig: {fileID: 11400000, guid: 58eae66fc1dac4076858e6225cc02787, type: 2}

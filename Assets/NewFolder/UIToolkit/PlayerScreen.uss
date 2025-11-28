@@ -1,0 +1,21 @@
+:root {
+}
+
+Label {
+    font-size: 44px;
+    margin-top: 32px;
+    margin-right: 32px;
+    margin-bottom: 32px;
+    margin-left: 32px;
+    -unity-font-style: bold;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+    border-bottom-left-radius: 14px;
+    background-color: rgba(0, 0, 0, 0.18);
+    padding-top: 25px;
+    padding-right: 25px;
+    padding-bottom: 25px;
+    padding-left: 25px;
+    color: rgb(255, 255, 255);
+}
