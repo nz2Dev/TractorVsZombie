@@ -48,6 +48,7 @@ public class PlayerController {
     public void Update() {
         SyncPositions();
         CollectRewards();
+        ReadDrivingInput();
         OperateDriver();
         OperatePlatforms();
         UpdateCamera();
@@ -68,15 +69,24 @@ public class PlayerController {
         }
     }
 
+    private void ReadDrivingInput() {
+        model.DrivingInput = new DrivingInput {
+            gas = Input.GetAxis("Vertical"),
+            steering = Input.GetAxis("Horizontal"),
+            boost = Input.GetKey(KeyCode.Space),
+        };
+    }
+
     private void SpawnDriver(Vector3 position) {
         driverController.Spawn(position, model.DriverConfig);
     }
 
     private void OperateDriver() {
-        var boost = Input.GetKey(KeyCode.Space);
-        var steerInput = Input.GetAxis("Horizontal");
-        var gasInput = Input.GetAxis("Vertical");
-        driverController.Control(steerInput, gasInput, boost);
+        driverController.Control(
+            model.DrivingInput.steering, 
+            model.DrivingInput.gas, 
+            model.DrivingInput.boost
+        );
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {

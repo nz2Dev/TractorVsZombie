@@ -2,11 +2,18 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+public struct DrivingInput {
+    public float gas;
+    public float steering;
+    public bool boost;
+}
+
 public class PlayerModel {
     
     private readonly PlayerConfig config;
 
     public Vector3 Position { get; set; }
+    public DrivingInput DrivingInput { get; set; }
     public List<int> ControlledPlatformIds { get; private set; } = new ();
 
     public PlayerModel(PlayerConfig config) {
