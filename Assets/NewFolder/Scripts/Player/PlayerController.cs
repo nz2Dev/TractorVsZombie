@@ -82,10 +82,12 @@ public class PlayerController {
     private void SpawnPlatform(Vector3 position, out int platformId) {
         platformId = platformController.SpawnPlatform(position, model.DefaultPlatformConfig);
         model.ControlledPlatformIds.Add(platformId);
+        view.AddPlatform(platformController.ReadPlatformState(platformId));
     }
 
     private void EquipePlatform(int platformId, WeaponConfig weaponConfig) {
         platformController.SetWeapon(platformId, weaponConfig);
+        view.UpdatePlatform(platformController.ReadPlatformState(platformId));
     }
 
     private void OperatePlatforms() {

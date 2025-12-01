@@ -3,6 +3,7 @@ using Codice.Client.Common.GameUI;
 using Unity.Profiling;
 
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameBootstrapper : MonoBehaviour {
     
@@ -27,6 +28,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private ArmorConfig enemyArmorConfig;
     [Space]
     [SerializeField] private PlayerConfig playerConfig;
+    [SerializeField] private UIDocument uiDocument;
     [Space]
     [SerializeField] private string rewardsLayerName;
     [SerializeField] private GameObject rewardVisualsPrefab;
@@ -61,7 +63,7 @@ public class GameBootstrapper : MonoBehaviour {
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
-        var playerView = new PlayerView();
+        var playerView = new PlayerView(uiDocument);
         var unitView = new EnemyView();
         var weaponView = new WeaponView();
         var motorVehicleView = new MotorVehicleView();
