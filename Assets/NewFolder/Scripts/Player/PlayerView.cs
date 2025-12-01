@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PlayerView {
@@ -27,18 +28,24 @@ public class PlayerView {
         UpdateLabel(stateLabel, state);
     }
 
+    internal void UpdateSelectedPlatform(PlatformState selectedPlatformState) {
+        foreach (var vehicleId in binding.Keys) {
+            var isSelectedKey = selectedPlatformState.vehicleId == vehicleId;
+            var label = binding[vehicleId];
+            label.RemoveFromClassList("selected-label");
+            if (isSelectedKey) {
+                label.AddToClassList("selected-label");
+            }
+        }
+    }
+
     private void MakeLabel(out Label created) {
         created = new Label();
         container.Add(created);
     }
 
     private void UpdateLabel(Label label, PlatformState state) {
-        var weaponFirstWord = FirstWord(state.weaponConfig.visualsPrefab.name);
-        label.text = state.weaponConfig == null ? "empty" : weaponFirstWord;
-    }
-
-    private string FirstWord(string line) {
-        return line.Split(' ')[0];
+        label.text = state.weaponConfig == null ? "empty" : state.weaponConfig.visualsPrefab.name;
     }
 
 }

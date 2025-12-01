@@ -18,4 +18,12 @@ Label {
     padding-bottom: 25px;
     padding-left: 25px;
     color: rgb(255, 255, 255);
+    max-width: 201px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.selected-label {
+    background-color: rgba(73, 192, 44, 0.57);
 }

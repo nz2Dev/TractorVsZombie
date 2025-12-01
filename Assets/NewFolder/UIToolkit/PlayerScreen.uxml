@@ -2,6 +2,7 @@
     <Style src="project://database/Assets/NewFolder/UIToolkit/PlayerScreen.uss?fileID=7433441132597879392&amp;guid=6be5141b9f02d48418f4d8adfbf8f06d&amp;type=3#PlayerScreen" />
     <ui:VisualElement style="flex-grow: 1; justify-content: flex-end;">
         <ui:VisualElement name="platformList" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+            <ui:Label text="Turel Weapon Visuals" class="selected-label" />
             <ui:Label text="Label" />
         </ui:VisualElement>
     </ui:VisualElement>

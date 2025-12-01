@@ -50,6 +50,7 @@ public class PlayerController {
         CollectRewards();
         ReadDrivingInput();
         OperateDriver();
+        ReadSelectedPlatformInput();
         OperatePlatforms();
         UpdateCamera();
     }
@@ -82,11 +83,26 @@ public class PlayerController {
     }
 
     private void OperateDriver() {
-        driverController.Control(
-            model.DrivingInput.steering, 
-            model.DrivingInput.gas, 
-            model.DrivingInput.boost
-        );
+        driverController.Control(model.DrivingInput.steering, model.DrivingInput.gas, model.DrivingInput.boost);
+    }
+
+    private void ReadSelectedPlatformInput() {
+        if (DetectPlatformSelectionIndexPressed(out var pressedIndex)) {
+            var pressedPlatformId = model.ControlledPlatformIds[pressedIndex];
+            model.SelectedPlatformId = pressedPlatformId != model.SelectedPlatformId ? pressedPlatformId : -1;
+            view.UpdateSelectedPlatform(platformController.ReadPlatformState(model.SelectedPlatformId));
+        }
+    }
+
+    private bool DetectPlatformSelectionIndexPressed(out int index) {
+        var zeroIndexPressed = Input.GetKeyDown(KeyCode.Alpha1);
+        var firstIndexPressed = Input.GetKeyDown(KeyCode.Alpha2);
+        var secondIndexPressed = Input.GetKeyDown(KeyCode.Alpha3);
+        index = -1;
+        if (zeroIndexPressed) index = 0;
+        else if (firstIndexPressed) index = 1;
+        else if (secondIndexPressed) index = 2;
+        return index >= 0;
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {
