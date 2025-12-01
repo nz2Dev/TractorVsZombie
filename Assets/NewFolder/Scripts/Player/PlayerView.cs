@@ -48,12 +48,11 @@ public class PlayerView {
         UpdateLabel(stateLabel, state);
     }
 
-    internal void UpdateSelectedPlatform(PlatformState selectedPlatformState) {
+    internal void ShowPlatformSelected(PlatformState selectedPlatformState) {
         foreach (var vehicleId in binding.Keys) {
             var isSelectedKey = selectedPlatformState.vehicleId == vehicleId;
-            var label = binding[vehicleId];
-            label.RemoveFromClassList("selected-label");
             if (isSelectedKey) {
+                var label = binding[vehicleId];
                 label.AddToClassList("selected-label");
             }
         }

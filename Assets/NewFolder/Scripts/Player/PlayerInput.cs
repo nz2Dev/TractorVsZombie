@@ -9,6 +9,10 @@ public class PlayerInput {
         };
     }
 
+    internal bool ReadSelectAllPressed() {
+        return Input.GetKeyDown(KeyCode.Alpha0);
+    }
+
     internal bool ReadSelectionIndexPressed(out int index) {
         var zeroIndexPressed = Input.GetKeyDown(KeyCode.Alpha1);
         var firstIndexPressed = Input.GetKeyDown(KeyCode.Alpha2);

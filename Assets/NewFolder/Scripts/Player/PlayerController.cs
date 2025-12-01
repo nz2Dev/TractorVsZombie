@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 
@@ -55,7 +56,7 @@ public class PlayerController {
         ReadDrivingInput();
         OperateDriver();
         ReadPlatformSelectionInput();
-        UpdateSelectedPlatformControl();
+        ComputeAimInput();
         OperatePlatforms();
         UpdateCamera();
     }
@@ -88,44 +89,58 @@ public class PlayerController {
     }
 
     private void ReadPlatformSelectionInput() {
-        if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
+        if (input.ReadSelectAllPressed()) {
+            var wasAllAlreadySelected = model.ControlledPlatformIds.All(controlled => model.SelectedPlatformIds.Contains(controlled));
+            model.SelectedPlatformIds.Clear();
+            if (!wasAllAlreadySelected) {
+                model.SelectedPlatformIds.AddRange(model.ControlledPlatformIds);
+            }
+            OnSelectedPlatformChanged();
+        } else if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
             var pressedPlatformId = model.ControlledPlatformIds[pressedIndex];
-            var lastSelectedPlatformId = model.SelectedPlatformId;
-            var pressedLastSelection = pressedPlatformId == lastSelectedPlatformId;
-            model.SelectedPlatformId = pressedLastSelection ? -1 : pressedPlatformId;
+            var pressedLastSelection = model.SelectedPlatformIds.Contains(pressedPlatformId);
+            if (pressedLastSelection) {
+                model.SelectedPlatformIds.Remove(pressedPlatformId);
+            } else {
+                model.SelectedPlatformIds.Add(pressedPlatformId);
+            }
             OnSelectedPlatformChanged();
         }
     }
 
     private void OnSelectedPlatformChanged() {
         DeactivateSelectionControl();
-        if (model.SelectedPlatformId != -1) {
+        if (model.SelectedPlatformIds.Count != 0) {
             ActivateSelectionControl();
         }
     }
 
     private void ActivateSelectionControl() {
         view.ShowAim(model.AimInput);
-        view.UpdateSelectedPlatform(platformController.ReadPlatformState(model.SelectedPlatformId));
-    }
-
-    private void UpdateSelectedPlatformControl() {
-        if (model.SelectedPlatformId != -1) {
-            var mousePosition = input.ReadMousePosition();
-            var mouseRay = cameraManager.GetCameraRay(mousePosition);
-            var mouseHitPoint = physicsService.GetGroundHitPosition(mouseRay);
-            model.AimInput = new TopDownAimInput {
-                position = mouseHitPoint,
-                direction = (mouseHitPoint - model.Position).normalized,
-                height = 0.5f
-            };
-            view.UpdateAim(model.AimInput);
+        foreach (var selectedPlatformId in model.SelectedPlatformIds) {
+            view.ShowPlatformSelected(platformController.ReadPlatformState(selectedPlatformId));
         }
     }
 
     private void DeactivateSelectionControl() {
         view.HideAim();
         view.ShowNoPlatformSelected();
+    }
+
+    private void ComputeAimInput() {
+        if (model.SelectedPlatformIds.Count == 0) {
+            return;
+        }
+        
+        var mousePosition = input.ReadMousePosition();
+        var mouseRay = cameraManager.GetCameraRay(mousePosition);
+        var mouseHitPoint = physicsService.GetGroundHitPosition(mouseRay);
+        model.AimInput = new TopDownAimInput {
+            position = mouseHitPoint,
+            direction = (mouseHitPoint - model.Position).normalized,
+            height = 0.5f
+        };
+        view.UpdateAim(model.AimInput);
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {
@@ -141,7 +156,7 @@ public class PlayerController {
 
     private void OperatePlatforms() {
         foreach (var platformId in model.ControlledPlatformIds) {
-            if (platformId == model.SelectedPlatformId) {
+            if (model.SelectedPlatformIds.Contains(platformId)) {
                 OperateFromInput(platformController.ReadPlatformState(platformId));
             } else {
                 OperateAutomatically(platformController.ReadPlatformState(platformId));

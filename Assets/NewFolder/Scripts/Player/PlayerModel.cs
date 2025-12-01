@@ -20,7 +20,7 @@ public class PlayerModel {
 
     public Vector3 Position { get; set; }
     public DrivingInput DrivingInput { get; set; }
-    public int SelectedPlatformId { get; set; }
+    public List<int> SelectedPlatformIds { get; set; } = new ();
     public List<int> ControlledPlatformIds { get; private set; } = new ();
     public TopDownAimInput AimInput { get; set; }
 
