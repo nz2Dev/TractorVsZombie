@@ -39,6 +39,12 @@ public class PlayerView {
         }
     }
 
+    internal void ShowNoPlatformSelected() {
+        foreach (var label in binding.Values) {
+            label.RemoveFromClassList("selected-label");
+        }
+    }
+
     private void MakeLabel(out Label created) {
         created = new Label();
         container.Add(created);

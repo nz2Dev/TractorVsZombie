@@ -88,7 +88,11 @@ public class PlayerController {
         if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
             var pressedPlatformId = model.ControlledPlatformIds[pressedIndex];
             model.SelectedPlatformId = pressedPlatformId != model.SelectedPlatformId ? pressedPlatformId : -1;
-            view.UpdateSelectedPlatform(platformController.ReadPlatformState(model.SelectedPlatformId));
+            if (model.SelectedPlatformId != -1) {
+                view.UpdateSelectedPlatform(platformController.ReadPlatformState(model.SelectedPlatformId));
+            } else {
+                view.ShowNoPlatformSelected();
+            }
         }
     }
 
