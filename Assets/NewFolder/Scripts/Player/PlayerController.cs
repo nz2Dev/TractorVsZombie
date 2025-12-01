@@ -141,12 +141,22 @@ public class PlayerController {
 
     private void OperatePlatforms() {
         foreach (var platformId in model.ControlledPlatformIds) {
-            var platformState = platformController.ReadPlatformState(platformId);
-            var searchRadius = platformState.weaponConfig.aimConfig.range;
-            
-            if (combatService.GetClosestEnemyAgentInRange(platformState.combatId, searchRadius, out var agentInfo)) {
-                weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
+            if (platformId == model.SelectedPlatformId) {
+                OperateFromInput(platformController.ReadPlatformState(platformId));
+            } else {
+                OperateAutomatically(platformController.ReadPlatformState(platformId));
             }
+        }
+    }
+
+    private void OperateFromInput(PlatformState platformState) {
+        weaponController.AimWeapon(platformState.weaponId, model.AimInput.position + Vector3.up * model.AimInput.height);
+    }
+
+    private void OperateAutomatically(PlatformState platformState) {
+        var searchRadius = platformState.weaponConfig.aimConfig.range;
+        if (combatService.GetClosestEnemyAgentInRange(platformState.combatId, searchRadius, out var agentInfo)) {
+            weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
         }
     }
 
