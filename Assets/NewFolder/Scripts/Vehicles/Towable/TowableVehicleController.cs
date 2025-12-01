@@ -46,6 +46,9 @@ public class TowableVehicleController {
 
     public void ConnectVehicle(TowableVehicleId id, int headPhysicsId) {
         var tailModel = registry[id];
+        var headState = vehicleService.GetVehicleState(headPhysicsId);
+        var towardHeadRotation = Quaternion.LookRotation((headState.position - tailModel.Position).normalized, Vector3.up);
+        vehicleService.UpdateVehiclePose(tailModel.PhysicsId, tailModel.Position, towardHeadRotation);
         vehicleService.MakeTowingConnection(headPhysicsId, tailModel.PhysicsId);
     }
 

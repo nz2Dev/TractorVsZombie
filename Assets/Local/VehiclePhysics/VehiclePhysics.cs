@@ -95,6 +95,12 @@ public class VehiclePhysics : MonoBehaviour {
         }
     }
 
+    public void Transform(Vector3 position, Quaternion rotation) {
+        transform.SetPositionAndRotation(position, rotation);
+        rootRigidbody.position = position;
+        rootRigidbody.rotation = rotation;
+    }
+
     public void SetPullingVehicle(VehiclePhysics vehiclePhysics) {
         pullingVehicle = vehiclePhysics;
     }

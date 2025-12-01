@@ -54,6 +54,11 @@ public class VehicleService {
         vehiclePhysics.SetBreaksTorque(breaksTorque);
     }
 
+    public void UpdateVehiclePose(int vehicleIndex, Vector3 position, Quaternion rotation) {
+        var vehiclePhysics = physicsRegistry[vehicleIndex];
+        vehiclePhysics.Transform(position, rotation);
+    }
+
     public void MakeTowingConnection(int headVehicleIndex, int tailVehicleIndex) {
         var headRig = physicsRegistry[headVehicleIndex];
         var tailRig = physicsRegistry[tailVehicleIndex];
