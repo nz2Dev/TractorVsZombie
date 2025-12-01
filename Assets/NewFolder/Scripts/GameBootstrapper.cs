@@ -28,6 +28,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private ArmorConfig enemyArmorConfig;
     [Space]
     [SerializeField] private PlayerConfig playerConfig;
+    [SerializeField] private AimVisuals aimVisualsPrefab;
     [SerializeField] private UIDocument uiDocument;
     [Space]
     [SerializeField] private string rewardsLayerName;
@@ -63,7 +64,7 @@ public class GameBootstrapper : MonoBehaviour {
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
-        var playerView = new PlayerView(uiDocument);
+        var playerView = new PlayerView(uiDocument, aimVisualsPrefab);
         var unitView = new EnemyView();
         var weaponView = new WeaponView();
         var motorVehicleView = new MotorVehicleView();

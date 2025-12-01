@@ -53,6 +53,7 @@ public class PlayerController {
         ReadDrivingInput();
         OperateDriver();
         ReadPlatformSelectionInput();
+        UpdateSelectedPlatformControl();
         OperatePlatforms();
         UpdateCamera();
     }
@@ -87,13 +88,39 @@ public class PlayerController {
     private void ReadPlatformSelectionInput() {
         if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
             var pressedPlatformId = model.ControlledPlatformIds[pressedIndex];
-            model.SelectedPlatformId = pressedPlatformId != model.SelectedPlatformId ? pressedPlatformId : -1;
-            if (model.SelectedPlatformId != -1) {
-                view.UpdateSelectedPlatform(platformController.ReadPlatformState(model.SelectedPlatformId));
-            } else {
-                view.ShowNoPlatformSelected();
-            }
+            var lastSelectedPlatformId = model.SelectedPlatformId;
+            var pressedLastSelection = pressedPlatformId == lastSelectedPlatformId;
+            model.SelectedPlatformId = pressedLastSelection ? -1 : pressedPlatformId;
+            OnSelectedPlatformChanged();
         }
+    }
+
+    private void OnSelectedPlatformChanged() {
+        DeactivateSelectionControl();
+        if (model.SelectedPlatformId != -1) {
+            ActivateSelectionControl();
+        }
+    }
+
+    private void ActivateSelectionControl() {
+        model.AimInput = new TopDownAimInput {
+            direction = Vector3.forward,
+            position = model.Position,
+            height = 0.5f
+        };
+        view.ShowAim(model.AimInput);
+        view.UpdateSelectedPlatform(platformController.ReadPlatformState(model.SelectedPlatformId));
+    }
+
+    private void UpdateSelectedPlatformControl() {
+        if (model.SelectedPlatformId != -1) {
+
+        }
+    }
+
+    private void DeactivateSelectionControl() {
+        view.HideAim();
+        view.ShowNoPlatformSelected();
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {

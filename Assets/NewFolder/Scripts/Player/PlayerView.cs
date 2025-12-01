@@ -7,14 +7,32 @@ using UnityEngine.UIElements;
 public class PlayerView {
 
     private readonly UIDocument uiDocument;
+    private readonly AimVisuals aimVisualsPrefab;
 
     private VisualElement container;
     private Dictionary<TowableVehicleId, Label> binding = new();
+    private AimVisuals aimVisuals;
 
-    public PlayerView(UIDocument uiDocument) {
+    public PlayerView(UIDocument uiDocument, AimVisuals aimVisualsPrefab) {
         this.uiDocument = uiDocument;
+        this.aimVisualsPrefab = aimVisualsPrefab;
         container = uiDocument.rootVisualElement.Q<VisualElement>("platformList");
         container.Clear();
+        aimVisuals = GameObject.Instantiate(aimVisualsPrefab);
+        aimVisuals.HideSelf();
+    }
+
+    internal void ShowAim(TopDownAimInput aimInput) {
+        aimVisuals.ShowSelf();
+        aimVisuals.Transform(aimInput);
+    }
+
+    internal void UpdateAim(TopDownAimInput aimInput) {
+        aimVisuals.Transform(aimInput);
+    }
+
+    internal void HideAim() {
+        aimVisuals.HideSelf();
     }
 
     internal void AddPlatform(PlatformState state) {

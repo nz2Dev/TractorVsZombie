@@ -8,6 +8,12 @@ public struct DrivingInput {
     public bool boost;
 }
 
+public struct TopDownAimInput {
+    public float height;
+    public Vector3 position; 
+    public Vector3 direction;
+}
+
 public class PlayerModel {
     
     private readonly PlayerConfig config;
@@ -16,6 +22,7 @@ public class PlayerModel {
     public DrivingInput DrivingInput { get; set; }
     public int SelectedPlatformId { get; set; }
     public List<int> ControlledPlatformIds { get; private set; } = new ();
+    public TopDownAimInput AimInput { get; set; }
 
     public PlayerModel(PlayerConfig config) {
         this.config = config;
