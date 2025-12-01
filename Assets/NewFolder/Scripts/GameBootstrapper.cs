@@ -149,6 +149,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         playerController = new PlayerController(
             playerView, 
+            new PlayerInput(),
             playerConfig,
             combatService,
             cameraManager,

@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController {
 
     private readonly PlayerView view;
+    private readonly PlayerInput input;
     private readonly CombatService combatService;
     private readonly CameraManager cameraManager;
     private readonly RewardController rewardController;
@@ -16,11 +17,12 @@ public class PlayerController {
 
     private readonly PlayerModel model;
 
-    public PlayerController(PlayerView view, PlayerConfig config, CombatService combatService, CameraManager cameraManager, 
+    public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, CombatService combatService, CameraManager cameraManager,
         RewardController rewardController, WeaponController weaponController,
         PlatformController platformController, DriverController driverController,
         CouplingController couplingController) {
         this.view = view;
+        this.input = input;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
         this.rewardController = rewardController;
@@ -50,7 +52,7 @@ public class PlayerController {
         CollectRewards();
         ReadDrivingInput();
         OperateDriver();
-        ReadSelectedPlatformInput();
+        ReadPlatformSelectionInput();
         OperatePlatforms();
         UpdateCamera();
     }
@@ -71,11 +73,7 @@ public class PlayerController {
     }
 
     private void ReadDrivingInput() {
-        model.DrivingInput = new DrivingInput {
-            gas = Input.GetAxis("Vertical"),
-            steering = Input.GetAxis("Horizontal"),
-            boost = Input.GetKey(KeyCode.Space),
-        };
+        model.DrivingInput = input.ReadDrivingInput();
     }
 
     private void SpawnDriver(Vector3 position) {
@@ -86,23 +84,12 @@ public class PlayerController {
         driverController.Control(model.DrivingInput.steering, model.DrivingInput.gas, model.DrivingInput.boost);
     }
 
-    private void ReadSelectedPlatformInput() {
-        if (DetectPlatformSelectionIndexPressed(out var pressedIndex)) {
+    private void ReadPlatformSelectionInput() {
+        if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
             var pressedPlatformId = model.ControlledPlatformIds[pressedIndex];
             model.SelectedPlatformId = pressedPlatformId != model.SelectedPlatformId ? pressedPlatformId : -1;
             view.UpdateSelectedPlatform(platformController.ReadPlatformState(model.SelectedPlatformId));
         }
-    }
-
-    private bool DetectPlatformSelectionIndexPressed(out int index) {
-        var zeroIndexPressed = Input.GetKeyDown(KeyCode.Alpha1);
-        var firstIndexPressed = Input.GetKeyDown(KeyCode.Alpha2);
-        var secondIndexPressed = Input.GetKeyDown(KeyCode.Alpha3);
-        index = -1;
-        if (zeroIndexPressed) index = 0;
-        else if (firstIndexPressed) index = 1;
-        else if (secondIndexPressed) index = 2;
-        return index >= 0;
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {
