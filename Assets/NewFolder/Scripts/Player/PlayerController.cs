@@ -8,6 +8,7 @@ public class PlayerController {
     private readonly PlayerView view;
     private readonly PlayerInput input;
     private readonly CombatService combatService;
+    private readonly PhysicsService physicsService;
     private readonly CameraManager cameraManager;
     private readonly RewardController rewardController;
     private readonly WeaponController weaponController;
@@ -17,12 +18,13 @@ public class PlayerController {
 
     private readonly PlayerModel model;
 
-    public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, CombatService combatService, CameraManager cameraManager,
+    public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatService combatService, CameraManager cameraManager,
         RewardController rewardController, WeaponController weaponController,
         PlatformController platformController, DriverController driverController,
         CouplingController couplingController) {
         this.view = view;
         this.input = input;
+        this.physicsService = physicsService;
         this.combatService = combatService;
         this.cameraManager = cameraManager;
         this.rewardController = rewardController;
@@ -103,18 +105,21 @@ public class PlayerController {
     }
 
     private void ActivateSelectionControl() {
-        model.AimInput = new TopDownAimInput {
-            direction = Vector3.forward,
-            position = model.Position,
-            height = 0.5f
-        };
         view.ShowAim(model.AimInput);
         view.UpdateSelectedPlatform(platformController.ReadPlatformState(model.SelectedPlatformId));
     }
 
     private void UpdateSelectedPlatformControl() {
         if (model.SelectedPlatformId != -1) {
-
+            var mousePosition = input.ReadMousePosition();
+            var mouseRay = cameraManager.GetCameraRay(mousePosition);
+            var mouseHitPoint = physicsService.GetGroundHitPosition(mouseRay);
+            model.AimInput = new TopDownAimInput {
+                position = mouseHitPoint,
+                direction = (mouseHitPoint - model.Position).normalized,
+                height = 0.5f
+            };
+            view.UpdateAim(model.AimInput);
         }
     }
 

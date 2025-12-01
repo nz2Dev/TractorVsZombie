@@ -19,4 +19,9 @@ public class PlayerInput {
         else if (secondIndexPressed) index = 2;
         return index >= 0;
     }
+
+    internal Vector2 ReadMousePosition() {
+        return Input.mousePosition;
+    }
+    
 }

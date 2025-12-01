@@ -152,6 +152,7 @@ public class GameBootstrapper : MonoBehaviour {
             playerView, 
             new PlayerInput(),
             playerConfig,
+            physicsService,
             combatService,
             cameraManager,
             rewardController,
