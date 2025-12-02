@@ -71,7 +71,7 @@ public class PlayerController {
             if (rewardState.RewardType == RewardType.Weapon) {
                 SpawnPlatform(rewardState.Position, out var platformId);
                 EquipePlatform(platformId, rewardState.WeaponConfig);
-                CouplePlatformInFront(platformId);
+                CouplePlatformToTheEnd(platformId);
             }
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 using UnityEngine;
 
@@ -43,6 +44,14 @@ public class VehiclePhysics : MonoBehaviour {
         public Vector3 worldAnchorRestPoint;
     }
 
+    [Serializable]
+    public struct PullingDrive {
+        public float spring;
+        public float dumper;
+        public float maxForce;
+        public bool acceleration;
+    }
+
     private Rigidbody rootRigidbody;
 
     [SerializeField] private BoxCollider baseCollider;
@@ -56,6 +65,7 @@ public class VehiclePhysics : MonoBehaviour {
     [SerializeField] private VehiclePhysics pullingVehicle;
     [SerializeField] private Rigidbody pullingGrabRigidbody;
     [SerializeField] private ConfigurableJoint pullingGrabJoint;
+    [SerializeField] private PullingDrive pullingDrive;
 
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
@@ -149,8 +159,7 @@ public class VehiclePhysics : MonoBehaviour {
 
     [ContextMenu("Collapse Towing Connection")]
     public void CollapseTowingConnection() {
-        pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
-        pullingGrabJoint.zDrive = new JointDrive { positionSpring = 10_000,  positionDamper = 5_000, maximumForce = float.MaxValue, useAcceleration = true };
+        CollapseTowingConnection(pullingDrive.spring, pullingDrive.dumper, pullingDrive.maxForce, pullingDrive.acceleration);
     }
 
     public void CollapseTowingConnection(float spring, float dumper, float maxforce, bool acceleration) {

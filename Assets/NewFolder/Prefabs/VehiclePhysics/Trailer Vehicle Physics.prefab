@@ -678,6 +678,11 @@ MonoBehaviour:
   pullingVehicle: {fileID: 0}
   pullingGrabRigidbody: {fileID: 59815791439413744}
   pullingGrabJoint: {fileID: 2127461906357807636}
+  pullingDrive:
+    spring: 30000
+    dumper: 5000
+    maxForce: 10000
+    acceleration: 1
 --- !u!114 &1298385832565005721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -800,7 +805,7 @@ ConfigurableJoint:
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
-  m_ProjectionMode: 0
+  m_ProjectionMode: 1
   m_ProjectionDistance: 0.1
   m_ProjectionAngle: 180
   m_ConfiguredInWorldSpace: 0

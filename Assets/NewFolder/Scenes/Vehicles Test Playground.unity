@@ -3426,10 +3426,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002966500}
     m_Modifications:
-    - target: {fileID: 1893744754300177155, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
-      propertyPath: m_ProjectionMode
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2127461906357807636, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
       propertyPath: m_ConnectedBody
       value: 
