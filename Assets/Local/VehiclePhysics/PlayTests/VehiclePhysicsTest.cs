@@ -44,15 +44,6 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     public void SetupTest() {
     } 
     
-    [UnityTest]
-    public IEnumerator CreateHingeWheelAxis_KeepVehicleAtPlace() {
-        yield return new WaitForFixedUpdate();
-    }
-
-    [UnityTest]
-    public IEnumerator JointTowingConnectorInAgnel_WheelAxisTurnsOnSameAngle() {
-        yield return new WaitForFixedUpdate();
-    }
     
     private IEnumerator DebugWaitForSleepState(string name, int limit = 100) {
         Debug.Break();

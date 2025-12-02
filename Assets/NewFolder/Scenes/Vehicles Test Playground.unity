@@ -1299,6 +1299,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1002966500}
+  - component: {fileID: 1002966502}
+  - component: {fileID: 1002966501}
   m_Layer: 0
   m_Name: Mono
   m_TagString: Untagged
@@ -1315,7 +1317,7 @@ Transform:
   m_GameObject: {fileID: 1002966499}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.884, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1323,6 +1325,42 @@ Transform:
   - {fileID: 1858497548}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1002966501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002966499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2fe5546f775c47d2820aa5e8a715f53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.VisualScripting.Flow::Unity.VisualScripting.ScriptMachine
+  _data:
+    _json: '{"nest":{"source":"Macro","macro":0,"embed":null}}'
+    _objectReferences:
+    - {fileID: 11400000, guid: a5b0b5179c4134ac68ca66616ffcc704, type: 2}
+--- !u!114 &1002966502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002966499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.VisualScripting.Core::Unity.VisualScripting.Variables
+  _data:
+    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[{"name":"puller","value":{"$content":0,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"VehiclePhysics,
+      VehiclePhysics, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"towable","value":{"$content":1,"$type":"UnityEngine.Object"},"typeHandle":{"Identification":"VehiclePhysics,
+      VehiclePhysics, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"drive
+      config","value":null,"typeHandle":{"Identification":null,"$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
+    _objectReferences:
+    - {fileID: 2058538456}
+    - {fileID: 1858497551}
 --- !u!1 &1011222744
 GameObject:
   m_ObjectHideFlags: 0
@@ -2981,6 +3019,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8034372944781209523, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
   m_PrefabInstance: {fileID: 4047016114734286442}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1858497551 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2496227567509786287, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
+  m_PrefabInstance: {fileID: 4047016114734286442}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52d71d466f42d4e688f1c60491f08768, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: VehiclePhysics::VehiclePhysics
 --- !u!1 &1911756729
 GameObject:
   m_ObjectHideFlags: 0
@@ -3211,11 +3260,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52d71d466f42d4e688f1c60491f08768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: VehiclePhysics::VehiclePhysics
---- !u!54 &2058538457 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 1340294729492977180, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
-  m_PrefabInstance: {fileID: 8228541980348367713}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2093785524
 GameObject:
   m_ObjectHideFlags: 0
@@ -3382,17 +3426,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002966500}
     m_Modifications:
+    - target: {fileID: 1893744754300177155, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
+      propertyPath: m_ProjectionMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2127461906357807636, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
       propertyPath: m_ConnectedBody
       value: 
-      objectReference: {fileID: 2058538457}
-    - target: {fileID: 2496227567509786287, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
-      propertyPath: pullingVehicle
-      value: 
-      objectReference: {fileID: 2058538456}
+      objectReference: {fileID: 0}
     - target: {fileID: 8034372944781209523, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1.36
       objectReference: {fileID: 0}
     - target: {fileID: 8034372944781209523, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3457,7 +3501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -2.6160002
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3469,19 +3513,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.70710677
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3489,7 +3533,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 4350355990105381784, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

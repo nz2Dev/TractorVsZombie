@@ -64,6 +64,7 @@ public class VehiclePhysics : MonoBehaviour {
     public WheelAxis FrontAxis => frontAxis;
     public WheelAxis RearAxis => rearAxis;
     public BoxCollider TurningBodyCollider => turningBoxCollider;
+    public VehiclePhysics PullingVehicle => pullingVehicle;
 
     private void Awake() {
         rootRigidbody = GetComponent<Rigidbody>();
@@ -149,7 +150,17 @@ public class VehiclePhysics : MonoBehaviour {
     [ContextMenu("Collapse Towing Connection")]
     public void CollapseTowingConnection() {
         pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
-        pullingGrabJoint.zDrive = new JointDrive { positionSpring = 30_000,  positionDamper = 15_000, maximumForce = float.MaxValue, useAcceleration = true };
+        pullingGrabJoint.zDrive = new JointDrive { positionSpring = 10_000,  positionDamper = 5_000, maximumForce = float.MaxValue, useAcceleration = true };
+    }
+
+    public void CollapseTowingConnection(float spring, float dumper, float maxforce, bool acceleration) {
+        pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.zDrive = new JointDrive { 
+            positionSpring = spring,  
+            positionDamper = dumper, 
+            maximumForce = maxforce, 
+            useAcceleration = acceleration 
+        };
     }
 
     [ContextMenu("Lock Towing Connection")]
