@@ -30,6 +30,7 @@ public class PlayerModel {
 
     public DriverConfig DriverConfig => config.driverConfig;
     public int InitPlatformCount => config.initPlatformCount;
+    public bool StartOrEndCouplingOrRewards => config.startOrEndCouplingOfRewards;
     public PlatformConfig DefaultPlatformConfig => config.platformConfig;
     public WeaponConfig FirstWeaponConfig => config.firstWeaponConfig;
     public WeaponConfig SecondWeaponConfig => config.secondWeaponConfig;

@@ -5,6 +5,7 @@ public class PlayerConfig : ScriptableObject {
     public DriverConfig driverConfig;
     public int initPlatformCount;
     public PlatformConfig platformConfig;
+    public bool startOrEndCouplingOfRewards = false;
     [Space]
     public WeaponConfig firstWeaponConfig;
     public WeaponConfig secondWeaponConfig;
