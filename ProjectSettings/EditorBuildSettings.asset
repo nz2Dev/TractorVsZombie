@@ -12,3 +12,4 @@ EditorBuildSettings:
     path: Assets/NewFolder/Scenes/Boot Scene.unity
     guid: 8c449d73178e14dda9377e63c81d1ee1
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
