@@ -35,7 +35,7 @@ public class VehicleService {
 
     public void DeleteVehicle(int vehicleId) {
         var vehiclePhysics = physicsRegistry[vehicleId];
-        GameObject.Destroy(vehiclePhysics.gameObject);
+        vehiclePhysics.DestroySelf();
         physicsRegistry.Remove(vehicleId);
     }
 

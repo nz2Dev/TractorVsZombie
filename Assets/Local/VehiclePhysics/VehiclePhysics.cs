@@ -80,6 +80,13 @@ public class VehiclePhysics : MonoBehaviour {
         rootRigidbody = GetComponent<Rigidbody>();
     }
 
+    public void DestroySelf() {
+        baseCollider.isTrigger = true;
+        rootRigidbody.isKinematic = true;
+        rootRigidbody.linearVelocity = Vector3.zero;
+        rootRigidbody.angularVelocity = Vector3.zero;
+    }
+
     public void SetFrontAxis(WheelCollider leftWheel, WheelCollider rightWheel) {
         frontAxis = new WheelAxis {
             leftWheel = leftWheel,
