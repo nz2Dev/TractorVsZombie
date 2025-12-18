@@ -150,7 +150,7 @@ public class VehiclePhysics : MonoBehaviour {
         pullingGrabJoint.xMotion = ConfigurableJointMotion.Locked;
         pullingGrabJoint.yMotion = ConfigurableJointMotion.Locked;
         pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
-        pullingGrabJoint.angularXMotion = ConfigurableJointMotion.Limited;
+        pullingGrabJoint.angularXMotion = ConfigurableJointMotion.Free;
         pullingGrabJoint.angularYMotion = ConfigurableJointMotion.Free;
         pullingGrabJoint.angularZMotion = ConfigurableJointMotion.Locked;
         pullingGrabJoint.highAngularXLimit = new SoftJointLimit { limit = 20 };

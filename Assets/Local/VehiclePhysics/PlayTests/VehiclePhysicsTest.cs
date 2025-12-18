@@ -44,6 +44,43 @@ public class VehiclePhysicsTest : IPrebuildSetup, IPostBuildCleanup {
     public void SetupTest() {
     } 
     
+    [UnityTest]
+    public IEnumerator SpawnAttachedPhysicsDuringRuntime() {
+        var motorPhysicsPrefab = Resources.Load<VehiclePhysics>("Motor Vehicle Physics"); 
+        var towablePhysicsPrefab = Resources.Load<VehiclePhysics>("Towable Vehicle Physics");
+        
+        VehiclePhysics AttachTrailer(VehiclePhysics tail) {
+            var rotation = Quaternion.LookRotation(-tail.transform.forward, Vector3.up);
+            var position = tail.transform.position - tail.transform.right * 2;
+            var towablePhysics = GameObject.Instantiate(towablePhysicsPrefab, position, rotation);
+            towablePhysics.SetPullingVehicle(tail);
+            towablePhysics.MakeLooseTowingConnection();
+            towablePhysics.CollapseTowingConnection();
+            return towablePhysics;
+        }
+
+        IEnumerator WaitDriveMotorStraightFor(VehiclePhysics motor, int frames) {
+            for (int i = 0; i < frames; i++) {
+                yield return null;
+                var angle = Vector3.Angle(Vector3.forward, motor.transform.forward);
+                angle = Mathf.Clamp(angle, -70, +70);
+                motor.SetMotorTorque(150);
+                // motor.SetSteerAngle(-angle);
+            }
+        }
+        
+        var motorPhysics = GameObject.Instantiate(motorPhysicsPrefab);
+        yield return WaitDriveMotorStraightFor(motorPhysics, 500);
+        var firstTrailer = AttachTrailer(motorPhysics);
+        Debug.Break();
+
+        yield return WaitDriveMotorStraightFor(motorPhysics, 1500);
+        var secondTrailer = AttachTrailer(firstTrailer);
+        Debug.Break();
+        
+        yield return WaitDriveMotorStraightFor(motorPhysics, 1500);
+        Debug.Break();
+    }
     
     private IEnumerator DebugWaitForSleepState(string name, int limit = 100) {
         Debug.Break();
