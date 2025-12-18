@@ -180,7 +180,7 @@ public class GameBootstrapper : MonoBehaviour {
         playerController.Init();
     }
 
-    private void FixedUpdate() {
+    private void Update() {
         combatService.UpdateSpatialTree();
 
         projectileController.Update();
