@@ -51,14 +51,20 @@ public class CombatService {
         }
     }
 
-    private readonly int layer;
-    private readonly LayerMask agentsMask;
-    private readonly LayerMask agentsAndObstaclesMask;
+    private readonly int alieLayer;
+    private readonly int foeLayer;
+    private readonly LayerMask alieAgentsMask;
+    private readonly LayerMask alieAgentsAndObstaclesMask;
+    private readonly LayerMask foeAgentsMask;
+    private readonly LayerMask foeAgentsAndObstaclesMask;
 
-    public CombatService(int agentsLayer, LayerMask obstaclesMask) {
-        this.layer = agentsLayer;
-        this.agentsMask = 1 << agentsLayer;
-        this.agentsAndObstaclesMask = agentsMask | obstaclesMask;
+    public CombatService(int agentsLayer, int foeAgentsLayer, LayerMask obstaclesMask) {
+        this.alieLayer = agentsLayer;
+        this.foeLayer = foeAgentsLayer;
+        this.alieAgentsMask = 1 << agentsLayer;
+        this.alieAgentsAndObstaclesMask = alieAgentsMask | obstaclesMask;
+        this.foeAgentsMask = 1 << foeAgentsLayer;
+        this.foeAgentsAndObstaclesMask = foeAgentsMask | obstaclesMask;
 
     }
 
@@ -147,7 +153,7 @@ public class CombatService {
 
     public int RegisterAgent(Vector3 position, bool alie, float height = 1f) {
         var agentId = idCounter++;
-        var spatialMarker = CreateSpatialMarker(agentId, position, height, 0.3f);
+        var spatialMarker = CreateSpatialMarker(agentId, position, height, 0.3f, alie);
         var agent = new CombatAgent { 
             agentId = agentId, 
             alie = alie,
@@ -195,7 +201,12 @@ public class CombatService {
     }
 
     public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage) {
-        if (!Physics.Raycast(position, direction, out var hitInfo, 0.25f, agentsAndObstaclesMask)) {
+        if (!agents.TryGetValue(agentId, out var agent)) {
+            return false;
+        }
+
+        var enemyMask = agent.alie ? foeAgentsAndObstaclesMask : alieAgentsAndObstaclesMask;
+        if (!Physics.Raycast(position, direction, out var hitInfo, 0.25f, enemyMask)) {
             return false;
         }
         
@@ -209,7 +220,7 @@ public class CombatService {
 
     public int ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage) {
         var sourceAgent = agents[sourceAgentId];
-        var overlapCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, agentsMask);
+        var overlapCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, alieAgentsMask | foeAgentsMask);
         int affectedCount = 0;
         for (int i = 0; i < overlapCount; i++) {
             var overlapCollider = overlapBuffer[i];
@@ -265,10 +276,10 @@ public class CombatService {
         };
     }
 
-    private CapsuleCollider CreateSpatialMarker(int id, Vector3 position, float height, float radius) {
+    private CapsuleCollider CreateSpatialMarker(int id, Vector3 position, float height, float radius, bool alie) {
         var go = new GameObject("Combat Agent (New) " + id, typeof(CapsuleCollider));
         go.transform.position = position;
-        go.layer = layer;
+        go.layer = alie ? alieLayer : foeLayer;
         var collider = go.GetComponent<CapsuleCollider>();
         collider.isTrigger = true;
         collider.height = height;

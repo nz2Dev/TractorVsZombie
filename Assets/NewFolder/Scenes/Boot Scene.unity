@@ -292,6 +292,7 @@ MonoBehaviour:
   orcaEnvironment: {fileID: 851369242}
   physicsServiceLayer: UnitPhysics
   combatServiceLayer: Combat
+  foeCombatServiceLayer: CombatFoe
   combatServiceEnvironmentMask:
     serializedVersion: 2
     m_Bits: 2177

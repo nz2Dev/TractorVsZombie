@@ -17,6 +17,7 @@ public class GameBootstrapper : MonoBehaviour {
     [Space]
     [SerializeField] private string physicsServiceLayer;
     [SerializeField] private string combatServiceLayer;
+    [SerializeField] private string foeCombatServiceLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
     [Space]
     [SerializeField] private InfantryConfig enemyInfantryConfig;
@@ -57,7 +58,7 @@ public class GameBootstrapper : MonoBehaviour {
     }
 
     private void Build() {
-        combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), combatServiceEnvironmentMask);
+        combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), LayerMask.NameToLayer(foeCombatServiceLayer), combatServiceEnvironmentMask);
         var vehicleService = new VehicleService();
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var navigationService = new NavigationService(flowFieldsSurface);
