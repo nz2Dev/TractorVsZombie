@@ -65,12 +65,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 783838195594919297, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_VersionIndex
-      value: 4160
+      value: 4166
       objectReference: {fileID: 0}
-    - target: {fileID: 1483170472942562723, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 6d5b35b85569a4c6b8452e7054b43c0d, type: 2}
     - target: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_Name
       value: Rear R Wheel Geometry
@@ -89,7 +85,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7198062487934941348, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.27
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7198062487934941348, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -156,12 +152,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 783838195594919297, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_VersionIndex
-      value: 4160
+      value: 4166
       objectReference: {fileID: 0}
-    - target: {fileID: 1483170472942562723, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 6d5b35b85569a4c6b8452e7054b43c0d, type: 2}
     - target: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_Name
       value: Front L Wheel Geometry
@@ -247,12 +239,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 783838195594919297, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_VersionIndex
-      value: 4160
+      value: 4166
       objectReference: {fileID: 0}
-    - target: {fileID: 1483170472942562723, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 6d5b35b85569a4c6b8452e7054b43c0d, type: 2}
     - target: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_Name
       value: Front R Wheel Geometry
@@ -336,10 +324,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3518426781514934332}
     m_Modifications:
-    - target: {fileID: 132251759533236118, guid: c0a65a2b06cc04f75af45a58b851557f, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 6d5b35b85569a4c6b8452e7054b43c0d, type: 2}
     - target: {fileID: 6437747089859687489, guid: c0a65a2b06cc04f75af45a58b851557f, type: 3}
       propertyPath: m_Name
       value: Tractor Base Geometry
@@ -386,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8308752066304019334, guid: c0a65a2b06cc04f75af45a58b851557f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4912
+      value: 4918
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -408,12 +392,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 783838195594919297, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_VersionIndex
-      value: 4160
+      value: 4166
       objectReference: {fileID: 0}
-    - target: {fileID: 1483170472942562723, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 6d5b35b85569a4c6b8452e7054b43c0d, type: 2}
     - target: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_Name
       value: Rear L Wheel Geometry
@@ -432,7 +412,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7198062487934941348, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.27
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7198062487934941348, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_LocalPosition.y
