@@ -44,7 +44,7 @@ public class InfantryController {
         registry[model.Id] = model;
         model.Health = model.MaxHealth;
         model.CombatId = combatService.RegisterAgent(model.Position, alie);
-        model.AvoidanceId = localAvoidanceService.AddAgent(model.Position);
+        model.AvoidanceId = localAvoidanceService.AddAgent(model.Position, model.AvoidanceConfig);
         model.PhysicsId = physicsService.RegisterPhysicsEntity(model.Position, model.PhysicsConfig.height, model.PhysicsConfig.radius);
         view.AddVisuals(model.Id, model.Position, model.VisualsPrefab);
         return model.Id;

@@ -15,4 +15,5 @@ public class InfantryConfig : ScriptableObject {
     public int damage = 1;
     public InfantryVisuals visualsPrefab;
     public InfantryPhysicsConfig physicsConfig = new InfantryPhysicsConfig { height = 0.5f, radius = 0.15f};
+    public AgentAvoidanceConfig agentAvoidanceConfig;
 }

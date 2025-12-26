@@ -7,6 +7,18 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
+[Serializable]
+public struct AgentAvoidanceConfig {
+    public float height; // = 0.5;
+    public float radius; // = 0.5f;
+    public float radiusObst; // = 0.5f;
+    public float maxSpeed; // = 20.0f;
+    public int maxNeighbors; // = 15;
+    public float neighborDist; // = 20.0f;
+    public float timeHorizon; // = 15.0f;
+    public float timeHorizonObst; // = 1.2f;
+}
+
 public class LocalAvoidanceService {
 
     private int nextId = 0;
@@ -21,12 +33,36 @@ public class LocalAvoidanceService {
     public IEnumerable<int> AgentIds => agentRegistry.Keys;
 
     public int AddAgent(Vector3 initPosition) {
+        return AddAgent(initPosition, new AgentAvoidanceConfig {
+            height = 0.5f,
+            radius = 0.3f,
+            radiusObst = 0.5f,
+            maxSpeed = 20.0f,
+            maxNeighbors = 15,
+            neighborDist = 20,
+            timeHorizon = 1.5f,
+            timeHorizonObst = 2.5f
+        });
+    }
+    
+    public int AddAgent(Vector3 initPosition, AgentAvoidanceConfig config) {
         var newAgent = environment.AddAgent(initPosition);
-        newAgent.timeHorizon = 1.5f;
-        newAgent.timeHorizonObst = 2.5f;
-        newAgent.radius = 0.3f;
         agentRegistry.Add(nextId, newAgent);
-        return nextId++;
+        var id = nextId++;
+        UpdateAgent(id, config);
+        return id;
+    }
+
+    public void UpdateAgent(int agentId, AgentAvoidanceConfig config) {
+        var newAgent = agentRegistry[agentId];
+        newAgent.height = config.height;
+        newAgent.radius = config.radius;
+        newAgent.radiusObst = config.radiusObst;
+        newAgent.maxSpeed = config.maxSpeed;
+        newAgent.maxNeighbors = config.maxNeighbors;
+        newAgent.neighborDist = config.neighborDist;
+        newAgent.timeHorizon = config.timeHorizon;
+        newAgent.timeHorizonObst = config.timeHorizonObst;
     }
 
     public void RemoveAgent(int agentId) {
