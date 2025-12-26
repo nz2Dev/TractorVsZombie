@@ -16,7 +16,7 @@ MonoBehaviour:
     enabled: 1
     impactSFX:
     - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
-    radius: 0.5
+    radius: 0.7
   drivingData:
     maxTorque: 200
     maxBreaksTorque: 50
