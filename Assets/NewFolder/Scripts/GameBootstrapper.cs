@@ -101,7 +101,9 @@ public class GameBootstrapper : MonoBehaviour {
 
         towableVehicleController = new TowableVehicleController(
             towableVehicleView,
-            vehicleService
+            vehicleService,
+            combatService,
+            soundManager
         );
 
         infantryController = new InfantryController(
