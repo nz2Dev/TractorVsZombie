@@ -60,7 +60,7 @@ public class RewardController {
 
     private void SpawnPointReward(InfantryModel diedInfantry) {
         var nextId = ++idCounter;
-        var reward = new RewardModel { Id = nextId, Position = diedInfantry.Position, RewardType = RewardType.Points, WeaponConfig = null };
+        var reward = new RewardModel { Id = nextId, Position = diedInfantry.BodyState.position, RewardType = RewardType.Points, WeaponConfig = null };
         reward.SpatialId = rewardsMediator.AddRewardPoint(reward.Position, 2f);
         registry[reward.SpatialId] = reward;
         view.SpawnPointReward(reward.Id, reward.Position);

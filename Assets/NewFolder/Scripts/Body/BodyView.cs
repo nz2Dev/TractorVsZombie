@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class InfantryView {
+public class BodyView {
     
-    private readonly Dictionary<int, InfantryVisuals> visualsRegistry = new Dictionary<int, InfantryVisuals>();
+    private readonly Dictionary<int, BodyVisuals> visualsRegistry = new Dictionary<int, BodyVisuals>();
 
-    public void AddVisuals(int infantryId, Vector3 position, InfantryVisuals visualsPrefab) {
+    public void AddVisuals(int infantryId, Vector3 position, BodyVisuals visualsPrefab) {
         var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
         visualsRegistry.Add(infantryId, visuals);
     }

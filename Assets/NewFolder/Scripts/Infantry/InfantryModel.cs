@@ -6,11 +6,9 @@ public class InfantryModel {
 
     public int Id { get; private set; }
     public int CombatId { get; set; }
-    public int AvoidanceId { get; set; }
-    public int PhysicsId { get; set; }
-    public Vector3 Position { get; set; }
-    public Quaternion Rotation { get; set; }
-    public bool Grounded { get; set; }
+    public int BodyId { get; set; }
+    public BodyState BodyState { get; set; }
+    
     public int Health { get; set; }
     public float LastAttackTime { get; set; }
 
@@ -18,13 +16,10 @@ public class InfantryModel {
     public int MaxHealth => config.maxHealth;
     public float AttackCooldown => config.attackCooldown;
     public int Damage => config.damage;
-    public InfantryVisuals VisualsPrefab => config.visualsPrefab;
-    public InfantryPhysicsConfig PhysicsConfig => config.physicsConfig;
-    public AgentAvoidanceConfig AvoidanceConfig => config.agentAvoidanceConfig;
+    public BodyConfig BodyConfig => config.bodyConfig;
 
-    public InfantryModel(int id, Vector3 position, InfantryConfig config) {
+    public InfantryModel(int id, InfantryConfig config) {
         Id = id;
-        Position = position;
         this.config = config;
     }
 

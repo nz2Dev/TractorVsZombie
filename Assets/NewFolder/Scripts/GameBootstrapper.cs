@@ -45,6 +45,7 @@ public class GameBootstrapper : MonoBehaviour {
     private WeaponController weaponController;
     private MotorVehicleController motorVehicleController;
     private TowableVehicleController towableVehicleController;
+    private BodyController bodyController;
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
@@ -71,7 +72,7 @@ public class GameBootstrapper : MonoBehaviour {
         var motorVehicleView = new MotorVehicleView();
         var towableVehicleView = new TowableVehicleView();
         var rewardView = new RewardView(rewardVisualsPrefab);
-        var infantryView = new InfantryView();
+        var bodyView = new BodyView();
 
         projectileController = new ProjectileController(
             combatService,
@@ -106,12 +107,16 @@ public class GameBootstrapper : MonoBehaviour {
             soundManager
         );
 
+        bodyController = new BodyController(
+            physicsService,
+            localAvoidanceService,
+            bodyView
+        );
+
         infantryController = new InfantryController(
-            infantryView,
             combatService,
             navigationService,
-            localAvoidanceService,
-            physicsService
+            bodyController
         );
 
         armorController = new ArmorController(
@@ -191,6 +196,7 @@ public class GameBootstrapper : MonoBehaviour {
         weaponController.Update();
         motorVehicleController.Update();
         towableVehicleController.Update();
+        bodyController.Update();
         infantryController.Update();
         armorController.Update();
         platformController.Update();

@@ -5,23 +5,19 @@ using UnityEngine;
 
 public class InfantryController {
 
-    private readonly InfantryView view;
     private readonly CombatService combatService;
-    private readonly LocalAvoidanceService localAvoidanceService;
     private readonly NavigationService navigationService;
-    private readonly PhysicsService physicsService;
+    private readonly BodyController bodyController;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
     private List<InfantryModel> diedInfantry = new();
 
-    public InfantryController(InfantryView view, CombatService combatService, NavigationService navigationService, LocalAvoidanceService localAvoidanceService, PhysicsService physicsService) {
-        this.view = view;
+    public InfantryController(CombatService combatService, NavigationService navigationService, BodyController bodyController) {
         this.combatService = combatService;
         this.navigationService = navigationService;
-        this.localAvoidanceService = localAvoidanceService;
-        this.physicsService = physicsService;
+        this.bodyController = bodyController;
     }
 
     public IReadOnlyList<InfantryModel> DiedInfantry => diedInfantry;
@@ -30,31 +26,47 @@ public class InfantryController {
     public void ClearDiedRegistry() => diedInfantry.Clear();
 
     public void Update() {
+        ReadBodyState();
         ReadCombatState();
-        UpdateMovements();
         ClearDeadInfantry();
-        SyncPositions();
-        UpdateNavigation();
+        UpdateCombatPositions();
+
         OperateInfantry();
     }
 
     public int SpawnInfantry(Vector3 position, bool alie, InfantryConfig config) {
         var nextId = ++idCounter;
-        var model = new InfantryModel(nextId, position, config);
+        var model = new InfantryModel(nextId, config);
         registry[model.Id] = model;
         model.Health = model.MaxHealth;
-        model.CombatId = combatService.RegisterAgent(model.Position, alie);
-        model.AvoidanceId = localAvoidanceService.AddAgent(model.Position, model.AvoidanceConfig);
-        model.PhysicsId = physicsService.RegisterPhysicsEntity(model.Position, model.PhysicsConfig.height, model.PhysicsConfig.radius);
-        view.AddVisuals(model.Id, model.Position, model.VisualsPrefab);
+        model.CombatId = combatService.RegisterAgent(position, alie);
+        model.BodyId = bodyController.SpawnBody(position, model.BodyConfig);
         return model.Id;
+    }
+
+    public void Move(int infantryId, Vector3 direction) {
+        var model = registry[infantryId];
+        bodyController.Move(model.BodyId, direction);
+    }
+
+    public void Attack(int infantryId, int targetCombatId) {
+        var model = registry[infantryId];
+        if (model.LastAttackTime + model.AttackCooldown < Time.time) {
+            model.LastAttackTime = Time.time;
+            combatService.ApplyDirectDamage(model.CombatId, targetCombatId, model.Damage);
+            bodyController.Attack(model.BodyId);
+        }
     }
 
     private void DeleteInfantry(InfantryModel model) {
         registry.Remove(model.Id);
-        localAvoidanceService.RemoveAgent(model.AvoidanceId);
-        physicsService.UnregisterPhysicsEntity(model.PhysicsId);
-        view.RemoveVisuals(model.Id);
+        bodyController.DeleteBody(model.BodyId);
+    }
+
+    private void ReadBodyState() {
+        foreach (var model in registry.Values) {
+            model.BodyState = bodyController.ReadBodyState(model.BodyId);
+        }
     }
 
     private void ReadCombatState() {
@@ -65,12 +77,9 @@ public class InfantryController {
             bool anyDamage = false;
             var combatState = combatService.GetAgentState(model.CombatId);
             
-            if (combatState.exploded && model.Grounded) {
-                model.Grounded = false;
+            if (combatState.exploded) {
                 model.Health -= combatState.damage;
-                physicsService.UpdatePhysicsEntityPosition(model.PhysicsId, model.Position);
-                physicsService.SetPhysicsActive(model.PhysicsId, true);
-                physicsService.AddExplosionForce(model.PhysicsId, 10, combatState.damageSourcePosition, 4f, 1, ForceMode.Impulse);
+                bodyController.Explode(model.BodyId, combatState.damageSourcePosition);
                 anyDamage = true;
             }
 
@@ -81,41 +90,21 @@ public class InfantryController {
 
             combatService.ClearAgentState(model.CombatId);
             if (anyDamage) {
-                view.ShowTakeHit(model.Id);
+                bodyController.Hit(model.BodyId);
             }
 
             if (!model.IsAlive) {
-                if (combatState.projectiled) {
-                    view.ShowDeathByProjectile(model.Id, combatState.damageSourcePosition, blownAway: model.Grounded);
-                } else {
-                    view.ShowDisolveDeath(model.Id);
-                }
-                
+                bodyController.Die(model.BodyId, combatState.damageSourcePosition, combatState.projectiled);
                 combatService.UnregisterAgent(model.CombatId);
                 diedInfantry.Add(model);
             }
         }
     }
 
-    private void UpdateMovements() {
+    private void UpdateCombatPositions() {
         foreach (var model in registry.Values) {
-            var physicsPose = physicsService.GetEntityPose(model.PhysicsId);
-            var keepFlying = !model.Grounded && physicsPose.InMotion;
-            var becomeGrounded = !model.Grounded && !physicsPose.InMotion;
-            var keepsGrouned = model.Grounded && !physicsPose.InMotion;
-            
-            if (keepFlying) {
-                model.Position = physicsPose.Position;
-                model.Rotation = physicsPose.Rotation;
-            } else if (becomeGrounded) {
-                model.Grounded = true;
-                model.Position = physicsService.GetGroundPosition(model.Position);
-                model.Rotation = Quaternion.identity;
-                physicsService.SetPhysicsActive(model.PhysicsId, false);
-            } else if (keepsGrouned && model.IsAlive) {
-                localAvoidanceService.GetAgentPositionAndRotation(model.AvoidanceId, out var pos, out var rot);
-                model.Position = pos;
-                model.Rotation = rot;
+            if (model.IsAlive) {
+                combatService.UpdateAgentPosition(model.CombatId, model.BodyState.position);
             }
         }
     }
@@ -123,7 +112,7 @@ public class InfantryController {
     private void ClearDeadInfantry() {
         List<InfantryModel> infantryToRemove = new();
         foreach (var model in registry.Values) {
-            if (!model.IsAlive && model.Grounded) {
+            if (!model.IsAlive && model.BodyState.grounded) {
                 infantryToRemove.Add(model);
             }
         }
@@ -132,35 +121,18 @@ public class InfantryController {
         }
     }
 
-    private void SyncPositions() {
-        foreach (var model in registry.Values) {
-            localAvoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
-            view.UpdateTransform(model.Id, model.Position, model.Rotation);
-            if (model.IsAlive) {
-                combatService.UpdateAgentPosition(model.CombatId, model.Position);
-            }
-        }
-    }
 
-    private void UpdateNavigation() {
-        foreach (var model in registry.Values) {    
-            var goalNavigationVector = navigationService.GetFlowVector(model.Position);
-            localAvoidanceService.SetPreferedVelocity(model.AvoidanceId, goalNavigationVector);
-        }
-    }
 
     private void OperateInfantry() {
         foreach (var model in registry.Values) {    
-            if (!model.Grounded || !model.IsAlive)
+            if (!model.BodyState.grounded || !model.IsAlive)
                 continue;
             
-            if (!combatService.GetClosestEnemyAgentInRange(model.CombatId, 2, out var closestFoe))
-                continue;
-                
-            if (model.LastAttackTime + model.AttackCooldown < Time.time) {
-                model.LastAttackTime = Time.time;
-                combatService.ApplyDirectDamage(model.CombatId, closestFoe.id, model.Damage);
-                view.ShowDirectFrontAttack(model.Id);
+            var goalNavigationVector = navigationService.GetFlowVector(model.BodyState.position);
+            Move(model.Id, goalNavigationVector);
+            
+            if (combatService.GetClosestEnemyAgentInRange(model.CombatId, 2, out var closestFoe)) {
+                Attack(model.Id, closestFoe.id);
             }
         }
     }

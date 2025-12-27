@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InfantryVisuals : MonoBehaviour {
+public class BodyVisuals : MonoBehaviour {
     
     private Animator animator;
 
