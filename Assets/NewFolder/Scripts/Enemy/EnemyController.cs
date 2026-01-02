@@ -11,6 +11,7 @@ public class EnemyController {
     private readonly InfantryController infantryController;
     private readonly ArmorController armorController;
     private readonly ArmorAIController armorAIController;
+    private readonly InfantryAIController infantryAIController;
 
     private float lastTimeProduced = float.MinValue;
     private Transform[] spawnPoints;
@@ -26,7 +27,7 @@ public class EnemyController {
 
     public EnemyController(EnemyView crowdView,
         Transform[] spawnPoints, Transform targetPoint, int unitsCount, InfantryConfig infantryConfig, InfantryController infantryController,
-        int maxVehiclesCount, ArmorConfig armorConfig, ArmorController armorController, ArmorAIController armorAIController) {
+        int maxVehiclesCount, ArmorConfig armorConfig, ArmorController armorController, ArmorAIController armorAIController, InfantryAIController infantryAIController) {
         this.enemyView = crowdView;
         this.spawnPoints = spawnPoints;
         this.targetPoint = targetPoint;
@@ -39,6 +40,7 @@ public class EnemyController {
         this.armorConfig = armorConfig;
         this.armorController = armorController;
         this.armorAIController = armorAIController;
+        this.infantryAIController = infantryAIController;
     }
 
     public void Update() {
@@ -57,7 +59,8 @@ public class EnemyController {
         
         lastTimeProduced = Time.time;
         foreach (var spawnPoint in spawnPoints) {    
-            infantryController.SpawnInfantry(spawnPoint.position, alie: false, infantryConfig);
+            var infantryId = infantryController.SpawnInfantry(spawnPoint.position, alie: false, infantryConfig);
+            infantryAIController.TakeUnderControl(infantryId);
         }
     }
 

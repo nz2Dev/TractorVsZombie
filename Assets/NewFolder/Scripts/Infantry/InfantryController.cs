@@ -6,7 +6,6 @@ using UnityEngine;
 public class InfantryController {
 
     private readonly CombatService combatService;
-    private readonly NavigationService navigationService;
     private readonly BodyController bodyController;
 
     private int idCounter;
@@ -14,9 +13,8 @@ public class InfantryController {
 
     private List<InfantryModel> diedInfantry = new();
 
-    public InfantryController(CombatService combatService, NavigationService navigationService, BodyController bodyController) {
+    public InfantryController(CombatService combatService, BodyController bodyController) {
         this.combatService = combatService;
-        this.navigationService = navigationService;
         this.bodyController = bodyController;
     }
 
@@ -30,8 +28,10 @@ public class InfantryController {
         ReadCombatState();
         ClearDeadInfantry();
         UpdateCombatPositions();
+    }
 
-        OperateInfantry();
+    public void WriteDeadInfantryFiltered(List<int> referencedList) {
+        referencedList.RemoveAll(id => !registry.ContainsKey(id));
     }
 
     public int SpawnInfantry(Vector3 position, bool alie, InfantryConfig config) {
@@ -56,6 +56,17 @@ public class InfantryController {
             combatService.ApplyDirectDamage(model.CombatId, targetCombatId, model.Damage);
             bodyController.Attack(model.BodyId);
         }
+    }
+
+    public InfantryState GetInfantryState(int infantryId) {
+        var model = registry[infantryId];
+        return new InfantryState {
+            position = model.BodyState.position,
+            isAlive = model.IsAlive,
+            isGrounded = model.BodyState.grounded,
+            combatId = model.CombatId,
+            bodyId = model.BodyId,
+        };
     }
 
     private void DeleteInfantry(InfantryModel model) {
@@ -118,22 +129,6 @@ public class InfantryController {
         }
         foreach (var model in infantryToRemove) {
             DeleteInfantry(model);
-        }
-    }
-
-
-
-    private void OperateInfantry() {
-        foreach (var model in registry.Values) {    
-            if (!model.BodyState.grounded || !model.IsAlive)
-                continue;
-            
-            var goalNavigationVector = navigationService.GetFlowVector(model.BodyState.position);
-            Move(model.Id, goalNavigationVector);
-            
-            if (combatService.GetClosestEnemyAgentInRange(model.CombatId, 2, out var closestFoe)) {
-                Attack(model.Id, closestFoe.id);
-            }
         }
     }
 
