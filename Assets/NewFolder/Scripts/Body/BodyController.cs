@@ -97,7 +97,7 @@ public class BodyController {
             } else if (becomeGrounded) {
                 model.Grounded = true;
                 model.Position = physicsService.GetGroundPosition(model.Position);
-                model.Rotation = Quaternion.identity;
+                model.Rotation = model.Alive ? Quaternion.identity : model.Rotation;
                 physicsService.SetPhysicsActive(model.PhysicsId, false);
             } else if (keepsGrouned && model.Alive) {
                 localAvoidanceService.GetAgentPositionAndRotation(model.AvoidanceId, out var pos, out var rot);

@@ -25,8 +25,8 @@ public class InfantryController {
 
     public void Update() {
         ReadBodyState();
-        ReadCombatState();
         ClearDeadInfantry();
+        ReadCombatState();
         UpdateCombatPositions();
     }
 
@@ -80,6 +80,18 @@ public class InfantryController {
         }
     }
 
+    private void ClearDeadInfantry() {
+        List<InfantryModel> infantryToRemove = new();
+        foreach (var model in registry.Values) {
+            if (!model.IsAlive && model.BodyState.grounded) {
+                infantryToRemove.Add(model);
+            }
+        }
+        foreach (var model in infantryToRemove) {
+            DeleteInfantry(model);
+        }
+    }
+
     private void ReadCombatState() {
         foreach (var model in registry.Values) {
             if (!model.IsAlive)
@@ -117,18 +129,6 @@ public class InfantryController {
             if (model.IsAlive) {
                 combatService.UpdateAgentPosition(model.CombatId, model.BodyState.position);
             }
-        }
-    }
-
-    private void ClearDeadInfantry() {
-        List<InfantryModel> infantryToRemove = new();
-        foreach (var model in registry.Values) {
-            if (!model.IsAlive && model.BodyState.grounded) {
-                infantryToRemove.Add(model);
-            }
-        }
-        foreach (var model in infantryToRemove) {
-            DeleteInfantry(model);
         }
     }
 
