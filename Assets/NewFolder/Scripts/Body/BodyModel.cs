@@ -20,7 +20,6 @@ public class BodyModel {
     public bool Grounded { get; set; }
     public bool Alive { get; set; }
 
-    public BodyVisuals VisualsPrefab => config.visualsPrefab;
     public BodyConfig.PhysicsData PhysicsData => config.physicsData;
     public AgentAvoidanceConfig AvoidanceConfig => config.agentAvoidanceConfig;
 

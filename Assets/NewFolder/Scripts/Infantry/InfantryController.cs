@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class InfantryController {
 
+    private readonly InfantryView view;
     private readonly CombatService combatService;
     private readonly BodyController bodyController;
 
@@ -13,9 +14,10 @@ public class InfantryController {
 
     private List<InfantryModel> diedInfantry = new();
 
-    public InfantryController(CombatService combatService, BodyController bodyController) {
+    public InfantryController(CombatService combatService, BodyController bodyController, InfantryView view) {
         this.combatService = combatService;
         this.bodyController = bodyController;
+        this.view = view;
     }
 
     public IReadOnlyList<InfantryModel> DiedInfantry => diedInfantry;
@@ -27,7 +29,7 @@ public class InfantryController {
         ReadBodyState();
         ClearDeadInfantry();
         ReadCombatState();
-        UpdateCombatPositions();
+        SyncPositions();
     }
 
     public void WriteDeadInfantryFiltered(List<int> referencedList) {
@@ -41,6 +43,7 @@ public class InfantryController {
         model.Health = model.MaxHealth;
         model.CombatId = combatService.RegisterAgent(position, alie);
         model.BodyId = bodyController.SpawnBody(position, model.BodyConfig);
+        view.AddVisuals(model.Id, position, model.VisualsPrefab);
         return model.Id;
     }
 
@@ -54,7 +57,7 @@ public class InfantryController {
         if (model.LastAttackTime + model.AttackCooldown < Time.time) {
             model.LastAttackTime = Time.time;
             combatService.ApplyDirectDamage(model.CombatId, targetCombatId, model.Damage);
-            bodyController.Attack(model.BodyId);
+            view.ShowDirectFrontAttack(model.Id);
         }
     }
 
@@ -72,6 +75,7 @@ public class InfantryController {
     private void DeleteInfantry(InfantryModel model) {
         registry.Remove(model.Id);
         bodyController.DeleteBody(model.BodyId);
+        view.RemoveVisuals(model.Id);
     }
 
     private void ReadBodyState() {
@@ -113,19 +117,25 @@ public class InfantryController {
 
             combatService.ClearAgentState(model.CombatId);
             if (anyDamage) {
-                bodyController.Hit(model.BodyId);
+                view.ShowTakeHit(model.Id);
             }
 
             if (!model.IsAlive) {
-                bodyController.Die(model.BodyId, combatState.damageSourcePosition, combatState.projectiled);
+                bodyController.Die(model.BodyId);
+                if (combatState.projectiled) {
+                    view.ShowDeathByProjectile(model.Id, combatState.damageSourcePosition, blownAway: model.BodyState.grounded);
+                } else {
+                    view.ShowDisolveDeath(model.Id);
+                }
                 combatService.UnregisterAgent(model.CombatId);
                 diedInfantry.Add(model);
             }
         }
     }
 
-    private void UpdateCombatPositions() {
+    private void SyncPositions() {
         foreach (var model in registry.Values) {
+            view.UpdateTransform(model.Id, model.BodyState.position, model.BodyState.rotation);
             if (model.IsAlive) {
                 combatService.UpdateAgentPosition(model.CombatId, model.BodyState.position);
             }

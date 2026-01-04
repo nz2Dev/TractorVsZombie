@@ -8,4 +8,5 @@ public class InfantryConfig : ScriptableObject {
     public float attackCooldown = 1;
     public int damage = 1;
     public BodyConfig bodyConfig;
+    public InfantryVisuals visualsPrefab;
 }

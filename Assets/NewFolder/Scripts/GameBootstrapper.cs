@@ -73,7 +73,7 @@ public class GameBootstrapper : MonoBehaviour {
         var motorVehicleView = new MotorVehicleView();
         var towableVehicleView = new TowableVehicleView();
         var rewardView = new RewardView(rewardVisualsPrefab);
-        var bodyView = new BodyView();
+        var infantryView = new InfantryView();
 
         projectileController = new ProjectileController(
             combatService,
@@ -110,13 +110,13 @@ public class GameBootstrapper : MonoBehaviour {
 
         bodyController = new BodyController(
             physicsService,
-            localAvoidanceService,
-            bodyView
+            localAvoidanceService
         );
 
         infantryController = new InfantryController(
             combatService,
-            bodyController
+            bodyController,
+            infantryView
         );
 
         armorController = new ArmorController(

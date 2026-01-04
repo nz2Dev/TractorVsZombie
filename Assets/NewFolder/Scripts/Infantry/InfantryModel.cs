@@ -17,6 +17,7 @@ public class InfantryModel {
     public float AttackCooldown => config.attackCooldown;
     public int Damage => config.damage;
     public BodyConfig BodyConfig => config.bodyConfig;
+    public InfantryVisuals VisualsPrefab => config.visualsPrefab;
 
     public InfantryModel(int id, InfantryConfig config) {
         Id = id;

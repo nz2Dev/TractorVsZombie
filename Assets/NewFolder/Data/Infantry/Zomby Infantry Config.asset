@@ -16,3 +16,4 @@ MonoBehaviour:
   attackCooldown: 1
   damage: 1
   bodyConfig: {fileID: 11400000, guid: 277b8184858dd4e039305917c9c2adc1, type: 2}
+  visualsPrefab: {fileID: 414806356285922434, guid: 6d206294f353a4dba8c27126d4edce39, type: 3}
