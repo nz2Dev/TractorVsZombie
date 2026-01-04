@@ -93,35 +93,29 @@ public class PlayerController {
     }
 
     private void ReadPlatformSelectionInput() {
-        var toggledIndexes = new List<int>();
+        var toggledIds = Enumerable.Empty<int>();
+
         if (input.ReadSelectAllPressed()) {
-            for (int i = 0; i < model.ControlledPlatformIds.Count; i++) 
-                toggledIndexes.Add(i);
-
-            bool partiallySelected = model.SelectedPlatformIds.Count != model.ControlledPlatformIds.Count;
-            if (partiallySelected) {
-                foreach (var selectedPlatformId in model.SelectedPlatformIds) {
-                    int selectedIndex = model.ControlledPlatformIds.IndexOf(selectedPlatformId);
-                    toggledIndexes.Remove(selectedIndex);
-                }
-            }
+            bool partiallySelected = 
+                model.SelectedPlatformIds.Count != model.ControlledPlatformIds.Count;
+            
+            toggledIds = partiallySelected
+                ? model.ControlledPlatformIds.Except(model.SelectedPlatformIds)
+                : model.ControlledPlatformIds;
         } else if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
-            toggledIndexes.Add(pressedIndex);
+            toggledIds = new[] { model.ControlledPlatformIds[pressedIndex] };
         }
 
-        if (toggledIndexes.Count == 0)
-            return;
-
-        foreach (var index in toggledIndexes) {
-            var platformId = model.ControlledPlatformIds[index];
-            if (model.SelectedPlatformIds.Contains(platformId)) {
-                model.SelectedPlatformIds.Remove(platformId);
-            } else {
-                model.SelectedPlatformIds.Add(platformId);
-            }
+        bool hasEffect = false;
+        foreach (var id in toggledIds) {
+            hasEffect = true;
+            if (!model.SelectedPlatformIds.Remove(id))
+                model.SelectedPlatformIds.Add(id);
         }
-
-        OnSelectedPlatformChanged();
+        
+        if (hasEffect) {
+            OnSelectedPlatformChanged();
+        }
     }
 
     private void OnSelectedPlatformChanged() {
