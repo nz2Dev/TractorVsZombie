@@ -37,23 +37,20 @@ public class BodyController {
         registry.Remove(bodyId);
     }
 
-    public void Explode(int bodyId, Vector3 epicentr) {
+    public void TriggerExplosion(int bodyId, Vector3 epicentr) {
         var model = registry[bodyId];
-        if (!model.Grounded)
-            return;
-
         model.Grounded = false;
         physicsService.UpdatePhysicsEntityPosition(model.PhysicsId, model.Position);
         physicsService.SetPhysicsActive(model.PhysicsId, true);
         physicsService.AddExplosionForce(model.PhysicsId, 10, epicentr, 4f, 1, ForceMode.Impulse);
     }
 
-    public void Die(int bodyId) {
+    public void DisableRecovery(int bodyId) {
         var model = registry[bodyId];
         model.Alive = false;   
     }
 
-    public void Move(int bodyId, Vector3 preferedVelocity) {
+    public void SetPreferedVelocity(int bodyId, Vector3 preferedVelocity) {
         var model = registry[bodyId];
         model.PreferedVelocity = preferedVelocity;
     }

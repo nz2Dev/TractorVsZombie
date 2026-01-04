@@ -49,7 +49,7 @@ public class InfantryController {
 
     public void Move(int infantryId, Vector3 direction) {
         var model = registry[infantryId];
-        bodyController.Move(model.BodyId, direction);
+        bodyController.SetPreferedVelocity(model.BodyId, direction);
     }
 
     public void Attack(int infantryId, int targetCombatId) {
@@ -104,9 +104,9 @@ public class InfantryController {
             bool anyDamage = false;
             var combatState = combatService.GetAgentState(model.CombatId);
             
-            if (combatState.exploded) {
+            if (combatState.exploded && model.BodyState.grounded) {
                 model.Health -= combatState.damage;
-                bodyController.Explode(model.BodyId, combatState.damageSourcePosition);
+                bodyController.TriggerExplosion(model.BodyId, combatState.damageSourcePosition);
                 anyDamage = true;
             }
 
@@ -121,7 +121,7 @@ public class InfantryController {
             }
 
             if (!model.IsAlive) {
-                bodyController.Die(model.BodyId);
+                bodyController.DisableRecovery(model.BodyId);
                 if (combatState.projectiled) {
                     view.ShowDeathByProjectile(model.Id, combatState.damageSourcePosition, blownAway: model.BodyState.grounded);
                 } else {
