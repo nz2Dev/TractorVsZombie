@@ -8,14 +8,16 @@ public class PlatformController {
     private readonly CombatService combatService;
     private readonly TowableVehicleController towableVehicleController;
     private readonly WeaponController weaponController;
+    private readonly RamEffect ramEffect;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatService combatService, TowableVehicleController towableVehicleController, WeaponController weaponController) {
+    public PlatformController(CombatService combatService, TowableVehicleController towableVehicleController, WeaponController weaponController, RamEffect ramEffect) {
         this.combatService = combatService;
         this.towableVehicleController = towableVehicleController;
         this.weaponController = weaponController;
+        this.ramEffect = ramEffect;
     }
 
     public void Update() {
@@ -29,6 +31,7 @@ public class PlatformController {
         
         platform.CombatId = combatService.RegisterAgent(position, alie: true);
         platform.VehicleId = towableVehicleController.SpawnVehicle(position, platform.CombatId, platform.VehicleConfig);
+        platform.RamId = ramEffect.StartNew(position, platform.CombatId, platform.RamConfig);
         return platform.Id;
     }
 
@@ -54,6 +57,7 @@ public class PlatformController {
             host.Position = towableVehicleController.GetVehiclePosition(host.VehicleId);
             weaponController.MoveWeapon(host.WeaponId, host.Position);
             combatService.UpdateAgentPosition(host.CombatId, host.Position);
+            ramEffect.Forward(host.RamId, host.Position);
         }
     }
 

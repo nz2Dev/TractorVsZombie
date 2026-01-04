@@ -5,16 +5,14 @@ using UnityEngine;
 public class MotorVehicleController {
     
     private readonly MotorVehicleView view;
-    private readonly CombatService combatService;
     private readonly VehicleService vehicleService;
     private readonly SoundManager soundManager;
 
     private int idCounter;
     private readonly Dictionary<MotorVehicleId, MotorVehicleModel> registry = new ();
 
-    public MotorVehicleController(MotorVehicleView view, VehicleService vehicleService, CombatService combatService, SoundManager soundManager) {
+    public MotorVehicleController(MotorVehicleView view, VehicleService vehicleService, SoundManager soundManager) {
         this.vehicleService = vehicleService;
-        this.combatService = combatService;
         this.soundManager = soundManager;
         this.view = view;
     }
@@ -23,7 +21,6 @@ public class MotorVehicleController {
         UpdateVehicleOrientation();
         UpdateVehiclePhysics();
         UpdateVehicleSounds();
-        ComputeRamDamage();
     }
 
     public MotorVehicleId SpawnVehicle(Vector3 position, int ramCombatId, MotorVehicleConfig vehicleConfig) {
@@ -86,19 +83,6 @@ public class MotorVehicleController {
         var forward = model.PhysicsPose.rotation * Vector3.forward;
         var forwardToDirectionDegrees = Vector3.SignedAngle(forward, direction, Vector3.up);
         model.SteeringDegrees = Mathf.Clamp(forwardToDirectionDegrees, -model.DrivingData.maxSteerDegrees, model.DrivingData.maxSteerDegrees);
-    }
-
-    private void ComputeRamDamage() {
-        foreach (var vehicle in registry.Values) {
-            if (!vehicle.RamData.enabled)
-                continue;
-
-            var affectedCount = combatService.ApplyExplosionDamage(vehicle.RamCombatId, vehicle.Position, vehicle.RamData.radius, damage: 0);
-            for (int i = 0; i < affectedCount; i++) {
-                var position = vehicle.Position + Random.onUnitSphere * vehicle.RamData.radius;
-                soundManager.PlayEffectDelayed(position, i * 0.05f, vehicle.RamData.impactSFX);
-            }    
-        }
     }
 
     private void UpdateVehiclePhysics() {

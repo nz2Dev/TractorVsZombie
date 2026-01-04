@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ArmorController {
 
+    private readonly RamEffect ramEffect;
     private readonly CombatService combatService;
     private readonly WeaponController weaponController;
     private readonly MotorVehicleController motorVehicleController;
@@ -13,10 +14,11 @@ public class ArmorController {
     private readonly Dictionary<int, ArmorModel> registry = new ();
     private readonly List<ArmorModel> diedArmor = new ();
 
-    public ArmorController(CombatService combatService, WeaponController weaponController, MotorVehicleController motorVehicleController) {
+    public ArmorController(CombatService combatService, WeaponController weaponController, MotorVehicleController motorVehicleController, RamEffect ramEffect) {
         this.combatService = combatService;
         this.weaponController = weaponController;
         this.motorVehicleController = motorVehicleController;
+        this.ramEffect = ramEffect;
     }
 
     public int ArmorCount => registry.Count;
@@ -36,6 +38,7 @@ public class ArmorController {
         model.CombatId = combatService.RegisterAgent(position, alie: false);
         model.VehicleId = motorVehicleController.SpawnVehicle(position, model.CombatId, model.VehicleConfig);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position, model.WeaponConfig);
+        model.RamId = ramEffect.StartNew(model.Position, model.CombatId, model.RamConfig);
         model.Health = model.MaxHealth;
         return model.Id;
     }
@@ -44,6 +47,7 @@ public class ArmorController {
         motorVehicleController.DeleteVehicle(model.VehicleId);
         combatService.UnregisterAgent(model.CombatId);
         weaponController.DeleteWeapon(model.WeaponId);
+        ramEffect.Stop(model.RamId);
         registry.Remove(model.Id);
     }
 
@@ -95,6 +99,7 @@ public class ArmorController {
             model.Position = motorVehicleController.GetVehiclePosition(model.VehicleId);
             weaponController.MoveWeapon(model.WeaponId, model.Position);
             combatService.UpdateAgentPosition(model.CombatId, model.Position);
+            ramEffect.Forward(model.RamId, model.Position);
         }
     }
 

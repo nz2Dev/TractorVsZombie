@@ -45,6 +45,7 @@ public class GameBootstrapper : MonoBehaviour {
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
+    private RamEffect ramEffect;
     private MotorVehicleController motorVehicleController;
     private TowableVehicleController towableVehicleController;
     private InfantryController infantryController;
@@ -93,6 +94,11 @@ public class GameBootstrapper : MonoBehaviour {
             combatService
         );
 
+        ramEffect = new RamEffect(
+            combatService,
+            soundManager
+        );
+
         weaponController = new WeaponController(
             weaponView,
             rocketController,
@@ -103,15 +109,12 @@ public class GameBootstrapper : MonoBehaviour {
         motorVehicleController = new MotorVehicleController(
             motorVehicleView,
             vehicleService,
-            combatService,
             soundManager
         );
 
         towableVehicleController = new TowableVehicleController(
             towableVehicleView,
-            vehicleService,
-            combatService,
-            soundManager
+            vehicleService
         );
 
         infantryController = new InfantryController(
@@ -123,18 +126,21 @@ public class GameBootstrapper : MonoBehaviour {
         armorController = new ArmorController(
             combatService,
             weaponController,
-            motorVehicleController
+            motorVehicleController,
+            ramEffect
         );
 
         platformController = new PlatformController(
             combatService,
             towableVehicleController,
-            weaponController
+            weaponController,
+            ramEffect
         );
 
         driverController = new DriverController(
             combatService,
-            motorVehicleController
+            motorVehicleController,
+            ramEffect
         );
         
         rewardController = new RewardController(
@@ -199,6 +205,7 @@ public class GameBootstrapper : MonoBehaviour {
     private void Update() {
         combatService.UpdateSpatialTree();
 
+        ramEffect.Update();
         bodySimulator.Update();
 
         projectileController.Update();

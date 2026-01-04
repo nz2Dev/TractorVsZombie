@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Tractor Driver
   m_EditorClassIdentifier: NewFolder::DriverConfig
   vehicleConfig: {fileID: 11400000, guid: 017779e2fdfce455a9125f5278b4a93c, type: 2}
+  ramConfig: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}

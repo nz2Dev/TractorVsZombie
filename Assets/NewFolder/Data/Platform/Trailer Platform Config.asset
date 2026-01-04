@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Trailer Platform Config
   m_EditorClassIdentifier: NewFolder::PlatformConfig
   vehicleConfig: {fileID: 11400000, guid: 58eae66fc1dac4076858e6225cc02787, type: 2}
+  ramConfig: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}

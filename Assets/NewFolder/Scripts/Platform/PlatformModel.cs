@@ -15,7 +15,9 @@ public class PlatformModel {
     public TowableVehicleId VehicleId { get; set; }
     public int CombatId { get; set; }
     public int WeaponId { get; set; }
+    public int RamId { get; set; }
     public WeaponConfig WeaponConfig { get; set; }
     public TowableVehicleConfig VehicleConfig => config.vehicleConfig;
+    public RamConfig RamConfig => config.ramConfig;
 
 }

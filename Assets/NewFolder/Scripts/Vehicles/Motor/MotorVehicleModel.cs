@@ -36,6 +36,5 @@ public class MotorVehicleModel {
     public VehiclePhysics PhysicsPrefab => config.physicsPrefab;
     public MotorVehicleVisuals VisualsPrefab => config.visualsPrefab;
     public MotorVehicleConfig.DrivingData DrivingData => config.drivingData;
-    public MotorVehicleConfig.RamData RamData => config.ramData;
 
 }

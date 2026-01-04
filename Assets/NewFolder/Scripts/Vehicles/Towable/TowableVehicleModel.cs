@@ -31,6 +31,5 @@ public class TowableVehicleModel {
 
     public VehiclePhysics PhysicsPrefab => config.physicsPrefab;
     public TowableVehicleVisuals VisualsPrefab => config.visualsPrefab;
-    public TowableVehicleConfig.RamData RamData => config.ramData;
     
 }

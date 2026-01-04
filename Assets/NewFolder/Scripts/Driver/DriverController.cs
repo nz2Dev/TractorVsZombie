@@ -5,12 +5,14 @@ public class DriverController {
     
     private readonly CombatService combatService;
     private readonly MotorVehicleController motorVehicleController;
+    private readonly RamEffect ramEffect;
 
     private DriverModel model;
 
-    public DriverController(CombatService combatService, MotorVehicleController vehicleController) {
+    public DriverController(CombatService combatService, MotorVehicleController vehicleController, RamEffect ramEffect) {
         this.combatService = combatService;
         this.motorVehicleController = vehicleController;
+        this.ramEffect = ramEffect;
     }
 
     public MotorVehicleId ReadVehicleId() => model.VehicleId;
@@ -24,6 +26,7 @@ public class DriverController {
         model = new DriverModel(config);
         model.CombatId = combatService.RegisterAgent(position, alie: true);
         model.VehicleId = motorVehicleController.SpawnVehicle(position, model.CombatId, model.VehicleConfig);
+        model.RamId = ramEffect.StartNew(position, model.CombatId, model.RamConfig);
     }
 
     public void Control(float steerAmount, float gasAmount, bool boost) {

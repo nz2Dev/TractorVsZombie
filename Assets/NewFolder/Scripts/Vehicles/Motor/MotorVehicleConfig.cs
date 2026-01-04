@@ -18,14 +18,6 @@ public class MotorVehicleConfig : ScriptableObject {
         public AudioClip engineIdleSound;
     }
 
-    [Serializable]
-    public struct RamData {
-        public bool enabled;
-        public AudioClip[] impactSFX;
-        public float radius;
-    }
-
-    public RamData ramData;
     public DrivingData drivingData;
     public MotorVehicleVisuals visualsPrefab;
     public VehiclePhysics physicsPrefab;
