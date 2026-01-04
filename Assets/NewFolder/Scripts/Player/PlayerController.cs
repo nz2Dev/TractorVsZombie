@@ -93,23 +93,35 @@ public class PlayerController {
     }
 
     private void ReadPlatformSelectionInput() {
+        var toggledIndexes = new List<int>();
         if (input.ReadSelectAllPressed()) {
-            var wasAllAlreadySelected = model.ControlledPlatformIds.All(controlled => model.SelectedPlatformIds.Contains(controlled));
-            model.SelectedPlatformIds.Clear();
-            if (!wasAllAlreadySelected) {
-                model.SelectedPlatformIds.AddRange(model.ControlledPlatformIds);
+            for (int i = 0; i < model.ControlledPlatformIds.Count; i++) 
+                toggledIndexes.Add(i);
+
+            bool partiallySelected = model.SelectedPlatformIds.Count != model.ControlledPlatformIds.Count;
+            if (partiallySelected) {
+                foreach (var selectedPlatformId in model.SelectedPlatformIds) {
+                    int selectedIndex = model.ControlledPlatformIds.IndexOf(selectedPlatformId);
+                    toggledIndexes.Remove(selectedIndex);
+                }
             }
-            OnSelectedPlatformChanged();
         } else if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
-            var pressedPlatformId = model.ControlledPlatformIds[pressedIndex];
-            var pressedLastSelection = model.SelectedPlatformIds.Contains(pressedPlatformId);
-            if (pressedLastSelection) {
-                model.SelectedPlatformIds.Remove(pressedPlatformId);
-            } else {
-                model.SelectedPlatformIds.Add(pressedPlatformId);
-            }
-            OnSelectedPlatformChanged();
+            toggledIndexes.Add(pressedIndex);
         }
+
+        if (toggledIndexes.Count == 0)
+            return;
+
+        foreach (var index in toggledIndexes) {
+            var platformId = model.ControlledPlatformIds[index];
+            if (model.SelectedPlatformIds.Contains(platformId)) {
+                model.SelectedPlatformIds.Remove(platformId);
+            } else {
+                model.SelectedPlatformIds.Add(platformId);
+            }
+        }
+
+        OnSelectedPlatformChanged();
     }
 
     private void OnSelectedPlatformChanged() {
