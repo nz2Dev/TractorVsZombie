@@ -25,7 +25,7 @@ public class DriverController {
     public void Spawn(Vector3 position, DriverConfig config) {
         model = new DriverModel(config);
         model.CombatId = combatService.RegisterAgent(position, alie: true);
-        model.VehicleId = motorVehicleController.SpawnVehicle(position, model.CombatId, model.VehicleConfig);
+        model.VehicleId = motorVehicleController.SpawnVehicle(position, model.VehicleConfig);
         model.RamId = ramEffect.StartNew(position, model.CombatId, model.RamConfig);
     }
 

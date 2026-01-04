@@ -20,7 +20,6 @@ public class MotorVehicleModel {
     public MotorVehicleId Id { get; }
     public Vector3 Position { get; set; }
     public int PhysicsId { get; set; }
-    public int RamCombatId { get; set; }
     public int SoundSourceId { get; set; }
     public VehicleState PhysicsPose { get; set; }
     public float MotorPower { get; set; }

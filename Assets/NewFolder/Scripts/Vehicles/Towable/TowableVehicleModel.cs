@@ -18,7 +18,6 @@ public class TowableVehicleModel {
     private readonly TowableVehicleConfig config;
 
     public TowableVehicleId Id { get; }
-    public int RamCombatId { get; set; }
     public Vector3 Position { get; set; }
     public int PhysicsId { get; set; }
     public VehicleState PhysicsPose { get; set; }

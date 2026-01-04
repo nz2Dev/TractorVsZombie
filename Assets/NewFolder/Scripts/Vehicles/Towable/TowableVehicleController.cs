@@ -20,11 +20,10 @@ public class TowableVehicleController {
         UpdateVehicleOrientation();
     }
 
-    public TowableVehicleId SpawnVehicle(Vector3 position, int combatId, TowableVehicleConfig vehicleConfig) {
+    public TowableVehicleId SpawnVehicle(Vector3 position, TowableVehicleConfig vehicleConfig) {
         var nextId = new TowableVehicleId(++idCounter);
         var model = new TowableVehicleModel(nextId, position, vehicleConfig);
         registry[nextId] = model;
-        model.RamCombatId = combatId;
         model.PhysicsId = vehicleService.CreateVehicle(model.Position, model.PhysicsPrefab);
         view.AddVehicle(model.Id, model.Position, model.VisualsPrefab);
         return model.Id;

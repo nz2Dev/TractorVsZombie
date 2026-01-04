@@ -36,7 +36,7 @@ public class ArmorController {
         var model = new ArmorModel(nextId, position, armorConfig);
         registry[model.Id] = model;
         model.CombatId = combatService.RegisterAgent(position, alie: false);
-        model.VehicleId = motorVehicleController.SpawnVehicle(position, model.CombatId, model.VehicleConfig);
+        model.VehicleId = motorVehicleController.SpawnVehicle(position, model.VehicleConfig);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position, model.WeaponConfig);
         model.RamId = ramEffect.StartNew(model.Position, model.CombatId, model.RamConfig);
         model.Health = model.MaxHealth;

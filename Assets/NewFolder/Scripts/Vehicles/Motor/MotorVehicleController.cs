@@ -23,11 +23,10 @@ public class MotorVehicleController {
         UpdateVehicleSounds();
     }
 
-    public MotorVehicleId SpawnVehicle(Vector3 position, int ramCombatId, MotorVehicleConfig vehicleConfig) {
+    public MotorVehicleId SpawnVehicle(Vector3 position, MotorVehicleConfig vehicleConfig) {
         var nextId = new MotorVehicleId(++idCounter);
         var model = new MotorVehicleModel(nextId, position, vehicleConfig);
         registry[nextId] = model;
-        model.RamCombatId = ramCombatId;
         model.PhysicsId = vehicleService.CreateVehicle(model.Position, model.PhysicsPrefab);
         model.SoundSourceId = soundManager.StartLoop(model.Position, model.DrivingData.engineIdleSound);
         view.AddVehicle(model.Id, model.Position, model.VisualsPrefab);
