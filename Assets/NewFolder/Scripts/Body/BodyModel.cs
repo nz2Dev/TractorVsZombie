@@ -8,7 +8,7 @@ public class BodyModel {
         Id = id;
         Position = position;
         this.config = config;
-        Alive = true;
+        CanRecover = true;
     }
 
     public int Id { get; private set; }
@@ -18,7 +18,7 @@ public class BodyModel {
     public Quaternion Rotation { get; set; }
     public Vector3 PreferedVelocity { get; set; }
     public bool Grounded { get; set; }
-    public bool Alive { get; set; }
+    public bool CanRecover { get; set; }
 
     public BodyConfig.PhysicsData PhysicsData => config.physicsData;
     public AgentAvoidanceConfig AvoidanceConfig => config.agentAvoidanceConfig;

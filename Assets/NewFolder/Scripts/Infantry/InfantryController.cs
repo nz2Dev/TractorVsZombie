@@ -106,7 +106,7 @@ public class InfantryController {
             
             if (combatState.exploded && model.BodyState.grounded) {
                 model.Health -= combatState.damage;
-                bodyController.TriggerExplosion(model.BodyId, combatState.damageSourcePosition);
+                bodyController.ApplyImpulse(model.BodyId, combatState.damageSourcePosition);
                 anyDamage = true;
             }
 

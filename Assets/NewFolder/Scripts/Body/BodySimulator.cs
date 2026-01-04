@@ -37,7 +37,7 @@ public class BodySimulator {
         registry.Remove(bodyId);
     }
 
-    public void TriggerExplosion(int bodyId, Vector3 epicentr) {
+    public void ApplyImpulse(int bodyId, Vector3 epicentr) {
         var model = registry[bodyId];
         model.Grounded = false;
         physicsService.UpdatePhysicsEntityPosition(model.PhysicsId, model.Position);
@@ -47,7 +47,7 @@ public class BodySimulator {
 
     public void DisableRecovery(int bodyId) {
         var model = registry[bodyId];
-        model.Alive = false;   
+        model.CanRecover = false;   
     }
 
     public void SetPreferedVelocity(int bodyId, Vector3 preferedVelocity) {
@@ -77,9 +77,9 @@ public class BodySimulator {
             } else if (becomeGrounded) {
                 model.Grounded = true;
                 model.Position = physicsService.GetGroundPosition(model.Position);
-                model.Rotation = model.Alive ? Quaternion.identity : model.Rotation;
+                model.Rotation = model.CanRecover ? Quaternion.identity : model.Rotation;
                 physicsService.SetPhysicsActive(model.PhysicsId, false);
-            } else if (keepsGrouned && model.Alive) {
+            } else if (keepsGrouned && model.CanRecover) {
                 localAvoidanceService.GetAgentPositionAndRotation(model.AvoidanceId, out var pos, out var rot);
                 model.Position = pos;
                 model.Rotation = rot;
