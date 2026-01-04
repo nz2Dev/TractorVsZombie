@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class BodyController {
+public class BodySimulator {
     
     private readonly PhysicsService physicsService;
     private readonly LocalAvoidanceService localAvoidanceService;
@@ -11,7 +11,7 @@ public class BodyController {
     private int idCounter;
     private Dictionary<int, BodyModel> registry = new ();
 
-    public BodyController(PhysicsService physicsService, LocalAvoidanceService localAvoidanceService) {
+    public BodySimulator(PhysicsService physicsService, LocalAvoidanceService localAvoidanceService) {
         this.physicsService = physicsService;
         this.localAvoidanceService = localAvoidanceService;
     }

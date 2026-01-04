@@ -37,6 +37,8 @@ public class GameBootstrapper : MonoBehaviour {
 
     private CombatService combatService;
 
+    private BodySimulator bodySimulator;
+
     private PlayerController playerController;
     private EnemyController enemyController;
     private RewardController rewardController;
@@ -45,7 +47,6 @@ public class GameBootstrapper : MonoBehaviour {
     private WeaponController weaponController;
     private MotorVehicleController motorVehicleController;
     private TowableVehicleController towableVehicleController;
-    private BodyController bodyController;
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
@@ -74,6 +75,11 @@ public class GameBootstrapper : MonoBehaviour {
         var towableVehicleView = new TowableVehicleView();
         var rewardView = new RewardView(rewardVisualsPrefab);
         var infantryView = new InfantryView();
+
+        bodySimulator = new BodySimulator(
+            physicsService,
+            localAvoidanceService
+        );
 
         projectileController = new ProjectileController(
             combatService,
@@ -108,14 +114,9 @@ public class GameBootstrapper : MonoBehaviour {
             soundManager
         );
 
-        bodyController = new BodyController(
-            physicsService,
-            localAvoidanceService
-        );
-
         infantryController = new InfantryController(
             combatService,
-            bodyController,
+            bodySimulator,
             infantryView
         );
 
@@ -198,12 +199,13 @@ public class GameBootstrapper : MonoBehaviour {
     private void Update() {
         combatService.UpdateSpatialTree();
 
+        bodySimulator.Update();
+
         projectileController.Update();
         rocketController.Update();
         weaponController.Update();
         motorVehicleController.Update();
         towableVehicleController.Update();
-        bodyController.Update();
         infantryController.Update();
         armorController.Update();
         platformController.Update();

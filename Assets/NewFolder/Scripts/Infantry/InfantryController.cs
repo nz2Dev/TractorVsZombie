@@ -7,14 +7,14 @@ public class InfantryController {
 
     private readonly InfantryView view;
     private readonly CombatService combatService;
-    private readonly BodyController bodyController;
+    private readonly BodySimulator bodyController;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
     private List<InfantryModel> diedInfantry = new();
 
-    public InfantryController(CombatService combatService, BodyController bodyController, InfantryView view) {
+    public InfantryController(CombatService combatService, BodySimulator bodyController, InfantryView view) {
         this.combatService = combatService;
         this.bodyController = bodyController;
         this.view = view;
