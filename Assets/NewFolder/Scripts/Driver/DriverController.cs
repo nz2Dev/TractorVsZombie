@@ -37,5 +37,6 @@ public class DriverController {
     private void SyncPosition() {
         model.Position = motorVehicleController.GetVehiclePosition(model.VehicleId);
         combatService.UpdateAgentPosition(model.CombatId, model.Position);
+        ramEffect.Forward(model.RamId, model.Position);
     }
 }
