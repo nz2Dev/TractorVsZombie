@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b4547c652b042ee8c04f916b2c2ff5, type: 3}
   m_Name: Copsule Body Config
   m_EditorClassIdentifier: NewFolder::BodyConfig
-  visualsPrefab: {fileID: 414806356285922434, guid: 6d206294f353a4dba8c27126d4edce39, type: 3}
   physicsData:
     height: 0.5
     radius: 0.15
   agentAvoidanceConfig:
     height: 0.5
-    radius: 0.3
+    radius: 0.2
     radiusObst: 0.5
     maxSpeed: 2
     maxNeighbors: 15
