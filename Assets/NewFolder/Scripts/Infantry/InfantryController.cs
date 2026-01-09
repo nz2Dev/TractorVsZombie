@@ -25,15 +25,15 @@ public class InfantryController {
 
     public void ClearDiedRegistry() => diedInfantry.Clear();
 
+    public void WriteDeadInfantryFiltered(List<int> referencedList) {
+        referencedList.RemoveAll(id => !registry.ContainsKey(id));
+    }
+
     public void Update() {
         ReadBodyState();
         ClearDeadInfantry();
         ReadCombatState();
         SyncPositions();
-    }
-
-    public void WriteDeadInfantryFiltered(List<int> referencedList) {
-        referencedList.RemoveAll(id => !registry.ContainsKey(id));
     }
 
     public int SpawnInfantry(Vector3 position, bool alie, InfantryConfig config) {
@@ -72,6 +72,17 @@ public class InfantryController {
         };
     }
 
+    private void ClearDeadInfantry() {
+        List<InfantryModel> infantryToRemove = new();
+        
+        foreach (var model in registry.Values) 
+            if (!model.IsAlive && model.BodyState.grounded) 
+                infantryToRemove.Add(model);
+            
+        foreach (var model in infantryToRemove)
+            DeleteInfantry(model);
+    }
+
     private void DeleteInfantry(InfantryModel model) {
         registry.Remove(model.Id);
         bodyController.DeleteBody(model.BodyId);
@@ -81,18 +92,6 @@ public class InfantryController {
     private void ReadBodyState() {
         foreach (var model in registry.Values) {
             model.BodyState = bodyController.ReadBodyState(model.BodyId);
-        }
-    }
-
-    private void ClearDeadInfantry() {
-        List<InfantryModel> infantryToRemove = new();
-        foreach (var model in registry.Values) {
-            if (!model.IsAlive && model.BodyState.grounded) {
-                infantryToRemove.Add(model);
-            }
-        }
-        foreach (var model in infantryToRemove) {
-            DeleteInfantry(model);
         }
     }
 
