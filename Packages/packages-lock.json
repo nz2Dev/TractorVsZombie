@@ -19,6 +19,13 @@
       "dependencies": {},
       "hash": "d4fc38c92fb139b4184912f20556ab27a3b519fa"
     },
+    "com.github-glitchenzo.nugetforunity": {
+      "version": "4.5.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.nebukam.common": {
       "version": "file:.com.nebukam.common@0.1.7",
       "depth": 0,
