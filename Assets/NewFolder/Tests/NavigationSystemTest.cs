@@ -34,14 +34,21 @@ public class NavigationSystemTest {
         var direction = (goal - position).normalized;
         var expectedVelocity = direction * maxSpeed;
 
-        avoidanceServiceMock.Setup(m => m.AddAgent(position)).Returns(1);
-        avoidanceServiceMock.Setup(m => m.GetVelocity(1)).Returns(new Vector3(0, 0, 0));
+        var storedVelocity = Vector3.zero;
         navigationServiceMock.Setup(m => m.GetFlowVector(position)).Returns(direction);
-
+        avoidanceServiceMock.Setup(m => m.AddAgent(position)).Returns(1);
+        avoidanceServiceMock.Setup(m => m.GetVelocity(1)).Returns(() => storedVelocity);
+        avoidanceServiceMock.Setup(m => m.SetPreferedVelocity(1, It.IsAny<Vector3>()))
+            .Callback<int, Vector3>((id, velocity) => storedVelocity = velocity);
+        
         var agentId = navigationSystem.AddAgent(position, maxSpeed);
         navigationSystem.SetGoal(agentId, goal);
+        // 1st frame: Input -> Logic -> Output (PreferredVelocity set)
         navigationSystem.Update();
-        avoidanceServiceMock.Verify(m => m.SetPreferedVelocity(agentId, expectedVelocity), Times.Once);
+        // 2nd frame: Input (PreferredVelocity from prev frame) -> Logic -> ComputedVelocity updated
+        navigationSystem.Update();
+
+        Assert.That(navigationSystem.GetComputedMovement(agentId), Is.EqualTo(expectedVelocity));
     }
 
 }
