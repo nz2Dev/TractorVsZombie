@@ -23,11 +23,11 @@ public class NavigationService {
         this.surface = surface;
     }
 
-    public Vector3 GetFlowVector(Vector3 worldSpacePosition) {
+    public virtual Vector3 GetFlowVector(Vector3 worldSpacePosition) {
         return surface.GetFlowVectorClamped(worldSpacePosition);
     }
 
-    public void SetGoal(Vector3 worldSpacePosition) {
+    public virtual void SetGoal(Vector3 worldSpacePosition) {
         surface.SetGoal(worldSpacePosition);
     }
 

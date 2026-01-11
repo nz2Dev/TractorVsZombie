@@ -32,7 +32,7 @@ public class LocalAvoidanceService {
 
     public IEnumerable<int> AgentIds => agentRegistry.Keys;
 
-    public int AddAgent(Vector3 initPosition) {
+    public virtual int AddAgent(Vector3 initPosition) {
         return AddAgent(initPosition, new AgentAvoidanceConfig {
             height = 0.5f,
             radius = 0.3f,
@@ -71,7 +71,7 @@ public class LocalAvoidanceService {
         agentRegistry.Remove(agentId);
     }
 
-    public void SetAgentPosition(int agentId, Vector3 position) {
+    public virtual void SetAgentPosition(int agentId, Vector3 position) {
         var agent = agentRegistry[agentId];
         agent.pos = position;
     }
@@ -99,11 +99,11 @@ public class LocalAvoidanceService {
         return Quaternion.LookRotation(agentRegistry[agentId].velocity);
     }
 
-    public Vector3 GetVelocity(int agentId) {
+    public virtual Vector3 GetVelocity(int agentId) {
         return agentRegistry[agentId].velocity;
     }
 
-    public void SetPreferedVelocity(int agentId, Vector3 preferedVelocity) {
+    public virtual void SetPreferedVelocity(int agentId, Vector3 preferedVelocity) {
         var agent = agentRegistry[agentId];
         agent.prefVelocity = preferedVelocity;
     }
