@@ -12,15 +12,14 @@ public class BodyModel {
     }
 
     public int Id { get; private set; }
-    public int AvoidanceId { get; set; }
     public int PhysicsId { get; set; }
     public Vector3 Position { get; set; }
     public Quaternion Rotation { get; set; }
-    public Vector3 PreferedVelocity { get; set; }
+    public Vector3 DrivenVelocity { get; set; }
+    
     public bool Grounded { get; set; }
     public bool CanRecover { get; set; }
 
     public BodyConfig.PhysicsData PhysicsData => config.physicsData;
-    public AgentAvoidanceConfig AvoidanceConfig => config.agentAvoidanceConfig;
 
 }

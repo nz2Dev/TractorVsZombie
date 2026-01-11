@@ -38,7 +38,7 @@ public class GameBootstrapper : MonoBehaviour {
     private CombatService combatService;
 
     private BodySimulator bodySimulator;
-
+    private NavigationSystem navigationSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
     private RewardController rewardController;
@@ -78,8 +78,12 @@ public class GameBootstrapper : MonoBehaviour {
         var infantryView = new InfantryView();
 
         bodySimulator = new BodySimulator(
-            physicsService,
-            localAvoidanceService
+            physicsService
+        );
+
+        navigationSystem = new NavigationSystem(
+            localAvoidanceService,
+            navigationService
         );
 
         projectileController = new ProjectileController(
@@ -160,7 +164,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         infantryAIController = new InfantryAIController(
             infantryController,
-            navigationService,
+            navigationSystem,
             combatService
         );
 
@@ -207,6 +211,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         ramEffect.Update();
         bodySimulator.Update();
+        navigationSystem.Update();
 
         projectileController.Update();
         rocketController.Update();

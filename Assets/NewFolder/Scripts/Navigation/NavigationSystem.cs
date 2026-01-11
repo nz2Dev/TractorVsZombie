@@ -25,6 +25,40 @@ public class NavigationSystem {
         WriteExternalState();
     }
 
+    public void SetGoal(Vector3 goal) {
+        navigationService.SetGoal(goal);
+    }
+
+    public int AddAgent(Vector3 position, float maxSpeed, AgentAvoidanceConfig config) {
+        var nextId = ++idCounter;
+        var agent = new NavigationAgent(nextId, position);
+        agent.MaxSpeed = maxSpeed;
+        agent.AvoidanceId = avoidanceService.AddAgent(position, config);
+        agent.NextPosition = position;
+        registry[nextId] = agent;
+        return nextId;
+    }
+
+    public void RemoveAgent(int id) {
+        if (registry.TryGetValue(id, out var agent)) {
+            avoidanceService.RemoveAgent(agent.AvoidanceId);
+            registry.Remove(id);
+        }
+    }
+
+    public void SetNextPosition(int id, Vector3 position) {
+        if (registry.TryGetValue(id, out var agent)) {
+            agent.NextPosition = position;
+        }
+    }
+
+    public Vector3 GetComputedVelocity(int id) {
+        if (registry.TryGetValue(id, out var agent)) {
+            return agent.ComputedVelocity;
+        }
+        return Vector3.zero;
+    }
+
     private void ReadExternalState() {
         foreach (var agent in registry.Values) {
             agent.RvoVelocity = avoidanceService.GetVelocity(agent.AvoidanceId);
@@ -44,33 +78,5 @@ public class NavigationSystem {
             avoidanceService.SetAgentPosition(agent.AvoidanceId, agent.NextPosition);
             avoidanceService.SetPreferedVelocity(agent.AvoidanceId, agent.MovementIntent);
         }
-    }
-
-    public int AddAgent(Vector3 position, float maxSpeed) {
-        var nextId = ++idCounter;
-        var agent = new NavigationAgent(nextId, position);
-        agent.MaxSpeed = maxSpeed;
-        agent.AvoidanceId = avoidanceService.AddAgent(position);
-        registry[nextId] = agent;
-        return nextId;
-    }
-
-    public void SetNextPosition(int id, Vector3 position) {
-        if (registry.TryGetValue(id, out var agent)) {
-            agent.NextPosition = position;
-        }
-    }
-
-    public void SetGoal(int id, Vector3 goal) {
-         if (registry.TryGetValue(id, out var agent)) {
-            agent.Goal = goal;
-        }
-    }
-
-    public Vector3 GetComputedMovement(int id) {
-        if (registry.TryGetValue(id, out var agent)) {
-            return agent.ComputedVelocity;
-        }
-        return Vector3.zero;
     }
 }

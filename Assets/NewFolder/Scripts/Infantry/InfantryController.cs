@@ -47,9 +47,9 @@ public class InfantryController {
         return model.Id;
     }
 
-    public void Move(int infantryId, Vector3 direction) {
+    public void Move(int infantryId, Vector3 velocity) {
         var model = registry[infantryId];
-        bodyController.SetPreferedVelocity(model.BodyId, direction);
+        bodyController.ApplyMovement(model.BodyId, velocity);
     }
 
     public void Attack(int infantryId, int targetCombatId) {
@@ -70,6 +70,10 @@ public class InfantryController {
             combatId = model.CombatId,
             bodyId = model.BodyId,
         };
+    }
+
+    public AgentAvoidanceConfig GetAvoidanceConfig(int infantryId) {
+        return registry[infantryId].AgentAvoidanceConfig;
     }
 
     private void ClearDeadInfantry() {

@@ -45,7 +45,7 @@ public class LocalAvoidanceService {
         });
     }
     
-    public int AddAgent(Vector3 initPosition, AgentAvoidanceConfig config) {
+    public virtual int AddAgent(Vector3 initPosition, AgentAvoidanceConfig config) {
         var newAgent = environment.AddAgent(initPosition);
         agentRegistry.Add(nextId, newAgent);
         var id = nextId++;

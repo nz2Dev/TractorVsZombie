@@ -18,6 +18,7 @@ public class InfantryModel {
     public int Damage => config.damage;
     public BodyConfig BodyConfig => config.bodyConfig;
     public InfantryVisuals VisualsPrefab => config.visualsPrefab;
+    public AgentAvoidanceConfig AgentAvoidanceConfig => config.agentAvoidanceConfig;
 
     public InfantryModel(int id, InfantryConfig config) {
         Id = id;

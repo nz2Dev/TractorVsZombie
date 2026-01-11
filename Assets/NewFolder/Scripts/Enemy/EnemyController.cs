@@ -58,8 +58,9 @@ public class EnemyController {
             return;
         
         lastTimeProduced = Time.time;
-        foreach (var spawnPoint in spawnPoints) {    
-            var infantryId = infantryController.SpawnInfantry(spawnPoint.position, alie: false, infantryConfig);
+        foreach (var spawnPoint in spawnPoints) {
+            var randomOffset = Vector3.ProjectOnPlane(UnityEngine.Random.onUnitSphere, Vector3.up);
+            var infantryId = infantryController.SpawnInfantry(spawnPoint.position + randomOffset, alie: false, infantryConfig);
             infantryAIController.TakeUnderControl(infantryId);
         }
     }
@@ -80,6 +81,7 @@ public class EnemyController {
 
     private void UpdateAI() {
         armorAIController.SetGoal(targetPoint.position);
+        infantryAIController.SetGoal(targetPoint.position);
     }
 
 }

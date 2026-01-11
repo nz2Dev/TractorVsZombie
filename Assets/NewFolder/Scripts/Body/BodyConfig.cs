@@ -12,5 +12,5 @@ public class BodyConfig : ScriptableObject {
     }
 
     public PhysicsData physicsData = new PhysicsData { height = 0.5f, radius = 0.15f};
-    public AgentAvoidanceConfig agentAvoidanceConfig;
+
 }

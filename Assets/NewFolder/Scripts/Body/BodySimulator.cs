@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -6,33 +5,28 @@ using UnityEngine;
 public class BodySimulator {
     
     private readonly PhysicsService physicsService;
-    private readonly LocalAvoidanceService localAvoidanceService;
 
     private int idCounter;
     private Dictionary<int, BodyModel> registry = new ();
 
-    public BodySimulator(PhysicsService physicsService, LocalAvoidanceService localAvoidanceService) {
+    public BodySimulator(PhysicsService physicsService) {
         this.physicsService = physicsService;
-        this.localAvoidanceService = localAvoidanceService;
     }
 
     public void Update() {
         UpdateMovements();
-        SyncPositions();
     }
 
     public int SpawnBody(Vector3 position, BodyConfig config) {
         var nextId = ++idCounter;
         var model = new BodyModel(nextId, position, config);
+        model.PhysicsId = physicsService.RegisterPhysicsEntity(model.Position, model.PhysicsData.height, model.PhysicsData.radius);        
         registry[model.Id] = model;
-        model.AvoidanceId = localAvoidanceService.AddAgent(model.Position, model.AvoidanceConfig);
-        model.PhysicsId = physicsService.RegisterPhysicsEntity(model.Position, model.PhysicsData.height, model.PhysicsData.radius);
         return nextId;
     }
 
     public void DeleteBody(int bodyId) {
         var model = registry[bodyId];
-        localAvoidanceService.RemoveAgent(model.AvoidanceId);
         physicsService.UnregisterPhysicsEntity(model.PhysicsId);
         registry.Remove(bodyId);
     }
@@ -50,9 +44,10 @@ public class BodySimulator {
         model.CanRecover = false;   
     }
 
-    public void SetPreferedVelocity(int bodyId, Vector3 preferedVelocity) {
-        var model = registry[bodyId];
-        model.PreferedVelocity = preferedVelocity;
+    public void ApplyMovement(int bodyId, Vector3 velocity) {
+        if (registry.TryGetValue(bodyId, out var model)) {
+            model.DrivenVelocity = velocity;
+        }
     }
 
     public BodyState ReadBodyState(int bodyId) {
@@ -80,17 +75,9 @@ public class BodySimulator {
                 model.Rotation = model.CanRecover ? Quaternion.identity : model.Rotation;
                 physicsService.SetPhysicsActive(model.PhysicsId, false);
             } else if (keepsGrouned && model.CanRecover) {
-                localAvoidanceService.GetAgentPositionAndRotation(model.AvoidanceId, out var pos, out var rot);
-                model.Position = pos;
-                model.Rotation = rot;
+                model.Position = model.Position += model.DrivenVelocity * Time.deltaTime;
+                model.Rotation = Quaternion.LookRotation(model.DrivenVelocity.normalized, Vector3.up);
             }
-        }
-    }
-
-    private void SyncPositions() {
-        foreach (var model in registry.Values) {
-            localAvoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
-            localAvoidanceService.SetPreferedVelocity(model.AvoidanceId, model.PreferedVelocity);
         }
     }
 

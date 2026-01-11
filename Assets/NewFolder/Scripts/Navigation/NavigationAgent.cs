@@ -8,11 +8,10 @@ class NavigationAgent {
     }
 
     public int Id { get; private set; }
-    public Vector3 NextPosition { get; set; }
     public int AvoidanceId { get; set; }
-    public Vector3 Goal { get; set; }
-    public Vector3 ComputedVelocity { get; set; }
     public float MaxSpeed { get; set; }
+    public Vector3 NextPosition { get; set; }
+    public Vector3 ComputedVelocity { get; set; }
 
     // Intermediate states for 3-stage update
     public Vector3 FlowDirection { get; set; }

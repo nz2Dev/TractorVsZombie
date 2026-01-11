@@ -9,4 +9,5 @@ public class InfantryConfig : ScriptableObject {
     public int damage = 1;
     public BodyConfig bodyConfig;
     public InfantryVisuals visualsPrefab;
+    public AgentAvoidanceConfig agentAvoidanceConfig;
 }
