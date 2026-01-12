@@ -7,8 +7,6 @@ using UnityEngine.UIElements;
 
 public class GameBootstrapper : MonoBehaviour {
     
-    [SerializeField] private ProjectileView projectileView;
-    [Space]
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private FlowFieldsSurface flowFieldsSurface;
@@ -76,6 +74,7 @@ public class GameBootstrapper : MonoBehaviour {
         var rewardView = new RewardView(rewardVisualsPrefab);
         var infantryView = new InfantryView();
         var rocketView = new RocketView();
+        var projectileView = new ProjectileView();
 
         bodySimulator = new BodySimulator(
             physicsService

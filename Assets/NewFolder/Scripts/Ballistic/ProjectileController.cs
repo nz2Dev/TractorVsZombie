@@ -17,16 +17,12 @@ public class ProjectileController {
         this.view = view;
     }
 
-    public void Init() {
-        view.Start();
-    }
-
-    public void SpawnBulletProjectile(int shooterId, Bullet bullet, AudioClip[] shootSFX) {
+    public void SpawnBulletProjectile(int shooterId, Bullet bullet, ProjectileConfig config) {
         var nextId = ++idCounter;
-        var model = new ProjectileModel(nextId, shooterId, bullet.firePoint, bullet.velocity, Time.time, 5f);
+        var model = new ProjectileModel(nextId, shooterId, bullet.firePoint, bullet.velocity, Time.time, config);
         models[nextId] = model;
         view.ShowBulletShoot(model.Id, bullet.firePoint, bullet.velocity);
-        soundManager.PlayEffect(bullet.firePoint, shootSFX);
+        soundManager.PlayEffect(bullet.firePoint, config.shootAudioClips);
     }
 
     public void Update() {
@@ -46,7 +42,7 @@ public class ProjectileController {
             if (projectile.IsAged)
                 continue;
 
-            if (combatService.ApplyProjectileDamage(projectile.ShooterId, projectile.Position, projectile.Velocity, 1/*?*/)) {
+            if (combatService.ApplyProjectileDamage(projectile.ShooterId, projectile.Position, projectile.Velocity, projectile.Config.damage)) {
                 projectile.Kill();
                 view.ShowBulletCrash(projectile.Id);
             }

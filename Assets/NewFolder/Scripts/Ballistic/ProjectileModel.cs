@@ -7,13 +7,13 @@ public struct Bullet {
 
 internal class ProjectileModel {
     
-    internal ProjectileModel(int id, int shooterId, Vector3 position, Vector3 velocity, float spawnTime, float lifetime) {
+    internal ProjectileModel(int id, int shooterId, Vector3 position, Vector3 velocity, float spawnTime, ProjectileConfig config) {
         Id = id;
         ShooterId = shooterId;
         Position = position;
         Velocity = velocity;
         SpawnTime = spawnTime;
-        Lifetime = lifetime;
+        Config = config;
     }
 
     internal int Id { get; private set; }
@@ -21,7 +21,7 @@ internal class ProjectileModel {
     internal Vector3 Position { get; private set; }
     internal Vector3 Velocity { get; private set; }
     internal float SpawnTime { get; private set; }
-    internal float Lifetime { get; private set; }
+    internal ProjectileConfig Config { get; private set; }
     internal bool IsAged { get; private set; }
     internal bool Killed { get; private set; }
 
@@ -33,7 +33,7 @@ internal class ProjectileModel {
         if (!IsAged)
             return;
         
-        IsAged = SpawnTime + Lifetime < time;
+        IsAged = SpawnTime + Config.lifetime < time;
     }
 
     internal void Kill() {

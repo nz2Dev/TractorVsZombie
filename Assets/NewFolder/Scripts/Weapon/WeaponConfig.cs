@@ -11,19 +11,9 @@ public enum BallisticType {
 [Serializable]
 public struct BallisticConfig {
     public BallisticType type;
-    public BulletConfig bullet;
+    public ProjectileConfig bullet;
     public RocketConfig rocket;
 }
-
-[Serializable]
-public struct BulletConfig {
-    public int damage;
-    public float speed;
-    public AudioClip[] shootAudioClips;
-    public float lifetime;
-}
-
-
 
 [CreateAssetMenu(fileName = "WeaponData", menuName = "WeaponData", order = 0)]
 public class WeaponConfig : ScriptableObject {

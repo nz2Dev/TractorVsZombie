@@ -20,7 +20,7 @@ public class WeaponVisuals : MonoBehaviour {
     internal void UpdateAimPoint(Vector3 aimPoint, BallisticConfig config) {
         switch (config.type) {
             case BallisticType.Bullet:
-                RotateGunAim(aimPoint, config.bullet);
+                RotateGunAim(aimPoint);
                 break;
             case BallisticType.Rocket:
                 RotateRocketAim(aimPoint, config.rocket);
@@ -33,7 +33,7 @@ public class WeaponVisuals : MonoBehaviour {
         rotationBase.rotation = Quaternion.LookRotation(flyTangent, Vector3.up);
     }
 
-    private void RotateGunAim(Vector3 aimPoint, BulletConfig config) {
+    private void RotateGunAim(Vector3 aimPoint) {
         var aimForward = (aimPoint - transform.position).normalized;
         var aimForwardFlat = Vector3.ProjectOnPlane(aimForward, Vector3.up);
         rotationBase.rotation = Quaternion.LookRotation(aimForwardFlat, Vector3.up);

@@ -75,7 +75,7 @@ public class WeaponController {
         projectileController.SpawnBulletProjectile(
             weapon.CombatId, 
             new Bullet { firePoint = weapon.LaunchPoint, velocity = bulletVelocity},
-            weapon.BallisticConfig.bullet.shootAudioClips
+            weapon.BallisticConfig.bullet
         );
     }
 
