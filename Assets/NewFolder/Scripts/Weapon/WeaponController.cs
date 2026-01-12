@@ -85,11 +85,8 @@ public class WeaponController {
             new RocketTrajectory {
                 launchPoint = weapon.LaunchPoint,
                 landPoint = weapon.AimPoint,
-                flyDuration = weapon.BallisticConfig.rocket.flyDuration,
-                height = weapon.BallisticConfig.rocket.amplitude,
-                launchEffectClips = weapon.BallisticConfig.rocket.launchEffectClips,
-                explodeEffectClips = weapon.BallisticConfig.rocket.explodeEffectClips,
-            }
+            },
+            weapon.BallisticConfig.rocket
         );
     }
 

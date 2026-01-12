@@ -2,19 +2,21 @@ using UnityEngine;
 
 public class RocketVisuals : MonoBehaviour {
 
-    [SerializeField] private AnimationCurve flyCurve;
-    [SerializeField] private float flyHeight;
+    private AnimationCurve flyCurve;
+    private float flyHeight;
 
     private Vector3 launchPoint;
     private Vector3 landPoint;
     private float startTime;
     private float flyDuration;
 
-    internal void Setup(Vector3 launchPoint, Vector3 landPoint, float startTime, float flyDuration) {
+    internal void Setup(Vector3 launchPoint, Vector3 landPoint, float startTime, float flyDuration, float flyHeight, AnimationCurve flyCurve) {
         this.startTime = startTime;
         this.launchPoint = launchPoint;
         this.landPoint = landPoint;
         this.flyDuration = flyDuration;
+        this.flyHeight = flyHeight;
+        this.flyCurve = flyCurve;
     }
 
     private void Update() {

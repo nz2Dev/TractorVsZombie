@@ -17,12 +17,12 @@ public class RocketController {
         this.combatService = combatService;
     }
 
-    public void SpawnRocket(int shooterId, RocketTrajectory trajectory) {
+    public void SpawnRocket(int shooterId, RocketTrajectory trajectory, RocketConfig config) {
         var nextRocketId = ++idCounter;
-        var rocket = new RocketModel(nextRocketId, shooterId, Time.time, trajectory);
+        var rocket = new RocketModel(nextRocketId, shooterId, Time.time, trajectory, config);
         models[nextRocketId] = rocket;
-        view.ShowRocketFly(rocket.Id, rocket.LaunchTime, trajectory);
-        soundManager.PlayEffect(trajectory.launchPoint, trajectory.launchEffectClips);
+        view.ShowRocketFly(rocket.Id, rocket.LaunchTime, trajectory, config);
+        soundManager.PlayEffect(trajectory.launchPoint, config.launchEffectClips);
     }
 
     public void Update() {
@@ -33,9 +33,9 @@ public class RocketController {
     private void UpdateRocketLandingCombat() {
         foreach (var rocket in models.Values) {
             if (rocket.ForwardLandingTime(Time.time)) {
-                combatService.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, 3, 1);
+                combatService.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, rocket.Config.damage, 1);
                 view.ShowRocketExplosion(rocket.Id);
-                soundManager.PlayEffect(rocket.Trajectory.landPoint, rocket.Trajectory.explodeEffectClips);
+                soundManager.PlayEffect(rocket.Trajectory.landPoint, rocket.Config.explodeEffectClips);
             }
         }   
     }

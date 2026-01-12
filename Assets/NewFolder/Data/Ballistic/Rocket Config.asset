@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2626e8dfc15444f289b1bb207110c1c4, type: 3}
+  m_Name: Rocket Config
+  m_EditorClassIdentifier: NewFolder::RocketConfig
+  launchEffectClips:
+  - {fileID: 8300000, guid: ad1ce12a189764290b3ff989693f1a3a, type: 3}
+  explodeEffectClips:
+  - {fileID: 8300000, guid: 3bdce37eb726244ce9175f91824613c8, type: 3}
+  - {fileID: 8300000, guid: 8cb278cd2f7d84ecdb86a26931d0bf02, type: 3}
+  - {fileID: 8300000, guid: 927e710ce94cf4e42b6a0602fdce3155, type: 3}
+  flyCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -2
+      outSlope: -2
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  amplitude: 5
+  flyDuration: 1.5
+  damage: 1
+  visualsPrefab: {fileID: 5296104131953643400, guid: 6d1a6af9428c1496dbbe1ebffd118928, type: 3}

@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 
 public class GameBootstrapper : MonoBehaviour {
     
-    [SerializeField] private RocketView rocketView; // todo remove monobehaviour inheritance
     [SerializeField] private ProjectileView projectileView;
     [Space]
     [SerializeField] private SoundManager soundManager;
@@ -76,6 +75,7 @@ public class GameBootstrapper : MonoBehaviour {
         var towableVehicleView = new TowableVehicleView();
         var rewardView = new RewardView(rewardVisualsPrefab);
         var infantryView = new InfantryView();
+        var rocketView = new RocketView();
 
         bodySimulator = new BodySimulator(
             physicsService

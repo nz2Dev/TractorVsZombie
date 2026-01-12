@@ -23,15 +23,7 @@ public struct BulletConfig {
     public float lifetime;
 }
 
-[Serializable]
-public struct RocketConfig {
-    public AudioClip[] launchEffectClips;
-    public AudioClip[] explodeEffectClips;
-    public AnimationCurve flyCurve;
-    public float amplitude;
-    public float flyDuration;
-    public int damage;
-}
+
 
 [CreateAssetMenu(fileName = "WeaponData", menuName = "WeaponData", order = 0)]
 public class WeaponConfig : ScriptableObject {

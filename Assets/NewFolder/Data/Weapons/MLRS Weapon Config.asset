@@ -25,47 +25,5 @@ MonoBehaviour:
       speed: 5
       shootAudioClips: []
       lifetime: 5
-    rocket:
-      launchEffectClips:
-      - {fileID: 8300000, guid: ad1ce12a189764290b3ff989693f1a3a, type: 3}
-      explodeEffectClips:
-      - {fileID: 8300000, guid: 3bdce37eb726244ce9175f91824613c8, type: 3}
-      - {fileID: 8300000, guid: 8cb278cd2f7d84ecdb86a26931d0bf02, type: 3}
-      - {fileID: 8300000, guid: 927e710ce94cf4e42b6a0602fdce3155, type: 3}
-      flyCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 2
-          outSlope: 2
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 0.5
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 0
-          inSlope: -2
-          outSlope: -2
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      amplitude: 5
-      flyDuration: 1.5
-      damage: 1
+    rocket: {fileID: 11400000, guid: 37ce4582061854c9396ec394f8d6d596, type: 2}
   visualsPrefab: {fileID: 8694748771204103510, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
