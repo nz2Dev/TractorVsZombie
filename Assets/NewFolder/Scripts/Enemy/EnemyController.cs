@@ -8,75 +8,55 @@ using System;
 public class EnemyController {
 
     private readonly EnemyView enemyView;
-    private readonly InfantryController infantryController;
-    private readonly ArmorController armorController;
+    private readonly SpawnSystem spawnSystem;
     private readonly ArmorAIController armorAIController;
     private readonly InfantryAIController infantryAIController;
 
-    private float lastTimeProduced = float.MinValue;
-    private Transform[] spawnPoints;
+    private List<int> spawners = new();
+    private List<SpawnResult> spawnResultBuffer = new(32);
     private Transform targetPoint;
-    private int maxInfantryCount;
-    private readonly InfantryConfig infantryConfig;
 
-    private float lastTimeProducedVehicle;
-    private Transform[] vehiclesSpawnPoints;
-    private int maxArmorCount;
-    private int lastSpawnIndex;
-    private readonly ArmorConfig armorConfig;
-
-    public EnemyController(EnemyView crowdView,
-        Transform[] spawnPoints, Transform targetPoint, int unitsCount, InfantryConfig infantryConfig, InfantryController infantryController,
-        int maxVehiclesCount, ArmorConfig armorConfig, ArmorController armorController, ArmorAIController armorAIController, InfantryAIController infantryAIController) {
+    public EnemyController(
+        EnemyView crowdView,
+        SpawnSystem spawnSystem,
+        Transform targetPoint, 
+        ArmorAIController armorAIController, 
+        InfantryAIController infantryAIController) {
+        
         this.enemyView = crowdView;
-        this.spawnPoints = spawnPoints;
+        this.spawnSystem = spawnSystem;
         this.targetPoint = targetPoint;
-        this.maxInfantryCount = unitsCount;
-        this.infantryConfig = infantryConfig;
-        this.infantryController = infantryController;
-
-        this.vehiclesSpawnPoints = spawnPoints; // reusing
-        this.maxArmorCount = maxVehiclesCount;
-        this.armorConfig = armorConfig;
-        this.armorController = armorController;
         this.armorAIController = armorAIController;
         this.infantryAIController = infantryAIController;
     }
 
     public void Update() {
-        ProduceNewInfantry();
-        
-        ProduceNewArmor();
+        ScanSpawnSources();
+        AssignSpawnedAI();
         UpdateAI();
     }
 
-    private void ProduceNewInfantry() {
-        if (infantryController.InfantryCount > maxInfantryCount) 
-            return;
-
-        if (lastTimeProduced + 0.1f > Time.time)
-            return;
-        
-        lastTimeProduced = Time.time;
-        foreach (var spawnPoint in spawnPoints) {
-            var randomOffset = Vector3.ProjectOnPlane(UnityEngine.Random.onUnitSphere, Vector3.up);
-            var infantryId = infantryController.SpawnInfantry(spawnPoint.position + randomOffset, alie: false, infantryConfig);
-            infantryAIController.TakeUnderControl(infantryId);
+    private void ScanSpawnSources() {
+        if (spawners.Count == 0) {
+            var sourcesFound = SpawnSource.ScanSceneForSources();
+            foreach (var source in sourcesFound) {
+                var spawnerId = spawnSystem.AddSpawner(source.Position, source.config);
+                spawners.Add(spawnerId);
+            }
         }
     }
 
-    private void ProduceNewArmor() {
-        if (armorController.ArmorCount > maxArmorCount)
-            return;
-
-        if (lastTimeProducedVehicle + 1f > Time.time)
-            return;
-
-        lastTimeProducedVehicle = Time.time;
-        var nextSpawnIndex = lastSpawnIndex++ % vehiclesSpawnPoints.Length;
-        var nextSpawnPoint = vehiclesSpawnPoints[nextSpawnIndex].position;
-        var armorId = armorController.SpawnArmor(nextSpawnPoint, armorConfig);
-        armorAIController.TakeUnderControl(armorId);
+    private void AssignSpawnedAI() {
+        spawnSystem.CaptureCompletedSpawns(spawners, spawnResultBuffer);
+        foreach (var spawnResult in spawnResultBuffer) {
+            if (spawnResult.spawnType == SpawnType.Infantry) {
+                infantryAIController.TakeUnderControl(spawnResult.spawnedId);
+            } else if (spawnResult.spawnType == SpawnType.Armor) {
+                armorAIController.TakeUnderControl(spawnResult.spawnedId);
+            } else {
+                throw new Exception();
+            }
+        }
     }
 
     private void UpdateAI() {

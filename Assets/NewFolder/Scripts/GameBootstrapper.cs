@@ -17,13 +17,9 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private string foeCombatServiceLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
     [Space]
-    [SerializeField] private InfantryConfig enemyInfantryConfig;
     [SerializeField] int unitsCount = 10;
-    [SerializeField] Transform[] spawnPoints;
-    [SerializeField] Transform targetPoint;
-    [Space]
     [SerializeField] private int maxVehicelCount = 10;
-    [SerializeField] private ArmorConfig enemyArmorConfig;
+    [SerializeField] Transform targetPoint;
     [Space]
     [SerializeField] private PlayerConfig playerConfig;
     [SerializeField] private AimVisuals aimVisualsPrefab;
@@ -34,6 +30,7 @@ public class GameBootstrapper : MonoBehaviour {
 
     private CombatService combatService;
 
+    private SpawnSystem spawnSystem;
     private BodySimulator bodySimulator;
     private NavigationSystem navigationSystem;
     private PlayerController playerController;
@@ -153,6 +150,13 @@ public class GameBootstrapper : MonoBehaviour {
             armorController
         );
 
+        spawnSystem = new SpawnSystem(
+            infantryController,
+            armorController,
+            maxVehicelCount,
+            unitsCount
+        );
+
         armorAIController = new ArmorAIController(
             combatService,
             pathfindingService,
@@ -188,14 +192,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         enemyController = new EnemyController(
             unitView,
-            spawnPoints,
+            spawnSystem,
             targetPoint,
-            unitsCount,
-            enemyInfantryConfig,
-            infantryController,
-            maxVehicelCount,
-            enemyArmorConfig,
-            armorController,
             armorAIController,
             infantryAIController
         );
@@ -211,6 +209,7 @@ public class GameBootstrapper : MonoBehaviour {
         ramEffect.Update();
         bodySimulator.Update();
         navigationSystem.Update();
+        spawnSystem.Update();
 
         projectileController.Update();
         rocketController.Update();
