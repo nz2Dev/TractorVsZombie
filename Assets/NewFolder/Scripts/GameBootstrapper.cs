@@ -65,7 +65,7 @@ public class GameBootstrapper : MonoBehaviour {
         combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), LayerMask.NameToLayer(foeCombatServiceLayer), combatServiceEnvironmentMask);
         var vehicleService = new VehicleService();
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
-        var navigationService = new NavigationService(flowFieldsSurface);
+        var pathfindingService = new PathfindingService(flowFieldsSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
@@ -83,7 +83,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         navigationSystem = new NavigationSystem(
             localAvoidanceService,
-            navigationService
+            pathfindingService
         );
 
         projectileController = new ProjectileController(
@@ -156,7 +156,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         armorAIController = new ArmorAIController(
             combatService,
-            navigationService,
+            pathfindingService,
             armorController,
             motorVehicleController,
             weaponController

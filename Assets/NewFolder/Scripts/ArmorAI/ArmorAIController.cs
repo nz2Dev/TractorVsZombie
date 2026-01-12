@@ -6,7 +6,7 @@ using UnityEngine;
 public class ArmorAIController {
     
     private readonly CombatService combatService;
-    private readonly NavigationService navigationService;
+    private readonly PathfindingService pathfindingService;
     private readonly ArmorController armorController;
     private readonly MotorVehicleController motorVehicleController;
     private readonly WeaponController weaponController;
@@ -14,9 +14,9 @@ public class ArmorAIController {
     private Vector3 goal;
     private readonly List<int> controlledArmorIds = new();
 
-    public ArmorAIController(CombatService combatService, NavigationService navigationService, ArmorController armorController, MotorVehicleController motorVehicleController, WeaponController weaponController) {
+    public ArmorAIController(CombatService combatService, PathfindingService pathfindingService, ArmorController armorController, MotorVehicleController motorVehicleController, WeaponController weaponController) {
         this.combatService = combatService;
-        this.navigationService = navigationService;
+        this.pathfindingService = pathfindingService;
         this.armorController = armorController;
         this.motorVehicleController = motorVehicleController;
         this.weaponController = weaponController;
@@ -29,7 +29,7 @@ public class ArmorAIController {
 
     public void SetGoal(Vector3 goal) {
         this.goal = goal;
-        navigationService.SetGoal(goal);
+        pathfindingService.SetGoal(goal);
     }
 
     public void TakeUnderControl(int armorId) {
@@ -59,7 +59,7 @@ public class ArmorAIController {
         var brakes = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
         motorVehicleController.BrakeVehicle(state.vehicleId, brakes);
 
-        var flowVector = navigationService.GetFlowVector(state.position);
+        var flowVector = pathfindingService.GetFlowVector(state.position);
         motorVehicleController.SteerVehicleToward(state.vehicleId, flowVector);
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class NavigationService {
+public class PathfindingService {
 
     private static readonly Vector3[] SampleOffsets = new Vector3[] {
         Vector3.zero,
@@ -19,7 +19,7 @@ public class NavigationService {
 
     private readonly FlowFieldsSurface surface;
 
-    public NavigationService(FlowFieldsSurface surface) {
+    public PathfindingService(FlowFieldsSurface surface) {
         this.surface = surface;
     }
 

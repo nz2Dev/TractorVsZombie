@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.TestTools.Utils;
 
 [TestFixture]
-public class NavigationServiceTest {
+public class PathfindingServiceTest {
     
     [Test]
     public void CreateFlowField_ReturnEmptyVector() {
-        var navigationService = new NavigationService(CreateSurface(5));
-        var flowVector = navigationService.GetFlowVector(worldSpacePosition: Vector3.zero);
+        var pathfindingService = new PathfindingService(CreateSurface(5));
+        var flowVector = pathfindingService.GetFlowVector(worldSpacePosition: Vector3.zero);
         Assert.That(flowVector, Is.EqualTo(Vector3.zero).Using(Vector3EqualityComparer.Instance));
     }
 
@@ -18,10 +18,10 @@ public class NavigationServiceTest {
         var checkPosition = new Vector3(-2, 0, -2);
         var goalPosition = new Vector3(0, 0, 0);
         
-        var navigationService = new NavigationService(CreateSurface(size: 5));
-        navigationService.SetGoal(goalPosition);
+        var pathfindingService = new PathfindingService(CreateSurface(size: 5));
+        pathfindingService.SetGoal(goalPosition);
 
-        var flowVector = navigationService.GetFlowVector(checkPosition);
+        var flowVector = pathfindingService.GetFlowVector(checkPosition);
         var checkToGoal = (goalPosition - checkPosition).normalized;
         Assert.That(flowVector, Is.EqualTo(checkToGoal).Using(Vector3EqualityComparer.Instance));
     }

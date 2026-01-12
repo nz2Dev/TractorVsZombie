@@ -8,12 +8,12 @@ using UnityEngine;
 */
 public class NavigationSystem {
     
-    private NavigationService navigationService;
+    private PathfindingService pathfindingService;
     private LocalAvoidanceService avoidanceService;
 
-    public NavigationSystem(LocalAvoidanceService avoidanceService, NavigationService navigationService) {
+    public NavigationSystem(LocalAvoidanceService avoidanceService, PathfindingService pathfindingService) {
         this.avoidanceService = avoidanceService;
-        this.navigationService = navigationService;
+        this.pathfindingService = pathfindingService;
     }
 
     private int idCounter;
@@ -26,7 +26,7 @@ public class NavigationSystem {
     }
 
     public void SetGoal(Vector3 goal) {
-        navigationService.SetGoal(goal);
+        pathfindingService.SetGoal(goal);
     }
 
     public int AddAgent(Vector3 position, float maxSpeed, AgentAvoidanceConfig config) {
@@ -62,7 +62,7 @@ public class NavigationSystem {
     private void ReadExternalState() {
         foreach (var agent in registry.Values) {
             agent.RvoVelocity = avoidanceService.GetVelocity(agent.AvoidanceId);
-            agent.FlowDirection = navigationService.GetFlowVector(agent.NextPosition);
+            agent.FlowDirection = pathfindingService.GetFlowVector(agent.NextPosition);
         }
     }
 

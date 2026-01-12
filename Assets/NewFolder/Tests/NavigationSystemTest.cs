@@ -8,14 +8,14 @@ using UnityEngine;
 public class NavigationSystemTest {
 
     private Mock<LocalAvoidanceService> avoidanceServiceMock;
-    private Mock<NavigationService> navigationServiceMock;
+    private Mock<PathfindingService> pathfindingServiceMock;
     private NavigationSystem navigationSystem;
 
     [SetUp]
     public void SetUp() {
         avoidanceServiceMock = new Mock<LocalAvoidanceService>(null);
-        navigationServiceMock = new Mock<NavigationService>(null);
-        navigationSystem = new NavigationSystem(avoidanceServiceMock.Object, navigationServiceMock.Object);
+        pathfindingServiceMock = new Mock<PathfindingService>(null);
+        navigationSystem = new NavigationSystem(avoidanceServiceMock.Object, pathfindingServiceMock.Object);
     }
 
     [Test]
@@ -35,7 +35,7 @@ public class NavigationSystemTest {
         var expectedVelocity = direction * maxSpeed;
 
         var storedVelocity = Vector3.zero;
-        navigationServiceMock.Setup(m => m.GetFlowVector(position)).Returns(direction);
+        pathfindingServiceMock.Setup(m => m.GetFlowVector(position)).Returns(direction);
         avoidanceServiceMock.Setup(m => m.AddAgent(position, It.IsAny<AgentAvoidanceConfig>())).Returns(1);
         avoidanceServiceMock.Setup(m => m.GetVelocity(1)).Returns(() => storedVelocity);
         avoidanceServiceMock.Setup(m => m.SetPreferedVelocity(1, It.IsAny<Vector3>()))
