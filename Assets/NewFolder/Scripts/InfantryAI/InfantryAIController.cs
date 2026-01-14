@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -8,6 +9,8 @@ public class InfantryAIController {
     private readonly NavigationSystem navigationSystem;
     private readonly CombatService combatService;
 
+    private int lastFormationCount;
+    private int navigationFormationId;
     private readonly List<int> controlledInfantryIds = new ();
     private readonly Dictionary<int, int> infantryToNavAgent = new();
 
@@ -19,7 +22,13 @@ public class InfantryAIController {
 
     public void Update() {
         ValidateInfantryIds();
+        UpdateFormation();
         OperateInfantry();
+    }
+
+    public void InitFormations() {
+        lastFormationCount = 0;
+        navigationFormationId = navigationSystem.CreateFormation();
     }
 
     public void SetGoal(Vector3 position) {
@@ -27,14 +36,20 @@ public class InfantryAIController {
     }
 
     public void TakeUnderControl(int infantryId) {
-        if (controlledInfantryIds.Contains(infantryId)) 
-            return;
-        
         var state = infantryController.GetInfantryState(infantryId);
         var config = infantryController.GetAvoidanceConfig(infantryId);
         var navId = navigationSystem.AddAgent(state.position, config.maxSpeed, config);
+        navigationSystem.AssignAgentToFormation(navId, navigationFormationId);
+        lastFormationCount++;
         infantryToNavAgent[infantryId] = navId;
         controlledInfantryIds.Add(infantryId);
+    }
+
+    private void UpdateFormation() {
+        if (lastFormationCount > 30) {
+            lastFormationCount = 0;
+            navigationFormationId = navigationSystem.CreateFormation();
+        }
     }
 
     private void ValidateInfantryIds() {

@@ -7,7 +7,7 @@ public class SpawnSource : MonoBehaviour {
     public Vector3 Position => transform.position;
 
     public static SpawnSource[] ScanSceneForSources() {
-        return FindObjectsByType<SpawnSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        return FindObjectsByType<SpawnSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
     }
 
 }

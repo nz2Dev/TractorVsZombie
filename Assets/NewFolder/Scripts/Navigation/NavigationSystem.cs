@@ -17,10 +17,13 @@ public class NavigationSystem {
     }
 
     private int idCounter;
+    private int formationIdCounter;
     private Dictionary<int, NavigationAgent> registry = new();
+    private Dictionary<int, NavigationFormation> formations = new();
 
     public void Update() {
         ReadExternalState();
+        ComputeFormationAverages();
         ProcessLogic();
         WriteExternalState();
     }
@@ -40,10 +43,11 @@ public class NavigationSystem {
     }
 
     public void RemoveAgent(int id) {
-        if (registry.TryGetValue(id, out var agent)) {
-            avoidanceService.RemoveAgent(agent.AvoidanceId);
-            registry.Remove(id);
-        }
+        var agent = registry[id];
+        avoidanceService.RemoveAgent(agent.AvoidanceId);
+        if (agent.FormationId.HasValue)
+            RemoveAgentFromFormation(id);
+        registry.Remove(id);
     }
 
     public void SetNextPosition(int id, Vector3 position) {
@@ -59,6 +63,43 @@ public class NavigationSystem {
         return Vector3.zero;
     }
 
+    public int CreateFormation() {
+        var nextId = ++formationIdCounter;
+        formations[nextId] = new NavigationFormation(nextId);
+        return nextId;
+    }
+
+    public void DisbandFormation(int formationId) {
+        var formation = formations[formationId];
+        foreach (var agentId in formation.AgentIds) {
+            registry[agentId].FormationId = null;
+        }
+        formations.Remove(formationId);
+    }
+
+    public void AssignAgentToFormation(int agentId, int formationId) {
+        var agent = registry[agentId];
+        var formation = formations[formationId];
+
+        if (agent.FormationId.HasValue && agent.FormationId.Value != formationId) {
+            RemoveAgentFromFormation(agentId);
+        }
+
+        if (!formation.AgentIds.Contains(agentId)) {
+            formation.AgentIds.Add(agentId);
+        }
+        agent.FormationId = formationId;
+    }
+
+    public void RemoveAgentFromFormation(int agentId) {
+        var agent = registry[agentId];
+        if (!agent.FormationId.HasValue)
+            return;
+
+        formations[agent.FormationId.Value].AgentIds.Remove(agentId);
+        agent.FormationId = null;
+    }
+
     private void ReadExternalState() {
         foreach (var agent in registry.Values) {
             agent.RvoVelocity = avoidanceService.GetVelocity(agent.AvoidanceId);
@@ -68,8 +109,45 @@ public class NavigationSystem {
 
     private void ProcessLogic() {
         foreach (var agent in registry.Values) {
-            agent.MovementIntent = agent.FlowDirection * agent.MaxSpeed;
+            var direction = agent.FlowDirection;
+            var speed = agent.MaxSpeed;
+
+            if (agent.FormationId.HasValue) {
+                var formation = formations[agent.FormationId.Value];
+                const float cohesionWeight = 0.3f;
+                direction = Vector3.Lerp(direction, formation.AverageDirection, cohesionWeight).normalized;
+
+                const float speedAdjustFactor = 0.2f;
+                float relativePosition = Vector3.Dot(agent.NextPosition - formation.CenterPosition, formation.AverageDirection);
+                float speedFactor = relativePosition > 0 ? Mathf.Clamp01(1f - relativePosition * speedAdjustFactor) : 1f;
+                speed = agent.MaxSpeed * speedFactor;
+            }
+
+            agent.MovementIntent = direction * speed;
             agent.ComputedVelocity = agent.RvoVelocity;
+        }
+    }
+
+    private void ComputeFormationAverages() {
+        foreach (var formation in formations.Values) {
+            if (formation.AgentIds.Count == 0)
+                continue;
+
+            var sumDirection = Vector3.zero;
+            var sumPosition = Vector3.zero;
+            int count = 0;
+
+            foreach (var agentId in formation.AgentIds) {
+                var agent = registry[agentId];
+                sumDirection += agent.RvoVelocity;
+                sumPosition += agent.NextPosition;
+                count++;
+            }
+
+            if (count > 0) {
+                formation.AverageDirection = (sumDirection / count).normalized;
+                formation.CenterPosition = sumPosition / count;
+            }
         }
     }
 

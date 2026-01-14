@@ -38,6 +38,7 @@ public class EnemyController {
 
     private void ScanSpawnSources() {
         if (spawners.Count == 0) {
+            infantryAIController.InitFormations();
             var sourcesFound = SpawnSource.ScanSceneForSources();
             foreach (var source in sourcesFound) {
                 var spawnerId = spawnSystem.AddSpawner(source.Position, source.config);
