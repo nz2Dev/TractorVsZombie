@@ -10,59 +10,72 @@ public class EnemyController {
     private readonly EnemyView enemyView;
     private readonly SpawnSystem spawnSystem;
     private readonly ArmorAIController armorAIController;
-    private readonly InfantryAIController infantryAIController;
+    private readonly GroupAIController groupAIController;
+    private readonly NavigationSystem navigationSystem;
 
-    private List<int> spawners = new();
-    private List<SpawnResult> spawnResultBuffer = new(32);
-    private Transform targetPoint;
+    private readonly List<EnemySource> enemySources = new();
+    private readonly List<SpawnResult> spawnResultBuffer = new(32);
+    private readonly Transform targetPoint;
 
     public EnemyController(
         EnemyView crowdView,
         SpawnSystem spawnSystem,
-        Transform targetPoint, 
-        ArmorAIController armorAIController, 
-        InfantryAIController infantryAIController) {
-        
+        Transform targetPoint,
+        ArmorAIController armorAIController,
+        GroupAIController infantryAIController,
+        NavigationSystem navigationSystem) {
+
         this.enemyView = crowdView;
         this.spawnSystem = spawnSystem;
         this.targetPoint = targetPoint;
         this.armorAIController = armorAIController;
-        this.infantryAIController = infantryAIController;
+        this.groupAIController = infantryAIController;
+        this.navigationSystem = navigationSystem;
     }
 
     public void Update() {
-        ScanSpawnSources();
-        AssignSpawnedAI();
-        UpdateAI();
+        TryInitEnemySources();
+        CaptureSpawnedEnemies();
+        UpdateLeakedNavigationSystemGoal();
     }
 
-    private void ScanSpawnSources() {
-        if (spawners.Count == 0) {
-            infantryAIController.InitFormations();
+    private void TryInitEnemySources() {
+        if (enemySources.Count == 0) {
             var sourcesFound = SpawnSource.ScanSceneForSources();
             foreach (var source in sourcesFound) {
-                var spawnerId = spawnSystem.AddSpawner(source.Position, source.config);
-                spawners.Add(spawnerId);
+                var enemySource = new EnemySource();
+                enemySource.SpawnType = source.config.spawnType;
+                enemySource.SpawnerId = spawnSystem.AddSpawner(source.Position, source.config);
+                enemySource.CurrentAIGroupId = groupAIController.AddGroup();
+                enemySources.Add(enemySource);
             }
         }
     }
 
-    private void AssignSpawnedAI() {
-        spawnSystem.CaptureCompletedSpawns(spawners, spawnResultBuffer);
-        foreach (var spawnResult in spawnResultBuffer) {
-            if (spawnResult.spawnType == SpawnType.Infantry) {
-                infantryAIController.TakeUnderControl(spawnResult.spawnedId);
-            } else if (spawnResult.spawnType == SpawnType.Armor) {
-                armorAIController.TakeUnderControl(spawnResult.spawnedId);
-            } else {
-                throw new Exception();
-            }
+    private void CaptureSpawnedEnemies() {
+        foreach (var enemySource in enemySources) {
+            spawnSystem.GetCompletedSpawns(enemySource.SpawnerId, spawnResultBuffer);
+            
+            if (enemySource.SpawnType == SpawnType.Infantry) {
+                foreach (var spawnResult in spawnResultBuffer) {
+                    groupAIController.AddInfantryToGroup(enemySource.CurrentAIGroupId, spawnResult.spawnedId);
+                }
+                
+                if (groupAIController.GetGroupSize(enemySource.CurrentAIGroupId) > 30) {
+                    enemySource.CurrentAIGroupId = groupAIController.AddGroup();
+                }
+            } 
+
+            if (enemySource.SpawnType == SpawnType.Armor) {
+                foreach (var spawnResult in spawnResultBuffer) {
+                    armorAIController.AddAIBehaviour(spawnResult.spawnedId);
+                }
+            } 
         }
     }
 
-    private void UpdateAI() {
-        armorAIController.SetGoal(targetPoint.position);
-        infantryAIController.SetGoal(targetPoint.position);
+    private void UpdateLeakedNavigationSystemGoal() {
+        navigationSystem.SetGoal(targetPoint.position);
     }
 
 }

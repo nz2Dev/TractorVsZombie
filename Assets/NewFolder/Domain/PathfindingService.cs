@@ -31,6 +31,10 @@ public class PathfindingService {
         surface.SetGoal(worldSpacePosition);
     }
 
+    public Vector3 GetGoal() {
+        return surface.Goal;
+    }
+
     private Vector3 MultiSampleFlowVector(Vector3 worldPos) {
         var sumsCount = 0;
         Vector3 flowSum = Vector3.zero;

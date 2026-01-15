@@ -27,16 +27,14 @@ public class SpawnSystem {
         return nextId;
     }
 
-    public void CaptureCompletedSpawns(IEnumerable<int> spawnerIds, List<SpawnResult> output) {
+    public void GetCompletedSpawns(int spawnerId, List<SpawnResult> output) {
         output.Clear();
-        foreach (var spawnerId in spawnerIds) {
-            var spawner = registry[spawnerId];
-            foreach (var entityId in spawner.SpawnedIds) {
-                output.Add(new SpawnResult {
-                    spawnType = spawner.SpawnConfig.spawnType,
-                    spawnedId = entityId,
-                });
-            }
+        var spawner = registry[spawnerId];
+        foreach (var entityId in spawner.SpawnedIds) {
+            output.Add(new SpawnResult {
+                spawnType = spawner.SpawnConfig.spawnType,
+                spawnedId = entityId,
+            });
         }
     }
 

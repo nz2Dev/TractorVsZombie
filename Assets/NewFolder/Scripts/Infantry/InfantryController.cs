@@ -24,10 +24,7 @@ public class InfantryController {
     public int InfantryCount => registry.Count;
 
     public void ClearDiedRegistry() => diedInfantry.Clear();
-
-    public void WriteDeadInfantryFiltered(List<int> referencedList) {
-        referencedList.RemoveAll(id => !registry.ContainsKey(id));
-    }
+    public bool IsExist(int infantryId) => registry.ContainsKey(infantryId);
 
     public void Update() {
         ReadBodyState();

@@ -11,7 +11,6 @@ public class ArmorAIController {
     private readonly MotorVehicleController motorVehicleController;
     private readonly WeaponController weaponController;
 
-    private Vector3 goal;
     private readonly List<int> controlledArmorIds = new();
 
     public ArmorAIController(CombatService combatService, PathfindingService pathfindingService, ArmorController armorController, MotorVehicleController motorVehicleController, WeaponController weaponController) {
@@ -27,12 +26,7 @@ public class ArmorAIController {
         OperateArmors();
     }
 
-    public void SetGoal(Vector3 goal) {
-        this.goal = goal;
-        pathfindingService.SetGoal(goal);
-    }
-
-    public void TakeUnderControl(int armorId) {
+    public void AddAIBehaviour(int armorId) {
         controlledArmorIds.Add(armorId);
     }
 
@@ -49,6 +43,7 @@ public class ArmorAIController {
     }
 
     private void OperateArmorNavigation(ArmorState state) {
+        var goal = pathfindingService.GetGoal();
         var distance = Vector3.Distance(goal, state.position);
 
         var gasDistance = 10;

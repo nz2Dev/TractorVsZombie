@@ -27,6 +27,7 @@ public class FlowFieldsSurface : MonoBehaviour {
     private Vector3 goal;
 
     public int Size => flowFields.Size;
+    public Vector3 Goal => goal;
     public FlowFieldsSpace Space => space;
     public Vector2Int[] BlockedCells => blockedCells;
     public bool BakeInRealTime => bakeInRealTime;
