@@ -17,34 +17,21 @@ public class FlowFieldsSurface : MonoBehaviour {
     [Space]
     [SerializeField] private bool bakeInRealTime;
     [SerializeField] private bool displayBlockers = true;
-    [SerializeField] private bool displayComputations = true;
-    [SerializeField] private bool costOrFieldsDisplay = true;
-    [SerializeField] private bool integratedOrSetCost = true;
-    [SerializeField] private bool updateGoalInEditor = true;
 
     private FlowFieldsSpace space;
-    private FlowFields flowFields;
-    private Vector3 goal;
 
-    public int Size => flowFields.Size;
-    public Vector3 Goal => goal;
+    public int Size => size;
     public FlowFieldsSpace Space => space;
     public Vector2Int[] BlockedCells => blockedCells;
     public bool BakeInRealTime => bakeInRealTime;
     public bool DisplayBlockers => displayBlockers;
-    public bool DisplayComputations => displayComputations;
-    public bool CostOrFieldsDisplay => costOrFieldsDisplay;
-    public bool IntegratedOrSetCost => integratedOrSetCost;
-    public bool UpdateGoalInEditor => updateGoalInEditor;
 
     private void OnValidate() {
         DefineSpace();
-        UpdateFields();
     }
 
     private void Awake() {
         DefineSpace();
-        UpdateFields();
     }
 
     private void DefineSpace() {
@@ -68,71 +55,23 @@ public class FlowFieldsSurface : MonoBehaviour {
         var cellsSet = new HashSet<Vector2Int>(size * size);
 
         foreach (var collider in colliders) {
-            if (MaskContainsLayer(blockersMask, collider.gameObject.layer)) {
+            if (DoesMaskContainsLayer(blockersMask, collider.gameObject.layer)) {
                 CellRaycaster.ColliderCast(collider, space, cellsSet);
             }
         }
 
         blockedCells = cellsSet.ToArray();
-        UpdateFields();
-        UpdateGoal();
     }
 
-    public void SetGoal(Vector3 goalPosition) {
-        goal = goalPosition;
-        UpdateGoal();
-    }
-
-    public Vector3 GetGridPosition(int x, int y, bool atCenter = true) {
+    public Vector3 GetWorldPosition(int x, int y, bool atCenter = true) {
         return space.ConvertToWorld(new Vector2Int(x, y), atCenter);
     }
 
-    public int GetIntegratedCost(int x, int y) {
-        return flowFields.GetIntegratedCost(x, y);
+    public Vector2Int GetGridPositionClamped(Vector3 worldPosition) {
+        return space.ConvertToGridClampled(worldPosition);
     }
 
-    public int GetCost(int row, int column) {
-        return flowFields.GetCost(row, column);
-    }
-
-    public Vector3 GetFlowVectorClamped(Vector3 worldPos) {
-        var gridPos = ClampGridPositionInBounds(space.ConvertToGrid(worldPos));
-        return GetFlowVector(gridPos.x, gridPos.y);
-    }
-
-    private Vector2Int ClampGridPositionInBounds(Vector2Int position) {
-        return new Vector2Int {
-            x = Mathf.Clamp(position.x, 0, flowFields.Size - 1),
-            y = Mathf.Clamp(position.y, 0, flowFields.Size - 1)
-        };
-    }
-
-    public Vector3 GetFlowVector(int x, int y) {
-        var gridVector = flowFields.GetFlowVector(x, y);
-        return new Vector3(gridVector.x, 0, gridVector.y).normalized;
-    }
-
-    private void UpdateFields() {
-        flowFields = new FlowFields();
-        flowFields.SetGrid(size);
-
-        foreach (var blocked in blockedCells) {
-            flowFields.SetCellBlocked(blocked.x, blocked.y, true);
-        }
-
-        foreach (var blocked in blockedCells) {
-            // flowFields.RaiseNeighborsCost(blocked.x, blocked.y, radius: 1, cost: 3);
-            // flowFields.RaiseNeighborsCost(blocked.x, blocked.y, radius: 2, cost: 2);
-        }
-    }
-
-    private void UpdateGoal() {
-        var goalLocation = space.ConvertToGrid(goal);
-        flowFields.ComputeCosts(goalLocation);
-        flowFields.ComputeFlow();
-    }
-
-    private static bool MaskContainsLayer(LayerMask layerMask, int layer) {
+    private static bool DoesMaskContainsLayer(LayerMask layerMask, int layer) {
         return (layerMask.value & (1 << layer)) != 0;
     }
 

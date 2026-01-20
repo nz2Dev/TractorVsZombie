@@ -6,7 +6,6 @@ public class FlowFieldsSurfaceEditor : Editor {
 
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
-
     }
 
     private void OnEnable() {
@@ -24,9 +23,6 @@ public class FlowFieldsSurfaceEditor : Editor {
 
         if (surface.BakeInRealTime) {
             surface.BakeBlockers();
-        }
-        if (surface.UpdateGoalInEditor) {
-            surface.SetGoal(Vector3.zero);
         }
     }
 
@@ -46,24 +42,17 @@ public class FlowFieldsSurfaceEditor : Editor {
         if (surface.DisplayBlockers) {
             DrawBlockers(surface);
         }
-
-        if (surface.DisplayComputations) {
-            if (surface.CostOrFieldsDisplay) {
-                DrawCosts(surface, surface.IntegratedOrSetCost);
-            } else {
-                DrawFields(surface);
-            }
-        }
     }
 
     private void DrawBlockers(FlowFieldsSurface surface) {
         Handles.color = Color.red;
         foreach (var blockedCell in surface.BlockedCells) {
-            var worldPos = surface.GetGridPosition(blockedCell.x, blockedCell.y, atCenter: true);
+            var worldPos = surface.GetWorldPosition(blockedCell.x, blockedCell.y, atCenter: true);
             Handles.RectangleHandleCap(0, worldPos, Quaternion.LookRotation(Vector3.up), surface.Space.Scale * 0.5f, EventType.Repaint);
         }
     }
 
+    /*
     private void DrawFields(FlowFieldsSurface surface) {
         Handles.color = Color.white;
         for (int row = 0; row < surface.Size; row++) {
@@ -74,16 +63,6 @@ public class FlowFieldsSurfaceEditor : Editor {
             }
         }
     }
-
-    private void DrawCosts(FlowFieldsSurface surface, bool integratedOrSet) {
-        Handles.color = Color.white;
-        for (int row = 0; row < surface.Size; row++) {
-            for (int column = 0; column < surface.Size; column++) {
-                var worldPos = surface.GetGridPosition(row, column, atCenter: true);
-                var costValue = integratedOrSet ? surface.GetIntegratedCost(row, column) : surface.GetCost(row, column);
-                Handles.Label(worldPos, $"{costValue}");
-            }
-        }
-    }
+    */
 
 }

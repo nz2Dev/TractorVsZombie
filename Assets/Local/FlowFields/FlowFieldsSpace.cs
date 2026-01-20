@@ -24,6 +24,13 @@ public class FlowFieldsSpace {
         return new Vector2Int(Mathf.FloorToInt(localPosition.x), Mathf.FloorToInt(localPosition.z));
     }
 
+    public Vector2Int ConvertToGridClampled(Vector3 worldPosition) {
+        var gridPosition = ConvertToGrid(worldPosition);
+        gridPosition.x = Mathf.Clamp(gridPosition.x, 0, size - 1);
+        gridPosition.y = Mathf.Clamp(gridPosition.y, 0, size - 1);
+        return gridPosition;
+    }
+
     public Vector3 ConvertToWorld(Vector2Int gridPosition, bool atCenter = false) {
         var localPosition = new Vector3(gridPosition.x, 0, gridPosition.y);
         if (atCenter) {

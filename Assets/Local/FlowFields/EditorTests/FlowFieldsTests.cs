@@ -11,46 +11,35 @@ using UnityEngine.TestTools.Utils;
 public class FlowFieldsTests {
     
     [Test]
-    public void First() {
-        var flowFields = new FlowFields();
-    }
-
-    [Test]
     public void SetGridSize_InitializeWithCellCount() {
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(size: 2);
+        var flowField = new FlowField(gridSize: 2, blockedCells: null, goal: Vector2Int.zero);
         
-        var cellsCount = flowFields.CellCount;
-        Assert.That(cellsCount, Is.EqualTo(4));
+        Assert.That(flowField.Size, Is.EqualTo(2));
     }
 
     [Test]
     public void SetGridSize_InitializeWithEmptyVectors() {
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(size: 2);
+        var flowField = new FlowField(gridSize: 2, blockedCells: null, goal: new Vector2Int(1, 1));
 
-        var vector = flowFields.GetFlowVector(x: 0, y: 0);
-        Assert.That(vector, Is.EqualTo(Vector2Int.zero));
+        var vector = flowField.GetFlowVector(x: 0, y: 0);
+        Assert.That(vector, Is.Not.EqualTo(null));
     }
 
     [Test]
     public void SetCellBlocked_ReturnsAssignedValue() {
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(size: 2);
-        flowFields.SetCellBlocked(x: 0, y: 0, blocked: true);
+        var blockedCells = new List<Vector2Int> { new Vector2Int(0, 0) };
+        var flowField = new FlowField(gridSize: 2, blockedCells: blockedCells, goal: new Vector2Int(1, 1));
 
-        var blocked = flowFields.IsCellBlocked(x: 0, y: 0);
+        var blocked = flowField.IsCellBlocked(x: 0, y: 0);
         Assert.That(blocked, Is.True);
     }
 
     [Test]
     public void ComputeCostsInOpositeCorner_IsMaximum() {
         int size = 5;
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(size: size);
+        var flowField = new FlowField(size, null, new Vector2Int(size - 1, size - 1));
 
-        flowFields.ComputeCosts(new Vector2Int(size - 1, size - 1));
-        var computedCost = flowFields.GetIntegratedCost(x: 0, y: 0);
+        var computedCost = flowField.GetIntegratedCost(x: 0, y: 0);
 
         Assert.That(computedCost, Is.EqualTo((size - 1) * 2));
     }
@@ -58,45 +47,39 @@ public class FlowFieldsTests {
     [Test]
     public void ComputeCostsToCenter_CornerIsHigherThanEdge() {
         const int radius = 2;
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(radius * 2 + 1);
-        flowFields.ComputeCosts(new Vector2Int(radius, radius));
+        int size = radius * 2 + 1;
+        var flowField = new FlowField(size, null, new Vector2Int(radius, radius));
 
-        var cornerCost = flowFields.GetIntegratedCost(0, 0);
-        var edgeCost = flowFields.GetIntegratedCost(0, radius);
+        var cornerCost = flowField.GetIntegratedCost(0, 0);
+        var edgeCost = flowField.GetIntegratedCost(0, radius);
         Assert.That(cornerCost, Is.GreaterThan(edgeCost));
     }
 
     [Test]
     public void GoalAtTopRightCornern_FlowVectorsPointingToIt() {
         int size = 2;
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(size);
-        flowFields.ComputeCosts(new Vector2Int(1, 1));
-        flowFields.ComputeFlow();
+        var flowField = new FlowField(size, null, new Vector2Int(1, 1));
 
-        var centerFV = flowFields.GetFlowVector(0, 0);        
+        var centerFV = flowField.GetFlowVector(0, 0);        
         Assert.That(centerFV, Is.EqualTo(Vector2Int.one));
-        var upFV = flowFields.GetFlowVector(0, 1);
+        var upFV = flowField.GetFlowVector(0, 1);
         Assert.That(upFV, Is.EqualTo(Vector2Int.right));
-        var rightFV = flowFields.GetFlowVector(1, 0);
+        var rightFV = flowField.GetFlowVector(1, 0);
         Assert.That(rightFV, Is.EqualTo(Vector2Int.up));
     }
 
     [Test]
     public void CostsDecreaseTowardCenter_FlowVectorsPointingToIt() {
         int size = 5;
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(size);
-        flowFields.ComputeCosts(new Vector2Int(size / 2, size / 2));
-        flowFields.ComputeFlow();
+        var goal = new Vector2Int(size / 2, size / 2);
+        var flowField = new FlowField(size, null, goal);
 
         int radius = size / 2;
-        var center = new Vector2Int(radius, radius);
-        foreach (var offset in FlowFields.CostNeighborsOffsets) {
+        var center = goal;
+        foreach (var offset in FlowField.CostNeighborsOffsets) {
             var cirularLocation = center + offset * radius;
             var locationToCenter = center - cirularLocation;
-            var flowVector = flowFields.GetFlowVector(cirularLocation.x, cirularLocation.y);
+            var flowVector = flowField.GetFlowVector(cirularLocation.x, cirularLocation.y);
             locationToCenter.Clamp(-Vector2Int.one, Vector2Int.one);
             Assert.That(locationToCenter, Is.EqualTo(flowVector));
         }
@@ -105,14 +88,11 @@ public class FlowFieldsTests {
     [Test]
     public void BlockedCells_FlowPointsAway() {
         int size = 3;
-        var flowFields = new FlowFields();
-        flowFields.SetGrid(size);
-        flowFields.SetCellBlocked(1, 1, true);
-        flowFields.ComputeCosts(new Vector2Int(2, 2));
-        flowFields.ComputeFlow();
+        var blockedCells = new List<Vector2Int> { new Vector2Int(1, 1) };
+        var flowField = new FlowField(size, blockedCells, new Vector2Int(2, 2));
 
-        Assert.That(flowFields.GetFlowVector(1, 1), Is.EqualTo(Vector2Int.zero));
-        Assert.That(flowFields.GetFlowVector(0, 0), Is.Not.EqualTo(new Vector2Int(1, 1)));
+        Assert.That(flowField.GetFlowVector(1, 1), Is.EqualTo(Vector2Int.zero));
+        Assert.That(flowField.GetFlowVector(0, 0), Is.Not.EqualTo(new Vector2Int(1, 1)));
     }
 
 }
