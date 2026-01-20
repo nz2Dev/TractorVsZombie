@@ -34,100 +34,47 @@ public class FlowFields {
         new(-1, -1),
     };
 
-    private int size;
-    private Cell[,] cells;
+    private Grid2D<Cell> grid;
 
-    public int CellCount => cells.Length;
-    public int Size => size;
+    public int CellCount => grid?.CellCount ?? 0;
+    public int Size => grid?.Size ?? 0;
 
     public FlowFields() {
     }
 
     public void SetGrid(int size) {
-        this.size = size;
-        cells = new Cell[size, size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                cells[i, j] = new Cell {
-                    cost = 1,
-                };
+        grid = new Grid2D<Cell>(size);
+        for (int x = 0; x < grid.Size; x++) {
+            for (int y = 0; y < grid.Size; y++) {
+                grid[x, y].cost = 1;
             }
         }
     }
 
     public void SetCellBlocked(int x, int y, bool blocked) {
-        cells[x, y].cost = blocked ? 255 : 0;
+        grid[x, y].cost = blocked ? 255 : 0;
     }
 
-    private static Vector2Int[] RadiusCorners = new Vector2Int[] {
-        new (-1, -1),
-        new (0, -1),
-        new (1, -1),
-        new (1, 0),
-        new (1, 1),
-        new (0, 1),
-        new (-1, 1),
-        new (-1, 0)
-    };
-    
-    // private static Vector2Int[] RadiusCorners = new Vector2Int[] {
-    //     new (0, -1),
-    //     new (1, 0),
-    //     new (0, 1),
-    //     new (-1, 0)
-    // };
 
-    private static Vector2Int[] RadiusDirections = new Vector2Int[] {
-        new (1, 0),
-        new (1, 0),
-        new (0, 1),
-        new (0, 1),
-        new (-1, 0),
-        new (-1, 0),
-        new (0, -1),
-        new (0, -1),
-    };
-    
-    // private static Vector2Int[] RadiusDirections = new Vector2Int[] {
-    //     new (1, 1),
-    //     new (-1, 1),
-    //     new (-1, -1),
-    //     new (1, -1),
-    // };
-
-    public void RaiseNeighborsCost(int x, int y, int radius, int cost) {
-        Assert.IsFalse(radius == 0);
-        var location = new Vector2Int(x, y);
-        for (int segment = 0; segment < RadiusCorners.Length * radius; segment++) {
-            var corner = segment / radius;
-            var step = segment % radius;
-            var offset = RadiusCorners[corner] * radius + RadiusDirections[corner] * step;
-            var neighborLocation = location + offset;
-            
-            if (IsLocationOutsideBounds(neighborLocation) || IsCellBlocked(neighborLocation.x, neighborLocation.y))
-                continue;
-
-            var neighborCell = cells[neighborLocation.x, neighborLocation.y];
-            neighborCell.cost = Mathf.Max(neighborCell.cost, cost);
-        }
-    }
 
     public bool IsCellBlocked(int x, int y) {
-        var cellCost = cells[x, y].cost;
+        var cellCost = grid[x, y].cost;
         return cellCost == 255;
     }
 
     public void ComputeCosts(Vector2Int goal) {
-        cells[goal.x, goal.y].integratedCost = 0;
+        // TODO: Bug - integratedCost != 0 check fails for cells with legitimate 0 cost
+        // TODO: Performance - List.RemoveAt(0) is O(n), consider Queue<Vector2Int>
+        grid[goal].integratedCost = 0;
         var inSearch = new List<Vector2Int>(capacity: 64) { goal };
         int safeCounter = 0;
         
         while (inSearch.Count > 0) {
-            if (++safeCounter > size * 100) 
+            if (++safeCounter > grid.Size * 100) 
                 throw new Exception("iterating over 1k times");
             
             var nextLocation = inSearch[0];
-            var nextCell = cells[nextLocation.x, nextLocation.y];
+            var nextCell = grid[nextLocation];
             inSearch.RemoveAt(0);
 
             foreach (var offset in CostNeighborsOffsets) {
@@ -137,7 +84,7 @@ public class FlowFields {
                     || neighborLocation == goal)
                     continue;
 
-                var neighborCell = cells[neighborLocation.x, neighborLocation.y];
+                var neighborCell = grid[neighborLocation];
                 if (neighborCell.integratedCost != 0)
                     continue;
 
@@ -148,24 +95,23 @@ public class FlowFields {
     }
 
     private bool IsLocationOutsideBounds(Vector2Int gridLocation) {
-        return gridLocation.x < 0 || gridLocation.x >= size
-            || gridLocation.y < 0 || gridLocation.y >= size;
+        return !grid.IsInBounds(gridLocation);
     }
 
     public int GetCost(int x, int y) {
-        return cells[x, y].cost;
+        return grid[x, y].cost;
     }
 
     public int GetIntegratedCost(int x, int y) {
-        return cells[x, y].integratedCost;
+        return grid[x, y].integratedCost;
     }
 
     public void ComputeFlow() {
-        for (int row = 0; row < size; row++) {
-            for (int column = 0; column < size; column++) {
+        for (int row = 0; row < grid.Size; row++) {
+            for (int column = 0; column < grid.Size; column++) {
                 var cellLocation = new Vector2Int(row, column);
                 if (IsCellBlocked(row, column)) {
-                    cells[row, column].flowVector = Vector2Int.zero;
+                    grid[row, column].flowVector = Vector2Int.zero;
                     continue;
                 }
                 
@@ -177,20 +123,20 @@ public class FlowFields {
                         || IsCellBlocked(neighborLocation.x, neighborLocation.y))
                         continue;
 
-                    var neighborCell = cells[neighborLocation.x, neighborLocation.y];
+                    var neighborCell = grid[neighborLocation];
                     if (neighborCell.integratedCost < lowestCost) {
                         lowestCost = neighborCell.integratedCost;
                         lowestCostLocation = neighborLocation;
                     }
                 }
 
-                cells[row, column].flowVector = lowestCostLocation - cellLocation;
+                grid[row, column].flowVector = lowestCostLocation - cellLocation;
             }
         }
     }
 
     public Vector2Int GetFlowVector(int x, int y) {
-        return cells[x, y].flowVector;
+        return grid[x, y].flowVector;
     }
 
 }
