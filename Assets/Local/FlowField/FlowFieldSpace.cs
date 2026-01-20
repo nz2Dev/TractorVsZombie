@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FlowFieldsSpace {
+public class FlowFieldSpace {
 
     private readonly int size;
     private readonly float scale;
@@ -11,7 +11,7 @@ public class FlowFieldsSpace {
     public float Scale => scale;
     public Vector3 Anchor => anchor;
 
-    public FlowFieldsSpace(int gridSize, float scale) {
+    public FlowFieldSpace(int gridSize, float scale) {
         this.scale = scale;
         this.size = gridSize;
         var sizeOffset = size * 0.5f;

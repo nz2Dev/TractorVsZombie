@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(FlowFieldsSurface))]
-public class FlowFieldsSurfaceEditor : Editor {
+[CustomEditor(typeof(FlowFieldSurface))]
+public class FlowFieldSurfaceEditor : Editor {
 
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
@@ -17,7 +17,7 @@ public class FlowFieldsSurfaceEditor : Editor {
     }
 
     private void OnEditorUpdate() {
-        var surface = target as FlowFieldsSurface;
+        var surface = target as FlowFieldSurface;
         if (surface == null)
             return;
 
@@ -27,7 +27,7 @@ public class FlowFieldsSurfaceEditor : Editor {
     }
 
     void OnSceneGUI() {
-        var surface = target as FlowFieldsSurface;
+        var surface = target as FlowFieldSurface;
         var space = surface.Space;
         
         Handles.color = Color.white;
@@ -44,7 +44,7 @@ public class FlowFieldsSurfaceEditor : Editor {
         }
     }
 
-    private void DrawBlockers(FlowFieldsSurface surface) {
+    private void DrawBlockers(FlowFieldSurface surface) {
         Handles.color = Color.red;
         foreach (var blockedCell in surface.BlockedCells) {
             var worldPos = surface.GetWorldPosition(blockedCell.x, blockedCell.y, atCenter: true);

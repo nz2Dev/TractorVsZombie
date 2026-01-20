@@ -26,9 +26,9 @@ public class PathfindingServiceTest {
         Assert.That(flowVector, Is.EqualTo(checkToGoal).Using(Vector3EqualityComparer.Instance));
     }
 
-    private FlowFieldsSurface CreateSurface(int size) {
-        var surfaceGameObject = new GameObject("Test Flow Field Surface (New)", typeof(FlowFieldsSurface));
-        var surface = surfaceGameObject.GetComponent<FlowFieldsSurface>();
+    private FlowFieldSurface CreateSurface(int size) {
+        var surfaceGameObject = new GameObject("Test Flow Field Surface (New)", typeof(FlowFieldSurface));
+        var surface = surfaceGameObject.GetComponent<FlowFieldSurface>();
         surface.SetSize(size);
         return surface;
     }

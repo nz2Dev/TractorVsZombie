@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class CellRaycaster {
     
-    public static void ColliderCast(Collider collider, FlowFieldsSpace space, ISet<Vector2Int> collector) {
+    public static void ColliderCast(Collider collider, FlowFieldSpace space, ISet<Vector2Int> collector) {
         var center = collider.bounds.center;
         var extens = collider.bounds.extents;
         var doubleUp = new Vector3(0, collider.bounds.size.y * 2, 0);

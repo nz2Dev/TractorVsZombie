@@ -9,7 +9,7 @@ public class GameBootstrapper : MonoBehaviour {
     
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
-    [SerializeField] private FlowFieldsSurface flowFieldsSurface;
+    [SerializeField] private FlowFieldSurface flowFieldSurface;
     [SerializeField] private ORCAEnvironment orcaEnvironment;
     [Space]
     [SerializeField] private string physicsServiceLayer;
@@ -60,7 +60,7 @@ public class GameBootstrapper : MonoBehaviour {
         combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), LayerMask.NameToLayer(foeCombatServiceLayer), combatServiceEnvironmentMask);
         var vehicleService = new VehicleService();
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
-        var pathfindingService = new PathfindingService(flowFieldsSurface);
+        var pathfindingService = new PathfindingService(flowFieldSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
         var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 

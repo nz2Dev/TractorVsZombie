@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.TestTools.Utils;
 
 [TestFixture]
-public class FlowFieldsTests {
+public class FlowFieldTests {
     
     [Test]
     public void SetGridSize_InitializeWithCellCount() {

@@ -5,23 +5,11 @@ using UnityEngine;
 
 public class PathfindingService {
 
-    private static readonly Vector3[] SampleOffsets = new Vector3[] {
-        Vector3.zero,
-        Vector3.forward,
-        new Vector3(0.71f, 0, 0.71f),
-        Vector3.right,
-        new Vector3(0.71f, 0, -0.71f),
-        Vector3.back,
-        new Vector3(-0.71f, 0, -0.71f),
-        Vector3.left,
-        new Vector3(-0.71f, 0, 0.71f),
-    };
-
-    private readonly FlowFieldsSurface surface;
+    private readonly FlowFieldSurface surface;
     private FlowField flowField;
     private Vector3 worldSpaceGoal;
 
-    public PathfindingService(FlowFieldsSurface surface) {
+    public PathfindingService(FlowFieldSurface surface) {
         this.surface = surface;
     }
 

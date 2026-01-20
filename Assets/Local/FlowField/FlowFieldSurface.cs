@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class FlowFieldsSurface : MonoBehaviour {
+public class FlowFieldSurface : MonoBehaviour {
     
     private const float DefaultScale = 1;
 
@@ -18,10 +18,10 @@ public class FlowFieldsSurface : MonoBehaviour {
     [SerializeField] private bool bakeInRealTime;
     [SerializeField] private bool displayBlockers = true;
 
-    private FlowFieldsSpace space;
+    private FlowFieldSpace space;
 
     public int Size => size;
-    public FlowFieldsSpace Space => space;
+    public FlowFieldSpace Space => space;
     public Vector2Int[] BlockedCells => blockedCells;
     public bool BakeInRealTime => bakeInRealTime;
     public bool DisplayBlockers => displayBlockers;
@@ -35,7 +35,7 @@ public class FlowFieldsSurface : MonoBehaviour {
     }
 
     private void DefineSpace() {
-        space = new FlowFieldsSpace(size, DefaultScale);
+        space = new FlowFieldSpace(size, DefaultScale);
     }
 
     public void SetSize(int size) {
