@@ -38,14 +38,14 @@ public class FlowField {
     };
 
     private readonly Grid2D<Cell> grid;
-    private readonly Vector2Int goal;
+    private Vector2Int nextGoal;
 
     public int Size => grid.Size;
-    public Vector2Int Goal => goal;
+    public Vector2Int NextGoal => nextGoal;
 
     public FlowField(int gridSize, IEnumerable<Vector2Int> blockedCells, Vector2Int goal) {
         this.grid = new Grid2D<Cell>(gridSize);
-        this.goal = goal;
+        this.nextGoal = goal;
         
         for (int x = 0; x < grid.Size; x++) {
             for (int y = 0; y < grid.Size; y++) {
@@ -62,6 +62,10 @@ public class FlowField {
         }
     }
 
+    public void SetNextGoal(Vector2Int location) {
+        this.nextGoal = location;
+    }
+
     public Vector2Int GetFlowVector(int x, int y) {
         return grid[x, y].flowVector;
     }
@@ -75,10 +79,10 @@ public class FlowField {
     }
 
     public void ComputeCosts() {
-        grid[goal].integratedCost = 0;
+        grid[nextGoal].integratedCost = 0;
 
         var inSearch = new Queue<Vector2Int>();
-        inSearch.Enqueue(goal);
+        inSearch.Enqueue(nextGoal);
         
         int safeCounter = 0;
         int maxIterations = Size * Size * 2; 
@@ -92,7 +96,7 @@ public class FlowField {
 
             foreach (var offset in CostNeighborsOffsets) {
                 var neighborLocation = nextLocation + offset;
-                if (!grid.IsInBounds(neighborLocation) || neighborLocation == goal)
+                if (!grid.IsInBounds(neighborLocation) || neighborLocation == nextGoal)
                     continue;
 
                 var neighborCell = grid[neighborLocation];
@@ -123,7 +127,7 @@ public class FlowField {
                         continue;
                     
                     var neighborCell = grid[neighborLocation];
-                    if (neighborCell.IsBlocked() || neighborCell.integratedCost == 0 && neighborLocation != goal)
+                    if (neighborCell.IsBlocked() || neighborCell.integratedCost == 0 && neighborLocation != nextGoal)
                         continue;
 
                     if (neighborCell.integratedCost < lowestCost) {

@@ -6,31 +6,36 @@ using UnityEngine;
 public class CommanderSystem {
     
     private readonly BehaviorSystem behaviorSystem;
+    private readonly PathfindingService pathfindingService;
     private readonly InfantryController infantryController;
 
     private int idCounter;
-    private Dictionary<int, CommanderState> registry = new();
+    private readonly Dictionary<int, CommanderState> registry = new();
 
-    public CommanderSystem(InfantryController infantryController, BehaviorSystem behaviorSystem) {
+    public CommanderSystem(InfantryController infantryController, BehaviorSystem behaviorSystem, PathfindingService pathfindingService) {
         this.infantryController = infantryController;
         this.behaviorSystem = behaviorSystem;
+        this.pathfindingService = pathfindingService;
     }
 
     public void Update() {
         ValidateSubordinates();
+        UpdateGoals();
         ProcessCommanders();
     }
 
-    public int CreateCommander() {
+    public int CreateCommander(Vector3 origin) {
         var nextGroupId = ++idCounter;
         var state = new CommanderState();
+        state.Origin = origin;
+        state.FlowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
         registry[nextGroupId] = state;
         return nextGroupId;
     }
 
     public void AddSubordinate(int commanderId, int infantryId) {
         var commanderState = registry[commanderId];
-        var actorId = behaviorSystem.CreateActor(infantryId);
+        var actorId = behaviorSystem.CreateActor(infantryId, commanderState.FlowFieldId);
         commanderState.Subordinates.Add(new Subordinate {
             infantryId = infantryId,
             behaviorActorId = actorId
@@ -49,6 +54,16 @@ public class CommanderSystem {
                     behaviorSystem.RemoveActor(subordinate.behaviorActorId);
                     commanderState.Subordinates.RemoveAt(i);
                 }
+            }
+        }
+    }
+
+    private void UpdateGoals() {
+        if (Input.GetKeyDown(KeyCode.R)) {
+            foreach (var commanderState in registry.Values) {
+                commanderState.ChaseCenter = !commanderState.ChaseCenter;
+                var goalPosition = commanderState.ChaseCenter ? Vector3.zero : commanderState.Origin;
+                pathfindingService.UpdateGoal(commanderState.FlowFieldId, goalPosition);
             }
         }
     }

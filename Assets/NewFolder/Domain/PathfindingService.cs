@@ -6,29 +6,37 @@ using UnityEngine;
 public class PathfindingService {
 
     private readonly FlowFieldSurface surface;
-    private FlowField flowField;
-    private Vector3 worldSpaceGoal;
+
+    private int idCounter;
+    private Dictionary<int, FlowField> registry = new();
 
     public PathfindingService(FlowFieldSurface surface) {
         this.surface = surface;
     }
 
-    public virtual Vector3 GetFlowVector(Vector3 worldSpacePosition) {
-        var gridPosition = surface.GetGridPositionClamped(worldSpacePosition);
-        var gridVector = flowField.GetFlowVector(gridPosition.x, gridPosition.y);
-        return new Vector3(gridVector.x, 0, gridVector.y).normalized;
+    public int CreateFlowField(Vector3 goal) {
+        var nextFlowFieldId = ++idCounter;
+        var goalGridPosition = surface.GetGridPositionClamped(goal);
+        var flowField = new FlowField(surface.Size, surface.BlockedCells, goalGridPosition);
+        flowField.ComputeCosts();
+        flowField.ComputeFlow();
+        registry[nextFlowFieldId] = flowField;
+        return nextFlowFieldId;
     }
 
-    public virtual void SetGoal(Vector3 worldSpacePosition) {
-        worldSpaceGoal = worldSpacePosition;
-        var goalGridPosition = surface.GetGridPositionClamped(worldSpacePosition);
-        flowField = new FlowField(surface.Size, surface.BlockedCells, goalGridPosition);
+    public void UpdateGoal(int fieldId, Vector3 positionWorldSpace) {
+        var goalGridPosition = surface.GetGridPositionClamped(positionWorldSpace);
+        var flowField = new FlowField(surface.Size, surface.BlockedCells, goalGridPosition);
+        registry[fieldId] = flowField;
         flowField.ComputeCosts();
         flowField.ComputeFlow();
     }
 
-    public Vector3 GetGoal() {
-        return worldSpaceGoal;
+    public virtual Vector3 GetFlowVector(int fieldId, Vector3 positionWorldSpace) {
+        var flowField = registry[fieldId];
+        var gridPosition = surface.GetGridPositionClamped(positionWorldSpace);
+        var gridVector = flowField.GetFlowVector(gridPosition.x, gridPosition.y);
+        return new Vector3(gridVector.x, 0, gridVector.y).normalized;
     }
 
 }

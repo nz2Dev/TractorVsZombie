@@ -11,6 +11,7 @@ class NavigationAgent {
     public int AvoidanceId { get; set; }
     public float MaxSpeed { get; set; }
     public Vector3 NextPosition { get; set; }
+    public int FlowFieldId { get; set; }
     public SteeringInput NextSteering { get; set; }
     public Vector3 ComputedVelocity { get; set; }
 

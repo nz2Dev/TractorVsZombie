@@ -20,10 +20,10 @@ public class BehaviorSystem {
         ProcessBehaviors();
     }
 
-    public int CreateActor(int infantryId) {
+    public int CreateActor(int infantryId, int flowFieldId) {
         var state = infantryController.GetInfantryState(infantryId);
         var config = infantryController.GetAvoidanceConfig(infantryId);
-        var navigationAgentId = navigationSystem.AddAgent(state.position, config.maxSpeed, config);
+        var navigationAgentId = navigationSystem.AddAgent(state.position, flowFieldId, config.maxSpeed, config);
         var id = ++nextId;
         registry[id] = new BehaviorActor(id, infantryId, navigationAgentId);
         return id;

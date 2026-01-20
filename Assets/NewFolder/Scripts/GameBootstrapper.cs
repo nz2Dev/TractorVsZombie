@@ -19,7 +19,6 @@ public class GameBootstrapper : MonoBehaviour {
     [Space]
     [SerializeField] int unitsCount = 10;
     [SerializeField] private int maxVehicelCount = 10;
-    [SerializeField] Transform targetPoint;
     [Space]
     [SerializeField] private PlayerConfig playerConfig;
     [SerializeField] private AimVisuals aimVisualsPrefab;
@@ -174,7 +173,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         commanderSystem = new CommanderSystem(
             infantryController,
-            behaviorSystem
+            behaviorSystem,
+            pathfindingService
         );
 
         couplingController = new CouplingController(
@@ -199,10 +199,8 @@ public class GameBootstrapper : MonoBehaviour {
         enemyController = new EnemyController(
             unitView,
             spawnSystem,
-            targetPoint,
             armorAIController,
-            commanderSystem,
-            navigationSystem
+            commanderSystem
         );
     }
 

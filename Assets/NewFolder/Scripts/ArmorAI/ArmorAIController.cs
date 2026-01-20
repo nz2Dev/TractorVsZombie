@@ -12,6 +12,7 @@ public class ArmorAIController {
     private readonly WeaponController weaponController;
 
     private readonly List<int> controlledArmorIds = new();
+    private readonly int flowFieldId;
 
     public ArmorAIController(CombatService combatService, PathfindingService pathfindingService, ArmorController armorController, MotorVehicleController motorVehicleController, WeaponController weaponController) {
         this.combatService = combatService;
@@ -19,6 +20,8 @@ public class ArmorAIController {
         this.armorController = armorController;
         this.motorVehicleController = motorVehicleController;
         this.weaponController = weaponController;
+
+        flowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
     }
 
     public void Update() {
@@ -43,7 +46,7 @@ public class ArmorAIController {
     }
 
     private void OperateArmorNavigation(ArmorState state) {
-        var goal = pathfindingService.GetGoal();
+        var goal = Vector3.zero;
         var distance = Vector3.Distance(goal, state.position);
 
         var gasDistance = 10;
@@ -54,7 +57,7 @@ public class ArmorAIController {
         var brakes = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
         motorVehicleController.BrakeVehicle(state.vehicleId, brakes);
 
-        var flowVector = pathfindingService.GetFlowVector(state.position);
+        var flowVector = pathfindingService.GetFlowVector(flowFieldId, state.position);
         motorVehicleController.SteerVehicleToward(state.vehicleId, flowVector);
     }
 

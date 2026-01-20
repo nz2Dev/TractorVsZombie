@@ -25,15 +25,12 @@ public class NavigationSystem {
         WriteExternalState();
     }
 
-    public void SetGoal(Vector3 goal) {
-        pathfindingService.SetGoal(goal);
-    }
-
-    public int AddAgent(Vector3 position, float maxSpeed, AgentAvoidanceConfig config) {
+    public int AddAgent(Vector3 position, int flowFieldId, float maxSpeed, AgentAvoidanceConfig config) {
         var nextId = ++idCounter;
         var agent = new NavigationAgent(nextId, position);
         agent.MaxSpeed = maxSpeed;
         agent.AvoidanceId = avoidanceService.AddAgent(position, config);
+        agent.FlowFieldId = flowFieldId;
         agent.NextPosition = position;
         registry[nextId] = agent;
         return nextId;
@@ -62,7 +59,7 @@ public class NavigationSystem {
     private void ReadExternalState() {
         foreach (var agent in registry.Values) {
             agent.RvoVelocity = avoidanceService.GetVelocity(agent.AvoidanceId);
-            agent.FlowDirection = pathfindingService.GetFlowVector(agent.NextPosition);
+            agent.FlowDirection = pathfindingService.GetFlowVector(agent.FlowFieldId, agent.NextPosition);
         }
     }
 
