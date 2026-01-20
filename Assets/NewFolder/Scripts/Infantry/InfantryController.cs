@@ -62,6 +62,7 @@ public class InfantryController {
         var model = registry[infantryId];
         return new InfantryState {
             position = model.BodyState.position,
+            movementVelocity = model.BodyState.movementVelocity,
             isAlive = model.IsAlive,
             isGrounded = model.BodyState.grounded,
             combatId = model.CombatId,

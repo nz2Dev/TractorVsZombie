@@ -47,8 +47,9 @@ public class GameBootstrapper : MonoBehaviour {
     private PlatformController platformController;
     private DriverController driverController;
     private ArmorAIController armorAIController;
-    private GroupAIController groupAIController;
+    private BehaviorSystem behaviorSystem;
     private CouplingController couplingController;
+    private CommanderSystem commanderSystem;
 
     private void Start() {
         Build();
@@ -165,10 +166,15 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController
         );
 
-        groupAIController = new GroupAIController(
-            infantryController,
+        behaviorSystem = new BehaviorSystem(
             navigationSystem,
+            infantryController,
             combatService
+        );
+
+        commanderSystem = new CommanderSystem(
+            infantryController,
+            behaviorSystem
         );
 
         couplingController = new CouplingController(
@@ -195,7 +201,7 @@ public class GameBootstrapper : MonoBehaviour {
             spawnSystem,
             targetPoint,
             armorAIController,
-            groupAIController,
+            commanderSystem,
             navigationSystem
         );
     }
@@ -223,7 +229,8 @@ public class GameBootstrapper : MonoBehaviour {
         driverController.Update();
         
         armorAIController.Update();
-        groupAIController.Update();
+        commanderSystem.Update();
+        behaviorSystem.Update();
 
         enemyController.Update();
         playerController.Update();

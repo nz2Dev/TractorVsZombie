@@ -10,26 +10,20 @@ public class EnemyController {
     private readonly EnemyView enemyView;
     private readonly SpawnSystem spawnSystem;
     private readonly ArmorAIController armorAIController;
-    private readonly GroupAIController groupAIController;
+    private readonly CommanderSystem commanderSystem;
     private readonly NavigationSystem navigationSystem;
 
     private readonly List<EnemySource> enemySources = new();
     private readonly List<SpawnResult> spawnResultBuffer = new(32);
     private readonly Transform targetPoint;
 
-    public EnemyController(
-        EnemyView crowdView,
-        SpawnSystem spawnSystem,
-        Transform targetPoint,
-        ArmorAIController armorAIController,
-        GroupAIController infantryAIController,
-        NavigationSystem navigationSystem) {
-
+    public EnemyController(EnemyView crowdView, SpawnSystem spawnSystem, Transform targetPoint, ArmorAIController armorAIController, 
+        CommanderSystem commanderSystem, NavigationSystem navigationSystem) {
         this.enemyView = crowdView;
         this.spawnSystem = spawnSystem;
         this.targetPoint = targetPoint;
         this.armorAIController = armorAIController;
-        this.groupAIController = infantryAIController;
+        this.commanderSystem = commanderSystem;
         this.navigationSystem = navigationSystem;
     }
 
@@ -46,7 +40,7 @@ public class EnemyController {
                 var enemySource = new EnemySource();
                 enemySource.SpawnType = source.config.spawnType;
                 enemySource.SpawnerId = spawnSystem.AddSpawner(source.Position, source.config);
-                enemySource.CurrentAIGroupId = groupAIController.AddGroup();
+                enemySource.CurrentCommanderId = commanderSystem.CreateCommander();
                 enemySources.Add(enemySource);
             }
         }
@@ -58,11 +52,11 @@ public class EnemyController {
             
             if (enemySource.SpawnType == SpawnType.Infantry) {
                 foreach (var spawnResult in spawnResultBuffer) {
-                    groupAIController.AddInfantryToGroup(enemySource.CurrentAIGroupId, spawnResult.spawnedId);
+                    commanderSystem.AddSubordinate(enemySource.CurrentCommanderId, spawnResult.spawnedId);
                 }
                 
-                if (groupAIController.GetGroupSize(enemySource.CurrentAIGroupId) > 30) {
-                    enemySource.CurrentAIGroupId = groupAIController.AddGroup();
+                if (commanderSystem.GetSubordinates(enemySource.CurrentCommanderId) > 30) {
+                    enemySource.CurrentCommanderId = commanderSystem.CreateCommander();
                 }
             } 
 

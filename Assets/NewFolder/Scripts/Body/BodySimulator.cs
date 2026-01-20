@@ -45,9 +45,8 @@ public class BodySimulator {
     }
 
     public void ApplyMovement(int bodyId, Vector3 velocity) {
-        if (registry.TryGetValue(bodyId, out var model)) {
-            model.DrivenVelocity = velocity;
-        }
+        var model = registry[bodyId];
+        model.DrivenVelocity = velocity;
     }
 
     public BodyState ReadBodyState(int bodyId) {
@@ -55,6 +54,7 @@ public class BodySimulator {
         return new BodyState {
             grounded = model.Grounded,
             position = model.Position,
+            movementVelocity = model.DrivenVelocity, // missing flying velocity, wich is not computed for now
             rotation = model.Rotation
         };
     }
