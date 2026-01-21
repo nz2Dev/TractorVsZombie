@@ -24,7 +24,9 @@ public class EnemyController {
 
     public void Update() {
         TryInitEnemySources();
+        HireNewCommanders();
         CaptureSpawnedEnemies();
+        ReadBehaviorChanges();
     }
 
     private void TryInitEnemySources() {
@@ -35,8 +37,21 @@ public class EnemyController {
                 enemySource.Origin = source.Position;
                 enemySource.SpawnType = source.config.spawnType;
                 enemySource.SpawnerId = spawnSystem.AddSpawner(source.Position, source.config);
-                enemySource.CurrentCommanderId = commanderSystem.CreateCommander(source.Position);
+                var firstCommander = commanderSystem.CreateCommander();
+                enemySource.Commanders.Add(firstCommander);
+                enemySource.LastCommanderId = firstCommander;
                 enemySources.Add(enemySource);
+            }
+        }
+    }
+    
+    private void HireNewCommanders() {
+        foreach (var enemySource in enemySources) {
+            var lastCommanderSnapshot = commanderSystem.GetCommanderSnapshot(enemySource.LastCommanderId);
+            if (lastCommanderSnapshot.subordinateCount > 50) {
+                var nextCommander = commanderSystem.CreateCommander();
+                enemySource.Commanders.Add(nextCommander);
+                enemySource.LastCommanderId = nextCommander;
             }
         }
     }
@@ -47,11 +62,7 @@ public class EnemyController {
             
             if (enemySource.SpawnType == SpawnType.Infantry) {
                 foreach (var spawnResult in spawnResultBuffer) {
-                    commanderSystem.AddSubordinate(enemySource.CurrentCommanderId, spawnResult.spawnedId);
-                }
-                
-                if (commanderSystem.GetSubordinates(enemySource.CurrentCommanderId) > 50) {
-                    enemySource.CurrentCommanderId = commanderSystem.CreateCommander(enemySource.Origin);
+                    commanderSystem.AddSubordinate(enemySource.LastCommanderId, spawnResult.spawnedId);
                 }
             } 
 
@@ -60,6 +71,19 @@ public class EnemyController {
                     armorAIController.AddAIBehaviour(spawnResult.spawnedId);
                 }
             } 
+        }
+    }
+
+    private void ReadBehaviorChanges() {
+        if (Input.GetKeyDown(KeyCode.R)) {
+            foreach (var enemySource in enemySources) {
+                foreach (var commanderId in enemySource.Commanders) {
+                    var commanderSnapshot = commanderSystem.GetCommanderSnapshot(commanderId);
+                    var switchedStrategyToChaseCenter = commanderSnapshot.isChasingCenter ? false : true;
+                    var targetPosition = switchedStrategyToChaseCenter ? Vector3.zero : enemySource.Origin;
+                    commanderSystem.SetStrategy(commanderId, switchedStrategyToChaseCenter, targetPosition);
+                }
+            }
         }
     }
 

@@ -20,14 +20,12 @@ public class CommanderSystem {
 
     public void Update() {
         ValidateSubordinates();
-        UpdateGoals();
         ProcessCommanders();
     }
 
-    public int CreateCommander(Vector3 origin) {
+    public int CreateCommander() {
         var nextGroupId = ++idCounter;
         var state = new CommanderState();
-        state.Origin = origin;
         state.CommonDestinationId = navigationSystem.CreateDestination(Vector3.zero);
         registry[nextGroupId] = state;
         return nextGroupId;
@@ -42,8 +40,18 @@ public class CommanderSystem {
         });
     }
 
-    public int GetSubordinates(int commanderId) {
-        return registry[commanderId].Subordinates.Count;
+    public void SetStrategy(int commanderId, bool chaseCenter, Vector3 position) {
+        var commanderState = registry[commanderId];
+        commanderState.ChaseCenter = chaseCenter;
+        navigationSystem.UpdateDestinationPosition(commanderState.CommonDestinationId, position);
+    }
+
+    public CommanderSnapshot GetCommanderSnapshot(int commanderId) {
+        var commanderState = registry[commanderId];
+        return new CommanderSnapshot {
+            subordinateCount = commanderState.Subordinates.Count,
+            isChasingCenter = commanderState.ChaseCenter,
+        };
     }
 
     private void ValidateSubordinates() {
@@ -54,16 +62,6 @@ public class CommanderSystem {
                     behaviorSystem.RemoveActor(subordinate.behaviorActorId);
                     commanderState.Subordinates.RemoveAt(i);
                 }
-            }
-        }
-    }
-
-    private void UpdateGoals() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            foreach (var commanderState in registry.Values) {
-                commanderState.ChaseCenter = !commanderState.ChaseCenter;
-                var goalPosition = commanderState.ChaseCenter ? Vector3.zero : commanderState.Origin;
-                navigationSystem.UpdateDestinationPosition(commanderState.CommonDestinationId, goalPosition);
             }
         }
     }
