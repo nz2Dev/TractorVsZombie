@@ -78,8 +78,11 @@ public class NavigationSystem {
     private void ReadExternalState() {
         foreach (var agent in registry.Values) {
             agent.RvoVelocity = avoidanceService.GetVelocity(agent.AvoidanceId);
-            var destinationFlowFieldId = destinationRegistry[agent.NextDestinationId];
-            agent.FlowDirection = pathfindingService.GetFlowVector(destinationFlowFieldId, agent.NextPosition);
+            if (destinationRegistry.TryGetValue(agent.NextDestinationId, out var flowFieldId)) {
+                agent.FlowDirection = pathfindingService.GetFlowVector(flowFieldId, agent.NextPosition);
+            } else {
+                agent.FlowDirection = Vector3.zero;
+            }
         }
     }
 
