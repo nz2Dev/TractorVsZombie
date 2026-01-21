@@ -9,7 +9,10 @@ public struct Subordinate {
 
 public class CommanderState {
     public bool ChaseCenter { get; set; } = true;
-    public DestinationId CommonDestinationId { get; set; }
+    // TODO: same domain has different semantic, here it's a target, but for navigation is a destination
+    // Idea: use api to create a Target entity in behavior system, that can be tracked by Id, wich can be a CombatId, Position, etc.
+    // This way, navigation system will be transparent for commander, whos domain is to "manage" behaviors.
+    public MarkerId CommonTargetMarkerId { get; set; }
     public SteeringInput FormationSteering { get; set; }
     public List<Subordinate> Subordinates { get; } = new();
 }

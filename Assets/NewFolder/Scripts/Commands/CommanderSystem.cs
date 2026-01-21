@@ -26,7 +26,7 @@ public class CommanderSystem {
     public int CreateCommander() {
         var nextGroupId = ++idCounter;
         var state = new CommanderState();
-        state.CommonDestinationId = navigationSystem.CreateDestination(Vector3.zero);
+        state.CommonTargetMarkerId = navigationSystem.CreateMarker(Vector3.zero);
         registry[nextGroupId] = state;
         return nextGroupId;
     }
@@ -43,7 +43,7 @@ public class CommanderSystem {
     public void SetStrategy(int commanderId, bool chaseCenter, Vector3 position) {
         var commanderState = registry[commanderId];
         commanderState.ChaseCenter = chaseCenter;
-        navigationSystem.UpdateDestinationPosition(commanderState.CommonDestinationId, position);
+        navigationSystem.UpdateMarkerPosition(commanderState.CommonTargetMarkerId, position);
     }
 
     public CommanderSnapshot GetCommanderSnapshot(int commanderId) {
@@ -72,11 +72,14 @@ public class CommanderSystem {
             foreach (var subordinate in commanderState.Subordinates) {
                 behaviorSystem.SetNavigationInput(subordinate.behaviorActorId, 
                     commanderState.FormationSteering,
-                    commanderState.CommonDestinationId);
+                    commanderState.CommonTargetMarkerId);
             }
         }
     }
 
+    // Idea: this compute is done in behavior system, and returns some sort of "Context", that later can be assigned to actor, or via specific behavior
+    // This way, navigation and movement will be transparent to commander.
+    // Idea/2: Or API to form a formation is directly handled in behavior system, commander only decides who belong in formations and when.
     private SteeringInput ComputeFormationSteering(CommanderState state) {
         int count = 0;
         Vector3 sumPosition = Vector3.zero;

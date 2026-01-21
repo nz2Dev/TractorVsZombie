@@ -20,7 +20,7 @@ public class NavigationSystem {
     private Dictionary<int, NavigationAgent> registry = new();
 
     private int destinationIdCounter;
-    private Dictionary<DestinationId, int> destinationRegistry = new();
+    private Dictionary<MarkerId, int> markerToFlowField = new();
 
     public void Update() {
         ReadExternalState();
@@ -28,16 +28,16 @@ public class NavigationSystem {
         WriteExternalState();
     }
 
-    public DestinationId CreateDestination(Vector3 position) {
-        var nextDestinationId = new DestinationId(++destinationIdCounter);
+    public MarkerId CreateMarker(Vector3 position) {
+        var markerId = new MarkerId(++destinationIdCounter);
         var flowFieldId = pathfindingService.CreateFlowField(position);
-        destinationRegistry[nextDestinationId] = flowFieldId;
-        return nextDestinationId;
+        markerToFlowField[markerId] = flowFieldId;
+        return markerId;
     }
 
-    public void UpdateDestinationPosition(DestinationId destinationId, Vector3 position) {
-        var destinationFlowFieldId = destinationRegistry[destinationId];
-        pathfindingService.UpdateGoal(destinationFlowFieldId, position);
+    public void UpdateMarkerPosition(MarkerId markerId, Vector3 position) {
+        var markerFlowFieldId = markerToFlowField[markerId];
+        pathfindingService.UpdateGoal(markerFlowFieldId, position);
     }
 
     public int AddAgent(Vector3 position, float maxSpeed, AgentAvoidanceConfig config) {
@@ -56,9 +56,9 @@ public class NavigationSystem {
         registry.Remove(id);
     }
 
-    public void SetNextDestination(int id, DestinationId destinationId) {
+    public void SetDestination(int id, MarkerId markerId) {
         var agent = registry[id];
-        agent.NextDestinationId = destinationId;
+        agent.DestinationMarkerId = markerId;
     }
 
     public void SetNextSteering(int id, SteeringInput steering) {
@@ -78,7 +78,7 @@ public class NavigationSystem {
     private void ReadExternalState() {
         foreach (var agent in registry.Values) {
             agent.RvoVelocity = avoidanceService.GetVelocity(agent.AvoidanceId);
-            if (destinationRegistry.TryGetValue(agent.NextDestinationId, out var flowFieldId)) {
+            if (markerToFlowField.TryGetValue(agent.DestinationMarkerId, out var flowFieldId)) {
                 agent.FlowDirection = pathfindingService.GetFlowVector(flowFieldId, agent.NextPosition);
             } else {
                 agent.FlowDirection = Vector3.zero;

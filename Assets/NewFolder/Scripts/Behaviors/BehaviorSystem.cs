@@ -31,10 +31,10 @@ public class BehaviorSystem {
         return id;
     }
 
-    public void SetNavigationInput(int actorId, SteeringInput input, DestinationId destinationId) {
+    public void SetNavigationInput(int actorId, SteeringInput steeringInput, MarkerId markerId) {
         var actor = registry[actorId];
-        actor.SteeringInput = input;
-        actor.DestinationId = destinationId;
+        actor.SteeringInput = steeringInput;
+        actor.TargetMarkerId = markerId;
     }
 
     public void RemoveActor(int id) {
@@ -50,8 +50,8 @@ public class BehaviorSystem {
             if (!infantryState.isAlive || !infantryState.isGrounded) 
                 continue;
 
+            navigationSystem.SetDestination(actor.NavigationAgentId, actor.TargetMarkerId);
             navigationSystem.SetNextPosition(actor.NavigationAgentId, infantryState.position);
-            navigationSystem.SetNextDestination(actor.NavigationAgentId, actor.DestinationId);
             navigationSystem.SetNextSteering(actor.NavigationAgentId, actor.SteeringInput);
 
             var navigationVelocity = navigationSystem.GetComputedVelocity(actor.NavigationAgentId);

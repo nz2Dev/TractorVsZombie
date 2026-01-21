@@ -9,9 +9,9 @@ class NavigationAgent {
 
     public int Id { get; private set; }
     public int AvoidanceId { get; set; }
+    public MarkerId DestinationMarkerId { get; set; }
     public float MaxSpeed { get; set; }
     public Vector3 NextPosition { get; set; }
-    public DestinationId NextDestinationId { get; set; }
     public SteeringInput NextSteering { get; set; }
     public Vector3 ComputedVelocity { get; set; }
 
