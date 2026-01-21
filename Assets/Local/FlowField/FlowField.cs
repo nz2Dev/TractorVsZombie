@@ -79,18 +79,15 @@ public class FlowField {
     }
 
     public void ComputeCosts() {
-        grid[nextGoal].integratedCost = 0;
+        for (int x = 0; x < grid.Size; x++) {
+            for (int y = 0; y < grid.Size; y++) {
+                grid[x, y].integratedCost = 0;
+            }
+        }
 
         var inSearch = new Queue<Vector2Int>();
         inSearch.Enqueue(nextGoal);
-        
-        int safeCounter = 0;
-        int maxIterations = Size * Size * 2; 
-
-        while (inSearch.Count > 0) {
-            if (++safeCounter > maxIterations) 
-                throw new Exception("Infinite loop detected in ComputeCosts");
-            
+        while (inSearch.Count > 0) {    
             var nextLocation = inSearch.Dequeue();
             var nextCell = grid[nextLocation];
 

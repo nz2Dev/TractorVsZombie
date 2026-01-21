@@ -50,9 +50,9 @@ public class EnemyController {
                     commanderSystem.AddSubordinate(enemySource.CurrentCommanderId, spawnResult.spawnedId);
                 }
                 
-                // if (commanderSystem.GetSubordinates(enemySource.CurrentCommanderId) > 30) {
-                //     enemySource.CurrentCommanderId = commanderSystem.CreateCommander(enemySource.Origin);
-                // }
+                if (commanderSystem.GetSubordinates(enemySource.CurrentCommanderId) > 50) {
+                    enemySource.CurrentCommanderId = commanderSystem.CreateCommander(enemySource.Origin);
+                }
             } 
 
             if (enemySource.SpawnType == SpawnType.Armor) {

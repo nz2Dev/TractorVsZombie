@@ -25,9 +25,10 @@ public class PathfindingService {
     }
 
     public void UpdateGoal(int fieldId, Vector3 positionWorldSpace) {
-        var goalGridPosition = surface.GetGridPositionClamped(positionWorldSpace);
-        var flowField = new FlowField(surface.Size, surface.BlockedCells, goalGridPosition);
+        var flowField = registry[fieldId];
         registry[fieldId] = flowField;
+        var goalGridPosition = surface.GetGridPositionClamped(positionWorldSpace);
+        flowField.SetNextGoal(goalGridPosition);
         flowField.ComputeCosts();
         flowField.ComputeFlow();
     }

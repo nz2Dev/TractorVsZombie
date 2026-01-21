@@ -11,7 +11,7 @@ public class CommanderState {
 
     public Vector3 Origin { get; set; }
     public int FlowFieldId { get; set; }
-    public bool ChaseCenter { get; set; }
+    public bool ChaseCenter { get; set; } = true;
     public float LastSwitchTime { get; set; } = float.NegativeInfinity;
     public SteeringInput FormationSteering { get; set; }
     public List<Subordinate> Subordinates { get; } = new();
