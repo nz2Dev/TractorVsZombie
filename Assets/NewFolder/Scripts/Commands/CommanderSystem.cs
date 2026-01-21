@@ -6,16 +6,16 @@ using UnityEngine;
 public class CommanderSystem {
     
     private readonly BehaviorSystem behaviorSystem;
-    private readonly PathfindingService pathfindingService;
     private readonly InfantryController infantryController;
+    private readonly NavigationSystem navigationSystem;
 
     private int idCounter;
     private readonly Dictionary<int, CommanderState> registry = new();
 
-    public CommanderSystem(InfantryController infantryController, BehaviorSystem behaviorSystem, PathfindingService pathfindingService) {
+    public CommanderSystem(InfantryController infantryController, BehaviorSystem behaviorSystem, NavigationSystem navigationSystem) {
         this.infantryController = infantryController;
         this.behaviorSystem = behaviorSystem;
-        this.pathfindingService = pathfindingService;
+        this.navigationSystem = navigationSystem;
     }
 
     public void Update() {
@@ -28,14 +28,14 @@ public class CommanderSystem {
         var nextGroupId = ++idCounter;
         var state = new CommanderState();
         state.Origin = origin;
-        state.FlowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
+        state.CommonDestinationId = navigationSystem.CreateDestination(Vector3.zero);
         registry[nextGroupId] = state;
         return nextGroupId;
     }
 
     public void AddSubordinate(int commanderId, int infantryId) {
         var commanderState = registry[commanderId];
-        var actorId = behaviorSystem.CreateActor(infantryId, commanderState.FlowFieldId);
+        var actorId = behaviorSystem.CreateActor(infantryId);
         commanderState.Subordinates.Add(new Subordinate {
             infantryId = infantryId,
             behaviorActorId = actorId
@@ -63,7 +63,7 @@ public class CommanderSystem {
             foreach (var commanderState in registry.Values) {
                 commanderState.ChaseCenter = !commanderState.ChaseCenter;
                 var goalPosition = commanderState.ChaseCenter ? Vector3.zero : commanderState.Origin;
-                pathfindingService.UpdateGoal(commanderState.FlowFieldId, goalPosition);
+                navigationSystem.UpdateDestinationPosition(commanderState.CommonDestinationId, goalPosition);
             }
         }
     }
@@ -72,7 +72,9 @@ public class CommanderSystem {
         foreach (var commanderState in registry.Values) {
             commanderState.FormationSteering = ComputeFormationSteering(commanderState);
             foreach (var subordinate in commanderState.Subordinates) {
-                behaviorSystem.SetSteeringInput(subordinate.behaviorActorId, commanderState.FormationSteering);
+                behaviorSystem.SetNavigationInput(subordinate.behaviorActorId, 
+                    commanderState.FormationSteering,
+                    commanderState.CommonDestinationId);
             }
         }
     }

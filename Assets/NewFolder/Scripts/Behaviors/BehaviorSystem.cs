@@ -20,17 +20,21 @@ public class BehaviorSystem {
         ProcessBehaviors();
     }
 
-    public int CreateActor(int infantryId, int flowFieldId) {
+    public int CreateActor(int infantryId) {
         var state = infantryController.GetInfantryState(infantryId);
         var config = infantryController.GetAvoidanceConfig(infantryId);
-        var navigationAgentId = navigationSystem.AddAgent(state.position, flowFieldId, config.maxSpeed, config);
+        var navigationAgentId = navigationSystem.AddAgent(state.position, config.maxSpeed, config);
         var id = ++nextId;
-        registry[id] = new BehaviorActor(id, infantryId, navigationAgentId);
+        registry[id] = new BehaviorActor(id, infantryId, navigationAgentId); 
+        // TODO: use consistent state initialization
+        // model.field = value
         return id;
     }
 
-    public void SetSteeringInput(int actorId, SteeringInput input) {
-        registry[actorId].SteeringInput = input;
+    public void SetNavigationInput(int actorId, SteeringInput input, DestinationId destinationId) {
+        var actor = registry[actorId];
+        actor.SteeringInput = input;
+        actor.DestinationId = destinationId;
     }
 
     public void RemoveActor(int id) {
@@ -46,8 +50,9 @@ public class BehaviorSystem {
             if (!infantryState.isAlive || !infantryState.isGrounded) 
                 continue;
 
-            navigationSystem.SetNextSteering(actor.NavigationAgentId, actor.SteeringInput);
             navigationSystem.SetNextPosition(actor.NavigationAgentId, infantryState.position);
+            navigationSystem.SetNextDestination(actor.NavigationAgentId, actor.DestinationId);
+            navigationSystem.SetNextSteering(actor.NavigationAgentId, actor.SteeringInput);
 
             var navigationVelocity = navigationSystem.GetComputedVelocity(actor.NavigationAgentId);
             infantryController.Move(actor.InfantryId, navigationVelocity);

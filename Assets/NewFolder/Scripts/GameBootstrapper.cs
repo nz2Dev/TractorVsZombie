@@ -174,7 +174,7 @@ public class GameBootstrapper : MonoBehaviour {
         commanderSystem = new CommanderSystem(
             infantryController,
             behaviorSystem,
-            pathfindingService
+            navigationSystem
         );
 
         couplingController = new CouplingController(

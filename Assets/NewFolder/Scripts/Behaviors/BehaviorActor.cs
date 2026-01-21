@@ -1,8 +1,9 @@
 public class BehaviorActor {
-    
+
     public int Id { get; }
     public int InfantryId { get; }
     public int NavigationAgentId { get; }
+    public DestinationId DestinationId { get; set; }
     public SteeringInput SteeringInput { get; set; }
 
     public BehaviorActor(int id, int infantryId, int navigationAgentId) {
