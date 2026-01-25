@@ -172,7 +172,6 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         commanderSystem = new CommanderSystem(
-            infantryController,
             behaviorSystem,
             navigationSystem
         );
@@ -200,7 +199,8 @@ public class GameBootstrapper : MonoBehaviour {
             unitView,
             spawnSystem,
             armorAIController,
-            commanderSystem
+            commanderSystem,
+            behaviorSystem
         );
     }
 
@@ -227,8 +227,8 @@ public class GameBootstrapper : MonoBehaviour {
         driverController.Update();
         
         armorAIController.Update();
-        commanderSystem.Update();
         behaviorSystem.Update();
+        commanderSystem.Update();
 
         enemyController.Update();
         playerController.Update();

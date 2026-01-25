@@ -11,15 +11,17 @@ public class EnemyController {
     private readonly SpawnSystem spawnSystem;
     private readonly ArmorAIController armorAIController;
     private readonly CommanderSystem commanderSystem;
+    private readonly BehaviorSystem behaviorSystem;
 
     private readonly List<EnemySource> enemySources = new();
     private readonly List<SpawnResult> spawnResultBuffer = new(32);
 
-    public EnemyController(EnemyView crowdView, SpawnSystem spawnSystem, ArmorAIController armorAIController, CommanderSystem commanderSystem) {
+    public EnemyController(EnemyView crowdView, SpawnSystem spawnSystem, ArmorAIController armorAIController, CommanderSystem commanderSystem, BehaviorSystem behaviorSystem) {
         this.enemyView = crowdView;
         this.spawnSystem = spawnSystem;
         this.armorAIController = armorAIController;
         this.commanderSystem = commanderSystem;
+        this.behaviorSystem = behaviorSystem;
     }
 
     public void Update() {
@@ -62,7 +64,8 @@ public class EnemyController {
             
             if (enemySource.SpawnType == SpawnType.Infantry) {
                 foreach (var spawnResult in spawnResultBuffer) {
-                    commanderSystem.AddSubordinate(enemySource.LastCommanderId, spawnResult.spawnedId);
+                    var actorId = behaviorSystem.CreateActor(spawnResult.spawnedId);
+                    commanderSystem.AddSubordinate(enemySource.LastCommanderId, actorId);
                 }
             } 
 

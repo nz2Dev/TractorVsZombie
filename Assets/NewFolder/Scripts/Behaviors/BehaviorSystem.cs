@@ -9,14 +9,17 @@ public class BehaviorSystem {
 
     private int nextId;
     private readonly Dictionary<int, BehaviorActor> registry = new();
+    private readonly List<int> removalBuffer = new(64);
 
     public BehaviorSystem(NavigationSystem navigationSystem, InfantryController infantryController, CombatService combatService) {
         this.navigationSystem = navigationSystem;
         this.infantryController = infantryController;
         this.combatService = combatService;
     }
+    
 
     public void Update() {
+        ValidateActors();
         ProcessBehaviors();
     }
 
@@ -31,6 +34,14 @@ public class BehaviorSystem {
         return id;
     }
 
+    public bool IsActorExist(int id) => registry.ContainsKey(id);
+
+    public (Vector3 position, Vector3 velocity)? GetFormationInput(int actorId) {
+        var actor = registry[actorId];
+        var state = infantryController.GetInfantryState(actor.InfantryId);
+        return (state.position, state.movementVelocity);
+    }
+
     public void SetNavigationInput(int actorId, SteeringInput steeringInput, MarkerId markerId) {
         var actor = registry[actorId];
         actor.SteeringInput = steeringInput;
@@ -43,7 +54,19 @@ public class BehaviorSystem {
         registry.Remove(id);
     }
 
-    public void ProcessBehaviors() {
+    private void ValidateActors() {
+        removalBuffer.Clear();
+        foreach (var actor in registry.Values) {
+            if (!infantryController.IsExist(actor.InfantryId)) {
+                removalBuffer.Add(actor.Id);
+            }
+        }
+        foreach (var id in removalBuffer) {
+            RemoveActor(id);
+        }
+    }
+
+    private void ProcessBehaviors() {
         foreach (var actor in registry.Values) {
             // *currently it's implicit chase behavior execution for every actor* //
             var infantryState = infantryController.GetInfantryState(actor.InfantryId);
@@ -62,4 +85,5 @@ public class BehaviorSystem {
             }
         }
     }
+
 }

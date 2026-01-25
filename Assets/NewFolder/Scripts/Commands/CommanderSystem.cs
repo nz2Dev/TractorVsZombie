@@ -6,14 +6,12 @@ using UnityEngine;
 public class CommanderSystem {
     
     private readonly BehaviorSystem behaviorSystem;
-    private readonly InfantryController infantryController;
     private readonly NavigationSystem navigationSystem;
 
     private int idCounter;
     private readonly Dictionary<int, CommanderState> registry = new();
 
-    public CommanderSystem(InfantryController infantryController, BehaviorSystem behaviorSystem, NavigationSystem navigationSystem) {
-        this.infantryController = infantryController;
+    public CommanderSystem(BehaviorSystem behaviorSystem, NavigationSystem navigationSystem) {
         this.behaviorSystem = behaviorSystem;
         this.navigationSystem = navigationSystem;
     }
@@ -31,11 +29,9 @@ public class CommanderSystem {
         return nextGroupId;
     }
 
-    public void AddSubordinate(int commanderId, int infantryId) {
+    public void AddSubordinate(int commanderId, int actorId) {
         var commanderState = registry[commanderId];
-        var actorId = behaviorSystem.CreateActor(infantryId);
         commanderState.Subordinates.Add(new Subordinate {
-            infantryId = infantryId,
             behaviorActorId = actorId
         });
     }
@@ -58,8 +54,7 @@ public class CommanderSystem {
         foreach (var commanderState in registry.Values) {
             for (int i = commanderState.Subordinates.Count - 1; i >= 0; i--) {
                 var subordinate = commanderState.Subordinates[i];
-                if (!infantryController.IsExist(subordinate.infantryId)) {
-                    behaviorSystem.RemoveActor(subordinate.behaviorActorId);
+                if (!behaviorSystem.IsActorExist(subordinate.behaviorActorId)) {
                     commanderState.Subordinates.RemoveAt(i);
                 }
             }
@@ -86,10 +81,12 @@ public class CommanderSystem {
         Vector3 sumDirection = Vector3.zero;
 
         foreach (var subordinate in state.Subordinates) {
-            var infantryState = infantryController.GetInfantryState(subordinate.infantryId);
-            sumPosition += infantryState.position;
-            sumDirection += infantryState.movementVelocity;
-            count++;
+            var infantryState = behaviorSystem.GetFormationInput(subordinate.behaviorActorId);
+            if (infantryState.HasValue) {
+                sumPosition += infantryState.Value.position;
+                sumDirection += infantryState.Value.velocity;
+                count++;
+            }
         }
 
         return new SteeringInput {
