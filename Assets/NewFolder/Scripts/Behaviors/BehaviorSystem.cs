@@ -9,7 +9,7 @@ public class BehaviorSystem {
 
     private int nextId;
     private readonly Dictionary<int, BehaviorActor> registry = new();
-    private readonly List<int> removalBuffer = new(64);
+    private readonly List<BehaviorActor> removalBuffer = new(64);
 
     public BehaviorSystem(NavigationSystem navigationSystem, InfantryController infantryController, CombatService combatService) {
         this.navigationSystem = navigationSystem;
@@ -23,6 +23,10 @@ public class BehaviorSystem {
         ProcessBehaviors();
     }
 
+    public bool IsActorExist(int id) {
+        return registry.ContainsKey(id);
+    }
+
     public int CreateActor(int infantryId) {
         var state = infantryController.GetInfantryState(infantryId);
         var config = infantryController.GetAvoidanceConfig(infantryId);
@@ -34,35 +38,40 @@ public class BehaviorSystem {
         return id;
     }
 
-    public bool IsActorExist(int id) => registry.ContainsKey(id);
+    public void ChaseInFormation(List<int> actorIds, MarkerId markerId) {
+        var count = 0;
+        var sumPosition = Vector3.zero;
+        var sumDirection = Vector3.zero;
+        
+        foreach (var actorId in actorIds) {
+            var actor = registry[actorId];
+            var infantryState = infantryController.GetInfantryState(actor.InfantryId);
+            sumPosition += infantryState.position;
+            sumDirection += infantryState.movementVelocity;
+            count++;
+        }
 
-    public (Vector3 position, Vector3 velocity)? GetFormationInput(int actorId) {
-        var actor = registry[actorId];
-        var state = infantryController.GetInfantryState(actor.InfantryId);
-        return (state.position, state.movementVelocity);
-    }
+        var formationSteering = new SteeringInput {
+            CohesionCenter = sumPosition / count,
+            AlignmentDirection = (sumDirection / count).normalized,
+        };
 
-    public void SetNavigationInput(int actorId, SteeringInput steeringInput, MarkerId markerId) {
-        var actor = registry[actorId];
-        actor.SteeringInput = steeringInput;
-        actor.TargetMarkerId = markerId;
-    }
-
-    public void RemoveActor(int id) {
-        var agent = registry[id];
-        navigationSystem.RemoveAgent(agent.NavigationAgentId);
-        registry.Remove(id);
+        foreach (var actorId in actorIds) {
+            var actor = registry[actorId];
+            actor.SteeringInput = formationSteering;
+            actor.TargetMarkerId = markerId;
+        }
     }
 
     private void ValidateActors() {
         removalBuffer.Clear();
-        foreach (var actor in registry.Values) {
-            if (!infantryController.IsExist(actor.InfantryId)) {
-                removalBuffer.Add(actor.Id);
-            }
-        }
-        foreach (var id in removalBuffer) {
-            RemoveActor(id);
+        foreach (var actor in registry.Values)
+            if (!infantryController.IsExist(actor.InfantryId))
+                removalBuffer.Add(actor);
+        
+        foreach (var actor in removalBuffer) {
+            navigationSystem.RemoveAgent(actor.NavigationAgentId);
+            registry.Remove(actor.Id);
         }
     }
 

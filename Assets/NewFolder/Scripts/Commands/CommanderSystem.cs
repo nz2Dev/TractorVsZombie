@@ -31,9 +31,8 @@ public class CommanderSystem {
 
     public void AddSubordinate(int commanderId, int actorId) {
         var commanderState = registry[commanderId];
-        commanderState.Subordinates.Add(new Subordinate {
-            behaviorActorId = actorId
-        });
+        commanderState.Subordinates.Add(new Subordinate { behaviorActorId = actorId });
+        commanderState.SubordinateActorIds.Add(actorId);
     }
 
     public void SetStrategy(int commanderId, bool chaseCenter, Vector3 position) {
@@ -56,6 +55,7 @@ public class CommanderSystem {
                 var subordinate = commanderState.Subordinates[i];
                 if (!behaviorSystem.IsActorExist(subordinate.behaviorActorId)) {
                     commanderState.Subordinates.RemoveAt(i);
+                    commanderState.SubordinateActorIds.RemoveAt(i);
                 }
             }
         }
@@ -63,37 +63,8 @@ public class CommanderSystem {
 
     private void ProcessCommanders() {
         foreach (var commanderState in registry.Values) {
-            commanderState.FormationSteering = ComputeFormationSteering(commanderState);
-            foreach (var subordinate in commanderState.Subordinates) {
-                behaviorSystem.SetNavigationInput(subordinate.behaviorActorId, 
-                    commanderState.FormationSteering,
-                    commanderState.CommonTargetMarkerId);
-            }
+            behaviorSystem.ChaseInFormation(commanderState.SubordinateActorIds, commanderState.CommonTargetMarkerId);
         }
     }
-
-    // Idea: this compute is done in behavior system, and returns some sort of "Context", that later can be assigned to actor, or via specific behavior
-    // This way, navigation and movement will be transparent to commander.
-    // Idea/2: Or API to form a formation is directly handled in behavior system, commander only decides who belong in formations and when.
-    private SteeringInput ComputeFormationSteering(CommanderState state) {
-        int count = 0;
-        Vector3 sumPosition = Vector3.zero;
-        Vector3 sumDirection = Vector3.zero;
-
-        foreach (var subordinate in state.Subordinates) {
-            var infantryState = behaviorSystem.GetFormationInput(subordinate.behaviorActorId);
-            if (infantryState.HasValue) {
-                sumPosition += infantryState.Value.position;
-                sumDirection += infantryState.Value.velocity;
-                count++;
-            }
-        }
-
-        return new SteeringInput {
-            CohesionCenter = sumPosition / count,
-            AlignmentDirection = (sumDirection / count).normalized,
-        };
-    }
-
 
 }

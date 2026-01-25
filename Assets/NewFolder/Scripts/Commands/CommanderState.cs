@@ -12,6 +12,6 @@ public class CommanderState {
     // Idea: use api to create a Target entity in behavior system, that can be tracked by Id, wich can be a CombatId, Position, etc.
     // This way, navigation system will be transparent for commander, whos domain is to "manage" behaviors.
     public MarkerId CommonTargetMarkerId { get; set; }
-    public SteeringInput FormationSteering { get; set; }
     public List<Subordinate> Subordinates { get; } = new();
+    public List<int> SubordinateActorIds { get; } = new();
 }
