@@ -175,7 +175,6 @@ MonoBehaviour:
     m_Bits: 2177
   unitsCount: 500
   maxVehicelCount: 1
-  targetPoint: {fileID: 650734648}
   playerConfig: {fileID: 11400000, guid: 15c1c417b54044a6b9ea2acbda4d6876, type: 2}
   aimVisualsPrefab: {fileID: 7650166389670777688, guid: db77fb008dad74d3ca69afe4d43638bd, type: 3}
   uiDocument: {fileID: 815707237}
@@ -324,37 +323,6 @@ MonoBehaviour:
   sceneCamera: {fileID: 618815300}
   topDownCameraDistance: 18
   topDownCamera: {fileID: 8876431605689980605}
---- !u!1 &650734647
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 650734648}
-  m_Layer: 0
-  m_Name: Target Point
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &650734648
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 650734647}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &804724241
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,4 +1031,3 @@ SceneRoots:
   - {fileID: 203952655}
   - {fileID: 618815301}
   - {fileID: 3544054318636726583}
-  - {fileID: 650734648}

@@ -2,46 +2,41 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.Profiling;
 using System.Linq;
-using UnityEngine.Assertions;
 using System;
 
 public class EnemyController {
 
     private readonly EnemyView enemyView;
-    private readonly SpawnSystem spawnSystem;
-    private readonly ArmorAIController armorAIController;
+    private readonly MilitaryBuildingController buildingController;
     private readonly CommanderSystem commanderSystem;
-    private readonly BehaviorSystem behaviorSystem;
 
     private readonly List<EnemySource> enemySources = new();
-    private readonly List<SpawnResult> spawnResultBuffer = new(32);
 
-    public EnemyController(EnemyView crowdView, SpawnSystem spawnSystem, ArmorAIController armorAIController, CommanderSystem commanderSystem, BehaviorSystem behaviorSystem) {
+    public EnemyController(EnemyView crowdView, MilitaryBuildingController buildingController, CommanderSystem commanderSystem) {
         this.enemyView = crowdView;
-        this.spawnSystem = spawnSystem;
-        this.armorAIController = armorAIController;
+        this.buildingController = buildingController;
         this.commanderSystem = commanderSystem;
-        this.behaviorSystem = behaviorSystem;
     }
 
     public void Update() {
         TryInitEnemySources();
         HireNewCommanders();
-        CaptureSpawnedEnemies();
         ReadBehaviorChanges();
     }
 
     private void TryInitEnemySources() {
         if (enemySources.Count == 0) {
-            var sourcesFound = SpawnSource.ScanSceneForSources();
-            foreach (var source in sourcesFound) {
-                var enemySource = new EnemySource();
-                enemySource.Origin = source.Position;
-                enemySource.SpawnType = source.config.spawnType;
-                enemySource.SpawnerId = spawnSystem.AddSpawner(source.Position, source.config);
+            var placesFound = MilitaryBuildingPlace.ScanSceneForPlaces();
+            foreach (var place in placesFound) {
                 var firstCommander = commanderSystem.CreateCommander();
-                enemySource.Commanders.Add(firstCommander);
+                var buildingId = buildingController.CreateBuilding(place.Position, place.config, alie: false, firstCommander);
+                
+                var enemySource = new EnemySource();
+                enemySource.Origin = place.Position;
+                enemySource.BuildingId = buildingId;
                 enemySource.LastCommanderId = firstCommander;
+                enemySource.Commanders.Add(firstCommander);
+                
                 enemySources.Add(enemySource);
             }
         }
@@ -54,26 +49,8 @@ public class EnemyController {
                 var nextCommander = commanderSystem.CreateCommander();
                 enemySource.Commanders.Add(nextCommander);
                 enemySource.LastCommanderId = nextCommander;
+                buildingController.SetAssignedCommander(enemySource.BuildingId, nextCommander);
             }
-        }
-    }
-
-    private void CaptureSpawnedEnemies() {
-        foreach (var enemySource in enemySources) {
-            spawnSystem.GetCompletedSpawns(enemySource.SpawnerId, spawnResultBuffer);
-            
-            if (enemySource.SpawnType == SpawnType.Infantry) {
-                foreach (var spawnResult in spawnResultBuffer) {
-                    var actorId = behaviorSystem.CreateActor(spawnResult.spawnedId);
-                    commanderSystem.AddSubordinate(enemySource.LastCommanderId, actorId);
-                }
-            } 
-
-            if (enemySource.SpawnType == SpawnType.Armor) {
-                foreach (var spawnResult in spawnResultBuffer) {
-                    armorAIController.AddAIBehaviour(spawnResult.spawnedId);
-                }
-            } 
         }
     }
 
@@ -82,7 +59,7 @@ public class EnemyController {
             foreach (var enemySource in enemySources) {
                 foreach (var commanderId in enemySource.Commanders) {
                     var commanderSnapshot = commanderSystem.GetCommanderSnapshot(commanderId);
-                    var switchedStrategyToChaseCenter = commanderSnapshot.isChasingCenter ? false : true;
+                    var switchedStrategyToChaseCenter = !commanderSnapshot.isChasingCenter;
                     var targetPosition = switchedStrategyToChaseCenter ? Vector3.zero : enemySource.Origin;
                     commanderSystem.SetStrategy(commanderId, switchedStrategyToChaseCenter, targetPosition);
                 }

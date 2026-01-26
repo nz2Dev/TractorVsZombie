@@ -29,7 +29,7 @@ public class GameBootstrapper : MonoBehaviour {
 
     private CombatService combatService;
 
-    private SpawnSystem spawnSystem;
+    private SpawningService spawningService;
     private BodySimulator bodySimulator;
     private NavigationSystem navigationSystem;
     private PlayerController playerController;
@@ -49,6 +49,7 @@ public class GameBootstrapper : MonoBehaviour {
     private BehaviorSystem behaviorSystem;
     private CouplingController couplingController;
     private CommanderSystem commanderSystem;
+    private MilitaryBuildingController buildingController;
 
     private void Start() {
         Build();
@@ -150,7 +151,7 @@ public class GameBootstrapper : MonoBehaviour {
             armorController
         );
 
-        spawnSystem = new SpawnSystem(
+        spawningService = new SpawningService(
             infantryController,
             armorController,
             maxVehicelCount,
@@ -181,6 +182,14 @@ public class GameBootstrapper : MonoBehaviour {
             towableVehicleController
         );
 
+        buildingController = new MilitaryBuildingController(
+            combatService,
+            spawningService,
+            behaviorSystem,
+            commanderSystem,
+            armorAIController
+        );
+
         playerController = new PlayerController(
             playerView, 
             new PlayerInput(),
@@ -197,10 +206,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         enemyController = new EnemyController(
             unitView,
-            spawnSystem,
-            armorAIController,
-            commanderSystem,
-            behaviorSystem
+            buildingController,
+            commanderSystem
         );
     }
 
@@ -214,7 +221,6 @@ public class GameBootstrapper : MonoBehaviour {
         ramEffect.Update();
         bodySimulator.Update();
         navigationSystem.Update();
-        spawnSystem.Update();
 
         projectileController.Update();
         rocketController.Update();
@@ -230,6 +236,7 @@ public class GameBootstrapper : MonoBehaviour {
         behaviorSystem.Update();
         commanderSystem.Update();
 
+        buildingController.Update();
         enemyController.Update();
         playerController.Update();
 
