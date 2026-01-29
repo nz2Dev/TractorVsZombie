@@ -28,28 +28,39 @@ public class CombatSystem {
     }
 
     public void Update() {
+        ResolveDamage();
         UpdateLookups();
     }
 
-    private void UpdateLookups() {
-        alieLookup.Reset();
-        foeLookup.Reset();
-        
-        foreach (var agent in agents.Values)
-            if (agent.alie) alieLookup.Add(agent);
-            else foeLookup.Add(agent);
-        
-        alieLookup.Fixate();
-        foeLookup.Fixate();
-        if (foeLookup.SourceCount != 0 && alieLookup.SourceCount != 0) {
-            JobHandle.CombineDependencies(alieLookup.ScheduleBuild(), foeLookup.ScheduleBuild())
-                .Complete();
+    private void ResolveDamage() {
+        foreach (var agent in agents.Values) {
+            var fatalDamage = false;
+            if (agent.ReceivedDamage > 0) {
+                agent.Health -= agent.ReceivedDamage;
+                if (agent.Health <= 0) {
+                    fatalDamage = true;
+                }
+            }
+
+            agent.Output =  new CombatOutputInfo {
+                damageTaken = agent.ReceivedDamage,
+                damageSourcePosition = agent.DamageSourcePosition,
+                wasExploded = agent.DamageByExplosion,
+                wasProjectiled = agent.DamageByProjectile,
+                wasPunched = agent.DamageByPunch,
+                damageWasFatal = fatalDamage
+            };
+
+            agent.ClearEvents();
         }
     }
 
-    public int RegisterAgent(Vector3 position, bool alie, float height = 1f) {
+    public int RegisterAgent(Vector3 position, bool alie, int maxHealth = 1, float height = 1f) {
         var agentId = idCounter++;
-        var agent = new CombatAgent { agentId = agentId, position = position, alie = alie, };
+        var agent = new CombatAgent(agentId, alie, maxHealth, height) {
+            Position = position,
+            Health = maxHealth
+        };
         agents[agentId] = agent;
         
         if (alie) alieCollisionsLookup.Add(agent, position, height, .3f);
@@ -60,30 +71,14 @@ public class CombatSystem {
 
     public void UnregisterAgent(int agentId) {
         agents.Remove(agentId, out var agent);
-        if (agent.alie) alieCollisionsLookup.Remove(agent);
+        if (agent.Alie) alieCollisionsLookup.Remove(agent);
         else foeCollisionLookup.Remove(agent);
-    }
-
-    public CombatOutputInfo GetAgentState(int agentId) {
-        var agent = agents[agentId];
-        return new CombatOutputInfo {
-            exploded = agent.exploded,
-            projectiled = agent.projectiled,
-            damage = agent.damageReceived,
-            damageSourceAgentId = -1,
-            damageSourcePosition = agent.damageSourcePosition
-        };
-    }
-
-    public void ClearAgentState(int agentId) {
-        var agent = agents[agentId];
-        agent.ClearState();
     }
 
     public void UpdateAgentPosition(int agentId, Vector3 position) {
         var agent = agents[agentId];
-        agent.position = position;
-        if (agent.alie) alieCollisionsLookup.Update(agent, position);
+        agent.Position = position;
+        if (agent.Alie) alieCollisionsLookup.Update(agent, position);
         else foeCollisionLookup.Update(agent, position);
     }
 
@@ -93,30 +88,30 @@ public class CombatSystem {
         }
 
         // Combat System should only check for agents collisions (obstacles is projectile source responsibilities)
-        var enemyCollisionLookup = agent.alie ? foeCollisionLookup : alieCollisionsLookup;
+        var enemyCollisionLookup = agent.Alie ? foeCollisionLookup : alieCollisionsLookup;
         if (!enemyCollisionLookup.Raycast(position, direction, 0.25f, out var hitAgent)) {
             return false;
         }
         
-        if (hitAgent.agentId != agentId) {
-            hitAgent.projectiled = true;
-            hitAgent.damageReceived = damage;
-            hitAgent.damageSourcePosition = position;
+        if (hitAgent.Id != agentId) {
+            hitAgent.DamageByProjectile = true;
+            hitAgent.ReceivedDamage = damage;
+            hitAgent.DamageSourcePosition = position;
         }
         return true;
     }
 
     public int ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage) {
         var sourceAgent = agents[sourceAgentId];
-        var collisionsLookup = sourceAgent.alie ? foeCollisionLookup : alieCollisionsLookup;
+        var collisionsLookup = sourceAgent.Alie ? foeCollisionLookup : alieCollisionsLookup;
         var overlapCount = collisionsLookup.Overlap(position, radius, out var results);
         int affectedCount = 0;
         for (int i = 0; i < overlapCount; i++) {
             var affectedAgent = results[i];
-            if (affectedAgent.agentId != sourceAgentId) {
-                affectedAgent.exploded = true;
-                affectedAgent.damageReceived = damage;
-                affectedAgent.damageSourcePosition = position;
+            if (affectedAgent.Id != sourceAgentId) {
+                affectedAgent.DamageByExplosion = true;
+                affectedAgent.ReceivedDamage = damage;
+                affectedAgent.DamageSourcePosition = position;
                 affectedCount++;
             }            
         }
@@ -126,15 +121,15 @@ public class CombatSystem {
     public void ApplyDirectDamage(int agentId, int targetId, int damage) {
         var sourceAgent = agents[agentId];
         var targetAgent = agents[targetId];
-        targetAgent.damageReceived = damage;
-        targetAgent.physicaly = true;
-        targetAgent.damageSourcePosition = sourceAgent.position;
+        targetAgent.ReceivedDamage = damage;
+        targetAgent.DamageByPunch = true;
+        targetAgent.DamageSourcePosition = sourceAgent.Position;
     }
 
     public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out CombatAgentInfo agentInfo) {
         var sourceAgent = agents[combatAgentId];
         var sourceAgentPosition = sourceAgent.Position;
-        var enemyLookup = sourceAgent.alie ? foeLookup : alieLookup;
+        var enemyLookup = sourceAgent.Alie ? foeLookup : alieLookup;
         
         agentInfo = default;
         if (enemyLookup.SourceCount == 0)
@@ -148,13 +143,34 @@ public class CombatSystem {
         return true;
     }
 
+    public CombatOutputInfo GetCombatOutput(int agentId) {
+        var agent = agents[agentId];
+        return agent.Output;
+    }
+
     private CombatAgentInfo GetAgentInfo(CombatAgent agent) {
         return new CombatAgentInfo {
-            id = agent.agentId,
-            alie = agent.alie,
-            position = agent.position,
-            height = agent.height
+            id = agent.Id,
+            alie = agent.Alie,
+            position = agent.Position,
+            height = agent.Height
         };
+    }
+
+    private void UpdateLookups() {
+        alieLookup.Reset();
+        foeLookup.Reset();
+        
+        foreach (var agent in agents.Values)
+            if (agent.Alie) alieLookup.Add(agent);
+            else foeLookup.Add(agent);
+        
+        alieLookup.Fixate();
+        foeLookup.Fixate();
+        if (foeLookup.SourceCount != 0 && alieLookup.SourceCount != 0) {
+            JobHandle.CombineDependencies(alieLookup.ScheduleBuild(), foeLookup.ScheduleBuild())
+                .Complete();
+        }
     }
 
 }

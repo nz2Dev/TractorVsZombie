@@ -1,23 +1,34 @@
 using UnityEngine;
 
 internal class CombatAgent : IPositionSource, IMetadata {
-    public int agentId;
-    public Vector3 position;
-    public bool alie;
-    public float height;
-    public bool projectiled;
-    public bool exploded;
-    public bool physicaly;
-    public int damageReceived;
-    public Vector3 damageSourcePosition;
+    
+    public int Id { get; }
+    public bool Alie { get; }
+    public int MaxHealth { get; }
+    public float Height { get; }
 
-    public Vector3 Position => position;
-    public int Id => agentId;
+    public Vector3 Position { get; set; }
+    public int Health { get; set; }
 
-    internal void ClearState() {
-        projectiled = false;
-        exploded = false;
-        physicaly = false;
-        damageReceived = 0;
+    public int ReceivedDamage { get; set; }
+    public Vector3 DamageSourcePosition { get; set; }
+    public bool DamageByProjectile { get; set; }
+    public bool DamageByExplosion { get; set; }
+    public bool DamageByPunch { get; set; }
+
+    public CombatOutputInfo Output { get; set; }
+
+    public CombatAgent(int id, bool alie, int maxHealth, float height) {
+        Id = id;
+        Alie = alie;
+        MaxHealth = maxHealth;
+        Height = height;
+    }
+
+    internal void ClearEvents() {
+        ReceivedDamage = 0;
+        DamageByProjectile = false;
+        DamageByExplosion = false;
+        DamageByPunch = false;
     }
 }

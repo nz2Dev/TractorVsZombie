@@ -1,9 +1,10 @@
 using UnityEngine;
 
 public struct CombatOutputInfo {
-    public bool exploded;
-    public bool projectiled;
-    public int damage;
+    public bool wasExploded;
+    public bool wasProjectiled;
+    public bool wasPunched;
+    public int damageTaken;
     public Vector3 damageSourcePosition;
-    public int damageSourceAgentId;
+    public bool damageWasFatal;
 }

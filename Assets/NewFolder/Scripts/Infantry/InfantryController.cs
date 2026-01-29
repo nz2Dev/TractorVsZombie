@@ -37,8 +37,7 @@ public class InfantryController {
         var nextId = ++idCounter;
         var model = new InfantryModel(nextId, config);
         registry[model.Id] = model;
-        model.Health = model.MaxHealth;
-        model.CombatId = combatSystem.RegisterAgent(position, alie);
+        model.CombatId = combatSystem.RegisterAgent(position, alie, model.MaxHealthConfig);
         model.BodyId = bodyController.SpawnBody(position, model.BodyConfig);
         view.AddVisuals(model.Id, position, model.VisualsPrefab);
         return model.Id;
@@ -63,7 +62,7 @@ public class InfantryController {
         return new InfantryState {
             position = model.BodyState.position,
             movementVelocity = model.BodyState.movementVelocity,
-            isAlive = model.IsAlive,
+            isAlive = !model.IsDead,
             isGrounded = model.BodyState.grounded,
             combatId = model.CombatId,
             bodyId = model.BodyId,
@@ -78,7 +77,7 @@ public class InfantryController {
         List<InfantryModel> infantryToRemove = new();
         
         foreach (var model in registry.Values) 
-            if (!model.IsAlive && model.BodyState.grounded) 
+            if (model.IsDead && model.BodyState.grounded) 
                 infantryToRemove.Add(model);
             
         foreach (var model in infantryToRemove)
@@ -99,36 +98,29 @@ public class InfantryController {
 
     private void ReadCombatState() {
         foreach (var model in registry.Values) {
-            if (!model.IsAlive)
+            if (model.IsDead)
                 continue;
-                
-            bool anyDamage = false;
-            var combatState = combatSystem.GetAgentState(model.CombatId);
             
-            if (combatState.exploded && model.BodyState.grounded) {
-                model.Health -= combatState.damage;
-                bodyController.ApplyImpulse(model.BodyId, combatState.damageSourcePosition);
-                anyDamage = true;
+            var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
+            if (combatOutput.wasExploded && model.BodyState.grounded) {
+                bodyController.ApplyImpulse(model.BodyId, combatOutput.damageSourcePosition);
             }
 
-            if (combatState.projectiled) {
-                model.Health -= combatState.damage;
-                anyDamage = true;
-            }
-
-            combatSystem.ClearAgentState(model.CombatId);
-            if (anyDamage) {
+            if (combatOutput.damageTaken > 0) {
                 view.ShowTakeHit(model.Id);
             }
 
-            if (!model.IsAlive) {
+            if (combatOutput.damageWasFatal) {
+                model.IsDead = true;
                 bodyController.DisableRecovery(model.BodyId);
-                if (combatState.projectiled) {
-                    view.ShowDeathByProjectile(model.Id, combatState.damageSourcePosition, blownAway: model.BodyState.grounded);
+                
+                if (combatOutput.wasProjectiled) {
+                    view.ShowDeathByProjectile(model.Id, combatOutput.damageSourcePosition, blownAway: model.BodyState.grounded);
                 } else {
                     view.ShowDisolveDeath(model.Id);
                 }
-                combatSystem.UnregisterAgent(model.CombatId);
+
+                combatSystem.UnregisterAgent(model.CombatId); // TODO: keep registered, add combat system queries filters for IsAlive
                 diedInfantry.Add(model);
             }
         }
@@ -137,7 +129,7 @@ public class InfantryController {
     private void SyncPositions() {
         foreach (var model in registry.Values) {
             view.UpdateTransform(model.Id, model.BodyState.position, model.BodyState.rotation);
-            if (model.IsAlive) {
+            if (!model.IsDead) {
                 combatSystem.UpdateAgentPosition(model.CombatId, model.BodyState.position);
             }
         }

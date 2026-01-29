@@ -29,7 +29,7 @@ public class PlatformController {
         var platform = new PlatformModel(nextId, position, config);
         registry[platform.Id] = platform;
         
-        platform.CombatId = combatSystem.RegisterAgent(position, alie: true);
+        platform.CombatId = combatSystem.RegisterAgent(position, true);
         platform.VehicleId = towableVehicleController.SpawnVehicle(position, platform.VehicleConfig);
         platform.RamId = ramEffect.StartNew(position, platform.CombatId, platform.RamConfig);
         return platform.Id;

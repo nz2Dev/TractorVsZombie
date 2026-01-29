@@ -31,10 +31,9 @@ public class MilitaryBuildingController {
         var model = new MilitaryBuildingModel(id, config);
         
         model.Position = position;
-        model.Health = config.maxHealth;
         model.Alie = alie;
         model.CommanderId = commanderId;
-        model.CombatId = combatSystem.RegisterAgent(position, alie, config.height);
+        model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
         model.NextSpawnTime = Time.time + config.spawnInterval;
         
         registry[id] = model;
@@ -42,7 +41,7 @@ public class MilitaryBuildingController {
     }
 
     public void Update() {
-        ReadCombatState();
+        ReadCombatOutput();
         ValidateBuildings();
         ProduceSpawns();
     }
@@ -51,15 +50,12 @@ public class MilitaryBuildingController {
         registry[id].CommanderId = commanderId;
     }
 
-    private void ReadCombatState() {
+    private void ReadCombatOutput() {
         foreach (var model in registry.Values) {
-            var combatState = combatSystem.GetAgentState(model.CombatId);
-            
-            if (combatState.damage <= 0)
-                continue;
-
-            model.Health -= combatState.damage;
-            combatSystem.ClearAgentState(model.CombatId);
+            var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
+            if (combatOutput.damageWasFatal) {
+                model.Destroyed = true;
+            }
         }
     }
 
@@ -67,7 +63,7 @@ public class MilitaryBuildingController {
         removalBuffer.Clear();
 
         foreach (var model in registry.Values)
-            if (!model.IsAlive)
+            if (model.Destroyed)
                 removalBuffer.Add(model.Id);
 
         foreach (var id in removalBuffer)

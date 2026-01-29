@@ -26,7 +26,7 @@ public class ArmorController {
     public void ClearDiedRegistry() => diedArmor.Clear();
 
     public void Update() {
-        ReadVehiclesCombat();
+        ReadCombatOutput();
         RemoveDeadArmor();
         SyncVehiclesPositions();
     }
@@ -35,11 +35,10 @@ public class ArmorController {
         var nextId = ++idCounter;
         var model = new ArmorModel(nextId, position, armorConfig);
         registry[model.Id] = model;
-        model.CombatId = combatSystem.RegisterAgent(position, alie: false);
+        model.CombatId = combatSystem.RegisterAgent(position, alie: false, model.MaxHealthConfig);
         model.VehicleId = motorVehicleController.SpawnVehicle(position, model.VehicleConfig);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position, model.WeaponConfig);
         model.RamId = ramEffect.StartNew(model.Position, model.CombatId, model.RamConfig);
-        model.Health = model.MaxHealth;
         return model.Id;
     }
 
@@ -66,18 +65,13 @@ public class ArmorController {
         };
     }
 
-    private void ReadVehiclesCombat() {
+    private void ReadCombatOutput() {
         foreach (var model in registry.Values) {
-            var combatState = combatSystem.GetAgentState(model.CombatId);
-            
-            if (combatState.projectiled || combatState.exploded) {    
-                model.Health -= combatState.damage;
-            }
-
-            combatSystem.ClearAgentState(model.CombatId);
-
-            if (model.Health <= 0) {
+            var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
+            if (combatOutput.damageWasFatal) {
+                model.Destroyed = true;
                 diedArmor.Add(model);
+                // TODO: spawn rewards from here! no needs for this registry tracking
             }
         }
     }
@@ -85,7 +79,7 @@ public class ArmorController {
     private void RemoveDeadArmor() {
         List<ArmorModel> removeBuffer = new();
         foreach (var model in registry.Values) {
-            if (model.Health <= 0) {
+            if (model.Destroyed) {
                 removeBuffer.Add(model);
             }
         }

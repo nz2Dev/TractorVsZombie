@@ -18,9 +18,9 @@ public class CombatServiceTest {
     public IEnumerator TestRegisterAgent_EmptyState() {
         var agent = combatService.RegisterAgent(new Vector3(0, 0, 0), alie: true);
         yield return null;
-        Assert.That(combatService.GetAgentState(agent).exploded, Is.False);
-        Assert.That(combatService.GetAgentState(agent).projectiled, Is.False);
-        Assert.That(combatService.GetAgentState(agent).damage, Is.EqualTo(0));
+        Assert.That(combatService.GetCombatOutput(agent).wasExploded, Is.False);
+        Assert.That(combatService.GetCombatOutput(agent).wasProjectiled, Is.False);
+        Assert.That(combatService.GetCombatOutput(agent).damageTaken, Is.EqualTo(0));
     }
 
     [UnityTest]
@@ -30,7 +30,7 @@ public class CombatServiceTest {
         yield return new WaitForFixedUpdate();
         var applyResult = combatService.ApplyProjectileDamage(agent1, new Vector3(0, 0, 1.9f), Vector3.forward, 1);
         Assert.That(applyResult, Is.True);
-        Assert.That(combatService.GetAgentState(agent2).projectiled, Is.True);
+        Assert.That(combatService.GetCombatOutput(agent2).wasProjectiled, Is.True);
     }
 
     [UnityTest]
