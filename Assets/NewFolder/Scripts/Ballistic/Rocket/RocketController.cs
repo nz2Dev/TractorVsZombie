@@ -6,15 +6,15 @@ public class RocketController {
     
     private readonly RocketView view;
     private readonly SoundManager soundManager;
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
 
     private int idCounter = 0;
     private Dictionary<int, RocketModel> models = new ();
 
-    public RocketController(RocketView view, SoundManager soundManager, CombatService combatService) {
+    public RocketController(RocketView view, SoundManager soundManager, CombatSystem combatSystem) {
         this.view = view;
         this.soundManager = soundManager;
-        this.combatService = combatService;
+        this.combatSystem = combatSystem;
     }
 
     public void SpawnRocket(int shooterId, RocketTrajectory trajectory, RocketConfig config) {
@@ -33,7 +33,7 @@ public class RocketController {
     private void UpdateRocketLandingCombat() {
         foreach (var rocket in models.Values) {
             if (rocket.ForwardLandingTime(Time.time)) {
-                combatService.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, rocket.Config.damage, 1);
+                combatSystem.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, rocket.Config.damage, 1);
                 view.ShowRocketExplosion(rocket.Id);
                 soundManager.PlayEffect(rocket.Trajectory.landPoint, rocket.Config.explodeEffectClips);
             }

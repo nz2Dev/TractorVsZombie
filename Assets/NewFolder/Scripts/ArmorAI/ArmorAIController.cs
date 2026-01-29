@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ArmorAIController {
     
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
     private readonly ArmorController armorController;
     private readonly MotorVehicleController motorVehicleController;
@@ -14,8 +14,8 @@ public class ArmorAIController {
     private readonly List<int> controlledArmorIds = new();
     private readonly int flowFieldId;
 
-    public ArmorAIController(CombatService combatService, PathfindingService pathfindingService, ArmorController armorController, MotorVehicleController motorVehicleController, WeaponController weaponController) {
-        this.combatService = combatService;
+    public ArmorAIController(CombatSystem combatSystem, PathfindingService pathfindingService, ArmorController armorController, MotorVehicleController motorVehicleController, WeaponController weaponController) {
+        this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.armorController = armorController;
         this.motorVehicleController = motorVehicleController;
@@ -63,7 +63,7 @@ public class ArmorAIController {
 
     private void OperateArmorCombat(ArmorState state) {
         var enemySearchRadius = state.weaponConfig.aimConfig.range;
-        if (combatService.GetClosestEnemyAgentInRange(state.combatId, enemySearchRadius, out var agentInfo)) {
+        if (combatSystem.GetClosestEnemyAgentInRange(state.combatId, enemySearchRadius, out var agentInfo)) {
             weaponController.AimWeapon(state.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
         }
     }

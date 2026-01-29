@@ -6,7 +6,7 @@ using UnityEngine;
 public class ArmorController {
 
     private readonly RamEffect ramEffect;
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
     private readonly WeaponController weaponController;
     private readonly MotorVehicleController motorVehicleController;
 
@@ -14,8 +14,8 @@ public class ArmorController {
     private readonly Dictionary<int, ArmorModel> registry = new ();
     private readonly List<ArmorModel> diedArmor = new ();
 
-    public ArmorController(CombatService combatService, WeaponController weaponController, MotorVehicleController motorVehicleController, RamEffect ramEffect) {
-        this.combatService = combatService;
+    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, MotorVehicleController motorVehicleController, RamEffect ramEffect) {
+        this.combatSystem = combatSystem;
         this.weaponController = weaponController;
         this.motorVehicleController = motorVehicleController;
         this.ramEffect = ramEffect;
@@ -35,7 +35,7 @@ public class ArmorController {
         var nextId = ++idCounter;
         var model = new ArmorModel(nextId, position, armorConfig);
         registry[model.Id] = model;
-        model.CombatId = combatService.RegisterAgent(position, alie: false);
+        model.CombatId = combatSystem.RegisterAgent(position, alie: false);
         model.VehicleId = motorVehicleController.SpawnVehicle(position, model.VehicleConfig);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position, model.WeaponConfig);
         model.RamId = ramEffect.StartNew(model.Position, model.CombatId, model.RamConfig);
@@ -45,7 +45,7 @@ public class ArmorController {
 
     private void DeleteArmor(ArmorModel model) {
         motorVehicleController.DeleteVehicle(model.VehicleId);
-        combatService.UnregisterAgent(model.CombatId);
+        combatSystem.UnregisterAgent(model.CombatId);
         weaponController.DeleteWeapon(model.WeaponId);
         ramEffect.Stop(model.RamId);
         registry.Remove(model.Id);
@@ -68,13 +68,13 @@ public class ArmorController {
 
     private void ReadVehiclesCombat() {
         foreach (var model in registry.Values) {
-            var combatState = combatService.GetAgentState(model.CombatId);
+            var combatState = combatSystem.GetAgentState(model.CombatId);
             
             if (combatState.projectiled || combatState.exploded) {    
                 model.Health -= combatState.damage;
             }
 
-            combatService.ClearAgentState(model.CombatId);
+            combatSystem.ClearAgentState(model.CombatId);
 
             if (model.Health <= 0) {
                 diedArmor.Add(model);
@@ -98,7 +98,7 @@ public class ArmorController {
         foreach (var model in registry.Values) {
             model.Position = motorVehicleController.GetVehiclePosition(model.VehicleId);
             weaponController.MoveWeapon(model.WeaponId, model.Position);
-            combatService.UpdateAgentPosition(model.CombatId, model.Position);
+            combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
             ramEffect.Forward(model.RamId, model.Position);
         }
     }

@@ -7,11 +7,11 @@ using UnityEngine.TestTools;
 
 public class CombatServiceTest {
     
-    private CombatService combatService;
+    private CombatSystem combatService;
 
     [SetUp]
     public void SetUp() {
-        combatService = new CombatService(LayerMask.NameToLayer("Default"), LayerMask.NameToLayer("Default"), 1 << LayerMask.NameToLayer("Default"));
+        combatService = new CombatSystem(LayerMask.NameToLayer("Default"), LayerMask.NameToLayer("Default"), 1 << LayerMask.NameToLayer("Default"));
     }
 
     [UnityTest]
@@ -40,7 +40,7 @@ public class CombatServiceTest {
         var foeAgent = combatService.RegisterAgent(new Vector3(0, 0, 2), alie: false);
 
         yield return new WaitForFixedUpdate();
-        combatService.UpdateSpatialTree();
+        combatService.Update();
         var enemyFound = combatService.GetClosestEnemyAgentInRange(friendlyAgent1, radius: 3, out var agentInfo);
         Assert.That(enemyFound, Is.True);
         Assert.That(agentInfo.id, Is.Not.EqualTo(friendlyAgent2));
@@ -55,7 +55,7 @@ public class CombatServiceTest {
         var agent1 = combatService.RegisterAgent(new Vector3(1, 0, 1), alie: false);
 
         yield return new WaitForFixedUpdate();
-        combatService.UpdateSpatialTree();
+        combatService.Update();
         var isRegistered = combatService.GetClosestEnemyAgentInRange(alie, 3, out var closestAgent);
         Assert.That(isRegistered, Is.True);
         Assert.That(closestAgent.id, Is.EqualTo(agent1));
@@ -66,7 +66,7 @@ public class CombatServiceTest {
         var alie = combatService.RegisterAgent(new Vector3(2, 0, 2), alie: true);
         
         yield return new WaitForFixedUpdate();
-        combatService.UpdateSpatialTree();
+        combatService.Update();
         var hasClosest = combatService.GetClosestEnemyAgentInRange(alie, 3, out var closest);
         
         Assert.That(hasClosest, Is.False);

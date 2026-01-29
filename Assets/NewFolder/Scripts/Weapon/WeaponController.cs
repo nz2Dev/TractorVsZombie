@@ -13,7 +13,7 @@ public class WeaponController {
     private int idCounter;
     private Dictionary<int, WeaponModel> registry = new ();
 
-    public WeaponController(WeaponView view, RocketController rocketController, ProjectileController projectileController, CombatService combatService) {
+    public WeaponController(WeaponView view, RocketController rocketController, ProjectileController projectileController) {
         this.view = view;
         this.rocketController = rocketController;
         this.projectileController = projectileController;

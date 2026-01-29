@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MilitaryBuildingController {
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
     private readonly SpawningService spawningService;
     private readonly BehaviorSystem behaviorSystem;
     private readonly CommanderSystem commanderSystem;
@@ -13,13 +13,13 @@ public class MilitaryBuildingController {
     private readonly List<int> removalBuffer = new();
 
     public MilitaryBuildingController(
-        CombatService combatService, 
+        CombatSystem combatSystem, 
         SpawningService spawningService,
         BehaviorSystem behaviorSystem,
         CommanderSystem commanderSystem,
         ArmorAIController armorAIController
     ) {
-        this.combatService = combatService;
+        this.combatSystem = combatSystem;
         this.spawningService = spawningService;
         this.behaviorSystem = behaviorSystem;
         this.commanderSystem = commanderSystem;
@@ -34,7 +34,7 @@ public class MilitaryBuildingController {
         model.Health = config.maxHealth;
         model.Alie = alie;
         model.CommanderId = commanderId;
-        model.CombatId = combatService.RegisterAgent(position, alie, config.height);
+        model.CombatId = combatSystem.RegisterAgent(position, alie, config.height);
         model.NextSpawnTime = Time.time + config.spawnInterval;
         
         registry[id] = model;
@@ -53,13 +53,13 @@ public class MilitaryBuildingController {
 
     private void ReadCombatState() {
         foreach (var model in registry.Values) {
-            var combatState = combatService.GetAgentState(model.CombatId);
+            var combatState = combatSystem.GetAgentState(model.CombatId);
             
             if (combatState.damage <= 0)
                 continue;
 
             model.Health -= combatState.damage;
-            combatService.ClearAgentState(model.CombatId);
+            combatSystem.ClearAgentState(model.CombatId);
         }
     }
 
@@ -95,7 +95,7 @@ public class MilitaryBuildingController {
 
     private void DestroyBuilding(int id) {
         var model = registry[id];
-        combatService.UnregisterAgent(model.CombatId);
+        combatSystem.UnregisterAgent(model.CombatId);
         registry.Remove(id);
     }
 }

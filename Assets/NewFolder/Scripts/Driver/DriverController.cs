@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class DriverController {
     
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
     private readonly MotorVehicleController motorVehicleController;
     private readonly RamEffect ramEffect;
 
     private DriverModel model;
 
-    public DriverController(CombatService combatService, MotorVehicleController vehicleController, RamEffect ramEffect) {
-        this.combatService = combatService;
+    public DriverController(CombatSystem combatSystem, MotorVehicleController vehicleController, RamEffect ramEffect) {
+        this.combatSystem = combatSystem;
         this.motorVehicleController = vehicleController;
         this.ramEffect = ramEffect;
     }
@@ -24,7 +24,7 @@ public class DriverController {
 
     public void Spawn(Vector3 position, DriverConfig config) {
         model = new DriverModel(config);
-        model.CombatId = combatService.RegisterAgent(position, alie: true);
+        model.CombatId = combatSystem.RegisterAgent(position, alie: true);
         model.VehicleId = motorVehicleController.SpawnVehicle(position, model.VehicleConfig);
         model.RamId = ramEffect.StartNew(position, model.CombatId, model.RamConfig);
     }
@@ -36,7 +36,7 @@ public class DriverController {
 
     private void SyncPosition() {
         model.Position = motorVehicleController.GetVehiclePosition(model.VehicleId);
-        combatService.UpdateAgentPosition(model.CombatId, model.Position);
+        combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
         ramEffect.Forward(model.RamId, model.Position);
     }
 }

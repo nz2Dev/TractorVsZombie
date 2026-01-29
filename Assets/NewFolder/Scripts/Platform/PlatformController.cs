@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlatformController {
 
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
     private readonly TowableVehicleController towableVehicleController;
     private readonly WeaponController weaponController;
     private readonly RamEffect ramEffect;
@@ -13,8 +13,8 @@ public class PlatformController {
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatService combatService, TowableVehicleController towableVehicleController, WeaponController weaponController, RamEffect ramEffect) {
-        this.combatService = combatService;
+    public PlatformController(CombatSystem combatSystem, TowableVehicleController towableVehicleController, WeaponController weaponController, RamEffect ramEffect) {
+        this.combatSystem = combatSystem;
         this.towableVehicleController = towableVehicleController;
         this.weaponController = weaponController;
         this.ramEffect = ramEffect;
@@ -29,7 +29,7 @@ public class PlatformController {
         var platform = new PlatformModel(nextId, position, config);
         registry[platform.Id] = platform;
         
-        platform.CombatId = combatService.RegisterAgent(position, alie: true);
+        platform.CombatId = combatSystem.RegisterAgent(position, alie: true);
         platform.VehicleId = towableVehicleController.SpawnVehicle(position, platform.VehicleConfig);
         platform.RamId = ramEffect.StartNew(position, platform.CombatId, platform.RamConfig);
         return platform.Id;
@@ -56,7 +56,7 @@ public class PlatformController {
         foreach (var host in registry.Values) {
             host.Position = towableVehicleController.GetVehiclePosition(host.VehicleId);
             weaponController.MoveWeapon(host.WeaponId, host.Position);
-            combatService.UpdateAgentPosition(host.CombatId, host.Position);
+            combatSystem.UpdateAgentPosition(host.CombatId, host.Position);
             ramEffect.Forward(host.RamId, host.Position);
         }
     }

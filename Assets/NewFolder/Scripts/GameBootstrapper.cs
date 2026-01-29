@@ -27,7 +27,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private string rewardsLayerName;
     [SerializeField] private GameObject rewardVisualsPrefab;
 
-    private CombatService combatService;
+    private CombatSystem combatSystem;
 
     private SpawningService spawningService;
     private BodySimulator bodySimulator;
@@ -57,7 +57,6 @@ public class GameBootstrapper : MonoBehaviour {
     }
 
     private void Build() {
-        combatService = new CombatService(LayerMask.NameToLayer(combatServiceLayer), LayerMask.NameToLayer(foeCombatServiceLayer), combatServiceEnvironmentMask);
         var vehicleService = new VehicleService();
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var pathfindingService = new PathfindingService(flowFieldSurface);
@@ -73,6 +72,12 @@ public class GameBootstrapper : MonoBehaviour {
         var infantryView = new InfantryView();
         var rocketView = new RocketView();
         var projectileView = new ProjectileView();
+        
+        combatSystem = new CombatSystem(
+            LayerMask.NameToLayer(combatServiceLayer), 
+            LayerMask.NameToLayer(foeCombatServiceLayer), 
+            combatServiceEnvironmentMask
+        );
 
         bodySimulator = new BodySimulator(
             physicsService
@@ -84,7 +89,7 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         projectileController = new ProjectileController(
-            combatService,
+            combatSystem,
             soundManager,
             projectileView
         );
@@ -92,19 +97,18 @@ public class GameBootstrapper : MonoBehaviour {
         rocketController = new RocketController(
             rocketView, 
             soundManager, 
-            combatService
+            combatSystem
         );
 
         ramEffect = new RamEffect(
-            combatService,
+            combatSystem,
             soundManager
         );
 
         weaponController = new WeaponController(
             weaponView,
             rocketController,
-            projectileController,
-            combatService
+            projectileController
         );
 
         motorVehicleController = new MotorVehicleController(
@@ -119,27 +123,27 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         infantryController = new InfantryController(
-            combatService,
+            combatSystem,
             bodySimulator,
             infantryView
         );
 
         armorController = new ArmorController(
-            combatService,
+            combatSystem,
             weaponController,
             motorVehicleController,
             ramEffect
         );
 
         platformController = new PlatformController(
-            combatService,
+            combatSystem,
             towableVehicleController,
             weaponController,
             ramEffect
         );
 
         driverController = new DriverController(
-            combatService,
+            combatSystem,
             motorVehicleController,
             ramEffect
         );
@@ -159,7 +163,7 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         armorAIController = new ArmorAIController(
-            combatService,
+            combatSystem,
             pathfindingService,
             armorController,
             motorVehicleController,
@@ -169,7 +173,7 @@ public class GameBootstrapper : MonoBehaviour {
         behaviorSystem = new BehaviorSystem(
             navigationSystem,
             infantryController,
-            combatService
+            combatSystem
         );
 
         commanderSystem = new CommanderSystem(
@@ -183,7 +187,7 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         buildingController = new MilitaryBuildingController(
-            combatService,
+            combatSystem,
             spawningService,
             behaviorSystem,
             commanderSystem,
@@ -195,7 +199,7 @@ public class GameBootstrapper : MonoBehaviour {
             new PlayerInput(),
             playerConfig,
             physicsService,
-            combatService,
+            combatSystem,
             cameraManager,
             rewardController,
             weaponController,
@@ -216,7 +220,7 @@ public class GameBootstrapper : MonoBehaviour {
     }
 
     private void Update() {
-        combatService.UpdateSpatialTree();
+        combatSystem.Update();
 
         ramEffect.Update();
         bodySimulator.Update();

@@ -6,13 +6,13 @@ public class ProjectileController {
 
     private readonly ProjectileView view;
     private readonly SoundManager soundManager;
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
     private readonly Dictionary<int, ProjectileModel> models = new ();
     
     private int idCounter = 0;
 
-    public ProjectileController(CombatService combatService, SoundManager soundManager, ProjectileView view) {
-        this.combatService = combatService;
+    public ProjectileController(CombatSystem combatSystem, SoundManager soundManager, ProjectileView view) {
+        this.combatSystem = combatSystem;
         this.soundManager = soundManager;
         this.view = view;
     }
@@ -42,7 +42,7 @@ public class ProjectileController {
             if (projectile.IsAged)
                 continue;
 
-            if (combatService.ApplyProjectileDamage(projectile.ShooterId, projectile.Position, projectile.Velocity, projectile.Config.damage)) {
+            if (combatSystem.ApplyProjectileDamage(projectile.ShooterId, projectile.Position, projectile.Velocity, projectile.Config.damage)) {
                 projectile.Kill();
                 view.ShowBulletCrash(projectile.Id);
             }

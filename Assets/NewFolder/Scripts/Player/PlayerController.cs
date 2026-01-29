@@ -8,7 +8,7 @@ public class PlayerController {
 
     private readonly PlayerView view;
     private readonly PlayerInput input;
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
     private readonly PhysicsService physicsService;
     private readonly CameraManager cameraManager;
     private readonly RewardController rewardController;
@@ -19,14 +19,14 @@ public class PlayerController {
 
     private readonly PlayerModel model;
 
-    public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatService combatService, CameraManager cameraManager,
+    public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatSystem combatSystem, CameraManager cameraManager,
         RewardController rewardController, WeaponController weaponController,
         PlatformController platformController, DriverController driverController,
         CouplingController couplingController) {
         this.view = view;
         this.input = input;
         this.physicsService = physicsService;
-        this.combatService = combatService;
+        this.combatSystem = combatSystem;
         this.cameraManager = cameraManager;
         this.rewardController = rewardController;
         this.weaponController = weaponController;
@@ -180,7 +180,7 @@ public class PlayerController {
 
     private void OperateAutomatically(PlatformState platformState) {
         var searchRadius = platformState.weaponConfig.aimConfig.range;
-        if (combatService.GetClosestEnemyAgentInRange(platformState.combatId, searchRadius, out var agentInfo)) {
+        if (combatSystem.GetClosestEnemyAgentInRange(platformState.combatId, searchRadius, out var agentInfo)) {
             weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
         }
     }

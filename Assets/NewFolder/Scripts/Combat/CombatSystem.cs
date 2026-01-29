@@ -1,65 +1,15 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
-using Unity.Collections;
 using Unity.Jobs;
-using Unity.Mathematics;
 
 using UnityEngine;
 
-public struct AgentState {
-    public bool exploded;
-    public bool projectiled;
-    public int damage;
-    public Vector3 damageSourcePosition;
-    public int damageSourceAgentId;
-}
-
-public struct AgentInfo { 
-    public int id;
-    public bool alie;
-    public Vector3 position;
-    public float height;
-}
-
-public class CombatService {
-
-    internal class CombatAgent : IPositionSource, IMetadata {
-        public int agentId;
-        public Vector3 position;
-        public bool alie;
-        public float height;
-        public bool projectiled;
-        public bool exploded;
-        public bool physicaly;
-        public int damageReceived;
-        public Vector3 damageSourcePosition;
-
-        public Vector3 Position => position;
-        public int Id => agentId;
-
-        internal void ClearState() {
-            projectiled = false;
-            exploded = false;
-            physicaly = false;
-            damageReceived = 0;
-        }
-    }
+public class CombatSystem {
 
     private readonly LayerMask alieAgentsMask;
     private readonly LayerMask alieAgentsAndObstaclesMask;
     private readonly LayerMask foeAgentsMask;
     private readonly LayerMask foeAgentsAndObstaclesMask;
-
-    public CombatService(int agentsLayer, int foeAgentsLayer, LayerMask obstaclesMask) {
-        this.alieAgentsMask = 1 << agentsLayer;
-        this.alieAgentsAndObstaclesMask = alieAgentsMask | obstaclesMask;
-        this.foeAgentsMask = 1 << foeAgentsLayer;
-        this.foeAgentsAndObstaclesMask = foeAgentsMask | obstaclesMask;
-        alieCollisionsLookup = new CollisionLookup<CombatAgent>(agentsLayer, 64);
-        foeCollisionLookup = new CollisionLookup<CombatAgent>(foeAgentsLayer, 512);
-    }
 
     private int idCounter;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
@@ -68,7 +18,20 @@ public class CombatService {
     private readonly SpatialLookup<CombatAgent> foeLookup = new SpatialLookup<CombatAgent>(1024);
     private readonly CollisionLookup<CombatAgent> foeCollisionLookup;
 
-    public void UpdateSpatialTree() {
+    public CombatSystem(int agentsLayer, int foeAgentsLayer, LayerMask obstaclesMask) {
+        this.alieAgentsMask = 1 << agentsLayer;
+        this.alieAgentsAndObstaclesMask = alieAgentsMask | obstaclesMask;
+        this.foeAgentsMask = 1 << foeAgentsLayer;
+        this.foeAgentsAndObstaclesMask = foeAgentsMask | obstaclesMask;
+        alieCollisionsLookup = new CollisionLookup<CombatAgent>(agentsLayer, 64);
+        foeCollisionLookup = new CollisionLookup<CombatAgent>(foeAgentsLayer, 512);
+    }
+
+    public void Update() {
+        UpdateLookups();
+    }
+
+    private void UpdateLookups() {
         alieLookup.Reset();
         foeLookup.Reset();
         
@@ -101,9 +64,9 @@ public class CombatService {
         else foeCollisionLookup.Remove(agent);
     }
 
-    public AgentState GetAgentState(int agentId) {
+    public CombatOutputInfo GetAgentState(int agentId) {
         var agent = agents[agentId];
-        return new AgentState {
+        return new CombatOutputInfo {
             exploded = agent.exploded,
             projectiled = agent.projectiled,
             damage = agent.damageReceived,
@@ -168,7 +131,7 @@ public class CombatService {
         targetAgent.damageSourcePosition = sourceAgent.position;
     }
 
-    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo) {
+    public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out CombatAgentInfo agentInfo) {
         var sourceAgent = agents[combatAgentId];
         var sourceAgentPosition = sourceAgent.Position;
         var enemyLookup = sourceAgent.alie ? foeLookup : alieLookup;
@@ -185,8 +148,8 @@ public class CombatService {
         return true;
     }
 
-    private AgentInfo GetAgentInfo(CombatAgent agent) {
-        return new AgentInfo {
+    private CombatAgentInfo GetAgentInfo(CombatAgent agent) {
+        return new CombatAgentInfo {
             id = agent.agentId,
             alie = agent.alie,
             position = agent.position,

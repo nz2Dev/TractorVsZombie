@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class RamEffect {
 
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
     private readonly SoundManager soundManager;
 
-    public RamEffect(CombatService combatService, SoundManager soundManager) {
-        this.combatService = combatService;
+    public RamEffect(CombatSystem combatSystem, SoundManager soundManager) {
+        this.combatSystem = combatSystem;
         this.soundManager = soundManager;
     }
 
@@ -37,7 +37,7 @@ public class RamEffect {
 
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
-            var affectedCount = combatService.ApplyExplosionDamage(model.CombatId, model.Position, model.Radius, damage: 0);
+            var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position, model.Radius, damage: 0);
             for (int i = 0; i < affectedCount; i++) {
                 var position = model.Position + Random.onUnitSphere * model.Radius;
                 soundManager.PlayEffectDelayed(position, i * 0.05f, model.ImpactSFX);

@@ -5,16 +5,16 @@ public class BehaviorSystem {
 
     private readonly NavigationSystem navigationSystem;
     private readonly InfantryController infantryController;
-    private readonly CombatService combatService;
+    private readonly CombatSystem combatSystem;
 
     private int nextId;
     private readonly Dictionary<int, BehaviorActor> registry = new();
     private readonly List<BehaviorActor> removalBuffer = new(64);
 
-    public BehaviorSystem(NavigationSystem navigationSystem, InfantryController infantryController, CombatService combatService) {
+    public BehaviorSystem(NavigationSystem navigationSystem, InfantryController infantryController, CombatSystem combatSystem) {
         this.navigationSystem = navigationSystem;
         this.infantryController = infantryController;
-        this.combatService = combatService;
+        this.combatSystem = combatSystem;
     }
     
 
@@ -89,7 +89,7 @@ public class BehaviorSystem {
             var navigationVelocity = navigationSystem.GetComputedVelocity(actor.NavigationAgentId);
             infantryController.Move(actor.InfantryId, navigationVelocity);
 
-            if (combatService.GetClosestEnemyAgentInRange(infantryState.combatId, 2, out var closestFoe)) {
+            if (combatSystem.GetClosestEnemyAgentInRange(infantryState.combatId, 2, out var closestFoe)) {
                 infantryController.Attack(actor.InfantryId, closestFoe.id);
             }
         }
