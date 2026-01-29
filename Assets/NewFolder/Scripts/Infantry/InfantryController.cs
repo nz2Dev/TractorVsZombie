@@ -106,7 +106,8 @@ public class InfantryController {
                 bodyController.ApplyImpulse(model.BodyId, combatOutput.damageSourcePosition);
             }
 
-            if (combatOutput.damageTaken > 0) {
+            // base visual effects on combat effects irregarding of logic damage
+            if (combatOutput.wasProjectiled || combatOutput.wasExploded) {
                 view.ShowTakeHit(model.Id);
             }
 
