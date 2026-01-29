@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3580328f7e122479ebc4da69efc2d1da, type: 3}
   m_Name: Ram Config
   m_EditorClassIdentifier: NewFolder::RamConfig
-  impactSFX: 
+  impactSFX:
   - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
   radius: 0.4
+  damage: 1

@@ -37,7 +37,7 @@ public class RamEffect {
 
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
-            var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position, model.Radius, damage: 0);
+            var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position, model.Radius, model.Damage);
             for (int i = 0; i < affectedCount; i++) {
                 var position = model.Position + Random.onUnitSphere * model.Radius;
                 soundManager.PlayEffectDelayed(position, i * 0.05f, model.ImpactSFX);

@@ -4,4 +4,5 @@ using UnityEngine;
 public class RamConfig : ScriptableObject {
     public AudioClip[] impactSFX;
     public float radius;
+    public int damage;
 }
