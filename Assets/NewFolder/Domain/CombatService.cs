@@ -25,8 +25,9 @@ public struct AgentInfo {
 
 public class CombatService {
 
-    internal class CombatAgent : IPositionSource {
+    internal class CombatAgent : IPositionSource, IMetadata {
         public int agentId;
+        public Vector3 position;
         public bool alie;
         public float height;
         public bool projectiled;
@@ -34,9 +35,9 @@ public class CombatService {
         public bool physicaly;
         public int damageReceived;
         public Vector3 damageSourcePosition;
-        public CapsuleCollider spatialMarker;
 
-        public Vector3 Position => spatialMarker.transform.position;
+        public Vector3 Position => position;
+        public int Id => agentId;
 
         internal void ClearState() {
             projectiled = false;
@@ -46,28 +47,26 @@ public class CombatService {
         }
     }
 
-    private readonly int alieLayer;
-    private readonly int foeLayer;
     private readonly LayerMask alieAgentsMask;
     private readonly LayerMask alieAgentsAndObstaclesMask;
     private readonly LayerMask foeAgentsMask;
     private readonly LayerMask foeAgentsAndObstaclesMask;
 
     public CombatService(int agentsLayer, int foeAgentsLayer, LayerMask obstaclesMask) {
-        this.alieLayer = agentsLayer;
-        this.foeLayer = foeAgentsLayer;
         this.alieAgentsMask = 1 << agentsLayer;
         this.alieAgentsAndObstaclesMask = alieAgentsMask | obstaclesMask;
         this.foeAgentsMask = 1 << foeAgentsLayer;
         this.foeAgentsAndObstaclesMask = foeAgentsMask | obstaclesMask;
+        alieCollisionsLookup = new CollisionLookup<CombatAgent>(agentsLayer, 64);
+        foeCollisionLookup = new CollisionLookup<CombatAgent>(foeAgentsLayer, 512);
     }
 
     private int idCounter;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
-    private readonly Dictionary<Collider, CombatAgent> markerToAgent = new Dictionary<Collider, CombatAgent>();
-    private readonly Collider[] overlapBuffer = new Collider[256];
     private readonly SpatialLookup<CombatAgent> alieLookup = new SpatialLookup<CombatAgent>(128);
+    private readonly CollisionLookup<CombatAgent> alieCollisionsLookup;
     private readonly SpatialLookup<CombatAgent> foeLookup = new SpatialLookup<CombatAgent>(1024);
+    private readonly CollisionLookup<CombatAgent> foeCollisionLookup;
 
     public void UpdateSpatialTree() {
         alieLookup.Reset();
@@ -87,23 +86,19 @@ public class CombatService {
 
     public int RegisterAgent(Vector3 position, bool alie, float height = 1f) {
         var agentId = idCounter++;
-        var spatialMarker = CreateSpatialMarker(agentId, position, height, 0.3f, alie);
-        var agent = new CombatAgent { 
-            agentId = agentId, 
-            alie = alie,
-            spatialMarker = spatialMarker, 
-        };
-        
-        markerToAgent[spatialMarker] = agent;
+        var agent = new CombatAgent { agentId = agentId, position = position, alie = alie, };
         agents[agentId] = agent;
+        
+        if (alie) alieCollisionsLookup.Add(agent, position, height, .3f);
+        else foeCollisionLookup.Add(agent, position, height, .3f);
+        
         return agentId;
     }
 
     public void UnregisterAgent(int agentId) {
-        var agent = agents[agentId];
-        markerToAgent.Remove(agent.spatialMarker);
-        GameObject.Destroy(agent.spatialMarker.gameObject);
-        agents.Remove(agentId);
+        agents.Remove(agentId, out var agent);
+        if (agent.alie) alieCollisionsLookup.Remove(agent);
+        else foeCollisionLookup.Remove(agent);
     }
 
     public AgentState GetAgentState(int agentId) {
@@ -123,7 +118,10 @@ public class CombatService {
     }
 
     public void UpdateAgentPosition(int agentId, Vector3 position) {
-        agents[agentId].spatialMarker.transform.position = position;
+        var agent = agents[agentId];
+        agent.position = position;
+        if (agent.alie) alieCollisionsLookup.Update(agent, position);
+        else foeCollisionLookup.Update(agent, position);
     }
 
     public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage) {
@@ -131,12 +129,13 @@ public class CombatService {
             return false;
         }
 
-        var enemyMask = agent.alie ? foeAgentsAndObstaclesMask : alieAgentsAndObstaclesMask;
-        if (!Physics.Raycast(position, direction, out var hitInfo, 0.25f, enemyMask)) {
+        // Combat System should only check for agents collisions (obstacles is projectile source responsibilities)
+        var enemyCollisionLookup = agent.alie ? foeCollisionLookup : alieCollisionsLookup;
+        if (!enemyCollisionLookup.Raycast(position, direction, 0.25f, out var hitAgent)) {
             return false;
         }
         
-        if (markerToAgent.TryGetValue(hitInfo.collider, out var hitAgent) && hitAgent.agentId != agentId) {
+        if (hitAgent.agentId != agentId) {
             hitAgent.projectiled = true;
             hitAgent.damageReceived = damage;
             hitAgent.damageSourcePosition = position;
@@ -146,14 +145,15 @@ public class CombatService {
 
     public int ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage) {
         var sourceAgent = agents[sourceAgentId];
-        var overlapCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, alieAgentsMask | foeAgentsMask);
+        var collisionsLookup = sourceAgent.alie ? foeCollisionLookup : alieCollisionsLookup;
+        var overlapCount = collisionsLookup.Overlap(position, radius, out var results);
         int affectedCount = 0;
         for (int i = 0; i < overlapCount; i++) {
-            var overlapCollider = overlapBuffer[i];
-            if (markerToAgent.TryGetValue(overlapCollider, out var overlapAgent) && overlapAgent.agentId != sourceAgentId) {
-                overlapAgent.exploded = true;
-                overlapAgent.damageReceived = damage;
-                overlapAgent.damageSourcePosition = position;
+            var affectedAgent = results[i];
+            if (affectedAgent.agentId != sourceAgentId) {
+                affectedAgent.exploded = true;
+                affectedAgent.damageReceived = damage;
+                affectedAgent.damageSourcePosition = position;
                 affectedCount++;
             }            
         }
@@ -165,7 +165,7 @@ public class CombatService {
         var targetAgent = agents[targetId];
         targetAgent.damageReceived = damage;
         targetAgent.physicaly = true;
-        targetAgent.damageSourcePosition = sourceAgent.spatialMarker.transform.position;
+        targetAgent.damageSourcePosition = sourceAgent.position;
     }
 
     public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out AgentInfo agentInfo) {
@@ -189,21 +189,9 @@ public class CombatService {
         return new AgentInfo {
             id = agent.agentId,
             alie = agent.alie,
-            position = agent.spatialMarker.transform.position,
-            height = agent.spatialMarker.height
+            position = agent.position,
+            height = agent.height
         };
-    }
-
-    private CapsuleCollider CreateSpatialMarker(int id, Vector3 position, float height, float radius, bool alie) {
-        var go = new GameObject("Combat Agent (New) " + id, typeof(CapsuleCollider));
-        go.transform.position = position;
-        go.layer = alie ? alieLayer : foeLayer;
-        var collider = go.GetComponent<CapsuleCollider>();
-        collider.isTrigger = true;
-        collider.height = height;
-        collider.radius = radius;
-        collider.center = new Vector3(0, height * 0.5f, 0);
-        return collider;
     }
 
 }
