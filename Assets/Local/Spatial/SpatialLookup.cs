@@ -11,6 +11,7 @@ public interface IPositionSource {
     public Vector3 Position { get; }
 }
 
+// TODO: Implement IDisposable, native resources ARE NOT dealocated
 public class SpatialLookup<T> where T : IPositionSource {
     
     private T[] sources;
