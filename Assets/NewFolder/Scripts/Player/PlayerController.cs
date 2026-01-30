@@ -66,7 +66,7 @@ public class PlayerController {
     }
 
     private void CollectRewards() {
-        var collectedRewardStates = rewardController.CollectRewards(model.Position, 0.5f);
+        var collectedRewardStates = rewardController.CollectRewards(model.Position, 3f);
         foreach (var rewardState in collectedRewardStates) {
             if (rewardState.RewardType == RewardType.Weapon) {
                 SpawnPlatform(rewardState.Position, out var platformId);

@@ -8,22 +8,19 @@ public class InfantryController {
     private readonly InfantryView view;
     private readonly CombatSystem combatSystem;
     private readonly BodySimulator bodyController;
+    private readonly RewardController rewardController;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    private List<InfantryModel> diedInfantry = new();
-
-    public InfantryController(CombatSystem combatSystem, BodySimulator bodyController, InfantryView view) {
+    public InfantryController(CombatSystem combatSystem, BodySimulator bodyController, InfantryView view, RewardController rewardController) {
         this.combatSystem = combatSystem;
         this.bodyController = bodyController;
         this.view = view;
+        this.rewardController = rewardController;
     }
 
-    public IReadOnlyList<InfantryModel> DiedInfantry => diedInfantry;
     public int InfantryCount => registry.Count;
-
-    public void ClearDiedRegistry() => diedInfantry.Clear();
     public bool IsExist(int infantryId) => registry.ContainsKey(infantryId);
 
     public void Update() {
@@ -114,15 +111,14 @@ public class InfantryController {
             if (combatOutput.damageWasFatal) {
                 model.IsDead = true;
                 bodyController.DisableRecovery(model.BodyId);
-                
+                rewardController.SpawnPointReward(model.BodyState.position);
+                combatSystem.UnregisterAgent(model.CombatId); // TODO: keep registered, add combat system queries filters for IsAlive
+
                 if (combatOutput.wasProjectiled) {
                     view.ShowDeathByProjectile(model.Id, combatOutput.damageSourcePosition, blownAway: model.BodyState.grounded);
                 } else {
                     view.ShowDisolveDeath(model.Id);
                 }
-
-                combatSystem.UnregisterAgent(model.CombatId); // TODO: keep registered, add combat system queries filters for IsAlive
-                diedInfantry.Add(model);
             }
         }
     }

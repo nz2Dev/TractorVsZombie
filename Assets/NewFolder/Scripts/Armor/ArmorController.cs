@@ -9,21 +9,23 @@ public class ArmorController {
     private readonly CombatSystem combatSystem;
     private readonly WeaponController weaponController;
     private readonly MotorVehicleController motorVehicleController;
+    private readonly RewardController rewardController;
 
     private int idCounter;    
     private readonly Dictionary<int, ArmorModel> registry = new ();
-    private readonly List<ArmorModel> diedArmor = new ();
 
-    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, MotorVehicleController motorVehicleController, RamEffect ramEffect) {
+    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, MotorVehicleController motorVehicleController, RamEffect ramEffect, RewardController rewardController) {
         this.combatSystem = combatSystem;
         this.weaponController = weaponController;
         this.motorVehicleController = motorVehicleController;
         this.ramEffect = ramEffect;
+        this.rewardController = rewardController;
     }
 
     public int ArmorCount => registry.Count;
-    public IReadOnlyList<ArmorModel> DiedArmor => diedArmor;
-    public void ClearDiedRegistry() => diedArmor.Clear();
+    public void WriteDeadArmorFiltered(List<int> armorIds) {
+        armorIds.RemoveAll(id => !registry.ContainsKey(id));
+    }
 
     public void Update() {
         ReadCombatOutput();
@@ -49,10 +51,6 @@ public class ArmorController {
         ramEffect.Stop(model.RamId);
         registry.Remove(model.Id);
     }
-
-    public void WriteDeadArmorFiltered(List<int> armorIds) {
-        armorIds.RemoveAll(id => !registry.ContainsKey(id));
-    }
     
     public ArmorState ReadArmorState(int armorId) {
         var armor = registry[armorId];
@@ -70,8 +68,7 @@ public class ArmorController {
             var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
             if (combatOutput.damageWasFatal) {
                 model.Destroyed = true;
-                diedArmor.Add(model);
-                // TODO: spawn rewards from here! no needs for this registry tracking
+                rewardController.SpawnWeaponReward(model.Position, model.WeaponConfig);
             }
         }
     }

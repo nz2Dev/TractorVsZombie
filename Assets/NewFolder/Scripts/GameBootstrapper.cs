@@ -105,6 +105,10 @@ public class GameBootstrapper : MonoBehaviour {
             soundManager
         );
 
+        rewardController = new RewardController(
+            rewardView
+        );
+
         weaponController = new WeaponController(
             weaponView,
             rocketController,
@@ -125,14 +129,16 @@ public class GameBootstrapper : MonoBehaviour {
         infantryController = new InfantryController(
             combatSystem,
             bodySimulator,
-            infantryView
+            infantryView,
+            rewardController
         );
 
         armorController = new ArmorController(
             combatSystem,
             weaponController,
             motorVehicleController,
-            ramEffect
+            ramEffect,
+            rewardController
         );
 
         platformController = new PlatformController(
@@ -146,13 +152,6 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             motorVehicleController,
             ramEffect
-        );
-        
-        rewardController = new RewardController(
-            rewardView,
-            rewardsMediator,
-            infantryController,
-            armorController
         );
 
         spawningService = new SpawningService(
@@ -224,6 +223,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         ramEffect.Update();
         bodySimulator.Update();
+        rewardController.Update();
         navigationSystem.Update();
 
         projectileController.Update();
@@ -244,7 +244,6 @@ public class GameBootstrapper : MonoBehaviour {
         enemyController.Update();
         playerController.Update();
 
-        rewardController.Update();
     }
 
 }

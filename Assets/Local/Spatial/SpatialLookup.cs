@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using KNN;
 using KNN.Jobs;
 
@@ -20,12 +22,16 @@ public class SpatialLookup<T> where T : IPositionSource {
     private KnnContainer knnContainer;
 
     private NativeArray<int> resultBuffer;
+    private NativeList<int> variableResultBuffer;
+    private List<T> resultSourcesBuffer;
 
-    public SpatialLookup(int initSize) {
+    public SpatialLookup(int initSize, int initRangeCapacity = 256) {
         sources = new T[initSize];
         points = new NativeArray<float3>(initSize, Allocator.Persistent);
         knnContainer = new KnnContainer(points.GetSubArray(0, 1), false, Allocator.TempJob);
         resultBuffer = new NativeArray<int>(1, Allocator.Persistent);
+        variableResultBuffer = new NativeList<int>(initRangeCapacity, Allocator.Persistent);
+        resultSourcesBuffer = new List<T>(initRangeCapacity);
     }
 
     public int SourceCount => sourceCount;
@@ -35,6 +41,10 @@ public class SpatialLookup<T> where T : IPositionSource {
     }
 
     public void Add(T source) {
+        // TODO: sources.Length is tested here. Use list?
+        if (sourceCount >= sources.Length)
+            return;
+
         sources[sourceCount++] = source;
     }
 
@@ -57,6 +67,21 @@ public class SpatialLookup<T> where T : IPositionSource {
     public T QueryNearest(Vector3 queryPosition) {
         knnContainer.QueryKNearest(queryPosition, resultBuffer.GetSubArray(0, 1));
         return sources[resultBuffer[0]];
+    }
+
+    public List<T> QueryRange(Vector3 queryPosition, float radius) {
+        resultSourcesBuffer.Clear();
+        if (sourceCount == 0) {
+            return resultSourcesBuffer;
+        }
+
+        variableResultBuffer.Clear();
+        knnContainer.QueryRange(queryPosition, radius, variableResultBuffer);
+        for (int i = 0; i < variableResultBuffer.Length; i++) {
+            var indexInRadius = variableResultBuffer[i];
+            resultSourcesBuffer.Add(sources[indexInRadius]);
+        }
+        return resultSourcesBuffer;
     }
 
 }

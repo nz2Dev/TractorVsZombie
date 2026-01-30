@@ -7,9 +7,8 @@ public enum RewardType {
     Weapon,
 }
 
-public class RewardModel {
+public class RewardModel : IPositionSource {
     public int Id { get; set; }
-    public int SpatialId { get; set; }
     public Vector3 Position { get; set; }
     public RewardType RewardType { get; set; }
     public WeaponConfig WeaponConfig { get; set; } 
