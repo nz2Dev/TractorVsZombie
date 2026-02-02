@@ -1,16 +1,28 @@
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class InfantryVisuals : MonoBehaviour {
     
-    private Animator animator;
+    public Color AnimatedColor;
 
+    private Animator animator;
+    private Renderer visualsRenderer;
+
+    private int colorPropertyID;
+    private MaterialPropertyBlock dynamicProps;
     private bool sheduledForDestruction;
 
     private void Awake() {
         animator = GetComponent<Animator>();
+        dynamicProps = new MaterialPropertyBlock();
+        visualsRenderer = GetComponentInChildren<Renderer>();
+        colorPropertyID = Shader.PropertyToID("_Color");
     }
 
     void LateUpdate() {
+        dynamicProps.SetColor(colorPropertyID, AnimatedColor);
+        visualsRenderer.SetPropertyBlock(dynamicProps);
+
         if (sheduledForDestruction && !IsAnimatorPlaying()) {
             Destroy(gameObject);
         }
@@ -19,11 +31,6 @@ public class InfantryVisuals : MonoBehaviour {
     private bool IsAnimatorPlaying() {
         var curentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
         return animator.IsInTransition(0) || curentStateInfo.normalizedTime < curentStateInfo.length;
-    }
-
-    private void Start() {
-        var renderer = GetComponentInChildren<Renderer>();
-        renderer.material = new Material(renderer.sharedMaterial);
     }
 
     internal void UpdatePositionAndRotation(Vector3 position, Quaternion rotation) {

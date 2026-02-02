@@ -24,7 +24,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private AimVisuals aimVisualsPrefab;
     [SerializeField] private UIDocument uiDocument;
     [Space]
-    [SerializeField] private string rewardsLayerName;
+    [SerializeField] private string rewardsLayerName; // FIXME: not used
     [SerializeField] private GameObject rewardVisualsPrefab;
 
     private CombatSystem combatSystem;
