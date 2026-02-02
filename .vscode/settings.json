@@ -51,8 +51,8 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "TractorVsZombie.sln",
-    "[csharp]" : {
+    "dotnet.defaultSolution": "TractorVsZombie.slnx",
+    "[csharp]": {
         "editor.formatOnType": false,
         "editor.formatOnSave": false
     }
