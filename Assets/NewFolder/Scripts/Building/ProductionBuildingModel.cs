@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class MilitaryBuildingModel {
+public class ProductionBuildingModel {
     
     public int Id { get; }
-    public MilitaryBuildingConfig Config { get; }
+    public ProductionBuildingConfig Config { get; }
     
     public int CombatId { get; set; }
     public int CommanderId { get; set; }
@@ -12,7 +12,7 @@ public class MilitaryBuildingModel {
     public float NextSpawnTime { get; set; }
     public bool Destroyed { get; set; }
 
-    public MilitaryBuildingModel(int id, MilitaryBuildingConfig config) {
+    public ProductionBuildingModel(int id, ProductionBuildingConfig config) {
         Id = id;
         Config = config;
     }

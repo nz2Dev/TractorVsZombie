@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MilitaryBuildingController {
+public class ProductionBuildingController {
 
-    private readonly MilitaryBuildingView view;
+    private readonly ProductionBuildingView view;
     private readonly CombatSystem combatSystem;
     private readonly SpawningService spawningService;
     private readonly BehaviorSystem behaviorSystem;
@@ -11,16 +11,16 @@ public class MilitaryBuildingController {
     private readonly ArmorAIController armorAIController;
     
     private int idCounter;
-    private readonly Dictionary<int, MilitaryBuildingModel> registry = new();
+    private readonly Dictionary<int, ProductionBuildingModel> registry = new();
     private readonly List<int> removalBuffer = new();
 
-    public MilitaryBuildingController(
+    public ProductionBuildingController(
         CombatSystem combatSystem,
         SpawningService spawningService,
         BehaviorSystem behaviorSystem,
         CommanderSystem commanderSystem,
         ArmorAIController armorAIController,
-        MilitaryBuildingView view) {
+        ProductionBuildingView view) {
         this.combatSystem = combatSystem;
         this.spawningService = spawningService;
         this.behaviorSystem = behaviorSystem;
@@ -29,9 +29,9 @@ public class MilitaryBuildingController {
         this.view = view;
     }
 
-    public int CreateBuilding(Vector3 position, Quaternion rotation, MilitaryBuildingConfig config, bool alie, int commanderId) {
+    public int CreateBuilding(Vector3 position, Quaternion rotation, ProductionBuildingConfig config, bool alie, int commanderId) {
         var id = ++idCounter;
-        var model = new MilitaryBuildingModel(id, config);
+        var model = new ProductionBuildingModel(id, config);
         
         model.Position = position;
         model.Alie = alie;

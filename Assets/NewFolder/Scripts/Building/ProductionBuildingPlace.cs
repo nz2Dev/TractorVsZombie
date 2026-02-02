@@ -4,9 +4,9 @@ using UnityEngine;
 
 [SelectionBase]
 [ExecuteInEditMode]
-public class MilitaryBuildingPlace : MonoBehaviour {
+public class ProductionBuildingPlace : MonoBehaviour {
     
-    public MilitaryBuildingConfig config;
+    public ProductionBuildingConfig config;
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
 
@@ -29,8 +29,8 @@ public class MilitaryBuildingPlace : MonoBehaviour {
         }
     }
 
-    public static MilitaryBuildingPlace[] ScanSceneForPlaces() {
-        return FindObjectsByType<MilitaryBuildingPlace>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+    public static ProductionBuildingPlace[] ScanSceneForPlaces() {
+        return FindObjectsByType<ProductionBuildingPlace>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
     }
 
 }

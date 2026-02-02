@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(MilitaryBuildingPlace))]
-public class MilitaryBuildingPlaceEditor : Editor {
+[CustomEditor(typeof(ProductionBuildingPlace))]
+public class ProductionBuildingPlaceEditor : Editor {
     
     private void OnEnable() {
         EditorApplication.update += OnEditorUpdate;
@@ -13,7 +13,7 @@ public class MilitaryBuildingPlaceEditor : Editor {
     }
 
     private void OnEditorUpdate() {
-        var place = target as MilitaryBuildingPlace;
+        var place = target as ProductionBuildingPlace;
         if (place != null)
             place.CheckScenePreview();
     }

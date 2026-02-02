@@ -8,8 +8,8 @@ public enum SpawnType {
     Armor
 }
 
-[CreateAssetMenu(fileName = "Military Building Config", menuName = "MilitaryBuildingConfig", order = 0)]
-public class MilitaryBuildingConfig : ScriptableObject {
+[CreateAssetMenu(fileName = "Production Building Config", menuName = "ProductionBuildingConfig", order = 0)]
+public class ProductionBuildingConfig : ScriptableObject {
     public int maxHealth = 100;
     public float height = 2f;
     public float radius = 1f;

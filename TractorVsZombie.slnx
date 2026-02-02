@@ -1,10 +1,10 @@
 ﻿<Solution>
   <Project Path="PrototypeEditor.csproj" />
-  <Project Path="NewFolder.csproj" />
   <Project Path="Prototype.csproj" />
   <Project Path="ORCAHelper.csproj" />
   <Project Path="SpatialLookup.csproj" />
   <Project Path="GenerationPlaygroundEditor.csproj" />
+  <Project Path="NewFolder.csproj" />
   <Project Path="Playground.Exmample.EditorTests.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />

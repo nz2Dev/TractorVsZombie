@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class MilitaryBuildingView {
+public class ProductionBuildingView {
 
     private readonly Dictionary<int, GameObject> registry = new();
 

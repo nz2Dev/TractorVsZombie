@@ -49,7 +49,7 @@ public class GameBootstrapper : MonoBehaviour {
     private BehaviorSystem behaviorSystem;
     private CouplingController couplingController;
     private CommanderSystem commanderSystem;
-    private MilitaryBuildingController buildingController;
+    private ProductionBuildingController buildingController;
 
     private void Start() {
         Build();
@@ -71,7 +71,7 @@ public class GameBootstrapper : MonoBehaviour {
         var infantryView = new InfantryView();
         var rocketView = new RocketView();
         var projectileView = new ProjectileView();
-        var militaryBuildingView = new MilitaryBuildingView();
+        var productionBuildingView = new ProductionBuildingView();
         
         combatSystem = new CombatSystem(
             LayerMask.NameToLayer(combatServiceLayer), 
@@ -185,13 +185,13 @@ public class GameBootstrapper : MonoBehaviour {
             towableVehicleController
         );
 
-        buildingController = new MilitaryBuildingController(
+        buildingController = new ProductionBuildingController(
             combatSystem,
             spawningService,
             behaviorSystem,
             commanderSystem,
             armorAIController,
-            militaryBuildingView
+            productionBuildingView
         );
 
         playerController = new PlayerController(

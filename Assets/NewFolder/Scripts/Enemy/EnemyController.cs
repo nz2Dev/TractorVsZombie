@@ -7,12 +7,12 @@ using System;
 public class EnemyController {
 
     private readonly EnemyView enemyView;
-    private readonly MilitaryBuildingController buildingController;
+    private readonly ProductionBuildingController buildingController;
     private readonly CommanderSystem commanderSystem;
 
     private readonly List<EnemySource> enemySources = new();
 
-    public EnemyController(EnemyView crowdView, MilitaryBuildingController buildingController, CommanderSystem commanderSystem) {
+    public EnemyController(EnemyView crowdView, ProductionBuildingController buildingController, CommanderSystem commanderSystem) {
         this.enemyView = crowdView;
         this.buildingController = buildingController;
         this.commanderSystem = commanderSystem;
@@ -26,7 +26,7 @@ public class EnemyController {
 
     private void TryInitEnemySources() {
         if (enemySources.Count == 0) {
-            var placesFound = MilitaryBuildingPlace.ScanSceneForPlaces();
+            var placesFound = ProductionBuildingPlace.ScanSceneForPlaces();
             
             foreach (var place in placesFound) {
                 var firstCommander = commanderSystem.CreateCommander();
