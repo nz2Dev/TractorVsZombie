@@ -23,14 +23,11 @@ public class InfantryView {
         visualsRegistry[infantryId].PlayDirectAttackAnimation();
     }
 
-    public void ShowDeathByProjectile(int infantryId, Vector3 damageSourcePosition, bool blownAway) {
+    public void ShowThrownAway(int infantryId, Vector3 sourcePosition) {
         var visuals = visualsRegistry[infantryId];
-        if (blownAway) {
-            visuals.RotateAway(damageSourcePosition);
-            visuals.PlayPushedAwayDeathAnimation();
-        } else {
-            visuals.PlayDisolveAnimation();
-        }
+        var sourceToPosition = visuals.transform.position - sourcePosition; sourceToPosition.y = 0;
+        visuals.SetOverrideRotation(Quaternion.LookRotation(-sourceToPosition.normalized, Vector3.up));
+        visuals.PlayPushedAwayDeathAnimation();
     }
 
     internal void ShowDisolveDeath(int infantryId) {

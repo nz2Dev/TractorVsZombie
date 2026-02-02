@@ -34,13 +34,15 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     internal void UpdatePositionAndRotation(Vector3 position, Quaternion rotation) {
-        transform.SetPositionAndRotation(position, rotation);
+        transform.SetPositionAndRotation(position, overrideRotation ? overridedQuaterion: rotation);
     }
 
-    internal void RotateAway(Vector3 sourcePosition) {
-        var sourceToPosition = transform.position - sourcePosition;
-        sourceToPosition.y = 0;
-        transform.rotation = Quaternion.LookRotation(-sourceToPosition.normalized, Vector3.up);
+    private Quaternion overridedQuaterion;
+    private bool overrideRotation;
+
+    internal void SetOverrideRotation(Quaternion quaternion) {
+        overridedQuaterion = quaternion;
+        overrideRotation = true;
     }
 
     internal void PlayTakeHit() {

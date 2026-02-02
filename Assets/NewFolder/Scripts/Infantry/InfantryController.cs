@@ -114,8 +114,8 @@ public class InfantryController {
                 rewardController.SpawnPointReward(model.BodyState.position);
                 combatSystem.UnregisterAgent(model.CombatId); // TODO: keep registered, add combat system queries filters for IsAlive
 
-                if (combatOutput.wasProjectiled) {
-                    view.ShowDeathByProjectile(model.Id, combatOutput.damageSourcePosition, blownAway: model.BodyState.grounded);
+                if (combatOutput.wasProjectiled && model.BodyState.grounded) {
+                    view.ShowThrownAway(model.Id, combatOutput.damageSourcePosition);
                 } else {
                     view.ShowDisolveDeath(model.Id);
                 }
