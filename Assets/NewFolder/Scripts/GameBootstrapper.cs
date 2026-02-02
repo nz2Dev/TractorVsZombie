@@ -61,7 +61,6 @@ public class GameBootstrapper : MonoBehaviour {
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var pathfindingService = new PathfindingService(flowFieldSurface);
         var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
-        var rewardsMediator = new RewardsMediator(LayerMask.NameToLayer(rewardsLayerName));
 
         var playerView = new PlayerView(uiDocument, aimVisualsPrefab);
         var unitView = new EnemyView();
