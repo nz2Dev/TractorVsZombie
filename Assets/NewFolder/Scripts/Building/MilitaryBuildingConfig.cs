@@ -13,6 +13,7 @@ public class MilitaryBuildingConfig : ScriptableObject {
     public int maxHealth = 100;
     public float height = 2f;
     public float radius = 1f;
+    public GameObject visualsPrefab;
     [Space]
     public float spawnInterval = 5f;
     public SpawnType spawnType;

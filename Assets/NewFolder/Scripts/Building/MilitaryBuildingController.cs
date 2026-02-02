@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MilitaryBuildingController {
+
+    private readonly MilitaryBuildingView view;
     private readonly CombatSystem combatSystem;
     private readonly SpawningService spawningService;
     private readonly BehaviorSystem behaviorSystem;
@@ -13,20 +15,21 @@ public class MilitaryBuildingController {
     private readonly List<int> removalBuffer = new();
 
     public MilitaryBuildingController(
-        CombatSystem combatSystem, 
+        CombatSystem combatSystem,
         SpawningService spawningService,
         BehaviorSystem behaviorSystem,
         CommanderSystem commanderSystem,
-        ArmorAIController armorAIController
-    ) {
+        ArmorAIController armorAIController,
+        MilitaryBuildingView view) {
         this.combatSystem = combatSystem;
         this.spawningService = spawningService;
         this.behaviorSystem = behaviorSystem;
         this.commanderSystem = commanderSystem;
         this.armorAIController = armorAIController;
+        this.view = view;
     }
 
-    public int CreateBuilding(Vector3 position, MilitaryBuildingConfig config, bool alie, int commanderId) {
+    public int CreateBuilding(Vector3 position, Quaternion rotation, MilitaryBuildingConfig config, bool alie, int commanderId) {
         var id = ++idCounter;
         var model = new MilitaryBuildingModel(id, config);
         
@@ -35,8 +38,9 @@ public class MilitaryBuildingController {
         model.CommanderId = commanderId;
         model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
         model.NextSpawnTime = Time.time + config.spawnInterval;
-        
         registry[id] = model;
+
+        view.AddVisuals(model.Id, position, rotation, model.Config.visualsPrefab);
         return id;
     }
 
@@ -90,8 +94,8 @@ public class MilitaryBuildingController {
     }
 
     private void DestroyBuilding(int id) {
-        var model = registry[id];
+        registry.Remove(id, out var model);
         combatSystem.UnregisterAgent(model.CombatId);
-        registry.Remove(id);
+        view.RemoveVisuals(model.Id);
     }
 }
