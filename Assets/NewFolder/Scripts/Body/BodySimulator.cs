@@ -76,7 +76,9 @@ public class BodySimulator {
                 physicsService.SetPhysicsActive(model.PhysicsId, false);
             } else if (keepsGrouned && model.CanRecover) {
                 model.Position = model.Position += model.DrivenVelocity * Time.deltaTime;
-                model.Rotation = Quaternion.LookRotation(model.DrivenVelocity.normalized, Vector3.up);
+                if (model.DrivenVelocity.sqrMagnitude > 0) {
+                    model.Rotation = Quaternion.LookRotation(model.DrivenVelocity.normalized, Vector3.up);
+                }
             }
         }
     }
