@@ -17,6 +17,7 @@ public class PathfindingService {
     public int CreateFlowField(Vector3 goal) {
         var nextFlowFieldId = ++idCounter;
         var goalGridPosition = surface.GetGridPositionClamped(goal);
+        
         var flowField = new FlowField(surface.Size, surface.BlockedCells, goalGridPosition);
         flowField.ComputeCosts();
         flowField.ComputeFlow();
@@ -40,4 +41,27 @@ public class PathfindingService {
         return new Vector3(gridVector.x, 0, gridVector.y).normalized;
     }
 
+    public int RegisterObstacle(Vector3 position, int radius) {
+        var obstacleId = surface.AddBlockerShape(position, radius);
+        surface.BakeDynamicBlockers();
+
+        foreach (var flowField in registry.Values) {
+            flowField.UpdateBlockedCells(surface.BlockedCells);
+            flowField.ComputeCosts();
+            flowField.ComputeFlow();
+        }
+
+        return obstacleId;
+    }
+
+    internal void UnregisterObstacle(int obstacleId) {
+        surface.RemoveBlockerShape(obstacleId);
+        surface.BakeDynamicBlockers();
+
+        foreach (var flowField in registry.Values) {
+            flowField.UpdateBlockedCells(surface.BlockedCells);
+            flowField.ComputeCosts();
+            flowField.ComputeFlow();
+        }
+    }
 }

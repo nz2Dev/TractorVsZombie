@@ -14,6 +14,10 @@ public class FlowField {
             cost = 255;
         }
 
+        internal void ClearBlocked() {
+            cost = 1;
+        }
+
         internal bool IsBlocked() {
             return cost == 255;
         }
@@ -60,6 +64,20 @@ public class FlowField {
                 }
             }
         }
+    }
+
+    public void UpdateBlockedCells(IEnumerable<Vector2Int> cells) {
+        for (int x = 0; x < grid.Size; x++)
+            for (int y = 0; y < grid.Size; y++)
+                grid[x, y].ClearBlocked();    
+        
+
+        if (cells == null)
+            return;
+
+        foreach (var cell in cells) 
+            if (grid.IsInBounds(cell)) 
+                grid[cell].SetBlocked();
     }
 
     public void SetNextGoal(Vector2Int location) {

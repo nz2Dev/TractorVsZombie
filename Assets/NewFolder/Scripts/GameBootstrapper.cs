@@ -196,7 +196,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         headquarterBuildingController = new HeadquarterBuildingController(
-            combatSystem
+            combatSystem,
+            pathfindingService
         );
 
         playerController = new PlayerController(

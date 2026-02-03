@@ -7,12 +7,14 @@ using UnityEngine;
 public class HeadquarterBuildingController {
     
     private readonly CombatSystem combatSystem;
+    private readonly PathfindingService pathfindingService;
 
     private GameObject visuals;
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(CombatSystem combatSystem) {
+    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService) {
         this.combatSystem = combatSystem;
+        this.pathfindingService = pathfindingService;
     }
 
     public void Update() {
@@ -23,8 +25,10 @@ public class HeadquarterBuildingController {
     public void SetHeadquearter(Vector3 position, Quaternion rotation, HeadquarterBuildingConfig config) {
         headquarter = new HeadquarterBuilding(config);
         headquarter.Position = position;
-        headquarter.CombatId = combatSystem.RegisterAgent(position, alie: true, config.maxHealth, height: 2);
+        headquarter.CombatId = combatSystem.RegisterAgent(position, config.alie, config.maxHealth, height: 2);
+        headquarter.ObstacleId = pathfindingService.RegisterObstacle(position, config.radius);
         visuals = GameObject.Instantiate(config.visualsPrefab, position, rotation);
+        
     }
 
     private void ReadCombatOutput() {
@@ -32,6 +36,7 @@ public class HeadquarterBuildingController {
         if (combatOutput.damageWasFatal) {
             headquarter.Destroyed = true;
             GameObject.Destroy(visuals);
+            pathfindingService.UnregisterObstacle(headquarter.ObstacleId);
         }
     }
 
