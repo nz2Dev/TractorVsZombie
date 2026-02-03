@@ -51,6 +51,7 @@ public class BuildingPlace : MonoBehaviour {
             yield break;
             
         yield return productionBuildingConfig.visualsPrefab;      
+        yield return NonNullGOPrefab(productionBuildingConfig.vehicleObstaclePrefab);
     }
 
     private IEnumerable<GameObject> ListHeadquarterBuildingEditablePrefabs() {
@@ -58,7 +59,11 @@ public class BuildingPlace : MonoBehaviour {
             yield break;
         
         yield return headquarterBuildingConfig.visualsPrefab;
-        yield return headquarterBuildingConfig.vehicleObstaclePrefab;
+        yield return NonNullGOPrefab(headquarterBuildingConfig.vehicleObstaclePrefab);
+    }
+
+    private GameObject NonNullGOPrefab(MonoBehaviour monoBehavior) {
+        return monoBehavior == null ? null : monoBehavior.gameObject;
     }
 
     public static BuildingPlace[] ScanSceneForPlaces() {

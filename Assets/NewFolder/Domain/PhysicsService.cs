@@ -21,14 +21,12 @@ public class PhysicsService {
         this.obstacleLayer = obstacleLayer;
     }
 
-    public int RegisterObstacle(Vector3 position, Vector3 size) {
+    public int RegisterObstacle(Vector3 position, PhysicsObstacle prefab) {
         var id = ++idCounter;
-        var go = new GameObject($"PhysicsObstacle_{id}");
+        var go = GameObject.Instantiate(prefab.gameObject, position, Quaternion.identity);
+        go.name = $"PhysicsObstacle_{id}";
         go.layer = obstacleLayer;
         go.transform.SetParent(container, false);
-        go.transform.position = position;
-        var collider = go.AddComponent<BoxCollider>();
-        collider.size = size;
         obstacleRegistry[id] = go;
         return id;
     }

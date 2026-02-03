@@ -6,7 +6,6 @@ public class HeadquarterBuildingConfig : ScriptableObject {
     public int maxHealth = 100;
     public bool alie = false;
     public GameObject visualsPrefab;
-    public GameObject vehicleObstaclePrefab;
-    public Vector3 physicsObstacleSize = new Vector3(3, 2, 3);
-    public Vector3 VehicleObstacleSize => vehicleObstaclePrefab.GetComponent<BoxCollider>().size;
+    public PhysicsObstacle vehicleObstaclePrefab;
+    public PhysicsObstacle physicsObstaclePrefab;
 }

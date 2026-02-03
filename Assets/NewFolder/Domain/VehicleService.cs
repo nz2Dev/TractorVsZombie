@@ -29,13 +29,11 @@ public class VehicleService {
         this.obstacleLayer = obstacleLayer;
     }
 
-    public int RegisterObstacle(Vector3 position, Vector3 size) {
+    public int RegisterObstacle(Vector3 position, PhysicsObstacle prefab) {
         var id = ++idCounter;
-        var go = new GameObject($"VehicleObstacle_{id}");
+        var go = GameObject.Instantiate(prefab.gameObject, position, Quaternion.identity);
+        go.name = $"VehicleObstacle_{id}";
         go.layer = obstacleLayer;
-        go.transform.position = position;
-        var collider = go.AddComponent<BoxCollider>();
-        collider.size = size;
         obstacleRegistry[id] = go;
         return id;
     }

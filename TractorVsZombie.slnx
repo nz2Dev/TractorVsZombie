@@ -19,4 +19,5 @@
   <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
   <Project Path="CollisionLookup.csproj" />
+  <Project Path="Local.csproj" />
 </Solution>

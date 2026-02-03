@@ -47,8 +47,8 @@ public class ProductionBuildingController {
         model.CommanderId = commanderId;
         model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
         model.ObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
-        model.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstacleSize);
-        model.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstacleSize);
+        model.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstaclePrefab);
+        model.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstaclePrefab);
         model.NextSpawnTime = Time.time + config.spawnInterval;
         registry[id] = model;
 
