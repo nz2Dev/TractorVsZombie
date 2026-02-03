@@ -33,7 +33,7 @@ public class RocketController {
     private void UpdateRocketLandingCombat() {
         foreach (var rocket in models.Values) {
             if (rocket.ForwardLandingTime(Time.time)) {
-                combatSystem.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, rocket.Config.damage, 1);
+                combatSystem.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, rocket.Config.explosionRadius, rocket.Config.damage);
                 view.ShowRocketExplosion(rocket.Id);
                 soundManager.PlayEffect(rocket.Trajectory.landPoint, rocket.Config.explodeEffectClips);
             }

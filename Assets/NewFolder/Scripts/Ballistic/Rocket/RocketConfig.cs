@@ -8,5 +8,6 @@ public class RocketConfig : ScriptableObject {
     public float amplitude;
     public float flyDuration;
     public int damage;
+    public float explosionRadius;
     public RocketVisuals visualsPrefab;
 }

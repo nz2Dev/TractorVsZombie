@@ -54,4 +54,5 @@ MonoBehaviour:
   amplitude: 5
   flyDuration: 1.5
   damage: 1
+  explosionRadius: 3
   visualsPrefab: {fileID: 5296104131953643400, guid: 6d1a6af9428c1496dbbe1ebffd118928, type: 3}
