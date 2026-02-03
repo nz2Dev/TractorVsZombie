@@ -201,7 +201,8 @@ public class GameBootstrapper : MonoBehaviour {
             pathfindingService,
             vehicleService,
             physicsService,
-            productionBuildingView
+            productionBuildingView,
+            localAvoidanceService
         );
 
         headquarterBuildingController = new HeadquarterBuildingController(

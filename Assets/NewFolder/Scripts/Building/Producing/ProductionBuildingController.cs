@@ -12,6 +12,7 @@ public class ProductionBuildingController {
     private readonly PathfindingService pathfindingService;
     private readonly VehicleService vehicleService;
     private readonly PhysicsService physicsService;
+    private readonly LocalAvoidanceService localAvoidanceService;
     
     private int idCounter;
     private readonly Dictionary<int, ProductionBuildingModel> registry = new();
@@ -26,7 +27,8 @@ public class ProductionBuildingController {
         PathfindingService pathfindingService,
         VehicleService vehicleService,
         PhysicsService physicsService,
-        ProductionBuildingView view) {
+        ProductionBuildingView view,
+        LocalAvoidanceService localAvoidanceService) {
         this.combatSystem = combatSystem;
         this.spawningService = spawningService;
         this.behaviorSystem = behaviorSystem;
@@ -36,6 +38,13 @@ public class ProductionBuildingController {
         this.vehicleService = vehicleService;
         this.physicsService = physicsService;
         this.view = view;
+        this.localAvoidanceService = localAvoidanceService;
+    }
+
+    public void Update() {
+        ReadCombatOutput();
+        ValidateBuildings();
+        ProduceSpawns();
     }
 
     public int CreateBuilding(Vector3 position, Quaternion rotation, ProductionBuildingConfig config, bool alie, int commanderId) {
@@ -46,7 +55,8 @@ public class ProductionBuildingController {
         model.Alie = alie;
         model.CommanderId = commanderId;
         model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
-        model.ObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
+        model.PathfindingObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
+        model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(position, rotation, config.avoidanceObstaclePrefab);
         model.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstaclePrefab);
         model.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstaclePrefab);
         model.NextSpawnTime = Time.time + config.spawnInterval;
@@ -56,10 +66,14 @@ public class ProductionBuildingController {
         return id;
     }
 
-    public void Update() {
-        ReadCombatOutput();
-        ValidateBuildings();
-        ProduceSpawns();
+    private void DestroyBuilding(int id) {
+        registry.Remove(id, out var model);
+        combatSystem.UnregisterAgent(model.CombatId);
+        pathfindingService.UnregisterObstacle(model.PathfindingObstacleId);
+        localAvoidanceService.RemoveObstacle(model.AvoidanceObstacleId);
+        vehicleService.UnregisterObstacle(model.VehicleObstacleId);
+        physicsService.UnregisterObstacle(model.PhysicsObstacleId);
+        view.RemoveVisuals(model.Id);
     }
 
     public void SetAssignedCommander(int id, int commanderId) {
@@ -105,12 +119,4 @@ public class ProductionBuildingController {
         }
     }
 
-    private void DestroyBuilding(int id) {
-        registry.Remove(id, out var model);
-        combatSystem.UnregisterAgent(model.CombatId);
-        pathfindingService.UnregisterObstacle(model.ObstacleId);
-        vehicleService.UnregisterObstacle(model.VehicleObstacleId);
-        physicsService.UnregisterObstacle(model.PhysicsObstacleId);
-        view.RemoveVisuals(model.Id);
-    }
 }

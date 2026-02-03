@@ -16,6 +16,7 @@ MonoBehaviour:
   height: 2
   radius: 3
   visualsPrefab: {fileID: 5835748091055800219, guid: 9b54f9a53a5334caeb0a66a17e560994, type: 3}
+  avoidanceObstaclePrefab: {fileID: 7519686569173021037, guid: 9b69c4dd1d41548108e1e3df1b2d793d, type: 3}
   vehicleObstaclePrefab: {fileID: 7519686569173021037, guid: 9b69c4dd1d41548108e1e3df1b2d793d, type: 3}
   physicsObstaclePrefab: {fileID: 7519686569173021037, guid: 9b69c4dd1d41548108e1e3df1b2d793d, type: 3}
   spawnInterval: 5

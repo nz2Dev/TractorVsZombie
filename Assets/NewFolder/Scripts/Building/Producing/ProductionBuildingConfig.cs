@@ -14,6 +14,7 @@ public class ProductionBuildingConfig : ScriptableObject {
     public float height = 2f;
     public float radius = 1f;
     public GameObject visualsPrefab;
+    public PhysicsObstacle avoidanceObstaclePrefab;
     public PhysicsObstacle vehicleObstaclePrefab;
     public PhysicsObstacle physicsObstaclePrefab;
     [Space]
