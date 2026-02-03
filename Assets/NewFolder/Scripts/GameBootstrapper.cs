@@ -50,6 +50,7 @@ public class GameBootstrapper : MonoBehaviour {
     private CouplingController couplingController;
     private CommanderSystem commanderSystem;
     private ProductionBuildingController buildingController;
+    private HeadquarterBuildingController headquarterBuildingController;
 
     private void Start() {
         Build();
@@ -194,6 +195,10 @@ public class GameBootstrapper : MonoBehaviour {
             productionBuildingView
         );
 
+        headquarterBuildingController = new HeadquarterBuildingController(
+            combatSystem
+        );
+
         playerController = new PlayerController(
             playerView, 
             new PlayerInput(),
@@ -205,7 +210,8 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController,
             platformController,
             driverController,
-            couplingController
+            couplingController,
+            headquarterBuildingController
         );
 
         enemyController = new EnemyController(
@@ -242,6 +248,8 @@ public class GameBootstrapper : MonoBehaviour {
         commanderSystem.Update();
 
         buildingController.Update();
+        headquarterBuildingController.Update();
+
         enemyController.Update();
         playerController.Update();
 

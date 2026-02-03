@@ -6,7 +6,8 @@ using UnityEditor;
 using UnityEngine;
 
 public enum BuildingConfigType {
-    ProductionBuilding
+    ProductionBuilding,
+    HeadquarterBuilding
 }
 
 [SelectionBase]
@@ -15,6 +16,7 @@ public class BuildingPlace : MonoBehaviour {
     
     public BuildingConfigType configType;
     public ProductionBuildingConfig productionBuildingConfig;
+    public HeadquarterBuildingConfig headquarterBuildingConfig;
 
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
@@ -50,6 +52,7 @@ public class BuildingPlace : MonoBehaviour {
     private GameObject GetBuildingTypeConfigVisualsPrefab() {
         return configType switch {
             BuildingConfigType.ProductionBuilding => productionBuildingConfig == null ? null : productionBuildingConfig.visualsPrefab,
+            BuildingConfigType.HeadquarterBuilding => headquarterBuildingConfig == null ? null : headquarterBuildingConfig.visualsPrefab,
             _ => null,
         };
     }

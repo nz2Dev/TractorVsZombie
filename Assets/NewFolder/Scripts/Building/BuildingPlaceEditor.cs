@@ -12,7 +12,8 @@ public class BuildingPlaceEditor : Editor {
     private void OnEditorUpdate() {
         foreach (var target in targets)
             if (target is BuildingPlace buildingPlace)
-                buildingPlace.CheckScenePreview();
+                if (buildingPlace != null) 
+                    buildingPlace.CheckScenePreview();
     }
     
 }

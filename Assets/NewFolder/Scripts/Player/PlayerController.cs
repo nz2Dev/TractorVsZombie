@@ -16,13 +16,14 @@ public class PlayerController {
     private readonly PlatformController platformController;
     private readonly DriverController driverController;
     private readonly CouplingController couplingController;
+    private readonly HeadquarterBuildingController headquarterBuildingController;
 
     private readonly PlayerModel model;
 
     public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatSystem combatSystem, CameraManager cameraManager,
         RewardController rewardController, WeaponController weaponController,
         PlatformController platformController, DriverController driverController,
-        CouplingController couplingController) {
+        CouplingController couplingController, HeadquarterBuildingController headquarterBuildingController) {
         this.view = view;
         this.input = input;
         this.physicsService = physicsService;
@@ -34,10 +35,12 @@ public class PlayerController {
         this.driverController = driverController;
         this.couplingController = couplingController;
         model = new PlayerModel(config);
+        this.headquarterBuildingController = headquarterBuildingController;
     }
 
     public void Init() {     
         CreateCamera();
+        SpawnHeadquearter();
         SpawnDriver(Vector3.zero);
         CreateCoupling();
 
@@ -59,6 +62,11 @@ public class PlayerController {
         ComputeAimInput();
         OperatePlatforms();
         UpdateCamera();
+    }
+
+    private void SpawnHeadquearter() {
+        var headquarterPlace = BuildingPlace.ScanSceneForPlaces().First(place => place.configType == BuildingConfigType.HeadquarterBuilding);
+        headquarterBuildingController.SetHeadquearter(headquarterPlace.Position, headquarterPlace.Rotation, headquarterPlace.headquarterBuildingConfig);
     }
 
     private void SyncPositions() {
