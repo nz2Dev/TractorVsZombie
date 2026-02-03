@@ -26,11 +26,14 @@ public class EnemyController {
 
     private void TryInitEnemySources() {
         if (enemySources.Count == 0) {
-            var placesFound = ProductionBuildingPlace.ScanSceneForPlaces();
+            var placesFound = BuildingPlace.ScanSceneForPlaces();
             
             foreach (var place in placesFound) {
+                if (place.configType != BuildingConfigType.ProductionBuilding)
+                    continue;
+                    
                 var firstCommander = commanderSystem.CreateCommander();
-                var buildingId = buildingController.CreateBuilding(place.Position, place.Rotation, place.config, alie: false, firstCommander);
+                var buildingId = buildingController.CreateBuilding(place.Position, place.Rotation, place.productionBuildingConfig, alie: false, firstCommander);
                 
                 var enemySource = new EnemySource();
                 enemySource.Origin = place.Position;
