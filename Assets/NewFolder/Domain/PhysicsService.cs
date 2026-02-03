@@ -5,7 +5,9 @@ using UnityEngine;
 public class PhysicsService {
 
     private readonly int operationalLayer;
+    private readonly int obstacleLayer;
     private readonly Dictionary<int, PhysicsEntity> entities = new();
+    private readonly Dictionary<int, GameObject> obstacleRegistry = new();
     private readonly Dictionary<Collider, int> colliderToId = new();
     private readonly Transform container;
     private const int MaxHits = 32;
@@ -13,9 +15,29 @@ public class PhysicsService {
     private readonly List<int> sphereQueryResult = new List<int>(64);
     private int idCounter;
 
-    public PhysicsService(Transform container = null, int operationalLayer = 0) {
+    public PhysicsService(Transform container = null, int operationalLayer = 0, int obstacleLayer = 0) {
         this.container = container;
         this.operationalLayer = operationalLayer;
+        this.obstacleLayer = obstacleLayer;
+    }
+
+    public int RegisterObstacle(Vector3 position, Vector3 size) {
+        var id = ++idCounter;
+        var go = new GameObject($"PhysicsObstacle_{id}");
+        go.layer = obstacleLayer;
+        go.transform.SetParent(container, false);
+        go.transform.position = position;
+        var collider = go.AddComponent<BoxCollider>();
+        collider.size = size;
+        obstacleRegistry[id] = go;
+        return id;
+    }
+
+    public void UnregisterObstacle(int id) {
+        if (obstacleRegistry.TryGetValue(id, out var go)) {
+            GameObject.Destroy(go);
+            obstacleRegistry.Remove(id);
+        }
     }
 
     internal class PhysicsEntity {

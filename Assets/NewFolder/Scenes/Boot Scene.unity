@@ -171,6 +171,7 @@ MonoBehaviour:
   combatServiceLayer: Combat
   foeCombatServiceLayer: CombatFoe
   vehicleObstacleLayer: Walls
+  physicsObstacleLayer: Walls
   combatServiceEnvironmentMask:
     serializedVersion: 2
     m_Bits: 2177

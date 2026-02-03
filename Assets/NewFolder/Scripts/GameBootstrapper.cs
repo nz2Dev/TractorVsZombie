@@ -16,6 +16,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private string combatServiceLayer;
     [SerializeField] private string foeCombatServiceLayer;
     [SerializeField] private string vehicleObstacleLayer;
+    [SerializeField] private string physicsObstacleLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
     [Space]
     [SerializeField] int unitsCount = 10;
@@ -62,7 +63,11 @@ public class GameBootstrapper : MonoBehaviour {
         var vehicleService = new VehicleService(LayerMask.NameToLayer(vehicleObstacleLayer));
         var localAvoidanceService = new LocalAvoidanceService(orcaEnvironment);
         var pathfindingService = new PathfindingService(flowFieldSurface);
-        var physicsService = new PhysicsService(container: null, LayerMask.NameToLayer(physicsServiceLayer));
+        var physicsService = new PhysicsService(
+            container: null, 
+            operationalLayer: LayerMask.NameToLayer(physicsServiceLayer), 
+            obstacleLayer: LayerMask.NameToLayer(physicsObstacleLayer)
+        );
 
         var playerView = new PlayerView(uiDocument, aimVisualsPrefab);
         var unitView = new EnemyView();
@@ -199,7 +204,8 @@ public class GameBootstrapper : MonoBehaviour {
         headquarterBuildingController = new HeadquarterBuildingController(
             combatSystem,
             pathfindingService,
-            vehicleService
+            vehicleService,
+            physicsService
         );
 
         playerController = new PlayerController(

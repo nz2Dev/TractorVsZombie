@@ -7,4 +7,5 @@ public class HeadquarterBuildingConfig : ScriptableObject {
     public bool alie = false;
     public GameObject visualsPrefab;
     public Vector3 vehicleObstacleSize = new Vector3(3, 2, 3);
+    public Vector3 physicsObstacleSize = new Vector3(3, 2, 3);
 }

@@ -9,14 +9,16 @@ public class HeadquarterBuildingController {
     private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
     private readonly VehicleService vehicleService;
+    private readonly PhysicsService physicsService;
 
     private GameObject visuals;
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, VehicleService vehicleService) {
+    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, VehicleService vehicleService, PhysicsService physicsService) {
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.vehicleService = vehicleService;
+        this.physicsService = physicsService;
     }
 
     public void Update() {
@@ -30,6 +32,7 @@ public class HeadquarterBuildingController {
         headquarter.CombatId = combatSystem.RegisterAgent(position, config.alie, config.maxHealth, height: 2);
         headquarter.ObstacleId = pathfindingService.RegisterObstacle(position, config.radius);
         headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstacleSize);
+        headquarter.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstacleSize);
         visuals = GameObject.Instantiate(config.visualsPrefab, position, rotation);
         
     }
@@ -41,6 +44,7 @@ public class HeadquarterBuildingController {
             GameObject.Destroy(visuals);
             pathfindingService.UnregisterObstacle(headquarter.ObstacleId);
             vehicleService.UnregisterObstacle(headquarter.VehicleObstacleId);
+            physicsService.UnregisterObstacle(headquarter.PhysicsObstacleId);
         }
     }
 
