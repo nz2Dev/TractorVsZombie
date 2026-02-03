@@ -6,4 +6,5 @@ public class HeadquarterBuildingConfig : ScriptableObject {
     public int maxHealth = 100;
     public bool alie = false;
     public GameObject visualsPrefab;
+    public Vector3 vehicleObstacleSize = new Vector3(3, 2, 3);
 }

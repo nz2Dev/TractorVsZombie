@@ -22,8 +22,29 @@ public class VehicleService {
     
     private int idCounter;
     private Dictionary<int, VehiclePhysics> physicsRegistry = new ();
+    private Dictionary<int, GameObject> obstacleRegistry = new ();
+    private readonly int obstacleLayer;
 
-    public VehicleService() {
+    public VehicleService(int obstacleLayer = 0) {
+        this.obstacleLayer = obstacleLayer;
+    }
+
+    public int RegisterObstacle(Vector3 position, Vector3 size) {
+        var id = ++idCounter;
+        var go = new GameObject($"VehicleObstacle_{id}");
+        go.layer = obstacleLayer;
+        go.transform.position = position;
+        var collider = go.AddComponent<BoxCollider>();
+        collider.size = size;
+        obstacleRegistry[id] = go;
+        return id;
+    }
+
+    public void UnregisterObstacle(int id) {
+        if (obstacleRegistry.TryGetValue(id, out var go)) {
+            GameObject.Destroy(go);
+            obstacleRegistry.Remove(id);
+        }
     }
 
     public int CreateVehicle(Vector3 position, VehiclePhysics physicsPrefab) {

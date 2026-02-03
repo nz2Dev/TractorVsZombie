@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::HeadquarterBuildingConfig
   radius: 4
   maxHealth: 100
+  alie: 0
   visualsPrefab: {fileID: 1212252232443948263, guid: edc78a847659e48a29db5eeafe7d4779, type: 3}
+  vehicleObstacleSize: {x: 4, y: 3, z: 4}
