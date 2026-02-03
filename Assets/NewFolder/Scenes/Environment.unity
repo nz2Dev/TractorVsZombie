@@ -242,6 +242,7 @@ GameObject:
   - component: {fileID: 357250590}
   - component: {fileID: 357250589}
   - component: {fileID: 357250588}
+  - component: {fileID: 357250592}
   m_Layer: 0
   m_Name: Ground (4)
   m_TagString: Untagged
@@ -342,6 +343,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &357250592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357250587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
 --- !u!1001 &387124200
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -916,6 +929,7 @@ GameObject:
   - component: {fileID: 737177483}
   - component: {fileID: 737177482}
   - component: {fileID: 737177481}
+  - component: {fileID: 737177485}
   m_Layer: 0
   m_Name: Ground (1)
   m_TagString: Untagged
@@ -1016,6 +1030,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &737177485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737177480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
 --- !u!1 &793919485
 GameObject:
   m_ObjectHideFlags: 0
@@ -2401,6 +2427,7 @@ GameObject:
   - component: {fileID: 1846664795}
   - component: {fileID: 1846664794}
   - component: {fileID: 1846664793}
+  - component: {fileID: 1846664797}
   m_Layer: 0
   m_Name: Ground (2)
   m_TagString: Untagged
@@ -2501,6 +2528,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1846664797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846664792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
 --- !u!1 &1856700854
 GameObject:
   m_ObjectHideFlags: 0
@@ -2861,6 +2900,7 @@ GameObject:
   - component: {fileID: 2097421395}
   - component: {fileID: 2097421394}
   - component: {fileID: 2097421393}
+  - component: {fileID: 2097421397}
   m_Layer: 0
   m_Name: Ground (3)
   m_TagString: Untagged
@@ -2961,6 +3001,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &2097421397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097421392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
