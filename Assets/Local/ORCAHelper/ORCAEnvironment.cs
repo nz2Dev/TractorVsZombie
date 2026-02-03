@@ -8,14 +8,6 @@ using System.Collections.Generic;
 public struct ObstacleData {
     public bool inverseOrder;
     public Vector3[] vertices;
-
-    public readonly float3[] ToFloat3Vertices() {
-        var vertices3 = new float3[vertices.Length];
-        for (int i = 0; i < vertices.Length; i++)
-            vertices3[i] = vertices[i];
-        
-        return vertices3;
-    }
 }
 
 public class ORCAEnvironment : MonoBehaviour {
@@ -25,14 +17,17 @@ public class ORCAEnvironment : MonoBehaviour {
     private ORCA orca;
     private AgentGroup<Agent> agentsGroup;
     private ObstacleGroup staticObstacles;
+    private ObstacleGroup dynamicObstacles;
 
     private void Awake() {
         agentsGroup = new();
         staticObstacles = new();
+        dynamicObstacles = new();
         orca = new ORCA() {
             plane = Nebukam.Common.AxisPair.XZ,
             agents = agentsGroup,
             staticObstacles = staticObstacles,
+            dynamicObstacles = dynamicObstacles
         };
 
         ORCADebuger.Debug(orca);
@@ -41,7 +36,7 @@ public class ORCAEnvironment : MonoBehaviour {
     private void Start() {
         staticObstacles.Clear();
         foreach (var bakedData in bakedObstacleData) {
-            staticObstacles.Add(bakedData.ToFloat3Vertices(), bakedData.inverseOrder);
+            staticObstacles.Add(ToFloat3Vertices(bakedData.vertices), bakedData.inverseOrder);
         }
     }
 
@@ -49,8 +44,21 @@ public class ORCAEnvironment : MonoBehaviour {
         bakedObstacleData.Clear();
         var obstacles = FindObjectsByType<ORCAObstacle>(FindObjectsSortMode.None);
         foreach (var obstacle in obstacles) {
-            bakedObstacleData.Add(obstacle.ComputeObstacleData());
+            obstacle.GetBoxInfo(out var position, out var rotation, out var boxSize);
+            bakedObstacleData.Add(new ObstacleData {
+                vertices = ComputeBoxVerticies(position, rotation, boxSize * 0.5f),
+                inverseOrder = true,
+            });
         }
+    }
+
+    public Obstacle AddBoxObstacle(Vector3 position, Quaternion rotation, Vector3 boxSize) {
+        var computedVerticies = ComputeBoxVerticies(position, rotation, boxSize * 0.5f);
+        return dynamicObstacles.Add(ToFloat3Vertices(computedVerticies), inverseOrder: true);
+    }
+
+    public void RemoveObstacle(Obstacle orcaObstacle) {
+        dynamicObstacles.Remove(orcaObstacle);
     }
 
     private void OnDestroy() {
@@ -68,6 +76,27 @@ public class ORCAEnvironment : MonoBehaviour {
 
     public void RemoveAgent(Agent agent) {
         agentsGroup.Remove(agent);
+    }
+
+    private static Vector3[] ComputeBoxVerticies(Vector3 position, Quaternion rotation, Vector3 halfSize) {
+        var verticies = new Vector3[4];
+        var left = -halfSize.x;
+        var right = halfSize.x;
+        var forward = halfSize.z;
+        var backward = -halfSize.z;
+        verticies[0] = position + rotation * new Vector3(left, 0, backward);
+        verticies[1] = position + rotation * new Vector3(left, 0, forward);
+        verticies[2] = position + rotation * new Vector3(right, 0, forward);
+        verticies[3] = position + rotation * new Vector3(right, 0, backward);
+        return verticies;
+    }
+
+    private static float3[] ToFloat3Vertices(Vector3[] vectorVertices) {
+        var vertices3 = new float3[vectorVertices.Length];
+        for (int i = 0; i < vectorVertices.Length; i++)
+            vertices3[i] = vectorVertices[i];
+        
+        return vertices3;
     }
 
 }

@@ -1,6 +1,10 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(BoxCollider))]
 public class PhysicsObstacle : MonoBehaviour {
-    // This component ensures a collider is attached to the game object.
+    public Vector3 bakedSize;
+
+    private void OnValidate() {
+        bakedSize = GetComponent<BoxCollider>().size;
+    }
 }

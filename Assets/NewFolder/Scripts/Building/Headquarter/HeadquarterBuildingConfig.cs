@@ -8,4 +8,5 @@ public class HeadquarterBuildingConfig : ScriptableObject {
     public GameObject visualsPrefab;
     public PhysicsObstacle vehicleObstaclePrefab;
     public PhysicsObstacle physicsObstaclePrefab;
+    public PhysicsObstacle avoidanceObstaclePrefab;
 }

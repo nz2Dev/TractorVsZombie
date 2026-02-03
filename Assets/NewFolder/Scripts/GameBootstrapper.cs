@@ -208,7 +208,8 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             pathfindingService,
             vehicleService,
-            physicsService
+            physicsService,
+            localAvoidanceService
         );
 
         playerController = new PlayerController(

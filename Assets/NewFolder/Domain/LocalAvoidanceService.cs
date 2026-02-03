@@ -21,16 +21,28 @@ public struct AgentAvoidanceConfig {
 
 public class LocalAvoidanceService {
 
-    private int nextId = 0;
     private readonly ORCAEnvironment environment;
     
+    private int nextId = 0;
     private readonly Dictionary<int, Agent> agentRegistry = new();
+
+    private int obstacleIdCounter;
+    private readonly Dictionary<int, Obstacle> obstacleRegistry = new();
 
     public LocalAvoidanceService(ORCAEnvironment environment) {
         this.environment = environment;
     }
 
-    public IEnumerable<int> AgentIds => agentRegistry.Keys;
+    public int AddObstacle(Vector3 position, Quaternion rotation, PhysicsObstacle prefab) {
+        var nextObstacleId = ++obstacleIdCounter;
+        obstacleRegistry[nextObstacleId] = environment.AddBoxObstacle(position, rotation, prefab.bakedSize);
+        return nextObstacleId;
+    }
+
+    public void RemoveObstacle(int obstacleId) {
+        obstacleRegistry.Remove(obstacleId, out var orcaObstacle);
+        environment.RemoveObstacle(orcaObstacle);
+    }
 
     public virtual int AddAgent(Vector3 initPosition) {
         return AddAgent(initPosition, new AgentAvoidanceConfig {

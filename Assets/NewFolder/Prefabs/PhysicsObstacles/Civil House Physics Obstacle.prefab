@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.8216248, y: 2.6946983, z: 4.456485}
-  m_Center: {x: 0, y: 1.3722327, z: 0}
+  m_Size: {x: 2.8216248, y: 2.9881392, z: 4.456485}
+  m_Center: {x: 0, y: 1.5189531, z: 0}
 --- !u!114 &6470828191781318376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,3 +66,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76f1ad6bf81f4ee2800c4521d528146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Local::PhysicsObstacle
+  bakedSize: {x: 2.8216248, y: 2.9881392, z: 4.456485}

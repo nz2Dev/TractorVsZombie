@@ -8,17 +8,19 @@ public class HeadquarterBuildingController {
     
     private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
+    private readonly LocalAvoidanceService localAvoidanceService;
     private readonly VehicleService vehicleService;
     private readonly PhysicsService physicsService;
 
     private GameObject visuals;
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, VehicleService vehicleService, PhysicsService physicsService) {
+    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, VehicleService vehicleService, PhysicsService physicsService, LocalAvoidanceService localAvoidanceService) {
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.vehicleService = vehicleService;
         this.physicsService = physicsService;
+        this.localAvoidanceService = localAvoidanceService;
     }
 
     public void Update() {
@@ -30,7 +32,8 @@ public class HeadquarterBuildingController {
         headquarter = new HeadquarterBuilding(config);
         headquarter.Position = position;
         headquarter.CombatId = combatSystem.RegisterAgent(position, config.alie, config.maxHealth, height: 2);
-        headquarter.ObstacleId = pathfindingService.RegisterObstacle(position, config.radius);
+        headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(position, config.radius);
+        headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(position, rotation, config.avoidanceObstaclePrefab);
         headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstaclePrefab);
         headquarter.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstaclePrefab);
         visuals = GameObject.Instantiate(config.visualsPrefab, position, rotation);
@@ -41,7 +44,8 @@ public class HeadquarterBuildingController {
         if (combatOutput.damageWasFatal) {
             headquarter.Destroyed = true;
             GameObject.Destroy(visuals);
-            pathfindingService.UnregisterObstacle(headquarter.ObstacleId);
+            pathfindingService.UnregisterObstacle(headquarter.PathfindingObstacleId);
+            localAvoidanceService.RemoveObstacle(headquarter.AvoidanceObstacleId);
             vehicleService.UnregisterObstacle(headquarter.VehicleObstacleId);
             physicsService.UnregisterObstacle(headquarter.PhysicsObstacleId);
         }

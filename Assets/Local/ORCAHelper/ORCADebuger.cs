@@ -53,5 +53,16 @@ public class ORCADebuger : MonoBehaviour {
                     Handles.DrawLine(vertexA.pos, vertexB.pos);
                 }
             }
+
+        if (orca.dynamicObstacles != null)
+            for (int i = 0; i < orca.dynamicObstacles.Count; i++) {
+                var obstacle = orca.dynamicObstacles[i];
+                Handles.color = Color.white;
+                for (int v = 1; v < obstacle.Count; v++) {
+                    var vertexA = obstacle[v - 1];
+                    var vertexB = obstacle[v];
+                    Handles.DrawLine(vertexA.pos, vertexB.pos);
+                }
+            }
     }
 }

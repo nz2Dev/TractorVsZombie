@@ -18,3 +18,4 @@ MonoBehaviour:
   visualsPrefab: {fileID: 1212252232443948263, guid: edc78a847659e48a29db5eeafe7d4779, type: 3}
   vehicleObstaclePrefab: {fileID: 6470828191781318376, guid: 2d2a8c3f789d245898bcc2d9440a1512, type: 3}
   physicsObstaclePrefab: {fileID: 6470828191781318376, guid: 2d2a8c3f789d245898bcc2d9440a1512, type: 3}
+  avoidanceObstaclePrefab: {fileID: 6470828191781318376, guid: 2d2a8c3f789d245898bcc2d9440a1512, type: 3}
