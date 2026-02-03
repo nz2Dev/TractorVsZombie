@@ -12,7 +12,6 @@ public class ORCAObstacle : MonoBehaviour {
 
     private void Awake() {
         boxCollider = GetComponent<BoxCollider>();
-        boxCollider.isTrigger = true;
     }
 
     public void GetBoxInfo(out Vector3 position, out Quaternion rotation, out Vector3 boxSize) {
