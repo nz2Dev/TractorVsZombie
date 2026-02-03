@@ -2,10 +2,25 @@ using UnityEngine;
 using Nebukam.ORCA;
 using Unity.Mathematics;
 using System;
+using System.Collections.Generic;
+
+[Serializable]
+public struct ObstacleData {
+    public bool inverseOrder;
+    public Vector3[] vertices;
+
+    public readonly float3[] ToFloat3Vertices() {
+        var vertices3 = new float3[vertices.Length];
+        for (int i = 0; i < vertices.Length; i++)
+            vertices3[i] = vertices[i];
+        
+        return vertices3;
+    }
+}
 
 public class ORCAEnvironment : MonoBehaviour {
     
-    [SerializeField] private LayerMask staticObstaclesMask;
+    [SerializeField] List<ObstacleData> bakedObstacleData;
 
     private ORCA orca;
     private AgentGroup<Agent> agentsGroup;
@@ -17,14 +32,25 @@ public class ORCAEnvironment : MonoBehaviour {
         orca = new ORCA() {
             plane = Nebukam.Common.AxisPair.XZ,
             agents = agentsGroup,
-            staticObstacles = staticObstacles
+            staticObstacles = staticObstacles,
         };
 
         ORCADebuger.Debug(orca);
     }
 
     private void Start() {
-        ComputeStaticObstacles();
+        staticObstacles.Clear();
+        foreach (var bakedData in bakedObstacleData) {
+            staticObstacles.Add(bakedData.ToFloat3Vertices(), bakedData.inverseOrder);
+        }
+    }
+
+    internal void BakeObstacles() {
+        bakedObstacleData.Clear();
+        var obstacles = FindObjectsByType<ORCAObstacle>(FindObjectsSortMode.None);
+        foreach (var obstacle in obstacles) {
+            bakedObstacleData.Add(obstacle.ComputeObstacleData());
+        }
     }
 
     private void OnDestroy() {
@@ -42,38 +68,6 @@ public class ORCAEnvironment : MonoBehaviour {
 
     public void RemoveAgent(Agent agent) {
         agentsGroup.Remove(agent);
-    }
-
-    private void ComputeStaticObstacles() {
-        staticObstacles.Clear();
-        var boxColliders = FindObjectsByType<BoxCollider>(FindObjectsSortMode.None);
-        foreach (var boxCollider in boxColliders) {
-            if ((staticObstaclesMask & (1 << boxCollider.gameObject.layer)) != 0) {
-                AddBoxColliderObstacle(boxCollider);
-            }
-        }
-    }
-
-    private void AddBoxColliderObstacle(BoxCollider boxCollider) {
-        boxCollider.transform.GetPositionAndRotation(out var position, out var rotation);
-        var boxSize = boxCollider.size;
-        
-        boxSize.Scale(boxCollider.transform.lossyScale);
-        var computedVerticies = ComputeBoxVerticies(position, rotation, boxSize * 0.5f);
-        staticObstacles.Add(computedVerticies, inverseOrder: true);
-    }
-
-    private static float3[] ComputeBoxVerticies(Vector3 position, Quaternion rotation, float3 halfSize) {
-        var verticies = new float3[4];
-        var left = -halfSize.x;
-        var right = halfSize.x;
-        var forward = halfSize.z;
-        var backward = -halfSize.z;
-        verticies[0] = position + rotation * new Vector3(left, 0, backward);
-        verticies[1] = position + rotation * new Vector3(left, 0, forward);
-        verticies[2] = position + rotation * new Vector3(right, 0, forward);
-        verticies[3] = position + rotation * new Vector3(right, 0, backward);
-        return verticies;
     }
 
 }
