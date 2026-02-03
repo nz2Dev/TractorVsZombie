@@ -9,6 +9,9 @@ public class ProductionBuildingController {
     private readonly BehaviorSystem behaviorSystem;
     private readonly CommanderSystem commanderSystem;
     private readonly ArmorAIController armorAIController;
+    private readonly PathfindingService pathfindingService;
+    private readonly VehicleService vehicleService;
+    private readonly PhysicsService physicsService;
     
     private int idCounter;
     private readonly Dictionary<int, ProductionBuildingModel> registry = new();
@@ -20,12 +23,18 @@ public class ProductionBuildingController {
         BehaviorSystem behaviorSystem,
         CommanderSystem commanderSystem,
         ArmorAIController armorAIController,
+        PathfindingService pathfindingService,
+        VehicleService vehicleService,
+        PhysicsService physicsService,
         ProductionBuildingView view) {
         this.combatSystem = combatSystem;
         this.spawningService = spawningService;
         this.behaviorSystem = behaviorSystem;
         this.commanderSystem = commanderSystem;
         this.armorAIController = armorAIController;
+        this.pathfindingService = pathfindingService;
+        this.vehicleService = vehicleService;
+        this.physicsService = physicsService;
         this.view = view;
     }
 
@@ -37,6 +46,9 @@ public class ProductionBuildingController {
         model.Alie = alie;
         model.CommanderId = commanderId;
         model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
+        model.ObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
+        model.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstacleSize);
+        model.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstacleSize);
         model.NextSpawnTime = Time.time + config.spawnInterval;
         registry[id] = model;
 
@@ -96,6 +108,9 @@ public class ProductionBuildingController {
     private void DestroyBuilding(int id) {
         registry.Remove(id, out var model);
         combatSystem.UnregisterAgent(model.CombatId);
+        pathfindingService.UnregisterObstacle(model.ObstacleId);
+        vehicleService.UnregisterObstacle(model.VehicleObstacleId);
+        physicsService.UnregisterObstacle(model.PhysicsObstacleId);
         view.RemoveVisuals(model.Id);
     }
 }

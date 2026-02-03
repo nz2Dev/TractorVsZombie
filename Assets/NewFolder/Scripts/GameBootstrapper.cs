@@ -198,6 +198,9 @@ public class GameBootstrapper : MonoBehaviour {
             behaviorSystem,
             commanderSystem,
             armorAIController,
+            pathfindingService,
+            vehicleService,
+            physicsService,
             productionBuildingView
         );
 

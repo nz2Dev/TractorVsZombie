@@ -6,6 +6,9 @@ public class ProductionBuildingModel {
     public ProductionBuildingConfig Config { get; }
     
     public int CombatId { get; set; }
+    public int ObstacleId { get; set; }
+    public int VehicleObstacleId { get; set; }
+    public int PhysicsObstacleId { get; set; }
     public int CommanderId { get; set; }
     public Vector3 Position { get; set; }
     public bool Alie { get; set; }

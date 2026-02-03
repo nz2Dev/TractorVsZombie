@@ -14,6 +14,8 @@ public class ProductionBuildingConfig : ScriptableObject {
     public float height = 2f;
     public float radius = 1f;
     public GameObject visualsPrefab;
+    public Vector3 vehicleObstacleSize = new Vector3(3, 2, 3);
+    public Vector3 physicsObstacleSize = new Vector3(3, 2, 3);
     [Space]
     public float spawnInterval = 5f;
     public SpawnType spawnType;
