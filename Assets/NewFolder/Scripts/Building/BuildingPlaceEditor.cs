@@ -5,13 +5,9 @@ using UnityEditor;
 public class BuildingPlaceEditor : Editor {
 
     BuildingPlace provider;
-    SerializedProperty spawnedInstanceProp;
 
     void OnEnable() {
         provider = target as BuildingPlace;
-
-        // Optional: track spawned instance if field exists
-        spawnedInstanceProp = serializedObject.FindProperty("spawnedInstance");
     }
 
     public override void OnInspectorGUI() {
@@ -25,83 +21,79 @@ public class BuildingPlaceEditor : Editor {
         using (new EditorGUILayout.VerticalScope("box")) {
             GUILayout.Label("Prefab Authoring", EditorStyles.boldLabel);
 
-            var prefab = provider.GetBuildingTypeConfigVisualsPrefab();
-
-            if (prefab == null) {
-                EditorGUILayout.HelpBox(
-                    "No editable prefab provided.",
-                    MessageType.Warning);
+            var prefabs = provider.GetEditablePrefabs();
+            if (prefabs == null)
                 return;
-            }
 
-            var instance = GetSpawnedInstance();
-
-            using (new EditorGUILayout.HorizontalScope()) {
-                GUI.enabled = instance == null;
-
-                if (GUILayout.Button("Spawn"))
-                    Spawn(prefab);
-
-                GUI.enabled = instance != null;
-
-                if (GUILayout.Button("Despawn"))
-                    Despawn(instance);
-
-                GUI.enabled = true;
-            }
-
-            if (instance != null) {
-                EditorGUILayout.ObjectField(
-                    "Spawned Instance",
-                    instance,
-                    typeof(GameObject),
-                    true);
+            int index = 0;
+            foreach (var prefab in prefabs) {
+                if (prefab == null)
+                    continue;
+                DrawPrefabRow(prefab, index++);
             }
         }
     }
 
-    // ------------------------
-    // Core logic
-    // ------------------------
+    void DrawPrefabRow(GameObject prefab, int index) {
+        var instance = FindInstanceForPrefab(prefab);
+
+        using (new EditorGUILayout.HorizontalScope()) {
+            using (new EditorGUI.DisabledScope(true)) {
+                EditorGUILayout.ObjectField(prefab, typeof(GameObject), false);
+            }
+
+            if (instance == null) {
+                if (GUILayout.Button("Spawn", GUILayout.Width(80))) {
+                    Spawn(prefab);
+                }
+            } else {
+                if (GUILayout.Button("Despawn", GUILayout.Width(80))) {
+                    Despawn(instance);
+                }
+            }
+        }
+    }
+
+    GameObject FindInstanceForPrefab(GameObject prefab) {
+        if (provider == null || prefab == null)
+            return null;
+
+        for (int i = 0; i < provider.transform.childCount; i++) {
+            var child = provider.transform.GetChild(i).gameObject;
+            var source = PrefabUtility.GetCorrespondingObjectFromSource(child);
+            if (source == prefab) {
+                return child;
+            }
+        }
+        return null;
+    }
 
     void Spawn(GameObject prefab) {
         var instance = (GameObject) PrefabUtility.InstantiatePrefab(prefab, provider.transform);
+        instance.transform.localPosition = Vector3.zero;
+        instance.transform.localRotation = Quaternion.identity;
 
         Undo.RegisterCreatedObjectUndo(instance, "Spawn Editable Prefab");
 
-        SetSpawnedInstance(instance);
+        if (provider.spawnedInstances == null)
+            provider.spawnedInstances = new System.Collections.Generic.List<GameObject>();
+
+        provider.spawnedInstances.Add(instance);
+        EditorUtility.SetDirty(provider);
 
         Selection.activeGameObject = instance;
-        SceneView.lastActiveSceneView?.FrameSelected();
     }
 
     void Despawn(GameObject instance) {
         if (instance == null)
             return;
 
+        if (provider.spawnedInstances != null && provider.spawnedInstances.Contains(instance)) {
+            provider.spawnedInstances.Remove(instance);
+            EditorUtility.SetDirty(provider);
+        }
+
         Undo.DestroyObjectImmediate(instance);
-
-        SetSpawnedInstance(null);
-    }
-
-    // ------------------------
-    // Spawn tracking helpers
-    // ------------------------
-
-    GameObject GetSpawnedInstance() {
-        if (spawnedInstanceProp == null)
-            return null;
-
-        return spawnedInstanceProp.objectReferenceValue as GameObject;
-    }
-
-    void SetSpawnedInstance(GameObject instance) {
-        if (spawnedInstanceProp == null)
-            return;
-
-        serializedObject.Update();
-        spawnedInstanceProp.objectReferenceValue = instance;
-        serializedObject.ApplyModifiedProperties();
     }
 
 }

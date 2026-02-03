@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+
+using Castle.Core.Logging;
 
 using UnityEditor;
 
@@ -23,14 +27,7 @@ public class BuildingPlace : MonoBehaviour {
 
     // Editor-only tracking
     [SerializeField, HideInInspector]
-    GameObject spawnedInstance;
-
-    // Exposed for editor
-    public GameObject SpawnedInstance
-    {
-        get => spawnedInstance;
-        set => spawnedInstance = value;
-    }
+    public List<GameObject> spawnedInstances = new List<GameObject>();
 
     private void Start() {
         if (Application.isPlaying)
@@ -38,12 +35,30 @@ public class BuildingPlace : MonoBehaviour {
                 GameObject.Destroy(transform.GetChild(i).gameObject);
     }
 
-    public GameObject GetBuildingTypeConfigVisualsPrefab() {
-        return configType switch {
-            BuildingConfigType.ProductionBuilding => productionBuildingConfig == null ? null : productionBuildingConfig.visualsPrefab,
-            BuildingConfigType.HeadquarterBuilding => headquarterBuildingConfig == null ? null : headquarterBuildingConfig.visualsPrefab,
-            _ => null,
+    public IEnumerable<GameObject> GetEditablePrefabs() {
+        switch (configType) {
+            case BuildingConfigType.ProductionBuilding:
+                return ListProductionBuildingEditablePrefabs();
+            case BuildingConfigType.HeadquarterBuilding:
+                return ListHeadquarterBuildingEditablePrefabs();
+            default: 
+                return Array.Empty<GameObject>();
         };
+    }
+
+    private IEnumerable<GameObject> ListProductionBuildingEditablePrefabs() {
+        if (productionBuildingConfig == null)
+            yield break;
+            
+        yield return productionBuildingConfig.visualsPrefab;      
+    }
+
+    private IEnumerable<GameObject> ListHeadquarterBuildingEditablePrefabs() {
+        if (headquarterBuildingConfig == null)
+            yield break;
+        
+        yield return headquarterBuildingConfig.visualsPrefab;
+        yield return headquarterBuildingConfig.vehicleObstaclePrefab;
     }
 
     public static BuildingPlace[] ScanSceneForPlaces() {

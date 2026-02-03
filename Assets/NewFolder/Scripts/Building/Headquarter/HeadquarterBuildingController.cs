@@ -31,10 +31,9 @@ public class HeadquarterBuildingController {
         headquarter.Position = position;
         headquarter.CombatId = combatSystem.RegisterAgent(position, config.alie, config.maxHealth, height: 2);
         headquarter.ObstacleId = pathfindingService.RegisterObstacle(position, config.radius);
-        headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstacleSize);
+        headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.VehicleObstacleSize);
         headquarter.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstacleSize);
         visuals = GameObject.Instantiate(config.visualsPrefab, position, rotation);
-        
     }
 
     private void ReadCombatOutput() {
