@@ -10,6 +10,7 @@ public class ORCAObstacle : MonoBehaviour {
 
     private void Awake() {
         boxCollider = GetComponent<BoxCollider>();
+        boxCollider.isTrigger = true;
     }
 
     public ObstacleData ComputeObstacleData() {
