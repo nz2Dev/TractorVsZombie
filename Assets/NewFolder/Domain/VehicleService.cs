@@ -73,6 +73,13 @@ public class VehicleService {
         vehiclePhysics.SetBreaksTorque(breaksTorque);
     }
 
+    public void SetVehicleInput(int vehicleIndex, float engineTorque, float brakesTorque, float steerDegrees) {
+        var vehiclePhysics = physicsRegistry[vehicleIndex];
+        vehiclePhysics.SetMotorTorque(engineTorque);
+        vehiclePhysics.SetBreaksTorque(brakesTorque);
+        vehiclePhysics.SetSteerAngle(steerDegrees);
+    }
+
     public void UpdateVehiclePose(int vehicleIndex, Vector3 position, Quaternion rotation) {
         var vehiclePhysics = physicsRegistry[vehicleIndex];
         vehiclePhysics.Transform(position, rotation);

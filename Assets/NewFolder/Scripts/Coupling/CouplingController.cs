@@ -10,9 +10,9 @@ public class CouplingController {
         this.towableVehicleController = towableVehicleController;
     }
 
-    public void Create(MotorVehicleId pullingVehicleId) {
+    public void Create(int pullingVehiclePhysicsId) {
         model = new CouplingModel();
-        model.PullingVehicleId = pullingVehicleId;
+        model.PullingVehiclePhysicsId = pullingVehiclePhysicsId;
     }
 
     public void AddTowable(TowableVehicleId vehicleId) {
@@ -21,8 +21,7 @@ public class CouplingController {
             var lastTowableVehicleId = model.TowableVehicleIds[^1];
             lastVehiclePhysicsId = towableVehicleController.ReadVehiclePhysicsId(lastTowableVehicleId);
         } else {
-            var pullingVehicleId = model.PullingVehicleId;
-            lastVehiclePhysicsId = motorVehicleController.ReadVehiclePhysicsId(pullingVehicleId);
+            lastVehiclePhysicsId = model.PullingVehiclePhysicsId;
         }
 
         towableVehicleController.ConnectVehicle(vehicleId, lastVehiclePhysicsId);
@@ -38,8 +37,7 @@ public class CouplingController {
             towableVehicleController.ConnectVehicle(firstOrderTowable, newVehiclePhysicsId);
         }
 
-        var pullingVehiclePhysicsId = motorVehicleController.ReadVehiclePhysicsId(model.PullingVehicleId);
-        towableVehicleController.ConnectVehicle(newVehicleId, pullingVehiclePhysicsId);
+        towableVehicleController.ConnectVehicle(newVehicleId, model.PullingVehiclePhysicsId);
         model.TowableVehicleIds.Insert(0, newVehicleId);
     }
 

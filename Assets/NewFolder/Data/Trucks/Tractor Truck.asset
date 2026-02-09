@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee873dd5eb0a84bea80fa95d7ab9df9a, type: 3}
   m_Name: Tractor Truck
   m_EditorClassIdentifier: NewFolder::DriverConfig
-  vehicleConfig: {fileID: 11400000, guid: 017779e2fdfce455a9125f5278b4a93c, type: 2}
   ramConfig: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
+  driverConfig: {fileID: 11400000, guid: 56680cff5f9ce4407b32197be227b52c, type: 2}
+  vehiclePhysicsPrefab: {fileID: 5571881020198792173, guid: 6835a67a931204fd4af337bbbe2a8d1e, type: 3}
+  visualsPrefab: {fileID: 2325663696177151136, guid: fd94b10e864364e73ba7ddb91581b065, type: 3}
+  engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}

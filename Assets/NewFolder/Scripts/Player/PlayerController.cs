@@ -97,7 +97,7 @@ public class PlayerController {
     }
 
     private void OperateDriver() {
-        truckController.Control(model.DrivingInput.steering, model.DrivingInput.gas, model.DrivingInput.boost);
+        truckController.SetDrivingInput(model.DrivingInput.steering, model.DrivingInput.gas, model.DrivingInput.boost);
     }
 
     private void ReadPlatformSelectionInput() {
@@ -194,7 +194,7 @@ public class PlayerController {
     }
 
     private void CreateCoupling() {
-        couplingController.Create(truckController.ReadVehicleId());
+        couplingController.Create(truckController.ReadVehiclePhysicsId());
     }
 
     private void CouplePlatformToTheEnd(int platformId) {
