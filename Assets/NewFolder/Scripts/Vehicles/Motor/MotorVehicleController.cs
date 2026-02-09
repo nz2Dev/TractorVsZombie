@@ -62,8 +62,10 @@ public class MotorVehicleController {
     private float Throttle(float gas, float deltaTime, bool boost, float lastDrivePower, MotorVehicleConfig.DrivingData drivingData) {
         var maxPower = boost ? 2 : 1;
         var accelerationSpeed = boost ? drivingData.powerAccelerationSpeed * 2 : drivingData.powerAccelerationSpeed;
-        if (gas > 0) {
-            return Mathf.Lerp(lastDrivePower, maxPower, deltaTime * accelerationSpeed);
+        
+        if (Mathf.Abs(gas) > 0.01f) {
+            var targetPower = Mathf.Sign(gas) * maxPower;
+            return Mathf.Lerp(lastDrivePower, targetPower, deltaTime * accelerationSpeed);
         } else {
             return 0;
         }
