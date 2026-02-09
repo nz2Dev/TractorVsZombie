@@ -46,7 +46,7 @@ public class GameBootstrapper : MonoBehaviour {
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
-    private DriverController driverController;
+    private TruckController truckController;
     private ArmorAIController armorAIController;
     private BehaviorSystem behaviorSystem;
     private CouplingController couplingController;
@@ -155,7 +155,7 @@ public class GameBootstrapper : MonoBehaviour {
             ramEffect
         );
 
-        driverController = new DriverController(
+        truckController = new TruckController(
             combatSystem,
             motorVehicleController,
             ramEffect
@@ -223,7 +223,7 @@ public class GameBootstrapper : MonoBehaviour {
             rewardController,
             weaponController,
             platformController,
-            driverController,
+            truckController,
             couplingController,
             headquarterBuildingController
         );
@@ -255,7 +255,7 @@ public class GameBootstrapper : MonoBehaviour {
         infantryController.Update();
         armorController.Update();
         platformController.Update();
-        driverController.Update();
+        truckController.Update();
         
         armorAIController.Update();
         behaviorSystem.Update();

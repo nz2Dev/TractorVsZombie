@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class DriverModel {
+public class TruckModel {
 
-    private readonly DriverConfig config;
+    private readonly TruckConfig config;
 
     public Vector3 Position { get; set; }
     public int CombatId { get; set; }
     public MotorVehicleId VehicleId { get; set; }
     public int RamId { get; set; }
 
-    public DriverModel(DriverConfig config) {
+    public TruckModel(TruckConfig config) {
         this.config = config;
     }
 

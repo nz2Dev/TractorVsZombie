@@ -14,7 +14,7 @@ public class PlayerController {
     private readonly RewardController rewardController;
     private readonly WeaponController weaponController;
     private readonly PlatformController platformController;
-    private readonly DriverController driverController;
+    private readonly TruckController truckController;
     private readonly CouplingController couplingController;
     private readonly HeadquarterBuildingController headquarterBuildingController;
 
@@ -22,7 +22,7 @@ public class PlayerController {
 
     public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatSystem combatSystem, CameraManager cameraManager,
         RewardController rewardController, WeaponController weaponController,
-        PlatformController platformController, DriverController driverController,
+        PlatformController platformController, TruckController driverController,
         CouplingController couplingController, HeadquarterBuildingController headquarterBuildingController) {
         this.view = view;
         this.input = input;
@@ -32,7 +32,7 @@ public class PlayerController {
         this.rewardController = rewardController;
         this.weaponController = weaponController;
         this.platformController = platformController;
-        this.driverController = driverController;
+        this.truckController = driverController;
         this.couplingController = couplingController;
         model = new PlayerModel(config);
         this.headquarterBuildingController = headquarterBuildingController;
@@ -70,7 +70,7 @@ public class PlayerController {
     }
 
     private void SyncPositions() {
-        model.Position = driverController.ReadVehiclePosition();
+        model.Position = truckController.ReadVehiclePosition();
     }
 
     private void CollectRewards() {
@@ -93,11 +93,11 @@ public class PlayerController {
     }
 
     private void SpawnDriver(Vector3 position) {
-        driverController.Spawn(position, model.DriverConfig);
+        truckController.Spawn(position, model.DriverConfig);
     }
 
     private void OperateDriver() {
-        driverController.Control(model.DrivingInput.steering, model.DrivingInput.gas, model.DrivingInput.boost);
+        truckController.Control(model.DrivingInput.steering, model.DrivingInput.gas, model.DrivingInput.boost);
     }
 
     private void ReadPlatformSelectionInput() {
@@ -194,7 +194,7 @@ public class PlayerController {
     }
 
     private void CreateCoupling() {
-        couplingController.Create(driverController.ReadVehicleId());
+        couplingController.Create(truckController.ReadVehicleId());
     }
 
     private void CouplePlatformToTheEnd(int platformId) {

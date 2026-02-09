@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "DriverConfig", menuName = "DriverConfig", order = 0)]
-public class DriverConfig : ScriptableObject {
+public class TruckConfig : ScriptableObject {
     public MotorVehicleConfig vehicleConfig;
     public RamConfig ramConfig;
 }

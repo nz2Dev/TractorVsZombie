@@ -2,7 +2,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerConfig", menuName = "PlayerConfig", order = 0)]
 public class PlayerConfig : ScriptableObject {
-    public DriverConfig driverConfig;
+    public TruckConfig driverConfig;
     public int initPlatformCount;
     public PlatformConfig platformConfig;
     public bool startOrEndCouplingOfRewards = false;

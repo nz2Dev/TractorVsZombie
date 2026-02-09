@@ -1,15 +1,15 @@
 
 using UnityEngine;
 
-public class DriverController {
+public class TruckController {
     
     private readonly CombatSystem combatSystem;
     private readonly MotorVehicleController motorVehicleController;
     private readonly RamEffect ramEffect;
 
-    private DriverModel model;
+    private TruckModel model;
 
-    public DriverController(CombatSystem combatSystem, MotorVehicleController vehicleController, RamEffect ramEffect) {
+    public TruckController(CombatSystem combatSystem, MotorVehicleController vehicleController, RamEffect ramEffect) {
         this.combatSystem = combatSystem;
         this.motorVehicleController = vehicleController;
         this.ramEffect = ramEffect;
@@ -22,8 +22,8 @@ public class DriverController {
         SyncPosition();
     }
 
-    public void Spawn(Vector3 position, DriverConfig config) {
-        model = new DriverModel(config);
+    public void Spawn(Vector3 position, TruckConfig config) {
+        model = new TruckModel(config);
         model.CombatId = combatSystem.RegisterAgent(position, alie: true);
         model.VehicleId = motorVehicleController.SpawnVehicle(position, model.VehicleConfig);
         model.RamId = ramEffect.StartNew(position, model.CombatId, model.RamConfig);
