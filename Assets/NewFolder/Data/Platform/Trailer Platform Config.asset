@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3da5733ab56a044d3879b1c7061207ca, type: 3}
   m_Name: Trailer Platform Config
   m_EditorClassIdentifier: NewFolder::PlatformConfig
-  vehicleConfig: {fileID: 11400000, guid: 58eae66fc1dac4076858e6225cc02787, type: 2}
   ramConfig: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
+  visualsPrefab: {fileID: 2635207420515318811, guid: 31ae2f3db26104c038dfead25d05c571, type: 3}
+  physicsPrefab: {fileID: 2496227567509786287, guid: bb70d4909e36747ef8ac673a16d00c65, type: 3}

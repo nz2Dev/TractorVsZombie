@@ -15,7 +15,6 @@ public class PlayerController {
     private readonly WeaponController weaponController;
     private readonly PlatformController platformController;
     private readonly TruckController truckController;
-    private readonly CouplingController couplingController;
     private readonly HeadquarterBuildingController headquarterBuildingController;
 
     private readonly PlayerModel model;
@@ -23,7 +22,7 @@ public class PlayerController {
     public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatSystem combatSystem, CameraManager cameraManager,
         RewardController rewardController, WeaponController weaponController,
         PlatformController platformController, TruckController driverController,
-        CouplingController couplingController, HeadquarterBuildingController headquarterBuildingController) {
+        HeadquarterBuildingController headquarterBuildingController) {
         this.view = view;
         this.input = input;
         this.physicsService = physicsService;
@@ -33,7 +32,6 @@ public class PlayerController {
         this.weaponController = weaponController;
         this.platformController = platformController;
         this.truckController = driverController;
-        this.couplingController = couplingController;
         model = new PlayerModel(config);
         this.headquarterBuildingController = headquarterBuildingController;
     }
@@ -42,7 +40,6 @@ public class PlayerController {
         CreateCamera();
         SpawnHeadquearter();
         SpawnDriver(Vector3.zero);
-        CreateCoupling();
 
         bool flipFlop = false;
         for (int i = 0; i < model.InitPlatformCount; i++) {
@@ -194,18 +191,30 @@ public class PlayerController {
         }
     }
 
-    private void CreateCoupling() {
-        couplingController.Create(truckController.ReadVehiclePhysicsId());
-    }
-
     private void CouplePlatformToTheEnd(int platformId) {
-        var platformState = platformController.ReadPlatformState(platformId);
-        couplingController.AddTowable(platformState.vehicleId);
+        int targetVehiclePhysicsId;
+        if (model.CoupledPlatformIds.Count > 0) {
+            var lastPlatformId = model.CoupledPlatformIds[^1];
+            targetVehiclePhysicsId = platformController.GetVehiclePhysicsId(lastPlatformId);
+        } else {
+            targetVehiclePhysicsId = truckController.ReadVehiclePhysicsId();
+        }
+
+        platformController.Connect(platformId, targetVehiclePhysicsId);
+        model.CoupledPlatformIds.Add(platformId);
     }
 
     private void CouplePlatformInFront(int platformId) {
-        var platformState = platformController.ReadPlatformState(platformId);
-        couplingController.InsertTowable(platformState.vehicleId);
+        if (model.CoupledPlatformIds.Count > 0) {
+            var firstPlatformId = model.CoupledPlatformIds[0];
+            platformController.Disconnect(firstPlatformId);
+
+            var newPlatformVehiclePhysicsId = platformController.GetVehiclePhysicsId(platformId);
+            platformController.Connect(firstPlatformId, newPlatformVehiclePhysicsId);
+        }
+
+        platformController.Connect(platformId, truckController.ReadVehiclePhysicsId());
+        model.CoupledPlatformIds.Insert(0, platformId);
     }
 
     private void CreateCamera() {

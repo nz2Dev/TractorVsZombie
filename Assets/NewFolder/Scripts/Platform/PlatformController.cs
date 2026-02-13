@@ -6,18 +6,20 @@ using UnityEngine;
 public class PlatformController {
 
     private readonly CombatSystem combatSystem;
-    private readonly TowableVehicleController towableVehicleController;
     private readonly WeaponController weaponController;
     private readonly RamEffect ramEffect;
+    private readonly VehicleService vehicleService;
+    private readonly PlatformView view;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatSystem combatSystem, TowableVehicleController towableVehicleController, WeaponController weaponController, RamEffect ramEffect) {
+    public PlatformController(CombatSystem combatSystem, WeaponController weaponController, RamEffect ramEffect, VehicleService vehicleService, PlatformView view) {
         this.combatSystem = combatSystem;
-        this.towableVehicleController = towableVehicleController;
         this.weaponController = weaponController;
         this.ramEffect = ramEffect;
+        this.vehicleService = vehicleService;
+        this.view = view;
     }
 
     public void Update() {
@@ -30,20 +32,25 @@ public class PlatformController {
         registry[platform.Id] = platform;
         
         platform.CombatId = combatSystem.RegisterAgent(position, true);
-        platform.VehicleId = towableVehicleController.SpawnVehicle(position, platform.VehicleConfig);
-        platform.RamId = ramEffect.StartNew(position, platform.CombatId, platform.RamConfig);
+        platform.VehiclePhysicsId = vehicleService.CreateVehicle(position, platform.Config.physicsPrefab);
+        platform.RamId = ramEffect.StartNew(position, platform.CombatId, platform.Config.ramConfig);
+        view.AddPlatform(platform.Id, position, platform.Config.visualsPrefab);
+
         return platform.Id;
     }
 
-    public PlatformState ReadPlatformState(int platformId) {
+    public void Connect(int tailPlatformId, int headVehiclePhysicsId) {
+        var tailPlatform = registry[tailPlatformId];
+        var headState = vehicleService.GetVehicleState(headVehiclePhysicsId);
+        
+        var towardHeadRotation = Quaternion.LookRotation((headState.position - tailPlatform.Position).normalized, Vector3.up);
+        vehicleService.UpdateVehiclePose(tailPlatform.VehiclePhysicsId, tailPlatform.Position, towardHeadRotation);
+        vehicleService.MakeTowingConnection(headVehiclePhysicsId, tailPlatform.VehiclePhysicsId);
+    }
+
+    public void Disconnect(int platformId) {
         var platform = registry[platformId];
-        return new PlatformState {
-            position = platform.Position,
-            combatId = platform.CombatId,
-            vehicleId = platform.VehicleId,
-            weaponId = platform.WeaponId,
-            weaponConfig = platform.WeaponConfig
-        };
+        vehicleService.ClearTowingConnection(platform.VehiclePhysicsId);
     }
 
     public void SetWeapon(int platformId, WeaponConfig weaponConfig) {
@@ -52,9 +59,28 @@ public class PlatformController {
         platform.WeaponId = weaponController.SpawnWeapon(platform.CombatId, platform.Position, weaponConfig);
     }
 
+    public int GetVehiclePhysicsId(int platformId) {
+        return registry[platformId].VehiclePhysicsId;
+    }
+
+    public PlatformState ReadPlatformState(int platformId) {
+        var platform = registry[platformId];
+        return new PlatformState {
+            position = platform.Position,
+            combatId = platform.CombatId,
+            vehiclePhysicsId = platform.VehiclePhysicsId,
+            weaponId = platform.WeaponId,
+            weaponConfig = platform.WeaponConfig,
+            platformId = platform.Id
+        };
+    }
+
     private void SyncPositions() {
         foreach (var host in registry.Values) {
-            host.Position = towableVehicleController.GetVehiclePosition(host.VehicleId);
+            host.VehiclePhysicsState = vehicleService.GetVehicleState(host.VehiclePhysicsId);
+            host.Position = host.VehiclePhysicsState.position;
+            view.UpdatePlatformPose(host.Id, host.VehiclePhysicsState);
+
             weaponController.MoveWeapon(host.WeaponId, host.Position);
             combatSystem.UpdateAgentPosition(host.CombatId, host.Position);
             ramEffect.Forward(host.RamId, host.Position);

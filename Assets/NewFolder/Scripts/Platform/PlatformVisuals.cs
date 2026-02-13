@@ -2,7 +2,7 @@ using System;
 
 using UnityEngine;
 
-public class TowableVehicleVisuals : MonoBehaviour {
+public class PlatformVisuals : MonoBehaviour {
     
     [Serializable]
     public struct WheelAxis {

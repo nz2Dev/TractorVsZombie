@@ -42,14 +42,12 @@ public class GameBootstrapper : MonoBehaviour {
     private WeaponController weaponController;
     private RamEffect ramEffect;
     private MotorVehicleController motorVehicleController;
-    private TowableVehicleController towableVehicleController;
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
     private TruckController truckController;
     private ArmorAIController armorAIController;
     private BehaviorSystem behaviorSystem;
-    private CouplingController couplingController;
     private CommanderSystem commanderSystem;
     private ProductionBuildingController buildingController;
     private HeadquarterBuildingController headquarterBuildingController;
@@ -73,7 +71,7 @@ public class GameBootstrapper : MonoBehaviour {
         var unitView = new EnemyView();
         var weaponView = new WeaponView();
         var motorVehicleView = new MotorVehicleView();
-        var towableVehicleView = new TowableVehicleView();
+        var platformView = new PlatformView();
         var rewardView = new RewardView(rewardVisualsPrefab);
         var infantryView = new InfantryView();
         var truckView = new TruckView(soundManager);
@@ -129,11 +127,6 @@ public class GameBootstrapper : MonoBehaviour {
             soundManager
         );
 
-        towableVehicleController = new TowableVehicleController(
-            towableVehicleView,
-            vehicleService
-        );
-
         infantryController = new InfantryController(
             combatSystem,
             bodySimulator,
@@ -151,9 +144,10 @@ public class GameBootstrapper : MonoBehaviour {
 
         platformController = new PlatformController(
             combatSystem,
-            towableVehicleController,
             weaponController,
-            ramEffect
+            ramEffect,
+            vehicleService,
+            platformView
         );
 
         truckController = new TruckController(
@@ -189,11 +183,6 @@ public class GameBootstrapper : MonoBehaviour {
             navigationSystem
         );
 
-        couplingController = new CouplingController(
-            motorVehicleController,
-            towableVehicleController
-        );
-
         buildingController = new ProductionBuildingController(
             combatSystem,
             spawningService,
@@ -226,7 +215,6 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController,
             platformController,
             truckController,
-            couplingController,
             headquarterBuildingController
         );
 
@@ -253,7 +241,6 @@ public class GameBootstrapper : MonoBehaviour {
         rocketController.Update();
         weaponController.Update();
         motorVehicleController.Update();
-        towableVehicleController.Update();
         infantryController.Update();
         armorController.Update();
         platformController.Update();

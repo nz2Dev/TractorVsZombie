@@ -12,7 +12,7 @@ public class PlayerView {
     private readonly AimVisuals aimVisualsPrefab;
 
     private VisualElement container;
-    private Dictionary<TowableVehicleId, Label> binding = new();
+    private Dictionary<int, Label> binding = new();
     private AimVisuals aimVisuals;
 
     public PlayerView(UIDocument uiDocument, AimVisuals aimVisualsPrefab) {
@@ -39,20 +39,20 @@ public class PlayerView {
 
     internal void AddPlatform(PlatformState state) {
         MakeLabel(out var label);
-        binding[state.vehicleId] = label;
+        binding[state.platformId] = label;
         UpdateLabel(label, state);
     }
 
     internal void UpdatePlatform(PlatformState state) {
-        var stateLabel = binding[state.vehicleId];
+        var stateLabel = binding[state.platformId];
         UpdateLabel(stateLabel, state);
     }
 
     internal void ShowPlatformSelected(PlatformState selectedPlatformState) {
-        foreach (var vehicleId in binding.Keys) {
-            var isSelectedKey = selectedPlatformState.vehicleId == vehicleId;
+        foreach (var platformId in binding.Keys) {
+            var isSelectedKey = selectedPlatformState.platformId == platformId;
             if (isSelectedKey) {
-                var label = binding[vehicleId];
+                var label = binding[platformId];
                 label.AddToClassList("selected-label");
             }
         }
