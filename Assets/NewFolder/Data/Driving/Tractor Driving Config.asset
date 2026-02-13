@@ -15,7 +15,7 @@ MonoBehaviour:
   powerAccelerationSpeed: 1
   speedCeilingForSteering: 5
   speedKFactor: 2
-  minStterAmount: 1
+  minStterAmount: 0.1
   maxSteerDegrees: 40
   maxEngineTorque: 150
   maxBrakesTorque: 50
