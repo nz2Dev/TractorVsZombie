@@ -41,7 +41,6 @@ public class GameBootstrapper : MonoBehaviour {
     private RocketController rocketController;
     private WeaponController weaponController;
     private RamEffect ramEffect;
-    private MotorVehicleController motorVehicleController;
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
@@ -70,7 +69,6 @@ public class GameBootstrapper : MonoBehaviour {
         var playerView = new PlayerView(uiDocument, aimVisualsPrefab);
         var unitView = new EnemyView();
         var weaponView = new WeaponView();
-        var motorVehicleView = new MotorVehicleView();
         var armorView = new ArmorView(soundManager);
         var platformView = new PlatformView();
         var rewardView = new RewardView(rewardVisualsPrefab);
@@ -120,12 +118,6 @@ public class GameBootstrapper : MonoBehaviour {
             weaponView,
             rocketController,
             projectileController
-        );
-
-        motorVehicleController = new MotorVehicleController(
-            motorVehicleView,
-            vehicleService,
-            soundManager
         );
 
         infantryController = new InfantryController(
@@ -241,7 +233,6 @@ public class GameBootstrapper : MonoBehaviour {
         projectileController.Update();
         rocketController.Update();
         weaponController.Update();
-        motorVehicleController.Update();
         infantryController.Update();
         armorController.Update();
         platformController.Update();
