@@ -112,7 +112,7 @@ public class ProductionBuildingController {
                     commanderSystem.AddSubordinate(model.CommanderId, actorId);
                 }
             } else if (model.Config.spawnType == SpawnType.Armor) {
-                if (spawningService.TryProduceArmor(model.Position, model.Config.armorConfig, out var spawnedId)) {
+                if (spawningService.TryProduceArmor(model.Position + Random.onUnitSphere * 3, model.Config.armorConfig, out var spawnedId)) {
                     armorAIController.AddAIBehaviour(spawnedId);
                 }
             }
