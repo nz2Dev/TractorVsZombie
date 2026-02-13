@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1032292071767458246}
-  - component: {fileID: 3497351247700678174}
+  - component: {fileID: 7397748899174649872}
   m_Layer: 0
   m_Name: Armored Vehicle Visuals
   m_TagString: Untagged
@@ -37,7 +37,7 @@ Transform:
   - {fileID: 9156852195971218376}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3497351247700678174
+--- !u!114 &7397748899174649872
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,9 +46,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5858173997722926588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7742a08504a0d440ca26a82e708b9af3, type: 3}
+  m_Script: {fileID: 11500000, guid: 60a0b2d03812e422c9e497da3063d8be, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: NewFolder::VehicleVisuals
+  m_EditorClassIdentifier: NewFolder::ArmorVisuals
   frontAxis:
     leftWheel: {fileID: 3437675309214922230}
     rightWheel: {fileID: 7510050832341294550}

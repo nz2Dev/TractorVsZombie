@@ -8,17 +8,15 @@ public class ArmorAIController {
     private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
     private readonly ArmorController armorController;
-    private readonly MotorVehicleController motorVehicleController;
     private readonly WeaponController weaponController;
 
     private readonly List<int> controlledArmorIds = new();
     private readonly int flowFieldId;
 
-    public ArmorAIController(CombatSystem combatSystem, PathfindingService pathfindingService, ArmorController armorController, MotorVehicleController motorVehicleController, WeaponController weaponController) {
+    public ArmorAIController(CombatSystem combatSystem, PathfindingService pathfindingService, ArmorController armorController, WeaponController weaponController) {
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.armorController = armorController;
-        this.motorVehicleController = motorVehicleController;
         this.weaponController = weaponController;
 
         flowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
@@ -40,25 +38,25 @@ public class ArmorAIController {
     private void OperateArmors() {
         foreach (var armorId in controlledArmorIds) {
             var state = armorController.ReadArmorState(armorId);
-            OperateArmorNavigation(state);
+            OperateArmorNavigation(armorId, state);
             OperateArmorCombat(state);
         }
     }
 
-    private void OperateArmorNavigation(ArmorState state) {
+    private void OperateArmorNavigation(int armorId, ArmorState state) {
         var goal = Vector3.zero;
         var distance = Vector3.Distance(goal, state.position);
 
         var gasDistance = 10;
         var gas = Mathf.Floor(Mathf.Clamp(distance, 0, gasDistance) / gasDistance);
-        motorVehicleController.DriveVehicle(state.vehicleId, gas, false);
+        armorController.Drive(armorId, gas, false);
         
         var stopDistance = 5f;
         var brakes = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
-        motorVehicleController.BrakeVehicle(state.vehicleId, brakes);
+        armorController.Brake(armorId, brakes);
 
         var flowVector = pathfindingService.GetFlowVector(flowFieldId, state.position);
-        motorVehicleController.SteerVehicleToward(state.vehicleId, flowVector);
+        armorController.SteerToward(armorId, flowVector);
     }
 
     private void OperateArmorCombat(ArmorState state) {

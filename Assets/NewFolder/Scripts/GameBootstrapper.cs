@@ -71,6 +71,7 @@ public class GameBootstrapper : MonoBehaviour {
         var unitView = new EnemyView();
         var weaponView = new WeaponView();
         var motorVehicleView = new MotorVehicleView();
+        var armorView = new ArmorView(soundManager);
         var platformView = new PlatformView();
         var rewardView = new RewardView(rewardVisualsPrefab);
         var infantryView = new InfantryView();
@@ -137,9 +138,10 @@ public class GameBootstrapper : MonoBehaviour {
         armorController = new ArmorController(
             combatSystem,
             weaponController,
-            motorVehicleController,
+            vehicleService,
             ramEffect,
-            rewardController
+            rewardController,
+            armorView
         );
 
         platformController = new PlatformController(
@@ -168,7 +170,6 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             pathfindingService,
             armorController,
-            motorVehicleController,
             weaponController
         );
 

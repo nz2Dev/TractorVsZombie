@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Red IFV
   m_EditorClassIdentifier: NewFolder::ArmorConfig
   maxHealth: 5
-  vehicleConfig: {fileID: 11400000, guid: cc75ee6029df940998a13a6d5602305a, type: 2}
+  drivingConfig: {fileID: 11400000, guid: 355d44d647c1b41e7913c0b2db1bc382, type: 2}
+  visualsPrefab: {fileID: 7397748899174649872, guid: 6f70d5b01ead64a469c9d608dc4bd4ad, type: 3}
+  physicsPrefab: {fileID: 5571881020198792173, guid: ba97d4c15eca54b7d89645b70bfd43f9, type: 3}
+  engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   weaponConfig: {fileID: 11400000, guid: 6c348206c4e5046d4bde12b5c4a3cd9d, type: 2}
   ramConfig: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
