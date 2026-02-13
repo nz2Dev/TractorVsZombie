@@ -97,7 +97,8 @@ public class PlayerController {
     }
 
     private void OperateDriver() {
-        truckController.SetDrivingInput(model.DrivingInput.steering, model.DrivingInput.gas, model.DrivingInput.boost);
+        truckController.Steer(model.DrivingInput.steering);
+        truckController.Drive(model.DrivingInput.gas, model.DrivingInput.boost);
     }
 
     private void ReadPlatformSelectionInput() {

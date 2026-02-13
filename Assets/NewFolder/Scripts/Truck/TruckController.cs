@@ -7,18 +7,16 @@ public class TruckController {
     
     private readonly TruckView view;
     private readonly CombatSystem combatSystem;
-    private readonly DriverSimulator driverSimulator;
     private readonly VehicleService vehicleService;
     private readonly RamEffect ramEffect;
 
     private TruckModel model;
 
-    public TruckController(CombatSystem combatSystem, RamEffect ramEffect, TruckView view, VehicleService vehicleService, DriverSimulator driverSimulator) {
+    public TruckController(CombatSystem combatSystem, RamEffect ramEffect, TruckView view, VehicleService vehicleService) {
         this.combatSystem = combatSystem;
         this.ramEffect = ramEffect;
         this.view = view;
         this.vehicleService = vehicleService;
-        this.driverSimulator = driverSimulator;
     }
 
     public int ReadVehiclePhysicsId() => model.VehiclePhysicsId;
@@ -34,33 +32,34 @@ public class TruckController {
         model = new TruckModel(config);
         model.CombatId = combatSystem.RegisterAgent(position, alie: true);
         model.RamId = ramEffect.StartNew(position, model.CombatId, model.Config.ramConfig);
-        model.DriverId = driverSimulator.Create(model.Config.driverConfig);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(position, model.Config.vehiclePhysicsPrefab);
         view.Show(position, model.Config.visualsPrefab, model.Config.engineLoopSFX);
     }
 
-    public void SetDrivingInput(float steerAmount, float gasAmount, bool boost) {
-        driverSimulator.SetInput(model.DriverId, gasAmount, steerAmount, boost);
+    public void Drive(float driveInput, bool boostInput) {
+        model.MotorTorque = VehicleDriving.GasThrottle(driveInput, boostInput, model.Config.drivingConfig.maxEngineTorque);   
+    }
+
+    public void Steer(float steerInput) {
+        var steeringLimit = VehicleDriving.LimitSteering(model.VehiclePhysicsState.velocity.magnitude, model.Config.drivingConfig);
+        model.SteeringDegrees = steerInput * steeringLimit * model.Config.drivingConfig.maxSteerDegrees;
     }
 
     private void ReadExternalState() {
         model.VehiclePhysicsState = vehicleService.GetVehicleState(model.VehiclePhysicsId);
         model.Position = model.VehiclePhysicsState.position;
-        model.DriverOutput = driverSimulator.GetOutput(model.DriverId);
     }
 
     private void WriteExternalInput() {
         ramEffect.Forward(model.RamId, model.Position);
         combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
-        driverSimulator.SetVehicleInput(model.DriverId, model.VehiclePhysicsState.velocity);
-        vehicleService.SetVehicleInput(model.VehiclePhysicsId, 
-            model.DriverOutput.motorTroque,
-            model.DriverOutput.brakesTorque,
-            model.DriverOutput.steeringDegrees);
+        vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.MotorTorque, brakesTorque: 0, model.SteeringDegrees);
     }
 
     private void UpdateView() {
         view.UpdatePose(model.VehiclePhysicsState);
-        view.UpdateSound(model.DriverOutput.gasThrottle);
+        var motorRev = model.MotorTorque / Mathf.Max(model.Config.drivingConfig.maxEngineTorque, 1);
+        view.UpdateSound(motorRev);
     }
+
 }

@@ -33,7 +33,6 @@ public class GameBootstrapper : MonoBehaviour {
 
     private SpawningService spawningService;
     private BodySimulator bodySimulator;
-    private DriverSimulator driverSimulator;
     private NavigationSystem navigationSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
@@ -91,8 +90,6 @@ public class GameBootstrapper : MonoBehaviour {
         bodySimulator = new BodySimulator(
             physicsService
         );
-
-        driverSimulator = new DriverSimulator();
 
         navigationSystem = new NavigationSystem(
             localAvoidanceService,
@@ -163,8 +160,7 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             ramEffect,
             truckView,
-            vehicleService,
-            driverSimulator
+            vehicleService
         );
 
         spawningService = new SpawningService(
@@ -250,7 +246,6 @@ public class GameBootstrapper : MonoBehaviour {
 
         ramEffect.Update();
         bodySimulator.Update();
-        driverSimulator.Update();
         rewardController.Update();
         navigationSystem.Update();
 
