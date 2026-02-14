@@ -2,6 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public struct BodyData {
+    public float height;
+    public float radius;
+}
+
 public class PhysicsService {
 
     private readonly int operationalLayer;
@@ -67,6 +73,10 @@ public class PhysicsService {
             InMotion = inMotion;
             Pending = pending;
         }
+    }
+
+    public int RegisterPhysicsEntity(Vector3 position, BodyData bodyData) {
+        return RegisterPhysicsEntity(position, bodyData.height, bodyData.radius);
     }
 
     public int RegisterPhysicsEntity(Vector3 position, float height, float radius) {

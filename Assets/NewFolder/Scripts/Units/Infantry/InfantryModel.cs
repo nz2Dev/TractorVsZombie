@@ -2,26 +2,23 @@ using UnityEngine;
 
 public class InfantryModel {
     
-    private readonly InfantryConfig config;
+    public InfantryConfig Config { get; }
 
     public int Id { get; private set; }
+    public Vector3 Position { get; set; }
+    public Quaternion Rotation { get; set; }
     public int CombatId { get; set; }
-    public int BodyId { get; set; }
-    public BodyState BodyState { get; set; }
-    
+    public int BodyPhysicsId { get; set; }
+
+    public bool Grounded { get; set; }
+    public bool IsPhysicsOnlyMovement { get; set; }
+    public Vector3 DrivenVelocity { get; set; }
     public bool IsDead { get; set; }
     public float LastAttackTime { get; set; }
 
-    public float AttackCooldown => config.attackCooldown;
-    public int Damage => config.damage;
-    public BodyConfig BodyConfig => config.bodyConfig;
-    public int MaxHealthConfig => config.maxHealth;
-    public InfantryVisuals VisualsPrefab => config.visualsPrefab;
-    public AgentAvoidanceConfig AgentAvoidanceConfig => config.agentAvoidanceConfig;
-
     public InfantryModel(int id, InfantryConfig config) {
         Id = id;
-        this.config = config;
+        this.Config = config;
     }
 
 }

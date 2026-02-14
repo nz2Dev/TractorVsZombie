@@ -32,7 +32,6 @@ public class GameBootstrapper : MonoBehaviour {
     private CombatSystem combatSystem;
 
     private SpawningService spawningService;
-    private BodySimulator bodySimulator;
     private NavigationSystem navigationSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
@@ -84,10 +83,6 @@ public class GameBootstrapper : MonoBehaviour {
             combatServiceEnvironmentMask
         );
 
-        bodySimulator = new BodySimulator(
-            physicsService
-        );
-
         navigationSystem = new NavigationSystem(
             localAvoidanceService,
             pathfindingService
@@ -122,9 +117,9 @@ public class GameBootstrapper : MonoBehaviour {
 
         infantryController = new InfantryController(
             combatSystem,
-            bodySimulator,
             infantryView,
-            rewardController
+            rewardController,
+            physicsService
         );
 
         armorController = new ArmorController(
@@ -226,7 +221,6 @@ public class GameBootstrapper : MonoBehaviour {
         combatSystem.Update();
 
         ramEffect.Update();
-        bodySimulator.Update();
         rewardController.Update();
         navigationSystem.Update();
 

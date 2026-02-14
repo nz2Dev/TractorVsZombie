@@ -7,7 +7,7 @@ public class InfantryConfig : ScriptableObject {
     public int maxHealth = 5;
     public float attackCooldown = 1;
     public int damage = 1;
-    public BodyConfig bodyConfig;
+    public BodyData bodyData;
     public InfantryVisuals visualsPrefab;
     public AgentAvoidanceConfig agentAvoidanceConfig;
 }
