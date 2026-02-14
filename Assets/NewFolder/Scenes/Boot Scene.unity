@@ -175,8 +175,7 @@ MonoBehaviour:
   combatServiceEnvironmentMask:
     serializedVersion: 2
     m_Bits: 2177
-  unitsCount: 1000
-  maxVehicelCount: 1
+  enemyConfig: {fileID: 11400000, guid: 5209ee6577e6c4dabb8f13feea30f913, type: 2}
   playerConfig: {fileID: 11400000, guid: 15c1c417b54044a6b9ea2acbda4d6876, type: 2}
   aimVisualsPrefab: {fileID: 7650166389670777688, guid: db77fb008dad74d3ca69afe4d43638bd, type: 3}
   uiDocument: {fileID: 815707237}
@@ -639,9 +638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148d4fbdaf21746e3828503f13309453, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staticObstaclesMask:
-    serializedVersion: 2
-    m_Bits: 2048
+  bakedObstacleData: []
 --- !u!1 &958139873
 GameObject:
   m_ObjectHideFlags: 0

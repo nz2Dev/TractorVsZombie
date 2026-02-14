@@ -1,44 +1,39 @@
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class ProductionBuildingController {
 
     private readonly ProductionBuildingView view;
     private readonly CombatSystem combatSystem;
-    private readonly SpawningService spawningService;
-    private readonly BehaviorSystem behaviorSystem;
-    private readonly CommanderSystem commanderSystem;
-    private readonly ArmorAIController armorAIController;
     private readonly PathfindingService pathfindingService;
     private readonly VehicleService vehicleService;
     private readonly PhysicsService physicsService;
     private readonly LocalAvoidanceService localAvoidanceService;
+    private readonly InfantryController infantryController;
+    private readonly ArmorController armorController;
     
     private int idCounter;
     private readonly Dictionary<int, ProductionBuildingModel> registry = new();
     private readonly List<int> removalBuffer = new();
 
     public ProductionBuildingController(
+        ProductionBuildingView view,
         CombatSystem combatSystem,
-        SpawningService spawningService,
-        BehaviorSystem behaviorSystem,
-        CommanderSystem commanderSystem,
-        ArmorAIController armorAIController,
         PathfindingService pathfindingService,
         VehicleService vehicleService,
         PhysicsService physicsService,
-        ProductionBuildingView view,
-        LocalAvoidanceService localAvoidanceService) {
+        LocalAvoidanceService localAvoidanceService,
+        InfantryController infantryController,
+        ArmorController armorController) {
+        this.view = view;
         this.combatSystem = combatSystem;
-        this.spawningService = spawningService;
-        this.behaviorSystem = behaviorSystem;
-        this.commanderSystem = commanderSystem;
-        this.armorAIController = armorAIController;
         this.pathfindingService = pathfindingService;
         this.vehicleService = vehicleService;
         this.physicsService = physicsService;
-        this.view = view;
         this.localAvoidanceService = localAvoidanceService;
+        this.infantryController = infantryController;
+        this.armorController = armorController;
     }
 
     public void Update() {
@@ -47,13 +42,24 @@ public class ProductionBuildingController {
         ProduceSpawns();
     }
 
-    public int CreateBuilding(Vector3 position, Quaternion rotation, ProductionBuildingConfig config, bool alie, int commanderId) {
+    public int GetProductionLoad(SpawnType spawnType) {
+        switch (spawnType) {
+            case SpawnType.Infantry: 
+                return infantryController.InfantryCount;
+            case SpawnType.Armor:
+                return armorController.ArmorCount;
+            default:
+                Debug.LogError($"{spawnType}");
+                return int.MaxValue;
+        }
+    }
+
+    public int Spawn(Vector3 position, Quaternion rotation, ProductionBuildingConfig config, bool alie) {
         var id = ++idCounter;
         var model = new ProductionBuildingModel(id, config);
         
-        model.Position = position;
         model.Alie = alie;
-        model.CommanderId = commanderId;
+        model.Position = position;
         model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
         model.PathfindingObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(position, rotation, config.avoidanceObstaclePrefab);
@@ -71,6 +77,14 @@ public class ProductionBuildingController {
         registry[buildingId].QueueAmount = amount;
     }
 
+    public ProductionResult ReadProductionResult(int buildingId) {
+        var model = registry[buildingId];
+        return new ProductionResult {
+            spawnType = model.Config.spawnType,
+            spawnedIds = model.ProducedEntities.AsReadOnly()
+        };
+    }
+
     private void DestroyBuilding(int id) {
         registry.Remove(id, out var model);
         combatSystem.UnregisterAgent(model.CombatId);
@@ -79,10 +93,6 @@ public class ProductionBuildingController {
         vehicleService.UnregisterObstacle(model.VehicleObstacleId);
         physicsService.UnregisterObstacle(model.PhysicsObstacleId);
         view.RemoveVisuals(model.Id);
-    }
-
-    public void SetAssignedCommander(int id, int commanderId) {
-        registry[id].CommanderId = commanderId;
     }
 
     private void ReadCombatOutput() {
@@ -107,21 +117,20 @@ public class ProductionBuildingController {
 
     private void ProduceSpawns() {
         foreach (var model in registry.Values) {
+            model.ProducedEntities.Clear();
             if (model.QueueAmount <= 0 || Time.time < model.NextSpawnTime)
                 continue;
 
             model.QueueAmount--;
             model.NextSpawnTime = Time.time + model.Config.spawnInterval;
 
+            var spawnPoint = model.Position + Vector3.ProjectOnPlane(UnityEngine.Random.onUnitSphere, Vector3.up);
             if (model.Config.spawnType == SpawnType.Infantry) {
-                if (spawningService.TryProduceInfantry(model.Position, model.Alie, model.Config.infantryConfig, out var spawnedId)) {
-                    var actorId = behaviorSystem.CreateActor(spawnedId);
-                    commanderSystem.AddSubordinate(model.CommanderId, actorId);
-                }
+                var spawnedId = infantryController.SpawnInfantry(spawnPoint, model.Alie, model.Config.infantryConfig);
+                model.ProducedEntities.Add(spawnedId);
             } else if (model.Config.spawnType == SpawnType.Armor) {
-                if (spawningService.TryProduceArmor(model.Position + Random.onUnitSphere * 3, model.Config.armorConfig, out var spawnedId)) {
-                    armorAIController.AddAIBehaviour(spawnedId);
-                }
+                var spawnedId = armorController.SpawnArmor(spawnPoint, model.Config.armorConfig);
+                model.ProducedEntities.Add(spawnedId);
             }
         }
     }

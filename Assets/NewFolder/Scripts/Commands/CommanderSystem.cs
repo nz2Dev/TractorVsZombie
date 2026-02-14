@@ -29,10 +29,10 @@ public class CommanderSystem {
         return nextGroupId;
     }
 
-    public void AddSubordinate(int commanderId, int actorId) {
+    public void AddSubordinate(int commanderId, int infantryId) {
         var commanderState = registry[commanderId];
-        commanderState.Subordinates.Add(new Subordinate { behaviorActorId = actorId });
-        commanderState.SubordinateActorIds.Add(actorId);
+        var infantryActorId = behaviorSystem.CreateActor(infantryId);
+        commanderState.SubordinateActorIds.Add(infantryActorId);
     }
 
     public void SetStrategy(int commanderId, bool chaseCenter, Vector3 position) {
@@ -44,17 +44,16 @@ public class CommanderSystem {
     public CommanderSnapshot GetCommanderSnapshot(int commanderId) {
         var commanderState = registry[commanderId];
         return new CommanderSnapshot {
-            subordinateCount = commanderState.Subordinates.Count,
+            subordinateCount = commanderState.SubordinateActorIds.Count,
             isChasingCenter = commanderState.ChaseCenter,
         };
     }
 
     private void ValidateSubordinates() {
         foreach (var commanderState in registry.Values) {
-            for (int i = commanderState.Subordinates.Count - 1; i >= 0; i--) {
-                var subordinate = commanderState.Subordinates[i];
-                if (!behaviorSystem.IsActorExist(subordinate.behaviorActorId)) {
-                    commanderState.Subordinates.RemoveAt(i);
+            for (int i = commanderState.SubordinateActorIds.Count - 1; i >= 0; i--) {
+                var actorId = commanderState.SubordinateActorIds[i];
+                if (!behaviorSystem.IsActorExist(actorId)) {
                     commanderState.SubordinateActorIds.RemoveAt(i);
                 }
             }

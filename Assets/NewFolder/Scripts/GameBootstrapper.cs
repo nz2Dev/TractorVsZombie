@@ -19,10 +19,9 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private string physicsObstacleLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
     [Space]
-    [SerializeField] int unitsCount = 10;
-    [SerializeField] private int maxVehicelCount = 10;
-    [Space]
+    [SerializeField] private EnemyConfig enemyConfig;
     [SerializeField] private PlayerConfig playerConfig;
+    [Space]
     [SerializeField] private AimVisuals aimVisualsPrefab;
     [SerializeField] private UIDocument uiDocument;
     [Space]
@@ -30,8 +29,6 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private GameObject rewardVisualsPrefab;
 
     private CombatSystem combatSystem;
-
-    private SpawningService spawningService;
     private NavigationSystem navigationSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
@@ -146,13 +143,6 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleService
         );
 
-        spawningService = new SpawningService(
-            infantryController,
-            armorController,
-            maxVehicelCount,
-            unitsCount
-        );
-
         armorAIController = new ArmorAIController(
             combatSystem,
             pathfindingService,
@@ -172,16 +162,14 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         buildingController = new ProductionBuildingController(
+            productionBuildingView,
             combatSystem,
-            spawningService,
-            behaviorSystem,
-            commanderSystem,
-            armorAIController,
             pathfindingService,
             vehicleService,
             physicsService,
-            productionBuildingView,
-            localAvoidanceService
+            localAvoidanceService,
+            infantryController,
+            armorController
         );
 
         headquarterBuildingController = new HeadquarterBuildingController(
@@ -208,8 +196,10 @@ public class GameBootstrapper : MonoBehaviour {
 
         enemyController = new EnemyController(
             unitView,
+            enemyConfig,
             buildingController,
-            commanderSystem
+            commanderSystem,
+            armorAIController
         );
     }
 
