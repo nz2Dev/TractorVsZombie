@@ -42,6 +42,10 @@ public class ProductionBuildingController {
         ProduceSpawns();
     }
 
+    public bool IsExist(int buildingId) {
+        return registry.ContainsKey(buildingId);
+    }
+
     public int GetProductionLoad(SpawnType spawnType) {
         switch (spawnType) {
             case SpawnType.Infantry: 

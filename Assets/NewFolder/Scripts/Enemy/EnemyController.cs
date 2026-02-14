@@ -25,6 +25,7 @@ public class EnemyController {
 
     public void Update() {
         TryInitEnemySources();
+        ValidateEnemySource();
         HireNewCommanders();
         AssignProducedEnemies();
         UpdateProductionQueues();
@@ -49,6 +50,15 @@ public class EnemyController {
             enemySource.Commanders.Add(firstCommanderId);
 
             enemySources.Add(enemySource);
+        }
+    }
+
+    private void ValidateEnemySource() {
+        for (int i = enemySources.Count - 1; i >= 0; i--) {
+            var enemySource = enemySources[i];
+            if (!productionBuildingController.IsExist(enemySource.ProductionBuildingId)) {
+                enemySources.RemoveAt(i);
+            }
         }
     }
 
