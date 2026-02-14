@@ -19,6 +19,7 @@ public class ProductionBuildingConfig : ScriptableObject {
     public PhysicsObstacle physicsObstaclePrefab;
     [Space]
     public float spawnInterval = 5f;
+    public int initialQueueAmount = 1000;
     public SpawnType spawnType;
     public InfantryConfig infantryConfig;
     public ArmorConfig armorConfig;

@@ -14,6 +14,7 @@ public class ProductionBuildingModel {
     public Vector3 Position { get; set; }
     public bool Alie { get; set; }
     public float NextSpawnTime { get; set; }
+    public int QueueAmount { get; set; }
     public bool Destroyed { get; set; }
 
     public ProductionBuildingModel(int id, ProductionBuildingConfig config) {

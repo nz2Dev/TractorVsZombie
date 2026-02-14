@@ -60,10 +60,15 @@ public class ProductionBuildingController {
         model.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstaclePrefab);
         model.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstaclePrefab);
         model.NextSpawnTime = Time.time + config.spawnInterval;
+        model.QueueAmount = config.initialQueueAmount;
         registry[id] = model;
 
         view.AddVisuals(model.Id, position, rotation, model.Config.visualsPrefab);
         return id;
+    }
+
+    public void SetQueueAmount(int buildingId, int amount) {
+        registry[buildingId].QueueAmount = amount;
     }
 
     private void DestroyBuilding(int id) {
@@ -102,10 +107,12 @@ public class ProductionBuildingController {
 
     private void ProduceSpawns() {
         foreach (var model in registry.Values) {
-            if (Time.time < model.NextSpawnTime)
+            if (model.QueueAmount <= 0 || Time.time < model.NextSpawnTime)
                 continue;
 
+            model.QueueAmount--;
             model.NextSpawnTime = Time.time + model.Config.spawnInterval;
+
             if (model.Config.spawnType == SpawnType.Infantry) {
                 if (spawningService.TryProduceInfantry(model.Position, model.Alie, model.Config.infantryConfig, out var spawnedId)) {
                     var actorId = behaviorSystem.CreateActor(spawnedId);
