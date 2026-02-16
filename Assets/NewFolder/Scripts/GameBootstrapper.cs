@@ -29,7 +29,6 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private GameObject rewardVisualsPrefab;
 
     private CombatSystem combatSystem;
-    private NavigationSystem navigationSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
     private RewardController rewardController;
@@ -42,7 +41,6 @@ public class GameBootstrapper : MonoBehaviour {
     private PlatformController platformController;
     private TruckController truckController;
     private ArmorAIController armorAIController;
-    private BehaviorSystem behaviorSystem;
     private CommanderSystem commanderSystem;
     private ProductionBuildingController buildingController;
     private HeadquarterBuildingController headquarterBuildingController;
@@ -78,10 +76,6 @@ public class GameBootstrapper : MonoBehaviour {
             LayerMask.NameToLayer(combatServiceLayer), 
             LayerMask.NameToLayer(foeCombatServiceLayer), 
             combatServiceEnvironmentMask
-        );
-
-        navigationSystem = new NavigationSystem(
-            pathfindingService
         );
 
         projectileController = new ProjectileController(
@@ -150,15 +144,10 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController
         );
 
-        behaviorSystem = new BehaviorSystem(
-            navigationSystem,
-            infantryController,
-            combatSystem
-        );
-
         commanderSystem = new CommanderSystem(
-            behaviorSystem,
-            navigationSystem
+            infantryController,
+            pathfindingService,
+            combatSystem
         );
 
         buildingController = new ProductionBuildingController(
@@ -212,7 +201,6 @@ public class GameBootstrapper : MonoBehaviour {
 
         ramEffect.Update();
         rewardController.Update();
-        navigationSystem.Update();
 
         projectileController.Update();
         rocketController.Update();
@@ -223,7 +211,6 @@ public class GameBootstrapper : MonoBehaviour {
         truckController.Update();
         
         armorAIController.Update();
-        behaviorSystem.Update();
         commanderSystem.Update();
 
         buildingController.Update();

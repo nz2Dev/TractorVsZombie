@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CommanderState {
+    public int FlowFieldId { get; set; }
+    public List<int> SubordinateIds { get; } = new();
     public bool ChaseCenter { get; set; } = true;
-    // TODO: same domain has different semantic, here it's a target, but for navigation is a destination
-    // Idea: use api to create a Target entity in behavior system, that can be tracked by Id, wich can be a CombatId, Position, etc.
-    // This way, navigation system will be transparent for commander, whos domain is to "manage" behaviors.
-    public MarkerId CommonTargetMarkerId { get; set; }
-    public List<int> SubordinateActorIds { get; } = new();
+    public SteeringInput NextFormationSteering { get; set; }
 }
