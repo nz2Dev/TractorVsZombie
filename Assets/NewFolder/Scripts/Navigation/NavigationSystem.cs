@@ -2,17 +2,11 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-/*
-    Produce step-based velocities to get agent's position to its goal
-    It accounts for avoidance steering of obstacles and other agents
-*/
 public class NavigationSystem {
     
     private PathfindingService pathfindingService;
-    private LocalAvoidanceService avoidanceService;
 
-    public NavigationSystem(LocalAvoidanceService avoidanceService, PathfindingService pathfindingService) {
-        this.avoidanceService = avoidanceService;
+    public NavigationSystem(PathfindingService pathfindingService) {
         this.pathfindingService = pathfindingService;
     }
 
@@ -25,7 +19,6 @@ public class NavigationSystem {
     public void Update() {
         ReadExternalState();
         ProcessLogic();
-        WriteExternalState();
     }
 
     public MarkerId CreateMarker(Vector3 position) {
@@ -40,19 +33,16 @@ public class NavigationSystem {
         pathfindingService.UpdateGoal(markerFlowFieldId, position);
     }
 
-    public int AddAgent(Vector3 position, float maxSpeed, AgentAvoidanceConfig config) {
+    public int AddAgent(Vector3 position, float maxSpeed) {
         var nextId = ++idCounter;
         var agent = new NavigationAgent(nextId, position);
         agent.MaxSpeed = maxSpeed;
-        agent.AvoidanceId = avoidanceService.AddAgent(position, config);
         agent.NextPosition = position;
         registry[nextId] = agent;
         return nextId;
     }
 
     public void RemoveAgent(int id) {
-        var agent = registry[id];
-        avoidanceService.RemoveAgent(agent.AvoidanceId);
         registry.Remove(id);
     }
 
@@ -71,13 +61,12 @@ public class NavigationSystem {
         agent.NextPosition = position;
     }
 
-    public Vector3 GetComputedVelocity(int id) {
-        return registry[id].ComputedVelocity;
+    public Vector3 GetComptutedIntent(int id) {
+        return registry[id].MovementIntent;
     }
 
     private void ReadExternalState() {
         foreach (var agent in registry.Values) {
-            agent.RvoVelocity = avoidanceService.GetVelocity(agent.AvoidanceId);
             if (markerToFlowField.TryGetValue(agent.DestinationMarkerId, out var flowFieldId)) {
                 agent.FlowDirection = pathfindingService.GetFlowVector(flowFieldId, agent.NextPosition);
             } else {
@@ -93,14 +82,7 @@ public class NavigationSystem {
             var speedFactor = Steering.ComputeSpeedFactor(agent.NextPosition, steeringInput);
             var speed = agent.MaxSpeed * speedFactor;
             agent.MovementIntent = direction * speed;
-            agent.ComputedVelocity = agent.RvoVelocity;
         }
     }
 
-    private void WriteExternalState() {
-        foreach (var agent in registry.Values) {
-            avoidanceService.SetAgentPosition(agent.AvoidanceId, agent.NextPosition);
-            avoidanceService.SetPreferedVelocity(agent.AvoidanceId, agent.MovementIntent);
-        }
-    }
 }

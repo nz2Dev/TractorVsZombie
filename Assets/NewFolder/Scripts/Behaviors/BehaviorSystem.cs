@@ -29,8 +29,7 @@ public class BehaviorSystem {
 
     public int CreateActor(int infantryId) {
         var state = infantryController.GetInfantryState(infantryId);
-        var config = infantryController.GetAvoidanceConfig(infantryId);
-        var navigationAgentId = navigationSystem.AddAgent(state.position, config.maxSpeed, config);
+        var navigationAgentId = navigationSystem.AddAgent(state.position, state.maxSpeed);
         var id = ++nextId;
         registry[id] = new BehaviorActor(id, infantryId, navigationAgentId); 
         // TODO: use consistent state initialization
@@ -86,7 +85,7 @@ public class BehaviorSystem {
             navigationSystem.SetNextPosition(actor.NavigationAgentId, infantryState.position);
             navigationSystem.SetNextSteering(actor.NavigationAgentId, actor.SteeringInput);
 
-            var navigationVelocity = navigationSystem.GetComputedVelocity(actor.NavigationAgentId);
+            var navigationVelocity = navigationSystem.GetComptutedIntent(actor.NavigationAgentId);
             infantryController.Move(actor.InfantryId, navigationVelocity);
 
             if (combatSystem.GetClosestEnemyAgentInRange(infantryState.combatId, 2, out var closestFoe)) {

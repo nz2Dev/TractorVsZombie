@@ -7,17 +7,19 @@ public class InfantryController {
 
     private readonly InfantryView view;
     private readonly CombatSystem combatSystem;
+    private readonly LocalAvoidanceService avoidanceService;
     private readonly PhysicsService physicsService;
     private readonly RewardController rewardController;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, PhysicsService physicsService) {
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, PhysicsService physicsService, LocalAvoidanceService avoidanceService) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
         this.physicsService = physicsService;
+        this.avoidanceService = avoidanceService;
     }
 
     public int InfantryCount => registry.Count;
@@ -37,13 +39,14 @@ public class InfantryController {
         model.Position = position;
         model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth);
         model.BodyPhysicsId = physicsService.RegisterPhysicsEntity(position, model.Config.bodyData);
+        model.AvoidanceId = avoidanceService.AddAgent(position, config.agentAvoidanceConfig);
         view.AddVisuals(model.Id, position, model.Config.visualsPrefab);
         return model.Id;
     }
 
     public void Move(int infantryId, Vector3 velocity) {
         var model = registry[infantryId];
-        model.DrivenVelocity = velocity;
+        avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
     }
 
     public void Attack(int infantryId, int targetCombatId) {
@@ -60,6 +63,7 @@ public class InfantryController {
         return new InfantryState {
             position = model.Position,
             movementVelocity = model.DrivenVelocity,
+            maxSpeed = model.Config.agentAvoidanceConfig.maxSpeed,
             isAlive = !model.IsDead,
             isGrounded = model.Grounded,
             combatId = model.CombatId,
@@ -85,11 +89,13 @@ public class InfantryController {
     private void DeleteInfantry(InfantryModel model) {
         registry.Remove(model.Id);
         physicsService.UnregisterPhysicsEntity(model.BodyPhysicsId);
+        avoidanceService.RemoveAgent(model.AvoidanceId);
         view.RemoveVisuals(model.Id);
     }
 
     private void UpdateMovements() {
         foreach (var model in registry.Values) {
+            var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
             var physicsPose = physicsService.GetEntityPose(model.BodyPhysicsId);
             var keepFlying = !model.Grounded && physicsPose.InMotion;
             var becomeGrounded = !model.Grounded && !physicsPose.InMotion;
@@ -104,9 +110,9 @@ public class InfantryController {
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 physicsService.SetPhysicsActive(model.BodyPhysicsId, false);
             } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {
-                model.Position = model.Position += model.DrivenVelocity * Time.deltaTime;
-                if (model.DrivenVelocity.sqrMagnitude > 0) {
-                    model.Rotation = Quaternion.LookRotation(model.DrivenVelocity.normalized, Vector3.up);
+                model.Position = model.Position += rvoVelocity * Time.deltaTime;
+                if (rvoVelocity.sqrMagnitude > 0) {
+                    model.Rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
                 }
             }
         }
@@ -148,6 +154,7 @@ public class InfantryController {
     private void SyncPositions() {
         foreach (var model in registry.Values) {
             view.UpdateTransform(model.Id, model.Position, model.Rotation);
+            avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
             if (!model.IsDead) {
                 combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
             }

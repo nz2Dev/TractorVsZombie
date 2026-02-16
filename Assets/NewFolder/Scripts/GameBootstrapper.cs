@@ -81,7 +81,6 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         navigationSystem = new NavigationSystem(
-            localAvoidanceService,
             pathfindingService
         );
 
@@ -116,7 +115,8 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             infantryView,
             rewardController,
-            physicsService
+            physicsService,
+            localAvoidanceService
         );
 
         armorController = new ArmorController(

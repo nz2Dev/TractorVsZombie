@@ -9,6 +9,7 @@ public class InfantryModel {
     public Quaternion Rotation { get; set; }
     public int CombatId { get; set; }
     public int BodyPhysicsId { get; set; }
+    public int AvoidanceId { get; set; }
 
     public bool Grounded { get; set; }
     public bool IsPhysicsOnlyMovement { get; set; }
