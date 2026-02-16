@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -6,36 +7,35 @@ public class ArmorView {
 
     private readonly SoundManager soundManager;
 
-    private ArmorVisuals visuals;
-    private int sfxLoopId;
+    private Dictionary<int, ArmorVisuals> visualsRegistry = new();
+    private Dictionary<int, int> sfxLoopRegistry = new();
 
     public ArmorView(SoundManager soundManager) {
         this.soundManager = soundManager;
     }
 
-    public void Show(Vector3 position, ArmorVisuals prefab, AudioClip engineSFX) {
-        visuals = GameObject.Instantiate(prefab, position, Quaternion.identity);
-        sfxLoopId = soundManager.StartLoop(position, engineSFX);
+    public void Show(int armorId, Vector3 position, ArmorVisuals prefab, AudioClip engineSFX) {
+        visualsRegistry[armorId] = GameObject.Instantiate(prefab, position, Quaternion.identity);
+        sfxLoopRegistry[armorId] = soundManager.StartLoop(position, engineSFX);
     }
 
-    public void Hide() {
-        if (visuals != null) {
-            visuals.DestroySelf();
-            visuals = null;
-        }
+    public void Hide(int armorId) {
+        visualsRegistry.Remove(armorId, out var visuals);
+        visuals.DestroySelf();
+        sfxLoopRegistry.Remove(armorId, out var sfxLoopId);
         soundManager.StopLoop(sfxLoopId);
     }
 
-    public void UpdatePose(VehicleState vehicleState) {
-        if (visuals == null) return;
-        
+    public void UpdatePose(int armorId, VehicleState vehicleState) {
+        var visuals = visualsRegistry[armorId];
         visuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         visuals.SetFrontAxis(vehicleState.frontAxis);
         visuals.SetRearAxis(vehicleState.rearAxis);
     }
 
-    public void UpdateSound(float gasThrottle) {
-        if (visuals == null) return;
+    public void UpdateSound(int armorId, float gasThrottle) {
+        var visuals = visualsRegistry[armorId];
+        var sfxLoopId = sfxLoopRegistry[armorId];
 
         var enginePitch = 0.5f + gasThrottle;
         var engineVolume = 0.5f + gasThrottle;

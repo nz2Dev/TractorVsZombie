@@ -47,7 +47,7 @@ public class ArmorController {
         model.VehiclePhysicsId = vehicleService.CreateVehicle(position, model.PhysicsPrefab);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position, model.WeaponConfig);
         model.RamId = ramEffect.StartNew(model.Position, model.CombatId, model.RamConfig);
-        view.Show(position, model.VisualsPrefab, model.EngineLoopSFX);
+        view.Show(nextId, position, model.VisualsPrefab, model.EngineLoopSFX);
         
         return model.Id;
     }
@@ -72,7 +72,7 @@ public class ArmorController {
         combatSystem.UnregisterAgent(model.CombatId);
         weaponController.DeleteWeapon(model.WeaponId);
         ramEffect.Stop(model.RamId);
-        view.Hide();
+        view.Hide(model.Id);
         registry.Remove(model.Id);
     }
     
@@ -128,10 +128,10 @@ public class ArmorController {
 
     private void UpdateView() {
         foreach (var model in registry.Values) {
-            view.UpdatePose(model.VehiclePhysicsState);
+            view.UpdatePose(model.Id, model.VehiclePhysicsState);
             
             var motorRev = model.MotorTorque / Mathf.Max(model.DrivingConfig.maxEngineTorque, 1);
-            view.UpdateSound(motorRev);
+            view.UpdateSound(model.Id, motorRev);
         }
     }
 
