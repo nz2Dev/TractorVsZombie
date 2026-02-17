@@ -5,6 +5,6 @@ public class EnemySource {
     public Vector3 Origin { get; set; }
     public int ProductionBuildingId { get; set; }
     public ProductionBuildingConfig ProductionBuildingConfig { get; set; }
-    public int LastCommanderId { get; set; }
-    public List<int> Commanders { get; set; } = new();
+    public int LastSquadId { get; set; }
+    public List<int> SquadIds { get; set; } = new();
 }

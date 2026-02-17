@@ -10,23 +10,23 @@ public class EnemyController {
     private readonly EnemyView enemyView;
     private readonly EnemyConfig enemyConfig;
     private readonly ProductionBuildingController productionBuildingController;
-    private readonly CommanderSystem commanderSystem;
+    private readonly SquadAIController squadAIController;
     private readonly ArmorAIController armorAIController;
 
     private readonly List<EnemySource> enemySources = new();
 
-    public EnemyController(EnemyView crowdView, EnemyConfig enemyConfig, ProductionBuildingController buildingController, CommanderSystem commanderSystem, ArmorAIController armorAIController) {
+    public EnemyController(EnemyView crowdView, EnemyConfig enemyConfig, ProductionBuildingController buildingController, SquadAIController commanderSystem, ArmorAIController armorAIController) {
         this.enemyView = crowdView;
         this.enemyConfig = enemyConfig;
         this.productionBuildingController = buildingController;
-        this.commanderSystem = commanderSystem;
+        this.squadAIController = commanderSystem;
         this.armorAIController = armorAIController;
     }
 
     public void Update() {
         TryInitEnemySources();
         ValidateEnemySource();
-        HireNewCommanders();
+        MakeNewSquads();
         AssignProducedEnemies();
         UpdateProductionQueues();
         ReadBehaviorChanges();
@@ -45,9 +45,9 @@ public class EnemyController {
             enemySource.ProductionBuildingId = productionBuildingController.Spawn(place.Position, place.Rotation, place.productionBuildingConfig, alie: false);
             enemySource.ProductionBuildingConfig = place.productionBuildingConfig;
             
-            var firstCommanderId = commanderSystem.CreateCommander();
-            enemySource.LastCommanderId = firstCommanderId;
-            enemySource.Commanders.Add(firstCommanderId);
+            var firstSquadId = squadAIController.CreateSquad();
+            enemySource.LastSquadId = firstSquadId;
+            enemySource.SquadIds.Add(firstSquadId);
 
             enemySources.Add(enemySource);
         }
@@ -62,13 +62,13 @@ public class EnemyController {
         }
     }
 
-    private void HireNewCommanders() {
+    private void MakeNewSquads() {
         foreach (var enemySource in enemySources) {
-            var lastCommanderSnapshot = commanderSystem.GetCommanderSnapshot(enemySource.LastCommanderId);
-            if (lastCommanderSnapshot.subordinateCount > 50) {
-                var nextCommander = commanderSystem.CreateCommander();
-                enemySource.Commanders.Add(nextCommander);
-                enemySource.LastCommanderId = nextCommander;
+            var lastSquadSnapshot = squadAIController.GetSquadSnapshot(enemySource.LastSquadId);
+            if (lastSquadSnapshot.subordinateCount > 50) {
+                var nextSquadId = squadAIController.CreateSquad();
+                enemySource.SquadIds.Add(nextSquadId);
+                enemySource.LastSquadId = nextSquadId;
             }
         }
     }
@@ -79,7 +79,7 @@ public class EnemyController {
             switch (productionResult.spawnType) {
                 case SpawnType.Infantry:
                     foreach (var producedInfantry in productionResult.spawnedIds)
-                        commanderSystem.AddSubordinate(enemySource.LastCommanderId, producedInfantry);
+                        squadAIController.AddSubordinate(enemySource.LastSquadId, producedInfantry);
                     break;
                 case SpawnType.Armor:
                     foreach (var producedArmor in productionResult.spawnedIds)
@@ -120,11 +120,11 @@ public class EnemyController {
     private void ReadBehaviorChanges() {
         if (Input.GetKeyDown(KeyCode.R)) {
             foreach (var enemySource in enemySources) {
-                foreach (var commanderId in enemySource.Commanders) {
-                    var commanderSnapshot = commanderSystem.GetCommanderSnapshot(commanderId);
-                    var switchedStrategyToChaseCenter = !commanderSnapshot.isChasingCenter;
+                foreach (var squadId in enemySource.SquadIds) {
+                    var snapshot = squadAIController.GetSquadSnapshot(squadId);
+                    var switchedStrategyToChaseCenter = !snapshot.isChasingCenter;
                     var targetPosition = switchedStrategyToChaseCenter ? Vector3.zero : enemySource.Origin;
-                    commanderSystem.SetStrategy(commanderId, switchedStrategyToChaseCenter, targetPosition);
+                    squadAIController.SetStrategy(squadId, switchedStrategyToChaseCenter, targetPosition);
                 }
             }
         }

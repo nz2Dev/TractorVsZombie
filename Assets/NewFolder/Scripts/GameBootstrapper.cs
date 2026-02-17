@@ -41,7 +41,7 @@ public class GameBootstrapper : MonoBehaviour {
     private PlatformController platformController;
     private TruckController truckController;
     private ArmorAIController armorAIController;
-    private CommanderSystem commanderSystem;
+    private SquadAIController squadAIController;
     private ProductionBuildingController buildingController;
     private HeadquarterBuildingController headquarterBuildingController;
 
@@ -144,7 +144,7 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController
         );
 
-        commanderSystem = new CommanderSystem(
+        squadAIController = new SquadAIController(
             infantryController,
             pathfindingService,
             combatSystem
@@ -187,7 +187,7 @@ public class GameBootstrapper : MonoBehaviour {
             unitView,
             enemyConfig,
             buildingController,
-            commanderSystem,
+            squadAIController,
             armorAIController
         );
     }
@@ -211,7 +211,7 @@ public class GameBootstrapper : MonoBehaviour {
         truckController.Update();
         
         armorAIController.Update();
-        commanderSystem.Update();
+        squadAIController.Update();
 
         buildingController.Update();
         headquarterBuildingController.Update();
