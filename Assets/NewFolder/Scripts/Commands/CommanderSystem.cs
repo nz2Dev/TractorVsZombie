@@ -20,7 +20,7 @@ public class CommanderSystem {
 
     public void Update() {
         ValidateSubordinates();
-        ComputeFormationSteerings();
+        ComputeFormations();
         ProcessCommands();
     }
 
@@ -63,7 +63,7 @@ public class CommanderSystem {
         }
     }
 
-    private void ComputeFormationSteerings() {
+    private void ComputeFormations() {
         foreach (var commanderState in registry.Values) {
             var count = 0;
             var sumPosition = Vector3.zero;
@@ -76,9 +76,9 @@ public class CommanderSystem {
                 count++;
             }
 
-            commanderState.NextFormationSteering = new SteeringInput {
-                CohesionCenter = sumPosition / count,
-                AlignmentDirection = (sumDirection / count).normalized,
+            commanderState.FormationCohesionInput = new CohesionInput {
+                center = sumPosition / count,
+                direction = (sumDirection / count).normalized,
             };
         }
     }
@@ -86,18 +86,15 @@ public class CommanderSystem {
     private void ProcessCommands() {
         foreach (var commanderState in registry.Values) {
             foreach (var infantryId in commanderState.SubordinateIds) {
-                var infantryState = infantryController.GetInfantryState(infantryId);
-                if (!infantryState.isAlive || !infantryState.isGrounded)
+                var infantry = infantryController.GetInfantryState(infantryId);
+                if (!infantry.isAlive || !infantry.isGrounded)
                     continue;
 
-                var steeringInput = commanderState.NextFormationSteering;
-                var flowVector = pathfindingService.GetFlowVector(commanderState.FlowFieldId, infantryState.position);
-                var direction = Steering.Blend(flowVector, infantryState.position, steeringInput);
-                var speedFactor = Steering.ComputeSpeedFactor(infantryState.position, steeringInput);
-                var movementIntent = direction * infantryState.maxSpeed * speedFactor;
+                var flowVector = pathfindingService.GetFlowVector(commanderState.FlowFieldId, infantry.position);
+                var movementIntent = Steering.CohesionSteering(infantry.position, flowVector, infantry.maxSpeed, commanderState.FormationCohesionInput);
                 infantryController.Move(infantryId, movementIntent);
 
-                if (combatSystem.GetClosestEnemyAgentInRange(infantryState.combatId, 2, out var closestFoe)) {
+                if (combatSystem.GetClosestEnemyAgentInRange(infantry.combatId, 2, out var closestFoe)) {
                     infantryController.Attack(infantryId, closestFoe.id);
                 }
             }
