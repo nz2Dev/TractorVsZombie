@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CommanderSystem {
-    
+
     private readonly CombatSystem combatSystem;
     private readonly InfantryController infantryController;
     private readonly PathfindingService pathfindingService;
@@ -68,7 +68,7 @@ public class CommanderSystem {
             var count = 0;
             var sumPosition = Vector3.zero;
             var sumDirection = Vector3.zero;
-            
+
             foreach (var infantryId in commanderState.SubordinateIds) {
                 var infantryState = infantryController.GetInfantryState(infantryId);
                 sumPosition += infantryState.position;
@@ -83,11 +83,11 @@ public class CommanderSystem {
         }
     }
 
-     private void ProcessCommands() {
+    private void ProcessCommands() {
         foreach (var commanderState in registry.Values) {
             foreach (var infantryId in commanderState.SubordinateIds) {
                 var infantryState = infantryController.GetInfantryState(infantryId);
-                if (!infantryState.isAlive || !infantryState.isGrounded) 
+                if (!infantryState.isAlive || !infantryState.isGrounded)
                     continue;
 
                 var steeringInput = commanderState.NextFormationSteering;
