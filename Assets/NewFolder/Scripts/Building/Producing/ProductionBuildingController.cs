@@ -65,7 +65,7 @@ public class ProductionBuildingController {
         model.Alie = alie;
         model.Position = position;
         model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
-        model.PathfindingObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
+        // model.PathfindingObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(position, rotation, config.avoidanceObstaclePrefab);
         model.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstaclePrefab);
         model.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstaclePrefab);
@@ -92,7 +92,7 @@ public class ProductionBuildingController {
     private void DestroyBuilding(int id) {
         registry.Remove(id, out var model);
         combatSystem.UnregisterAgent(model.CombatId);
-        pathfindingService.UnregisterObstacle(model.PathfindingObstacleId);
+        // pathfindingService.UnregisterObstacle(model.PathfindingObstacleId);
         localAvoidanceService.RemoveObstacle(model.AvoidanceObstacleId);
         vehicleService.UnregisterObstacle(model.VehicleObstacleId);
         physicsService.UnregisterObstacle(model.PhysicsObstacleId);
