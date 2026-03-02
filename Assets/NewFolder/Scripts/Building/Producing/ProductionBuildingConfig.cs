@@ -20,6 +20,8 @@ public class ProductionBuildingConfig : ScriptableObject {
     [Space]
     public float spawnInterval = 5f;
     public int initialQueueAmount = 1000;
+    public SpawnShape spawnShapePrefab;
+    [Space]
     public SpawnType spawnType;
     public InfantryConfig infantryConfig;
     public ArmorConfig armorConfig;

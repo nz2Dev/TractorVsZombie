@@ -52,6 +52,7 @@ public class BuildingPlace : MonoBehaviour {
             
         yield return productionBuildingConfig.visualsPrefab;      
         yield return NonNullGOPrefab(productionBuildingConfig.vehicleObstaclePrefab);
+        yield return NonNullGOPrefab(productionBuildingConfig.spawnShapePrefab);
     }
 
     private IEnumerable<GameObject> ListHeadquarterBuildingEditablePrefabs() {

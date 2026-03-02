@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class ProductionBuildingController {
     private int idCounter;
     private readonly Dictionary<int, ProductionBuildingModel> registry = new();
     private readonly List<int> removalBuffer = new();
+    private readonly List<Vector3> spawnPointsBuffer = new(32);
 
     public ProductionBuildingController(
         ProductionBuildingView view,
@@ -126,16 +128,21 @@ public class ProductionBuildingController {
             if (model.QueueAmount <= 0 || Time.time < model.NextSpawnTime)
                 continue;
 
-            model.QueueAmount--;
+            var availableSpawn = Mathf.Min(model.QueueAmount, model.Config.spawnShapePrefab.GetTotalPoints());
             model.NextSpawnTime = Time.time + model.Config.spawnInterval;
+            model.QueueAmount -= availableSpawn;
 
-            var spawnPoint = model.Position + Vector3.ProjectOnPlane(UnityEngine.Random.onUnitSphere, Vector3.up);
-            if (model.Config.spawnType == SpawnType.Infantry) {
-                var spawnedId = infantryController.SpawnInfantry(spawnPoint, model.Alie, model.Config.infantryConfig);
-                model.ProducedEntities.Add(spawnedId);
-            } else if (model.Config.spawnType == SpawnType.Armor) {
-                var spawnedId = armorController.SpawnArmor(spawnPoint, model.Config.armorConfig);
-                model.ProducedEntities.Add(spawnedId);
+            model.Config.spawnShapePrefab.CalculateSpawnPoints(spawnPointsBuffer);
+            foreach (var spawnPoint in spawnPointsBuffer.Take(availableSpawn)) {
+                var worldSpaceSpawnPoint = model.Position + model.Rotation * spawnPoint;
+                
+                if (model.Config.spawnType == SpawnType.Infantry) {
+                    var spawnedId = infantryController.SpawnInfantry(worldSpaceSpawnPoint, model.Alie, model.Config.infantryConfig);
+                    model.ProducedEntities.Add(spawnedId);
+                } else if (model.Config.spawnType == SpawnType.Armor) {
+                    var spawnedId = armorController.SpawnArmor(worldSpaceSpawnPoint, model.Config.armorConfig);
+                    model.ProducedEntities.Add(spawnedId);
+                }
             }
         }
     }
