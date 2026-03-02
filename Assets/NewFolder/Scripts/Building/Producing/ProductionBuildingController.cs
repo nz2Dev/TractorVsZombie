@@ -69,7 +69,7 @@ public class ProductionBuildingController {
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(position, rotation, config.avoidanceObstaclePrefab);
         model.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstaclePrefab);
         model.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstaclePrefab);
-        model.NextSpawnTime = Time.time + config.spawnInterval;
+        model.NextSpawnTime = Time.time;
         model.QueueAmount = config.initialQueueAmount;
         registry[id] = model;
 
