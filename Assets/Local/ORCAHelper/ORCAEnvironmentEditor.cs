@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 
 [CustomEditor(typeof(ORCAEnvironment))]
 public class ORCAEnvironmentEditor : Editor {
@@ -13,6 +14,7 @@ public class ORCAEnvironmentEditor : Editor {
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
         if (GUILayout.Button("Bake")) {
+            Undo.RecordObject(environment, "Bake obstacles");
             environment.BakeObstacles();
         }
     }
