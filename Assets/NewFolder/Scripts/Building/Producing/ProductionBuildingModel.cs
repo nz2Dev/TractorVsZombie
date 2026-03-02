@@ -13,6 +13,7 @@ public class ProductionBuildingModel {
     public int VehicleObstacleId { get; set; }
     public int PhysicsObstacleId { get; set; }
     public Vector3 Position { get; set; }
+    public Quaternion Rotation { get; set; }
     public bool Alie { get; set; }
     public float NextSpawnTime { get; set; }
     public int QueueAmount { get; set; }

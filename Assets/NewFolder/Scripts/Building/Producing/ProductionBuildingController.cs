@@ -64,6 +64,7 @@ public class ProductionBuildingController {
         
         model.Alie = alie;
         model.Position = position;
+        model.Rotation = rotation;
         model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
         // model.PathfindingObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(position, rotation, config.avoidanceObstaclePrefab);
