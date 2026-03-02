@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using KNN;
 using KNN.Jobs;
@@ -13,8 +15,7 @@ public interface IPositionSource {
     public Vector3 Position { get; }
 }
 
-// TODO: Implement IDisposable, native resources ARE NOT dealocated
-public class SpatialLookup<T> where T : IPositionSource {
+public class SpatialLookup<T> : IDisposable where T : IPositionSource {
     
     private T[] sources;
     private int sourceCount;
@@ -32,6 +33,13 @@ public class SpatialLookup<T> where T : IPositionSource {
         resultBuffer = new NativeArray<int>(1, Allocator.Persistent);
         variableResultBuffer = new NativeList<int>(initRangeCapacity, Allocator.Persistent);
         resultSourcesBuffer = new List<T>(initRangeCapacity);
+    }
+
+    public void Dispose() {
+        points.Dispose();
+        knnContainer.Dispose();
+        resultBuffer.Dispose();
+        variableResultBuffer.Dispose();
     }
 
     public int SourceCount => sourceCount;

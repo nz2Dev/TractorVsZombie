@@ -221,4 +221,9 @@ public class GameBootstrapper : MonoBehaviour {
 
     }
 
+    private void OnDestroy() {
+        combatSystem.Destroy();
+        rewardController.Destroy();       
+    }
+
 }

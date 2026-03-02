@@ -20,6 +20,10 @@ public class RewardController {
         UpdateSpatialLookup();
     }
 
+    internal void Destroy() {
+        spatialLookup.Dispose();
+    }
+
     public IReadOnlyList<RewardState> CollectRewards(Vector3 position, float radius) {
         var rewardsInRange = spatialLookup.QueryRange(position, radius);
         rewardStateBuffer.Clear();

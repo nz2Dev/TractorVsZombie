@@ -32,6 +32,11 @@ public class CombatSystem {
         UpdateLookups();
     }
 
+    public void Destroy() {
+        alieLookup.Dispose();
+        foeLookup.Dispose();
+    }
+
     private void ResolveDamage() {
         foreach (var agent in agents.Values) {
             var fatalDamage = false;
