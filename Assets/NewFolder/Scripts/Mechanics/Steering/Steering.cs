@@ -2,11 +2,11 @@ using UnityEngine;
 
 public static class Steering {
 
-    public const float DefaultCohesionWeight = 0.3f;
-    public const float DefaultSpeedAdjustFactor = 0.2f;
+    public const float DefaultCohesionWeight = 0.4f;
+    public const float DefaultSpeedAdjustFactor = 0.4f;
 
     public static Vector3 CohesionSteering(Vector3 position, Vector3 direction, float maxSpeed, CohesionInput cohesionInput) {
-        var cohesionForce = (cohesionInput.center - position).normalized * DefaultCohesionWeight;
+        var cohesionForce = (cohesionInput.center - position).normalized;
 
         var blend = Vector3.Lerp(direction, cohesionForce, DefaultCohesionWeight).normalized;
 
