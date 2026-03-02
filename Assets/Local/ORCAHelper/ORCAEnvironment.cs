@@ -14,35 +14,27 @@ public class ORCAEnvironment : MonoBehaviour {
     
     [SerializeField] List<ObstacleData> bakedObstacleData;
 
-    private ORCA orca;
-    private AgentGroup<Agent> agentsGroup;
-    private ObstacleGroup staticObstacles;
-    private ObstacleGroup dynamicObstacles;
-
-    private void Awake() {
-        agentsGroup = new();
-        staticObstacles = new();
-        dynamicObstacles = new();
-        orca = new ORCA() {
-            plane = Nebukam.Common.AxisPair.XZ,
-            agents = agentsGroup,
-            staticObstacles = staticObstacles,
-            dynamicObstacles = dynamicObstacles
-        };
-
-        ORCADebuger.Debug(orca);
-    }
+    public IReadOnlyList<ObstacleData> BakedData => bakedObstacleData;
 
     private void Start() {
-        staticObstacles.Clear();
+        var system = ORCASystem.Instance;
+        
         foreach (var bakedData in bakedObstacleData) {
-            staticObstacles.Add(ToFloat3Vertices(bakedData.vertices), bakedData.inverseOrder);
+            system.StaticObstacles.Add(ToFloat3Vertices(bakedData.vertices), bakedData.inverseOrder);
         }
+
+        system.Recreate();
+    }
+
+    void OnDestroy() {
+        // if domain reload disabled for enter/exit play mode
+        ORCASystem.Instance.StaticObstacles.Clear();
+        ORCASystem.Instance.DynamicObstacles.Clear();
     }
 
     internal void BakeObstacles() {
         bakedObstacleData.Clear();
-        var obstacles = FindObjectsByType<ORCAObstacle>(FindObjectsSortMode.None);
+        var obstacles = FindObjectsByType<ORCABoxObstacleTag>(FindObjectsSortMode.None);
         foreach (var obstacle in obstacles) {
             obstacle.GetBoxInfo(out var position, out var rotation, out var boxSize);
             bakedObstacleData.Add(new ObstacleData {
@@ -52,30 +44,14 @@ public class ORCAEnvironment : MonoBehaviour {
         }
     }
 
-    public Obstacle AddBoxObstacle(Vector3 position, Quaternion rotation, Vector3 boxSize) {
+    public Obstacle AddTemporalBoxObstacle(Vector3 position, Quaternion rotation, Vector3 boxSize) {
         var computedVerticies = ComputeBoxVerticies(position, rotation, boxSize * 0.5f);
-        return dynamicObstacles.Add(ToFloat3Vertices(computedVerticies), inverseOrder: true);
+        var boxObstacle = ORCASystem.Instance.DynamicObstacles.Add(ToFloat3Vertices(computedVerticies), inverseOrder: true);
+        return boxObstacle;
     }
 
-    public void RemoveObstacle(Obstacle orcaObstacle) {
-        dynamicObstacles.Remove(orcaObstacle);
-    }
-
-    private void OnDestroy() {
-        orca.DisposeAll();
-    }
-
-    private void Update() {
-        orca.Schedule(Time.deltaTime);
-        orca.Complete();
-    }
-
-    public Agent AddAgent(Vector3 position) {
-        return agentsGroup.Add(position);
-    }
-
-    public void RemoveAgent(Agent agent) {
-        agentsGroup.Remove(agent);
+    public void RemoveTemporalObstacle(Obstacle orcaObstacle) {
+        ORCASystem.Instance.DynamicObstacles.Remove(orcaObstacle);
     }
 
     private static Vector3[] ComputeBoxVerticies(Vector3 position, Quaternion rotation, Vector3 halfSize) {

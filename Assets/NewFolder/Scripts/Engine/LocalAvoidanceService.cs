@@ -31,17 +31,18 @@ public class LocalAvoidanceService {
 
     public LocalAvoidanceService(ORCAEnvironment environment) {
         this.environment = environment;
+        ORCASystem.Instance.Agents.Clear(); // if domain reload disabled for enter/exit play mode
     }
 
     public int AddObstacle(Vector3 position, Quaternion rotation, PhysicsObstacle prefab) {
         var nextObstacleId = ++obstacleIdCounter;
-        obstacleRegistry[nextObstacleId] = environment.AddBoxObstacle(position, rotation, prefab.bakedSize);
+        obstacleRegistry[nextObstacleId] = environment.AddTemporalBoxObstacle(position, rotation, prefab.bakedSize);
         return nextObstacleId;
     }
 
     public void RemoveObstacle(int obstacleId) {
         obstacleRegistry.Remove(obstacleId, out var orcaObstacle);
-        environment.RemoveObstacle(orcaObstacle);
+        environment.RemoveTemporalObstacle(orcaObstacle);
     }
 
     public virtual int AddAgent(Vector3 initPosition) {
@@ -58,7 +59,7 @@ public class LocalAvoidanceService {
     }
     
     public virtual int AddAgent(Vector3 initPosition, AgentAvoidanceConfig config) {
-        var newAgent = environment.AddAgent(initPosition);
+        var newAgent = ORCASystem.Instance.Agents.Add(initPosition);
         agentRegistry.Add(nextId, newAgent);
         var id = nextId++;
         UpdateAgent(id, config);
@@ -79,7 +80,7 @@ public class LocalAvoidanceService {
 
     public void RemoveAgent(int agentId) {
         var agent = agentRegistry[agentId];
-        environment.RemoveAgent(agent);
+        ORCASystem.Instance.Agents.Remove(agent);
         agentRegistry.Remove(agentId);
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(BoxCollider))]
-public class ORCAObstacle : MonoBehaviour {
+public class ORCABoxObstacleTag : MonoBehaviour {
     
     private BoxCollider boxCollider;
 
