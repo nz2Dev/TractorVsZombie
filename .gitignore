@@ -74,3 +74,6 @@ crashlytics-build.properties
 
 # UITookit generated metadata
 /UIElementsSchema
+
+# macOS files
+.DS_Store
