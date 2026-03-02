@@ -19,6 +19,10 @@ public class InfantryVisuals : MonoBehaviour {
         colorPropertyID = Shader.PropertyToID("_Color");
     }
 
+    private void Start() {
+        animator.SetFloat("CycleOffset", Random.Range(0, 1f));
+    }
+
     void LateUpdate() {
         dynamicProps.SetColor(colorPropertyID, AnimatedColor);
         visualsRenderer.SetPropertyBlock(dynamicProps);
