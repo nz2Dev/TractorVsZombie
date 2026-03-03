@@ -3,6 +3,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 public class FlowFieldDebugWindow : EditorWindow {
 
@@ -11,6 +12,9 @@ public class FlowFieldDebugWindow : EditorWindow {
 
     private FlowFieldSpace space;
     private HashSet<Vector2Int> obstacleCells = new();
+
+    private int selectedIndex;
+    private string[] flowFieldNames = new string[0];
     
     [MenuItem("Tools/FlowField Debuger")]
     private static void ShowWindow() {
@@ -32,6 +36,10 @@ public class FlowFieldDebugWindow : EditorWindow {
                 obstacleCells.Add(cell);
             }
         }
+
+        if (Application.isPlaying) {
+            flowFieldNames = FlowFieldSystem.Instance.Handles.Select((handle, index) => "flow field " + index).ToArray();
+        }
     }
 
     private void OnBecameInvisible() {
@@ -42,6 +50,15 @@ public class FlowFieldDebugWindow : EditorWindow {
         GUILayout.Label("obstacle sources: " + obstacleSources.Length);
         GUILayout.Label("space source found: " + (spaceSource == null ? "no" : "yes"));
         GUILayout.Label("obstacle cells: " + obstacleCells.Count);
+
+        if (Application.isPlaying) {
+            GUILayout.Label("Flow Fields Count: " + FlowFieldSystem.Instance.Handles.Count);
+            selectedIndex = EditorGUILayout.Popup("Select Flow Field", selectedIndex, flowFieldNames);
+            
+            if (selectedIndex >= 0 && selectedIndex < flowFieldNames.Length) {
+                EditorGUILayout.LabelField("Selected:", flowFieldNames[selectedIndex]);
+            }
+        }
     }
 
     private void OnSceneGUI(SceneView sceneView) {
@@ -50,6 +67,8 @@ public class FlowFieldDebugWindow : EditorWindow {
 
         if (!Application.isPlaying) {
             DrawEditTimeSceneGUI();
+        } else {
+            DrawRuntimeSceneGUI();
         }
     }
 
@@ -67,6 +86,23 @@ public class FlowFieldDebugWindow : EditorWindow {
         foreach (var blockedCell in obstacleCells) {
             var worldPos = space.ConvertToWorld(blockedCell, atCenter: true);
             Handles.RectangleHandleCap(0, worldPos, Quaternion.LookRotation(Vector3.up), space.Scale * 0.5f, EventType.Repaint);
+        }
+    }
+
+    private void DrawRuntimeSceneGUI() {
+        var system = FlowFieldSystem.Instance;
+        if (system.Handles.Count == 0)
+            return;
+
+        var selectedHandle = system.Handles[selectedIndex];
+        var flowField = selectedHandle.flowField;
+        for (int x = 0; x < flowField.Size; x++) {
+            for (int y = 0; y < flowField.Size; y++) {
+                var worldPos = space.ConvertToWorld(new Vector2Int(x, y), atCenter: true);
+                var flowVectorGrid = flowField.GetFlowVector(x, y);
+                var flowVectorWorld = new Vector3(flowVectorGrid.x, 0, flowVectorGrid.y) * 0.5f;
+                Handles.DrawLine(worldPos, worldPos + flowVectorWorld, thickness: 2);
+            }
         }
     }
 

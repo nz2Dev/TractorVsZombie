@@ -11,6 +11,8 @@ public class FlowFieldSystem {
     private List<FlowFieldObstacle> obstacles = new();
     private List<FlowFieldHandle> flowFieldsHandles = new();
 
+    public IReadOnlyList<FlowFieldHandle> Handles => flowFieldsHandles;
+
     private HashSet<Vector2Int> blockedCells = new();
     private bool obstaclesIsDirty = false;
 
