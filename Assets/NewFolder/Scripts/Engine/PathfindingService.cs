@@ -5,63 +5,45 @@ using UnityEngine;
 
 public class PathfindingService {
 
-    private readonly FlowFieldSurface surface;
+    private readonly FlowFieldSystem system;
 
     private int idCounter;
-    private Dictionary<int, FlowField> registry = new();
+    private Dictionary<int, FlowFieldHandle> registry = new();
 
-    public PathfindingService(FlowFieldSurface surface) {
-        this.surface = surface;
+    private int obstacleIdCounter;
+    private Dictionary<int, FlowFieldObstacle> obstacleRegistry = new();
+
+    public PathfindingService(FlowFieldSystem system) {
+        this.system = system;
     }
 
     public int CreateFlowField(Vector3 goal) {
         var nextFlowFieldId = ++idCounter;
-        var goalGridPosition = surface.GetGridPositionClamped(goal);
-        
-        var flowField = new FlowField(surface.Size, surface.BlockedCells, goalGridPosition);
-        flowField.ComputeCosts();
-        flowField.ComputeFlow();
-        registry[nextFlowFieldId] = flowField;
+        var handle = system.CreateField(goal);
+        registry[nextFlowFieldId] = handle;
         return nextFlowFieldId;
     }
 
     public void UpdateGoal(int fieldId, Vector3 positionWorldSpace) {
-        var flowField = registry[fieldId];
-        registry[fieldId] = flowField;
-        var goalGridPosition = surface.GetGridPositionClamped(positionWorldSpace);
-        flowField.SetNextGoal(goalGridPosition);
-        flowField.ComputeCosts();
-        flowField.ComputeFlow();
+        var flowFieldHandle = registry[fieldId];
+        system.SetFieldGoal(flowFieldHandle, positionWorldSpace);
     }
 
     public virtual Vector3 GetFlowVector(int fieldId, Vector3 positionWorldSpace) {
-        var flowField = registry[fieldId];
-        var gridPosition = surface.GetGridPositionClamped(positionWorldSpace);
-        var gridVector = flowField.GetFlowVector(gridPosition.x, gridPosition.y);
-        return new Vector3(gridVector.x, 0, gridVector.y).normalized;
+        var flowFieldHandle = registry[fieldId];
+        return system.GetFlowVector(flowFieldHandle, positionWorldSpace);
     }
 
     public int RegisterObstacle(Vector3 position, int radius) {
-        var obstacleId = surface.AddBlockerShape(position, radius);
-        surface.BakeDynamicBlockers();
-
-        foreach (var flowField in registry.Values) {
-            flowField.UpdateBlockedCells(surface.BlockedCells);
-            flowField.ComputeCosts();
-            flowField.ComputeFlow();
-        }
-
-        return obstacleId;
+        var obstacle = system.AddObstacle(position, radius);
+        var nextObstacleId = ++obstacleIdCounter;
+        obstacleRegistry[nextObstacleId] = obstacle;
+        return nextObstacleId;
     }
 
-    internal void UnregisterObstacle(int obstacleId) {
-        surface.RemoveBlockerShape(obstacleId);
-        surface.BakeDynamicBlockers();
-
-        foreach (var flowField in registry.Values) {
-            flowField.UpdateBlockedCells(surface.BlockedCells);
-            flowField.ComputeCosts();
-            flowField.ComputeFlow();
-        }
+    public void UnregisterObstacle(int obstacleId) {
+        obstacleRegistry.Remove(obstacleId, out var obstacle);
+        system.RemoveObstacle(obstacle);
     }
+
 }

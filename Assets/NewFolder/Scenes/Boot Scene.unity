@@ -165,7 +165,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundManager: {fileID: 1012605277}
   cameraManager: {fileID: 618815303}
-  flowFieldSurface: {fileID: 804724243}
   orcaEnvironment: {fileID: 851369242}
   physicsServiceLayer: UnitPhysics
   combatServiceLayer: Combat
@@ -335,7 +334,7 @@ GameObject:
   - component: {fileID: 804724242}
   - component: {fileID: 804724243}
   m_Layer: 0
-  m_Name: FlowFieldsSurface
+  m_Name: FlowFieldsSpace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -350,7 +349,7 @@ Transform:
   m_GameObject: {fileID: 804724241}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -363,182 +362,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 804724241}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2a651aa3654942cf864072452760d1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   size: 50
-  blockersMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  blockedCells:
-  - {x: 11, y: 10}
-  - {x: 12, y: 9}
-  - {x: 12, y: 10}
-  - {x: 12, y: 11}
-  - {x: 13, y: 9}
-  - {x: 13, y: 10}
-  - {x: 13, y: 11}
-  - {x: 13, y: 12}
-  - {x: 14, y: 10}
-  - {x: 14, y: 11}
-  - {x: 14, y: 12}
-  - {x: 14, y: 13}
-  - {x: 15, y: 11}
-  - {x: 15, y: 12}
-  - {x: 15, y: 13}
-  - {x: 15, y: 14}
-  - {x: 16, y: 12}
-  - {x: 16, y: 13}
-  - {x: 16, y: 14}
-  - {x: 17, y: 13}
-  - {x: 15, y: 35}
-  - {x: 15, y: 36}
-  - {x: 15, y: 37}
-  - {x: 15, y: 38}
-  - {x: 15, y: 39}
-  - {x: 15, y: 40}
-  - {x: 15, y: 41}
-  - {x: 16, y: 35}
-  - {x: 16, y: 36}
-  - {x: 16, y: 37}
-  - {x: 16, y: 38}
-  - {x: 16, y: 39}
-  - {x: 16, y: 40}
-  - {x: 16, y: 41}
-  - {x: 17, y: 35}
-  - {x: 17, y: 36}
-  - {x: 17, y: 37}
-  - {x: 17, y: 38}
-  - {x: 17, y: 39}
-  - {x: 17, y: 40}
-  - {x: 17, y: 41}
-  - {x: 34, y: 8}
-  - {x: 34, y: 9}
-  - {x: 34, y: 10}
-  - {x: 34, y: 11}
-  - {x: 34, y: 12}
-  - {x: 34, y: 13}
-  - {x: 34, y: 14}
-  - {x: 35, y: 8}
-  - {x: 35, y: 9}
-  - {x: 35, y: 10}
-  - {x: 35, y: 11}
-  - {x: 35, y: 12}
-  - {x: 35, y: 13}
-  - {x: 35, y: 14}
-  - {x: 36, y: 8}
-  - {x: 36, y: 9}
-  - {x: 36, y: 10}
-  - {x: 36, y: 11}
-  - {x: 36, y: 12}
-  - {x: 36, y: 13}
-  - {x: 36, y: 14}
-  - {x: 34, y: 35}
-  - {x: 34, y: 36}
-  - {x: 34, y: 37}
-  - {x: 34, y: 38}
-  - {x: 34, y: 39}
-  - {x: 34, y: 40}
-  - {x: 34, y: 41}
-  - {x: 35, y: 35}
-  - {x: 35, y: 36}
-  - {x: 35, y: 37}
-  - {x: 35, y: 38}
-  - {x: 35, y: 39}
-  - {x: 35, y: 40}
-  - {x: 35, y: 41}
-  - {x: 36, y: 35}
-  - {x: 36, y: 36}
-  - {x: 36, y: 37}
-  - {x: 36, y: 38}
-  - {x: 36, y: 39}
-  - {x: 36, y: 40}
-  - {x: 36, y: 41}
-  - {x: 12, y: 22}
-  - {x: 12, y: 23}
-  - {x: 12, y: 24}
-  - {x: 12, y: 25}
-  - {x: 12, y: 26}
-  - {x: 12, y: 27}
-  - {x: 13, y: 22}
-  - {x: 13, y: 23}
-  - {x: 13, y: 24}
-  - {x: 13, y: 25}
-  - {x: 13, y: 26}
-  - {x: 13, y: 27}
-  - {x: 14, y: 22}
-  - {x: 14, y: 23}
-  - {x: 14, y: 24}
-  - {x: 14, y: 25}
-  - {x: 14, y: 26}
-  - {x: 14, y: 27}
-  - {x: 24, y: 35}
-  - {x: 24, y: 36}
-  - {x: 24, y: 37}
-  - {x: 24, y: 38}
-  - {x: 24, y: 39}
-  - {x: 24, y: 40}
-  - {x: 24, y: 41}
-  - {x: 25, y: 35}
-  - {x: 25, y: 36}
-  - {x: 25, y: 37}
-  - {x: 25, y: 38}
-  - {x: 25, y: 39}
-  - {x: 25, y: 40}
-  - {x: 25, y: 41}
-  - {x: 26, y: 35}
-  - {x: 26, y: 36}
-  - {x: 26, y: 37}
-  - {x: 26, y: 38}
-  - {x: 26, y: 39}
-  - {x: 26, y: 40}
-  - {x: 26, y: 41}
-  - {x: 24, y: 8}
-  - {x: 24, y: 9}
-  - {x: 24, y: 10}
-  - {x: 24, y: 11}
-  - {x: 24, y: 12}
-  - {x: 24, y: 13}
-  - {x: 24, y: 14}
-  - {x: 25, y: 8}
-  - {x: 25, y: 9}
-  - {x: 25, y: 10}
-  - {x: 25, y: 11}
-  - {x: 25, y: 12}
-  - {x: 25, y: 13}
-  - {x: 25, y: 14}
-  - {x: 26, y: 8}
-  - {x: 26, y: 9}
-  - {x: 26, y: 10}
-  - {x: 26, y: 11}
-  - {x: 26, y: 12}
-  - {x: 26, y: 13}
-  - {x: 26, y: 14}
-  - {x: 35, y: 21}
-  - {x: 35, y: 22}
-  - {x: 35, y: 23}
-  - {x: 35, y: 24}
-  - {x: 35, y: 25}
-  - {x: 35, y: 26}
-  - {x: 35, y: 27}
-  - {x: 36, y: 21}
-  - {x: 36, y: 22}
-  - {x: 36, y: 23}
-  - {x: 36, y: 24}
-  - {x: 36, y: 25}
-  - {x: 36, y: 26}
-  - {x: 36, y: 27}
-  - {x: 37, y: 21}
-  - {x: 37, y: 22}
-  - {x: 37, y: 23}
-  - {x: 37, y: 24}
-  - {x: 37, y: 25}
-  - {x: 37, y: 26}
-  - {x: 37, y: 27}
-  bakeInRealTime: 1
-  displayBlockers: 1
+  scale: 1
 --- !u!1 &815707236
 GameObject:
   m_ObjectHideFlags: 0

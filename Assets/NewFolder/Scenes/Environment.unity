@@ -660,6 +660,7 @@ GameObject:
   - component: {fileID: 605810658}
   - component: {fileID: 605810657}
   - component: {fileID: 605810661}
+  - component: {fileID: 605810662}
   m_Layer: 11
   m_Name: Wall (6)
   m_TagString: Untagged
@@ -772,6 +773,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
+--- !u!114 &605810662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605810656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ef65cf58c104cb7ab01b966ba8d525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowFields::FlowFieldObstacleSource
 --- !u!1 &617197005
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,6 +850,7 @@ GameObject:
   - component: {fileID: 623484679}
   - component: {fileID: 623484678}
   - component: {fileID: 623484682}
+  - component: {fileID: 623484683}
   m_Layer: 11
   m_Name: Wall (5)
   m_TagString: Untagged
@@ -949,6 +963,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
+--- !u!114 &623484683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623484677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ef65cf58c104cb7ab01b966ba8d525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowFields::FlowFieldObstacleSource
 --- !u!1 &667948799
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,6 +1162,7 @@ GameObject:
   - component: {fileID: 793919487}
   - component: {fileID: 793919486}
   - component: {fileID: 793919490}
+  - component: {fileID: 793919491}
   m_Layer: 11
   m_Name: Wall (7)
   m_TagString: Untagged
@@ -1248,6 +1275,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
+--- !u!114 &793919491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793919485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ef65cf58c104cb7ab01b966ba8d525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowFields::FlowFieldObstacleSource
 --- !u!1001 &806419686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1551,6 +1590,7 @@ GameObject:
   - component: {fileID: 1302959107}
   - component: {fileID: 1302959106}
   - component: {fileID: 1302959110}
+  - component: {fileID: 1302959111}
   m_Layer: 11
   m_Name: Wall (4)
   m_TagString: Untagged
@@ -1663,6 +1703,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
+--- !u!114 &1302959111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302959105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ef65cf58c104cb7ab01b966ba8d525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowFields::FlowFieldObstacleSource
 --- !u!1001 &1314480521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1962,6 +2014,7 @@ GameObject:
   - component: {fileID: 1517945908}
   - component: {fileID: 1517945907}
   - component: {fileID: 1517945911}
+  - component: {fileID: 1517945912}
   m_Layer: 11
   m_Name: Wall
   m_TagString: Untagged
@@ -2074,6 +2127,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
+--- !u!114 &1517945912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517945906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ef65cf58c104cb7ab01b966ba8d525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowFields::FlowFieldObstacleSource
 --- !u!1001 &1634003351
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2384,6 +2449,7 @@ GameObject:
   - component: {fileID: 1796270578}
   - component: {fileID: 1796270577}
   - component: {fileID: 1796270581}
+  - component: {fileID: 1796270582}
   m_Layer: 11
   m_Name: Wall (2)
   m_TagString: Untagged
@@ -2496,6 +2562,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
+--- !u!114 &1796270582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796270575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ef65cf58c104cb7ab01b966ba8d525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowFields::FlowFieldObstacleSource
 --- !u!1 &1846664792
 GameObject:
   m_ObjectHideFlags: 0
@@ -2732,6 +2810,7 @@ GameObject:
   - component: {fileID: 2094270049}
   - component: {fileID: 2094270048}
   - component: {fileID: 2094270052}
+  - component: {fileID: 2094270053}
   m_Layer: 11
   m_Name: Wall (3)
   m_TagString: Untagged
@@ -2844,6 +2923,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
+--- !u!114 &2094270053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094270047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ef65cf58c104cb7ab01b966ba8d525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowFields::FlowFieldObstacleSource
 --- !u!1 &2094859492
 GameObject:
   m_ObjectHideFlags: 0
@@ -2857,6 +2948,7 @@ GameObject:
   - component: {fileID: 2094859494}
   - component: {fileID: 2094859493}
   - component: {fileID: 2094859497}
+  - component: {fileID: 2094859498}
   m_Layer: 11
   m_Name: Wall (1)
   m_TagString: Untagged
@@ -2969,6 +3061,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCAHelper::ORCAObstacle
+--- !u!114 &2094859498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094859492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ef65cf58c104cb7ab01b966ba8d525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FlowFields::FlowFieldObstacleSource
 --- !u!1 &2097421392
 GameObject:
   m_ObjectHideFlags: 0

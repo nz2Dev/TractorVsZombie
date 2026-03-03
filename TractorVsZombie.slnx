@@ -7,11 +7,11 @@
   <Project Path="VehiclePhysics.csproj" />
   <Project Path="GenerationPlaygroundEditor.csproj" />
   <Project Path="Playground.Example.csproj" />
+  <Project Path="FlowFields.csproj" />
   <Project Path="Playground.Exmample.EditorTests.csproj" />
   <Project Path="Playground.Example.PlayTests.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="NewFolder.EditorTests.csproj" />
-  <Project Path="FlowFields.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="FlowFields.EditorTests.csproj" />
