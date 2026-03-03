@@ -21,8 +21,6 @@ public struct AgentAvoidanceConfig {
 
 public class LocalAvoidanceService {
 
-    private readonly ORCAEnvironment environment;
-    
     private int nextId = 0;
     private readonly Dictionary<int, Agent> agentRegistry = new();
 
@@ -30,19 +28,21 @@ public class LocalAvoidanceService {
     private readonly Dictionary<int, Obstacle> obstacleRegistry = new();
 
     public LocalAvoidanceService(ORCAEnvironment environment) {
-        this.environment = environment;
-        ORCASystem.Instance.Agents.Clear(); // if domain reload disabled for enter/exit play mode
     }
 
     public int AddObstacle(Vector3 position, Quaternion rotation, PhysicsObstacle prefab) {
         var nextObstacleId = ++obstacleIdCounter;
-        obstacleRegistry[nextObstacleId] = environment.AddTemporalBoxObstacle(position, rotation, prefab.bakedSize);
+        
+        var computedVerticies = ObstaclesConverter.ComputeBoxVerticies(position, rotation, prefab.bakedSize * 0.5f);
+        var boxObstacle = ORCASystem.Instance.DynamicObstacles.Add(ObstaclesConverter.ToFloat3Vertices(computedVerticies), inverseOrder: true);
+        obstacleRegistry[nextObstacleId] = boxObstacle;
+
         return nextObstacleId;
     }
 
     public void RemoveObstacle(int obstacleId) {
         obstacleRegistry.Remove(obstacleId, out var orcaObstacle);
-        environment.RemoveTemporalObstacle(orcaObstacle);
+        ORCASystem.Instance.DynamicObstacles.Remove(orcaObstacle);
     }
 
     public virtual int AddAgent(Vector3 initPosition) {

@@ -11,17 +11,10 @@ public class ORCASystem {
     public ObstacleGroup StaticObstacles { get; }
     public ObstacleGroup DynamicObstacles { get; }
 
-    [InitializeOnLoadMethod]
-    public static void Initialize() {
-        Instance = new ORCASystem();
-        AssemblyReloadEvents.beforeAssemblyReload += () => Instance.Dispose();
-    }
-
     public ORCASystem() {
         Agents = new();
         StaticObstacles = new();
         DynamicObstacles = new();
-        Recreate();
     }
 
     public void Recreate() {
@@ -38,8 +31,9 @@ public class ORCASystem {
         orca.Run(deltaTime);
     }
 
-    private void Dispose() {
-        orca.Dispose();
+    public void Dispose() {
+        orca?.Dispose();
+        orca = null;
     }
 
 }

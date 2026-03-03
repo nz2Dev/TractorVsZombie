@@ -197,8 +197,6 @@ public class GameBootstrapper : MonoBehaviour {
     }
 
     private void Update() {
-        ORCASystem.Instance.Tick(Time.deltaTime);
-
         combatSystem.Update();
 
         ramEffect.Update();
