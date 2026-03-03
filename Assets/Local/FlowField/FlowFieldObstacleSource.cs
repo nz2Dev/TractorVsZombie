@@ -9,6 +9,11 @@ public class FlowFieldObstacleSource : MonoBehaviour {
 
     private FlowFieldObstacle obstacle;
 
+    // should be called: create edit time debug obstacle, that's what it's doing
+    public FlowFieldObstacle CreateObstacle() {
+        return new FlowFieldObstacle(GetComponent<Collider>());
+    }
+
     private void Awake() {
         thisCollider = GetComponent<Collider>();
     }
