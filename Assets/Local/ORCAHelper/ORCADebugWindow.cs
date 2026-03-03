@@ -14,15 +14,12 @@ public class ORCADebugWindow : EditorWindow {
         window.Show();
     }
 
-    private void OnEnable() {
-        // Bind to current active SceneView
-        boundSceneView = SceneView.lastActiveSceneView;
-
-        // Subscribe to scene GUI callback
+    private void OnBecameVisible() {
         SceneView.duringSceneGui += OnSceneGUI;
+        boundSceneView = SceneView.lastActiveSceneView;
     }
 
-    private void OnDisable() {
+    private void OnBecameInvisible() {
         SceneView.duringSceneGui -= OnSceneGUI;
     }
 
