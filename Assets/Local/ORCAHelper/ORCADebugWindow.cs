@@ -64,15 +64,16 @@ public class ORCADebugWindow : EditorWindow {
 
         sceneRepaintCount++;
 
-        // Ensure continuous updates
-        // sceneView.Repaint();
+        OverlayGUI();
+
+        if (!sceneView.drawGizmos)
+            return;
+
         if (Application.isPlaying) {
             DrawSystemGizmos();
         } else {
             DrawEnvironmentBakedDataGizmos();
         }
-
-        OverlayGUI();
     }
 
     private ORCAEnvironment environment;
