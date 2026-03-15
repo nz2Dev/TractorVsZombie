@@ -20,7 +20,6 @@ public class SquadAIController {
 
     public void Update() {
         ValidateSubordinates();
-        ComputeFormations();
         ProcessCommands();
     }
 
@@ -28,6 +27,7 @@ public class SquadAIController {
         var nextId = ++idCounter;
         var state = new SquadAIState();
         state.FlowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
+        state.Formation = new CohesionFormation(64);
         state.ChaseCenter = true;
         registry[nextId] = state;
         return nextId;
@@ -63,36 +63,24 @@ public class SquadAIController {
         }
     }
 
-    private void ComputeFormations() {
-        foreach (var state in registry.Values) {
-            var count = 0;
-            var sumPosition = Vector3.zero;
-            var sumDirection = Vector3.zero;
-
-            foreach (var infantryId in state.SubordinateIds) {
-                var infantryState = infantryController.GetInfantryState(infantryId);
-                sumPosition += infantryState.position;
-                sumDirection += infantryState.movementVelocity;
-                count++;
-            }
-
-            state.FormationCohesionInput = new CohesionInput {
-                center = sumPosition / count,
-                direction = (sumDirection / count).normalized,
-            };
-        }
-    }
-
     private void ProcessCommands() {
         foreach (var state in registry.Values) {
+            state.Formation.Clear();
             foreach (var infantryId in state.SubordinateIds) {
+                var infantryState = infantryController.GetInfantryState(infantryId);
+                state.Formation.AddMember(infantryState.position, infantryState.movementVelocity, infantryState.maxSpeed);
+            }
+            state.Formation.Compute();
+
+            for (int subordinateIndex = 0; subordinateIndex < state.SubordinateIds.Count; subordinateIndex++) {
+                var infantryId = state.SubordinateIds[subordinateIndex];
                 var infantry = infantryController.GetInfantryState(infantryId);
                 if (!infantry.isAlive || !infantry.isGrounded)
                     continue;
 
                 var flowVector = pathfindingService.GetFlowVector(state.FlowFieldId, infantry.position);
-                var movementIntent = Steering.CohesionSteering(infantry.position, flowVector, infantry.maxSpeed, state.FormationCohesionInput);
-                infantryController.Move(infantryId, movementIntent);
+                var formationVector = state.Formation.GetFormationVector(subordinateIndex);
+                infantryController.Move(infantryId, Vector3.Lerp(flowVector, formationVector, 0.3f));
 
                 if (combatSystem.GetClosestEnemyAgentInRange(infantry.combatId, 2, out var closestFoe)) {
                     infantryController.Attack(infantryId, closestFoe.id);
