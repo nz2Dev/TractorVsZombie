@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Audio;
+
+public struct CohesionConfig {
+    public float speedAdjustFactor;
+    public float minSpeedClamped;
+}
 
 public struct CohesionMember {
     public Vector3 position;
@@ -10,8 +16,9 @@ public struct CohesionMember {
 }
 
 public class CohesionFormation {
-    
+
     private readonly List<CohesionMember> members;
+    private CohesionConfig config;
     private Vector3 averageCenter;
     private Vector3 averageDirection;
 
@@ -29,6 +36,10 @@ public class CohesionFormation {
             direction = direction,
             maxSpeed = maxSpeed
         });
+    }
+
+    public void SetConfig(CohesionConfig config) {
+        this.config = config;
     }
 
     public void Compute() {
@@ -54,13 +65,22 @@ public class CohesionFormation {
     private void ComputeVectors() {
         for (int i = 0; i < members.Count; i++) {
             var data = members[i]; 
-            data.formationVector = Steering.Cohese(data.position, data.maxSpeed, averageCenter, averageDirection);
+            data.formationVector = Cohese(data.position, data.maxSpeed, averageCenter, averageDirection, config.speedAdjustFactor, config.minSpeedClamped);
             members[i] = data;
         }
     }
 
     public Vector3 GetFormationVector(int index) {
         return members[index].formationVector;
+    }
+
+    private static Vector3 Cohese(Vector3 position, float maxSpeed, Vector3 center, Vector3 direction, float speedAdjustFactor, float minSpeedClamped) {
+        var cohesionDirection = (center - position).normalized;
+
+        float relativePosition = Vector3.Dot(position - center, direction);
+        var speedFactor = relativePosition > 0 ? Mathf.Clamp(1f - relativePosition * speedAdjustFactor, minSpeedClamped, 1) : 1f;
+
+        return maxSpeed * speedFactor * cohesionDirection;
     }
 
 }

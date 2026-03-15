@@ -23,9 +23,9 @@ public class SquadAIController {
         ProcessCommands();
     }
 
-    public int CreateSquad() {
+    public int CreateSquad(SquadAIConfig config) {
         var nextId = ++idCounter;
-        var state = new SquadAIState();
+        var state = new SquadAIState(config);
         state.FlowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
         state.Formation = new CohesionFormation(64);
         state.ChaseCenter = true;
@@ -70,6 +70,10 @@ public class SquadAIController {
                 var infantryState = infantryController.GetInfantryState(infantryId);
                 state.Formation.AddMember(infantryState.position, infantryState.movementVelocity, infantryState.maxSpeed);
             }
+            state.Formation.SetConfig(new CohesionConfig {
+                speedAdjustFactor = state.Config.coheseSpeedAdjustFactor,
+                minSpeedClamped = state.Config.coheseSpeedAdjustMinClamped
+            });
             state.Formation.Compute();
 
             for (int subordinateIndex = 0; subordinateIndex < state.SubordinateIds.Count; subordinateIndex++) {
@@ -80,7 +84,7 @@ public class SquadAIController {
 
                 var flowVector = pathfindingService.GetFlowVector(state.FlowFieldId, infantry.position);
                 var formationVector = state.Formation.GetFormationVector(subordinateIndex);
-                infantryController.Move(infantryId, Vector3.Lerp(flowVector, formationVector, 0.3f));
+                infantryController.Move(infantryId, Vector3.Lerp(flowVector, formationVector, state.Config.formationBlendFactor));
 
                 if (combatSystem.GetClosestEnemyAgentInRange(infantry.combatId, 2, out var closestFoe)) {
                     infantryController.Attack(infantryId, closestFoe.id);

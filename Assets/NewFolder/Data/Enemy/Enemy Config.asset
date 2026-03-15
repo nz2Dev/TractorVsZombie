@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Enemy Config
   m_EditorClassIdentifier: NewFolder::EnemyConfig
   maxInfantryCount: 1000
+  squadAIConfig: {fileID: 11400000, guid: cdc8ced221e2c4536879833069c57da2, type: 2}
   maxArmorCount: 3

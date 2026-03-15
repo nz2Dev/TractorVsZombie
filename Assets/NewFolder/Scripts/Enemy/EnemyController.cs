@@ -45,7 +45,7 @@ public class EnemyController {
             enemySource.ProductionBuildingId = productionBuildingController.Spawn(place.Position, place.Rotation, place.productionBuildingConfig, alie: false);
             enemySource.ProductionBuildingConfig = place.productionBuildingConfig;
             
-            var firstSquadId = squadAIController.CreateSquad();
+            var firstSquadId = squadAIController.CreateSquad(enemyConfig.squadAIConfig);
             enemySource.LastSquadId = firstSquadId;
             enemySource.SquadIds.Add(firstSquadId);
 
@@ -66,7 +66,7 @@ public class EnemyController {
         foreach (var enemySource in enemySources) {
             var lastSquadSnapshot = squadAIController.GetSquadSnapshot(enemySource.LastSquadId);
             if (lastSquadSnapshot.subordinateCount > 50) {
-                var nextSquadId = squadAIController.CreateSquad();
+                var nextSquadId = squadAIController.CreateSquad(enemyConfig.squadAIConfig);
                 enemySource.SquadIds.Add(nextSquadId);
                 enemySource.LastSquadId = nextSquadId;
             }
