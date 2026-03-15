@@ -11,12 +11,12 @@ public class SquadNavigationScenario : MonoBehaviour {
 
     private SquadAIController squadController;
     private InfantryController infantryController;
-
+    private List<int> infantries;
     private int squadId;
 
     private void Start() {
         infantryController = SquadNavigationBoot.Instance.infantryController;
-        var infantries = new List<int>();
+        infantries = new List<int>();
         for (int i = 0; i < 20; i++) {
             var infantryId = infantryController.SpawnInfantry(Random.onUnitSphere * 0.1f, false, infantryConfig);
             infantries.Add(infantryId);
@@ -34,6 +34,12 @@ public class SquadNavigationScenario : MonoBehaviour {
             var snapshot = squadController.GetSquadSnapshot(squadId);
             var chaseCenter = !snapshot.isChasingCenter;
             squadController.SetStrategy(squadId, chaseCenter, chaseCenter ? targetPointCenter.position : targetPointA.position);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            foreach (var infantryId in infantries) {
+                infantryController.Position(infantryId, Vector3.ProjectOnPlane(Random.onUnitSphere, Vector3.up) * 5);
+            }
         }
     }
 }

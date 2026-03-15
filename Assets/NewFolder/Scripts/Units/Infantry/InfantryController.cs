@@ -49,6 +49,12 @@ public class InfantryController {
         avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
     }
 
+    public void Position(int infantryId, Vector3 position) {
+        var model = registry[infantryId];
+        model.Position = position;
+        physicsService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, position);
+    }
+
     public void Attack(int infantryId, int targetCombatId) {
         var model = registry[infantryId];
         if (model.LastAttackTime + model.Config.attackCooldown < Time.time) {
@@ -62,7 +68,7 @@ public class InfantryController {
         var model = registry[infantryId];
         return new InfantryState {
             position = model.Position,
-            movementVelocity = model.DrivenVelocity,
+            movementVelocity = model.Velocity,
             maxSpeed = model.Config.agentAvoidanceConfig.maxSpeed,
             isAlive = !model.IsDead,
             isGrounded = model.Grounded,
@@ -110,6 +116,7 @@ public class InfantryController {
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 physicsService.SetPhysicsActive(model.BodyPhysicsId, false);
             } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {
+                model.Velocity = rvoVelocity;
                 model.Position = model.Position += rvoVelocity * Time.deltaTime;
                 if (rvoVelocity.sqrMagnitude > 0) {
                     model.Rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);

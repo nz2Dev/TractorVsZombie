@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.Audio;
 
+[Serializable]
 public struct CohesionConfig {
     public float speedAdjustFactor;
     public float minSpeedClamped;
+    public float lookaheadDistance;
 }
 
 public struct CohesionMember {
@@ -63,9 +66,11 @@ public class CohesionFormation {
     }
 
     private void ComputeVectors() {
+        var futureCenter = averageCenter + averageDirection * config.lookaheadDistance;
+        Debug.Log(averageDirection);
         for (int i = 0; i < members.Count; i++) {
             var data = members[i]; 
-            data.formationVector = Cohese(data.position, data.maxSpeed, averageCenter, averageDirection, config.speedAdjustFactor, config.minSpeedClamped);
+            data.formationVector = Cohese(data.position, data.maxSpeed, futureCenter, averageDirection, config.speedAdjustFactor, config.minSpeedClamped);
             members[i] = data;
         }
     }

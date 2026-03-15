@@ -70,10 +70,7 @@ public class SquadAIController {
                 var infantryState = infantryController.GetInfantryState(infantryId);
                 state.Formation.AddMember(infantryState.position, infantryState.movementVelocity, infantryState.maxSpeed);
             }
-            state.Formation.SetConfig(new CohesionConfig {
-                speedAdjustFactor = state.Config.coheseSpeedAdjustFactor,
-                minSpeedClamped = state.Config.coheseSpeedAdjustMinClamped
-            });
+            state.Formation.SetConfig(state.Config.cohesionConfig);
             state.Formation.Compute();
 
             for (int subordinateIndex = 0; subordinateIndex < state.SubordinateIds.Count; subordinateIndex++) {

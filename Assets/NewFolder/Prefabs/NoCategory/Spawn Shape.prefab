@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810b75dd8d0ea449a9f39588cdeb4054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnShape
-  width: 5
-  height: 2
+  width: 10
+  height: 5
   spaceScale: 1
   centerOffset: {x: 0, y: 0, z: 2.4}
   randomOffset: 1
