@@ -9,7 +9,7 @@ public class RewardView {
 
     private readonly Dictionary<int, GameObject> rewardVisualsRegistry = new ();
 
-    public RewardView(GameObject pointRewardVisualsPrefab) {
+    public RewardView(GameObject pointRewardVisualsPrefab = null) {
         this.pointRewardVisualsPrefab = pointRewardVisualsPrefab;
     }
 
@@ -18,7 +18,12 @@ public class RewardView {
     }
 
     public void SpawnReward(int id, Vector3 position, GameObject rewardVisualsPrefab) {
-        var visuals = GameObject.Instantiate(rewardVisualsPrefab, position, Quaternion.identity);
+        GameObject visuals;
+        if (rewardVisualsPrefab != null) {
+            visuals = GameObject.Instantiate(rewardVisualsPrefab, position, Quaternion.identity);
+        } else {
+            visuals = new GameObject();
+        }
         rewardVisualsRegistry[id] = visuals;
     }
 

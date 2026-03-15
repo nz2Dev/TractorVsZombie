@@ -27,7 +27,7 @@ public class LocalAvoidanceService {
     private int obstacleIdCounter;
     private readonly Dictionary<int, Obstacle> obstacleRegistry = new();
 
-    public LocalAvoidanceService(ORCAEnvironment environment) {
+    public LocalAvoidanceService() {
     }
 
     public int AddObstacle(Vector3 position, Quaternion rotation, PhysicsObstacle prefab) {

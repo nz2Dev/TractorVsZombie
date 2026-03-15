@@ -9,14 +9,10 @@ using UnityEngine.TestTools.Utils;
 [TestFixture]
 public class LocalAvoidanceServiceTest {
     
-    private ORCAEnvironment environment;
     private GameObject testContainer;
     private LocalAvoidanceService service;
 
     private void InstantiateORCAEnvironement() {
-        var gameObject = new GameObject("Test ORCA Environment (New)", typeof(ORCAEnvironment));
-        environment = gameObject.GetComponent<ORCAEnvironment>();
-        environment.transform.SetParent(testContainer.transform);
     }
 
     private void InstantiateBoxCollider(Vector3 position, Vector3 size) {
@@ -28,7 +24,7 @@ public class LocalAvoidanceServiceTest {
     }
 
     private void InstantiateService() {
-        service = new LocalAvoidanceService(environment);
+        service = new LocalAvoidanceService();
     }
 
     [SetUp]

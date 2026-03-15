@@ -12,7 +12,7 @@ public struct ObstacleData {
 
 public class ORCAEnvironment : MonoBehaviour {
     
-    [SerializeField] List<ObstacleData> bakedObstacleData;
+    [SerializeField] List<ObstacleData> bakedObstacleData = new List<ObstacleData>();
 
     public IReadOnlyList<ObstacleData> BakedData => bakedObstacleData;
 
