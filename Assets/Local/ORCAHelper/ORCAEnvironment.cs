@@ -27,6 +27,15 @@ public class ORCAEnvironment : MonoBehaviour {
                 inverseOrder = true,
             });
         }
+
+        var meshObstacles = FindObjectsByType<ORCAMeshObstacleTag>(FindObjectsSortMode.None);
+        foreach (var obstacle in meshObstacles) {
+            var vertices = obstacle.GetShapeVertices();
+            bakedObstacleData.Add(new ObstacleData {
+                vertices = vertices,
+                inverseOrder = false
+            });
+        }
     }    
 
 }
