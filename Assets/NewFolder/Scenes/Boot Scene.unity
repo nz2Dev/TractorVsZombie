@@ -165,7 +165,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundManager: {fileID: 1012605277}
   cameraManager: {fileID: 618815303}
-  orcaEnvironment: {fileID: 851369242}
   physicsServiceLayer: UnitPhysics
   combatServiceLayer: Combat
   foeCombatServiceLayer: CombatFoe
@@ -424,123 +423,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &851369240
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 851369241}
-  - component: {fileID: 851369242}
-  m_Layer: 0
-  m_Name: ORCAEnvironment
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &851369241
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851369240}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &851369242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851369240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 148d4fbdaf21746e3828503f13309453, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bakedObstacleData:
-  - inverseOrder: 1
-    vertices:
-    - {x: 8.82, y: 0, z: -16.64}
-    - {x: 8.82, y: 0, z: -9.64}
-    - {x: 11.82, y: 0, z: -9.64}
-    - {x: 11.82, y: 0, z: -16.64}
-  - inverseOrder: 1
-    vertices:
-    - {x: -25, y: 0, z: -25.5}
-    - {x: -25, y: 0, z: -24.5}
-    - {x: 25, y: 0, z: -24.5}
-    - {x: 25, y: 0, z: -25.5}
-  - inverseOrder: 1
-    vertices:
-    - {x: -1.3000002, y: 0, z: 10.0199995}
-    - {x: -1.3000002, y: 0, z: 17.02}
-    - {x: 1.6999998, y: 0, z: 17.02}
-    - {x: 1.6999998, y: 0, z: 10.0199995}
-  - inverseOrder: 1
-    vertices:
-    - {x: -10, y: 0, z: 3.470805}
-    - {x: -10, y: 0, z: -3.470805}
-    - {x: -13, y: 0, z: -3.470805}
-    - {x: -13, y: 0, z: 3.470805}
-  - inverseOrder: 1
-    vertices:
-    - {x: -13.905533, y: 0, z: -14.514215}
-    - {x: -8.955788, y: 0, z: -9.564466}
-    - {x: -6.834467, y: 0, z: -11.685785}
-    - {x: -11.784212, y: 0, z: -16.635534}
-  - inverseOrder: 1
-    vertices:
-    - {x: -10.11, y: 0, z: 10.049999}
-    - {x: -10.11, y: 0, z: 17.05}
-    - {x: -7.1099997, y: 0, z: 17.05}
-    - {x: -7.1099997, y: 0, z: 10.049999}
-  - inverseOrder: 1
-    vertices:
-    - {x: 10.32, y: 0, z: -3.6400003}
-    - {x: 10.32, y: 0, z: 3.3599997}
-    - {x: 13.32, y: 0, z: 3.3599997}
-    - {x: 13.32, y: 0, z: -3.6400003}
-  - inverseOrder: 1
-    vertices:
-    - {x: -25, y: 0, z: 24.5}
-    - {x: -25, y: 0, z: 25.5}
-    - {x: 25, y: 0, z: 25.5}
-    - {x: 25, y: 0, z: 24.5}
-  - inverseOrder: 1
-    vertices:
-    - {x: 25.499998, y: 0, z: -25}
-    - {x: 24.499998, y: 0, z: -25}
-    - {x: 24.500002, y: 0, z: 25}
-    - {x: 25.500002, y: 0, z: 25}
-  - inverseOrder: 1
-    vertices:
-    - {x: 11.92, y: 0, z: 16.718994}
-    - {x: 11.920008, y: 0, z: 9.681004}
-    - {x: 8.920008, y: 0, z: 9.681001}
-    - {x: 8.92, y: 0, z: 16.71899}
-  - inverseOrder: 1
-    vertices:
-    - {x: -1.4300003, y: 0, z: -16.89}
-    - {x: -1.4300003, y: 0, z: -9.89}
-    - {x: 1.5699997, y: 0, z: -9.89}
-    - {x: 1.5699997, y: 0, z: -16.89}
-  - inverseOrder: 1
-    vertices:
-    - {x: -24.500002, y: 0, z: -25}
-    - {x: -25.500002, y: 0, z: -25}
-    - {x: -25.499998, y: 0, z: 25}
-    - {x: -24.499998, y: 0, z: 25}
 --- !u!1 &958139873
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,7 +810,6 @@ SceneRoots:
   - {fileID: 815707238}
   - {fileID: 1012605276}
   - {fileID: 804724242}
-  - {fileID: 851369241}
   - {fileID: 203952655}
   - {fileID: 618815301}
   - {fileID: 3544054318636726583}

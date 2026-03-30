@@ -34,7 +34,7 @@ public class LocalAvoidanceService {
         var nextObstacleId = ++obstacleIdCounter;
         
         var computedVerticies = ObstaclesConverter.ComputeBoxVerticies(position, rotation, prefab.bakedSize * 0.5f);
-        var boxObstacle = ORCASystem.Instance.DynamicObstacles.Add(ObstaclesConverter.ToFloat3Vertices(computedVerticies), inverseOrder: true);
+        var boxObstacle = ORCASystem.Instance.AddObstacle(isStatic: false, inverseOrder: true, computedVerticies);
         obstacleRegistry[nextObstacleId] = boxObstacle;
 
         return nextObstacleId;
@@ -42,7 +42,7 @@ public class LocalAvoidanceService {
 
     public void RemoveObstacle(int obstacleId) {
         obstacleRegistry.Remove(obstacleId, out var orcaObstacle);
-        ORCASystem.Instance.DynamicObstacles.Remove(orcaObstacle);
+        ORCASystem.Instance.RemoveObstacle(orcaObstacle);
     }
 
     public virtual int AddAgent(Vector3 initPosition) {
@@ -59,7 +59,7 @@ public class LocalAvoidanceService {
     }
     
     public virtual int AddAgent(Vector3 initPosition, AgentAvoidanceConfig config) {
-        var newAgent = ORCASystem.Instance.Agents.Add(initPosition);
+        var newAgent = ORCASystem.Instance.AddAgent(initPosition);
         agentRegistry.Add(nextId, newAgent);
         var id = nextId++;
         UpdateAgent(id, config);
@@ -80,7 +80,7 @@ public class LocalAvoidanceService {
 
     public void RemoveAgent(int agentId) {
         var agent = agentRegistry[agentId];
-        ORCASystem.Instance.Agents.Remove(agent);
+        ORCASystem.Instance.RemoveAgent(agent);
         agentRegistry.Remove(agentId);
     }
 

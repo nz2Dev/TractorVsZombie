@@ -1,10 +1,9 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEditor.Callbacks;
-using System;
 
 public class ORCADebugWindow : EditorWindow {
     private SceneView boundSceneView;
+    private BaseObstacleSource[] obstacleSources;
     private int sceneRepaintCount;
 
     [MenuItem("Tools/ORCA Debug Window")]
@@ -17,6 +16,7 @@ public class ORCADebugWindow : EditorWindow {
     private void OnBecameVisible() {
         SceneView.duringSceneGui += OnSceneGUI;
         boundSceneView = SceneView.lastActiveSceneView;
+        obstacleSources = GameObject.FindObjectsByType<BaseObstacleSource>(FindObjectsSortMode.None);
     }
 
     private void OnBecameInvisible() {
@@ -42,19 +42,6 @@ public class ORCADebugWindow : EditorWindow {
         if (GUILayout.Button("Force Scene Repaint")) {
             boundSceneView.Repaint();
         }
-
-        environment = (ORCAEnvironment) EditorGUILayout.ObjectField(
-            "Found Component",
-            environment,
-            typeof(ORCAEnvironment),
-            true // allow scene objects
-        );
-
-        if (GUILayout.Button("Find in scene")) {
-            environment = GameObject.FindFirstObjectByType<ORCAEnvironment>(FindObjectsInactive.Include);
-        }
-
-        GUILayout.Label("environment guid" + environment.GetInstanceID());
     }
 
     private void OnSceneGUI(SceneView sceneView) {
@@ -72,25 +59,18 @@ public class ORCADebugWindow : EditorWindow {
         if (Application.isPlaying) {
             DrawSystemGizmos();
         } else {
-            DrawEnvironmentBakedDataGizmos();
+            DrawEditTimeSources();
         }
     }
 
-    private ORCAEnvironment environment;
-
-    private void DrawEnvironmentBakedDataGizmos() {
-        if (environment == null)
-            return;
-
-        for (int i = 0; i < environment.BakedData.Count; i++) {
-            foreach (var data in environment.BakedData) {
-                Handles.color = Color.white;
-                for (int v = 1; v < data.vertices.Length; v++) {
-                    var vertexA = data.vertices[v - 1];
-                    var vertexB = data.vertices[v];
-                    Handles.DrawLine(vertexA, vertexB);
-                }    
-            }
+    private void DrawEditTimeSources() {
+        foreach (var source in obstacleSources) {
+            Handles.color = Color.white;
+            for (int v = 1; v < source.Vertices.Length; v++) {
+                var vertexA = source.Vertices[v - 1];
+                var vertexB = source.Vertices[v];
+                Handles.DrawLine(vertexA, vertexB);
+            }    
         }
     }
 

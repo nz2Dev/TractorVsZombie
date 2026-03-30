@@ -20,19 +20,6 @@ public class ORCARunner : MonoBehaviour {
         system = ORCASystem.Instance;
     }
 
-    private void Start() {
-        Assert.AreEqual(system, ORCASystem.Instance);
-        system.Recreate();
-
-        var environmnt = FindFirstObjectByType<ORCAEnvironment>();
-        if (environmnt == null)
-            return;
-        
-        foreach (var bakedData in environmnt.BakedData) {
-            system.StaticObstacles.Add(ObstaclesConverter.ToFloat3Vertices(bakedData.vertices), bakedData.inverseOrder);
-        }
-    }
-
     private void Update() {
         Assert.AreEqual(system, ORCASystem.Instance);
         system.Tick(Time.deltaTime);
