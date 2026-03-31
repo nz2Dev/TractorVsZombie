@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96f6b7f9aa6504227875d015d7c62dad, type: 3}
+  m_Name: Farm Headquarter Building Config
+  m_EditorClassIdentifier: NewFolder::HeadquarterBuildingConfig
+  radius: 4
+  maxHealth: 100
+  alie: 0
+  visualsPrefab: {fileID: 8720949481670791159, guid: a57955eb465f141188c4e6e801dfddf0, type: 3}
+  vehicleObstaclePrefab: {fileID: 9198967994064705274, guid: 752a855cac13c4ba69906400830d12f8, type: 3}
+  physicsObstaclePrefab: {fileID: 9198967994064705274, guid: 752a855cac13c4ba69906400830d12f8, type: 3}
+  avoidanceObstaclePrefab: {fileID: 9198967994064705274, guid: 752a855cac13c4ba69906400830d12f8, type: 3}

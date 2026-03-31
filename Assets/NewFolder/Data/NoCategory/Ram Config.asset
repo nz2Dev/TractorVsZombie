@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::RamConfig
   impactSFX:
   - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
-  radius: 0.4
+  radius: 1.5
   damage: 0

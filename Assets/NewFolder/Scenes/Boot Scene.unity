@@ -174,7 +174,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2177
   enemyConfig: {fileID: 11400000, guid: 5209ee6577e6c4dabb8f13feea30f913, type: 2}
-  playerConfig: {fileID: 11400000, guid: 15c1c417b54044a6b9ea2acbda4d6876, type: 2}
+  playerConfig: {fileID: 11400000, guid: eb5c353f75400495b95e597ea2c3b5b5, type: 2}
   aimVisualsPrefab: {fileID: 7650166389670777688, guid: db77fb008dad74d3ca69afe4d43638bd, type: 3}
   uiDocument: {fileID: 815707237}
   rewardsLayerName: Rewards
@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2a651aa3654942cf864072452760d1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 50
+  size: 100
   scale: 1
 --- !u!1 &815707236
 GameObject:
