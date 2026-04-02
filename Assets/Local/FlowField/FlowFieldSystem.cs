@@ -7,7 +7,8 @@ public class FlowFieldSystem {
     
     public static FlowFieldSystem Instance;
 
-    private FlowFieldSpace space = new FlowFieldSpace(50, 1);
+    // todo add explanation why setting space from FlowFieldSpaceSource has no effect if system is used during Start() and the source didn't get created yet
+    private FlowFieldSpace space = new FlowFieldSpace(100, 1);
     private List<FlowFieldObstacle> obstacles = new();
     private List<FlowFieldHandle> flowFieldsHandles = new();
 
@@ -34,6 +35,7 @@ public class FlowFieldSystem {
     }
 
     public void SetSpace(FlowFieldSpace space) {
+        // todo fix space overriding creates state desync, when fields use one space and system the newly assigned
         this.space = space;
     }
 
