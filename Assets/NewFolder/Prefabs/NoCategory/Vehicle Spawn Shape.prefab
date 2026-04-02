@@ -47,3 +47,6 @@ MonoBehaviour:
   width: 1
   height: 1
   spaceScale: 1
+  centerOffset: {x: 0, y: 0, z: 5.02}
+  randomOffset: 1
+  offsetScale: 0.5
