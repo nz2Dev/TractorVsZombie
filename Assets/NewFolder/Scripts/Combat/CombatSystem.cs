@@ -60,7 +60,11 @@ public class CombatSystem {
         }
     }
 
-    public int RegisterAgent(Vector3 position, bool alie, int maxHealth = 1, float height = 1f) {
+    public int RegisterAgent(Vector3 position, CombatAgentConfig config) {
+        return RegisterAgent(position, config.alie, config.maxHealth, config.collisionHeight, config.collisionRadius);
+    }
+
+    public int RegisterAgent(Vector3 position, bool alie, int maxHealth = 1, float height = 1f, float radius = .3f) {
         var agentId = idCounter++;
         var agent = new CombatAgent(agentId, alie, maxHealth, height) {
             Position = position,
@@ -68,8 +72,8 @@ public class CombatSystem {
         };
         agents[agentId] = agent;
         
-        if (alie) alieCollisionsLookup.Add(agent, position, height, .3f);
-        else foeCollisionLookup.Add(agent, position, height, .3f);
+        if (alie) alieCollisionsLookup.Add(agent, position, height, radius);
+        else foeCollisionLookup.Add(agent, position, height, radius);
         
         return agentId;
     }

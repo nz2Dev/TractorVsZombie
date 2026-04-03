@@ -26,8 +26,6 @@ public class ArmorModel {
     public bool Destroyed { get; set; }
     public int RamId { get; set; }
 
-    public int MaxHealthConfig => Config.maxHealth;
-    
     public VehicleDrivingConfig DrivingConfig => Config.drivingConfig;
     public ArmorVisuals VisualsPrefab => Config.visualsPrefab;
     public VehiclePhysics PhysicsPrefab => Config.physicsPrefab;

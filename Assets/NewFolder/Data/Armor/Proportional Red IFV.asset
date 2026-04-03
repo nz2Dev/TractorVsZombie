@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d2be9bf000544240ba611352d0bc16b, type: 3}
   m_Name: Proportional Red IFV
   m_EditorClassIdentifier: NewFolder::ArmorConfig
-  maxHealth: 5
+  combatConfig:
+    alie: 0
+    maxHealth: 5
+    collisionHeight: 1
+    collisionRadius: 1.5
   drivingConfig: {fileID: 11400000, guid: e8c48fa9116a64691a8e953ae98466e4, type: 2}
   visualsPrefab: {fileID: 7397748899174649872, guid: 7309a86063f1f454a8b70b5449251a64, type: 3}
   physicsPrefab: {fileID: 5571881020198792173, guid: 8ab6a571f22e14a4a969d958f9256b27, type: 3}
