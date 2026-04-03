@@ -45,7 +45,7 @@ public class ArmorController {
         
         model.CombatId = combatSystem.RegisterAgent(position, alie: false, model.MaxHealthConfig);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(position, model.PhysicsPrefab);
-        model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position, model.WeaponConfig);
+        model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position + armorConfig.weaponPlacementOffset, model.WeaponConfig);
         model.RamId = ramEffect.StartNew(model.Position, model.CombatId, model.RamConfig);
         view.Show(nextId, position, model.VisualsPrefab, model.EngineLoopSFX);
         
@@ -114,7 +114,7 @@ public class ArmorController {
             model.VehiclePhysicsState = vehicleService.GetVehicleState(model.VehiclePhysicsId);
             model.Position = model.VehiclePhysicsState.position;
             
-            weaponController.MoveWeapon(model.WeaponId, model.Position);
+            weaponController.MoveWeapon(model.WeaponId, model.Position + model.Config.weaponPlacementOffset);
             combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
             ramEffect.Forward(model.RamId, model.Position);
         }

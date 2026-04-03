@@ -18,4 +18,5 @@ MonoBehaviour:
   physicsPrefab: {fileID: 5571881020198792173, guid: 8ab6a571f22e14a4a969d958f9256b27, type: 3}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   weaponConfig: {fileID: 11400000, guid: 6c348206c4e5046d4bde12b5c4a3cd9d, type: 2}
+  weaponPlacementOffset: {x: 0, y: 1.755, z: 0}
   ramConfig: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}

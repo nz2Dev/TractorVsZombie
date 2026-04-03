@@ -20,7 +20,7 @@ MonoBehaviour:
   vehicleObstaclePrefab: {fileID: 7519686569173021037, guid: 9b69c4dd1d41548108e1e3df1b2d793d, type: 3}
   physicsObstaclePrefab: {fileID: 7519686569173021037, guid: 9b69c4dd1d41548108e1e3df1b2d793d, type: 3}
   spawnInterval: 5
-  initialQueueAmount: 1000
+  initialQueueAmount: 1
   spawnShapePrefab: {fileID: 5391597330652448849, guid: fbeb35bb3a9864a3e950d68b4f733d30, type: 3}
   spawnType: 1
   infantryConfig: {fileID: 0}
