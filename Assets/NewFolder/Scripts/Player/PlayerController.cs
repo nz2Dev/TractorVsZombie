@@ -44,7 +44,7 @@ public class PlayerController {
         bool flipFlop = false;
         for (int i = 0; i < model.InitPlatformCount; i++) {
             var weaponConfig = (flipFlop = !flipFlop) ? model.FirstWeaponConfig : model.SecondWeaponConfig;
-            SpawnPlatform(new Vector3(0, 0, -2f + i * -2f), out var platformId);
+            SpawnPlatform(new Vector3(0, 0, -6f + i * -6f), out var platformId);
             EquipePlatform(platformId, weaponConfig);
             CouplePlatformToTheEnd(platformId);
         }
