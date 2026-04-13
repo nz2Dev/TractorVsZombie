@@ -27,7 +27,7 @@ public class RewardView {
         rewardVisualsRegistry[id] = visuals;
     }
 
-    public void SpawnBrokenArmorReward(int id, Vector3 position, 
+    public void SpawnLoadoutReward(int id, Vector3 position, 
         GameObject brokenArmorVisualsPrefab, GameObject attachedWeaponVisualsPrefab, Vector3 weaponPlacementOffset) {
         var visualsRoot = new GameObject("broken Armor visuals");
         visualsRoot.transform.position = position;

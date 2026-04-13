@@ -38,9 +38,7 @@ public class RewardController {
         return new RewardState {
             Position = model.Position,
             RewardType = model.RewardType,
-            BrokenArmorVisualsPrefab = model.BrokenArmorVisualsPrefab,
-            WeaponConfig = model.WeaponConfig,
-            WeaponOffset = model.WeaponOffset
+            LoadoutConfig = model.LoadoutConfig
         };
     }
 
@@ -51,16 +49,14 @@ public class RewardController {
         view.SpawnPointReward(reward.Id, reward.Position);
     }
 
-    public void SpawnBrokenArmorReward(Vector3 position, GameObject brokenArmorVisualsPrefab, WeaponConfig weaponConfig, Vector3 weaponVisualsOffset) {
+    public void SpawnLoadoutReward(Vector3 position, LoadoutConfig loadout) {
         var nextId = ++idCounter;
         var reward = new RewardModel { Id = nextId, Position = position, 
-            RewardType = RewardType.BrokenArmor,
-            BrokenArmorVisualsPrefab = brokenArmorVisualsPrefab, 
-            WeaponConfig = weaponConfig,
-            WeaponOffset = weaponVisualsOffset
+            RewardType = RewardType.Loadout,
+            LoadoutConfig = loadout
         };
         registry[reward.Id] = reward;
-        view.SpawnBrokenArmorReward(reward.Id, reward.Position, brokenArmorVisualsPrefab, weaponConfig.visualsPrefab.gameObject, weaponVisualsOffset);
+        view.SpawnLoadoutReward(reward.Id, reward.Position, loadout.brokenVisualsPrefab, loadout.weaponConfig.visualsPrefab.gameObject, loadout.weaponLocalOffset);
     }
 
     private void DeleteReward(RewardModel reward) {

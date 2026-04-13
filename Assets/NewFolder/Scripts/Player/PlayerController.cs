@@ -43,10 +43,9 @@ public class PlayerController {
 
         bool flipFlop = false;
         for (int i = 0; i < model.InitPlatformCount; i++) {
-            var weaponConfig = (flipFlop = !flipFlop) ? model.FirstWeaponConfig : model.SecondWeaponConfig;
-            var weaponOffset = (flipFlop = !flipFlop) ? model.Config.firstWeaponOffset : model.Config.secondWeaponOffset;
+            var loadout = (flipFlop = !flipFlop) ? model.FirstLoadoutConfig : model.SecondLoadoutConfig;
             SpawnPlatform(new Vector3(0, 0, -6f + i * -6f), out var platformId);
-            EquipePlatform(platformId, model.Config.brokenArmorVisualsPrefab, weaponConfig, weaponOffset);
+            EquipPlatform(platformId, loadout);
             CouplePlatformToTheEnd(platformId);
         }
     }
@@ -74,14 +73,13 @@ public class PlayerController {
     private void CollectRewards() {
         var collectedRewardStates = rewardController.CollectRewards(model.Position, 3f);
         foreach (var rewardState in collectedRewardStates) {
-            if (rewardState.RewardType == RewardType.BrokenArmor) {
+            if (rewardState.RewardType == RewardType.Loadout) {
                 SpawnPlatform(rewardState.Position, out var platformId);
-                EquipePlatform(platformId, rewardState.BrokenArmorVisualsPrefab, rewardState.WeaponConfig, rewardState.WeaponOffset);
-                if (model.StartOrEndCouplingOrRewards) {
+                EquipPlatform(platformId, rewardState.LoadoutConfig);
+                if (model.StartOrEndCouplingOrRewards)
                     CouplePlatformInFront(platformId);
-                } else {
+                else
                     CouplePlatformToTheEnd(platformId);
-                }
             }
         }
     }
@@ -166,8 +164,8 @@ public class PlayerController {
         view.AddPlatform(platformController.ReadPlatformState(platformId));
     }
 
-    private void EquipePlatform(int platformId, GameObject brokenArmorVisualsPrefab, WeaponConfig weaponConfig, Vector3 weaponOffset) {
-        platformController.SetBrokenArmor(platformId, brokenArmorVisualsPrefab, weaponConfig, weaponOffset);
+    private void EquipPlatform(int platformId, LoadoutConfig loadout) {
+        platformController.SetLoadout(platformId, loadout);
         view.UpdatePlatform(platformController.ReadPlatformState(platformId));
     }
 

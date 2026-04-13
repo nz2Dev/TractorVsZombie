@@ -53,12 +53,12 @@ public class PlatformController {
         vehicleService.ClearTowingConnection(platform.VehiclePhysicsId);
     }
 
-    public void SetBrokenArmor(int platformId, GameObject brokenArmorVisualsPrefab, WeaponConfig weaponConfig, Vector3 weaponPlacementOffset) {
+    public void SetLoadout(int platformId, LoadoutConfig loadout) {
         var platform = registry[platformId];
-        platform.WeaponConfig = weaponConfig;
-        platform.WeaponPlacementOffset = weaponPlacementOffset;
-        platform.WeaponId = weaponController.SpawnWeapon(platform.CombatId, platform.Position, weaponConfig);
-        view.SetBrokenArmorOnPlatform(platformId, brokenArmorVisualsPrefab, platform.Config.LoadoutOffset);
+        platform.WeaponConfig = loadout.weaponConfig;
+        platform.WeaponPlacementOffset = loadout.weaponLocalOffset;
+        platform.WeaponId = weaponController.SpawnWeapon(platform.CombatId, platform.Position, loadout.weaponConfig);
+        view.SetLoadoutVisuals(platformId, loadout.brokenVisualsPrefab, platform.Config.LoadoutOffset);
     }
 
     public int GetVehiclePhysicsId(int platformId) {

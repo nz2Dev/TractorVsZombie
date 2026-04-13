@@ -15,9 +15,6 @@ MonoBehaviour:
   driverConfig: {fileID: 11400000, guid: 8676e0ba7ac064d1e80b430935205f9b, type: 2}
   initPlatformCount: 1
   platformConfig: {fileID: 11400000, guid: dac4c19d2445744d3a7e444a64102c1f, type: 2}
-  startOrEndCouplingOfRewards: 1
-  brokenArmorVisualsPrefab: {fileID: 2529982957386298620, guid: 940f4b094f0954abcbf04e762742bd65, type: 3}
-  firstWeaponConfig: {fileID: 11400000, guid: bbf335660863d4142b04746d3fe8217a, type: 2}
-  firstWeaponOffset: {x: 0, y: 1.7, z: 0}
-  secondWeaponConfig: {fileID: 11400000, guid: 79f33a2489ade46cf8e5621936488dc7, type: 2}
-  secondWeaponOffset: {x: 0, y: 1.7, z: 0}
+  startOrEndCouplingOfRewards: 0
+  firstLoadoutConfig: {fileID: 11400000, guid: 79689a985f2a641188a76db2f0c875cb, type: 2}
+  secondLoadoutConfig: {fileID: 11400000, guid: b8ff0b02deef34d3f990d174264b7cc9, type: 2}

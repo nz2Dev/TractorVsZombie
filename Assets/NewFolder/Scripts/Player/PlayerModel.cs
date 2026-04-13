@@ -33,7 +33,7 @@ public class PlayerModel {
     public int InitPlatformCount => Config.initPlatformCount;
     public bool StartOrEndCouplingOrRewards => Config.startOrEndCouplingOfRewards;
     public PlatformConfig DefaultPlatformConfig => Config.platformConfig;
-    public WeaponConfig FirstWeaponConfig => Config.firstWeaponConfig;
-    public WeaponConfig SecondWeaponConfig => Config.secondWeaponConfig;
+    public LoadoutConfig FirstLoadoutConfig => Config.firstLoadoutConfig;
+    public LoadoutConfig SecondLoadoutConfig => Config.secondLoadoutConfig;
 
 }
