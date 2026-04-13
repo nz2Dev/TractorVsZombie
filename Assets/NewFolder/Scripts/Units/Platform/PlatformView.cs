@@ -10,6 +10,12 @@ public class PlatformView {
         visualsRegistry[id] = vehicleVisuals;
     }
 
+    public void SetBrokenArmorOnPlatform(int id, GameObject brokenArmorVisualsPrefab, Vector3 loadoutOffset) {
+        var visuals = visualsRegistry[id];
+        var subVisuals = GameObject.Instantiate(brokenArmorVisualsPrefab, visuals.transform);
+        subVisuals.transform.localPosition = loadoutOffset;
+    }
+
     public void UpdatePlatformPose(int id, VehicleState vehicleState) {
         var vehicleVisuals = visualsRegistry[id];
         vehicleVisuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);

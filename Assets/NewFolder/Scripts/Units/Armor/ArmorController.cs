@@ -92,7 +92,10 @@ public class ArmorController {
             var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
             if (combatOutput.damageWasFatal) {
                 model.Destroyed = true;
-                rewardController.SpawnWeaponReward(model.Position, model.WeaponConfig);
+                rewardController.SpawnBrokenArmorReward(model.Position, 
+                    model.Config.visualsPrefab.gameObject, 
+                    model.Config.weaponConfig, 
+                    model.Config.weaponPlacementOffset);
             }
         }
     }

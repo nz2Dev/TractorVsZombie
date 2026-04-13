@@ -53,10 +53,12 @@ public class PlatformController {
         vehicleService.ClearTowingConnection(platform.VehiclePhysicsId);
     }
 
-    public void SetWeapon(int platformId, WeaponConfig weaponConfig) {
+    public void SetBrokenArmor(int platformId, GameObject brokenArmorVisualsPrefab, WeaponConfig weaponConfig, Vector3 weaponPlacementOffset) {
         var platform = registry[platformId];
         platform.WeaponConfig = weaponConfig;
+        platform.WeaponPlacementOffset = weaponPlacementOffset;
         platform.WeaponId = weaponController.SpawnWeapon(platform.CombatId, platform.Position, weaponConfig);
+        view.SetBrokenArmorOnPlatform(platformId, brokenArmorVisualsPrefab, platform.Config.LoadoutOffset);
     }
 
     public int GetVehiclePhysicsId(int platformId) {
@@ -81,7 +83,7 @@ public class PlatformController {
             host.Position = host.VehiclePhysicsState.position;
             view.UpdatePlatformPose(host.Id, host.VehiclePhysicsState);
 
-            weaponController.MoveWeapon(host.WeaponId, host.Position);
+            weaponController.MoveWeapon(host.WeaponId, host.Position + host.Config.LoadoutOffset + host.WeaponPlacementOffset);
             combatSystem.UpdateAgentPosition(host.CombatId, host.Position);
             ramEffect.Forward(host.RamId, host.Position);
         }

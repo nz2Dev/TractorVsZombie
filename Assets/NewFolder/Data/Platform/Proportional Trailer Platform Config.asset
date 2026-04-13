@@ -15,3 +15,4 @@ MonoBehaviour:
   ramConfig: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
   visualsPrefab: {fileID: 5851998403967449264, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
   physicsPrefab: {fileID: 5069907814222022228, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+  LoadoutOffset: {x: 0, y: 0.75, z: 0}

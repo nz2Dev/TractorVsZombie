@@ -44,8 +44,9 @@ public class PlayerController {
         bool flipFlop = false;
         for (int i = 0; i < model.InitPlatformCount; i++) {
             var weaponConfig = (flipFlop = !flipFlop) ? model.FirstWeaponConfig : model.SecondWeaponConfig;
+            var weaponOffset = (flipFlop = !flipFlop) ? model.Config.firstWeaponOffset : model.Config.secondWeaponOffset;
             SpawnPlatform(new Vector3(0, 0, -6f + i * -6f), out var platformId);
-            EquipePlatform(platformId, weaponConfig);
+            EquipePlatform(platformId, model.Config.brokenArmorVisualsPrefab, weaponConfig, weaponOffset);
             CouplePlatformToTheEnd(platformId);
         }
     }
@@ -73,9 +74,9 @@ public class PlayerController {
     private void CollectRewards() {
         var collectedRewardStates = rewardController.CollectRewards(model.Position, 3f);
         foreach (var rewardState in collectedRewardStates) {
-            if (rewardState.RewardType == RewardType.Weapon) {
+            if (rewardState.RewardType == RewardType.BrokenArmor) {
                 SpawnPlatform(rewardState.Position, out var platformId);
-                EquipePlatform(platformId, rewardState.WeaponConfig);
+                EquipePlatform(platformId, rewardState.BrokenArmorVisualsPrefab, rewardState.WeaponConfig, rewardState.WeaponOffset);
                 if (model.StartOrEndCouplingOrRewards) {
                     CouplePlatformInFront(platformId);
                 } else {
@@ -165,8 +166,8 @@ public class PlayerController {
         view.AddPlatform(platformController.ReadPlatformState(platformId));
     }
 
-    private void EquipePlatform(int platformId, WeaponConfig weaponConfig) {
-        platformController.SetWeapon(platformId, weaponConfig);
+    private void EquipePlatform(int platformId, GameObject brokenArmorVisualsPrefab, WeaponConfig weaponConfig, Vector3 weaponOffset) {
+        platformController.SetBrokenArmor(platformId, brokenArmorVisualsPrefab, weaponConfig, weaponOffset);
         view.UpdatePlatform(platformController.ReadPlatformState(platformId));
     }
 

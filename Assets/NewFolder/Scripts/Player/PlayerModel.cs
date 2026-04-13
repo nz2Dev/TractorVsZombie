@@ -16,7 +16,7 @@ public struct TopDownAimInput {
 
 public class PlayerModel {
     
-    private readonly PlayerConfig config;
+    public PlayerConfig Config { get; }
 
     public Vector3 Position { get; set; }
     public DrivingInput DrivingInput { get; set; }
@@ -26,14 +26,14 @@ public class PlayerModel {
     public TopDownAimInput AimInput { get; set; }
 
     public PlayerModel(PlayerConfig config) {
-        this.config = config;
+        this.Config = config;
     }
 
-    public TruckConfig DriverConfig => config.driverConfig;
-    public int InitPlatformCount => config.initPlatformCount;
-    public bool StartOrEndCouplingOrRewards => config.startOrEndCouplingOfRewards;
-    public PlatformConfig DefaultPlatformConfig => config.platformConfig;
-    public WeaponConfig FirstWeaponConfig => config.firstWeaponConfig;
-    public WeaponConfig SecondWeaponConfig => config.secondWeaponConfig;
+    public TruckConfig DriverConfig => Config.driverConfig;
+    public int InitPlatformCount => Config.initPlatformCount;
+    public bool StartOrEndCouplingOrRewards => Config.startOrEndCouplingOfRewards;
+    public PlatformConfig DefaultPlatformConfig => Config.platformConfig;
+    public WeaponConfig FirstWeaponConfig => Config.firstWeaponConfig;
+    public WeaponConfig SecondWeaponConfig => Config.secondWeaponConfig;
 
 }

@@ -5,4 +5,5 @@ public class PlatformConfig : ScriptableObject {
     public RamConfig ramConfig;
     public PlatformVisuals visualsPrefab;
     public VehiclePhysics physicsPrefab;
+    public Vector3 LoadoutOffset;
 }
