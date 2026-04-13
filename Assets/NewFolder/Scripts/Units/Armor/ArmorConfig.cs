@@ -14,4 +14,6 @@ public class ArmorConfig : ScriptableObject {
     public Vector3 weaponPlacementOffset;
     public RamConfig ramConfig;
 
+    public GameObject brokenVisualsPrefab;
+
 }

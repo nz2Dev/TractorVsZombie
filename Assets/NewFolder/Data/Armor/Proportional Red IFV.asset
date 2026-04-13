@@ -24,3 +24,4 @@ MonoBehaviour:
   weaponConfig: {fileID: 11400000, guid: 6c348206c4e5046d4bde12b5c4a3cd9d, type: 2}
   weaponPlacementOffset: {x: 0, y: 1.755, z: 0}
   ramConfig: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
+  brokenVisualsPrefab: {fileID: 2529982957386298620, guid: 940f4b094f0954abcbf04e762742bd65, type: 3}
