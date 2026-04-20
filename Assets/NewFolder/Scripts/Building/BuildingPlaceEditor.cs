@@ -5,9 +5,16 @@ using UnityEditor;
 public class BuildingPlaceEditor : Editor {
 
     BuildingPlace provider;
+    private Editor scriptableEditor;
 
     void OnEnable() {
         provider = target as BuildingPlace;
+    }
+
+    private void OnDisable() {
+        if (scriptableEditor != null) {
+            DestroyImmediate(scriptableEditor);
+        }
     }
 
     public override void OnInspectorGUI() {
@@ -15,6 +22,20 @@ public class BuildingPlaceEditor : Editor {
 
         if (provider == null)
             return;
+
+        EditorGUILayout.Space();
+
+        var so = provider.GetScriptableObject();
+        
+        // Create cached editor for ScriptableObject
+        if (scriptableEditor == null) {
+            scriptableEditor = CreateEditor(so);
+        }
+
+        EditorGUILayout.LabelField("Scriptable Object", EditorStyles.boldLabel);
+
+        // Draw ScriptableObject inspector inside MonoBehaviour inspector
+        scriptableEditor.OnInspectorGUI();
 
         GUILayout.Space(10);
 

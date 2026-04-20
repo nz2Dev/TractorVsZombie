@@ -35,6 +35,17 @@ public class BuildingPlace : MonoBehaviour {
                 GameObject.Destroy(transform.GetChild(i).gameObject);
     }
 
+    public ScriptableObject GetScriptableObject() {
+        switch (configType) {
+            case BuildingConfigType.ProductionBuilding:
+                return productionBuildingConfig;
+            case BuildingConfigType.HeadquarterBuilding:
+                return headquarterBuildingConfig;
+            default:
+                return null;
+        }
+    }
+
     public IEnumerable<GameObject> GetEditablePrefabs() {
         switch (configType) {
             case BuildingConfigType.ProductionBuilding:
