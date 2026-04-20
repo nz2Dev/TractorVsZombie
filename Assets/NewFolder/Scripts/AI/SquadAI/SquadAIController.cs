@@ -81,7 +81,7 @@ public class SquadAIController {
 
                 var flowVector = pathfindingService.GetFlowVector(state.FlowFieldId, infantry.position);
                 var formationVector = state.Formation.GetFormationVector(subordinateIndex);
-                infantryController.Move(infantryId, Vector3.Lerp(flowVector, formationVector, state.Config.formationBlendFactor));
+                infantryController.Move(infantryId, Vector3.Lerp(flowVector, formationVector, state.Config.formationBlendFactor) * infantry.maxSpeed);
 
                 if (combatSystem.GetClosestEnemyAgentInRange(infantry.combatId, 2, out var closestFoe)) {
                     infantryController.Attack(infantryId, closestFoe.id);
