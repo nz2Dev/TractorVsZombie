@@ -21,8 +21,8 @@ MonoBehaviour:
   visualsPrefab: {fileID: 414806356285922434, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
   agentAvoidanceConfig:
     height: 2
-    radius: 0.5
-    radiusObst: 1
+    radius: 1
+    radiusObst: 2
     maxSpeed: 2
     maxNeighbors: 15
     neighborDist: 20
