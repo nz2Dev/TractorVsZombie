@@ -19,7 +19,7 @@ MonoBehaviour:
   avoidanceObstaclePrefab: {fileID: 6470828191781318376, guid: 5e85ad169bd1e46ddb2e73850bb9d2c7, type: 3}
   vehicleObstaclePrefab: {fileID: 6470828191781318376, guid: 5e85ad169bd1e46ddb2e73850bb9d2c7, type: 3}
   physicsObstaclePrefab: {fileID: 6470828191781318376, guid: 5e85ad169bd1e46ddb2e73850bb9d2c7, type: 3}
-  spawnInterval: 5
+  spawnInterval: 1
   initialQueueAmount: 100
   spawnType: 0
   spawnShapePrefab: {fileID: 5391597330652448849, guid: dc47073ffeb444a728f631fc98cc9177, type: 3}

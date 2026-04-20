@@ -11,20 +11,26 @@ public class EnemyController {
     private readonly EnemyConfig enemyConfig;
     private readonly SpawnService spawnService;
     private readonly ProductionBuildingController productionBuildingController;
+    private readonly WaveController waveController;
     private readonly SquadAIController squadAIController;
     private readonly ArmorAIController armorAIController;
 
     private readonly List<EnemySource> enemySources = new();
 
-    public EnemyController(EnemyView crowdView, EnemyConfig enemyConfig, 
-    SpawnService spawnService, ProductionBuildingController buildingController, 
-    SquadAIController commanderSystem, ArmorAIController armorAIController) {
+    public EnemyController(EnemyView crowdView, EnemyConfig enemyConfig,
+    SpawnService spawnService, ProductionBuildingController buildingController,
+    SquadAIController commanderSystem, ArmorAIController armorAIController, WaveController waveController) {
         this.enemyView = crowdView;
         this.enemyConfig = enemyConfig;
         this.spawnService = spawnService;
         this.productionBuildingController = buildingController;
         this.squadAIController = commanderSystem;
         this.armorAIController = armorAIController;
+        this.waveController = waveController;
+    }
+
+    public void Init() {
+        ActivateAllWaves();
     }
 
     public void Update() {
@@ -34,6 +40,13 @@ public class EnemyController {
         AssignProducedEnemies();
         UpdateProductionQueues();
         ReadBehaviorChanges();
+    }
+
+    private void ActivateAllWaves() {
+        var waveSources = GameObject.FindObjectsByType<WaveSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (var source in waveSources) {
+            waveController.Create(source.waveConfig);
+        }
     }
 
     private void TryInitEnemySources() {

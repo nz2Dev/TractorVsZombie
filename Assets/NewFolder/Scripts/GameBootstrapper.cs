@@ -39,6 +39,7 @@ public class GameBootstrapper : MonoBehaviour {
     private PlatformController platformController;
     private TruckController truckController;
     private SpawnService spawnService;
+    private WaveController waveController;
     private ArmorAIController armorAIController;
     private SquadAIController squadAIController;
     private ProductionBuildingController buildingController;
@@ -141,6 +142,10 @@ public class GameBootstrapper : MonoBehaviour {
             armorController
         );
 
+        waveController = new WaveController(
+            spawnService
+        );
+
         armorAIController = new ArmorAIController(
             combatSystem,
             pathfindingService,
@@ -191,11 +196,13 @@ public class GameBootstrapper : MonoBehaviour {
             spawnService,
             buildingController,
             squadAIController,
-            armorAIController
+            armorAIController,
+            waveController
         );
     }
 
     private void Init() {
+        enemyController.Init();
         playerController.Init();
     }
 
@@ -218,6 +225,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         buildingController.Update();
         headquarterBuildingController.Update();
+
+        waveController.Update();
 
         enemyController.Update();
         playerController.Update();

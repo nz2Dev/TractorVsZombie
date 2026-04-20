@@ -28,7 +28,6 @@ public class SpawnService {
         }
     }
 
-    // resulted list is safe to use until next call to this method, as its data gets overwriten
     public SpawnResult Spawn(SpawnRequest request) {
         idsBuffer.Clear();
         request.shape.CalculateSpawnPoints(spawnPointsBuffer);
@@ -47,7 +46,7 @@ public class SpawnService {
 
         return new SpawnResult {
             spawnType = request.spawnType,
-            spawnedIds = idsBuffer,
+            spawnedIds = idsBuffer.ToArray(),
         };
     }
 
