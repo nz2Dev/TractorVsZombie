@@ -32,7 +32,7 @@ public class ORCAMeshObstacleSource : BaseObstacleSource {
 
     private void OnDestroy() {
         if (Application.isPlaying) {
-            ORCASystem.Instance.RemoveObstacle(obstacle);
+            ORCASystem.Instance?.RemoveObstacle(obstacle);
         }
     }
 
