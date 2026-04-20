@@ -26,7 +26,7 @@ public class ORCAMeshObstacleSource : BaseObstacleSource {
     private void Start() {
         if (Application.isPlaying) {
             var orcaSystem = ORCASystem.Instance;
-            obstacle = orcaSystem.AddObstacle(isStatic: true, inverseOrder: true, vertices);
+            obstacle = orcaSystem.AddObstacle(isStatic: true, inverseOrder: false, vertices);
         } 
     }
 
