@@ -24,8 +24,10 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     void LateUpdate() {
-        dynamicProps.SetColor(colorPropertyID, AnimatedColor);
-        visualsRenderer.SetPropertyBlock(dynamicProps);
+        if (dynamicProps != null) {
+            dynamicProps.SetColor(colorPropertyID, AnimatedColor);
+            visualsRenderer.SetPropertyBlock(dynamicProps);
+        }
 
         if (sheduledForDestruction && !IsAnimatorPlaying()) {
             Destroy(gameObject);
