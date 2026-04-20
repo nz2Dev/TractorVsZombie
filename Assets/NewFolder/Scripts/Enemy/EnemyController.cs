@@ -9,15 +9,19 @@ public class EnemyController {
 
     private readonly EnemyView enemyView;
     private readonly EnemyConfig enemyConfig;
+    private readonly SpawnService spawnService;
     private readonly ProductionBuildingController productionBuildingController;
     private readonly SquadAIController squadAIController;
     private readonly ArmorAIController armorAIController;
 
     private readonly List<EnemySource> enemySources = new();
 
-    public EnemyController(EnemyView crowdView, EnemyConfig enemyConfig, ProductionBuildingController buildingController, SquadAIController commanderSystem, ArmorAIController armorAIController) {
+    public EnemyController(EnemyView crowdView, EnemyConfig enemyConfig, 
+    SpawnService spawnService, ProductionBuildingController buildingController, 
+    SquadAIController commanderSystem, ArmorAIController armorAIController) {
         this.enemyView = crowdView;
         this.enemyConfig = enemyConfig;
+        this.spawnService = spawnService;
         this.productionBuildingController = buildingController;
         this.squadAIController = commanderSystem;
         this.armorAIController = armorAIController;
@@ -75,18 +79,22 @@ public class EnemyController {
 
     private void AssignProducedEnemies() {
         foreach (var enemySource in enemySources) {
-            var productionResult = productionBuildingController.ReadProductionResult(enemySource.ProductionBuildingId);
-            switch (productionResult.spawnType) {
+            if (!productionBuildingController.TryReadLastSpawnRequest(enemySource.ProductionBuildingId, out var spawnRequest)) {
+                continue;
+            }
+
+            var spawnResult = spawnService.Spawn(spawnRequest);
+            switch (spawnResult.spawnType) {
                 case SpawnType.Infantry:
-                    foreach (var producedInfantry in productionResult.spawnedIds)
+                    foreach (var producedInfantry in spawnResult.spawnedIds)
                         squadAIController.AddSubordinate(enemySource.LastSquadId, producedInfantry);
                     break;
                 case SpawnType.Armor:
-                    foreach (var producedArmor in productionResult.spawnedIds)
+                    foreach (var producedArmor in spawnResult.spawnedIds)
                         armorAIController.AddAIBehaviour(producedArmor);
                     break;
                 default: 
-                    Debug.LogError($"{productionResult.spawnType}");
+                    Debug.LogError($"{spawnRequest.spawnType}");
                     break;
             }
         }
@@ -94,9 +102,9 @@ public class EnemyController {
 
     private void UpdateProductionQueues() {
         var infantrySources = Mathf.Max(enemySources.Count(source => source.ProductionBuildingConfig.spawnType == SpawnType.Infantry), 1);
-        var availableInfantryQueue = enemyConfig.maxInfantryCount - productionBuildingController.GetProductionLoad(SpawnType.Infantry);
+        var availableInfantryQueue = enemyConfig.maxInfantryCount - spawnService.GetProductionLoad(SpawnType.Infantry);
         var armorSources = Mathf.Max(enemySources.Count(source => source.ProductionBuildingConfig.spawnType == SpawnType.Armor), 1);
-        var availableArmorQueue = enemyConfig.maxArmorCount - productionBuildingController.GetProductionLoad(SpawnType.Armor);
+        var availableArmorQueue = enemyConfig.maxArmorCount - spawnService.GetProductionLoad(SpawnType.Armor);
 
         Debug.Log($"{availableInfantryQueue}");
 

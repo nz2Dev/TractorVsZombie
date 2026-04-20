@@ -18,7 +18,8 @@ public class ProductionBuildingModel {
     public float NextSpawnTime { get; set; }
     public int QueueAmount { get; set; }
     public bool Destroyed { get; set; }
-    public List<int> ProducedEntities { get; } = new();
+    public bool SpawnRequested { get; set; }
+    public SpawnRequest LastRequest { get; set; }
 
     public ProductionBuildingModel(int id, ProductionBuildingConfig config) {
         Id = id;

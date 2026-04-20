@@ -38,6 +38,7 @@ public class GameBootstrapper : MonoBehaviour {
     private ArmorController armorController;
     private PlatformController platformController;
     private TruckController truckController;
+    private SpawnService spawnService;
     private ArmorAIController armorAIController;
     private SquadAIController squadAIController;
     private ProductionBuildingController buildingController;
@@ -135,6 +136,11 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleService
         );
 
+        spawnService = new SpawnService(
+            infantryController,
+            armorController
+        );
+
         armorAIController = new ArmorAIController(
             combatSystem,
             pathfindingService,
@@ -154,9 +160,7 @@ public class GameBootstrapper : MonoBehaviour {
             pathfindingService,
             vehicleService,
             physicsService,
-            localAvoidanceService,
-            infantryController,
-            armorController
+            localAvoidanceService
         );
 
         headquarterBuildingController = new HeadquarterBuildingController(
@@ -184,6 +188,7 @@ public class GameBootstrapper : MonoBehaviour {
         enemyController = new EnemyController(
             unitView,
             enemyConfig,
+            spawnService,
             buildingController,
             squadAIController,
             armorAIController

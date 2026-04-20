@@ -2,12 +2,6 @@ using System;
 
 using UnityEngine;
 
-[Serializable]
-public enum SpawnType {
-    Infantry,
-    Armor
-}
-
 [CreateAssetMenu(fileName = "Production Building Config", menuName = "ProductionBuildingConfig", order = 0)]
 public class ProductionBuildingConfig : ScriptableObject {
     public int maxHealth = 100;
@@ -20,9 +14,8 @@ public class ProductionBuildingConfig : ScriptableObject {
     [Space]
     public float spawnInterval = 5f;
     public int initialQueueAmount = 1000;
-    public SpawnShape spawnShapePrefab;
     [Space]
     public SpawnType spawnType;
-    public InfantryConfig infantryConfig;
-    public ArmorConfig armorConfig;
+    public SpawnShape spawnShapePrefab;
+    public SpawnConfig spawnConfig;
 }

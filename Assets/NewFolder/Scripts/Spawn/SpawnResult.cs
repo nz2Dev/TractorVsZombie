@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public struct ProductionResult {
+public struct SpawnResult {
     public SpawnType spawnType;
-    public IReadOnlyCollection<int> spawnedIds;
+    public List<int> spawnedIds;
 }

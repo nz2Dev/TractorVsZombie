@@ -11,13 +11,10 @@ public class ProductionBuildingController {
     private readonly VehicleService vehicleService;
     private readonly PhysicsService physicsService;
     private readonly LocalAvoidanceService localAvoidanceService;
-    private readonly InfantryController infantryController;
-    private readonly ArmorController armorController;
     
     private int idCounter;
     private readonly Dictionary<int, ProductionBuildingModel> registry = new();
     private readonly List<int> removalBuffer = new();
-    private readonly List<Vector3> spawnPointsBuffer = new(32);
 
     public ProductionBuildingController(
         ProductionBuildingView view,
@@ -25,17 +22,13 @@ public class ProductionBuildingController {
         PathfindingService pathfindingService,
         VehicleService vehicleService,
         PhysicsService physicsService,
-        LocalAvoidanceService localAvoidanceService,
-        InfantryController infantryController,
-        ArmorController armorController) {
+        LocalAvoidanceService localAvoidanceService) {
         this.view = view;
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.vehicleService = vehicleService;
         this.physicsService = physicsService;
         this.localAvoidanceService = localAvoidanceService;
-        this.infantryController = infantryController;
-        this.armorController = armorController;
     }
 
     public void Update() {
@@ -46,18 +39,6 @@ public class ProductionBuildingController {
 
     public bool IsExist(int buildingId) {
         return registry.ContainsKey(buildingId);
-    }
-
-    public int GetProductionLoad(SpawnType spawnType) {
-        switch (spawnType) {
-            case SpawnType.Infantry: 
-                return infantryController.InfantryCount;
-            case SpawnType.Armor:
-                return armorController.ArmorCount;
-            default:
-                Debug.LogError($"{spawnType}");
-                return int.MaxValue;
-        }
     }
 
     public int Spawn(Vector3 position, Quaternion rotation, ProductionBuildingConfig config, bool alie) {
@@ -84,12 +65,12 @@ public class ProductionBuildingController {
         registry[buildingId].QueueAmount = amount;
     }
 
-    public ProductionResult ReadProductionResult(int buildingId) {
+    public bool TryReadLastSpawnRequest(int buildingId, out SpawnRequest request) {
         var model = registry[buildingId];
-        return new ProductionResult {
-            spawnType = model.Config.spawnType,
-            spawnedIds = model.ProducedEntities.AsReadOnly()
-        };
+        request = model.LastRequest;
+        var wasRequested = model.SpawnRequested;
+        model.SpawnRequested = false;
+        return wasRequested;
     }
 
     private void DestroyBuilding(int id) {
@@ -124,26 +105,22 @@ public class ProductionBuildingController {
 
     private void ProduceSpawns() {
         foreach (var model in registry.Values) {
-            model.ProducedEntities.Clear();
             if (model.QueueAmount <= 0 || Time.time < model.NextSpawnTime)
                 continue;
 
             var availableSpawn = Mathf.Min(model.QueueAmount, model.Config.spawnShapePrefab.GetTotalPoints());
             model.NextSpawnTime = Time.time + model.Config.spawnInterval;
             model.QueueAmount -= availableSpawn;
-
-            model.Config.spawnShapePrefab.CalculateSpawnPoints(spawnPointsBuffer);
-            foreach (var spawnPoint in spawnPointsBuffer.Take(availableSpawn)) {
-                var worldSpaceSpawnPoint = model.Position + model.Rotation * spawnPoint;
-                
-                if (model.Config.spawnType == SpawnType.Infantry) {
-                    var spawnedId = infantryController.SpawnInfantry(worldSpaceSpawnPoint, model.Alie, model.Config.infantryConfig);
-                    model.ProducedEntities.Add(spawnedId);
-                } else if (model.Config.spawnType == SpawnType.Armor) {
-                    var spawnedId = armorController.SpawnArmor(worldSpaceSpawnPoint, model.Config.armorConfig);
-                    model.ProducedEntities.Add(spawnedId);
-                }
-            }
+            model.SpawnRequested = true;
+            model.LastRequest = new SpawnRequest {
+                amount = availableSpawn,
+                spawnType = model.Config.spawnType,
+                shape = model.Config.spawnShapePrefab,
+                position = model.Position,
+                rotation = model.Rotation,
+                alie = model.Alie,
+                spawnConfig = model.Config.spawnConfig
+            };
         }
     }
 
