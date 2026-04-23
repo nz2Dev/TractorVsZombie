@@ -116,8 +116,10 @@ public class ProductionBuildingController {
                 amount = availableSpawn,
                 spawnType = model.Config.spawnType,
                 shape = model.Config.spawnShapePrefab,
-                position = model.Position,
-                rotation = model.Rotation,
+                spawnPoint = new SpawnPoint {
+                    position = model.Position,
+                    rotation = model.Rotation,
+                },
                 alie = model.Alie,
                 spawnConfig = model.Config.spawnConfig
             };

@@ -33,7 +33,7 @@ public class SpawnService {
         request.shape.CalculateSpawnPoints(spawnPointsBuffer);
         
         foreach (var spawnPoint in spawnPointsBuffer.Take(request.amount)) {
-            var worldSpaceSpawnPoint = request.position + request.rotation * spawnPoint;
+            var worldSpaceSpawnPoint = request.spawnPoint.position + request.spawnPoint.rotation * spawnPoint;
             
             if (request.spawnType == SpawnType.Infantry) {
                 var spawnedId = infantryController.SpawnInfantry(worldSpaceSpawnPoint, request.alie, request.spawnConfig.infantryConfig);

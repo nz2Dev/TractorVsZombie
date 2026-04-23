@@ -45,7 +45,7 @@ public class EnemyController {
     private void ActivateAllWaves() {
         var waveSources = GameObject.FindObjectsByType<WaveSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         foreach (var source in waveSources) {
-            waveController.Create(source.waveConfig);
+            waveController.Create(source.GetPrototype());
         }
     }
 

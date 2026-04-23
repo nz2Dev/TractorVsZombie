@@ -405,9 +405,9 @@ GameObject:
   - component: {fileID: 130093669}
   - component: {fileID: 130093670}
   m_Layer: 0
-  m_Name: WaveSource
+  m_Name: Wave Source
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -420,11 +420,10 @@ Transform:
   m_GameObject: {fileID: 130093668}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 38.5, y: 0, z: -43.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 517219185}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &130093670
@@ -440,6 +439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::WaveSource
   waveConfig: {fileID: 11400000, guid: 7cf0122b3f05e43fd8c52be8c44b04ac, type: 2}
+  spawnPointSource: {fileID: 2845072440889980232}
 --- !u!43 &172952823
 Mesh:
   m_ObjectHideFlags: 0
@@ -1171,7 +1171,7 @@ GameObject:
   - component: {fileID: 349445393}
   - component: {fileID: 349445392}
   m_Layer: 0
-  m_Name: Infantry Spawn Place
+  m_Name: Infantry Producer Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1224,7 +1224,7 @@ GameObject:
   - component: {fileID: 429557617}
   - component: {fileID: 429557616}
   m_Layer: 0
-  m_Name: Armor Spawn Place
+  m_Name: Armor Producer Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1672,11 +1672,6 @@ Transform:
   - {fileID: 1683777974}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!4 &517219185 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-  m_PrefabInstance: {fileID: 2845072440889980230}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &526922605 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7063130400984449068, guid: a57955eb465f141188c4e6e801dfddf0, type: 3}
@@ -10532,7 +10527,7 @@ GameObject:
   - component: {fileID: 1909830769}
   - component: {fileID: 1909830770}
   m_Layer: 0
-  m_Name: InfantryAuthoring
+  m_Name: Infantry Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10979,67 +10974,33 @@ MonoBehaviour:
   productionBuildingConfig: {fileID: 0}
   headquarterBuildingConfig: {fileID: 11400000, guid: 6ee799a472e0b4c088633f1d76f011ba, type: 2}
   spawnedInstances: []
---- !u!1001 &2845072440889980230
-PrefabInstance:
+--- !u!4 &2287471336966655069
+Transform:
   m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7860914831364610009}
   serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 130093669}
-    m_Modifications:
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -50.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5362712023922008735, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
-    - target: {fileID: 5362712023922008735, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
-      propertyPath: m_Name
-      value: Wave Spawn Point
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.25, y: 0, z: -50.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2845072440889980232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7860914831364610009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4af0279d1559d46f099a721bcfa4e510, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::SpawnPointSource
 --- !u!1001 &4339310384163035683
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11308,6 +11269,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a57955eb465f141188c4e6e801dfddf0, type: 3}
+--- !u!1 &7860914831364610009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2287471336966655069}
+  - component: {fileID: 2845072440889980232}
+  m_Layer: 0
+  m_Name: Spawn Point Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -11322,6 +11300,7 @@ SceneRoots:
   - {fileID: 1862540269}
   - {fileID: 1807067403}
   - {fileID: 130093669}
+  - {fileID: 2287471336966655069}
   - {fileID: 1909830769}
   - {fileID: 349445393}
   - {fileID: 429557617}

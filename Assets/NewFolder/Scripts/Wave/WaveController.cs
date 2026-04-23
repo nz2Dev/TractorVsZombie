@@ -13,10 +13,10 @@ public class WaveController {
     private int idCounter;
     private readonly Dictionary<int, WaveModel> registry = new();
 
-    public int Create(WaveConfig waveConfig) {
+    public int Create(WavePrototype prototype) {
         var nextId = idCounter++;
-        var model = new WaveModel(nextId, waveConfig);
-        model.Queue = waveConfig.initialQueue;
+        var model = new WaveModel(nextId, prototype.waveConfig, prototype.waveSpawnPoint);
+        model.Queue = prototype.waveConfig.initialQueue;
         model.NextSpawnTime = Time.time;
         registry[nextId] = model;
         return nextId;
@@ -33,9 +33,8 @@ public class WaveController {
             model.SpawnResult = spawnService.Spawn(new SpawnRequest {
                 alie = false,
                 amount = availableSpawn,
-                position = model.Config.worldPointPrefab.position,
-                rotation = model.Config.worldPointPrefab.rotation,
                 shape = model.Config.spawnShape,
+                spawnPoint = model.SpawnPoint,
                 spawnConfig = model.Config.spawnConfig,
                 spawnType = model.Config.spawnType
             });
