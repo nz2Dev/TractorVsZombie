@@ -4,11 +4,13 @@ public class WaveSource : MonoBehaviour {
     
     [SerializeField] private WaveConfig waveConfig;
     [SerializeField] private SpawnPointSource spawnPointSource;
+    [SerializeField] private SpawnShape spawnShapePrefab;
 
     public WavePrototype GetPrototype() {
         return new WavePrototype {
             waveConfig = waveConfig,
-            waveSpawnPoint = spawnPointSource.Provide(),
+            waveSpawnPointA = spawnPointSource.Provide(),
+            waveSpawnShapeA = spawnShapePrefab,
         };
     }
 

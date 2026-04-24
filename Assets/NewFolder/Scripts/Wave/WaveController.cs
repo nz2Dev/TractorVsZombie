@@ -15,7 +15,7 @@ public class WaveController {
 
     public int Create(WavePrototype prototype) {
         var nextId = idCounter++;
-        var model = new WaveModel(nextId, prototype.waveConfig, prototype.waveSpawnPoint);
+        var model = new WaveModel(nextId, prototype.waveConfig, prototype.waveSpawnPointA, prototype.waveSpawnShapeA);
         model.Queue = prototype.waveConfig.initialQueue;
         model.NextSpawnTime = Time.time;
         registry[nextId] = model;
@@ -27,14 +27,14 @@ public class WaveController {
             if (model.Queue <= 0 || Time.time < model.NextSpawnTime)
                 continue;
 
-            var availableSpawn = Mathf.Min(model.Queue, model.Config.spawnShape.GetTotalPoints());
+            var availableSpawn = Mathf.Min(model.Queue, model.SpawnShapeAPrefab.GetTotalPoints());
             model.NextSpawnTime = Time.time + model.Config.spawnInterval;
             model.Queue -= availableSpawn;
             model.SpawnResult = spawnService.Spawn(new SpawnRequest {
                 alie = false,
                 amount = availableSpawn,
-                shape = model.Config.spawnShape,
-                spawnPoint = model.SpawnPoint,
+                shape = model.SpawnShapeAPrefab,
+                spawnPoint = model.SpawnPointA,
                 spawnConfig = model.Config.spawnConfig,
                 spawnType = model.Config.spawnType
             });

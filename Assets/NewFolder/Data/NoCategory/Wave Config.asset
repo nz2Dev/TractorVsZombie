@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdec78ba87c174955802f8e0591cd548, type: 3}
   m_Name: Wave Config
   m_EditorClassIdentifier: NewFolder::WaveConfig
-  worldPointPrefab: {fileID: 4090677211433613595, guid: f7786dd89e3b941649f362fd0d12a397, type: 3}
   spawnInterval: 10
   initialQueue: 2
   spawnType: 1
   spawnConfig:
     infantryConfig: {fileID: 0}
     armorConfig: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}
-  spawnShape: {fileID: 5391597330652448849, guid: fbeb35bb3a9864a3e950d68b4f733d30, type: 3}
+  squadAIConfig: {fileID: 11400000, guid: cdc8ced221e2c4536879833069c57da2, type: 2}

@@ -440,6 +440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::WaveSource
   waveConfig: {fileID: 11400000, guid: 7cf0122b3f05e43fd8c52be8c44b04ac, type: 2}
   spawnPointSource: {fileID: 2845072440889980232}
+  spawnShapePrefab: {fileID: 7860914831364610010}
 --- !u!43 &172952823
 Mesh:
   m_ObjectHideFlags: 0
@@ -10983,7 +10984,7 @@ Transform:
   m_GameObject: {fileID: 7860914831364610009}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.25, y: 0, z: -50.75}
+  m_LocalPosition: {x: 0, y: 0, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11279,13 +11280,32 @@ GameObject:
   m_Component:
   - component: {fileID: 2287471336966655069}
   - component: {fileID: 2845072440889980232}
+  - component: {fileID: 7860914831364610010}
   m_Layer: 0
-  m_Name: Spawn Point Source
+  m_Name: Spawn Point And Shape Source
   m_TagString: Untagged
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7860914831364610010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7860914831364610009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 810b75dd8d0ea449a9f39588cdeb4054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::SpawnShape
+  width: 1
+  height: 1
+  spaceScale: 1
+  centerOffset: {x: 0, y: 0, z: 0}
+  randomOffset: 1
+  offsetScale: 0.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
