@@ -206,7 +206,8 @@ public class GameBootstrapper : MonoBehaviour {
             unitView,
             enemyConfig,
             commanderController,
-            buildingController
+            buildingController,
+            productionSpaceController
         );
     }
 
@@ -234,11 +235,9 @@ public class GameBootstrapper : MonoBehaviour {
 
         buildingController.Update();
         headquarterBuildingController.Update();
-
         productionSpaceController.Update();
 
         commanderController.Update();
-
         enemyController.Update();
         playerController.Update();
 

@@ -1456,6 +1456,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d5d36206fe74a6c963edb9d51612ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
+  unique: 1
+  uniqueId: 2023644871
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   spawnSpotSource: {fileID: 2845072440889980232}
   dimensionsPrefab: {fileID: 988582194}
@@ -8784,6 +8786,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4e37cdaecfb46d9a7929dddf65c63b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
+  unique: 1
+  uniqueId: 1233990012
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
 --- !u!43 &1671408922

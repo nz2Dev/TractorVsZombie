@@ -13,9 +13,35 @@ public class ProductionSpaceController {
 
     private int idCounter;
     private readonly Dictionary<int, ProductionSpaceModel> registry = new ();
+    private readonly Dictionary<int, int> uniqueIdRegistry = new();
+
+    public int RegisterUniqueId(int uniqueId) {
+        if (uniqueId == 0) {
+            Debug.LogError("not a unique id");
+            return -1;
+        }
+
+        int nextId;
+        if (uniqueIdRegistry.ContainsKey(uniqueId)) {
+            nextId = uniqueIdRegistry[uniqueId];
+        } else {
+            nextId = ++idCounter;
+            uniqueIdRegistry[uniqueId] = nextId;
+        }
+        return nextId;
+    }
 
     public int Create(ProductionSpacePrototype prototype) {
-        var nextId = ++idCounter;
+        int nextId;
+        if (prototype.uniqueId == 0) {
+            nextId = ++idCounter;
+        } else if (!uniqueIdRegistry.ContainsKey(prototype.uniqueId)) {
+            nextId = ++idCounter;
+            uniqueIdRegistry[prototype.uniqueId] = nextId;
+        } else {
+            nextId = uniqueIdRegistry[prototype.uniqueId];
+        }
+
         var model = new ProductionSpaceModel(nextId, prototype.config, prototype.spawnSpot);
         model.NextSpawnTime = Time.time;
         model.Queue = prototype.config.initialQueue;

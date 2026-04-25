@@ -2,13 +2,13 @@ using System;
 
 [Serializable]
 public enum ProducerType {
-    Space,
-    Structure
+    ProductionSpace,
+    ProductionBuilding
 }
 
 [Serializable]
-public struct ProducerHandle {
-    public int producerId;
+public struct ProducerReference {
+    public int producerUniqueId;
     public ProducerType type;
 }
 

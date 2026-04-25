@@ -10,12 +10,17 @@ public class ProducerFactory {
         this.productionSpaceController = productionSpaceController;
     }
 
-    public IProducer Create(ProducerHandle handle) {
-        return handle.type switch {
-            ProducerType.Space => new SpaceProducer(handle.producerId, productionSpaceController),
-            ProducerType.Structure => new StructureProducer(handle.producerId, productionBuildingController),
-            _ => throw new Exception($"{handle.type}"),
+    public IProducer Create(ProducerReference reference) {
+        return reference.type switch {
+            ProducerType.ProductionSpace => new SpaceProducer(
+                productionSpaceController.RegisterUniqueId(reference.producerUniqueId), 
+                productionSpaceController
+            ),
+            ProducerType.ProductionBuilding => new StructureProducer(
+                productionBuildingController.RegisterUniqueId(reference.producerUniqueId), 
+                productionBuildingController
+            ),
+            _ => throw new Exception($"{reference.type}"),
         };
     }
-
 }

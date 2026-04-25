@@ -11,17 +11,20 @@ public class EnemyController {
     private readonly EnemyConfig enemyConfig;
     private readonly CommanderController commanderController;
     private readonly ProductionBuildingController productionBuildingController;
+    private readonly ProductionSpaceController productionSpaceController;
 
-    public EnemyController(EnemyView crowdView, EnemyConfig enemyConfig, CommanderController waveController, ProductionBuildingController productionBuildingController) {
+    public EnemyController(EnemyView crowdView, EnemyConfig enemyConfig, CommanderController waveController, ProductionBuildingController productionBuildingController, ProductionSpaceController productionSpaceController) {
         this.enemyView = crowdView;
         this.enemyConfig = enemyConfig;
         this.commanderController = waveController;
         this.productionBuildingController = productionBuildingController;
+        this.productionSpaceController = productionSpaceController;
     }
 
     public void Init() {
         // acts as level bootstraper?
         CreateAllProductionBuildings();
+        CreateAllProductionSpaces();
         ActivateAllCommanders();
     }
 
@@ -35,6 +38,13 @@ public class EnemyController {
         var productionBuildingSources = GameObject.FindObjectsByType<ProductionBuildingSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         foreach (var source in productionBuildingSources) {
             productionBuildingController.Create(source.GetPrototype());
+        }
+    }
+
+    private void CreateAllProductionSpaces() {
+        var sources = GameObject.FindObjectsByType<ProductionSpaceSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (var source in sources) {
+            productionSpaceController.Create(source.GetPrototype());
         }
     }
 

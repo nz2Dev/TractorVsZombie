@@ -25,8 +25,9 @@ public class CommanderController {
         var nextId = idCounter++;
         var model = new CommanderModel(nextId, prototype.position, prototype.commanderConfig);
         
-        model.LastSquadId = squadAIController.CreateSquad(model.Config.squadAIConfig);;
-        model.Producers.AddRange(prototype.producerHandles.Select(handle => producerFactory.Create(handle)));
+        model.LastSquadId = squadAIController.CreateSquad(model.Config.squadAIConfig);
+        var producers = prototype.producerHandles.Select(handle => producerFactory.Create(handle));
+        model.Producers.AddRange(producers);
         
         registry[nextId] = model;
         return nextId;

@@ -5,24 +5,32 @@ using UnityEngine;
 public class CommanderSource : MonoBehaviour {
     
     [SerializeField] private CommanderConfig commanderConfig;
-    [SerializeField] private ProductionBuildingSource[] productionBuildingSource; // has no effect for now
-    [SerializeField] private ProductionSpaceSource[] productionSpaceSources; // has no effect for now
+    [SerializeField] private ProductionBuildingSource[] productionBuildingSource;
+    [SerializeField] private ProductionSpaceSource[] productionSpaceSources;
 
     public CommanderPrototype GetPrototype() {
+        var handlesLength = productionBuildingSource.Length + productionSpaceSources.Length;
+        var handles = new ProducerReference[handlesLength];
+
+        var index = 0;
+        foreach (var buildingSource in productionBuildingSource) {
+            handles[index++] = new ProducerReference {
+                producerUniqueId = buildingSource.GetUniqueId(),
+                type = ProducerType.ProductionBuilding
+            };
+        }
+
+        foreach (var spaceSource in productionSpaceSources) {
+            handles[index++] = new ProducerReference {
+                producerUniqueId = spaceSource.GetUniqueId(),
+                type = ProducerType.ProductionSpace
+            };
+        }
+
         return new CommanderPrototype {
             commanderConfig = commanderConfig,
             position = transform.position,
-            // todo implement external ids. productionBuildingId = productionBuildingPlace.
-            producerHandles = new ProducerHandle[] {
-                new() {
-                    producerId = 1, // will work, assuming there will be only one such building in runtime created
-                    type = ProducerType.Structure
-                },
-                new() {
-                    producerId = 1, // same here
-                    type = ProducerType.Space
-                }
-            }, 
+            producerHandles = handles
         };
     }
 

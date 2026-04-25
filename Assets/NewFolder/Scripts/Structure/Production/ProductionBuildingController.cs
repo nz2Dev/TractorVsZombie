@@ -15,6 +15,7 @@ public class ProductionBuildingController {
     
     private int idCounter;
     private readonly Dictionary<int, ProductionBuildingModel> registry = new();
+    private readonly Dictionary<int, int> uniqueIdRegistry = new();
     private readonly List<int> removalBuffer = new();
 
     public ProductionBuildingController(
@@ -43,10 +44,34 @@ public class ProductionBuildingController {
         return registry.ContainsKey(buildingId);
     }
 
+    public int RegisterUniqueId(int uniqueId) {
+        if (uniqueId == 0) {
+            Debug.LogError("not a unique id");
+            return -1;
+        }
+
+        int nextId;
+        if (uniqueIdRegistry.ContainsKey(uniqueId)) {
+            nextId = uniqueIdRegistry[uniqueId];
+        } else {
+            nextId = ++idCounter;
+            uniqueIdRegistry[uniqueId] = nextId;
+        }
+        return nextId;
+    }
+
     public int Create(ProductionBuildingPrototype prototype) {
-        var id = ++idCounter;
-        var model = new ProductionBuildingModel(id, prototype.config, prototype.spawnSpot);
-        
+        int nextId;
+        if (prototype.uniqueId == 0) {
+            nextId = ++idCounter;
+        } else if (!uniqueIdRegistry.ContainsKey(prototype.uniqueId)) {
+            nextId = ++idCounter;
+            uniqueIdRegistry[prototype.uniqueId] = nextId;
+        } else {
+            nextId = uniqueIdRegistry[prototype.uniqueId];
+        }
+
+        var model = new ProductionBuildingModel(nextId, prototype.config, prototype.spawnSpot);
         model.Position = prototype.position;
         model.Rotation = prototype.rotation;
         model.QueueAmount = prototype.config.initialQueueAmount;
@@ -56,10 +81,10 @@ public class ProductionBuildingController {
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.dimensionsPrefab);
         model.VehicleObstacleId = vehicleService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
         model.PhysicsObstacleId = physicsService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
-        registry[id] = model;
+        registry[nextId] = model;
 
         view.AddVisuals(model.Id, model.Position, model.Rotation, prototype.visualsPrefab);
-        return id;
+        return nextId;
     }
 
     public ProductionBuildingState ReadState(int buildingId) {
