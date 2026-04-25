@@ -618,6 +618,74 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::WaveSource
   commanderConfig: {fileID: 11400000, guid: 7cf0122b3f05e43fd8c52be8c44b04ac, type: 2}
   productionBuildingSource: {fileID: 349445394}
+--- !u!1 &155815520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 155815521}
+  - component: {fileID: 155815523}
+  - component: {fileID: 155815522}
+  m_Layer: 0
+  m_Name: Armor Spawn Spot Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &155815521
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155815520}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1654976756}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &155815522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155815520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 810b75dd8d0ea449a9f39588cdeb4054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::SpawnShape
+  width: 1
+  height: 1
+  spaceScale: 1
+  centerOffset: {x: 0, y: 0, z: 0}
+  randomOffset: 1
+  offsetScale: 0.5
+--- !u!114 &155815523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155815520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4af0279d1559d46f099a721bcfa4e510, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::SpawnSpotSource
+  type: 1
+  shape: {fileID: 155815522}
+  config:
+    infantryConfig: {fileID: 0}
+    armorConfig: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}
 --- !u!43 &172952823
 Mesh:
   m_ObjectHideFlags: 0
@@ -8677,10 +8745,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1654976756}
+  - component: {fileID: 1654976757}
   m_Layer: 0
   m_Name: Armor Production Point Source
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -8693,12 +8762,27 @@ Transform:
   m_GameObject: {fileID: 1654976755}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30.35299, y: 1.62563, z: -32.02703}
+  m_LocalPosition: {x: 22, y: 0, z: -46.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 155815521}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1654976757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654976755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4e37cdaecfb46d9a7929dddf65c63b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
+  config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
+  spawnSpotSource: {fileID: 155815523}
 --- !u!43 &1671408922
 Mesh:
   m_ObjectHideFlags: 0
