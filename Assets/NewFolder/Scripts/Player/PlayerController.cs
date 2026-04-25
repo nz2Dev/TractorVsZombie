@@ -62,8 +62,8 @@ public class PlayerController {
     }
 
     private void SpawnHeadquearter() {
-        var headquarterPlace = BuildingPlace.ScanSceneForPlaces().First(place => place.configType == BuildingConfigType.HeadquarterBuilding);
-        headquarterBuildingController.SetHeadquearter(headquarterPlace.Position, headquarterPlace.Rotation, headquarterPlace.headquarterBuildingConfig);
+        var headquarterSource = GameObject.FindFirstObjectByType<HeadquarterBuildingSource>();
+        headquarterBuildingController.SetHeadquearter(headquarterSource.GetPrototype());
     }
 
     private void SyncPositions() {

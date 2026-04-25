@@ -39,7 +39,7 @@ public class GameBootstrapper : MonoBehaviour {
     private PlatformController platformController;
     private TruckController truckController;
     private SpawnService spawnService;
-    private WaveController waveController;
+    private CommanderController commanderController;
     private ArmorAIController armorAIController;
     private SquadAIController squadAIController;
     private ProductionBuildingController buildingController;
@@ -142,10 +142,6 @@ public class GameBootstrapper : MonoBehaviour {
             armorController
         );
 
-        waveController = new WaveController(
-            spawnService
-        );
-
         armorAIController = new ArmorAIController(
             combatSystem,
             pathfindingService,
@@ -162,10 +158,10 @@ public class GameBootstrapper : MonoBehaviour {
         buildingController = new ProductionBuildingController(
             productionBuildingView,
             combatSystem,
-            pathfindingService,
             vehicleService,
             physicsService,
-            localAvoidanceService
+            localAvoidanceService,
+            spawnService
         );
 
         headquarterBuildingController = new HeadquarterBuildingController(
@@ -190,14 +186,17 @@ public class GameBootstrapper : MonoBehaviour {
             headquarterBuildingController
         );
 
+        commanderController = new CommanderController(
+            squadAIController,
+            armorAIController,
+            buildingController
+        );
+
         enemyController = new EnemyController(
             unitView,
             enemyConfig,
-            spawnService,
-            buildingController,
-            squadAIController,
-            armorAIController,
-            waveController
+            commanderController,
+            buildingController
         );
     }
 
@@ -226,7 +225,7 @@ public class GameBootstrapper : MonoBehaviour {
         buildingController.Update();
         headquarterBuildingController.Update();
 
-        waveController.Update();
+        commanderController.Update();
 
         enemyController.Update();
         playerController.Update();

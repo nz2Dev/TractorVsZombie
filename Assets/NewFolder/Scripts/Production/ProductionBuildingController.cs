@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,10 +8,10 @@ public class ProductionBuildingController {
 
     private readonly ProductionBuildingView view;
     private readonly CombatSystem combatSystem;
-    private readonly PathfindingService pathfindingService;
     private readonly VehicleService vehicleService;
     private readonly PhysicsService physicsService;
     private readonly LocalAvoidanceService localAvoidanceService;
+    private readonly SpawnService spawnService;
     
     private int idCounter;
     private readonly Dictionary<int, ProductionBuildingModel> registry = new();
@@ -19,19 +20,20 @@ public class ProductionBuildingController {
     public ProductionBuildingController(
         ProductionBuildingView view,
         CombatSystem combatSystem,
-        PathfindingService pathfindingService,
         VehicleService vehicleService,
         PhysicsService physicsService,
-        LocalAvoidanceService localAvoidanceService) {
+        LocalAvoidanceService localAvoidanceService,
+        SpawnService spawnService) {
         this.view = view;
         this.combatSystem = combatSystem;
-        this.pathfindingService = pathfindingService;
         this.vehicleService = vehicleService;
         this.physicsService = physicsService;
         this.localAvoidanceService = localAvoidanceService;
+        this.spawnService = spawnService;
     }
 
     public void Update() {
+        ClearEvents();
         ReadCombatOutput();
         ValidateBuildings();
         ProduceSpawns();
@@ -41,42 +43,41 @@ public class ProductionBuildingController {
         return registry.ContainsKey(buildingId);
     }
 
-    public int Spawn(Vector3 position, Quaternion rotation, ProductionBuildingConfig config, bool alie) {
+    public int Create(ProductionBuildingPrototype prototype) {
         var id = ++idCounter;
-        var model = new ProductionBuildingModel(id, config);
+        var model = new ProductionBuildingModel(id, prototype.config, prototype.spawnSpot);
         
-        model.Alie = alie;
-        model.Position = position;
-        model.Rotation = rotation;
-        model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth, config.height);
-        // model.PathfindingObstacleId = pathfindingService.RegisterObstacle(position, (int)config.radius);
-        model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(position, rotation, config.avoidanceObstaclePrefab);
-        model.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstaclePrefab);
-        model.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstaclePrefab);
+        model.Position = prototype.position;
+        model.Rotation = prototype.rotation;
+        model.QueueAmount = prototype.config.initialQueueAmount;
         model.NextSpawnTime = Time.time;
-        model.QueueAmount = config.initialQueueAmount;
+
+        model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.config.alie, model.Config.maxHealth, prototype.config.height);
+        model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.dimensionsPrefab);
+        model.VehicleObstacleId = vehicleService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
+        model.PhysicsObstacleId = physicsService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
         registry[id] = model;
 
-        view.AddVisuals(model.Id, position, rotation, model.Config.visualsPrefab);
+        view.AddVisuals(model.Id, model.Position, model.Rotation, prototype.visualsPrefab);
         return id;
     }
 
-    public void SetQueueAmount(int buildingId, int amount) {
-        registry[buildingId].QueueAmount = amount;
+    public ProductionBuildingState ReadState(int buildingId) {
+        var model = registry[buildingId];
+        return new ProductionBuildingState {
+            lastResult = model.SpawnResult
+        };
     }
 
-    public bool TryReadLastSpawnRequest(int buildingId, out SpawnRequest request) {
-        var model = registry[buildingId];
-        request = model.LastRequest;
-        var wasRequested = model.SpawnRequested;
-        model.SpawnRequested = false;
-        return wasRequested;
+    private void ClearEvents() {
+        foreach (var building in registry.Values) {
+            building.SpawnResult = null;
+        }
     }
 
     private void DestroyBuilding(int id) {
         registry.Remove(id, out var model);
         combatSystem.UnregisterAgent(model.CombatId);
-        // pathfindingService.UnregisterObstacle(model.PathfindingObstacleId);
         localAvoidanceService.RemoveObstacle(model.AvoidanceObstacleId);
         vehicleService.UnregisterObstacle(model.VehicleObstacleId);
         physicsService.UnregisterObstacle(model.PhysicsObstacleId);
@@ -108,21 +109,11 @@ public class ProductionBuildingController {
             if (model.QueueAmount <= 0 || Time.time < model.NextSpawnTime)
                 continue;
 
-            var availableSpawn = Mathf.Min(model.QueueAmount, model.Config.spawnShapePrefab.GetTotalPoints());
+            var availableSpawn = model.QueueAmount;
             model.NextSpawnTime = Time.time + model.Config.spawnInterval;
-            model.QueueAmount -= availableSpawn;
-            model.SpawnRequested = true;
-            model.LastRequest = new SpawnRequest {
-                amount = availableSpawn,
-                spawnType = model.Config.spawnType,
-                shape = model.Config.spawnShapePrefab,
-                spawnPoint = new SpawnPoint {
-                    position = model.Position,
-                    rotation = model.Rotation,
-                },
-                alie = model.Alie,
-                spawnConfig = model.Config.spawnConfig
-            };
+            var spawnResult = spawnService.Spawn(model.SpawnSpot, availableSpawn);
+            model.QueueAmount -= spawnResult.spawnedIds.Length;
+            model.SpawnResult = spawnResult;
         }
     }
 

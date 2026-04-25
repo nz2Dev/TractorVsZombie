@@ -32,12 +32,12 @@ public class InfantryController {
         SyncPositions();
     }
 
-    public int SpawnInfantry(Vector3 position, bool alie, InfantryConfig config) {
+    public int SpawnInfantry(Vector3 position, InfantryConfig config) {
         var nextId = ++idCounter;
         var model = new InfantryModel(nextId, config);
         registry[model.Id] = model;
         model.Position = position;
-        model.CombatId = combatSystem.RegisterAgent(position, alie, model.Config.maxHealth);
+        model.CombatId = combatSystem.RegisterAgent(position, config.alie, model.Config.maxHealth);
         model.BodyPhysicsId = physicsService.RegisterPhysicsEntity(position, model.Config.bodyData);
         model.AvoidanceId = avoidanceService.AddAgent(position, config.agentAvoidanceConfig);
         view.AddVisuals(model.Id, position, model.Config.visualsPrefab);

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdec78ba87c174955802f8e0591cd548, type: 3}
-  m_Name: Wave Config
+  m_Name: Commander Config
   m_EditorClassIdentifier: NewFolder::WaveConfig
   spawnInterval: 10
   initialQueue: 2

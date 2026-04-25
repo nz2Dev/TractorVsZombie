@@ -28,15 +28,15 @@ public class HeadquarterBuildingController {
         CheckLooseCondition();
     }
 
-    public void SetHeadquearter(Vector3 position, Quaternion rotation, HeadquarterBuildingConfig config) {
-        headquarter = new HeadquarterBuilding(config);
-        headquarter.Position = position;
-        headquarter.CombatId = combatSystem.RegisterAgent(position, config.alie, config.maxHealth, height: 2);
-        headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(position, config.radius);
-        headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(position, rotation, config.avoidanceObstaclePrefab);
-        headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(position, config.vehicleObstaclePrefab);
-        headquarter.PhysicsObstacleId = physicsService.RegisterObstacle(position, config.physicsObstaclePrefab);
-        visuals = GameObject.Instantiate(config.visualsPrefab, position, rotation);
+    public void SetHeadquearter(HeadquarterBuildingPrototype prototype) {
+        headquarter = new HeadquarterBuilding(prototype.config);
+        headquarter.Position = prototype.position;
+        headquarter.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.config.alie, prototype.config.maxHealth, height: 2);
+        headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.position, prototype.config.radius);
+        headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.position, prototype.rotation, prototype.config.avoidanceObstaclePrefab);
+        headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(prototype.position, prototype.config.vehicleObstaclePrefab);
+        headquarter.PhysicsObstacleId = physicsService.RegisterObstacle(prototype.position, prototype.config.physicsObstaclePrefab);
+        visuals = GameObject.Instantiate(prototype.config.visualsPrefab, prototype.position, prototype.rotation);
     }
 
     private void ReadCombatOutput() {

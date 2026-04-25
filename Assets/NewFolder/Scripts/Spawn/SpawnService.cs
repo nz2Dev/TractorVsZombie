@@ -28,24 +28,24 @@ public class SpawnService {
         }
     }
 
-    public SpawnResult Spawn(SpawnRequest request) {
+    public SpawnResult Spawn(SpawnSpot spot, int limit) {
         idsBuffer.Clear();
-        request.shape.CalculateSpawnPoints(spawnPointsBuffer);
+        spot.shape.CalculateSpawnPoints(spawnPointsBuffer);
         
-        foreach (var spawnPoint in spawnPointsBuffer.Take(request.amount)) {
-            var worldSpaceSpawnPoint = request.spawnPoint.position + request.spawnPoint.rotation * spawnPoint;
+        foreach (var spawnPoint in spawnPointsBuffer.Take(limit)) {
+            var worldSpaceSpawnPoint = spot.position + spot.rotation * spawnPoint;
             
-            if (request.spawnType == SpawnType.Infantry) {
-                var spawnedId = infantryController.SpawnInfantry(worldSpaceSpawnPoint, request.alie, request.spawnConfig.infantryConfig);
+            if (spot.type == SpawnType.Infantry) {
+                var spawnedId = infantryController.SpawnInfantry(worldSpaceSpawnPoint, spot.config.infantryConfig);
                 idsBuffer.Add(spawnedId);
-            } else if (request.spawnType == SpawnType.Armor) {
-                var spawnedId = armorController.SpawnArmor(worldSpaceSpawnPoint, request.spawnConfig.armorConfig);
+            } else if (spot.type == SpawnType.Armor) {
+                var spawnedId = armorController.SpawnArmor(worldSpaceSpawnPoint, spot.config.armorConfig);
                 idsBuffer.Add(spawnedId);
             }
         }
 
         return new SpawnResult {
-            spawnType = request.spawnType,
+            spawnType = spot.type,
             spawnedIds = idsBuffer.ToArray(),
         };
     }
