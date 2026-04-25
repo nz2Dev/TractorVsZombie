@@ -1457,7 +1457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 2023644871
+  uniqueId: -939326682
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   spawnSpotSource: {fileID: 2845072440889980232}
   dimensionsPrefab: {fileID: 988582194}
@@ -8767,7 +8767,7 @@ Transform:
   m_GameObject: {fileID: 1654976755}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22, y: 0, z: -46.75}
+  m_LocalPosition: {x: 0, y: 0, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8787,7 +8787,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: 1233990012
+  uniqueId: 354580265
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
 --- !u!43 &1671408922

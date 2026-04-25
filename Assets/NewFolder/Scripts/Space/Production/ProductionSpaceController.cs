@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using NUnit.Framework;
+
 using UnityEngine;
 
 public class ProductionSpaceController {
@@ -16,11 +18,7 @@ public class ProductionSpaceController {
     private readonly Dictionary<int, int> uniqueIdRegistry = new();
 
     public int RegisterUniqueId(int uniqueId) {
-        if (uniqueId == 0) {
-            Debug.LogError("not a unique id");
-            return -1;
-        }
-
+        Assert.IsFalse(uniqueId == 0);
         int nextId;
         if (uniqueIdRegistry.ContainsKey(uniqueId)) {
             nextId = uniqueIdRegistry[uniqueId];

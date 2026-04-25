@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class ProductionBuildingController {
 
@@ -45,11 +46,7 @@ public class ProductionBuildingController {
     }
 
     public int RegisterUniqueId(int uniqueId) {
-        if (uniqueId == 0) {
-            Debug.LogError("not a unique id");
-            return -1;
-        }
-
+        Assert.IsFalse(uniqueId == 0);
         int nextId;
         if (uniqueIdRegistry.ContainsKey(uniqueId)) {
             nextId = uniqueIdRegistry[uniqueId];
