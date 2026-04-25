@@ -44,6 +44,7 @@ public class GameBootstrapper : MonoBehaviour {
     private SquadAIController squadAIController;
     private ProductionBuildingController buildingController;
     private HeadquarterBuildingController headquarterBuildingController;
+    private ProductionSpaceController productionSpaceController;
 
     private void Start() {
         Build();
@@ -172,6 +173,10 @@ public class GameBootstrapper : MonoBehaviour {
             localAvoidanceService
         );
 
+        productionSpaceController = new ProductionSpaceController(
+            spawnService
+        );
+
         playerController = new PlayerController(
             playerView, 
             new PlayerInput(),
@@ -186,10 +191,15 @@ public class GameBootstrapper : MonoBehaviour {
             headquarterBuildingController
         );
 
+        var producerFactory = new ProducerFactory(
+            buildingController,
+            productionSpaceController
+        );
+
         commanderController = new CommanderController(
             squadAIController,
             armorAIController,
-            buildingController
+            producerFactory
         );
 
         enemyController = new EnemyController(
@@ -224,6 +234,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         buildingController.Update();
         headquarterBuildingController.Update();
+
+        productionSpaceController.Update();
 
         commanderController.Update();
 

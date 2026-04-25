@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -20,6 +21,10 @@ public class ProductionSpaceController {
         model.Queue = prototype.config.initialQueue;
         registry[nextId] = model;
         return nextId;
+    }
+
+    public bool IsExist(int productionSpaceId) {
+        return registry.ContainsKey(productionSpaceId);
     }
 
     public SpawnResult ReadSpawnResult(int productionSpaceId) {

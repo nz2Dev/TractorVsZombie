@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 
@@ -7,15 +8,14 @@ public class CommanderController {
 
     private readonly SquadAIController squadAIController;
     private readonly ArmorAIController armorAIController;
-    private readonly ProductionBuildingController productionBuildingController;
+    private readonly ProducerFactory producerFactory;
 
     public CommanderController(
-        SquadAIController squadAIController, ArmorAIController armorAIController, 
-        ProductionBuildingController productionBuildingController
-        ) {
+        SquadAIController squadAIController, ArmorAIController armorAIController,
+        ProducerFactory producerFactory) {
         this.squadAIController = squadAIController;
         this.armorAIController = armorAIController;
-        this.productionBuildingController = productionBuildingController;
+        this.producerFactory = producerFactory;
     }
 
     private int idCounter;
@@ -24,8 +24,10 @@ public class CommanderController {
     public int Create(CommanderPrototype prototype) {
         var nextId = idCounter++;
         var model = new CommanderModel(nextId, prototype.position, prototype.commanderConfig);
-        model.ProductionBuildingIds.Add(prototype.productionBuildingId);
+        
         model.LastSquadId = squadAIController.CreateSquad(model.Config.squadAIConfig);;
+        model.Producers.AddRange(prototype.producerHandles.Select(handle => producerFactory.Create(handle)));
+        
         registry[nextId] = model;
         return nextId;
     }
@@ -50,10 +52,10 @@ public class CommanderController {
 
     private void ValidateProducers() {
         foreach (var commander in registry.Values) {
-            for (int i = commander.ProductionBuildingIds.Count - 1; i >= 0; i--) {
-                var productionBuildingId = commander.ProductionBuildingIds[i];
-                if (!productionBuildingController.IsExist(productionBuildingId)) {
-                    commander.ProductionBuildingIds.RemoveAt(i);
+            for (int i = commander.Producers.Count - 1; i >= 0; i--) {
+                var producer = commander.Producers[i];
+                if (!producer.IsValid()) {
+                    commander.Producers.RemoveAt(i);
                 }
             }
         }
@@ -61,22 +63,21 @@ public class CommanderController {
 
     private void AssignProducedEntities() {
         foreach (var model in registry.Values) {
-            foreach (var productionBuildingId in model.ProductionBuildingIds) {
-                var buildingSpawnResult = productionBuildingController.ReadState(productionBuildingId).lastResult;
-                if (buildingSpawnResult == null)
+            foreach (var producer in model.Producers) {
+                if (!producer.TryGetSpawnResult(out var spawnResult))
                     continue;
 
-                switch (buildingSpawnResult.spawnType) {
+                switch (spawnResult.spawnType) {
                     case SpawnType.Infantry:
-                        foreach (var producedInfantry in buildingSpawnResult.spawnedIds)
+                        foreach (var producedInfantry in spawnResult.spawnedIds)
                             squadAIController.AddSubordinate(model.LastSquadId, producedInfantry);
                         break;
                     case SpawnType.Armor:
-                        foreach (var producedArmor in buildingSpawnResult.spawnedIds)
+                        foreach (var producedArmor in spawnResult.spawnedIds)
                             armorAIController.AddAIBehaviour(producedArmor);
                         break;
                     default: 
-                        Debug.LogError($"{buildingSpawnResult.spawnType}");
+                        Debug.LogError($"{spawnResult.spawnType}");
                         break;
                 }
             }

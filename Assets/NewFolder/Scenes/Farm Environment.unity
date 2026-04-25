@@ -617,7 +617,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::WaveSource
   commanderConfig: {fileID: 11400000, guid: 7cf0122b3f05e43fd8c52be8c44b04ac, type: 2}
-  productionBuildingSource: {fileID: 349445394}
+  productionBuildingSource:
+  - {fileID: 349445394}
+  productionSpaceSources:
+  - {fileID: 1654976757}
 --- !u!1 &155815520
 GameObject:
   m_ObjectHideFlags: 0
@@ -8747,7 +8750,7 @@ GameObject:
   - component: {fileID: 1654976756}
   - component: {fileID: 1654976757}
   m_Layer: 0
-  m_Name: Armor Production Point Source
+  m_Name: Armor Production Space Source
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

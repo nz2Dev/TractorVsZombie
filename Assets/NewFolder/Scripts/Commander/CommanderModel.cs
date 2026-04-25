@@ -12,7 +12,7 @@ public class CommanderModel {
     public int Id { get; }
     public Vector3 Position { get; }
     public CommanderConfig Config { get; }
-    public List<int> ProductionBuildingIds { get; } = new ();
+    public List<IProducer> Producers { get; } = new ();
 
     public List<int> SquadIds { get; } = new ();
     public int LastSquadId { get; set; }
