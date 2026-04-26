@@ -14,6 +14,8 @@ internal class CombatAgent : IPositionSource, IMetadata {
     public Vector3 DamageSourcePosition { get; set; }
     public bool DamageByProjectile { get; set; }
     public bool DamageByExplosion { get; set; }
+    public float ExplosionRadius { get; set ;}
+    public float ExplosionForce { get; set; }
     public bool DamageByPunch { get; set; }
 
     public CombatOutputInfo Output { get; set; }

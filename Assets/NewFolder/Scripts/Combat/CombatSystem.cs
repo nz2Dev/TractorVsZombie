@@ -51,6 +51,8 @@ public class CombatSystem {
                 damageTaken = agent.ReceivedDamage,
                 damageSourcePosition = agent.DamageSourcePosition,
                 wasExploded = agent.DamageByExplosion,
+                explosionForce = agent.ExplosionForce,
+                explosionRadius = agent.ExplosionRadius,
                 wasProjectiled = agent.DamageByProjectile,
                 wasPunched = agent.DamageByPunch,
                 damageWasFatal = fatalDamage
@@ -110,7 +112,7 @@ public class CombatSystem {
         return true;
     }
 
-    public int ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage) {
+    public int ApplyExplosionDamage(int sourceAgentId, Vector3 position, float radius, int damage, float force = 10) {
         var sourceAgent = agents[sourceAgentId];
         var collisionsLookup = sourceAgent.Alie ? foeCollisionLookup : alieCollisionsLookup;
         var overlapCount = collisionsLookup.Overlap(position, radius, out var results);
@@ -119,6 +121,8 @@ public class CombatSystem {
             var affectedAgent = results[i];
             if (affectedAgent.Id != sourceAgentId) {
                 affectedAgent.DamageByExplosion = true;
+                affectedAgent.ExplosionRadius = radius;
+                affectedAgent.ExplosionForce = force;
                 affectedAgent.ReceivedDamage = damage;
                 affectedAgent.DamageSourcePosition = position;
                 affectedCount++;

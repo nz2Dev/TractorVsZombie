@@ -135,7 +135,7 @@ public class InfantryController {
                 model.Grounded = false;
                 physicsService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, model.Position);
                 physicsService.SetPhysicsActive(model.BodyPhysicsId, true);
-                physicsService.AddExplosionForce(model.BodyPhysicsId, 10, combatOutput.damageSourcePosition, 4f, 1, ForceMode.Impulse);
+                physicsService.AddExplosionForce(model.BodyPhysicsId, combatOutput.explosionForce, combatOutput.damageSourcePosition, combatOutput.explosionRadius, 1, ForceMode.Impulse);
             }
 
             // base visual effects on combat effects irregarding of logic damage

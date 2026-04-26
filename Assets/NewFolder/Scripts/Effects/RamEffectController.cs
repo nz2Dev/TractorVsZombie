@@ -38,7 +38,7 @@ public class RamEffectController {
 
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
-            var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position, model.Config.radius, model.Config.damage);
+            var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position, model.Config.radius, model.Config.damage, model.Config.explosionForce);
             view.PlayImpact(model.Position, model.Config.radius, affectedCount, model.Config.impactSFX);
         }
     }

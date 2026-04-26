@@ -4,5 +4,6 @@ using UnityEngine;
 public class RamEffectConfig : ScriptableObject {
     public AudioClip[] impactSFX;
     public float radius;
+    public float explosionForce;
     public int damage;
 }
