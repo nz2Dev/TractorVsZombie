@@ -2,26 +2,26 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class RamEffect {
+public class RamEffectController {
 
-    private readonly RamView view;
+    private readonly RamEffectView view;
     private readonly CombatSystem combatSystem;
 
-    public RamEffect(RamView view, CombatSystem combatSystem) {
+    public RamEffectController(RamEffectView view, CombatSystem combatSystem) {
         this.view = view;
         this.combatSystem = combatSystem;
     }
 
     private int idCounter;
-    private readonly Dictionary<int, RamModel> registry = new ();
+    private readonly Dictionary<int, RamEffectModel> registry = new ();
 
     public void Update() {
         ComputeDamage();
     }
 
-    public int StartNew(int combatId, RamPrototype prototype) {
+    public int StartNew(int combatId, RamEffectPrototype prototype) {
         var nextId = idCounter++;
-        var model = new RamModel(nextId, combatId, prototype.config);
+        var model = new RamEffectModel(nextId, combatId, prototype.config);
         model.Position = prototype.position;
         registry[nextId] = model;
         return nextId;

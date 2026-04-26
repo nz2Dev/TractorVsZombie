@@ -8,11 +8,11 @@ public class TruckController {
     private readonly TruckView view;
     private readonly CombatSystem combatSystem;
     private readonly VehicleService vehicleService;
-    private readonly RamEffect ramEffect;
+    private readonly RamEffectController ramEffect;
 
     private TruckModel model;
 
-    public TruckController(CombatSystem combatSystem, RamEffect ramEffect, TruckView view, VehicleService vehicleService) {
+    public TruckController(CombatSystem combatSystem, RamEffectController ramEffect, TruckView view, VehicleService vehicleService) {
         this.combatSystem = combatSystem;
         this.ramEffect = ramEffect;
         this.view = view;

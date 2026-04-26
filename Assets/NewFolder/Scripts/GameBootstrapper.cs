@@ -33,7 +33,7 @@ public class GameBootstrapper : MonoBehaviour {
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
-    private RamEffect ramEffect;
+    private RamEffectController ramEffect;
     private InfantryController infantryController;
     private ArmorController armorController;
     private PlatformController platformController;
@@ -91,8 +91,8 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem
         );
 
-        ramEffect = new RamEffect(
-            new RamView(soundManager),
+        ramEffect = new RamEffectController(
+            new RamEffectView(soundManager),
             combatSystem
         );
 

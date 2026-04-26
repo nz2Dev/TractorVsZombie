@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class RamModel {
+public class RamEffectModel {
 
-    public RamConfig Config { get; }
+    public RamEffectConfig Config { get; }
     public int Id { get; private set; }
     public int CombatId { get; private set; }
 
-    public RamModel(int id, int combatId, RamConfig config) {
+    public RamEffectModel(int id, int combatId, RamEffectConfig config) {
         Id = id;
         CombatId = combatId;
         Config = config;

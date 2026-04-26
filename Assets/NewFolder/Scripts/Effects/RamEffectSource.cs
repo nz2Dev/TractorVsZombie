@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class RamSource : MonoBehaviour {
+public class RamEffectSource : MonoBehaviour {
 
-    [Inline] [SerializeField] private RamConfig config;
+    [Inline] [SerializeField] private RamEffectConfig config;
 
-    public RamPrototype GetPrototype() {
-        return new RamPrototype {
+    public RamEffectPrototype GetPrototype() {
+        return new RamEffectPrototype {
             position = transform.position,
             config = config,
         };

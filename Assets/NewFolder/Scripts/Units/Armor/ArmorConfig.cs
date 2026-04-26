@@ -12,7 +12,7 @@ public class ArmorConfig : ScriptableObject {
 
     public WeaponConfig weaponConfig;
     public Vector3 weaponPlacementOffset;
-    public RamConfig ramConfig;
+    public RamEffectConfig ramConfig;
 
     public LoadoutConfig loadoutConfig;
 

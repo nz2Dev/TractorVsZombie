@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class RamView {
+public class RamEffectView {
     
     private readonly SoundManager soundManager;
 
-    public RamView(SoundManager soundManager) {
+    public RamEffectView(SoundManager soundManager) {
         this.soundManager = soundManager;
     }
 

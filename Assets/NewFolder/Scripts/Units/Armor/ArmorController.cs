@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ArmorController {
 
-    private readonly RamEffect ramEffect;
+    private readonly RamEffectController ramEffect;
     private readonly CombatSystem combatSystem;
     private readonly WeaponController weaponController;
     private readonly VehicleService vehicleService;
@@ -15,7 +15,7 @@ public class ArmorController {
     private int idCounter;    
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
-    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, VehicleService vehicleService, RamEffect ramEffect, RewardController rewardController, ArmorView view) {
+    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, VehicleService vehicleService, RamEffectController ramEffect, RewardController rewardController, ArmorView view) {
         this.combatSystem = combatSystem;
         this.weaponController = weaponController;
         this.vehicleService = vehicleService;
@@ -46,7 +46,7 @@ public class ArmorController {
         model.CombatId = combatSystem.RegisterAgent(position, armorConfig.combatConfig);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(position, model.PhysicsPrefab);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position + armorConfig.weaponPlacementOffset, model.WeaponConfig);
-        model.RamId = ramEffect.StartNew(model.CombatId, new RamPrototype { position = position, config = model.RamConfig} );
+        model.RamId = ramEffect.StartNew(model.CombatId, new RamEffectPrototype { position = position, config = model.RamConfig} );
         view.Show(nextId, position, model.VisualsPrefab, model.EngineLoopSFX);
         
         return model.Id;

@@ -32,6 +32,6 @@ public class ArmorModel {
     public AudioClip EngineLoopSFX => Config.engineLoopSFX;
 
     public WeaponConfig WeaponConfig => Config.weaponConfig;
-    public RamConfig RamConfig => Config.ramConfig;
+    public RamEffectConfig RamConfig => Config.ramConfig;
 
 }

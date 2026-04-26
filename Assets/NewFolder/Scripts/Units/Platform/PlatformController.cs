@@ -7,14 +7,14 @@ public class PlatformController {
 
     private readonly CombatSystem combatSystem;
     private readonly WeaponController weaponController;
-    private readonly RamEffect ramEffect;
+    private readonly RamEffectController ramEffect;
     private readonly VehicleService vehicleService;
     private readonly PlatformView view;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatSystem combatSystem, WeaponController weaponController, RamEffect ramEffect, VehicleService vehicleService, PlatformView view) {
+    public PlatformController(CombatSystem combatSystem, WeaponController weaponController, RamEffectController ramEffect, VehicleService vehicleService, PlatformView view) {
         this.combatSystem = combatSystem;
         this.weaponController = weaponController;
         this.ramEffect = ramEffect;
@@ -33,7 +33,7 @@ public class PlatformController {
         
         platform.CombatId = combatSystem.RegisterAgent(position, true);
         platform.VehiclePhysicsId = vehicleService.CreateVehicle(position, platform.Config.physicsPrefab);
-        platform.RamId = ramEffect.StartNew(platform.CombatId, new RamPrototype {position = position, config = platform.Config.ramConfig});
+        platform.RamId = ramEffect.StartNew(platform.CombatId, new RamEffectPrototype {position = position, config = platform.Config.ramConfig});
         view.AddPlatform(platform.Id, position, platform.Config.visualsPrefab);
 
         return platform.Id;
