@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 using UnityEngine;
 
@@ -11,10 +13,11 @@ public class ProductionBuildingSource : MonoBehaviour {
     [SerializeField] private ProductionBuildingConfig config;
     [SerializeField] private SpawnSpotSource spawnSpotSource;
     [SerializeField] private PhysicsObstacle dimensionsPrefab;
-    [SerializeField] private GameObject visualsPrefab;
+    [Local] [SerializeField] private GameObject visualsPrefab;
 
     private bool lastUniqueFlag;
 
+#if UNITY_EDITOR
     private void OnValidate() {
         var changed = unique == lastUniqueFlag;
         lastUniqueFlag = unique;
@@ -22,6 +25,7 @@ public class ProductionBuildingSource : MonoBehaviour {
             uniqueId = GUID.Generate().GetHashCode();
         }
     }
+#endif
 
     public int GetUniqueId() {
         return uniqueId;
