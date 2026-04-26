@@ -10,4 +10,8 @@ public class RamSource : MonoBehaviour {
             config = config,
         };
     }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.DrawWireSphere(transform.position, config.radius);
+    }
 }
