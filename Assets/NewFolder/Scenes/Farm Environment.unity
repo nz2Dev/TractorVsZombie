@@ -696,6 +696,83 @@ MonoBehaviour:
       physicsPrefab: {fileID: 0}
       engineLoopSFX: {fileID: 0}
       weaponPlacementOffset: {x: 0, y: 0, z: 0}
+      weaponPrototype:
+        position: {x: 0, y: 0, z: 0}
+        config: {fileID: 0}
+        visualsPrefab: {fileID: 0}
+--- !u!1001 &166002183
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 563693865}
+    m_Modifications:
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2801353324334895931, guid: c6da62660cdb141f984a797360695798, type: 3}
+      propertyPath: m_Name
+      value: Red Turel Weapon Visuals
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c6da62660cdb141f984a797360695798, type: 3}
+--- !u!114 &166002184 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5158388582320969347, guid: c6da62660cdb141f984a797360695798, type: 3}
+  m_PrefabInstance: {fileID: 166002183}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270dfbc67ae3b43c4996c221ff1184a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::WeaponVisuals
+--- !u!4 &166002185 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 305677845518559717, guid: c6da62660cdb141f984a797360695798, type: 3}
+  m_PrefabInstance: {fileID: 166002183}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &172952823
 Mesh:
   m_ObjectHideFlags: 0
@@ -1459,7 +1536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -400688269
+  uniqueId: 1511879772
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   spawnSpotSource: {fileID: 2845072440889980232}
   dimensionsPrefab: {fileID: 988582194}
@@ -1876,6 +1953,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7063130400984449068, guid: a57955eb465f141188c4e6e801dfddf0, type: 3}
   m_PrefabInstance: {fileID: 7625605575023938725}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &563693864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 563693865}
+  - component: {fileID: 563693866}
+  m_Layer: 0
+  m_Name: Turel Weapon Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &563693865
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563693864}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 166002185}
+  m_Father: {fileID: 2083997502}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &563693866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563693864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4af44f9c9710d4d8d90a06ab5dddc676, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::WeaponSource
+  config: {fileID: 11400000, guid: 6c348206c4e5046d4bde12b5c4a3cd9d, type: 2}
+  visualsPrefab: {fileID: 166002184}
 --- !u!43 &565233687
 Mesh:
   m_ObjectHideFlags: 0
@@ -12067,7 +12191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: -1173725420
+  uniqueId: -177185014
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
 --- !u!43 &1671408922
@@ -14325,6 +14449,7 @@ Transform:
   - {fileID: 1931922712}
   - {fileID: 660157426}
   - {fileID: 1882187327}
+  - {fileID: 563693865}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2083997503
@@ -14344,6 +14469,7 @@ MonoBehaviour:
   physicsPrefab: {fileID: 660157425}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   weaponPlacementOffset: {x: 0, y: 1.75, z: 0}
+  weaponSource: {fileID: 563693866}
   ramSource: {fileID: 1882187328}
 --- !u!1 &2114227373
 GameObject:
@@ -14431,6 +14557,10 @@ MonoBehaviour:
       physicsPrefab: {fileID: 0}
       engineLoopSFX: {fileID: 0}
       weaponPlacementOffset: {x: 0, y: 0, z: 0}
+      weaponPrototype:
+        position: {x: 0, y: 0, z: 0}
+        config: {fileID: 0}
+        visualsPrefab: {fileID: 0}
 --- !u!4 &4796720935335220873 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4409030520497824723, guid: 752a855cac13c4ba69906400830d12f8, type: 3}

@@ -7,6 +7,7 @@ public class ArmorSource : MonoBehaviour {
     [Local] [SerializeField] private VehiclePhysics physicsPrefab;
     [SerializeField] private AudioClip engineLoopSFX;
     [SerializeField] private Vector3 weaponPlacementOffset;
+    [Local] [SerializeField] private WeaponSource weaponSource;
     [Local] [SerializeField] private RamEffectSource ramSource;
 
     private void Awake() {
@@ -21,6 +22,7 @@ public class ArmorSource : MonoBehaviour {
             physicsPrefab = physicsPrefab,
             engineLoopSFX = engineLoopSFX,
             weaponPlacementOffset = weaponPlacementOffset,
+            weaponPrototype = weaponSource != null ? weaponSource.GetPrototype() : default,
             ramPrototype = ramSource != null ? ramSource.GetPrototype() : default,
         };
     }

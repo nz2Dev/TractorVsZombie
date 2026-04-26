@@ -56,7 +56,7 @@ public class RewardController {
             LoadoutConfig = loadout
         };
         registry[reward.Id] = reward;
-        view.SpawnLoadoutReward(reward.Id, reward.Position, loadout.brokenVisualsPrefab, loadout.weaponConfig.visualsPrefab.gameObject, loadout.weaponLocalOffset);
+        view.SpawnLoadoutReward(reward.Id, reward.Position, loadout.brokenVisualsPrefab, loadout.weaponVisualsPrefab.gameObject, loadout.weaponLocalOffset);
     }
 
     private void DeleteReward(RewardModel reward) {

@@ -21,5 +21,4 @@ public class WeaponConfig : ScriptableObject {
     public Vector3 launchOffset;
     public AimConfig aimConfig;
     public BallisticConfig ballisticConfig;
-    public WeaponVisuals visualsPrefab;
 }

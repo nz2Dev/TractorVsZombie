@@ -70,7 +70,7 @@ public class PlayerView {
     }
 
     private void UpdateLabel(Label label, PlatformState state) {
-        label.text = state.weaponConfig == null ? "empty" : state.weaponConfig.visualsPrefab.name;
+        label.text = state.weaponConfig == null ? "empty" : state.weaponConfig.name;
     }
 
 }

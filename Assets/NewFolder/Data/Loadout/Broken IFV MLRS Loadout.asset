@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::LoadoutConfig
   brokenVisualsPrefab: {fileID: 2529982957386298620, guid: 940f4b094f0954abcbf04e762742bd65, type: 3}
   weaponConfig: {fileID: 11400000, guid: 79f33a2489ade46cf8e5621936488dc7, type: 2}
+  weaponVisualsPrefab: {fileID: 8694748771204103510, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
   weaponLocalOffset: {x: 0, y: 1.75, z: 0}

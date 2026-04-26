@@ -23,11 +23,11 @@ public class WeaponController {
         UpdateFire();
     }
 
-    public int SpawnWeapon(int combatId, Vector3 position, WeaponConfig config) {
+    public int SpawnWeapon(int ownerCombatId, WeaponPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new WeaponModel(nextId, combatId, position, config);
+        var model = new WeaponModel(nextId, ownerCombatId, prototype.position, prototype.config);
         registry[nextId] = model;
-        view.AddWeapon(model.Id, position, model.VisualsPrefab);
+        view.AddWeapon(model.Id, prototype.position, prototype.visualsPrefab);
         return model.Id;
     }
 

@@ -59,7 +59,13 @@ public class PlatformController {
         var platform = registry[platformId];
         platform.WeaponConfig = loadout.weaponConfig;
         platform.WeaponPlacementOffset = loadout.weaponLocalOffset;
-        platform.WeaponId = weaponController.SpawnWeapon(platform.CombatId, platform.Position, loadout.weaponConfig);
+
+        var weaponPrototype = new WeaponPrototype {
+            position = platform.Position + platform.LoadoutOffset + platform.WeaponPlacementOffset,
+            config = loadout.weaponConfig,
+            visualsPrefab = loadout.weaponVisualsPrefab,
+        };
+        platform.WeaponId = weaponController.SpawnWeapon(platform.CombatId, weaponPrototype);
         view.SetLoadoutVisuals(platformId, loadout.brokenVisualsPrefab, platform.LoadoutOffset);
     }
 
