@@ -7,7 +7,6 @@ public struct ArmorPrototype {
     public ArmorVisuals visualsPrefab;
     public VehiclePhysics physicsPrefab;
     public AudioClip engineLoopSFX;
-    public Vector3 weaponPlacementOffset;
-    public WeaponPrototype weaponPrototype;
+    public WeaponPrototype localWeaponPrototype;
     public RamEffectPrototype ramPrototype;
 }

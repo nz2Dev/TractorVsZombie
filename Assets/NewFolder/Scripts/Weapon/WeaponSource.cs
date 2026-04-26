@@ -9,9 +9,9 @@ public class WeaponSource : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public WeaponPrototype GetPrototype() {
+    public WeaponPrototype GetPrototype(bool localTransform) {
         return new WeaponPrototype {
-            position = transform.position,
+            position = localTransform ? transform.localPosition : transform.position,
             config = config,
             visualsPrefab = visualsPrefab,
         };

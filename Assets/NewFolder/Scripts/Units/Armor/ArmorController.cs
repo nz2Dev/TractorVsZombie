@@ -45,12 +45,12 @@ public class ArmorController {
         
         model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.config.combatConfig);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.physicsPrefab);
-        model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.weaponPrototype);
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
+        
+        model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.localWeaponPrototype);
+        model.WeaponPlacementOffset = prototype.localWeaponPrototype.position;
+
         view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.engineLoopSFX);
-        
-        model.WeaponPlacementOffset = prototype.weaponPlacementOffset;
-        
         return model.Id;
     }
 
