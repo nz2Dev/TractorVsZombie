@@ -38,7 +38,7 @@ public class RewardController {
         return new RewardState {
             Position = model.Position,
             RewardType = model.RewardType,
-            LoadoutConfig = model.LoadoutConfig
+            LoadoutPrototype = model.LoadoutPrototype
         };
     }
 
@@ -49,14 +49,14 @@ public class RewardController {
         view.SpawnPointReward(reward.Id, reward.Position);
     }
 
-    public void SpawnLoadoutReward(Vector3 position, LoadoutConfig loadout) {
+    public void SpawnLoadoutReward(Vector3 position, LoadoutPrototype loadout) {
         var nextId = ++idCounter;
         var reward = new RewardModel { Id = nextId, Position = position, 
             RewardType = RewardType.Loadout,
-            LoadoutConfig = loadout
+            LoadoutPrototype = loadout
         };
         registry[reward.Id] = reward;
-        view.SpawnLoadoutReward(reward.Id, reward.Position, loadout.brokenVisualsPrefab, loadout.weaponVisualsPrefab.gameObject, loadout.weaponLocalOffset);
+        view.SpawnLoadoutReward(reward.Id, reward.Position, loadout.rewardVisualsPrefab);
     }
 
     private void DeleteReward(RewardModel reward) {

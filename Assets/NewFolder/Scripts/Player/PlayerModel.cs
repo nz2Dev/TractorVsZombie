@@ -21,18 +21,12 @@ public class PlayerModel {
     public Vector3 Position { get; set; }
     public DrivingInput DrivingInput { get; set; }
     public List<int> SelectedPlatformIds { get; set; } = new ();
-    public List<int> CoupledPlatformIds { get; private set; } = new ();
-    public List<int> ControlledPlatformIds { get; private set; } = new ();
+    public List<int> CoupledPlatformIds { get; } = new ();
+    public List<int> ControlledPlatformIds { get; } = new ();
     public TopDownAimInput AimInput { get; set; }
 
     public PlayerModel(PlayerConfig config) {
         this.Config = config;
     }
-
-    public int InitPlatformCount => Config.initPlatformCount;
-    public bool StartOrEndCouplingOrRewards => Config.startOrEndCouplingOfRewards;
-    public PlatformSource PlatformSourcePrefab => Config.platformSourcePrefab;
-    public LoadoutConfig FirstLoadoutConfig => Config.firstLoadoutConfig;
-    public LoadoutConfig SecondLoadoutConfig => Config.secondLoadoutConfig;
 
 }

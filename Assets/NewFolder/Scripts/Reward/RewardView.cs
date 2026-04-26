@@ -27,14 +27,9 @@ public class RewardView {
         rewardVisualsRegistry[id] = visuals;
     }
 
-    public void SpawnLoadoutReward(int id, Vector3 position, 
-        GameObject brokenArmorVisualsPrefab, GameObject attachedWeaponVisualsPrefab, Vector3 weaponPlacementOffset) {
-        var visualsRoot = new GameObject("broken Armor visuals");
-        visualsRoot.transform.position = position;
-        GameObject.Instantiate(brokenArmorVisualsPrefab, visualsRoot.transform, instantiateInWorldSpace: false);
-        var weaponVisuals = (GameObject) GameObject.Instantiate(attachedWeaponVisualsPrefab, visualsRoot.transform, instantiateInWorldSpace: false);
-        weaponVisuals.transform.localPosition = weaponPlacementOffset;
-        rewardVisualsRegistry[id] = visualsRoot;
+    public void SpawnLoadoutReward(int id, Vector3 position, GameObject rewardVisualsPrefab) {
+        var visuals = GameObject.Instantiate(rewardVisualsPrefab, position, Quaternion.identity);
+        rewardVisualsRegistry[id] = visuals;
     }
 
     public void DespawnReward(int id) {

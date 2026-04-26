@@ -6,6 +6,6 @@ public class PlayerConfig : ScriptableObject {
     public PlatformSource platformSourcePrefab; // will later be replaced with source pattern itself, 
                                                 // and can be referenced from scene
     public bool startOrEndCouplingOfRewards = false;
-    public LoadoutConfig firstLoadoutConfig;
-    public LoadoutConfig secondLoadoutConfig;
+    public LoadoutSource firstLoadoutSourcePrefab;
+    public LoadoutSource secondLoadoutSourcePrefab;
 }

@@ -15,5 +15,5 @@ MonoBehaviour:
   initPlatformCount: 1
   platformSourcePrefab: {fileID: 3553383499548591022, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
   startOrEndCouplingOfRewards: 0
-  firstLoadoutConfig: {fileID: 11400000, guid: 79689a985f2a641188a76db2f0c875cb, type: 2}
-  secondLoadoutConfig: {fileID: 11400000, guid: b8ff0b02deef34d3f990d174264b7cc9, type: 2}
+  firstLoadoutSourcePrefab: {fileID: 6142668077178143939, guid: faf4afaf5bec34c26badd22d745b8054, type: 3}
+  secondLoadoutSourcePrefab: {fileID: 0}

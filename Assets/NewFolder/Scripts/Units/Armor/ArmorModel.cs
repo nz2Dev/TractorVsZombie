@@ -16,6 +16,7 @@ public class ArmorModel {
     
     public int VehiclePhysicsId { get; set; }
     public VehicleState VehiclePhysicsState { get; set; }
+    public LoadoutPrototype RewardLoadoutPrototype { get; set; }
     
     public float MotorTorque { get; set; }
     public float SteeringDegrees { get; set; }
@@ -27,8 +28,5 @@ public class ArmorModel {
     public int RamId { get; set; }
 
     public Vector3 WeaponPlacementOffset { get; set; }
-
-    public VehicleDrivingConfig DrivingConfig => Config.drivingConfig;
-    public WeaponConfig WeaponConfig => Config.weaponConfig;
 
 }

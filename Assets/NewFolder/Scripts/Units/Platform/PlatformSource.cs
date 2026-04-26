@@ -5,7 +5,7 @@ public class PlatformSource : MonoBehaviour {
     [Inline] [SerializeField] private PlatformConfig config;
     [Local] [SerializeField] private PlatformVisuals visualsPrefab;
     [Local] [SerializeField] private VehiclePhysics physicsPrefab;
-    [SerializeField] private Vector3 loadoutOffset;
+    [SerializeField] private Vector3 loadoutOffset; // TODO: consider making it visuals, by adding util TransformSource, that returns struct that contain Position/Rotation 
     [Local] [SerializeField] private RamEffectSource ramSource;
 
     private void Awake() {

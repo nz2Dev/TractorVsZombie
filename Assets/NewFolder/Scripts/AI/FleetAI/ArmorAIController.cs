@@ -60,7 +60,7 @@ public class ArmorAIController {
     }
 
     private void OperateArmorCombat(ArmorState state) {
-        var enemySearchRadius = state.weaponConfig.aimConfig.range;
+        var enemySearchRadius = state.weaponState.aimConfig.range;
         if (combatSystem.GetClosestEnemyAgentInRange(state.combatId, enemySearchRadius, out var agentInfo)) {
             weaponController.AimWeapon(state.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
         }

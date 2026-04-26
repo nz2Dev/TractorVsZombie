@@ -8,6 +8,8 @@ public class ArmorSource : MonoBehaviour {
     [SerializeField] private AudioClip engineLoopSFX;
     [Local] [SerializeField] private WeaponSource weaponSource;
     [Local] [SerializeField] private RamEffectSource ramSource;
+    [Local] [SerializeField] private LoadoutSource rewardLoadoutSource;
+    // todo consider creting LoadoutPrototype dynamically from ArmorController
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -21,6 +23,7 @@ public class ArmorSource : MonoBehaviour {
             physicsPrefab = physicsPrefab,
             engineLoopSFX = engineLoopSFX,
             localWeaponPrototype = weaponSource != null ? weaponSource.GetPrototype(localTransform: true) : default,
+            rewardLoadoutPrototype = rewardLoadoutSource.GetPrototype(),
             ramPrototype = ramSource != null ? ramSource.GetPrototype() : default,
         };
     }

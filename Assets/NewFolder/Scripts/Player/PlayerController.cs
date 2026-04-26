@@ -42,10 +42,10 @@ public class PlayerController {
         SpawnDriver();
 
         bool flipFlop = false;
-        for (int i = 0; i < model.InitPlatformCount; i++) {
-            var loadout = (flipFlop = !flipFlop) ? model.FirstLoadoutConfig : model.SecondLoadoutConfig;
+        for (int i = 0; i < model.Config.initPlatformCount; i++) {
+            var loadoutSourcePrefab = (flipFlop = !flipFlop) ? model.Config.firstLoadoutSourcePrefab : model.Config.secondLoadoutSourcePrefab;
             SpawnPlatform(new Vector3(0, 0, -6f + i * -6f), out var platformId);
-            EquipPlatform(platformId, loadout);
+            EquipPlatform(platformId, loadoutSourcePrefab.GetPrototype());
             CouplePlatformToTheEnd(platformId);
         }
     }
@@ -75,8 +75,8 @@ public class PlayerController {
         foreach (var rewardState in collectedRewardStates) {
             if (rewardState.RewardType == RewardType.Loadout) {
                 SpawnPlatform(rewardState.Position, out var platformId);
-                EquipPlatform(platformId, rewardState.LoadoutConfig);
-                if (model.StartOrEndCouplingOrRewards)
+                EquipPlatform(platformId, rewardState.LoadoutPrototype);
+                if (model.Config.startOrEndCouplingOfRewards)
                     CouplePlatformInFront(platformId);
                 else
                     CouplePlatformToTheEnd(platformId);
@@ -160,7 +160,7 @@ public class PlayerController {
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {
-        var prototype = model.PlatformSourcePrefab.GetPrototype();
+        var prototype = model.Config.platformSourcePrefab.GetPrototype();
         prototype.position = position;
         
         platformId = platformController.SpawnPlatform(prototype);
@@ -168,7 +168,7 @@ public class PlayerController {
         view.AddPlatform(platformController.ReadPlatformState(platformId));
     }
 
-    private void EquipPlatform(int platformId, LoadoutConfig loadout) {
+    private void EquipPlatform(int platformId, LoadoutPrototype loadout) {
         platformController.SetLoadout(platformId, loadout);
         view.UpdatePlatform(platformController.ReadPlatformState(platformId));
     }
@@ -188,7 +188,7 @@ public class PlayerController {
     }
 
     private void OperateAutomatically(PlatformState platformState) {
-        var searchRadius = platformState.weaponConfig.aimConfig.range;
+        var searchRadius = platformState.weaponState.aimConfig.range;
         if (combatSystem.GetClosestEnemyAgentInRange(platformState.combatId, searchRadius, out var agentInfo)) {
             weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
         }

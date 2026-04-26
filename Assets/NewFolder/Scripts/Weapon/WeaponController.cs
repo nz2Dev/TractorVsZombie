@@ -31,6 +31,13 @@ public class WeaponController {
         return model.Id;
     }
 
+    public WeaponState ReadWeaponState(int weaponId) {
+        var weapon = registry[weaponId];
+        return new WeaponState {
+            aimConfig = weapon.AimConfig
+        };
+    }
+
     public void AimWeapon(int weaponId, Vector3 target) {
         var weapon = registry[weaponId];
         var aimInput = new AimInput { deltaTime = Time.deltaTime, position = weapon.Position, previousAim = weapon.AimPoint, targetAim = target };

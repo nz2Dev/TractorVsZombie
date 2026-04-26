@@ -35,6 +35,7 @@ public class GameBootstrapper : MonoBehaviour {
     private WeaponController weaponController;
     private RamEffectController ramEffect;
     private InfantryController infantryController;
+    private LoadoutController loadoutController;
     private ArmorController armorController;
     private PlatformController platformController;
     private TruckController truckController;
@@ -114,6 +115,11 @@ public class GameBootstrapper : MonoBehaviour {
             localAvoidanceService
         );
 
+        loadoutController = new LoadoutController(
+            new LoadoutView(),
+            weaponController
+        );
+
         armorController = new ArmorController(
             combatSystem,
             weaponController,
@@ -125,7 +131,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         platformController = new PlatformController(
             combatSystem,
-            weaponController,
+            loadoutController,
             ramEffect,
             vehicleService,
             platformView
@@ -225,6 +231,8 @@ public class GameBootstrapper : MonoBehaviour {
         projectileController.Update();
         rocketController.Update();
         weaponController.Update();
+
+        loadoutController.Update();
         infantryController.Update();
         armorController.Update();
         platformController.Update();

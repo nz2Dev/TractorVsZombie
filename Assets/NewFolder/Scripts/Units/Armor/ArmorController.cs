@@ -49,6 +49,7 @@ public class ArmorController {
         
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.localWeaponPrototype);
         model.WeaponPlacementOffset = prototype.localWeaponPrototype.position;
+        model.RewardLoadoutPrototype = prototype.rewardLoadoutPrototype;
 
         view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.engineLoopSFX);
         return model.Id;
@@ -56,17 +57,17 @@ public class ArmorController {
 
     public void Drive(int armorId, float gasInput, bool boostInput) {
         var model = registry[armorId];
-        model.MotorTorque = VehicleDriving.GasThrottle(gasInput, boostInput, model.DrivingConfig.maxEngineTorque);   
+        model.MotorTorque = VehicleDriving.GasThrottle(gasInput, boostInput, model.Config.drivingConfig.maxEngineTorque);   
     }
 
     public void Brake(int armorId, float brakeInput) {
         var model = registry[armorId];
-        model.BrakesTorque = brakeInput * model.DrivingConfig.maxBrakesTorque;
+        model.BrakesTorque = brakeInput * model.Config.drivingConfig.maxBrakesTorque;
     }
 
     public void SteerToward(int armorId, Vector3 direction) {
         var model = registry[armorId];
-        model.SteeringDegrees = VehicleDriving.SteerToward(direction, model.VehiclePhysicsState.velocity, model.DrivingConfig.maxSteerDegrees);
+        model.SteeringDegrees = VehicleDriving.SteerToward(direction, model.VehiclePhysicsState.velocity, model.Config.drivingConfig.maxSteerDegrees);
     }
 
     private void DeleteArmor(ArmorModel model) {
@@ -85,7 +86,7 @@ public class ArmorController {
             combatId = armor.CombatId,
             vehiclePhysicsId = armor.VehiclePhysicsId, // Kept as 'vehicleId' in state struct for compatibility 
             weaponId = armor.WeaponId,
-            weaponConfig = armor.WeaponConfig
+            weaponState = weaponController.ReadWeaponState(armor.WeaponId)
         };
     }
 
@@ -94,7 +95,7 @@ public class ArmorController {
             var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
             if (combatOutput.damageWasFatal) {
                 model.Destroyed = true;
-                rewardController.SpawnLoadoutReward(model.Position, model.Config.loadoutConfig);
+                rewardController.SpawnLoadoutReward(model.Position, model.RewardLoadoutPrototype);
             }
         }
     }
@@ -132,7 +133,7 @@ public class ArmorController {
         foreach (var model in registry.Values) {
             view.UpdatePose(model.Id, model.VehiclePhysicsState);
             
-            var motorRev = model.MotorTorque / Mathf.Max(model.DrivingConfig.maxEngineTorque, 1);
+            var motorRev = model.MotorTorque / Mathf.Max(model.Config.drivingConfig.maxEngineTorque, 1);
             view.UpdateSound(model.Id, motorRev);
         }
     }

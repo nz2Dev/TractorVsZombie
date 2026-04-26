@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlatformController {
 
     private readonly CombatSystem combatSystem;
-    private readonly WeaponController weaponController;
+    private readonly LoadoutController loadoutController;
     private readonly RamEffectController ramEffect;
     private readonly VehicleService vehicleService;
     private readonly PlatformView view;
@@ -14,9 +14,9 @@ public class PlatformController {
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatSystem combatSystem, WeaponController weaponController, RamEffectController ramEffect, VehicleService vehicleService, PlatformView view) {
+    public PlatformController(CombatSystem combatSystem, LoadoutController loadoutController, RamEffectController ramEffect, VehicleService vehicleService, PlatformView view) {
         this.combatSystem = combatSystem;
-        this.weaponController = weaponController;
+        this.loadoutController = loadoutController;
         this.ramEffect = ramEffect;
         this.vehicleService = vehicleService;
         this.view = view;
@@ -55,18 +55,15 @@ public class PlatformController {
         vehicleService.ClearTowingConnection(platform.VehiclePhysicsId);
     }
 
-    public void SetLoadout(int platformId, LoadoutConfig loadout) {
+    public void SetLoadout(int platformId, LoadoutPrototype loadoutPrototype) {
         var platform = registry[platformId];
-        platform.WeaponConfig = loadout.weaponConfig;
-        platform.WeaponPlacementOffset = loadout.weaponLocalOffset;
+        
+        if (platform.LoadoutId != 0) {
+            loadoutController.DeleteLoadout(platform.LoadoutId);
+        }
 
-        var weaponPrototype = new WeaponPrototype {
-            position = platform.Position + platform.LoadoutOffset + platform.WeaponPlacementOffset,
-            config = loadout.weaponConfig,
-            visualsPrefab = loadout.weaponVisualsPrefab,
-        };
-        platform.WeaponId = weaponController.SpawnWeapon(platform.CombatId, weaponPrototype);
-        view.SetLoadoutVisuals(platformId, loadout.brokenVisualsPrefab, platform.LoadoutOffset);
+        loadoutPrototype.position = platform.Position + platform.LoadoutOffset;
+        platform.LoadoutId = loadoutController.SpawnLoadout(platform.CombatId, loadoutPrototype);
     }
 
     public int GetVehiclePhysicsId(int platformId) {
@@ -75,12 +72,16 @@ public class PlatformController {
 
     public PlatformState ReadPlatformState(int platformId) {
         var platform = registry[platformId];
+        var loadoutState = default (LoadoutState);
+        if (platform.LoadoutId != 0) {
+            loadoutState = loadoutController.ReadLoadoutState(platform.LoadoutId);
+        }
         return new PlatformState {
             position = platform.Position,
             combatId = platform.CombatId,
             vehiclePhysicsId = platform.VehiclePhysicsId,
-            weaponId = platform.WeaponId,
-            weaponConfig = platform.WeaponConfig,
+            weaponId = loadoutState.weaponId,
+            weaponState = loadoutState.weaponState,
             platformId = platform.Id
         };
     }
@@ -90,8 +91,11 @@ public class PlatformController {
             host.VehiclePhysicsState = vehicleService.GetVehicleState(host.VehiclePhysicsId);
             host.Position = host.VehiclePhysicsState.position;
             view.UpdatePlatformPose(host.Id, host.VehiclePhysicsState);
+            
+            if (host.LoadoutId != 0) {
+                loadoutController.MoveLoadout(host.LoadoutId, host.Position + host.LoadoutOffset, host.VehiclePhysicsState.rotation);
+            }
 
-            weaponController.MoveWeapon(host.WeaponId, host.Position + host.LoadoutOffset + host.WeaponPlacementOffset);
             combatSystem.UpdateAgentPosition(host.CombatId, host.Position);
             ramEffect.Forward(host.RamId, host.Position);
         }
