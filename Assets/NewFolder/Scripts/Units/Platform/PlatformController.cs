@@ -33,7 +33,7 @@ public class PlatformController {
         
         platform.CombatId = combatSystem.RegisterAgent(position, true);
         platform.VehiclePhysicsId = vehicleService.CreateVehicle(position, platform.Config.physicsPrefab);
-        platform.RamId = ramEffect.StartNew(position, platform.CombatId, platform.Config.ramConfig);
+        platform.RamId = ramEffect.StartNew(platform.CombatId, new RamPrototype {position = position, config = platform.Config.ramConfig});
         view.AddPlatform(platform.Id, position, platform.Config.visualsPrefab);
 
         return platform.Id;

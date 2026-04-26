@@ -92,8 +92,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         ramEffect = new RamEffect(
-            combatSystem,
-            soundManager
+            new RamView(soundManager),
+            combatSystem
         );
 
         rewardController = new RewardController(

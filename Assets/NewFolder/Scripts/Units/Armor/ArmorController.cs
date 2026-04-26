@@ -46,7 +46,7 @@ public class ArmorController {
         model.CombatId = combatSystem.RegisterAgent(position, armorConfig.combatConfig);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(position, model.PhysicsPrefab);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position + armorConfig.weaponPlacementOffset, model.WeaponConfig);
-        model.RamId = ramEffect.StartNew(model.Position, model.CombatId, model.RamConfig);
+        model.RamId = ramEffect.StartNew(model.CombatId, new RamPrototype { position = position, config = model.RamConfig} );
         view.Show(nextId, position, model.VisualsPrefab, model.EngineLoopSFX);
         
         return model.Id;

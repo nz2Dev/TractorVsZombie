@@ -1452,7 +1452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -1828070356
+  uniqueId: -1903969722
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   spawnSpotSource: {fileID: 2845072440889980232}
   dimensionsPrefab: {fileID: 988582194}
@@ -8426,6 +8426,7 @@ Transform:
   m_Children:
   - {fileID: 970888142}
   - {fileID: 1947877291}
+  - {fileID: 1600251741}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1117709943
@@ -8443,6 +8444,7 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 8676e0ba7ac064d1e80b430935205f9b, type: 2}
   vehiclePhysicsPrefab: {fileID: 970888141}
   visualsPrefab: {fileID: 1947877290}
+  ramSource: {fileID: 1600251742}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
 --- !u!43 &1169618318
 Mesh:
@@ -10100,6 +10102,51 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &1600251740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1600251741}
+  - component: {fileID: 1600251742}
+  m_Layer: 0
+  m_Name: Ram Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1600251741
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600251740}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1117709942}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1600251742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600251740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80328ad222bf646fd8836313989da026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::RamSource
+  config: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
 --- !u!1001 &1606119367
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10257,7 +10304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: 1176593683
+  uniqueId: -1361446574
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
 --- !u!43 &1671408922
