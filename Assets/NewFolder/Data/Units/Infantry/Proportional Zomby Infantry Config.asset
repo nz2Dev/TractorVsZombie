@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c01f54c4dc44e4f5fb2082850f217b1c, type: 3}
   m_Name: Proportional Zomby Infantry Config
   m_EditorClassIdentifier: NewFolder::InfantryConfig
+  alie: 0
+  hitboxRadius: 0.73
+  hitboxHeight: 2
   maxHealth: 2
   attackCooldown: 1
   damage: 1
   bodyData:
     height: 2
     radius: 0.5
-  visualsPrefab: {fileID: 414806356285922434, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
   agentAvoidanceConfig:
     height: 2
     radius: 1

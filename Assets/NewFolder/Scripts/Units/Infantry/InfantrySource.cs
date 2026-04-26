@@ -27,6 +27,9 @@ public class InfantrySource : MonoBehaviour {
 
         Handles.DrawWireDisc(transform.position, Vector3.up, config.bodyData.radius);
         Handles.DrawWireDisc(transform.position + Vector3.up * config.bodyData.height, Vector3.up, config.bodyData.radius);
+
+        Handles.color = Color.green;
+        Handles.DrawWireDisc(transform.position + Vector3.up * config.hitboxHeight * 0.5f, Vector3.up, config.hitboxRadius);
     }
 #endif
 }
