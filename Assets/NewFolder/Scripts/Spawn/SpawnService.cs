@@ -41,7 +41,9 @@ public class SpawnService {
                 var spawnedId = infantryController.SpawnInfantry(prototype);
                 idsBuffer.Add(spawnedId);
             } else if (spot.type == SpawnType.Armor) {
-                var spawnedId = armorController.SpawnArmor(worldSpaceSpawnPoint, spot.config.armorConfig);
+                var prototype = spot.config.armorPrototype;
+                prototype.position = worldSpaceSpawnPoint;
+                var spawnedId = armorController.SpawnArmor(prototype);
                 idsBuffer.Add(spawnedId);
             }
         }

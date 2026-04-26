@@ -8,7 +8,7 @@ public class ArmorModel {
     public ArmorModel(int id, Vector3 position, ArmorConfig config) {
         Id = id;
         Position = position;
-        this.Config = config;
+        Config = config;
     }
 
     public int Id { get; private set; }
@@ -26,12 +26,9 @@ public class ArmorModel {
     public bool Destroyed { get; set; }
     public int RamId { get; set; }
 
-    public VehicleDrivingConfig DrivingConfig => Config.drivingConfig;
-    public ArmorVisuals VisualsPrefab => Config.visualsPrefab;
-    public VehiclePhysics PhysicsPrefab => Config.physicsPrefab;
-    public AudioClip EngineLoopSFX => Config.engineLoopSFX;
+    public Vector3 WeaponPlacementOffset { get; set; }
 
+    public VehicleDrivingConfig DrivingConfig => Config.drivingConfig;
     public WeaponConfig WeaponConfig => Config.weaponConfig;
-    public RamEffectConfig RamConfig => Config.ramConfig;
 
 }

@@ -11,7 +11,11 @@ public class RamEffectSource : MonoBehaviour {
         };
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
-        Gizmos.DrawWireSphere(transform.position, config.radius);
+        if (config != null) {
+            Gizmos.DrawWireSphere(transform.position, config.radius);
+        }
     }
 }
+#endif

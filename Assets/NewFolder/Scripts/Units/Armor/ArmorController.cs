@@ -38,16 +38,18 @@ public class ArmorController {
         UpdateView();
     }
 
-    public int SpawnArmor(Vector3 position, ArmorConfig armorConfig) {
+    public int SpawnArmor(ArmorPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new ArmorModel(nextId, position, armorConfig);
+        var model = new ArmorModel(nextId, prototype.position, prototype.config);
         registry[model.Id] = model;
         
-        model.CombatId = combatSystem.RegisterAgent(position, armorConfig.combatConfig);
-        model.VehiclePhysicsId = vehicleService.CreateVehicle(position, model.PhysicsPrefab);
-        model.WeaponId = weaponController.SpawnWeapon(model.CombatId, position + armorConfig.weaponPlacementOffset, model.WeaponConfig);
-        model.RamId = ramEffect.StartNew(model.CombatId, new RamEffectPrototype { position = position, config = model.RamConfig} );
-        view.Show(nextId, position, model.VisualsPrefab, model.EngineLoopSFX);
+        model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.config.combatConfig);
+        model.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.physicsPrefab);
+        model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.position + prototype.weaponPlacementOffset, prototype.config.weaponConfig);
+        model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
+        view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.engineLoopSFX);
+        
+        model.WeaponPlacementOffset = prototype.weaponPlacementOffset;
         
         return model.Id;
     }
@@ -114,7 +116,7 @@ public class ArmorController {
             model.VehiclePhysicsState = vehicleService.GetVehicleState(model.VehiclePhysicsId);
             model.Position = model.VehiclePhysicsState.position;
             
-            weaponController.MoveWeapon(model.WeaponId, model.Position + model.Config.weaponPlacementOffset);
+            weaponController.MoveWeapon(model.WeaponId, model.Position + model.WeaponPlacementOffset);
             combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
             ramEffect.Forward(model.RamId, model.Position);
         }

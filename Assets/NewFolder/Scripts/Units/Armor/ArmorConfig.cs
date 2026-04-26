@@ -5,15 +5,7 @@ public class ArmorConfig : ScriptableObject {
     
     public CombatAgentConfig combatConfig;
     public VehicleDrivingConfig drivingConfig;
-    public ArmorVisuals visualsPrefab;
-    public VehiclePhysics physicsPrefab;
-
-    public AudioClip engineLoopSFX;
-
     public WeaponConfig weaponConfig;
-    public Vector3 weaponPlacementOffset;
-    public RamEffectConfig ramConfig;
-
     public LoadoutConfig loadoutConfig;
 
 }
