@@ -19,10 +19,10 @@ MonoBehaviour:
   avoidanceObstaclePrefab: {fileID: 7519686569173021037, guid: 9b69c4dd1d41548108e1e3df1b2d793d, type: 3}
   vehicleObstaclePrefab: {fileID: 7519686569173021037, guid: 9b69c4dd1d41548108e1e3df1b2d793d, type: 3}
   physicsObstaclePrefab: {fileID: 7519686569173021037, guid: 9b69c4dd1d41548108e1e3df1b2d793d, type: 3}
-  spawnInterval: 5
-  initialQueueAmount: 1000
-  spawnShapePrefab: {fileID: 5391597330652448849, guid: fbeb35bb3a9864a3e950d68b4f733d30, type: 3}
-  centerOffset: {x: 0, y: 0, z: 2}
+  spawnInterval: 30
+  initialQueueAmount: 1
   spawnType: 1
-  infantryConfig: {fileID: 0}
-  armorConfig: {fileID: 11400000, guid: 851dce02d491a4a14ba2e210ee134015, type: 2}
+  spawnShapePrefab: {fileID: 5391597330652448849, guid: fbeb35bb3a9864a3e950d68b4f733d30, type: 3}
+  spawnConfig:
+    infantryConfig: {fileID: 0}
+    armorConfig: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}

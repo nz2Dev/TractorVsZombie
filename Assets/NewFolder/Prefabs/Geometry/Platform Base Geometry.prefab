@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7383575709262788721}
   - component: {fileID: 2364874166466561651}
   m_Layer: 0
-  m_Name: Proportional Platform Base Geometry
+  m_Name: Platform Base Geometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

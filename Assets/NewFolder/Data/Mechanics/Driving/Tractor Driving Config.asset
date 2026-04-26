@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Tractor Driving Config
   m_EditorClassIdentifier: NewFolder::DriverConfig
   powerAccelerationSpeed: 1
-  speedCeilingForSteering: 5
+  speedCeilingForSteering: 15
   speedKFactor: 2
   minStterAmount: 0.1
   maxSteerDegrees: 40
-  maxEngineTorque: 150
-  maxBrakesTorque: 50
+  maxEngineTorque: 2000
+  maxBrakesTorque: 1000

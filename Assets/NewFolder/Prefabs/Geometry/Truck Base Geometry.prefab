@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2427734628282635568}
   - component: {fileID: 9060926769453103345}
   m_Layer: 0
-  m_Name: Proportional Truck Base Geometry
+  m_Name: Truck Base Geometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

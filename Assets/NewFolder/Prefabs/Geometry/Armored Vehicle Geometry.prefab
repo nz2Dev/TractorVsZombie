@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8551922928738439726}
   - component: {fileID: 3296253035601904032}
   m_Layer: 0
-  m_Name: Proportional Armored Vehicle Geometry
+  m_Name: Armored Vehicle Geometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
