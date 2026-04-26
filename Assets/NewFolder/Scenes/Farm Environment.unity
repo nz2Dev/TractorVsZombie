@@ -686,8 +686,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::SpawnSpotSource
   type: 1
   shape: {fileID: 155815522}
+  infantrySource: {fileID: 0}
   config:
-    infantryConfig: {fileID: 0}
     armorConfig: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}
 --- !u!43 &172952823
 Mesh:
@@ -1452,7 +1452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -1903969722
+  uniqueId: -1877650729
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   spawnSpotSource: {fileID: 2845072440889980232}
   dimensionsPrefab: {fileID: 988582194}
@@ -7987,6 +7987,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76f1ad6bf81f4ee2800c4521d528146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Local::PhysicsObstacle
+--- !u!1001 &1060467420
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1909830769}
+    m_Modifications:
+    - target: {fileID: 691360027140104949, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 691360027140104949, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7295302377222804672, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: m_Name
+      value: Proportional Capsule Infantry Visuals
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+--- !u!114 &1060467421 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 414806356285922434, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+  m_PrefabInstance: {fileID: 1060467420}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71bb9df2152a84d28bb5e097e517de8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::InfantryVisuals
+--- !u!4 &1060467422 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5054745284786525183, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+  m_PrefabInstance: {fileID: 1060467420}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1077530810
 GameObject:
   m_ObjectHideFlags: 0
@@ -10304,7 +10385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: -1361446574
+  uniqueId: -1277031585
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
 --- !u!43 &1671408922
@@ -11836,6 +11917,53 @@ Transform:
   - {fileID: 253847475}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!1 &1909830768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1909830769}
+  - component: {fileID: 1909830770}
+  m_Layer: 0
+  m_Name: Infantry Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1909830769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909830768}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 30.25, y: 0, z: -26.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1060467422}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1909830770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909830768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a10f80900afec410fbd68c8bf1645f86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::InfantrySource
+  config: {fileID: 11400000, guid: 434c3c02ad2014cdd843637907fa633b, type: 2}
+  visualsPrefab: {fileID: 1060467421}
 --- !u!1001 &1947877289
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12210,8 +12338,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::SpawnPointSource
   type: 0
   shape: {fileID: 7860914831364610010}
+  infantrySource: {fileID: 1909830770}
   config:
-    infantryConfig: {fileID: 11400000, guid: 434c3c02ad2014cdd843637907fa633b, type: 2}
     armorConfig: {fileID: 0}
 --- !u!4 &4796720935335220873 stripped
 Transform:
@@ -12413,3 +12541,4 @@ SceneRoots:
   - {fileID: 130093669}
   - {fileID: 1654976756}
   - {fileID: 349445393}
+  - {fileID: 1909830769}

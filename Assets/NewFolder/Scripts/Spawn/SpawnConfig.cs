@@ -2,6 +2,6 @@ using System;
 
 [Serializable]
 public struct SpawnConfig {
-    public InfantryConfig infantryConfig;
+    public InfantryPrototype infantryPrototype;
     public ArmorConfig armorConfig;
 }

@@ -18,7 +18,7 @@ public class SquadNavigationScenario : MonoBehaviour {
         infantryController = SquadNavigationBoot.Instance.infantryController;
         infantries = new List<int>();
         for (int i = 0; i < 20; i++) {
-            var infantryId = infantryController.SpawnInfantry(Random.onUnitSphere * 0.1f, infantryConfig);
+            var infantryId = infantryController.SpawnInfantry(new InfantryPrototype {position = Random.onUnitSphere * 0.1f, config = infantryConfig });
             infantries.Add(infantryId);
         }
 
