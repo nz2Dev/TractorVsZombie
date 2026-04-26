@@ -8,6 +8,10 @@ public class CommanderSource : MonoBehaviour {
     [SerializeField] private ProductionBuildingSource[] productionBuildingSource;
     [SerializeField] private ProductionSpaceSource[] productionSpaceSources;
 
+    private void Awake() {
+        gameObject.SetActive(false);
+    }
+
     public CommanderPrototype GetPrototype() {
         var handlesLength = productionBuildingSource.Length + productionSpaceSources.Length;
         var handles = new ProducerReference[handlesLength];

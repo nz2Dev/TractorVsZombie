@@ -21,6 +21,10 @@ public class ProductionSpaceSource : MonoBehaviour {
         }
     }
 
+    private void Awake() {
+        gameObject.SetActive(false);
+    }
+
     public int GetUniqueId() {
         return uniqueId;
     }

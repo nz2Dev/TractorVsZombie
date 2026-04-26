@@ -27,6 +27,10 @@ public class ProductionBuildingSource : MonoBehaviour {
     }
 #endif
 
+    private void Awake() {
+        gameObject.SetActive(false);
+    }
+
     public int GetUniqueId() {
         return uniqueId;
     }

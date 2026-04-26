@@ -35,21 +35,21 @@ public class EnemyController {
     }
 
     private void CreateAllProductionBuildings() {
-        var productionBuildingSources = GameObject.FindObjectsByType<ProductionBuildingSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var productionBuildingSources = GameObject.FindObjectsByType<ProductionBuildingSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var source in productionBuildingSources) {
             productionBuildingController.Create(source.GetPrototype());
         }
     }
 
     private void CreateAllProductionSpaces() {
-        var sources = GameObject.FindObjectsByType<ProductionSpaceSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var sources = GameObject.FindObjectsByType<ProductionSpaceSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var source in sources) {
             productionSpaceController.Create(source.GetPrototype());
         }
     }
 
     private void ActivateAllCommanders() {
-        var commanderSources = GameObject.FindObjectsByType<CommanderSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var commanderSources = GameObject.FindObjectsByType<CommanderSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var source in commanderSources) {
             commanderController.Create(source.GetPrototype());
         }
