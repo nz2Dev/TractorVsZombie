@@ -2,8 +2,7 @@ using UnityEngine;
 
 public struct CombatOutputInfo {
     public bool wasExploded;
-    public float explosionRadius;
-    public float explosionForce;
+    public ExplosionData explosionData;
     public bool wasProjectiled;
     public bool wasPunched;
     public int damageTaken;

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: IFV Production Space Config
   m_EditorClassIdentifier: NewFolder::ProductionSpaceConfig
   spawnInterval: 5
-  initialQueue: 1
+  initialQueue: 0

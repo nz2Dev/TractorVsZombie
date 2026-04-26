@@ -36,13 +36,11 @@ public class RamEffectController {
         registry.Remove(id);
     }
 
-    private void ComputeDamage() {
-        if (Time.frameCount % 5 == 0)
-            return;
-            
+    private void ComputeDamage() {    
         foreach (var model in registry.Values) {
-            var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position, model.Config.radius, model.Config.damage, model.Config.explosionForce);
-            view.PlayImpact(model.Position, model.Config.radius, affectedCount, model.Config.impactSFX);
+            var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position, 
+                model.Config.triggerRadius, model.Config.damage, model.Config.explosionData);
+            view.PlayImpact(model.Position, model.Config.triggerRadius, affectedCount, model.Config.impactSFX);
         }
     }
 }

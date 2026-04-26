@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3580328f7e122479ebc4da69efc2d1da, type: 3}
-  m_Name: Ram Config
-  m_EditorClassIdentifier: NewFolder::RamConfig
+  m_Name: Tractor Ram Config
+  m_EditorClassIdentifier: NewFolder::RamEffectConfig
   impactSFX:
+  - {fileID: 8300000, guid: 846273779798d48abb5ca63fe4a42bec, type: 3}
+  - {fileID: 8300000, guid: 5f642b9534cee4c7ca8bfaa6351f3e24, type: 3}
   - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
   damage: 0
   triggerRadius: 2

@@ -9,5 +9,10 @@ public class RocketConfig : ScriptableObject {
     public float flyDuration;
     public int damage;
     public float explosionRadius;
+    public ExplosionData explosionData = new() {
+        force = 10,
+        radius = 5,
+        upwardModifier = 1
+    };
     public RocketVisuals visualsPrefab;
 }
