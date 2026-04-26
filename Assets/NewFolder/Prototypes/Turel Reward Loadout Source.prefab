@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8555917442388384475}
   - component: {fileID: 6142668077178143939}
   m_Layer: 0
-  m_Name: Reward Loadout Source
+  m_Name: Turel Reward Loadout Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

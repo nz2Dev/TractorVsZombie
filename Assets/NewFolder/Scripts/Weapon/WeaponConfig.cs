@@ -11,8 +11,8 @@ public enum BallisticType {
 [Serializable]
 public struct BallisticConfig {
     public BallisticType type;
-    public ProjectileConfig bullet;
-    public RocketConfig rocket;
+    [Inline] public ProjectileConfig bullet;
+    [Inline] public RocketConfig rocket;
 }
 
 [CreateAssetMenu(fileName = "WeaponData", menuName = "WeaponData", order = 0)]

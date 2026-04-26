@@ -19,6 +19,6 @@ MonoBehaviour:
   damage: 0
   triggerRadius: 2
   explosionData:
-    radius: 4
+    radius: 6
     force: 10
-    upwardModifier: 2
+    upwardModifier: 3

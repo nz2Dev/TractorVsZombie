@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 09eb77da5bceb4043a222dbcaa0df16b, type: 3}
-  m_Name: IFV Production Space Config
+  m_Name: Armor Production Space Config
   m_EditorClassIdentifier: NewFolder::ProductionSpaceConfig
   spawnInterval: 5
   initialQueue: 0
