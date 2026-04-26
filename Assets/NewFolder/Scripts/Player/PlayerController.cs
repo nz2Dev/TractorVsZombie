@@ -39,7 +39,7 @@ public class PlayerController {
     public void Init() {     
         CreateCamera();
         SpawnHeadquearter();
-        SpawnDriver(Vector3.zero);
+        SpawnDriver();
 
         bool flipFlop = false;
         for (int i = 0; i < model.InitPlatformCount; i++) {
@@ -88,8 +88,9 @@ public class PlayerController {
         model.DrivingInput = input.ReadDrivingInput();
     }
 
-    private void SpawnDriver(Vector3 position) {
-        truckController.Spawn(position, model.DriverConfig);
+    private void SpawnDriver() {
+        var truckSource = GameObject.FindFirstObjectByType<TruckSource>(FindObjectsInactive.Include);
+        truckController.Spawn(truckSource.GetPrototype());
     }
 
     private void OperateDriver() {

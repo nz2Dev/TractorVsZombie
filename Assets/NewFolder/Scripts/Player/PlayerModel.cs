@@ -29,7 +29,6 @@ public class PlayerModel {
         this.Config = config;
     }
 
-    public TruckConfig DriverConfig => Config.driverConfig;
     public int InitPlatformCount => Config.initPlatformCount;
     public bool StartOrEndCouplingOrRewards => Config.startOrEndCouplingOfRewards;
     public PlatformConfig DefaultPlatformConfig => Config.platformConfig;
