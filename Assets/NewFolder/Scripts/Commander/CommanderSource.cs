@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CommanderSource : MonoBehaviour {
     
-    [SerializeField] private CommanderConfig commanderConfig;
+    [Inline] [SerializeField] private CommanderConfig commanderConfig;
     [SerializeField] private ProductionBuildingSource[] productionBuildingSource;
     [SerializeField] private ProductionSpaceSource[] productionSpaceSources;
 

@@ -1452,7 +1452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 504595897
+  uniqueId: 1939027450
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   spawnSpotSource: {fileID: 2845072440889980232}
   dimensionsPrefab: {fileID: 988582194}
@@ -9422,7 +9422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: 1813201632
+  uniqueId: 1909800785
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
 --- !u!43 &1671408922

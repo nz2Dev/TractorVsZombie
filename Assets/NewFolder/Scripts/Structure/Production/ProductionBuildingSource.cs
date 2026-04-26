@@ -11,8 +11,8 @@ public class ProductionBuildingSource : MonoBehaviour {
     [SerializeField] private int uniqueId = 0;
     [Space]
     [Inline] [SerializeField] private ProductionBuildingConfig config;
-    [SerializeField] private SpawnSpotSource spawnSpotSource;
-    [SerializeField] private PhysicsObstacle dimensionsPrefab;
+    [Local] [SerializeField] private SpawnSpotSource spawnSpotSource;
+    [Local] [SerializeField] private PhysicsObstacle dimensionsPrefab;
     [Local] [SerializeField] private GameObject visualsPrefab;
 
     private bool lastUniqueFlag;
