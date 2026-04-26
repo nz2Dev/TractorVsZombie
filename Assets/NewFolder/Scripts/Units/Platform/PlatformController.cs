@@ -26,15 +26,17 @@ public class PlatformController {
         SyncPositions();
     }
     
-    public int SpawnPlatform(Vector3 position, PlatformConfig config) {
+    public int SpawnPlatform(PlatformPrototype prototype) {
         var nextId = ++idCounter;
-        var platform = new PlatformModel(nextId, position, config);
+        var platform = new PlatformModel(nextId, prototype.position, prototype.config);
         registry[platform.Id] = platform;
         
-        platform.CombatId = combatSystem.RegisterAgent(position, true);
-        platform.VehiclePhysicsId = vehicleService.CreateVehicle(position, platform.Config.physicsPrefab);
-        platform.RamId = ramEffect.StartNew(platform.CombatId, new RamEffectPrototype {position = position, config = platform.Config.ramConfig});
-        view.AddPlatform(platform.Id, position, platform.Config.visualsPrefab);
+        platform.CombatId = combatSystem.RegisterAgent(prototype.position, true);
+        platform.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.physicsPrefab);
+        platform.RamId = ramEffect.StartNew(platform.CombatId, prototype.ramPrototype);
+        view.AddPlatform(platform.Id, prototype.position, prototype.visualsPrefab);
+
+        platform.LoadoutOffset = prototype.loadoutOffset;
 
         return platform.Id;
     }
@@ -58,7 +60,7 @@ public class PlatformController {
         platform.WeaponConfig = loadout.weaponConfig;
         platform.WeaponPlacementOffset = loadout.weaponLocalOffset;
         platform.WeaponId = weaponController.SpawnWeapon(platform.CombatId, platform.Position, loadout.weaponConfig);
-        view.SetLoadoutVisuals(platformId, loadout.brokenVisualsPrefab, platform.Config.LoadoutOffset);
+        view.SetLoadoutVisuals(platformId, loadout.brokenVisualsPrefab, platform.LoadoutOffset);
     }
 
     public int GetVehiclePhysicsId(int platformId) {
@@ -83,7 +85,7 @@ public class PlatformController {
             host.Position = host.VehiclePhysicsState.position;
             view.UpdatePlatformPose(host.Id, host.VehiclePhysicsState);
 
-            weaponController.MoveWeapon(host.WeaponId, host.Position + host.Config.LoadoutOffset + host.WeaponPlacementOffset);
+            weaponController.MoveWeapon(host.WeaponId, host.Position + host.LoadoutOffset + host.WeaponPlacementOffset);
             combatSystem.UpdateAgentPosition(host.CombatId, host.Position);
             ramEffect.Forward(host.RamId, host.Position);
         }

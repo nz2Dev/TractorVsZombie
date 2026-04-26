@@ -1,0 +1,245 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1288884211873851069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2119333286541025500}
+  - component: {fileID: 3553383499548591022}
+  m_Layer: 0
+  m_Name: Platform Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2119333286541025500
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1288884211873851069}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8187107323059989604}
+  - {fileID: 4249764905920596271}
+  - {fileID: 2843252585603288568}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3553383499548591022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1288884211873851069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ff88970517f74c7c8698dc9cbc4141a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::PlatformSource
+  config: {fileID: 11400000, guid: 843bbae72c8f446c18439515cba7be86, type: 2}
+  visualsPrefab: {fileID: 788712317402739098}
+  physicsPrefab: {fileID: 4720295995508879898}
+  loadoutOffset: {x: 0, y: 0.75, z: 0}
+  ramSource: {fileID: 7335553454362133953}
+--- !u!1 &1674252641367127333
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2843252585603288568}
+  - component: {fileID: 7335553454362133953}
+  m_Layer: 0
+  m_Name: Platform RamEffect Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2843252585603288568
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674252641367127333}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2119333286541025500}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7335553454362133953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674252641367127333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80328ad222bf646fd8836313989da026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::RamEffectSource
+  config: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
+--- !u!1001 &565820200502375502
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2119333286541025500}
+    m_Modifications:
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8102125379990674598, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_Name
+      value: Proportional Trailer Vehicle Physics
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+--- !u!4 &4249764905920596271 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+  m_PrefabInstance: {fileID: 565820200502375502}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4720295995508879898 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5069907814222022228, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+  m_PrefabInstance: {fileID: 565820200502375502}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52d71d466f42d4e688f1c60491f08768, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: VehiclePhysics::VehiclePhysics
+--- !u!1001 &6612524671921424682
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2119333286541025500}
+    m_Modifications:
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3371121685155722078, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+      propertyPath: m_Name
+      value: Proportional Trailer Vehicle Visuals
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+--- !u!114 &788712317402739098 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5851998403967449264, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+  m_PrefabInstance: {fileID: 6612524671921424682}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9741c8a7e2984f24b9c706f19ca0ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::TowableVehicleVisuals
+--- !u!4 &8187107323059989604 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3051780955797677390, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
+  m_PrefabInstance: {fileID: 6612524671921424682}
+  m_PrefabAsset: {fileID: 0}

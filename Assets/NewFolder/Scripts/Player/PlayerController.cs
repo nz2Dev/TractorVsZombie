@@ -160,7 +160,10 @@ public class PlayerController {
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {
-        platformId = platformController.SpawnPlatform(position, model.DefaultPlatformConfig);
+        var prototype = model.PlatformSourcePrefab.GetPrototype();
+        prototype.position = position;
+        
+        platformId = platformController.SpawnPlatform(prototype);
         model.ControlledPlatformIds.Add(platformId);
         view.AddPlatform(platformController.ReadPlatformState(platformId));
     }

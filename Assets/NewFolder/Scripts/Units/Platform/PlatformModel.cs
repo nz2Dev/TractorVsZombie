@@ -6,8 +6,8 @@ public class PlatformModel {
 
     public PlatformModel(int id, Vector3 position, PlatformConfig config) {
         Id = id;
-        Config = config;
         Position = position;
+        Config = config;
     }
 
     public int Id { get; private set; }
@@ -19,5 +19,7 @@ public class PlatformModel {
     public WeaponConfig WeaponConfig { get; set; }
     public Vector3 WeaponPlacementOffset { get; set; }
     public int RamId { get; set; }
+    
+    public Vector3 LoadoutOffset { get; set; }
 
 }
