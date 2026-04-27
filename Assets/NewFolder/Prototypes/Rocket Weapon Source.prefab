@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 8652739942634871789}
   serializedVersion: 2
   m_LocalRotation: {x: -0.25881857, y: -0, z: -0, w: 0.965926}
-  m_LocalPosition: {x: 0, y: 1.3679998, z: 0.77150697}
+  m_LocalPosition: {x: 0, y: 1.74, z: 0.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -97,7 +97,7 @@ MonoBehaviour:
   visualsPrefab: {fileID: 6457900837160972009}
   ballisticPrototypeSource:
     type: 1
-    projectileConfig: {fileID: 0}
+    projectileSource: {fileID: 0}
     rocketPrototypeSource: {fileID: 9053547702380814144}
   ballisticLaunchOffsetSource: {fileID: 1130313757235651893}
 --- !u!1001 &2393348090385863615
@@ -108,6 +108,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8189230488376577178}
     m_Modifications:
+    - target: {fileID: 6561461717761399719, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5657
+      objectReference: {fileID: 0}
+    - target: {fileID: 6561461717761399719, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5657
+      objectReference: {fileID: 0}
+    - target: {fileID: 6561461717761399719, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5657
+      objectReference: {fileID: 0}
     - target: {fileID: 6561461717761399719, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -184,6 +196,18 @@ PrefabInstance:
     - target: {fileID: 4745983099203599405, guid: 6d1a6af9428c1496dbbe1ebffd118928, type: 3}
       propertyPath: m_Name
       value: Rocket Visuals
+      objectReference: {fileID: 0}
+    - target: {fileID: 6010313623846117325, guid: 6d1a6af9428c1496dbbe1ebffd118928, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.3081
+      objectReference: {fileID: 0}
+    - target: {fileID: 6010313623846117325, guid: 6d1a6af9428c1496dbbe1ebffd118928, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.3081
+      objectReference: {fileID: 0}
+    - target: {fileID: 6010313623846117325, guid: 6d1a6af9428c1496dbbe1ebffd118928, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.3081
       objectReference: {fileID: 0}
     - target: {fileID: 6010313623846117325, guid: 6d1a6af9428c1496dbbe1ebffd118928, type: 3}
       propertyPath: m_LocalPosition.x
