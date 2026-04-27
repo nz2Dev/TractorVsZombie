@@ -6,4 +6,5 @@ public struct ProductionSpacePrototype {
     public Quaternion rotation;
     public ProductionSpaceConfig config;
     public SpawnSpot spawnSpot;
+    public SpawnVariant spawnVariant;
 }

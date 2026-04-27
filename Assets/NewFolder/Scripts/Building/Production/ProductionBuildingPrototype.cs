@@ -8,4 +8,5 @@ public struct ProductionBuildingPrototype {
     public PhysicsObstacle dimensionsPrefab;
     public ProductionBuildingConfig config;
     public SpawnSpot spawnSpot;
+    public SpawnVariant spawnVariant;
 }

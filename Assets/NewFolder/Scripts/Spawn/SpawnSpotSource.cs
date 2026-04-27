@@ -1,27 +1,36 @@
+using UnityEditor;
+
 using UnityEngine;
 
 public class SpawnSpotSource : MonoBehaviour {
     
-    [SerializeField] private SpawnType type;
-    [SerializeField] private SpawnShape shape;
-    [SerializeField] private InfantrySource infantrySource;
-    [SerializeField] private ArmorSource armorSource;
-    [SerializeField] private SpawnConfig config;
+    [SerializeField] private SpawnShape shape = new SpawnShape {
+        height = 1,
+        width = 1,
+        spaceScale = 1,
+        randomOffset = false,
+        randomScale = 1,
+    };
 
-    public SpawnSpot Provide() {
-        var spotConfig = config;
-        if (type == SpawnType.Infantry && infantrySource != null) {
-            spotConfig.infantryPrototype = infantrySource.GetPrototype();
-        } else if (type == SpawnType.Armor && armorSource != null) {
-            spotConfig.armorPrototype = armorSource.GetPrototype();
-        }
+    public SpawnSpot Get() {
         return new SpawnSpot {
             position = transform.position,
             rotation = transform.rotation,
-            config = spotConfig,
             shape = shape,
-            type = type
         };
+    }
+
+    private void OnDrawGizmos() {
+        Handles.matrix = transform.localToWorldMatrix;
+        var halfWidth = shape.width * 0.5f * shape.spaceScale;
+        var halfHeight = shape.height * 0.5f * shape.spaceScale;
+        Handles.DrawPolyLine(new Vector3[] {
+            new(-halfWidth, 0, halfHeight),
+            new(halfWidth, 0, halfHeight),
+            new(halfWidth, 0, -halfHeight),
+            new(-halfWidth, 0, -halfHeight),
+            new(-halfWidth, 0, halfHeight),
+        });
     }
 
 }

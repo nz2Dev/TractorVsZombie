@@ -10,6 +10,7 @@ public class ProductionSpaceSource : MonoBehaviour {
     [Space]
     [Inline] [SerializeField] private ProductionSpaceConfig config;
     [Local] [SerializeField] private SpawnSpotSource spawnSpotSource;
+    [SerializeField] private SpawnVariantSource spawnVariantSource;
 
     private bool lastUniqueFlag;
 
@@ -35,7 +36,8 @@ public class ProductionSpaceSource : MonoBehaviour {
             config = config,
             position = transform.position,
             rotation = transform.rotation,
-            spawnSpot = spawnSpotSource.Provide(), 
+            spawnSpot = spawnSpotSource.Get(), 
+            spawnVariant = spawnVariantSource.Get()
         };
     }
 }

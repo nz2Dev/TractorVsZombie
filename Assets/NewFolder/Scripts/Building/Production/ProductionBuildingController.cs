@@ -68,7 +68,7 @@ public class ProductionBuildingController {
             nextId = uniqueIdRegistry[prototype.uniqueId];
         }
 
-        var model = new ProductionBuildingModel(nextId, prototype.config, prototype.spawnSpot);
+        var model = new ProductionBuildingModel(nextId, prototype.config, prototype.spawnSpot, prototype.spawnVariant);
         model.Position = prototype.position;
         model.Rotation = prototype.rotation;
         model.QueueAmount = prototype.config.initialQueueAmount;
@@ -133,7 +133,7 @@ public class ProductionBuildingController {
 
             var availableSpawn = model.QueueAmount;
             model.NextSpawnTime = Time.time + model.Config.spawnInterval;
-            var spawnResult = spawnService.Spawn(model.SpawnSpot, availableSpawn);
+            var spawnResult = spawnService.Spawn(model.SpawnSpot, model.SpawnVariant, availableSpawn);
             model.QueueAmount -= spawnResult.spawnedIds.Length;
             model.SpawnResult = spawnResult;
         }

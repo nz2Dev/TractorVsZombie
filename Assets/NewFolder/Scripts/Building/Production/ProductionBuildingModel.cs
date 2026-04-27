@@ -7,7 +7,15 @@ public class ProductionBuildingModel {
     public int Id { get; }
     public ProductionBuildingConfig Config { get; }
     public SpawnSpot SpawnSpot { get; }
-    
+    public SpawnVariant SpawnVariant { get; }
+
+    public ProductionBuildingModel(int id, ProductionBuildingConfig config, SpawnSpot spawnSpot, SpawnVariant spawnVariant) {
+        Id = id;
+        Config = config;
+        SpawnSpot = spawnSpot;
+        SpawnVariant = spawnVariant;
+    }
+
     public Vector3 Position { get; set; }
     public Quaternion Rotation { get; set; }
     public int CombatId { get; set; }
@@ -21,9 +29,4 @@ public class ProductionBuildingModel {
     public bool Destroyed { get; set; }
     public SpawnResult SpawnResult { get; set; }
 
-    public ProductionBuildingModel(int id, ProductionBuildingConfig config, SpawnSpot spawnSpot) {
-        Id = id;
-        Config = config;
-        SpawnSpot = spawnSpot;
-    }
 }

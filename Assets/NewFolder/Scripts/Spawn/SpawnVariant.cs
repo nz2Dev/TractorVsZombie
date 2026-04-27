@@ -1,7 +1,8 @@
 using System;
 
 [Serializable]
-public struct SpawnConfig {
+public struct SpawnVariant {
+    public SpawnType type;
     public InfantryPrototype infantryPrototype;
     public ArmorPrototype armorPrototype;
 }

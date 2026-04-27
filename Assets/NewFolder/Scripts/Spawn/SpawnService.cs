@@ -28,20 +28,20 @@ public class SpawnService {
         }
     }
 
-    public SpawnResult Spawn(SpawnSpot spot, int limit) {
+    public SpawnResult Spawn(SpawnSpot spot, SpawnVariant variant, int limit) {
         idsBuffer.Clear();
         spot.shape.CalculateSpawnPoints(spawnPointsBuffer);
         
         foreach (var spawnPoint in spawnPointsBuffer.Take(limit)) {
             var worldSpaceSpawnPoint = spot.position + spot.rotation * spawnPoint;
             
-            if (spot.type == SpawnType.Infantry) {
-                var prototype = spot.config.infantryPrototype;
+            if (variant.type == SpawnType.Infantry) {
+                var prototype = variant.infantryPrototype;
                 prototype.position = worldSpaceSpawnPoint;
                 var spawnedId = infantryController.SpawnInfantry(prototype);
                 idsBuffer.Add(spawnedId);
-            } else if (spot.type == SpawnType.Armor) {
-                var prototype = spot.config.armorPrototype;
+            } else if (variant.type == SpawnType.Armor) {
+                var prototype = variant.armorPrototype;
                 prototype.position = worldSpaceSpawnPoint;
                 var spawnedId = armorController.SpawnArmor(prototype);
                 idsBuffer.Add(spawnedId);
@@ -49,7 +49,7 @@ public class SpawnService {
         }
 
         return new SpawnResult {
-            spawnType = spot.type,
+            spawnType = variant.type,
             spawnedIds = idsBuffer.ToArray(),
         };
     }

@@ -11,9 +11,10 @@ public class ProductionBuildingSource : MonoBehaviour {
     [SerializeField] private int uniqueId = 0;
     [Space]
     [Inline] [SerializeField] private ProductionBuildingConfig config;
-    [Local] [SerializeField] private SpawnSpotSource spawnSpotSource;
     [Local] [SerializeField] private PhysicsObstacle dimensionsPrefab;
     [Local] [SerializeField] private GameObject visualsPrefab;
+    [Inline] [Local] [SerializeField] private SpawnSpotSource spawnSpotSource;
+    [SerializeField] SpawnVariantSource spawnVariantSource;
 
     private bool lastUniqueFlag;
 
@@ -41,7 +42,8 @@ public class ProductionBuildingSource : MonoBehaviour {
             position = transform.position,
             rotation = transform.rotation,
             config = config,
-            spawnSpot = spawnSpotSource.Provide(),
+            spawnSpot = spawnSpotSource.Get(),
+            spawnVariant = spawnVariantSource.Get(),
             dimensionsPrefab = dimensionsPrefab,
             visualsPrefab = visualsPrefab,
         };

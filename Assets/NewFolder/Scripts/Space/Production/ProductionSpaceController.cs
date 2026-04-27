@@ -40,7 +40,7 @@ public class ProductionSpaceController {
             nextId = uniqueIdRegistry[prototype.uniqueId];
         }
 
-        var model = new ProductionSpaceModel(nextId, prototype.config, prototype.spawnSpot);
+        var model = new ProductionSpaceModel(nextId, prototype.config, prototype.spawnSpot, prototype.spawnVariant);
         model.NextSpawnTime = Time.time;
         model.Queue = prototype.config.initialQueue;
         registry[nextId] = model;
@@ -73,7 +73,7 @@ public class ProductionSpaceController {
 
             model.NextSpawnTime = Time.time + model.Config.spawnInterval;
             var availableSpawn = model.Queue;
-            var result = spawnService.Spawn(model.SpawnSpot, availableSpawn);
+            var result = spawnService.Spawn(model.SpawnSpot, model.SpawnVariant, availableSpawn);
             model.Queue -= result.spawnedIds.Length;
             model.LastSpawnEvent = result;
         }
