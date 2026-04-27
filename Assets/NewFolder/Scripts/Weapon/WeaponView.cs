@@ -17,14 +17,14 @@ public class WeaponView {
         visuals.UpdatePosition(position);
     }
 
-    internal void UpdateAim(int weaponId, Vector3 aimPoint, BallisticConfig config) {
+    internal void UpdateAim(int weaponId, Vector3 aimPoint, BallisticPrototype ballisticPrototype) {
         var visuals = visualsRegistry[weaponId];
-        visuals.UpdateAimPoint(aimPoint, config);
+        visuals.UpdateAimPoint(aimPoint, ballisticPrototype);
     }
 
-    internal void ShowActivation(int weaponId, BallisticType ballisticType) {
+    internal void ShowActivation(int weaponId, BallisticPrototype ballisticPrototype) {
         var visuals = visualsRegistry[weaponId];
-        visuals.ShowActivation(ballisticType);
+        visuals.ShowActivation(ballisticPrototype.type);
     }
 
     internal void RemoveWeapon(int weaponId) {

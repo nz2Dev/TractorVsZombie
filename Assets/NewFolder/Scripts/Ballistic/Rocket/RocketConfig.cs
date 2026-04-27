@@ -4,8 +4,7 @@ using UnityEngine;
 public class RocketConfig : ScriptableObject {
     public AudioClip[] launchEffectClips;
     public AudioClip[] explodeEffectClips;
-    public AnimationCurve flyCurve;
-    public float amplitude;
+    public FlyShape flyShape;
     public float flyDuration;
     public int damage;
     public float explosionRadius;
@@ -14,5 +13,4 @@ public class RocketConfig : ScriptableObject {
         radius = 5,
         upwardModifier = 1
     };
-    public RocketVisuals visualsPrefab;
 }

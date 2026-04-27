@@ -2,24 +2,20 @@ using UnityEngine;
 
 public class WeaponModel {
     
-    private readonly WeaponConfig config;
+    public int Id { get; }
+    public int CombatId { get; }
+    public WeaponConfig Config { get; }
 
-    public WeaponModel(int id, int combatId, Vector3 position, WeaponConfig config) {
+    public WeaponModel(int id, int combatId, WeaponConfig config) {
         Id = id;
         CombatId = combatId;
-        Position = position;
-        this.config = config;
+        Config = config;
     }
 
-    public int Id { get; private set; }
-    public int CombatId { get; private set; }
     public Vector3 Position { get; set; }
+    public BallisticPrototype BallisticPrototype { get; set; }
+    public Vector3 BallisticLaunchOffset { get; set; }
     public Vector3 AimPoint { get; set; }
     public float LastShootTime { get; set; }
-    
-    public AimConfig AimConfig => config.aimConfig;
-    public BallisticConfig BallisticConfig => config.ballisticConfig;  
-    public Vector3 LaunchPoint => Position + config.launchOffset;
-    public float CooldownSec => config.cooldownSec;
     
 }

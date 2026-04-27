@@ -1,0 +1,458 @@
+diff --git a/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketConfig.cs b/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketConfig.cs
+index 8621fc6..de39fb9 100644
+--- a/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketConfig.cs
++++ b/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketConfig.cs
+@@ -4,8 +4,7 @@ using UnityEngine;
+ public class RocketConfig : ScriptableObject {
+     public AudioClip[] launchEffectClips;
+     public AudioClip[] explodeEffectClips;
+-    public AnimationCurve flyCurve;
+-    public float amplitude;
++    public FlyShape flyShape;
+     public float flyDuration;
+     public int damage;
+     public float explosionRadius;
+@@ -14,5 +13,4 @@ public class RocketConfig : ScriptableObject {
+         radius = 5,
+         upwardModifier = 1
+     };
+-    public RocketVisuals visualsPrefab;
+ }
+diff --git a/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketController.cs b/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketController.cs
+index 24d190e..431319a 100644
+--- a/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketController.cs
++++ b/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketController.cs
+@@ -5,24 +5,23 @@ using UnityEngine;
+ public class RocketController {
+     
+     private readonly RocketView view;
+-    private readonly SoundManager soundManager;
+     private readonly CombatSystem combatSystem;
+ 
+     private int idCounter = 0;
+-    private Dictionary<int, RocketModel> models = new ();
++    private readonly Dictionary<int, RocketModel> registry = new ();
+ 
+-    public RocketController(RocketView view, SoundManager soundManager, CombatSystem combatSystem) {
++    public RocketController(RocketView view, CombatSystem combatSystem) {
+         this.view = view;
+-        this.soundManager = soundManager;
+         this.combatSystem = combatSystem;
+     }
+ 
+-    public void SpawnRocket(int shooterId, RocketTrajectory trajectory, RocketConfig config) {
++    public void Create(int shooterId, RocketPrototype prototype, FlyPath trajectory) {
+         var nextRocketId = ++idCounter;
+-        var rocket = new RocketModel(nextRocketId, shooterId, Time.time, trajectory, config);
+-        models[nextRocketId] = rocket;
+-        view.ShowRocketFly(rocket.Id, rocket.LaunchTime, trajectory, config);
+-        soundManager.PlayEffect(trajectory.launchPoint, config.launchEffectClips);
++        var rocket = new RocketModel(nextRocketId, shooterId, Time.time, trajectory, prototype.config);
++        registry[nextRocketId] = rocket;
++        
++        view.ShowRocketFly(rocket.Id, prototype.visualsPrefab, rocket.LaunchTime, 
++            prototype.config.flyDuration, trajectory, prototype.config.flyShape, prototype.config.launchEffectClips);
+     }
+ 
+     public void Update() {
+@@ -31,25 +30,27 @@ public class RocketController {
+     }
+ 
+     private void UpdateRocketLandingCombat() {
+-        foreach (var rocket in models.Values) {
+-            if (rocket.ForwardLandingTime(Time.time)) {
+-                combatSystem.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, rocket.Config.explosionRadius, rocket.Config.damage,
+-                    rocket.Config.explosionData);
+-                view.ShowRocketExplosion(rocket.Id);
+-                soundManager.PlayEffect(rocket.Trajectory.landPoint, rocket.Config.explodeEffectClips);
++        foreach (var rocket in registry.Values) {
++            if (rocket.LaunchTime + rocket.Config.flyDuration < Time.time)
++                rocket.Landed = true;
++
++            if (rocket.Landed) {
++                combatSystem.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, 
++                    rocket.Config.explosionRadius, rocket.Config.damage, rocket.Config.explosionData);
++                view.ShowRocketExplosion(rocket.Id, rocket.Trajectory.landPoint, rocket.Config.explodeEffectClips);
+             }
+         }   
+     }
+ 
+     private void FilterElapsedRockets() {
+         var landedRockets = new List<int>();
+-        foreach (var rocket in models.Values) {
++        foreach (var rocket in registry.Values) {
+             if (rocket.Landed) {
+                 landedRockets.Add(rocket.Id);
+             }
+         }
+         foreach (var landedRocketId in landedRockets) {
+-            models.Remove(landedRocketId);
++            registry.Remove(landedRocketId);
+         }
+     }
+ }
+\ No newline at end of file
+diff --git a/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketModel.cs b/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketModel.cs
+index 0426b44..0f1267f 100644
+--- a/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketModel.cs
++++ b/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketModel.cs
+@@ -1,33 +1,19 @@
+-using UnityEngine;
+-
+-public struct RocketTrajectory {
+-    public Vector3 launchPoint;
+-    public Vector3 landPoint;
+-}
+-
+ public class RocketModel {
+     
+     internal int Id { get; private set; }
+     internal int ShooterId { get; private set; }
+-    internal RocketTrajectory Trajectory { get; private set; }
++    internal FlyPath Trajectory { get; private set; }
+     internal RocketConfig Config { get; private set; }
+     internal float LaunchTime { get; private set; }
+-    internal bool Landed { get; private set; }
+-
+-    public RocketModel(int id, int shooterId, float launchTime, RocketTrajectory trajectory, RocketConfig config) {
++    
++    public RocketModel(int id, int shooterId, float launchTime, FlyPath trajectory, RocketConfig config) {
+         Id = id;
+         ShooterId = shooterId;
+         Trajectory = trajectory;
+         Config = config;
+         LaunchTime = launchTime;
+-        Landed = false;
+     }
+ 
+-    public bool ForwardLandingTime(float time) {
+-        if (Landed)
+-            return false;
++    internal bool Landed { get; set; }
+ 
+-        Landed = LaunchTime + 1 < time;
+-        return Landed;
+-    }
+ }
+\ No newline at end of file
+diff --git a/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketView.cs b/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketView.cs
+index f31a9a4..8a32de1 100644
+--- a/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketView.cs
++++ b/Assets/NewFolder/Scripts/Ballistic/Rocket/RocketView.cs
+@@ -4,15 +4,25 @@ using UnityEngine;
+ 
+ public class RocketView {
+     
+-    private Dictionary<int, RocketVisuals> visualsRegistry = new ();
++    private readonly SoundManager soundManager;
++    private readonly Dictionary<int, RocketVisuals> visualsRegistry = new ();
+ 
+-    internal void ShowRocketFly(int rocketId, float startTime, RocketTrajectory trajectory, RocketConfig config) {
+-        var visuals = GameObject.Instantiate(config.visualsPrefab, trajectory.launchPoint, Quaternion.identity);
+-        visuals.Setup(trajectory.launchPoint, trajectory.landPoint, startTime, config.flyDuration, config.amplitude, config.flyCurve);
+-        visualsRegistry[rocketId] = visuals;
++    public RocketView(SoundManager soundManager) {
++        this.soundManager = soundManager;
+     }
+ 
+-    internal void ShowRocketExplosion(int rocketId) {
++    internal void ShowRocketFly(int rocketId, RocketVisuals visualsPrefab, 
++        float startTime, float duration, 
++        FlyPath trajectory, FlyShape flyShape, AudioClip[] launchEffectClips) {
++        var visuals = GameObject.Instantiate(visualsPrefab, trajectory.launchPoint, Quaternion.identity);
++        visualsRegistry[rocketId] = visualsPrefab;
++        visuals.Setup(trajectory.launchPoint, trajectory.landPoint, 
++            startTime, duration, flyShape.amplitude, flyShape.curve);
++        soundManager.PlayEffect(trajectory.launchPoint, launchEffectClips);
++    }
++
++    internal void ShowRocketExplosion(int rocketId, Vector3 landPoint, AudioClip[] explosionSFX) {
++        soundManager.PlayEffect(landPoint, explosionSFX);
+         var visuals = visualsRegistry[rocketId];
+         GameObject.Destroy(visuals.gameObject);
+         visualsRegistry.Remove(rocketId);
+diff --git a/Assets/NewFolder/Scripts/GameBootstrapper.cs b/Assets/NewFolder/Scripts/GameBootstrapper.cs
+index 77a9849..4b9c5d5 100644
+--- a/Assets/NewFolder/Scripts/GameBootstrapper.cs
++++ b/Assets/NewFolder/Scripts/GameBootstrapper.cs
+@@ -67,7 +67,7 @@ public class GameBootstrapper : MonoBehaviour {
+         var rewardView = new RewardView();
+         var infantryView = new InfantryView();
+         var truckView = new TruckView(soundManager);
+-        var rocketView = new RocketView();
++        var rocketView = new RocketView(soundManager);
+         var projectileView = new ProjectileView();
+         var productionBuildingView = new ProductionBuildingView();
+         
+@@ -85,7 +85,6 @@ public class GameBootstrapper : MonoBehaviour {
+ 
+         rocketController = new RocketController(
+             rocketView, 
+-            soundManager, 
+             combatSystem
+         );
+ 
+diff --git a/Assets/NewFolder/Scripts/Weapon/WeaponConfig.cs b/Assets/NewFolder/Scripts/Weapon/WeaponConfig.cs
+index 921cc4a..5525caa 100644
+--- a/Assets/NewFolder/Scripts/Weapon/WeaponConfig.cs
++++ b/Assets/NewFolder/Scripts/Weapon/WeaponConfig.cs
+@@ -1,24 +1,7 @@
+-using System;
+-
+ using UnityEngine;
+ 
+-[Serializable]
+-public enum BallisticType {
+-    Bullet,
+-    Rocket
+-}
+-
+-[Serializable]
+-public struct BallisticConfig {
+-    public BallisticType type;
+-    [Inline] public ProjectileConfig bullet;
+-    [Inline] public RocketConfig rocket;
+-}
+-
+ [CreateAssetMenu(fileName = "WeaponData", menuName = "WeaponData", order = 0)]
+ public class WeaponConfig : ScriptableObject {
+     public float cooldownSec;
+-    public Vector3 launchOffset;
+     public AimConfig aimConfig;
+-    public BallisticConfig ballisticConfig;
+ }
+\ No newline at end of file
+diff --git a/Assets/NewFolder/Scripts/Weapon/WeaponController.cs b/Assets/NewFolder/Scripts/Weapon/WeaponController.cs
+index c27caab..a085f83 100644
+--- a/Assets/NewFolder/Scripts/Weapon/WeaponController.cs
++++ b/Assets/NewFolder/Scripts/Weapon/WeaponController.cs
+@@ -25,8 +25,13 @@ public class WeaponController {
+ 
+     public int SpawnWeapon(int ownerCombatId, WeaponPrototype prototype) {
+         var nextId = ++idCounter;
+-        var model = new WeaponModel(nextId, ownerCombatId, prototype.position, prototype.config);
++        var model = new WeaponModel(nextId, ownerCombatId, prototype.config);
+         registry[nextId] = model;
++
++        model.Position = prototype.position;
++        model.BallisticLaunchOffset = prototype.ballisticLaunchOffset;
++        model.LastShootTime = Time.time;
++
+         view.AddWeapon(model.Id, prototype.position, prototype.visualsPrefab);
+         return model.Id;
+     }
+@@ -34,15 +39,15 @@ public class WeaponController {
+     public WeaponState ReadWeaponState(int weaponId) {
+         var weapon = registry[weaponId];
+         return new WeaponState {
+-            aimConfig = weapon.AimConfig
++            aimConfig = weapon.Config.aimConfig
+         };
+     }
+ 
+     public void AimWeapon(int weaponId, Vector3 target) {
+         var weapon = registry[weaponId];
+         var aimInput = new AimInput { deltaTime = Time.deltaTime, position = weapon.Position, previousAim = weapon.AimPoint, targetAim = target };
+-        weapon.AimPoint = AimStrategy.Evaluate(weapon.AimConfig, aimInput);
+-        view.UpdateAim(weapon.Id, weapon.AimPoint, weapon.BallisticConfig);
++        weapon.AimPoint = AimStrategy.Evaluate(weapon.Config.aimConfig, aimInput);
++        view.UpdateAim(weapon.Id, weapon.AimPoint, weapon.BallisticPrototype);
+     }
+ 
+     public void MoveWeapon(int weaponId, Vector3 position) {
+@@ -58,16 +63,16 @@ public class WeaponController {
+ 
+     private void UpdateFire() {
+         foreach (var model in registry.Values) {
+-            if (model.LastShootTime + model.CooldownSec < Time.time) {
++            if (model.LastShootTime + model.Config.cooldownSec < Time.time) {
+                 model.LastShootTime = Time.time;
+                 FireBallistic(model);
+-                view.ShowActivation(model.Id, model.BallisticConfig.type);
++                view.ShowActivation(model.Id, model.BallisticPrototype);
+             }
+         }
+     }
+ 
+     private void FireBallistic(WeaponModel weapon) {
+-        switch (weapon.BallisticConfig.type) {
++        switch (weapon.BallisticPrototype.type) {
+             case BallisticType.Bullet:
+                 FireBullet(weapon);
+                 break;
+@@ -78,22 +83,23 @@ public class WeaponController {
+     }
+ 
+     private void FireBullet(WeaponModel weapon) {
+-        var bulletVelocity = (weapon.AimPoint - weapon.LaunchPoint).normalized * weapon.BallisticConfig.bullet.speed;
++        var launchPoint = weapon.Position + weapon.BallisticLaunchOffset;
++        var bulletVelocity = (weapon.AimPoint - launchPoint).normalized * weapon.BallisticPrototype.projectileConfig.speed;
+         projectileController.SpawnBulletProjectile(
+             weapon.CombatId, 
+-            new Bullet { firePoint = weapon.LaunchPoint, velocity = bulletVelocity},
+-            weapon.BallisticConfig.bullet
++            new Bullet { firePoint = launchPoint, velocity = bulletVelocity}, // speed could be part of projectile prototype?
++            weapon.BallisticPrototype.projectileConfig
+         );
+     }
+ 
+     private void FireRocket(WeaponModel weapon) {
+-        rocketController.SpawnRocket(
++        rocketController.Create(
+             weapon.CombatId,
+-            new RocketTrajectory {
++            weapon.BallisticVariant.rocketPrototype,
++            new FlyPath {
+                 launchPoint = weapon.LaunchPoint,
+                 landPoint = weapon.AimPoint,
+-            },
+-            weapon.BallisticConfig.rocket
++            }
+         );
+     }
+ 
+diff --git a/Assets/NewFolder/Scripts/Weapon/WeaponModel.cs b/Assets/NewFolder/Scripts/Weapon/WeaponModel.cs
+index 578d344..8483379 100644
+--- a/Assets/NewFolder/Scripts/Weapon/WeaponModel.cs
++++ b/Assets/NewFolder/Scripts/Weapon/WeaponModel.cs
+@@ -2,24 +2,20 @@ using UnityEngine;
+ 
+ public class WeaponModel {
+     
+-    private readonly WeaponConfig config;
++    public int Id { get; }
++    public int CombatId { get; }
++    public WeaponConfig Config { get; }
+ 
+-    public WeaponModel(int id, int combatId, Vector3 position, WeaponConfig config) {
++    public WeaponModel(int id, int combatId, WeaponConfig config) {
+         Id = id;
+         CombatId = combatId;
+-        Position = position;
+-        this.config = config;
++        Config = config;
+     }
+ 
+-    public int Id { get; private set; }
+-    public int CombatId { get; private set; }
+     public Vector3 Position { get; set; }
++    public BallisticPrototype BallisticPrototype { get; set; }
++    public Vector3 BallisticLaunchOffset { get; set; }
+     public Vector3 AimPoint { get; set; }
+     public float LastShootTime { get; set; }
+     
+-    public AimConfig AimConfig => config.aimConfig;
+-    public BallisticConfig BallisticConfig => config.ballisticConfig;  
+-    public Vector3 LaunchPoint => Position + config.launchOffset;
+-    public float CooldownSec => config.cooldownSec;
+-    
+ }
+\ No newline at end of file
+diff --git a/Assets/NewFolder/Scripts/Weapon/WeaponPrototype.cs b/Assets/NewFolder/Scripts/Weapon/WeaponPrototype.cs
+index 91c6be3..fa8a4de 100644
+--- a/Assets/NewFolder/Scripts/Weapon/WeaponPrototype.cs
++++ b/Assets/NewFolder/Scripts/Weapon/WeaponPrototype.cs
+@@ -5,4 +5,6 @@ public struct WeaponPrototype {
+     public Vector3 position;
+     public WeaponConfig config;
+     public WeaponVisuals visualsPrefab;
++    public BallisticPrototype ballisticPrototype;
++    public Vector3 ballisticLaunchOffset;
+ }
+diff --git a/Assets/NewFolder/Scripts/Weapon/WeaponSource.cs b/Assets/NewFolder/Scripts/Weapon/WeaponSource.cs
+index e922f56..1696332 100644
+--- a/Assets/NewFolder/Scripts/Weapon/WeaponSource.cs
++++ b/Assets/NewFolder/Scripts/Weapon/WeaponSource.cs
+@@ -4,6 +4,9 @@ public class WeaponSource : MonoBehaviour {
+ 
+     [Inline] [SerializeField] private WeaponConfig config;
+     [Local] [SerializeField] private WeaponVisuals visualsPrefab;
++    [SerializeField] private BallisticPrototypeSource ballisticPrototypeSource;
++    [SerializeField] private Transform ballisticLaunchOffsetSource;
++
+ 
+     private void Awake() {
+         gameObject.SetActive(false);
+@@ -11,9 +14,10 @@ public class WeaponSource : MonoBehaviour {
+ 
+     public WeaponPrototype GetPrototype(bool localTransform) {
+         return new WeaponPrototype {
+-            position = localTransform ? transform.localPosition : transform.position,
+             config = config,
++            position = localTransform ? transform.localPosition : transform.position,
+             visualsPrefab = visualsPrefab,
++            ballisticPrototype = ballisticPrototypeSource.Get(),
+         };
+     }
+ }
+diff --git a/Assets/NewFolder/Scripts/Weapon/WeaponView.cs b/Assets/NewFolder/Scripts/Weapon/WeaponView.cs
+index 4928160..20d0dba 100644
+--- a/Assets/NewFolder/Scripts/Weapon/WeaponView.cs
++++ b/Assets/NewFolder/Scripts/Weapon/WeaponView.cs
+@@ -17,14 +17,14 @@ public class WeaponView {
+         visuals.UpdatePosition(position);
+     }
+ 
+-    internal void UpdateAim(int weaponId, Vector3 aimPoint, BallisticConfig config) {
++    internal void UpdateAim(int weaponId, Vector3 aimPoint, BallisticPrototype ballisticPrototype) {
+         var visuals = visualsRegistry[weaponId];
+-        visuals.UpdateAimPoint(aimPoint, config);
++        visuals.UpdateAimPoint(aimPoint, ballisticPrototype);
+     }
+ 
+-    internal void ShowActivation(int weaponId, BallisticType ballisticType) {
++    internal void ShowActivation(int weaponId, BallisticPrototype ballisticPrototype) {
+         var visuals = visualsRegistry[weaponId];
+-        visuals.ShowActivation(ballisticType);
++        visuals.ShowActivation(ballisticPrototype.type);
+     }
+ 
+     internal void RemoveWeapon(int weaponId) {
+diff --git a/Assets/NewFolder/Scripts/Weapon/WeaponVisuals.cs b/Assets/NewFolder/Scripts/Weapon/WeaponVisuals.cs
+index 9c73915..40cdcba 100644
+--- a/Assets/NewFolder/Scripts/Weapon/WeaponVisuals.cs
++++ b/Assets/NewFolder/Scripts/Weapon/WeaponVisuals.cs
+@@ -17,19 +17,19 @@ public class WeaponVisuals : MonoBehaviour {
+         transform.position = position;
+     }
+ 
+-    internal void UpdateAimPoint(Vector3 aimPoint, BallisticConfig config) {
+-        switch (config.type) {
++    internal void UpdateAimPoint(Vector3 aimPoint, BallisticPrototype ballisticPrototype) {
++        switch (ballisticPrototype.type) {
+             case BallisticType.Bullet:
+                 RotateGunAim(aimPoint);
+                 break;
+             case BallisticType.Rocket:
+-                RotateRocketAim(aimPoint, config.rocket);
++                RotateRocketAim(aimPoint, ballisticPrototype.rocketPrototype.config.flyShape);
+                 break;
+         }
+     }
+ 
+-    private void RotateRocketAim(Vector3 aimPoint, RocketConfig config) {
+-        var flyTangent = GetTangent(transform.position, aimPoint, config.flyCurve, config.amplitude, 0);
++    private void RotateRocketAim(Vector3 aimPoint, FlyShape flyShape) {
++        var flyTangent = flyShape.GetTangent(transform.position, aimPoint, 0);
+         rotationBase.rotation = Quaternion.LookRotation(flyTangent, Vector3.up);
+     }
+ 
+@@ -50,17 +50,4 @@ public class WeaponVisuals : MonoBehaviour {
+         cannoParticlesSystem.Emit(1);
+     }
+ 
+-    Vector3 GetPointOnCurve(Vector3 start, Vector3 end, AnimationCurve curve, float curveScale, float t) {
+-        Vector3 horizontal = Vector3.Lerp(start, end, t);
+-        float height = curve.Evaluate(t) * curveScale;
+-        return new Vector3(horizontal.x, horizontal.y + height, horizontal.z);
+-    }
+-
+-    Vector3 GetTangent(Vector3 start, Vector3 end, AnimationCurve curve, float curveScale, float t) {
+-        float delta = 0.01f;
+-        Vector3 p1 = GetPointOnCurve(start, end, curve, curveScale, t);
+-        Vector3 p2 = GetPointOnCurve(start, end, curve, curveScale, Mathf.Min(t + delta, 1f));
+-        return (p2 - p1).normalized;
+-    }
+-
+ }
+\ No newline at end of file

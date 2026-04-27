@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36557d5cca1d74d4f96f8407f4104c7c, type: 3}
   m_Name: Farm Player Config
   m_EditorClassIdentifier: NewFolder::PlayerConfig
-  initPlatformCount: 0
+  initPlatformCount: 1
   platformSourcePrefab: {fileID: 3553383499548591022, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
   startOrEndCouplingOfRewards: 0
-  firstLoadoutSourcePrefab: {fileID: 4224667866852439853, guid: d0a967060e5f54fc6b5b9fa9456418f0, type: 3}
+  firstLoadoutSourcePrefab: {fileID: 2248895191762497786, guid: 697de765863b048a7a82e00beb0eb422, type: 3}
   secondLoadoutSourcePrefab: {fileID: 0}

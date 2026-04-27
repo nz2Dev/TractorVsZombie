@@ -67,7 +67,7 @@ public class GameBootstrapper : MonoBehaviour {
         var rewardView = new RewardView();
         var infantryView = new InfantryView();
         var truckView = new TruckView(soundManager);
-        var rocketView = new RocketView();
+        var rocketView = new RocketView(soundManager);
         var projectileView = new ProjectileView();
         var productionBuildingView = new ProductionBuildingView();
         
@@ -85,7 +85,6 @@ public class GameBootstrapper : MonoBehaviour {
 
         rocketController = new RocketController(
             rocketView, 
-            soundManager, 
             combatSystem
         );
 

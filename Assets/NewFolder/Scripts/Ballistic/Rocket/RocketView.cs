@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class RocketView {
     
-    private Dictionary<int, RocketVisuals> visualsRegistry = new ();
+    private readonly SoundManager soundManager;
+    private readonly Dictionary<int, RocketVisuals> visualsRegistry = new ();
 
-    internal void ShowRocketFly(int rocketId, float startTime, RocketTrajectory trajectory, RocketConfig config) {
-        var visuals = GameObject.Instantiate(config.visualsPrefab, trajectory.launchPoint, Quaternion.identity);
-        visuals.Setup(trajectory.launchPoint, trajectory.landPoint, startTime, config.flyDuration, config.amplitude, config.flyCurve);
-        visualsRegistry[rocketId] = visuals;
+    public RocketView(SoundManager soundManager) {
+        this.soundManager = soundManager;
     }
 
-    internal void ShowRocketExplosion(int rocketId) {
+    internal void ShowRocketFly(int rocketId, RocketVisuals visualsPrefab, 
+        float startTime, float duration, 
+        FlyPath trajectory, FlyShape flyShape, AudioClip[] launchEffectClips) {
+        var visuals = GameObject.Instantiate(visualsPrefab, trajectory.launchPoint, Quaternion.identity);
+        visualsRegistry[rocketId] = visuals;
+        visuals.Setup(trajectory.launchPoint, trajectory.landPoint, 
+            startTime, duration, flyShape.amplitude, flyShape.curve);
+        soundManager.PlayEffect(trajectory.launchPoint, launchEffectClips);
+    }
+
+    internal void ShowRocketExplosion(int rocketId, Vector3 landPoint, AudioClip[] explosionSFX) {
+        soundManager.PlayEffect(landPoint, explosionSFX);
         var visuals = visualsRegistry[rocketId];
         GameObject.Destroy(visuals.gameObject);
         visualsRegistry.Remove(rocketId);

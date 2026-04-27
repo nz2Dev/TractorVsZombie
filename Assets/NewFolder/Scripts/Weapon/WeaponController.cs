@@ -25,8 +25,14 @@ public class WeaponController {
 
     public int SpawnWeapon(int ownerCombatId, WeaponPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new WeaponModel(nextId, ownerCombatId, prototype.position, prototype.config);
+        var model = new WeaponModel(nextId, ownerCombatId, prototype.config);
         registry[nextId] = model;
+
+        model.Position = prototype.position;
+        model.BallisticPrototype = prototype.ballisticPrototype;
+        model.BallisticLaunchOffset = prototype.ballisticLaunchOffset;
+        model.LastShootTime = Time.time;
+
         view.AddWeapon(model.Id, prototype.position, prototype.visualsPrefab);
         return model.Id;
     }
@@ -34,15 +40,15 @@ public class WeaponController {
     public WeaponState ReadWeaponState(int weaponId) {
         var weapon = registry[weaponId];
         return new WeaponState {
-            aimConfig = weapon.AimConfig
+            aimConfig = weapon.Config.aimConfig
         };
     }
 
     public void AimWeapon(int weaponId, Vector3 target) {
         var weapon = registry[weaponId];
         var aimInput = new AimInput { deltaTime = Time.deltaTime, position = weapon.Position, previousAim = weapon.AimPoint, targetAim = target };
-        weapon.AimPoint = AimStrategy.Evaluate(weapon.AimConfig, aimInput);
-        view.UpdateAim(weapon.Id, weapon.AimPoint, weapon.BallisticConfig);
+        weapon.AimPoint = AimStrategy.Evaluate(weapon.Config.aimConfig, aimInput);
+        view.UpdateAim(weapon.Id, weapon.AimPoint, weapon.BallisticPrototype);
     }
 
     public void MoveWeapon(int weaponId, Vector3 position) {
@@ -58,16 +64,16 @@ public class WeaponController {
 
     private void UpdateFire() {
         foreach (var model in registry.Values) {
-            if (model.LastShootTime + model.CooldownSec < Time.time) {
+            if (model.LastShootTime + model.Config.cooldownSec < Time.time) {
                 model.LastShootTime = Time.time;
                 FireBallistic(model);
-                view.ShowActivation(model.Id, model.BallisticConfig.type);
+                view.ShowActivation(model.Id, model.BallisticPrototype);
             }
         }
     }
 
     private void FireBallistic(WeaponModel weapon) {
-        switch (weapon.BallisticConfig.type) {
+        switch (weapon.BallisticPrototype.type) {
             case BallisticType.Bullet:
                 FireBullet(weapon);
                 break;
@@ -78,22 +84,23 @@ public class WeaponController {
     }
 
     private void FireBullet(WeaponModel weapon) {
-        var bulletVelocity = (weapon.AimPoint - weapon.LaunchPoint).normalized * weapon.BallisticConfig.bullet.speed;
+        var launchPoint = weapon.Position + weapon.BallisticLaunchOffset;
+        var bulletVelocity = (weapon.AimPoint - launchPoint).normalized * weapon.BallisticPrototype.projectileConfig.speed;
         projectileController.SpawnBulletProjectile(
             weapon.CombatId, 
-            new Bullet { firePoint = weapon.LaunchPoint, velocity = bulletVelocity},
-            weapon.BallisticConfig.bullet
+            new Bullet { firePoint = launchPoint, velocity = bulletVelocity}, // speed could be part of projectile prototype?
+            weapon.BallisticPrototype.projectileConfig
         );
     }
 
     private void FireRocket(WeaponModel weapon) {
-        rocketController.SpawnRocket(
+        rocketController.Create(
             weapon.CombatId,
-            new RocketTrajectory {
-                launchPoint = weapon.LaunchPoint,
+            weapon.BallisticPrototype.rocketPrototype,
+            new FlyPath {
+                launchPoint = weapon.Position + weapon.BallisticLaunchOffset,
                 landPoint = weapon.AimPoint,
-            },
-            weapon.BallisticConfig.rocket
+            }
         );
     }
 
