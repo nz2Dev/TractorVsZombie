@@ -49,7 +49,7 @@ public class ArmorController {
         
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.localWeaponPrototype);
         model.WeaponPlacementOffset = prototype.localWeaponPrototype.position;
-        model.RewardLoadoutPrototype = prototype.rewardLoadoutPrototype;
+        model.RewardPrototype = prototype.rewardPrototype;
 
         view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.engineLoopSFX);
         return model.Id;
@@ -95,7 +95,9 @@ public class ArmorController {
             var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
             if (combatOutput.damageWasFatal) {
                 model.Destroyed = true;
-                rewardController.SpawnLoadoutReward(model.Position, model.RewardLoadoutPrototype);
+                var rewardPrototype = model.RewardPrototype;
+                rewardPrototype.position = model.Position;
+                rewardController.SpawnReward(rewardPrototype);
             }
         }
     }

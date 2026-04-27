@@ -16,7 +16,7 @@ public class ArmorModel {
     
     public int VehiclePhysicsId { get; set; }
     public VehicleState VehiclePhysicsState { get; set; }
-    public LoadoutPrototype RewardLoadoutPrototype { get; set; }
+    public RewardPrototype RewardPrototype { get; set; }
     
     public float MotorTorque { get; set; }
     public float SteeringDegrees { get; set; }

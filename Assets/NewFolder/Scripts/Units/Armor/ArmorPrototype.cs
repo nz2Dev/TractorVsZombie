@@ -8,6 +8,6 @@ public struct ArmorPrototype {
     public VehiclePhysics physicsPrefab;
     public AudioClip engineLoopSFX;
     public WeaponPrototype localWeaponPrototype;
-    public LoadoutPrototype rewardLoadoutPrototype;
     public RamEffectPrototype ramPrototype;
+    public RewardPrototype rewardPrototype;
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8189230488376577178}
   - component: {fileID: 1294312336676817733}
   m_Layer: 0
-  m_Name: MLRS Weapon Source
+  m_Name: Rocket Weapon Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

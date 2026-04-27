@@ -177,8 +177,6 @@ MonoBehaviour:
   playerConfig: {fileID: 11400000, guid: eb5c353f75400495b95e597ea2c3b5b5, type: 2}
   aimVisualsPrefab: {fileID: 7650166389670777688, guid: db77fb008dad74d3ca69afe4d43638bd, type: 3}
   uiDocument: {fileID: 815707237}
-  rewardsLayerName: Rewards
-  rewardVisualsPrefab: {fileID: 3547344186677869774, guid: 4ecebdb845241478384bef7f7ba9e450, type: 3}
 --- !u!1 &618815298
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +265,7 @@ Transform:
   m_GameObject: {fileID: 618815298}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4184007, y: 0.5700358, z: -0.4184008, w: 0.5700359}
-  m_LocalPosition: {x: 10.852294, y: 26.663465, z: -2.5874746}
+  m_LocalPosition: {x: -0.2, y: 19.3, z: -1.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

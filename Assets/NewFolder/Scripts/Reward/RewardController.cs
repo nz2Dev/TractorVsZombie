@@ -42,21 +42,12 @@ public class RewardController {
         };
     }
 
-    public void SpawnPointReward(Vector3 position) {
+    public int SpawnReward(RewardPrototype prototype) {
         var nextId = ++idCounter;
-        var reward = new RewardModel { Id = nextId, Position = position, RewardType = RewardType.Points };
-        registry[reward.Id] = reward;
-        view.SpawnPointReward(reward.Id, reward.Position);
-    }
-
-    public void SpawnLoadoutReward(Vector3 position, LoadoutPrototype loadout) {
-        var nextId = ++idCounter;
-        var reward = new RewardModel { Id = nextId, Position = position, 
-            RewardType = RewardType.Loadout,
-            LoadoutPrototype = loadout
-        };
-        registry[reward.Id] = reward;
-        view.SpawnLoadoutReward(reward.Id, reward.Position, loadout.rewardVisualsPrefab);
+        var model = new RewardModel(nextId, prototype.position, prototype.type, prototype.loadoutPrototype);
+        registry[nextId] = model;
+        view.SpawnReward(nextId, prototype.position, prototype.visualsPrefab);
+        return nextId;
     }
 
     private void DeleteReward(RewardModel reward) {

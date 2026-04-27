@@ -22,9 +22,6 @@ public class GameBootstrapper : MonoBehaviour {
     [Space]
     [SerializeField] private AimVisuals aimVisualsPrefab;
     [SerializeField] private UIDocument uiDocument;
-    [Space]
-    [SerializeField] private string rewardsLayerName; // FIXME: not used
-    [SerializeField] private GameObject rewardVisualsPrefab;
 
     private CombatSystem combatSystem;
     private PlayerController playerController;
@@ -67,7 +64,7 @@ public class GameBootstrapper : MonoBehaviour {
         var weaponView = new WeaponView();
         var armorView = new ArmorView(soundManager);
         var platformView = new PlatformView();
-        var rewardView = new RewardView(rewardVisualsPrefab);
+        var rewardView = new RewardView();
         var infantryView = new InfantryView();
         var truckView = new TruckView(soundManager);
         var rocketView = new RocketView();
