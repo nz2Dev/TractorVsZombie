@@ -4,6 +4,7 @@ using UnityEngine;
 public class ProjectileConfig : ScriptableObject {
     public int damage;
     public float speed;
-    public AudioClip[] shootAudioClips;
     public float lifetime;
+    public AudioClip[] shootAudioClips;
+    public ProjectileStyle style;
 }

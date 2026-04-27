@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3137662200259168651}
+  - component: {fileID: 7818100592006410936}
   m_Layer: 0
-  m_Name: Ballistic Launch Offset Source
+  m_Name: Bullet Projectile Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,6 +32,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6576760841398642602}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7818100592006410936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230268005298513612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a62a6173d869a4592862bd29f6dd2952, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::ProjectileSource
+  config: {fileID: 11400000, guid: 6849e6bf014cf49058eca0bb815db68e, type: 2}
 --- !u!1 &5619433139348794399
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,7 +95,7 @@ MonoBehaviour:
   visualsPrefab: {fileID: 4111576135358493653}
   ballisticPrototypeSource:
     type: 0
-    projectileConfig: {fileID: 11400000, guid: 6849e6bf014cf49058eca0bb815db68e, type: 2}
+    projectileSource: {fileID: 7818100592006410936}
     rocketPrototypeSource: {fileID: 0}
   ballisticLaunchOffsetSource: {fileID: 3137662200259168651}
 --- !u!1001 &9122330920394171734

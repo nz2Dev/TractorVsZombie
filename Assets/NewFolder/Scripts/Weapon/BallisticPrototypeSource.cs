@@ -3,13 +3,13 @@ using System;
 [Serializable]
 public struct BallisticPrototypeSource {
     public BallisticType type;
-    [Inline] public ProjectileConfig projectileConfig;
-    public RocketPrototypeSource rocketPrototypeSource;
+    [Inline] public ProjectileSource projectileSource;
+    [Inline] public RocketPrototypeSource rocketPrototypeSource;
 
     public readonly BallisticPrototype Get() {
         return new BallisticPrototype {
             type = type,
-            projectileConfig = projectileConfig,
+            projectilePrototype = projectileSource == null ? default : projectileSource.Get(),
             rocketPrototype = rocketPrototypeSource == null ? default : rocketPrototypeSource.Get(),
         };
     }

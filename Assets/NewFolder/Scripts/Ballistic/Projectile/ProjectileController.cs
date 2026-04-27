@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -7,9 +8,10 @@ public class ProjectileController {
     private readonly ProjectileView view;
     private readonly SoundManager soundManager;
     private readonly CombatSystem combatSystem;
-    private readonly Dictionary<int, ProjectileModel> models = new ();
-    
+
     private int idCounter = 0;
+    private readonly Dictionary<int, ProjectileModel> registry = new ();
+    private readonly List<int> removeBuffer = new(16);
 
     public ProjectileController(CombatSystem combatSystem, SoundManager soundManager, ProjectileView view) {
         this.combatSystem = combatSystem;
@@ -17,43 +19,63 @@ public class ProjectileController {
         this.view = view;
     }
 
-    public void SpawnBulletProjectile(int shooterId, Bullet bullet, ProjectileConfig config) {
+    public void Create(int shooterId, ProjectilePrototype prototype, Orientation orientation) {
         var nextId = ++idCounter;
-        var model = new ProjectileModel(nextId, shooterId, bullet.firePoint, bullet.velocity, Time.time, config);
-        models[nextId] = model;
-        view.ShowBulletShoot(model.Id, bullet.firePoint, bullet.velocity);
-        soundManager.PlayEffect(bullet.firePoint, config.shootAudioClips);
+        var model = new ProjectileModel(nextId, prototype.config, shooterId);
+        registry[nextId] = model;
+
+        model.Position = orientation.origin;
+        model.Velocity = orientation.direction * prototype.config.speed;
+        model.SpawnTime = Time.time;
+
+        view.ShowBulletShoot(model.Id, orientation.origin, model.Velocity, 
+            prototype.config.style, prototype.config.shootAudioClips);
     }
 
     public void Update() {
         MoveProjectiles();
         UpdateProjectileHits();
+        AgeProjectiles();
         FilterDeadProjectiles();
     }
 
     private void MoveProjectiles() {
-        foreach (var projectile in models.Values) {
-            projectile.Move(Time.deltaTime);
+        foreach (var model in registry.Values) {
+            model.Position += model.Velocity * Time.deltaTime;
         }
     }
 
     private void UpdateProjectileHits() {   
-        foreach (var projectile in models.Values) {
-            if (projectile.IsAged)
+        foreach (var projectile in registry.Values) {
+            if (!projectile.IsAlive)
                 continue;
 
-            if (combatSystem.ApplyProjectileDamage(projectile.ShooterId, projectile.Position, projectile.Velocity, projectile.Config.damage)) {
-                projectile.Kill();
+            if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectile.Config.damage)) {
+                projectile.IsAlive = false;
                 view.ShowBulletCrash(projectile.Id);
             }
         }
     }
 
-    private void FilterDeadProjectiles() {
-        foreach (var projectile in models.Values) {
-            if (projectile.IsAged) {
+    private void AgeProjectiles() {
+        foreach (var projectile in registry.Values) {
+            if (projectile.IsAlive && projectile.SpawnTime + projectile.Config.lifetime < Time.time) {
+                projectile.IsAlive = false;
                 view.ShowBulletDisappear(projectile.Id);
             }
+        }
+    }
+
+    private void FilterDeadProjectiles() {
+        removeBuffer.Clear();
+        foreach (var model in registry.Values) {
+            if (!model.IsAlive) {
+                removeBuffer.Add(model.Id);
+            }
+        }
+        
+        foreach (var id in removeBuffer) {
+            registry.Remove(id);
         }
     }
 }

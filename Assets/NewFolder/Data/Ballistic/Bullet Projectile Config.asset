@@ -10,11 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d43d009dd21b40aeb82cd13402761a6, type: 3}
-  m_Name: Bullet Config
+  m_Name: Bullet Projectile Config
   m_EditorClassIdentifier: NewFolder::ProjectileConfig
   damage: 1
   speed: 15
+  lifetime: 5
   shootAudioClips:
   - {fileID: 8300000, guid: 63e582df7ac9f47728c689a10aa7ce66, type: 3}
   - {fileID: 8300000, guid: 794deb703e8f44644b4f27d9bf53e223, type: 3}
-  lifetime: 5
+  style:
+    startSize: 0.8
+    startColor: {r: 0.9622642, g: 0, b: 0, a: 1}

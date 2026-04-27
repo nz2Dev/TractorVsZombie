@@ -11,7 +11,7 @@ public class WeaponController {
     private readonly ProjectileController projectileController;
 
     private int idCounter;
-    private Dictionary<int, WeaponModel> registry = new ();
+    private readonly Dictionary<int, WeaponModel> registry = new ();
 
     public WeaponController(WeaponView view, RocketController rocketController, ProjectileController projectileController) {
         this.view = view;
@@ -85,11 +85,14 @@ public class WeaponController {
 
     private void FireBullet(WeaponModel weapon) {
         var launchPoint = weapon.Position + weapon.BallisticLaunchOffset;
-        var bulletVelocity = (weapon.AimPoint - launchPoint).normalized * weapon.BallisticPrototype.projectileConfig.speed;
-        projectileController.SpawnBulletProjectile(
+        var projectileDirection = (weapon.AimPoint - launchPoint).normalized;
+        projectileController.Create(
             weapon.CombatId, 
-            new Bullet { firePoint = launchPoint, velocity = bulletVelocity}, // speed could be part of projectile prototype?
-            weapon.BallisticPrototype.projectileConfig
+            weapon.BallisticPrototype.projectilePrototype,
+            new Orientation { 
+                origin = launchPoint, 
+                direction = projectileDirection
+            }
         );
     }
 

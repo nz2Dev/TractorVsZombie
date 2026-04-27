@@ -3,6 +3,6 @@ using System;
 [Serializable]
 public struct BallisticPrototype {
     public BallisticType type;
-    public ProjectileConfig projectileConfig;
+    public ProjectilePrototype projectilePrototype;
     public RocketPrototype rocketPrototype;
 }
