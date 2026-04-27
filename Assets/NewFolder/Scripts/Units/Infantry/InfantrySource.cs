@@ -7,6 +7,7 @@ public class InfantrySource : MonoBehaviour {
 
     [Inline] [SerializeField] private InfantryConfig config;
     [Local] [SerializeField] private InfantryVisuals visualsPrefab;
+    [SerializeField] private RewardSource rewardSource;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -17,6 +18,7 @@ public class InfantrySource : MonoBehaviour {
             position = transform.position,
             config = config,
             visualsPrefab = visualsPrefab,
+            rewardPrototype = rewardSource.GetPrototype(),
         };
     }
 

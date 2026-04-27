@@ -36,6 +36,7 @@ public class InfantryController {
         var nextId = ++idCounter;
         var model = new InfantryModel(nextId, prototype.config);
         registry[model.Id] = model;
+        
         model.Position = prototype.position;
         model.CombatId = combatSystem.RegisterAgent(
             prototype.position, model.Config.alie, 
@@ -43,6 +44,8 @@ public class InfantryController {
         );
         model.BodyPhysicsId = physicsService.RegisterPhysicsEntity(prototype.position, model.Config.bodyData);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, model.Config.agentAvoidanceConfig);
+        model.RewardPrototype = prototype.rewardPrototype;
+
         view.AddVisuals(model.Id, prototype.position, prototype.visualsPrefab);
         return model.Id;
     }
@@ -150,7 +153,7 @@ public class InfantryController {
             if (combatOutput.damageWasFatal) {
                 model.IsDead = true;
                 model.IsPhysicsOnlyMovement = true;
-                rewardController.SpawnReward(model.Config.rewardSourcePrefab.GetPrototype());
+                rewardController.SpawnReward(model.RewardPrototype);
                 combatSystem.UnregisterAgent(model.CombatId); // TODO: keep registered, add combat system queries filters for IsAlive
 
                 if (combatOutput.wasProjectiled && model.Grounded) {

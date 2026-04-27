@@ -14,7 +14,4 @@ public class InfantryConfig : ScriptableObject {
     
     public BodyData bodyData; // those are the component (physics)
     public AgentAvoidanceConfig agentAvoidanceConfig; // and this are the component (avoidance)
-
-    [Space]
-    public RewardSource rewardSourcePrefab;
 }

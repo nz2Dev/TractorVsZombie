@@ -2,9 +2,14 @@ using UnityEngine;
 
 public class InfantryModel {
     
+    public int Id { get; }
     public InfantryConfig Config { get; }
 
-    public int Id { get; private set; }
+    public InfantryModel(int id, InfantryConfig config) {
+        Id = id;
+        this.Config = config;
+    }
+
     public Vector3 Position { get; set; }
     public Vector3 Velocity { get; set; }
     public Quaternion Rotation { get; set; }
@@ -12,14 +17,13 @@ public class InfantryModel {
     public int BodyPhysicsId { get; set; }
     public int AvoidanceId { get; set; }
 
+    public RewardPrototype RewardPrototype { get; set; }
+
     public bool Grounded { get; set; }
     public bool IsPhysicsOnlyMovement { get; set; }
     public bool IsDead { get; set; }
     public float LastAttackTime { get; set; }
 
-    public InfantryModel(int id, InfantryConfig config) {
-        Id = id;
-        this.Config = config;
-    }
+    
 
 }
