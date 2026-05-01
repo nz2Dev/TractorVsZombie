@@ -2,6 +2,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+// Is a presenation layer subsystem that handles work related to playing audio in different ways
+// Should be used by presentation components such as Views.
+// ***
+// I keep it in separate folder, to break folder coupling with GameBootstrapper
+// future is still to be decided
+// ***
+// It doesn't fit inside Local/ "packages" semantic as it's not a library in its sense, it's tight to the application we develop
 public class SoundManager : MonoBehaviour {
     
     [SerializeField] private int effectSourcesCount = 30;
