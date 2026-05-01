@@ -15,9 +15,9 @@
   <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="FlowFields.EditorTests.csproj" />
+  <Project Path="Local.csproj" />
   <Project Path="VehiclePhysics.PlayTests.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
   <Project Path="CollisionLookup.csproj" />
-  <Project Path="Local.csproj" />
   <Project Path="CaravanPlaygroundEditor.csproj" />
 </Solution>

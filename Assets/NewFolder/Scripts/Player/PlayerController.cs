@@ -10,7 +10,7 @@ public class PlayerController {
     private readonly PlayerInput input;
     private readonly CombatSystem combatSystem;
     private readonly PhysicsService physicsService;
-    private readonly CameraManager cameraManager;
+    private readonly CameraProvider cameraProvider;
     private readonly RewardController rewardController;
     private readonly WeaponController weaponController;
     private readonly PlatformController platformController;
@@ -19,7 +19,7 @@ public class PlayerController {
 
     private readonly PlayerModel model;
 
-    public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatSystem combatSystem, CameraManager cameraManager,
+    public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
         RewardController rewardController, WeaponController weaponController,
         PlatformController platformController, TruckController driverController,
         HeadquarterBuildingController headquarterBuildingController) {
@@ -27,7 +27,7 @@ public class PlayerController {
         this.input = input;
         this.physicsService = physicsService;
         this.combatSystem = combatSystem;
-        this.cameraManager = cameraManager;
+        this.cameraProvider = cameraProvider;
         this.rewardController = rewardController;
         this.weaponController = weaponController;
         this.platformController = platformController;
@@ -37,9 +37,8 @@ public class PlayerController {
     }
 
     public void Init() {     
-        CreateCamera();
-        SpawnHeadquearter();
         SpawnDriver();
+        SpawnHeadquearter();
 
         bool flipFlop = false;
         for (int i = 0; i < model.Config.initPlatformCount; i++) {
@@ -58,16 +57,11 @@ public class PlayerController {
         ReadPlatformSelectionInput();
         ComputeAimInput();
         OperatePlatforms();
-        UpdateCamera();
     }
 
     private void SpawnHeadquearter() {
         var headquarterSource = GameObject.FindFirstObjectByType<HeadquarterBuildingSource>();
         headquarterBuildingController.SetHeadquearter(headquarterSource.GetPrototype());
-    }
-
-    private void SyncPositions() {
-        model.Position = truckController.ReadVehiclePosition();
     }
 
     private void CollectRewards() {
@@ -90,12 +84,19 @@ public class PlayerController {
 
     private void SpawnDriver() {
         var truckSource = GameObject.FindFirstObjectByType<TruckSource>(FindObjectsInactive.Include);
-        truckController.Spawn(truckSource.GetPrototype());
+        var truckPrototype = truckSource.GetPrototype();
+        truckController.Spawn(truckPrototype);
+        view.EnableFollowCamera(truckPrototype.position);
     }
 
     private void OperateDriver() {
         truckController.Steer(model.DrivingInput.steering);
         truckController.Drive(model.DrivingInput.gas, model.DrivingInput.boost);
+    }
+
+    private void SyncPositions() {
+        model.Position = truckController.ReadVehiclePosition();
+        view.UpdateFollowCamera(model.Position);
     }
 
     private void ReadPlatformSelectionInput() {
@@ -149,7 +150,7 @@ public class PlayerController {
         }
         
         var mousePosition = input.ReadMousePosition();
-        var mouseRay = cameraManager.GetCameraRay(mousePosition);
+        var mouseRay = cameraProvider.GetScreenPointRay(mousePosition);
         var mouseHitPoint = physicsService.GetGroundHitPosition(mouseRay);
         model.AimInput = new TopDownAimInput {
             position = mouseHitPoint,
@@ -218,14 +219,6 @@ public class PlayerController {
 
         platformController.Connect(platformId, truckController.ReadVehiclePhysicsId());
         model.CoupledPlatformIds.Insert(0, platformId);
-    }
-
-    private void CreateCamera() {
-        cameraManager.InitTopDownFollowTarget(Vector3.zero);
-    }
-
-    private void UpdateCamera() {
-        cameraManager.UpdateTopDownFollowPosition(model.Position);
     }
 
 }

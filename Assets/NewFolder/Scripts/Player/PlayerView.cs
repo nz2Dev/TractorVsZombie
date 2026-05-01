@@ -10,18 +10,20 @@ public class PlayerView {
 
     private readonly UIDocument uiDocument;
     private readonly AimVisuals aimVisualsPrefab;
+    private readonly CameraManager cameraManager;
 
     private VisualElement container;
     private Dictionary<int, Label> binding = new();
     private AimVisuals aimVisuals;
 
-    public PlayerView(UIDocument uiDocument, AimVisuals aimVisualsPrefab) {
+    public PlayerView(UIDocument uiDocument, AimVisuals aimVisualsPrefab, CameraManager cameraManager) {
         this.uiDocument = uiDocument;
         this.aimVisualsPrefab = aimVisualsPrefab;
         container = uiDocument.rootVisualElement.Q<VisualElement>("platformList");
         container.Clear();
         aimVisuals = GameObject.Instantiate(aimVisualsPrefab);
         aimVisuals.HideSelf();
+        this.cameraManager = cameraManager;
     }
 
     internal void ShowAim(TopDownAimInput aimInput) {
@@ -73,4 +75,11 @@ public class PlayerView {
         label.text = $"weapon {state.weaponId}";
     }
 
+    internal void EnableFollowCamera(Vector3 position) {
+        cameraManager.InitTopDownFollowTarget(position);
+    }
+
+    internal void UpdateFollowCamera(Vector3 position) {
+        cameraManager.UpdateTopDownFollowPosition(position);
+    }
 }

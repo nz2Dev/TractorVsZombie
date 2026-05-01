@@ -21,8 +21,8 @@ public class CameraManager : MonoBehaviour {
         topDownCamera.m_LookAt = followTransform;
     }
 
-    public Ray GetCameraRay(Vector2 mousePositionInPixels) {
-        return sceneCamera.ScreenPointToRay(mousePositionInPixels);
+    public Camera GetActiveCamera() {
+        return sceneCamera;
     }
 
     private void Update() {
