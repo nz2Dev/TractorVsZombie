@@ -26,19 +26,19 @@ public class PlatformController {
         SyncPositions();
     }
     
-    public int SpawnPlatform(PlatformPrototype prototype) {
+    public int Create(PlatformPrototype prototype, Vector3 position = default) {
         var nextId = ++idCounter;
-        var platform = new PlatformModel(nextId, prototype.position, prototype.config);
-        registry[platform.Id] = platform;
+        var initPosition = position == default ? prototype.position : position;
+        var model = new PlatformModel(nextId, initPosition, prototype.config);
+        registry[model.Id] = model;
         
-        platform.CombatId = combatSystem.RegisterAgent(prototype.position, true);
-        platform.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.physicsPrefab);
-        platform.RamId = ramEffect.StartNew(platform.CombatId, prototype.ramPrototype);
-        view.AddPlatform(platform.Id, prototype.position, prototype.visualsPrefab);
+        model.LoadoutOffset = prototype.loadoutOffset;
+        model.CombatId = combatSystem.RegisterAgent(model.Position, true);
+        model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.physicsPrefab);
+        model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
+        view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab);
 
-        platform.LoadoutOffset = prototype.loadoutOffset;
-
-        return platform.Id;
+        return model.Id;
     }
 
     public void Connect(int tailPlatformId, int headVehiclePhysicsId) {
