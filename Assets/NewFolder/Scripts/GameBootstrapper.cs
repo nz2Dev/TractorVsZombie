@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 
 public class GameBootstrapper : MonoBehaviour {
     
+    [SerializeField] private UIDocument uiDocument;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
     [Space]
@@ -16,16 +17,11 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private string vehicleObstacleLayer;
     [SerializeField] private string physicsObstacleLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
-    [Space]
-    [SerializeField] private EnemyConfig enemyConfig;
-    [SerializeField] private PlayerConfig playerConfig;
-    [Space]
-    [SerializeField] private AimVisuals aimVisualsPrefab;
-    [SerializeField] private UIDocument uiDocument;
 
     private CombatSystem combatSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
+    private LevelController levelController;
     private RewardController rewardController;
     private ProjectileController projectileController;
     private RocketController rocketController;
@@ -60,8 +56,7 @@ public class GameBootstrapper : MonoBehaviour {
             obstacleLayer: LayerMask.NameToLayer(physicsObstacleLayer)
         );
 
-        var playerView = new PlayerView(uiDocument, aimVisualsPrefab, cameraManager);
-        var unitView = new EnemyView();
+        var playerView = new PlayerView(uiDocument, cameraManager);
         var weaponView = new WeaponView();
         var armorView = new ArmorView(soundManager);
         var platformView = new PlatformView();
@@ -183,15 +178,13 @@ public class GameBootstrapper : MonoBehaviour {
         playerController = new PlayerController(
             playerView, 
             new PlayerInput(),
-            playerConfig,
             physicsService,
             combatSystem,
             cameraProvider,
             rewardController,
             weaponController,
             platformController,
-            truckController,
-            headquarterBuildingController
+            truckController
         );
 
         var producerFactory = new ProducerFactory(
@@ -206,17 +199,21 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         enemyController = new EnemyController(
-            unitView,
-            enemyConfig,
             commanderController,
             buildingController,
             productionSpaceController
         );
+
+        levelController = new LevelController(
+            new LevelView(),
+            playerController,
+            enemyController,
+            headquarterBuildingController
+        );
     }
 
     private void Init() {
-        enemyController.Init();
-        playerController.Init();
+        levelController.Init(GameObject.FindFirstObjectByType<LevelPrototypeSource>().Get());
     }
 
     private void Update() {
@@ -246,6 +243,7 @@ public class GameBootstrapper : MonoBehaviour {
         enemyController.Update();
         playerController.Update();
 
+        levelController.Update();
     }
 
     private void OnDestroy() {

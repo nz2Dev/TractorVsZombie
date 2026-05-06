@@ -9,21 +9,22 @@ using UnityEngine.UIElements;
 public class PlayerView {
 
     private readonly UIDocument uiDocument;
-    private readonly AimVisuals aimVisualsPrefab;
     private readonly CameraManager cameraManager;
 
     private VisualElement container;
     private Dictionary<int, Label> binding = new();
     private AimVisuals aimVisuals;
 
-    public PlayerView(UIDocument uiDocument, AimVisuals aimVisualsPrefab, CameraManager cameraManager) {
+    public PlayerView(UIDocument uiDocument, CameraManager cameraManager) {
         this.uiDocument = uiDocument;
-        this.aimVisualsPrefab = aimVisualsPrefab;
         container = uiDocument.rootVisualElement.Q<VisualElement>("platformList");
         container.Clear();
+        this.cameraManager = cameraManager;
+    }
+
+    internal void SetAimVisuals(AimVisuals aimVisualsPrefab) {
         aimVisuals = GameObject.Instantiate(aimVisualsPrefab);
         aimVisuals.HideSelf();
-        this.cameraManager = cameraManager;
     }
 
     internal void ShowAim(TopDownAimInput aimInput) {
@@ -82,4 +83,5 @@ public class PlayerView {
     internal void UpdateFollowCamera(Vector3 position) {
         cameraManager.UpdateTopDownFollowPosition(position);
     }
+
 }

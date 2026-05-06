@@ -28,7 +28,7 @@ public class HeadquarterBuildingController {
         CheckLooseCondition();
     }
 
-    public void SetHeadquearter(HeadquarterBuildingPrototype prototype) {
+    public void Create(HeadquarterBuildingPrototype prototype) {
         headquarter = new HeadquarterBuilding(prototype.config);
         headquarter.Position = prototype.position;
         headquarter.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.config.alie, prototype.config.maxHealth, height: 2);

@@ -23,6 +23,9 @@ public class TruckController {
     public Vector3 ReadVehiclePosition() => model.Position;
 
     public void Update() {
+        if (model == null)
+            return;
+            
         ReadExternalState();
         WriteExternalInput();
         UpdateView();

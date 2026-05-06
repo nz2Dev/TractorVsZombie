@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972a34e951a0e4d95acb2ae214840102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiDocument: {fileID: 815707237}
   soundManager: {fileID: 1012605277}
   cameraManager: {fileID: 618815303}
   physicsServiceLayer: UnitPhysics
@@ -173,10 +174,7 @@ MonoBehaviour:
   combatServiceEnvironmentMask:
     serializedVersion: 2
     m_Bits: 2177
-  enemyConfig: {fileID: 11400000, guid: 5209ee6577e6c4dabb8f13feea30f913, type: 2}
-  playerConfig: {fileID: 11400000, guid: eb5c353f75400495b95e597ea2c3b5b5, type: 2}
-  aimVisualsPrefab: {fileID: 7650166389670777688, guid: db77fb008dad74d3ca69afe4d43638bd, type: 3}
-  uiDocument: {fileID: 815707237}
+  levelPrototypeSource: {fileID: 0}
 --- !u!1 &618815298
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,8 +262,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 618815298}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.4184007, y: 0.5700358, z: -0.4184008, w: 0.5700359}
-  m_LocalPosition: {x: -0.2, y: 19.3, z: -1.3}
+  m_LocalRotation: {x: 0.3090656, y: 0.6351112, z: -0.30797577, w: 0.6373879}
+  m_LocalPosition: {x: -20.349375, y: 29.70676, z: 3.287078}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

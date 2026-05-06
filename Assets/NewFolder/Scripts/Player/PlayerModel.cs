@@ -15,9 +15,12 @@ public struct TopDownAimInput {
 }
 
 public class PlayerModel {
-    
+
     public PlayerConfig Config { get; }
 
+    public TruckPrototype TruckPrototype { get; set; }
+    public PlatformPrototype PickupPlatformPrototype { get; set; }
+    
     public Vector3 Position { get; set; }
     public DrivingInput DrivingInput { get; set; }
     public List<int> SelectedPlatformIds { get; set; } = new ();

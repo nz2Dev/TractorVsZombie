@@ -15,14 +15,11 @@ public class PlayerController {
     private readonly WeaponController weaponController;
     private readonly PlatformController platformController;
     private readonly TruckController truckController;
-    private readonly HeadquarterBuildingController headquarterBuildingController;
 
-    private readonly PlayerModel model;
+    private PlayerModel model;
 
-    public PlayerController(PlayerView view, PlayerInput input, PlayerConfig config, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
-        RewardController rewardController, WeaponController weaponController,
-        PlatformController platformController, TruckController driverController,
-        HeadquarterBuildingController headquarterBuildingController) {
+    public PlayerController(PlayerView view, PlayerInput input, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
+        RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController driverController) {
         this.view = view;
         this.input = input;
         this.physicsService = physicsService;
@@ -32,24 +29,25 @@ public class PlayerController {
         this.weaponController = weaponController;
         this.platformController = platformController;
         this.truckController = driverController;
-        model = new PlayerModel(config);
-        this.headquarterBuildingController = headquarterBuildingController;
     }
 
-    public void Init() {     
+    public void Setup(PlayerPrototype prototype) {     
+        model = new PlayerModel(prototype.config);
+        view.SetAimVisuals(prototype.aimVisualsPrefab);
+        
+        model.TruckPrototype = prototype.initTruckPrototype;
         SpawnDriver();
-        SpawnHeadquearter();
-
-        bool flipFlop = false;
-        for (int i = 0; i < model.Config.initPlatformCount; i++) {
-            var loadoutSourcePrefab = (flipFlop = !flipFlop) ? model.Config.firstLoadoutSourcePrefab : model.Config.secondLoadoutSourcePrefab;
-            SpawnPlatform(new Vector3(0, 0, -6f + i * -6f), out var platformId);
-            EquipPlatform(platformId, loadoutSourcePrefab.GetPrototype());
-            CouplePlatformToTheEnd(platformId);
-        }
+        
+        model.PickupPlatformPrototype = prototype.pickupPlatformPrototype;
+        SpawnPlatform(prototype.pickupPlatformPrototype.position, out var platformId);
+        CouplePlatformToTheEnd(platformId);
+        EquipPlatform(platformId, prototype.initLoadoutPrototype);
     }
 
     public void Update() {
+        if (model == null)
+            return;
+            
         SyncPositions();
         CollectRewards();
         ReadDrivingInput();
@@ -57,11 +55,6 @@ public class PlayerController {
         ReadPlatformSelectionInput();
         ComputeAimInput();
         OperatePlatforms();
-    }
-
-    private void SpawnHeadquearter() {
-        var headquarterSource = GameObject.FindFirstObjectByType<HeadquarterBuildingSource>();
-        headquarterBuildingController.SetHeadquearter(headquarterSource.GetPrototype());
     }
 
     private void CollectRewards() {
@@ -83,10 +76,8 @@ public class PlayerController {
     }
 
     private void SpawnDriver() {
-        var truckSource = GameObject.FindFirstObjectByType<TruckSource>(FindObjectsInactive.Include);
-        var truckPrototype = truckSource.GetPrototype();
-        truckController.Spawn(truckPrototype);
-        view.EnableFollowCamera(truckPrototype.position);
+        truckController.Spawn(model.TruckPrototype);
+        view.EnableFollowCamera(model.TruckPrototype.position);
     }
 
     private void OperateDriver() {
@@ -161,9 +152,8 @@ public class PlayerController {
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {
-        var prototype = model.Config.platformSourcePrefab.GetPrototype();
+        var prototype = model.PickupPlatformPrototype;
         prototype.position = position;
-        
         platformId = platformController.SpawnPlatform(prototype);
         model.ControlledPlatformIds.Add(platformId);
         view.AddPlatform(platformController.ReadPlatformState(platformId));
