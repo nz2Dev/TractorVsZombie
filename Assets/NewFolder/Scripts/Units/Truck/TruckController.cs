@@ -31,12 +31,12 @@ public class TruckController {
         UpdateView();
     }
 
-    public void Spawn(TruckPrototype prototype) {
-        model = new TruckModel(prototype.config);
-        model.CombatId = combatSystem.RegisterAgent(prototype.position, alie: true);
+    public void Create(TruckPrototype prototype, Vector3 position = default) {
+        model = new TruckModel(prototype.config, position == default ? prototype.position : position);
+        model.CombatId = combatSystem.RegisterAgent(model.Position, alie: true);
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
-        model.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.vehiclePhysicsPrefab);
-        view.Show(prototype.position, prototype.visualsPrefab, prototype.engineLoopSFX);
+        model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePhysicsPrefab, prototype.rotation);
+        view.Show(model.Position, prototype.visualsPrefab, prototype.engineLoopSFX);
     }
 
     public void Drive(float driveInput, bool boostInput) {

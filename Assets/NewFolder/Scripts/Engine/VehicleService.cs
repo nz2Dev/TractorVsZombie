@@ -45,8 +45,8 @@ public class VehicleService {
         }
     }
 
-    public int CreateVehicle(Vector3 position, VehiclePhysics physicsPrefab) {
-        var vehiclePhysics = GameObject.Instantiate(physicsPrefab, position, Quaternion.identity);
+    public int CreateVehicle(Vector3 position, VehiclePhysics physicsPrefab, Quaternion rotation = default) {
+        var vehiclePhysics = GameObject.Instantiate(physicsPrefab, position, rotation);
         var nextRigId = idCounter++;
         physicsRegistry[nextRigId] = vehiclePhysics;
         return nextRigId;

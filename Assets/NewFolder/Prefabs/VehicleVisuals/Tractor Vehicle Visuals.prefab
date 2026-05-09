@@ -34,7 +34,7 @@ Transform:
   - {fileID: 6118315007135962136}
   - {fileID: 1227731649885359509}
   - {fileID: 4322881650355972101}
-  - {fileID: 1848536939370464890}
+  - {fileID: 8810154948226481884}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2325663696177151136
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::TruckVisuals
   frontAxis:
-    leftWheel: {fileID: 1848536939370464889}
+    leftWheel: {fileID: 3090958955037077730}
     rightWheel: {fileID: 7735858154654262843}
   rearAxis:
     leftWheel: {fileID: 4733134336438010795}
@@ -132,12 +132,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
---- !u!1 &1848536939370464889 stripped
+--- !u!1 &3090958955037077730 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
   m_PrefabInstance: {fileID: 1848536939370464888}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1848536939370464890 stripped
+--- !u!4 &8810154948226481884 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7198062487934941348, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
   m_PrefabInstance: {fileID: 1848536939370464888}
@@ -461,6 +461,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7471330787554891651, guid: dab5a04e2cb6f4568bd21a50da4b579b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060926769453103345, guid: dab5a04e2cb6f4568bd21a50da4b579b, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

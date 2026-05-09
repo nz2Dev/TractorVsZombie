@@ -15,6 +15,7 @@ public class TruckSource : MonoBehaviour {
     public TruckPrototype GetPrototype() {
         return new TruckPrototype {
             position = transform.position,
+            rotation = transform.rotation,
             config = config,
             ramPrototype = ramSource.GetPrototype(),
             vehiclePhysicsPrefab = vehiclePhysicsPrefab,

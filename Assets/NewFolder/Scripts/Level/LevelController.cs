@@ -21,9 +21,8 @@ public class LevelController {
         model = new LevelModel();
         model.PlayerPrototype = levelPrototype.playerPrototype;
         model.EnemyPrototype = levelPrototype.enemyPrototype;
-        // view.ShowEnteringCutscene(levelPrototype.entranceCutscene);
-        // model.InCutscene = true;
-        OnLevelLoaded();
+        view.ShowEnteringCutscene(levelPrototype.entranceCutscene);
+        model.InCutscene = true;
     }
 
     public void Update() {

@@ -12,8 +12,9 @@ public class TruckModel {
     public VehicleState VehiclePhysicsState { get; set; }
     public int RamId { get; set; }
 
-    public TruckModel(TruckConfig config) {
-        this.Config = config;
+    public TruckModel(TruckConfig config, Vector3 position) {
+        Config = config;
+        Position = position;
     }
 
 }
