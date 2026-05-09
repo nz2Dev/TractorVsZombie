@@ -6,14 +6,16 @@ public class LevelController {
     private readonly PlayerController playerController;
     private readonly EnemyController enemyController;
     private readonly HeadquarterBuildingController headquarterBuildingController;
+    private readonly CameraProvider cameraProvider;
 
     private LevelModel model;
 
-    public LevelController(LevelView view, PlayerController playerController, EnemyController enemyController, HeadquarterBuildingController headquarterBuildingController) {
+    public LevelController(LevelView view, PlayerController playerController, EnemyController enemyController, HeadquarterBuildingController headquarterBuildingController, CameraProvider cameraProvider) {
         this.view = view;
         this.playerController = playerController;
         this.enemyController = enemyController;
         this.headquarterBuildingController = headquarterBuildingController;
+        this.cameraProvider = cameraProvider;
     }
 
     public void Init(LevelPrototype levelPrototype) {
@@ -21,7 +23,10 @@ public class LevelController {
         model = new LevelModel();
         model.PlayerPrototype = levelPrototype.playerPrototype;
         model.EnemyPrototype = levelPrototype.enemyPrototype;
-        view.ShowEnteringCutscene(levelPrototype.entranceCutscene);
+        
+        cameraProvider.SetCutsceneState(true);
+        cameraProvider.SetCutsceneEndFollowPosition(levelPrototype.playerPrototype.initTruckPrototype.position);
+        view.ShowEnteringCutscene(levelPrototype.entranceCutscene, cameraProvider.GetCinemachineBrain());
         model.InCutscene = true;
     }
 

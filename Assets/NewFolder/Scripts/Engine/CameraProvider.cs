@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 public class CameraProvider {
@@ -13,4 +15,15 @@ public class CameraProvider {
         return camera.ScreenPointToRay(screenPositionInPixels);
     }
 
+    public void SetCutsceneState(bool isCutscene) {
+        cameraManager.SetCutsceneState(isCutscene);
+    }
+
+    public Cinemachine.CinemachineBrain GetCinemachineBrain() {
+        return cameraManager.GetBrain();
+    }
+
+    internal void SetCutsceneEndFollowPosition(Vector3 position) {
+        cameraManager.UpdateTopDownFollowPosition(position);
+    }
 }
