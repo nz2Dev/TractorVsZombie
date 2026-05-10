@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d43d009dd21b40aeb82cd13402761a6, type: 3}
   m_Name: Bullet Projectile Config
   m_EditorClassIdentifier: NewFolder::ProjectileConfig
-  damage: 1
-  speed: 25
+  damage: 2
+  speed: 55
   lifetime: 5
   shootAudioClips:
   - {fileID: 8300000, guid: 63e582df7ac9f47728c689a10aa7ce66, type: 3}

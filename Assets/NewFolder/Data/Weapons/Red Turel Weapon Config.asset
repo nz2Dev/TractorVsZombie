@@ -15,5 +15,5 @@ MonoBehaviour:
   cooldownSec: 0.4
   aimConfig:
     type: 1
-    range: 20
+    range: 40
     speed: 15
