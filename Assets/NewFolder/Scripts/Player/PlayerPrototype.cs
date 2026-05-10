@@ -5,5 +5,5 @@ public struct PlayerPrototype {
     public AimVisuals aimVisualsPrefab; // is a view dependency, should the view has its mechanism for injections from scene/prefab/config?
     public TruckPrototype initTruckPrototype;
     public PlatformPrototype pickupPlatformPrototype;
-    public LoadoutPrototype initLoadoutPrototype;
+    public LoadoutPrototype[] initLoadoutPrototypes;
 }

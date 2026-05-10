@@ -39,9 +39,15 @@ public class PlayerController {
         SpawnDriver();
         
         model.PickupPlatformPrototype = prototype.pickupPlatformPrototype;
-        SpawnPlatform(prototype.pickupPlatformPrototype.position, out var platformId);
-        CouplePlatformToTheEnd(platformId);
-        EquipPlatform(platformId, prototype.initLoadoutPrototype);
+
+        Vector3 directionStep = prototype.initTruckPrototype.rotation * Vector3.back * 6;
+        Vector3 loadoutPosition = prototype.initTruckPrototype.position + directionStep; 
+        foreach (var loadout in prototype.initLoadoutPrototypes) {    
+            SpawnPlatform(loadoutPosition, out var platformId);
+            CouplePlatformToTheEnd(platformId);
+            EquipPlatform(platformId, loadout);
+            loadoutPosition += directionStep;
+        }
     }
 
     public void Update() {
