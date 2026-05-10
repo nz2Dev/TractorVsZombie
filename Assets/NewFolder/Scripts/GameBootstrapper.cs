@@ -205,7 +205,7 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         levelController = new LevelController(
-            new LevelView(),
+            new LevelView(cameraManager),
             playerController,
             enemyController,
             headquarterBuildingController,

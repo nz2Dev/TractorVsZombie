@@ -77,7 +77,6 @@ public class PlayerController {
 
     private void SpawnDriver() {
         truckController.Create(model.TruckPrototype);
-        view.EnableFollowCamera(model.TruckPrototype.position);
     }
 
     private void OperateDriver() {

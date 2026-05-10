@@ -14,16 +14,5 @@ public class CameraProvider {
         var camera = cameraManager.GetActiveCamera();
         return camera.ScreenPointToRay(screenPositionInPixels);
     }
-
-    public void SetCutsceneState(bool isCutscene) {
-        cameraManager.SetCutsceneState(isCutscene);
-    }
-
-    public Cinemachine.CinemachineBrain GetCinemachineBrain() {
-        return cameraManager.GetBrain();
-    }
-
-    internal void SetCutsceneEndFollowPosition(Vector3 position) {
-        cameraManager.UpdateTopDownFollowPosition(position);
-    }
+    
 }

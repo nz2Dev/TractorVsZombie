@@ -1,18 +1,21 @@
+
 using Cinemachine;
+
+using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 public class LevelView {
 
+    private readonly CameraManager cameraManager;
     public bool CutsceneFinished;
 
-    public void ShowEnteringCutscene(PlayableDirector cutsceneDirector, CinemachineBrain brain) {
-        foreach (var output in cutsceneDirector.playableAsset.outputs) {
-            if (output.sourceObject is CinemachineTrack) {
-                cutsceneDirector.SetGenericBinding(output.sourceObject, brain);
-            }
-        }
-        
+    public LevelView(CameraManager cameraManager) {
+        this.cameraManager = cameraManager;
+    }
+
+    public void ShowEnteringCutscene(PlayableDirector cutsceneDirector) {
+        cameraManager.BindToDirector(cutsceneDirector);
         cutsceneDirector.stopped += OnStopped;
         cutsceneDirector.Play();
     }

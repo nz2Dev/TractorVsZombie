@@ -1,6 +1,9 @@
+using System;
+
 using Cinemachine;
 
 using UnityEngine;
+using UnityEngine.Playables;
 
 // Is presentation layer subsystem that is the main authority over what camera rig is currently used
 // and how camera rig behave, and what camera it operate
@@ -12,57 +15,31 @@ using UnityEngine;
 // It doesn't fit inside Local/ "packages" semantic as it's not a library in its sense, it's tight to the application we develop
 public class CameraManager : MonoBehaviour {
 
-    [SerializeField] private Camera sceneCamera;
-    [SerializeField] private float topDownCameraDistance = 10;
-    [SerializeField] private CinemachineVirtualCamera topDownCamera;
+    private CinemachineSource cinemachineSource;
+    private TopDownCameraRig topDownCameraRig;
 
-    private Transform followTransform;
-
-    private void Awake() {
-        if (sceneCamera.GetComponent<CinemachineBrain>() == null) {
-            sceneCamera.gameObject.AddComponent<CinemachineBrain>();
-        }
-        
-        var followGameObject = new GameObject("Camera Follow Target (New)");
-        followTransform = followGameObject.transform;
-        topDownCamera.m_Follow = followTransform;
-        topDownCamera.m_LookAt = followTransform;
-        
-        // Ensure we start with a standard priority
-        topDownCamera.Priority = 10;
+    internal void SetCinemachineSource(CinemachineSource cinemachineSource) {
+        this.cinemachineSource = cinemachineSource;
     }
 
     public Camera GetActiveCamera() {
-        return sceneCamera;
+        return cinemachineSource.cameraRef;
     }
 
-    public CinemachineBrain GetBrain() {
-        return sceneCamera.GetComponent<CinemachineBrain>();
-    }
-
-    private void Update() {
-        var framingTransposer = topDownCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-        if (framingTransposer != null) {
-            framingTransposer.m_CameraDistance = topDownCameraDistance;
+    public void BindToDirector(PlayableDirector director) {
+        foreach (var output in director.playableAsset.outputs) {
+            if (output.sourceObject is CinemachineTrack) {
+                director.SetGenericBinding(output.sourceObject, cinemachineSource.cinemachineBrain);
+            }
         }
     }
 
-    public void SetCutsceneState(bool isCutscene) {
-        // When in cutscene, we lower the gameplay camera priority so other cameras (like Timeline shots) take over.
-        // When cutscene ends, we raise it back to trigger a smooth blend.
-        // topDownCamera.Priority = isCutscene ? 0 : 20;
-        
-        // Important: SoloCamera overrides all blending logic. 
-        // We clear it to ensure Cinemachine uses its standard priority-based blending.
-        // CinemachineBrain.SoloCamera = null;
+    public void SetTopDownCameraRig(TopDownCameraRig topDownCameraRig) {
+        this.topDownCameraRig = topDownCameraRig;
     }
 
-    public void InitTopDownFollowTarget(Vector3 initPosition) {
-        followTransform.position = initPosition;
-        SetCutsceneState(false);
+    public void UpdateTopDownFollowPosition(Vector3 position) {
+        topDownCameraRig.UpdateFollowPosition(position);
     }
 
-    public void UpdateTopDownFollowPosition(Vector3 vector3) {
-        followTransform.position = vector3;
-    }
 }

@@ -76,12 +76,8 @@ public class PlayerView {
         label.text = $"weapon {state.weaponId}";
     }
 
-    internal void EnableFollowCamera(Vector3 position) {
-        cameraManager.InitTopDownFollowTarget(position);
-    }
-
     internal void UpdateFollowCamera(Vector3 position) {
         cameraManager.UpdateTopDownFollowPosition(position);
     }
-
+    
 }

@@ -24,9 +24,7 @@ public class LevelController {
         model.PlayerPrototype = levelPrototype.playerPrototype;
         model.EnemyPrototype = levelPrototype.enemyPrototype;
         
-        cameraProvider.SetCutsceneState(true);
-        cameraProvider.SetCutsceneEndFollowPosition(levelPrototype.playerPrototype.initTruckPrototype.position);
-        view.ShowEnteringCutscene(levelPrototype.entranceCutscene, cameraProvider.GetCinemachineBrain());
+        view.ShowEnteringCutscene(levelPrototype.entranceCutscene);
         model.InCutscene = true;
     }
 
