@@ -151,7 +151,7 @@ public class PlayerController {
         model.AimInput = new TopDownAimInput {
             position = mouseHitPoint,
             direction = (mouseHitPoint - model.Position).normalized,
-            height = 0.5f
+            height = 1
         };
         view.UpdateAim(model.AimInput);
     }

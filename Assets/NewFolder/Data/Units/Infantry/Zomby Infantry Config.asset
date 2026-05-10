@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Zomby Infantry Config
   m_EditorClassIdentifier: NewFolder::InfantryConfig
   alie: 0
-  hitboxRadius: 0.73
+  hitboxRadius: 0.76
   hitboxHeight: 2
   maxHealth: 2
   attackCooldown: 1

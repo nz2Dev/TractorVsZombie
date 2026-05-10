@@ -47,11 +47,11 @@ public class ProjectileController {
 
     private void UpdateProjectileHits() {   
         foreach (var projectile in registry.Values) {
-            if (!projectile.IsAlive)
+            if (projectile.IsDead)
                 continue;
 
             if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectile.Config.damage)) {
-                projectile.IsAlive = false;
+                projectile.IsDead = true;
                 view.ShowBulletCrash(projectile.Id);
             }
         }
@@ -59,8 +59,8 @@ public class ProjectileController {
 
     private void AgeProjectiles() {
         foreach (var projectile in registry.Values) {
-            if (projectile.IsAlive && projectile.SpawnTime + projectile.Config.lifetime < Time.time) {
-                projectile.IsAlive = false;
+            if (!projectile.IsDead && projectile.SpawnTime + projectile.Config.lifetime < Time.time) {
+                projectile.IsDead = true;
                 view.ShowBulletDisappear(projectile.Id);
             }
         }
@@ -69,7 +69,7 @@ public class ProjectileController {
     private void FilterDeadProjectiles() {
         removeBuffer.Clear();
         foreach (var model in registry.Values) {
-            if (!model.IsAlive) {
+            if (model.IsDead) {
                 removeBuffer.Add(model.Id);
             }
         }

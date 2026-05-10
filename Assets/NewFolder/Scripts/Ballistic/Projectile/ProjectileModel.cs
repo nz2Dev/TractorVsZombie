@@ -15,6 +15,6 @@ internal class ProjectileModel {
     internal Vector3 Position { get; set; }
     internal Vector3 Velocity { get; set; }
     internal float SpawnTime { get; set; }
-    internal bool IsAlive { get; set; }
+    internal bool IsDead { get; set; }
 
 }
