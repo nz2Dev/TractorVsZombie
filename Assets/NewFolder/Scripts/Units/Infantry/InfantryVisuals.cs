@@ -3,29 +3,35 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class InfantryVisuals : MonoBehaviour {
     
-    public Color AnimatedColor;
+    public Color AnimatedColor; //temporaly disabled
 
     private Animator animator;
     private Renderer visualsRenderer;
 
-    private int colorPropertyID;
+    private int hitFlashPropertyID;
     private MaterialPropertyBlock dynamicProps;
     private bool sheduledForDestruction;
+
+    private float hitFlash;
 
     private void Awake() {
         animator = GetComponent<Animator>();
         dynamicProps = new MaterialPropertyBlock();
         visualsRenderer = GetComponentInChildren<Renderer>();
-        colorPropertyID = Shader.PropertyToID("_Color");
+        hitFlashPropertyID = Shader.PropertyToID("_HitFlash");
     }
 
     private void Start() {
         animator.SetFloat("CycleOffset", Random.Range(0, 1f));
     }
 
+    private void Update() {
+        hitFlash = Mathf.MoveTowards(hitFlash, 0, Time.deltaTime);
+    }
+
     void LateUpdate() {
         if (dynamicProps != null) {
-            dynamicProps.SetColor(colorPropertyID, AnimatedColor);
+            dynamicProps.SetFloat(hitFlashPropertyID, hitFlash);
             visualsRenderer.SetPropertyBlock(dynamicProps);
         }
 
@@ -52,7 +58,8 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     internal void PlayTakeHit() {
-        animator.SetTrigger("Take Hit");
+        // animator.SetTrigger("Take Hit");
+        hitFlash = 1;
     }
 
     internal void PlayDirectAttackAnimation() {
