@@ -13,6 +13,7 @@ public class InfantryVisuals : MonoBehaviour {
     private bool sheduledForDestruction;
 
     private float hitFlash;
+    private float hitFlashBottom = 0;
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -26,7 +27,7 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     private void Update() {
-        hitFlash = Mathf.MoveTowards(hitFlash, 0, Time.deltaTime);
+        hitFlash = Mathf.MoveTowards(hitFlash, hitFlashBottom, Time.deltaTime);
     }
 
     void LateUpdate() {
@@ -72,6 +73,7 @@ public class InfantryVisuals : MonoBehaviour {
 
     internal void PlayDisolveAnimation() {
         animator.SetTrigger("Disolve Death");
+        hitFlashBottom = -1;
     }
 
     internal void DestroySelfOnIdle() {
