@@ -6,6 +6,7 @@ using UnityEngine;
 public struct BodyData {
     public float height;
     public float radius;
+    public float damping;
 }
 
 public class PhysicsService {
@@ -76,10 +77,10 @@ public class PhysicsService {
     }
 
     public int RegisterPhysicsEntity(Vector3 position, BodyData bodyData) {
-        return RegisterPhysicsEntity(position, bodyData.height, bodyData.radius);
+        return RegisterPhysicsEntity(position, bodyData.height, bodyData.radius, bodyData.damping);
     }
 
-    public int RegisterPhysicsEntity(Vector3 position, float height, float radius) {
+    public int RegisterPhysicsEntity(Vector3 position, float height, float radius, float damping = 0) {
         var entityId = idCounter++;
         var go = new GameObject($"Physics Entity {entityId} (New)", typeof(CapsuleCollider), typeof(Rigidbody));
         go.layer = operationalLayer;
@@ -94,6 +95,7 @@ public class PhysicsService {
         var rb = go.GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
+        rb.linearDamping = damping;
         entities[entityId] = new PhysicsEntity(entityId, go, capsule, rb);
         colliderToId[capsule] = entityId;
         return entityId;

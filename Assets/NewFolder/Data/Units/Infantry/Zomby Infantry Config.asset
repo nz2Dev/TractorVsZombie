@@ -21,6 +21,7 @@ MonoBehaviour:
   bodyData:
     height: 2
     radius: 0.5
+    damping: 0.1
   agentAvoidanceConfig:
     height: 2
     radius: 0.6
