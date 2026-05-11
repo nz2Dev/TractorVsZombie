@@ -77,3 +77,7 @@ crashlytics-build.properties
 
 # macOS files
 .DS_Store
+
+#
+/Assets/AI Toolkit/Temp/
+/Assets/AI Toolkit/Temp.meta
