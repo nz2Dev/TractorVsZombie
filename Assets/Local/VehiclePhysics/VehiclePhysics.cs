@@ -156,7 +156,7 @@ public class VehiclePhysics : MonoBehaviour {
         pullingGrabJoint.connectedAnchor = pullingConnector.anchorOffset;
         pullingGrabJoint.xMotion = ConfigurableJointMotion.Locked;
         pullingGrabJoint.yMotion = ConfigurableJointMotion.Locked;
-        pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.zMotion = ConfigurableJointMotion.Limited;
         pullingGrabJoint.angularXMotion = ConfigurableJointMotion.Free;
         pullingGrabJoint.angularYMotion = ConfigurableJointMotion.Free;
         pullingGrabJoint.angularZMotion = ConfigurableJointMotion.Locked;
@@ -170,7 +170,7 @@ public class VehiclePhysics : MonoBehaviour {
     }
 
     public void CollapseTowingConnection(float spring, float dumper, float maxforce, bool acceleration) {
-        pullingGrabJoint.zMotion = ConfigurableJointMotion.Free;
+        pullingGrabJoint.zMotion = ConfigurableJointMotion.Limited;
         pullingGrabJoint.zDrive = new JointDrive { 
             positionSpring = spring,  
             positionDamper = dumper, 
