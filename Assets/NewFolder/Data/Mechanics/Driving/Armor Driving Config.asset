@@ -17,5 +17,5 @@ MonoBehaviour:
   speedKFactor: 2
   minStterAmount: 0.1
   maxSteerDegrees: 40
-  maxEngineTorque: 1000
+  maxEngineTorque: 500
   maxBrakesTorque: 500

@@ -25,8 +25,8 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _ToonSmoothness: 0.376
-    - _ToonThreshold: 0
+    - _ToonSmoothness: 0.084
+    - _ToonThreshold: 0.156
     m_Colors:
     - _BaseColor: {r: 0.8396226, g: 0.8356621, b: 0.8356621, a: 1}
     - _HitEmissionColor: {r: 0.14346743, g: 0.9319687, b: 0.9811321, a: 1}
