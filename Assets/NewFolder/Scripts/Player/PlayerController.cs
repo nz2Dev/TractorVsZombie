@@ -66,9 +66,9 @@ public class PlayerController {
     private void CollectRewards() {
         var collectedRewardStates = rewardController.CollectRewards(model.Position, 3f);
         foreach (var rewardState in collectedRewardStates) {
-            if (rewardState.RewardType == RewardType.Loadout) {
-                SpawnPlatform(rewardState.Position, out var platformId);
-                EquipPlatform(platformId, rewardState.LoadoutPrototype);
+            if (rewardState.payload.type == RewardType.Loadout) {
+                SpawnPlatform(rewardState.position, out var platformId);
+                EquipPlatform(platformId, rewardState.payload.loadoutPrototype);
                 if (model.Config.startOrEndCouplingOfRewards)
                     CouplePlatformInFront(platformId);
                 else

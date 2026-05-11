@@ -36,17 +36,16 @@ public class RewardController {
 
     private RewardState GetRewardState(RewardModel model) {
         return new RewardState {
-            Position = model.Position,
-            RewardType = model.RewardType,
-            LoadoutPrototype = model.LoadoutPrototype
+            position = model.Position,
+            payload = model.Payload
         };
     }
 
-    public int SpawnReward(RewardPrototype prototype) {
+    public int Create(RewardPrototype prototype, Vector3 position = default, Quaternion rotation = default) {
         var nextId = ++idCounter;
-        var model = new RewardModel(nextId, prototype.position, prototype.type, prototype.loadoutPrototype);
+        var model = new RewardModel(nextId, position == default ? prototype.position : position, prototype.payload);
         registry[nextId] = model;
-        view.SpawnReward(nextId, prototype.position, prototype.visualsPrefab);
+        view.SpawnReward(nextId, model.Position, rotation, prototype.visualsPrefab);
         return nextId;
     }
 

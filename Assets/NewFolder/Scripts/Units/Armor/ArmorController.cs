@@ -95,9 +95,7 @@ public class ArmorController {
             var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
             if (combatOutput.damageWasFatal) {
                 model.Destroyed = true;
-                var rewardPrototype = model.RewardPrototype;
-                rewardPrototype.position = model.Position;
-                rewardController.SpawnReward(rewardPrototype);
+                rewardController.Create(model.RewardPrototype, model.Position, model.VehiclePhysicsState.rotation);
             }
         }
     }

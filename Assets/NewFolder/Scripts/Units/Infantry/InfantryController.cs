@@ -153,7 +153,7 @@ public class InfantryController {
             if (combatOutput.damageWasFatal) {
                 model.IsDead = true;
                 model.IsPhysicsOnlyMovement = true;
-                rewardController.SpawnReward(model.RewardPrototype);
+                rewardController.Create(model.RewardPrototype, model.Position);
                 combatSystem.UnregisterAgent(model.CombatId); // TODO: keep registered, add combat system queries filters for IsAlive
 
                 if (combatOutput.wasProjectiled && model.Grounded) {

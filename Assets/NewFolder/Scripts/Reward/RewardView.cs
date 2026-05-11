@@ -10,8 +10,8 @@ public class RewardView {
     public RewardView() {
     }
 
-    internal void SpawnReward(int id, Vector3 position, GameObject visualsPrefab) {
-        var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
+    internal void SpawnReward(int id, Vector3 position, Quaternion rotation, GameObject visualsPrefab) {
+        var visuals = GameObject.Instantiate(visualsPrefab, position, rotation);
         visualsRegistry[id] = visuals;
     }
 
