@@ -109,8 +109,8 @@ PrefabInstance:
       value: Proportional Platform Base Geometry
       objectReference: {fileID: 0}
     - target: {fileID: 7383575709262788721, guid: 225672724801e4cfb93d13c3701d671f, type: 3}
-      propertyPath: m_VersionIndex
-      value: 106
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7383575709262788721, guid: 225672724801e4cfb93d13c3701d671f, type: 3}
       propertyPath: m_Colors.Array.data[0].b
@@ -399,18 +399,6 @@ PrefabInstance:
     - target: {fileID: 7383575709262788721, guid: 225672724801e4cfb93d13c3701d671f, type: 3}
       propertyPath: m_Colors.Array.data[23].r
       value: 0.72368294
-      objectReference: {fileID: 0}
-    - target: {fileID: 7383575709262788721, guid: 225672724801e4cfb93d13c3701d671f, type: 3}
-      propertyPath: m_SelectedEdges.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7383575709262788721, guid: 225672724801e4cfb93d13c3701d671f, type: 3}
-      propertyPath: m_SelectedFaces.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7383575709262788721, guid: 225672724801e4cfb93d13c3701d671f, type: 3}
-      propertyPath: m_SelectedVertices.Array.size
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
