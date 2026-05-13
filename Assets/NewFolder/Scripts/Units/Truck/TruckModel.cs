@@ -6,8 +6,8 @@ public class TruckModel {
 
     public Vector3 Position { get; set; }
     public int CombatId { get; set; }
-    public float MotorTorque { get; set; }
-    public float SteeringDegrees { get; set; }
+    public float Gas { get; set; }
+    public float Steer { get; set; }
     public int VehiclePhysicsId { get; set; }
     public VehicleState VehiclePhysicsState { get; set; }
     public int RamId { get; set; }

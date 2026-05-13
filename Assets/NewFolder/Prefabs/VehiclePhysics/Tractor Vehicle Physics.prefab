@@ -97,6 +97,12 @@ MonoBehaviour:
     dumper: 0
     maxForce: 0
     acceleration: 0
+  maxEngineTorque: 2000
+  maxBrakesTorque: 1000
+  maxSteerDegrees: 40
+  speedCeilingForSteering: 15
+  speedKFactor: 2
+  minSteerAmount: 0.1
 --- !u!114 &1441506342663817163
 MonoBehaviour:
   m_ObjectHideFlags: 0

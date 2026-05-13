@@ -40,12 +40,12 @@ public class TruckController {
     }
 
     public void Drive(float driveInput, bool boostInput) {
-        model.MotorTorque = VehicleDriving.GasThrottle(driveInput, boostInput, model.Config.drivingConfig.maxEngineTorque);   
+        var boostMultiplier = boostInput ? 2f : 1f;   // gameplay rule: boost doubles throttle
+        model.Gas = driveInput * boostMultiplier;
     }
 
     public void Steer(float steerInput) {
-        var steeringLimit = VehicleDriving.LimitSteering(model.VehiclePhysicsState.velocity.magnitude, model.Config.drivingConfig);
-        model.SteeringDegrees = steerInput * steeringLimit * model.Config.drivingConfig.maxSteerDegrees;
+        model.Steer = steerInput;   // -1..1; traction limiting happens inside VehiclePhysics
     }
 
     private void ReadExternalState() {
@@ -56,13 +56,12 @@ public class TruckController {
     private void WriteExternalInput() {
         ramEffect.Forward(model.RamId, model.Position);
         combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
-        vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.MotorTorque, brakesTorque: 0, model.SteeringDegrees);
+        vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, brakes: 0f, model.Steer);
     }
 
     private void UpdateView() {
         view.UpdatePose(model.VehiclePhysicsState);
-        var motorRev = model.MotorTorque / Mathf.Max(model.Config.drivingConfig.maxEngineTorque, 1);
-        view.UpdateSound(motorRev);
+        view.UpdateSound(model.Gas);
     }
 
 }

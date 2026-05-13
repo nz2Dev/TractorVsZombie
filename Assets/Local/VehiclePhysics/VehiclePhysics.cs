@@ -66,6 +66,14 @@ public class VehiclePhysics : MonoBehaviour {
     [SerializeField] private Rigidbody pullingGrabRigidbody;
     [SerializeField] private ConfigurableJoint pullingGrabJoint;
     [SerializeField] private PullingDrive pullingDrive;
+    [Space]
+    [Header("Driving")]
+    [SerializeField] private float maxEngineTorque = 1500f;
+    [SerializeField] private float maxBrakesTorque = 3000f;
+    [SerializeField] private float maxSteerDegrees = 30f;
+    [SerializeField] private float speedCeilingForSteering = 20f;
+    [SerializeField] private float speedKFactor = 2f;
+    [SerializeField] private float minSteerAmount = 0.15f;
 
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
@@ -123,6 +131,38 @@ public class VehiclePhysics : MonoBehaviour {
         pullingVehicle = vehiclePhysics;
     }
 
+    // Normalised API — callers pass game-space values, physics handles scaling
+
+    /// <param name="gas">0 = no throttle, 1 = full throttle, negative = reverse</param>
+    public void SetGas(float gas) {
+        var torque = gas * maxEngineTorque;
+        frontAxis.leftWheel.motorTorque = torque;
+        frontAxis.rightWheel.motorTorque = torque;
+        rearAxis.leftWheel.motorTorque = torque;
+        rearAxis.rightWheel.motorTorque = torque;
+    }
+
+    /// <param name="brakes">0 = no braking, 1 = full braking</param>
+    public void SetBrakes(float brakes) {
+        var torque = brakes * maxBrakesTorque;
+        frontAxis.leftWheel.brakeTorque = torque;
+        frontAxis.rightWheel.brakeTorque = torque;
+        rearAxis.leftWheel.brakeTorque = torque;
+        rearAxis.rightWheel.brakeTorque = torque;
+    }
+
+    /// <param name="steer">-1 = full left, 0 = straight, 1 = full right. Traction limiting applied internally.</param>
+    public void SetSteer(float steer) {
+        var speed = rootRigidbody.linearVelocity.magnitude;
+        var t = Mathf.Clamp01(speed / speedCeilingForSteering);
+        var steerFactor = Mathf.Max(minSteerAmount, 1f - Mathf.Pow(t, speedKFactor));
+        var angle = steer * steerFactor * maxSteerDegrees;
+        frontAxis.leftWheel.steerAngle = angle;
+        frontAxis.rightWheel.steerAngle = angle;
+    }
+
+    // Raw API — kept for internal / editor use
+
     public void SetMotorTorque(float engineTorque) {
         frontAxis.leftWheel.motorTorque = engineTorque;
         frontAxis.rightWheel.motorTorque = engineTorque;
@@ -138,8 +178,8 @@ public class VehiclePhysics : MonoBehaviour {
     }
 
     public void SetSteerAngle(float angleInDegrees) {
-        frontAxis.leftWheel.steerAngle = angleInDegrees;
-        frontAxis.rightWheel.steerAngle = angleInDegrees;
+        frontAxis.leftWheel.steerAngle = Mathf.Clamp(angleInDegrees, -maxSteerDegrees, maxSteerDegrees);
+        frontAxis.rightWheel.steerAngle = Mathf.Clamp(angleInDegrees, -maxSteerDegrees, maxSteerDegrees);
     }
 
     private void SetConstantGlideTorque() {

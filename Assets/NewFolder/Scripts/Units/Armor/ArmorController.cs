@@ -57,17 +57,18 @@ public class ArmorController {
 
     public void Drive(int armorId, float gasInput, bool boostInput) {
         var model = registry[armorId];
-        model.MotorTorque = VehicleDriving.GasThrottle(gasInput, boostInput, model.Config.drivingConfig.maxEngineTorque);   
+        var boostMultiplier = boostInput ? 2f : 1f;   // gameplay rule
+        model.Gas = gasInput * boostMultiplier;
     }
 
     public void Brake(int armorId, float brakeInput) {
         var model = registry[armorId];
-        model.BrakesTorque = brakeInput * model.Config.drivingConfig.maxBrakesTorque;
+        model.Brakes = brakeInput;
     }
 
     public void SteerToward(int armorId, Vector3 direction) {
         var model = registry[armorId];
-        model.SteeringDegrees = VehicleDriving.SteerToward(direction, model.VehiclePhysicsState.velocity, model.Config.drivingConfig.maxSteerDegrees);
+        model.SteerDirection = direction;
     }
 
     private void DeleteArmor(ArmorModel model) {
@@ -125,16 +126,16 @@ public class ArmorController {
 
     private void UpdateVehiclePhysics() {
         foreach (var model in registry.Values) {
-            vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.MotorTorque, model.BrakesTorque, model.SteeringDegrees);
+            vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, model.Brakes, 0);
+            var forwardToDirectionDegrees = Vector3.SignedAngle(model.VehiclePhysicsState.velocity.normalized, model.SteerDirection, Vector3.up);
+            vehicleService.SetVehicleSteerAngle(model.VehiclePhysicsId, forwardToDirectionDegrees);
         }
     }
 
     private void UpdateView() {
         foreach (var model in registry.Values) {
             view.UpdatePose(model.Id, model.VehiclePhysicsState);
-            
-            var motorRev = model.MotorTorque / Mathf.Max(model.Config.drivingConfig.maxEngineTorque, 1);
-            view.UpdateSound(model.Id, motorRev);
+            view.UpdateSound(model.Id, model.Gas);
         }
     }
 

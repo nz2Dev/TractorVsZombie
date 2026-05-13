@@ -58,26 +58,30 @@ public class VehicleService {
         physicsRegistry.Remove(vehicleId);
     }
 
-    public void SetVehicleSteer(int vehicleIndex, float steerDegrees) {
-        var vehiclePhysics = physicsRegistry[vehicleIndex];
-        vehiclePhysics.SetSteerAngle(steerDegrees);
+    /// <param name="gas">0–1 throttle / negative for reverse</param>
+    public void SetVehicleGas(int vehicleIndex, float gas) {
+        physicsRegistry[vehicleIndex].SetGas(gas);
     }
 
-    public void SetVehicleEngineTorque(int vehicleIndex, float engineTorque) {
-        var vehiclePhysics = physicsRegistry[vehicleIndex];
-        vehiclePhysics.SetMotorTorque(engineTorque);
+    /// <param name="brakes">0–1</param>
+    public void SetVehicleBrakes(int vehicleIndex, float brakes) {
+        physicsRegistry[vehicleIndex].SetBrakes(brakes);
     }
 
-    public void SetVehicleBreaks(int vehicleIndex, float breaksTorque) {
-        var vehiclePhysics = physicsRegistry[vehicleIndex];
-        vehiclePhysics.SetBreaksTorque(breaksTorque);
+    /// <param name="steer">-1 to 1. Traction limiting is applied inside VehiclePhysics.</param>
+    public void SetVehicleSteer(int vehicleIndex, float steer) {
+        physicsRegistry[vehicleIndex].SetSteer(steer);
     }
 
-    public void SetVehicleInput(int vehicleIndex, float engineTorque, float brakesTorque, float steerDegrees) {
+    public void SetVehicleSteerAngle(int vehicleIndex, float steerAngle) {
+        physicsRegistry[vehicleIndex].SetSteerAngle(steerAngle);
+    }
+
+    public void SetVehicleInput(int vehicleIndex, float gas, float brakes, float steer) {
         var vehiclePhysics = physicsRegistry[vehicleIndex];
-        vehiclePhysics.SetMotorTorque(engineTorque);
-        vehiclePhysics.SetBreaksTorque(brakesTorque);
-        vehiclePhysics.SetSteerAngle(steerDegrees);
+        vehiclePhysics.SetGas(gas);
+        vehiclePhysics.SetBrakes(brakes);
+        vehiclePhysics.SetSteer(steer);
     }
 
     public void UpdateVehiclePose(int vehicleIndex, Vector3 position, Quaternion rotation) {

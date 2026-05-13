@@ -18,9 +18,9 @@ public class ArmorModel {
     public VehicleState VehiclePhysicsState { get; set; }
     public RewardPrototype RewardPrototype { get; set; }
     
-    public float MotorTorque { get; set; }
-    public float SteeringDegrees { get; set; }
-    public float BrakesTorque { get; set; }
+    public float Gas { get; set; }
+    public Vector3 SteerDirection { get; set; }
+    public float Brakes { get; set; }
 
     public int CombatId { get; set; }
     public int WeaponId { get; set; }
