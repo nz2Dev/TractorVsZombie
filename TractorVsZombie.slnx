@@ -7,6 +7,7 @@
   <Project Path="Playground.Exmample.EditorTests.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="ORCAHelper.csproj" />
+  <Project Path="Local.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="FlowFields.EditorTests.csproj" />
@@ -19,5 +20,4 @@
   <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
   <Project Path="CollisionLookup.csproj" />
-  <Project Path="Local.csproj" />
 </Solution>
