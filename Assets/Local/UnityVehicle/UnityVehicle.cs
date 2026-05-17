@@ -1,38 +1,29 @@
 using UnityEngine;
 
 [SelectionBase]
+[ExecuteInEditMode]
 [DisallowMultipleComponent]
-[RequireComponent(typeof(VehicleBody))]
+[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(VehicleChassie))]
 public class UnityVehicle : MonoBehaviour {
 
-    private VehicleBody body;
+    [SerializeField] private float mass = 1000f;
+
+    private Rigidbody physics;
     private VehicleChassie chassie;
     private VehicleDrive drive;
 
     private void Awake() {
-        body = GetComponent<VehicleBody>();
+        physics = GetComponent<Rigidbody>();
         chassie = GetComponent<VehicleChassie>();
         drive = GetComponent<VehicleDrive>();
     }
 
-    public void Gas(float input) {
-        if (drive != null) {
-            drive.SetGas(input);
-        }
+#if UNITY_EDITOR
+    private void OnValidate() {
+        physics.mass = mass;
     }
-
-    public void Brakes(float input) {
-        if (drive != null) {
-            drive.SetBrakes(input);
-        }
-    }
-
-    public void Steer(float signedInput) {
-        if (drive != null) {
-            drive.SetSteer(signedInput);
-        }
-    }
+#endif
 
     private void FixedUpdate() {
         if (drive != null) {

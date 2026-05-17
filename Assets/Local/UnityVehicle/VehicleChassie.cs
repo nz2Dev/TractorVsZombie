@@ -19,6 +19,7 @@ public struct WheelAxis {
 
 public class VehicleChassie : MonoBehaviour {
 
+    [SerializeField, Inline, Local]internal BoxCollider baseCollider;
     [SerializeField] internal WheelAxis frontAxis;
     [SerializeField] internal WheelAxis rearAxis;
 

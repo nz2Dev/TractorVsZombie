@@ -2,6 +2,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [DisallowMultipleComponent]
+[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(VehicleChassie))]
 public class VehicleSteeringAxle : MonoBehaviour {
     
@@ -10,12 +11,12 @@ public class VehicleSteeringAxle : MonoBehaviour {
     [SerializeField] internal Rigidbody axleRigidbody;
     [SerializeField] internal BoxCollider axleBoxCollider;
     [SerializeField] internal ConfigurableJoint axleBodyJoint;
-    [Space]
-    [ReadOnly, SerializeField] internal VehicleBody body;
-    [ReadOnly, SerializeField] internal VehicleChassie chassie;
+    
+    private Rigidbody physics;
+    private VehicleChassie chassie;
 
-    private void OnEnable() {
-        body = GetComponent<VehicleBody>();
+    private void Awake() {
+        physics = GetComponent<Rigidbody>();
         chassie = GetComponent<VehicleChassie>();
     }
 
@@ -40,8 +41,8 @@ public class VehicleSteeringAxle : MonoBehaviour {
     private void AdjustAxleJoint() {
         axleBodyJoint.enablePreprocessing = false;
         axleBodyJoint.autoConfigureConnectedAnchor = false;
-        axleBodyJoint.connectedBody = body.physics;
-        axleBodyJoint.connectedAnchor = body.transform.InverseTransformPoint(axleRigidbody.transform.position);
+        axleBodyJoint.connectedBody = physics;
+        axleBodyJoint.connectedAnchor = physics.transform.InverseTransformPoint(axleRigidbody.transform.position);
 
         axleBodyJoint.xMotion = ConfigurableJointMotion.Locked;
         axleBodyJoint.yMotion = ConfigurableJointMotion.Locked;

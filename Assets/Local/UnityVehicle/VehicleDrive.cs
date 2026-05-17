@@ -1,6 +1,8 @@
 using UnityEngine;
 
-[RequireComponent(typeof(VehicleBody))]
+[ExecuteInEditMode]
+[DisallowMultipleComponent]
+[RequireComponent(typeof(Rigidbody))]
 public class VehicleDrive : MonoBehaviour {
     
     [SerializeField] private float maxEngineTorque = 1000;
@@ -10,14 +12,14 @@ public class VehicleDrive : MonoBehaviour {
     [SerializeField] private float minSteerAmount = 0.15f;
     [SerializeField] private float speedKFactor = 2f;
 
-    private VehicleBody body;
+    private Rigidbody physics;
 
     internal float MotorTorque { get; private set; }
     internal float BrakesTorque { get; private set; }
     internal float SteeringDegree { get; private set; }
 
     private void Awake() {
-        body = GetComponent<VehicleBody>();
+        physics = GetComponent<Rigidbody>();
     }
 
     public void SetGas(float gas) {
@@ -29,7 +31,7 @@ public class VehicleDrive : MonoBehaviour {
     }
 
     public void SetSteer(float steer) {
-        var speed = body.Velocity.magnitude;
+        var speed = physics.linearVelocity.magnitude;
         var t = Mathf.Clamp01(speed / speedCeilingForSteering);
         var steerFactor = Mathf.Max(minSteerAmount, 1f - Mathf.Pow(t, speedKFactor));
         var angle = steer * steerFactor * maxSteerDegrees;

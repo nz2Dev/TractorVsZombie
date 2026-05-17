@@ -7,11 +7,24 @@ public class VehicleChassieEditor : Editor {
 
     private static bool mirrorRightWheels = true;
     private static bool mirrorRearAxis = false;
-
-    private bool prototypingFoldout = true;
+    
+    private bool prototypingFoldout = false;
     private WheelCollider wheelPrototype;
+    private SerializedProperty baseColliderProperty;
     private SerializedProperty frontAxisProperty;
     private SerializedProperty rearAxisProperty;
+
+    private void OnEnable() {
+        EditorApplication.update += EditorUpdate;
+        var chassie = target as VehicleChassie;
+        baseColliderProperty = serializedObject.FindProperty(nameof(chassie.baseCollider));
+        frontAxisProperty = serializedObject.FindProperty(nameof(chassie.frontAxis));
+        rearAxisProperty = serializedObject.FindProperty(nameof(chassie.rearAxis));
+    }
+
+    private void OnDisable() {
+        EditorApplication.update -= EditorUpdate;
+    }
 
     public override void OnInspectorGUI() {
         var chassie = target as VehicleChassie;
@@ -46,6 +59,23 @@ public class VehicleChassieEditor : Editor {
         }
 
         serializedObject.Update();
+        
+        EditorGUILayout.Space();
+        EditorGUILayout.PropertyField(baseColliderProperty);
+        if (chassie.baseCollider == null) {
+            EditorGUILayout.HelpBox("There should be at least one box collider as child game object", MessageType.Error);
+            if (GUILayout.Button("Create Default BoxCollider")) {
+                var baseColliderObject = new GameObject("Base Collider", typeof(BoxCollider));
+                baseColliderObject.transform.SetParent(chassie.transform, false);
+                baseColliderObject.GetComponent<BoxCollider>().size = new Vector3(2, 1, 4);
+                chassie.baseCollider = baseColliderObject.GetComponent<BoxCollider>();
+            }
+            if (GUILayout.Button("Find First Shape Collider")) {
+                var firstShapeCollider = chassie.transform.GetComponentInChildren<BoxCollider>();
+                chassie.baseCollider = firstShapeCollider;
+            }
+        }
+
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(frontAxisProperty);
         if (wheelPrototype != null && (chassie.frontAxis.leftWheel == null || chassie.frontAxis.rightWheel == null)) {
@@ -72,17 +102,6 @@ public class VehicleChassieEditor : Editor {
             }
         }
         serializedObject.ApplyModifiedProperties();
-    }
-
-    private void OnEnable() {
-        EditorApplication.update += EditorUpdate;
-        var chassie = target as VehicleChassie;
-        frontAxisProperty = serializedObject.FindProperty(nameof(chassie.frontAxis));
-        rearAxisProperty = serializedObject.FindProperty(nameof(chassie.rearAxis));
-    }
-
-    private void OnDisable() {
-        EditorApplication.update -= EditorUpdate;
     }
 
     private void EditorUpdate() {
