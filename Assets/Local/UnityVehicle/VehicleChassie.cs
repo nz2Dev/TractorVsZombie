@@ -1,5 +1,7 @@
 using System;
 
+using UnityEditor;
+
 using UnityEngine;
 
 public enum WheelAxisName {
@@ -9,37 +11,23 @@ public enum WheelAxisName {
 
 [Serializable]
 public struct WheelAxis {
-    public WheelCollider leftWheel;
-    public WheelCollider rightWheel;
-}
-
-[Serializable]
-public struct WheelAxisConfig {
     public float depth;
     public float width;
-    [Inline][Local] public WheelCollider wheelPrototype;
+    [Inline] public WheelCollider leftWheel;
+    [Inline] public WheelCollider rightWheel;
 }
 
 public class VehicleChassie : MonoBehaviour {
 
-    [Header("Builder")]
-    [SerializeField] internal WheelAxisConfig frontAxisConfig;
-    [SerializeField] internal WheelAxisConfig rearAxisConfig;
-    [Header("Runtime")]
     [SerializeField] internal WheelAxis frontAxis;
     [SerializeField] internal WheelAxis rearAxis;
 
 #if UNITY_EDITOR
     private void OnValidate() {
-        if (frontAxisConfig.wheelPrototype != null) frontAxisConfig.wheelPrototype.gameObject.SetActive(false);
-        if (rearAxisConfig.wheelPrototype != null) rearAxisConfig.wheelPrototype.gameObject.SetActive(false);
+        AdjustAxisWheels(frontAxis);
+        AdjustAxisWheels(rearAxis);
     }
 #endif
-
-    private void Awake() {
-        frontAxis = BuildAxis(frontAxisConfig);
-        rearAxis = BuildAxis(rearAxisConfig);
-    }
 
     public void SetAxisTorque(WheelAxisName name, float torque) {
         var wheelAxis = GetAxisByName(name);
@@ -47,16 +35,12 @@ public class VehicleChassie : MonoBehaviour {
         wheelAxis.rightWheel.motorTorque = torque;
     }
 
-    private WheelAxis BuildAxis(WheelAxisConfig axisConfig) {
-        var wheelRadius = axisConfig.wheelPrototype.radius;
-        var leftWheel = Instantiate(axisConfig.wheelPrototype, transform, false);
-        leftWheel.transform.localPosition = new Vector3(-0.5f * axisConfig.width, wheelRadius, axisConfig.depth);
-        leftWheel.gameObject.SetActive(true);
+    private void AdjustAxisWheels(WheelAxis axis) {
+        var leftWheelRadius = axis.leftWheel.radius;
+        axis.leftWheel.transform.localPosition = new Vector3(-0.5f * axis.width, leftWheelRadius, axis.depth);
         
-        var rightWheel = Instantiate(axisConfig.wheelPrototype, transform, false);
-        rightWheel.transform.localPosition = new Vector3(0.5f * axisConfig.width, wheelRadius, axisConfig.depth);
-        rightWheel.gameObject.SetActive(true);
-        return new WheelAxis { leftWheel = leftWheel, rightWheel = rightWheel };
+        var rightWheelRadius = axis.rightWheel.radius;
+        axis.rightWheel.transform.localPosition = new Vector3(0.5f * axis.width, rightWheelRadius, axis.depth);
     }
 
     private WheelAxis GetAxisByName(WheelAxisName name) {
@@ -65,14 +49,15 @@ public class VehicleChassie : MonoBehaviour {
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected() {
-        DrawAxisBoundary(frontAxisConfig);
-        DrawAxisBoundary(rearAxisConfig);
+        DrawAxisBoundary(frontAxis);
+        DrawAxisBoundary(rearAxis);
     }
 
-    private void DrawAxisBoundary(WheelAxisConfig axisConfig) {
-        var wheelRadius = axisConfig.wheelPrototype == null ? 0.1f : axisConfig.wheelPrototype.radius;
-        var wheelDiameter = wheelRadius + wheelRadius;
-        Gizmos.DrawWireCube(transform.position + new Vector3(0, wheelRadius, axisConfig.depth), new Vector3(axisConfig.width, wheelDiameter, wheelDiameter));
+    private void DrawAxisBoundary(WheelAxis axis) {
+        var left = new Vector3(-0.5f * axis.width, 0, axis.depth);
+        var right = new Vector3(0.5f * axis.width, 0, axis.depth);
+        Handles.matrix = transform.localToWorldMatrix;
+        Handles.DrawLine(left, right, 2f);
     }
 #endif
 }

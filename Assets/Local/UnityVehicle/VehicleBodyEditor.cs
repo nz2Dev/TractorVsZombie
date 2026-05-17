@@ -7,12 +7,8 @@ public class VehicleBodyEditor : Editor {
 
     private static bool showRigidbodyComponent = false;
 
-    public override void OnInspectorGUI() {
-        showRigidbodyComponent = EditorGUILayout.Toggle("Show rigidbody component", showRigidbodyComponent);
-
-        base.OnInspectorGUI();
+    private void OnEnable() {
         var body = target as VehicleBody;
-        
         if (body.physics == null) {
             body.physics = body.GetComponent<Rigidbody>();
         }
@@ -21,6 +17,13 @@ public class VehicleBodyEditor : Editor {
         } else if (body.physics.hideFlags != HideFlags.HideInInspector) {
             body.physics.hideFlags = HideFlags.HideInInspector;
         } 
+    }
+
+    public override void OnInspectorGUI() {
+        showRigidbodyComponent = EditorGUILayout.Toggle("Show rigidbody component", showRigidbodyComponent);
+
+        base.OnInspectorGUI();
+        var body = target as VehicleBody;
 
         if (body.baseCollider == null) {
             EditorGUILayout.HelpBox("There should be at least one collider as child game object", MessageType.Error);
