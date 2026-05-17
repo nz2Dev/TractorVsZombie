@@ -25,9 +25,9 @@ public class VehicleTowing : MonoBehaviour {
     private void AdjustTowingJoint() {
         towingJoint.autoConfigureConnectedAnchor = false;
         towingJoint.anchor = towingConnector.anchorOffsetLocalSpace;
-        towingJoint.xMotion = ConfigurableJointMotion.Locked;
-        towingJoint.yMotion = ConfigurableJointMotion.Locked;
-        towingJoint.zMotion = ConfigurableJointMotion.Limited;
+        towingJoint.xMotion = ConfigurableJointMotion.Free;
+        towingJoint.yMotion = ConfigurableJointMotion.Free;
+        towingJoint.zMotion = ConfigurableJointMotion.Free;
         towingJoint.angularXMotion = ConfigurableJointMotion.Free;
         towingJoint.angularYMotion = ConfigurableJointMotion.Free;
         towingJoint.angularZMotion = ConfigurableJointMotion.Locked;
@@ -35,11 +35,13 @@ public class VehicleTowing : MonoBehaviour {
         towingJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
     }
 
-    public void MakeConnection(UnityVehicle pullingVehicle) {
-        var pullingConnectionProvider = pullingVehicle.GetComponent<IVehiclePullingConnectorProvider>();
-        var pullingConnector = pullingConnectionProvider.GetPullingConnector();
+    public void MakeConnection(IVehiclePullingConnectorProvider pullingConnectorProvider) {
+        var pullingConnector = pullingConnectorProvider.GetPullingConnector();
         towingJoint.connectedBody = pullingConnector.rigidbody;
         towingJoint.connectedAnchor = pullingConnector.anchorOffsetLocalSpace;
+        towingJoint.xMotion = ConfigurableJointMotion.Locked;
+        towingJoint.yMotion = ConfigurableJointMotion.Locked;
+        towingJoint.zMotion = ConfigurableJointMotion.Limited;
     }
 
 }
