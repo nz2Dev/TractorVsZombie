@@ -2,6 +2,11 @@ using System;
 
 using UnityEngine;
 
+public enum WheelAxisName {
+    Front,
+    Rear
+}
+
 [Serializable]
 public struct WheelAxis {
     public WheelCollider leftWheel;
@@ -36,6 +41,12 @@ public class VehicleChassie : MonoBehaviour {
         rearAxis = BuildAxis(rearAxisConfig);
     }
 
+    public void SetAxisTorque(WheelAxisName name, float torque) {
+        var wheelAxis = GetAxisByName(name);
+        wheelAxis.leftWheel.motorTorque = torque;
+        wheelAxis.rightWheel.motorTorque = torque;
+    }
+
     private WheelAxis BuildAxis(WheelAxisConfig axisConfig) {
         var wheelRadius = axisConfig.wheelPrototype.radius;
         var leftWheel = Instantiate(axisConfig.wheelPrototype, transform, false);
@@ -48,9 +59,8 @@ public class VehicleChassie : MonoBehaviour {
         return new WheelAxis { leftWheel = leftWheel, rightWheel = rightWheel };
     }
 
-    public void SetFrontAxisTorque(float torque) {
-        frontAxis.leftWheel.motorTorque = torque;
-        frontAxis.rightWheel.motorTorque = torque;
+    private WheelAxis GetAxisByName(WheelAxisName name) {
+        return name == WheelAxisName.Front ? frontAxis : name == WheelAxisName.Rear ? rearAxis : throw new Exception($"{name}");
     }
 
 #if UNITY_EDITOR
