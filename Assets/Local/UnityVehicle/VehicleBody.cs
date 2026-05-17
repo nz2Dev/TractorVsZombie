@@ -4,12 +4,17 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class VehicleBody : MonoBehaviour {
     
-    [Inline][Local][SerializeField] internal Collider baseCollider;
-    
+    [SerializeField] private float mass;
+    [SerializeField, Tooltip("Is hiden in inspector"), Inline, ReadOnly] 
     internal Rigidbody physics;
+    [Space]
+    [Inline, Local, SerializeField] 
+    internal Collider baseCollider;
 
-    private void Awake() {
-        physics = GetComponent<Rigidbody>();
+#if UNITY_EDITOR
+    private void OnValidate() {
+        physics.mass = mass;
     }
+#endif
 
 }

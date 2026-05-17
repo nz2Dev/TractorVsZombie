@@ -4,14 +4,23 @@ using UnityEditor;
 
 [CustomEditor(typeof(VehicleBody))]
 public class VehicleBodyEditor : Editor {
+
+    private static bool showRigidbodyComponent = false;
+
     public override void OnInspectorGUI() {
+        showRigidbodyComponent = EditorGUILayout.Toggle("Show rigidbody component", showRigidbodyComponent);
+
         base.OnInspectorGUI();
         var body = target as VehicleBody;
         
-        var singleRigidbody = body.GetComponent<Rigidbody>();
-        if (singleRigidbody.hideFlags != HideFlags.HideInInspector) {
-            singleRigidbody.hideFlags = HideFlags.HideInInspector;
+        if (body.physics == null) {
+            body.physics = body.GetComponent<Rigidbody>();
         }
+        if (showRigidbodyComponent) {
+            body.physics.hideFlags = HideFlags.None;    
+        } else if (body.physics.hideFlags != HideFlags.HideInInspector) {
+            body.physics.hideFlags = HideFlags.HideInInspector;
+        } 
 
         if (body.baseCollider == null) {
             EditorGUILayout.HelpBox("There should be at least one collider as child game object", MessageType.Error);

@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 191447591}
   - component: {fileID: 191447590}
   m_Layer: 0
-  m_Name: V2
+  m_Name: Vehicle 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -257,12 +257,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Local::VehicleChassie
   frontAxisConfig:
-    depth: 0
-    width: 0
+    depth: 1
+    width: 2
     wheelPrototype: {fileID: 0}
   rearAxisConfig:
-    depth: 0
-    width: 0
+    depth: -1
+    width: 2
     wheelPrototype: {fileID: 0}
   frontAxis:
     leftWheel: {fileID: 0}
@@ -282,6 +282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 231abd21f1e6440868b257c0847684d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Local::VehicleBody
+  mass: 1000
+  physics: {fileID: 191447593}
   baseCollider: {fileID: 1373499944}
 --- !u!54 &191447593
 Rigidbody:
@@ -291,8 +293,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 191447589}
   serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
+  m_Mass: 1000
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -319,7 +321,7 @@ Transform:
   m_GameObject: {fileID: 191447589}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8, y: 1.25273, z: 2.02433}
+  m_LocalPosition: {x: 10, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -441,6 +443,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 231abd21f1e6440868b257c0847684d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Local::VehicleBody
+  mass: 0
+  physics: {fileID: 0}
   baseCollider: {fileID: 1858035803}
 --- !u!1 &1074232081
 GameObject:
@@ -576,7 +580,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 2, y: 1, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!4 &1373499945
 Transform:
   m_ObjectHideFlags: 0
