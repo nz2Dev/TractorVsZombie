@@ -12,11 +12,13 @@ public class UnityVehicle : MonoBehaviour {
     private Rigidbody physics;
     private VehicleChassie chassie;
     private VehicleDrive drive;
+    private VehicleSteeringAxle steeringAxle;
 
     private void Awake() {
         physics = GetComponent<Rigidbody>();
         chassie = GetComponent<VehicleChassie>();
         drive = GetComponent<VehicleDrive>();
+        steeringAxle = GetComponent<VehicleSteeringAxle>();
     }
 
 #if UNITY_EDITOR
@@ -30,6 +32,10 @@ public class UnityVehicle : MonoBehaviour {
             chassie.SetAxisfMotorTorque(WheelAxisName.Front, drive.MotorTorque);
             chassie.SetAxisfMotorTorque(WheelAxisName.Rear, drive.MotorTorque);
             chassie.SetAxisSteerAngle(WheelAxisName.Front, drive.SteeringDegree);
+        } else if (steeringAxle != null) {
+            chassie.SetAxisfMotorTorque(WheelAxisName.Front, steeringAxle.FrontAxisMotorTorque);
+            chassie.SetAxisfMotorTorque(WheelAxisName.Rear, steeringAxle.RearAxisMotorTorque);
+            chassie.SetAxisSteerAngle(WheelAxisName.Front, steeringAxle.FrontAxisSteeringDegree);
         }
     }
 

@@ -15,6 +15,10 @@ public class VehicleSteeringAxle : MonoBehaviour, IVehicleTowingConnectorProvide
     private Rigidbody physics;
     private VehicleChassie chassie;
 
+    internal float FrontAxisMotorTorque => 1f;
+    internal float RearAxisMotorTorque => -1f;
+    internal float FrontAxisSteeringDegree { get; private set; }
+
     private void Awake() {
         physics = GetComponent<Rigidbody>();
         chassie = GetComponent<VehicleChassie>();
@@ -33,6 +37,11 @@ public class VehicleSteeringAxle : MonoBehaviour, IVehicleTowingConnectorProvide
             rigidbody = axleRigidbody,
             anchorOffsetLocalSpace = new Vector3(0, 0, axleBoxCollider.size.z)
         };
+    }
+
+    private void FixedUpdate() {
+        var axleAngle = Vector3.SignedAngle(physics.transform.forward, axleRigidbody.transform.forward, Vector3.up);
+        FrontAxisSteeringDegree = axleAngle;
     }
 
     private void AdjustAxleVolume() {
