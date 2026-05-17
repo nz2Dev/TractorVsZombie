@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 191447593}
   - component: {fileID: 191447592}
   - component: {fileID: 191447591}
+  - component: {fileID: 191447595}
   - component: {fileID: 191447590}
   m_Layer: 0
   m_Name: Vehicle 2
@@ -328,6 +329,24 @@ Transform:
   - {fileID: 384503061}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &191447595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 191447589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50ec530cc77e34dfeb85ac24e8413e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Local::VehicleDrive
+  maxEngineTorque: 1000
+  maxBrakesTorque: 1000
+  maxSteerDegrees: 40
+  speedCeilingForSteering: 20
+  minSteerAmount: 0.15
+  speedKFactor: 2
 --- !u!1 &384503059
 GameObject:
   m_ObjectHideFlags: 0

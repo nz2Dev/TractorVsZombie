@@ -29,10 +29,16 @@ public class VehicleChassie : MonoBehaviour {
     }
 #endif
 
-    public void SetAxisTorque(WheelAxisName name, float torque) {
+    public void SetAxisfMotorTorque(WheelAxisName name, float torque) {
         var wheelAxis = GetAxisByName(name);
         wheelAxis.leftWheel.motorTorque = torque;
         wheelAxis.rightWheel.motorTorque = torque;
+    }
+
+    internal void SetAxisSteerAngle(WheelAxisName axisName, float steeringDegree) {
+        var wheelAxis = GetAxisByName(axisName);
+        wheelAxis.leftWheel.steerAngle = steeringDegree;
+        wheelAxis.rightWheel.steerAngle = steeringDegree;
     }
 
     private void AdjustAxisWheels(WheelAxis axis) {

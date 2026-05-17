@@ -11,6 +11,8 @@ public class VehicleBody : MonoBehaviour {
     [Inline, Local, SerializeField] 
     internal Collider baseCollider;
 
+    public Vector3 Velocity => physics.linearVelocity;
+
 #if UNITY_EDITOR
     private void OnValidate() {
         physics.mass = mass;
