@@ -4,7 +4,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(VehicleChassie))]
-public class VehicleSteeringAxle : MonoBehaviour {
+public class VehicleSteeringAxle : MonoBehaviour, IVehicleTowingConnectorProvider {
     
     [SerializeField] private float axleSize = 0.1f;
     [SerializeField] private float axleLength = 1.0f;
@@ -27,6 +27,13 @@ public class VehicleSteeringAxle : MonoBehaviour {
         AdjustAxleJoint();   
     }
 #endif
+
+    public VehicleTowingConnector GetTowingConnector() {
+        return new VehicleTowingConnector {
+            rigidbody = axleRigidbody,
+            anchorOffsetLocalSpace = new Vector3(0, 0, axleBoxCollider.size.z)
+        };
+    }
 
     private void AdjustAxleVolume() {
         axleBoxCollider.center = new Vector3(0, 0, axleLength * 0.5f);

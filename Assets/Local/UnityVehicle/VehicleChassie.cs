@@ -23,6 +23,8 @@ public class VehicleChassie : MonoBehaviour {
     [SerializeField] internal WheelAxis frontAxis;
     [SerializeField] internal WheelAxis rearAxis;
 
+    public Vector3 Size => baseCollider.size;
+
 #if UNITY_EDITOR
     private void OnValidate() {
         AdjustAxisWheels(frontAxis);
