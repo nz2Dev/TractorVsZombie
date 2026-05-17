@@ -17,13 +17,22 @@ public struct WheelAxis {
     [Inline] public WheelCollider rightWheel;
 }
 
-public class VehicleChassie : MonoBehaviour {
+[ExecuteInEditMode]
+[DisallowMultipleComponent]
+[RequireComponent(typeof(Rigidbody))]
+public class VehicleChassie : MonoBehaviour, IVehiclePullingConnectorProvider {
 
     [SerializeField, Inline, Local]internal BoxCollider baseCollider;
     [SerializeField] internal WheelAxis frontAxis;
     [SerializeField] internal WheelAxis rearAxis;
 
+    private Rigidbody physics;
+
     public Vector3 Size => baseCollider.size;
+
+    private void Awake() {
+        physics = GetComponent<Rigidbody>();
+    }
 
 #if UNITY_EDITOR
     private void OnValidate() {
@@ -42,6 +51,13 @@ public class VehicleChassie : MonoBehaviour {
         var wheelAxis = GetAxisByName(axisName);
         wheelAxis.leftWheel.steerAngle = steeringDegree;
         wheelAxis.rightWheel.steerAngle = steeringDegree;
+    }
+
+    public VehiclePullingConnector GetPullingConnector() {
+        return new VehiclePullingConnector {
+            rigidbody = physics,
+            anchorOffsetLocalSpace = new Vector3(0, 0, -0.5f * baseCollider.size.z),
+        };
     }
 
     private void AdjustAxisWheels(WheelAxis axis) {

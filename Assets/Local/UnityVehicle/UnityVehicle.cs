@@ -13,6 +13,11 @@ public class UnityVehicle : MonoBehaviour {
     private VehicleChassie chassie;
     private VehicleDrive drive;
     private VehicleSteeringAxle steeringAxle;
+    private VehicleTowing towing;
+
+    public VehicleDrive Drive => drive;
+    public VehicleChassie Chassie => chassie;
+    public VehicleTowing Towing => towing;
 
     private void Awake() {
         physics = GetComponent<Rigidbody>();

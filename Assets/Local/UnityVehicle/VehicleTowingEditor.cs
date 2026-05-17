@@ -4,16 +4,9 @@ using UnityEditor;
 using System.Runtime.InteropServices.WindowsRuntime;
 
 [CustomEditor(typeof(VehicleTowing))]
-public class VehicleTowingEditor : Editor, IVehiclePullingConnectorProvider {
+public class VehicleTowingEditor : Editor {
 
     private UnityVehicle testPullingVehicle;
-
-    public VehiclePullingConnector GetPullingConnector() {
-        return new VehiclePullingConnector {
-            rigidbody = testPullingVehicle.GetComponent<Rigidbody>(),
-            anchorOffsetLocalSpace = new Vector3(0, 0, -2f)
-        };
-    }
 
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
@@ -31,7 +24,7 @@ public class VehicleTowingEditor : Editor, IVehiclePullingConnectorProvider {
         if (Application.isPlaying) {
             testPullingVehicle = (UnityVehicle) EditorGUILayout.ObjectField("test pulling vehicle", testPullingVehicle, typeof(UnityVehicle), true);
             if (testPullingVehicle != null && GUILayout.Button("Active Connection")) {
-                towing.MakeConnection(this);
+                towing.MakeConnection(testPullingVehicle.Chassie);
             }
         }
     }
