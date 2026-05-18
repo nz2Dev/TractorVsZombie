@@ -34,7 +34,7 @@ public class PlatformController {
         
         model.LoadoutOffset = prototype.loadoutOffset;
         model.CombatId = combatSystem.RegisterAgent(model.Position, true);
-        model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.physicsPrefab);
+        model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab);
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
         view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab);
 

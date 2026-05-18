@@ -4,7 +4,7 @@ public class ArmorSource : MonoBehaviour {
 
     [Inline] [SerializeField] private ArmorConfig config;
     [Local] [SerializeField] private ArmorVisuals visualsPrefab;
-    [Local] [SerializeField] private VehiclePhysics physicsPrefab;
+    [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [SerializeField] private AudioClip engineLoopSFX;
     [Local] [SerializeField] private WeaponSource weaponSource;
     [Local] [SerializeField] private RamEffectSource ramSource;
@@ -19,7 +19,7 @@ public class ArmorSource : MonoBehaviour {
             position = transform.position,
             config = config,
             visualsPrefab = visualsPrefab,
-            physicsPrefab = physicsPrefab,
+            vehiclePrefab = vehiclePrefab,
             engineLoopSFX = engineLoopSFX,
             ramPrototype = ramSource != null ? ramSource.GetPrototype() : default,
             localWeaponPrototype = weaponSource != null ? weaponSource.GetPrototype(localTransform: true) : default,

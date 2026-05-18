@@ -21,7 +21,7 @@ public struct VehicleState {
 public class VehicleService {
     
     private int idCounter;
-    private Dictionary<int, VehiclePhysics> physicsRegistry = new ();
+    private Dictionary<int, UnityVehicle> vehiclesRegistry = new ();
     private Dictionary<int, GameObject> obstacleRegistry = new ();
     private readonly int obstacleLayer;
 
@@ -45,73 +45,55 @@ public class VehicleService {
         }
     }
 
-    public int CreateVehicle(Vector3 position, VehiclePhysics physicsPrefab, Quaternion rotation = default) {
-        var vehiclePhysics = GameObject.Instantiate(physicsPrefab, position, rotation);
-        var nextRigId = idCounter++;
-        physicsRegistry[nextRigId] = vehiclePhysics;
-        return nextRigId;
+    public int CreateVehicle(Vector3 position, UnityVehicle vehiclePrefab, Quaternion rotation = default) {
+        var vehicle = GameObject.Instantiate(vehiclePrefab, position, rotation);
+        var nextId = idCounter++;
+        vehiclesRegistry[nextId] = vehicle;
+        return nextId;
     }
 
     public void DeleteVehicle(int vehicleId) {
-        var vehiclePhysics = physicsRegistry[vehicleId];
+        var vehiclePhysics = vehiclesRegistry[vehicleId];
         vehiclePhysics.DestroySelf();
-        physicsRegistry.Remove(vehicleId);
-    }
-
-    /// <param name="gas">0–1 throttle / negative for reverse</param>
-    public void SetVehicleGas(int vehicleIndex, float gas) {
-        physicsRegistry[vehicleIndex].SetGas(gas);
-    }
-
-    /// <param name="brakes">0–1</param>
-    public void SetVehicleBrakes(int vehicleIndex, float brakes) {
-        physicsRegistry[vehicleIndex].SetBrakes(brakes);
-    }
-
-    /// <param name="steer">-1 to 1. Traction limiting is applied inside VehiclePhysics.</param>
-    public void SetVehicleSteer(int vehicleIndex, float steer) {
-        physicsRegistry[vehicleIndex].SetSteer(steer);
+        vehiclesRegistry.Remove(vehicleId);
     }
 
     public void SetVehicleSteerAngle(int vehicleIndex, float steerAngle) {
-        physicsRegistry[vehicleIndex].SetSteerAngle(steerAngle);
+        vehiclesRegistry[vehicleIndex].Drive.SetSteerAngle(steerAngle);
     }
 
     public void SetVehicleInput(int vehicleIndex, float gas, float brakes, float steer) {
-        var vehiclePhysics = physicsRegistry[vehicleIndex];
-        vehiclePhysics.SetGas(gas);
-        vehiclePhysics.SetBrakes(brakes);
-        vehiclePhysics.SetSteer(steer);
+        var vehicle = vehiclesRegistry[vehicleIndex];
+        var vehicleDrive =vehicle.Drive;
+        vehicleDrive.SetGas(gas);
+        vehicleDrive.SetBrakes(brakes);
+        vehicleDrive.SetSteer(steer);
     }
 
     public void UpdateVehiclePose(int vehicleIndex, Vector3 position, Quaternion rotation) {
-        var vehiclePhysics = physicsRegistry[vehicleIndex];
+        var vehiclePhysics = vehiclesRegistry[vehicleIndex];
         vehiclePhysics.Transform(position, rotation);
     }
 
     public void MakeTowingConnection(int headVehicleIndex, int tailVehicleIndex) {
-        var headRig = physicsRegistry[headVehicleIndex];
-        var tailRig = physicsRegistry[tailVehicleIndex];
-        tailRig.SetPullingVehicle(headRig);
-        tailRig.MakeLooseTowingConnection();
-        tailRig.CollapseTowingConnection();
+        var headVehicle = vehiclesRegistry[headVehicleIndex];
+        var tailVehicle = vehiclesRegistry[tailVehicleIndex];
+        tailVehicle.Towing.MakeConnection(headVehicle.Chassie);
     }
 
     public void ClearTowingConnection(int vehicleIndex) {
-        var physics = physicsRegistry[vehicleIndex];
-        physics.ClearTowingConnection();
+        var vehicle = vehiclesRegistry[vehicleIndex];
+        vehicle.Towing.ClearConnection();
     }
 
     public VehicleState GetVehicleState(int vehicleId) {
-        var vehiclePhysics = physicsRegistry[vehicleId];
-        vehiclePhysics.FrontAxis.GetLeftWheelPose(out var fLeftPos, out var fLeftRot);
-        vehiclePhysics.FrontAxis.GetRightWheelPose(out var fRightPos, out var fRightRot);
-        vehiclePhysics.RearAxis.GetLeftWheelPose(out var rLeftPos, out var rLeftRot);
-        vehiclePhysics.RearAxis.GetRightWheelPose(out var rRightPos, out var rRightRot);
+        var vehicle = vehiclesRegistry[vehicleId];
+        vehicle.Chassie.GetAxisWheels(WheelAxisName.Front, out var fLeftPos, out var fLeftRot, out var fRightPos, out var fRightRot);
+        vehicle.Chassie.GetAxisWheels(WheelAxisName.Rear, out var rLeftPos, out var rLeftRot, out var rRightPos, out var rRightRot);
         return new VehicleState {
-            position = vehiclePhysics.Position,
-            rotation = vehiclePhysics.Rotation,
-            velocity = vehiclePhysics.Velocity,
+            position = vehicle.Position,
+            rotation = vehicle.Rotation,
+            velocity = vehicle.Velocity,
             frontAxis = new WheelAxisPose {
                 positionL = fLeftPos, 
                 rotationL = fLeftRot,

@@ -3,7 +3,7 @@ using UnityEngine;
 public class TruckSource : MonoBehaviour {
 
     [Inline] [SerializeField] private TruckConfig config;
-    [Local] [SerializeField] private VehiclePhysics vehiclePhysicsPrefab;
+    [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [Local] [SerializeField] private TruckVisuals visualsPrefab;
     [Local] [SerializeField] private RamEffectSource ramSource;
     [SerializeField] private AudioClip engineLoopSFX;
@@ -18,7 +18,7 @@ public class TruckSource : MonoBehaviour {
             rotation = transform.rotation,
             config = config,
             ramPrototype = ramSource.GetPrototype(),
-            vehiclePhysicsPrefab = vehiclePhysicsPrefab,
+            vehiclePrefab = vehiclePrefab,
             visualsPrefab = visualsPrefab,
             engineLoopSFX = engineLoopSFX,
         };

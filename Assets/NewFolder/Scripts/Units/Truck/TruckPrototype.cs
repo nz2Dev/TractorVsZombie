@@ -5,7 +5,7 @@ public struct TruckPrototype {
     public Quaternion rotation;
     public TruckConfig config;
     public RamEffectPrototype ramPrototype;
-    public VehiclePhysics vehiclePhysicsPrefab;
+    public UnityVehicle vehiclePrefab;
     public TruckVisuals visualsPrefab;
     public AudioClip engineLoopSFX;
 }
