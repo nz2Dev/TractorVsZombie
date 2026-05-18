@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -38,4 +40,8 @@ public class VehicleDrive : MonoBehaviour {
         SteeringDegree = angle;
     }
 
+    public void SetSteerAngle(float steerAngle) {
+        SteeringDegree = steerAngle;
+    }
+    
 }

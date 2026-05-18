@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3efe51cf9a084f8b94ada64f1144399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Local::UnityVehicle
-  mass: 1000
+  mass: 500
 --- !u!114 &191447591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,7 +276,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 191447589}
   serializedVersion: 5
-  m_Mass: 1000
+  m_Mass: 500
   m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -375,7 +375,7 @@ WheelCollider:
   m_GameObject: {fileID: 384503059}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.67
+  m_Radius: 0.65
   m_SuspensionSpring:
     spring: 35000
     damper: 4500
@@ -804,7 +804,7 @@ WheelCollider:
   m_GameObject: {fileID: 791714979}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.67
+  m_Radius: 0.65
   m_SuspensionSpring:
     spring: 35000
     damper: 4500
@@ -1359,7 +1359,7 @@ WheelCollider:
   m_GameObject: {fileID: 1519347304}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.67
+  m_Radius: 0.65
   m_SuspensionSpring:
     spring: 35000
     damper: 4500
@@ -1595,7 +1595,7 @@ WheelCollider:
   m_GameObject: {fileID: 1944093383}
   serializedVersion: 2
   m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.67
+  m_Radius: 0.65
   m_SuspensionSpring:
     spring: 35000
     damper: 4500

@@ -28,8 +28,6 @@ public class VehicleChassie : MonoBehaviour, IVehiclePullingConnectorProvider {
 
     private Rigidbody physics;
 
-    public Vector3 Size => baseCollider.size;
-
     private void Awake() {
         physics = GetComponent<Rigidbody>();
     }
@@ -58,6 +56,12 @@ public class VehicleChassie : MonoBehaviour, IVehiclePullingConnectorProvider {
             rigidbody = physics,
             anchorOffsetLocalSpace = new Vector3(0, 0, -0.5f * baseCollider.size.z),
         };
+    }
+
+    public void GetAxisWheels(WheelAxisName axisName, out Vector3 lPos, out Quaternion lRot, out Vector3 rPos, out Quaternion rRot) {
+        var axis = GetAxisByName(axisName);
+        axis.leftWheel.GetWorldPose(out lPos, out lRot);
+        axis.rightWheel.GetWorldPose(out rPos, out rRot);
     }
 
     private void AdjustAxisWheels(WheelAxis axis) {

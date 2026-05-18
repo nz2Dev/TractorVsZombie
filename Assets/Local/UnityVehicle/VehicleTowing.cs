@@ -44,4 +44,11 @@ public class VehicleTowing : MonoBehaviour {
         towingJoint.zMotion = ConfigurableJointMotion.Limited;
     }
 
+    public void ClearConnection() {
+        towingJoint.connectedBody = null;
+        towingJoint.xMotion = ConfigurableJointMotion.Free;
+        towingJoint.yMotion = ConfigurableJointMotion.Free;
+        towingJoint.zMotion = ConfigurableJointMotion.Free;
+    }
+
 }

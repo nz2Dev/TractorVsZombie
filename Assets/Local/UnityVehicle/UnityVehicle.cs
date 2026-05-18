@@ -19,6 +19,10 @@ public class UnityVehicle : MonoBehaviour {
     public VehicleChassie Chassie => chassie;
     public VehicleTowing Towing => towing;
 
+    public Vector3 Position => transform.position;
+    public Quaternion Rotation => transform.rotation;
+    public Vector3 Velocity => physics.linearVelocity;
+
     private void Awake() {
         physics = GetComponent<Rigidbody>();
         chassie = GetComponent<VehicleChassie>();
@@ -31,6 +35,19 @@ public class UnityVehicle : MonoBehaviour {
         physics.mass = mass;
     }
 #endif
+
+    public void Transform(Vector3 position, Quaternion rotation) {
+        transform.SetPositionAndRotation(position, rotation);
+        physics.position = position;
+        physics.rotation = rotation;
+    }
+
+    public void DestroySelf() {
+        chassie.baseCollider.isTrigger = true;
+        physics.isKinematic = true;
+        physics.linearVelocity = Vector3.zero;
+        physics.angularVelocity = Vector3.zero;
+    }
 
     private void FixedUpdate() {
         if (drive != null) {
