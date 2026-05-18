@@ -28,6 +28,7 @@ public class UnityVehicle : MonoBehaviour {
         chassie = GetComponent<VehicleChassie>();
         drive = GetComponent<VehicleDrive>();
         steeringAxle = GetComponent<VehicleSteeringAxle>();
+        towing = GetComponent<VehicleTowing>();
     }
 
 #if UNITY_EDITOR
