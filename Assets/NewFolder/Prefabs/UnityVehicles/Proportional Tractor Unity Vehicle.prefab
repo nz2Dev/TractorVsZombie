@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9093452787165827929}
   - component: {fileID: 4495872882688886938}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Rear Left Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ Rigidbody:
   m_GameObject: {fileID: 4441451520058313787}
   serializedVersion: 5
   m_Mass: 2000
-  m_LinearDamping: 1
+  m_LinearDamping: 0.1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -202,7 +202,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6096959774496526162}
   - component: {fileID: 3042798051353856625}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Front Left Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -273,7 +273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8078102304843618046}
   - component: {fileID: 3174082325308362371}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Rear Right Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3734513262738261289}
   - component: {fileID: 5155696973189278775}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Base Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -397,7 +397,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1693447991278118010}
   - component: {fileID: 8090169952234316199}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Front Right Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

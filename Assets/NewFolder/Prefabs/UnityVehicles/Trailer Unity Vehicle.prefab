@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5980005089452948097}
   - component: {fileID: 3839733415428299441}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Front Right Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,7 +81,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6214110984374416491}
   - component: {fileID: 348024632108773573}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Base Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758436668229806698}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: ac61d2b3ec461444fbdbac1495999545, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 3275998511737942848}
   - component: {fileID: 7158297638791994403}
   - component: {fileID: 2938794648065758583}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Turning Body (New)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9002290671559141419}
   - component: {fileID: 3178156590119114254}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Rear Right Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -492,7 +492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2880090461204819423}
   - component: {fileID: 1283283747750132100}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Rear Left Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4556323183739191488}
   - component: {fileID: 7670700374184298500}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Front Left Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
