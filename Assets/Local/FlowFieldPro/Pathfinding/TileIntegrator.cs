@@ -95,7 +95,6 @@ namespace FlowFieldPro
                 }
             }
         }
-
         /// <summary>
         /// Integrates a single tile through all 4 phases.
         /// </summary>
@@ -123,7 +122,7 @@ namespace FlowFieldPro
             bool isGoalTile = seedCosts == null;
             if (isGoalTile && seedCells.Length == 1)
             {
-                ComputeLineOfSight(tile, seedCells[0]);
+                ComputeLineOfSight(tile, seedCells[0], wavefront);
             }
 
             // Phase C: Cost integration (Dijkstra expansion)
@@ -162,6 +161,81 @@ namespace FlowFieldPro
             return queue;
         }
 
+        private static bool IsLosCorner(FlowTile tile, Vector2Int cell, Vector2Int neighbor)
+        {
+            var dx = neighbor.x - cell.x;
+            // horizontal
+            if (dx != 0) 
+            {
+                bool neighborBlocked = tile.Cost[neighbor.x, cell.y] > 1;
+                bool opositeBlocked = tile.Cost[cell.x - dx, cell.y] > 1;
+                return neighborBlocked != opositeBlocked;
+            
+            }
+            // vertical 
+            else 
+            {
+                var dy = neighbor.y - cell.y;
+                bool neighborBlocked = tile.Cost[cell.x, neighbor.y] > 1;
+                bool opositeBlocked = tile.Cost[cell.x, cell.y - dy] > 1;
+                return neighborBlocked != opositeBlocked;
+            }
+        }
+
+        /// <summary>
+        /// Uses a modified Bresenham raycast to find cells blocked by a corner.
+        /// </summary>
+        private static int CastShadowRay(FlowTile tile, Vector2Int corner, Vector2Int goal)
+        {
+            int w = tile.Width;
+            int h = tile.Height;
+
+            int x0 = goal.x;
+            int y0 = goal.y;
+            int x1 = corner.x;
+            int y1 = corner.y;
+
+            int dx = Math.Abs(x1 - x0);
+            int dy = Math.Abs(y1 - y0);
+            int sx = x0 < x1 ? 1 : -1;
+            int sy = y0 < y1 ? 1 : -1;
+            int err = dx - dy;
+
+            int cx = x1;
+            int cy = y1;
+
+            if (cx == x0 && cy == y0)
+                return 0;
+
+            int distance = 0;
+            while (true)
+            {
+                if (cx < 0 || cx >= w || cy < 0 || cy >= h)
+                    break;
+
+                // Stop if we hit another wall (except the starting corner itself)
+                if (tile.Cost.IsWall(cx, cy))
+                    break;
+
+                ref var cell = ref tile.Integration[cx, cy];
+                cell.Flags |= CellFlags.WaveFrontBlocked;
+                distance++;
+
+                int e2 = 2 * err;
+                if (e2 > -dy)
+                {
+                    err -= dy;
+                    cx += sx;
+                }
+                if (e2 < dx)
+                {
+                    err += dx;
+                    cy += sy;
+                }
+            }
+            return distance;
+        }
+
         // -----------------------------------------------------------------------
         // Phase B: Line-of-Sight Pass
         // -----------------------------------------------------------------------
@@ -182,7 +256,7 @@ namespace FlowFieldPro
         /// the diamond-shaped artifacts that pure gradient descent creates near the
         /// destination.
         /// </summary>
-        private static void ComputeLineOfSight(FlowTile tile, Vector2Int goalCell)
+        private static void ComputeLineOfSight(FlowTile tile, Vector2Int goalCell, Queue<Vector2Int> costWavefront)
         {
             int w = tile.Width;
             int h = tile.Height;
@@ -200,6 +274,7 @@ namespace FlowFieldPro
             while (queue.Count > 0)
             {
                 var current = queue.Dequeue();
+                ushort currentCost = tile.Integration[current.x, current.y].BestCost;
 
                 // Expand to cardinal neighbors only (4-connected for LOS flood)
                 foreach (var dir in Directions.Cardinal)
@@ -211,75 +286,40 @@ namespace FlowFieldPro
                         continue;
 
                     int neighborIdx = neighbor.y * w + neighbor.x;
-                    if (visited[neighborIdx])
-                        continue;
+                    ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
 
-                    // Only consider cells with base cost of 1 (flat terrain)
-                    if (tile.Cost[neighbor.x, neighbor.y] != CostField.DefaultCost)
+                    // If we hit an obstacle cell (cost > 1)
+                    if (tile.Cost[neighbor.x, neighbor.y] > CostField.DefaultCost)
+                    {
+                        if (IsLosCorner(tile, current, neighbor)) 
+                        {
+                            CastShadowRay(tile, current, goalCell);
+                        }
+                        continue;
+                    }
+
+                    // If the neighbor is blocked by a shadow line, stop visibility propagation
+                    // but seed it into the cost wavefront for Phase C cost integration.
+                    if ((neighborInt.Flags & CellFlags.WaveFrontBlocked) != 0)
+                    {
+                        ushort potentialCost = (ushort)(currentCost + 1);
+                        if (potentialCost < neighborInt.BestCost)
+                        {
+                            neighborInt.BestCost = potentialCost;
+                            costWavefront.Enqueue(neighbor);
+                        }
+                        continue;
+                    }
+
+                    if (visited[neighborIdx])
                         continue;
 
                     visited[neighborIdx] = true;
 
-                    // Cast a Bresenham ray from this cell back to the goal
-                    if (HasClearLineOfSight(tile, neighbor, goalCell))
-                    {
-                        ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
-                        neighborInt.Flags |= CellFlags.HasLineOfSight;
-                        queue.Enqueue(neighbor);
-                    }
-                    else
-                    {
-                        // This cell is at the LOS boundary — mark as WaveFrontBlocked
-                        ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
-                        neighborInt.Flags |= CellFlags.WaveFrontBlocked;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Checks if a Bresenham line from 'from' to 'to' crosses only non-wall,
-        /// default-cost cells. Used to determine LOS to the goal.
-        /// </summary>
-        internal static bool HasClearLineOfSight(FlowTile tile, Vector2Int from, Vector2Int to)
-        {
-            // Bresenham's line algorithm
-            int x0 = from.x, y0 = from.y;
-            int x1 = to.x, y1 = to.y;
-
-            int dx = Math.Abs(x1 - x0);
-            int dy = Math.Abs(y1 - y0);
-            int sx = x0 < x1 ? 1 : -1;
-            int sy = y0 < y1 ? 1 : -1;
-            int err = dx - dy;
-
-            while (true)
-            {
-                // Reached the target — line is clear
-                if (x0 == x1 && y0 == y1)
-                    return true;
-
-                // Check if current cell is an obstacle
-                if (tile.Cost.IsWall(x0, y0))
-                    return false;
-
-                // For strict LOS, intermediate cells should also be basic terrain
-                if (x0 != from.x || y0 != from.y) // skip the starting cell
-                {
-                    if (tile.Cost[x0, y0] > CostField.DefaultCost)
-                        return false;
-                }
-
-                int e2 = 2 * err;
-                if (e2 > -dy)
-                {
-                    err -= dy;
-                    x0 += sx;
-                }
-                if (e2 < dx)
-                {
-                    err += dx;
-                    y0 += sy;
+                    // Increment the wave front cost by one (as the paper says) and flag as HasLineOfSight
+                    neighborInt.BestCost = (ushort)(currentCost + 1);
+                    neighborInt.Flags |= CellFlags.HasLineOfSight;
+                    queue.Enqueue(neighbor);
                 }
             }
         }
