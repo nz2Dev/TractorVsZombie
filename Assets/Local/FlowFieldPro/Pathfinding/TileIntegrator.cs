@@ -161,24 +161,26 @@ namespace FlowFieldPro
             return queue;
         }
 
+        private static int GetCostOutOfBoundsAsWalls(FlowTile tile, int x, int y) {
+            if (!tile.Cost.InBounds(x, y))
+                return CostField.Wall;
+            return tile.Cost[x, y];
+        }
+
         private static bool IsLosCorner(FlowTile tile, Vector2Int cell, Vector2Int neighbor)
         {
-            var dx = neighbor.x - cell.x;
-            // horizontal
+            int dx = neighbor.x - cell.x;
             if (dx != 0) 
             {
-                bool neighborBlocked = tile.Cost[neighbor.x, cell.y] > 1;
-                bool opositeBlocked = tile.Cost[cell.x - dx, cell.y] > 1;
-                return neighborBlocked != opositeBlocked;
-            
-            }
-            // vertical 
+                bool west = GetCostOutOfBoundsAsWalls(tile, cell.x - 1, cell.y) > 1;
+                bool east = GetCostOutOfBoundsAsWalls(tile, cell.x + 1, cell.y) > 1;
+                return west != east;
+            } 
             else 
             {
-                var dy = neighbor.y - cell.y;
-                bool neighborBlocked = tile.Cost[cell.x, neighbor.y] > 1;
-                bool opositeBlocked = tile.Cost[cell.x, cell.y - dy] > 1;
-                return neighborBlocked != opositeBlocked;
+                bool north = GetCostOutOfBoundsAsWalls(tile, cell.x, cell.y - 1) > 1;
+                bool south = GetCostOutOfBoundsAsWalls(tile, cell.x, cell.y + 1) > 1;
+                return north != south;
             }
         }
 
