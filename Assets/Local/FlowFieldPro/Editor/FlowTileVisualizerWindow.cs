@@ -36,7 +36,7 @@ namespace FlowFieldPro.Editor
         private float currentCellSize;
 
         private const float BaseCellSize = 36f;
-        private const float SidebarWidth = 280f;
+        private const float SidebarWidth = 380f;
 
         [MenuItem("Tools/FlowFieldPro/FlowTile Visualizer")]
         public static void ShowWindow()
@@ -388,7 +388,10 @@ namespace FlowFieldPro.Editor
             if (isWall)
                 bg = new Color(0.15f, 0.15f, 0.15f);
             else if (integrationCell.BestCost != IntegrationField.Unreachable)
-                bg = GetIntegrationColor(integrationCell.BestCost, maxCost);
+                if (integrationCell.Flags.HasFlag(CellFlags.HasLineOfSight))
+                    bg = new Color(0.7f, 0.7f, 0.7f);
+                else 
+                    bg = GetIntegrationColor(integrationCell.BestCost, maxCost);
             else
                 bg = GetCostColor(cost);
 
@@ -401,18 +404,10 @@ namespace FlowFieldPro.Editor
                 DrawRectBorder(rect, new Color(0.2f, 1f, 0.3f, 1f), 2f);
             }
 
-            // LOS flag indicator
-            if (!isWall && (integrationCell.Flags & CellFlags.HasLineOfSight) != 0)
-            {
-                var dotRect = new Rect(rect.xMax - 7f, rect.y + 2f, 5f, 5f);
-                EditorGUI.DrawRect(dotRect, new Color(0.2f, 1f, 0.8f, 0.9f));
-            }
-
             // WaveFrontBlocked flag indicator
             if (!isWall && (integrationCell.Flags & CellFlags.WaveFrontBlocked) != 0)
             {
-                var dotRect = new Rect(rect.x + 2f, rect.y + 2f, 5f, 5f);
-                EditorGUI.DrawRect(dotRect, new Color(1f, 0.3f, 0.1f, 0.9f));
+                DrawRectBorder(ContractRect(rect, currentCellSize * 0.08f), new Color(0.2f, 0.2f, 0.2f, 1f), 2f);
             }
 
             // Flow arrow
