@@ -12,8 +12,7 @@ namespace FlowFieldPro.Editor
     /// </summary>
     public class FlowTileVisualizerWindow : EditorWindow
     {
-        [SerializeField] private int gridWidth = 10;
-        [SerializeField] private int gridHeight = 10;
+        [SerializeField] private int gridSize = 10;
         [SerializeField] private float zoom = 1f;
 
         [SerializeField] private int goalX;
@@ -25,6 +24,8 @@ namespace FlowFieldPro.Editor
 
         private FlowTile tile;
         private Vector2Int? selectedCell;
+        private bool editingWalls;
+        private bool? wallBrushPlacing;
 
         private Vector2 sidebarScrollPos;
         private Vector2 gridScrollPos;
@@ -85,17 +86,16 @@ namespace FlowFieldPro.Editor
             GUILayout.Space(12);
             DrawSectionHeader("Tile Size");
 
-            bool changed = false;
+            bool sizeChanged = false;
+            bool passesChanged = false;
 
-            int newW = EditorGUILayout.IntSlider("Width", gridWidth, 2, 64);
-            int newH = EditorGUILayout.IntSlider("Height", gridHeight, 2, 64);
-            if (newW != gridWidth || newH != gridHeight)
+            int newSize = EditorGUILayout.IntSlider("Size", gridSize, 2, 64);
+            if (newSize != gridSize)
             {
-                gridWidth = newW;
-                gridHeight = newH;
-                goalX = Mathf.Clamp(goalX, 0, gridWidth - 1);
-                goalY = Mathf.Clamp(goalY, 0, gridHeight - 1);
-                changed = true;
+                gridSize = newSize;
+                goalX = Mathf.Clamp(goalX, 0, gridSize - 1);
+                goalY = Mathf.Clamp(goalY, 0, gridSize - 1);
+                sizeChanged = true;
             }
 
             zoom = EditorGUILayout.Slider("Zoom", zoom, 0.3f, 4f);
@@ -103,13 +103,13 @@ namespace FlowFieldPro.Editor
             GUILayout.Space(12);
             DrawSectionHeader("Goal Position");
 
-            int newGX = EditorGUILayout.IntSlider("Goal X", goalX, 0, gridWidth - 1);
-            int newGY = EditorGUILayout.IntSlider("Goal Y", goalY, 0, gridHeight - 1);
+            int newGX = EditorGUILayout.IntSlider("Goal X", goalX, 0, gridSize - 1);
+            int newGY = EditorGUILayout.IntSlider("Goal Y", goalY, 0, gridSize - 1);
             if (newGX != goalX || newGY != goalY)
             {
                 goalX = newGX;
                 goalY = newGY;
-                changed = true;
+                passesChanged = true;
             }
 
             GUILayout.Space(12);
@@ -123,15 +123,36 @@ namespace FlowFieldPro.Editor
                 enableLOS = newLOS;
                 enableCostIntegration = newCost;
                 enableFlowBuilder = newFlow;
-                changed = true;
+                passesChanged = true;
             }
 
-            if (changed)
+            if (sizeChanged)
                 RebuildAndRun();
+            else if (passesChanged)
+                RunPasses();
 
             GUILayout.Space(16);
-            DrawSectionHeader("Cell Inspector");
-            DrawCellInspector();
+
+            if (editingWalls)
+            {
+                DrawSectionHeader("Wall Editing");
+                EditorGUILayout.HelpBox("Click to place walls.\nRight-click to erase walls.", MessageType.Info);
+                GUILayout.Space(4);
+                if (GUILayout.Button("Done"))
+                {
+                    editingWalls = false;
+                    RunPasses();
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("Edit Walls"))
+                    editingWalls = true;
+
+                GUILayout.Space(16);
+                DrawSectionHeader("Cell Inspector");
+                DrawCellInspector();
+            }
 
             GUILayout.Space(10);
             EditorGUILayout.EndScrollView();
@@ -154,7 +175,7 @@ namespace FlowFieldPro.Editor
             }
 
             var c = selectedCell.Value;
-            if (c.x < 0 || c.x >= gridWidth || c.y < 0 || c.y >= gridHeight)
+            if (c.x < 0 || c.x >= gridSize || c.y < 0 || c.y >= gridSize)
             {
                 selectedCell = null;
                 return;
@@ -195,8 +216,8 @@ namespace FlowFieldPro.Editor
             gridScrollPos = GUILayout.BeginScrollView(gridScrollPos);
 
             float drawCellSize = BaseCellSize * zoom;
-            float totalW = gridWidth * drawCellSize;
-            float totalH = gridHeight * drawCellSize;
+            float totalW = gridSize * drawCellSize;
+            float totalH = gridSize * drawCellSize;
             currentCellSize = drawCellSize;
 
             var rect = GUILayoutUtility.GetRect(totalW, totalH, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
@@ -227,11 +248,11 @@ namespace FlowFieldPro.Editor
 
                 EditorGUI.DrawRect(gridRect, new Color(0.08f, 0.08f, 0.08f));
 
-                for (int y = 0; y < gridHeight; y++)
+                for (int y = 0; y < gridSize; y++)
                 {
-                    for (int x = 0; x < gridWidth; x++)
+                    for (int x = 0; x < gridSize; x++)
                     {
-                        int screenRow = gridHeight - 1 - y;
+                        int screenRow = gridSize - 1 - y;
                         var cellRect = new Rect(startX + x * currentCellSize, startY + screenRow * currentCellSize, currentCellSize, currentCellSize);
                         DrawCell(x, y, cellRect, maxCost);
                     }
@@ -239,12 +260,12 @@ namespace FlowFieldPro.Editor
 
                 // Grid lines
                 Handles.color = new Color(1f, 1f, 1f, 0.06f);
-                for (int x = 0; x <= gridWidth; x++)
+                for (int x = 0; x <= gridSize; x++)
                 {
                     float px = startX + x * currentCellSize;
                     Handles.DrawLine(new Vector3(px, startY), new Vector3(px, startY + totalH));
                 }
-                for (int y = 0; y <= gridHeight; y++)
+                for (int y = 0; y <= gridSize; y++)
                 {
                     float py = startY + y * currentCellSize;
                     Handles.DrawLine(new Vector3(startX, py), new Vector3(startX + totalW, py));
@@ -254,7 +275,7 @@ namespace FlowFieldPro.Editor
                 if (selectedCell.HasValue)
                 {
                     var sc = selectedCell.Value;
-                    int selScreenRow = gridHeight - 1 - sc.y;
+                    int selScreenRow = gridSize - 1 - sc.y;
                     var selRect = new Rect(startX + sc.x * currentCellSize, startY + selScreenRow * currentCellSize, currentCellSize, currentCellSize);
                     DrawRectBorder(selRect, new Color(1f, 0.9f, 0.2f, 1f), 2.5f);
                 }
@@ -271,17 +292,83 @@ namespace FlowFieldPro.Editor
             if (e == null || cachedGridRect.width <= 0f)
                 return;
 
-            if (e.type == EventType.MouseDown && e.button == 0 && cachedGridRect.Contains(e.mousePosition))
+            if (!cachedGridRect.Contains(e.mousePosition))
             {
-                int mx = Mathf.FloorToInt((e.mousePosition.x - cachedStartX) / currentCellSize);
-                int screenRow = Mathf.FloorToInt((e.mousePosition.y - cachedStartY) / currentCellSize);
-                mx = Mathf.Clamp(mx, 0, gridWidth - 1);
-                int my = Mathf.Clamp(gridHeight - 1 - screenRow, 0, gridHeight - 1);
+                if (e.type == EventType.MouseUp)
+                    wallBrushPlacing = null;
+                return;
+            }
 
-                selectedCell = new Vector2Int(mx, my);
+            if (editingWalls)
+                HandleWallEditing(e);
+            else
+                HandleCellInspect(e);
+        }
+
+        private bool TryGetCellUnderMouse(Event e, out Vector2Int cell)
+        {
+            int mx = Mathf.FloorToInt((e.mousePosition.x - cachedStartX) / currentCellSize);
+            int screenRow = Mathf.FloorToInt((e.mousePosition.y - cachedStartY) / currentCellSize);
+            mx = Mathf.Clamp(mx, 0, gridSize - 1);
+            int my = Mathf.Clamp(gridSize - 1 - screenRow, 0, gridSize - 1);
+            cell = new Vector2Int(mx, my);
+            return true;
+        }
+
+        private void HandleCellInspect(Event e)
+        {
+            if (e.type != EventType.MouseDown || e.button != 0)
+                return;
+
+            if (TryGetCellUnderMouse(e, out var cell))
+            {
+                selectedCell = cell;
                 e.Use();
                 Repaint();
             }
+        }
+
+        private void HandleWallEditing(Event e)
+        {
+            if (e.type == EventType.MouseDown && (e.button == 0 || e.button == 1))
+            {
+                if (TryGetCellUnderMouse(e, out var cell))
+                {
+                    wallBrushPlacing = e.button == 0;
+                    ApplyWallBrush(cell);
+                    e.Use();
+                }
+            }
+            else if (e.type == EventType.MouseDrag && wallBrushPlacing.HasValue)
+            {
+                if (TryGetCellUnderMouse(e, out var cell))
+                {
+                    ApplyWallBrush(cell);
+                    e.Use();
+                }
+            }
+            else if (e.type == EventType.MouseUp)
+            {
+                wallBrushPlacing = null;
+            }
+        }
+
+        private void ApplyWallBrush(Vector2Int cell)
+        {
+            if (tile == null)
+                return;
+
+            bool placing = wallBrushPlacing.GetValueOrDefault(true);
+            byte current = tile.Cost[cell.x, cell.y];
+
+            if (placing && current != CostField.Wall)
+                tile.Cost[cell.x, cell.y] = CostField.Wall;
+            else if (!placing && current == CostField.Wall)
+                tile.Cost[cell.x, cell.y] = CostField.DefaultCost;
+            else
+                return;
+
+            RunPasses();
         }
 
         // ------------------------------------------------------------------
@@ -454,9 +541,9 @@ namespace FlowFieldPro.Editor
         private ushort GetMaxIntegrationCost()
         {
             ushort max = 0;
-            for (int y = 0; y < gridHeight; y++)
+            for (int y = 0; y < gridSize; y++)
             {
-                for (int x = 0; x < gridWidth; x++)
+                for (int x = 0; x < gridSize; x++)
                 {
                     ushort c = tile.Integration[x, y].BestCost;
                     if (c != IntegrationField.Unreachable && c > max)
@@ -472,7 +559,7 @@ namespace FlowFieldPro.Editor
 
         private void RebuildAndRun()
         {
-            tile = new FlowTile(gridWidth, gridHeight);
+            tile = new FlowTile(gridSize, gridSize);
             RunPasses();
         }
 
