@@ -20,6 +20,7 @@
   <Project Path="Playground.Example.PlayTests.csproj" />
   <Project Path="Playground.Example.csproj" />
   <Project Path="NewFolder.EditorTests.csproj" />
+  <Project Path="FlowFieldPro.Editor.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
   <Project Path="CollisionLookup.csproj" />
 </Solution>

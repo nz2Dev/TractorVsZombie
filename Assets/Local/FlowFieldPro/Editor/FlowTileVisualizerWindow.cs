@@ -1,0 +1,513 @@
+using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+namespace FlowFieldPro.Editor
+{
+    /// <summary>
+    /// Interactive visualizer for a single FlowTile data structure.
+    /// Lets the user configure tile size, goal position, and selectively run
+    /// individual integration passes to observe their effect on the grid.
+    /// </summary>
+    public class FlowTileVisualizerWindow : EditorWindow
+    {
+        [SerializeField] private int gridWidth = 10;
+        [SerializeField] private int gridHeight = 10;
+        [SerializeField] private float zoom = 1f;
+
+        [SerializeField] private int goalX;
+        [SerializeField] private int goalY;
+
+        [SerializeField] private bool enableLOS = true;
+        [SerializeField] private bool enableCostIntegration = true;
+        [SerializeField] private bool enableFlowBuilder = true;
+
+        private FlowTile tile;
+        private Vector2Int? selectedCell;
+
+        private Vector2 sidebarScrollPos;
+        private Vector2 gridScrollPos;
+
+        private Rect cachedGridRect;
+        private float cachedStartX;
+        private float cachedStartY;
+        private float currentCellSize;
+
+        private const float BaseCellSize = 36f;
+        private const float SidebarWidth = 280f;
+
+        [MenuItem("Tools/FlowFieldPro/FlowTile Visualizer")]
+        public static void ShowWindow()
+        {
+            var window = GetWindow<FlowTileVisualizerWindow>();
+            window.titleContent = new GUIContent("FlowTile Visualizer");
+            window.minSize = new Vector2(600, 400);
+            window.Show();
+        }
+
+        private void OnEnable()
+        {
+            RebuildAndRun();
+        }
+
+        private void OnGUI()
+        {
+            EditorGUI.DrawRect(new Rect(0, 0, SidebarWidth, position.height), new Color(0.18f, 0.18f, 0.18f));
+            EditorGUI.DrawRect(new Rect(SidebarWidth - 1f, 0, 1f, position.height), new Color(0.12f, 0.12f, 0.12f));
+
+            GUILayout.BeginArea(new Rect(0, 0, SidebarWidth, position.height));
+            DrawSidebar();
+            GUILayout.EndArea();
+
+            GUILayout.BeginArea(new Rect(SidebarWidth, 0, position.width - SidebarWidth, position.height));
+            DrawGridArea(position.width - SidebarWidth, position.height);
+            GUILayout.EndArea();
+        }
+
+        // ------------------------------------------------------------------
+        // Sidebar
+        // ------------------------------------------------------------------
+
+        private void DrawSidebar()
+        {
+            sidebarScrollPos = EditorGUILayout.BeginScrollView(sidebarScrollPos);
+            GUILayout.Space(10);
+
+            var titleStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                fontSize = 15,
+                alignment = TextAnchor.MiddleCenter
+            };
+            titleStyle.normal.textColor = new Color(0.2f, 0.7f, 1f);
+            GUILayout.Label("FlowTile Visualizer", titleStyle);
+
+            GUILayout.Space(12);
+            DrawSectionHeader("Tile Size");
+
+            bool changed = false;
+
+            int newW = EditorGUILayout.IntSlider("Width", gridWidth, 2, 64);
+            int newH = EditorGUILayout.IntSlider("Height", gridHeight, 2, 64);
+            if (newW != gridWidth || newH != gridHeight)
+            {
+                gridWidth = newW;
+                gridHeight = newH;
+                goalX = Mathf.Clamp(goalX, 0, gridWidth - 1);
+                goalY = Mathf.Clamp(goalY, 0, gridHeight - 1);
+                changed = true;
+            }
+
+            zoom = EditorGUILayout.Slider("Zoom", zoom, 0.3f, 4f);
+
+            GUILayout.Space(12);
+            DrawSectionHeader("Goal Position");
+
+            int newGX = EditorGUILayout.IntSlider("Goal X", goalX, 0, gridWidth - 1);
+            int newGY = EditorGUILayout.IntSlider("Goal Y", goalY, 0, gridHeight - 1);
+            if (newGX != goalX || newGY != goalY)
+            {
+                goalX = newGX;
+                goalY = newGY;
+                changed = true;
+            }
+
+            GUILayout.Space(12);
+            DrawSectionHeader("Passes");
+
+            bool newLOS = EditorGUILayout.Toggle("1. Line of Sight", enableLOS);
+            bool newCost = EditorGUILayout.Toggle("2. Cost Integration", enableCostIntegration);
+            bool newFlow = EditorGUILayout.Toggle("3. Flow Field Builder", enableFlowBuilder);
+            if (newLOS != enableLOS || newCost != enableCostIntegration || newFlow != enableFlowBuilder)
+            {
+                enableLOS = newLOS;
+                enableCostIntegration = newCost;
+                enableFlowBuilder = newFlow;
+                changed = true;
+            }
+
+            if (changed)
+                RebuildAndRun();
+
+            GUILayout.Space(16);
+            DrawSectionHeader("Cell Inspector");
+            DrawCellInspector();
+
+            GUILayout.Space(10);
+            EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawSectionHeader(string label)
+        {
+            var style = new GUIStyle(EditorStyles.boldLabel) { fontSize = 12 };
+            style.normal.textColor = new Color(0.6f, 0.8f, 1f);
+            GUILayout.Label(label, style);
+            GUILayout.Space(2);
+        }
+
+        private void DrawCellInspector()
+        {
+            if (!selectedCell.HasValue || tile == null)
+            {
+                EditorGUILayout.HelpBox("Click a grid cell to inspect.", MessageType.Info);
+                return;
+            }
+
+            var c = selectedCell.Value;
+            if (c.x < 0 || c.x >= gridWidth || c.y < 0 || c.y >= gridHeight)
+            {
+                selectedCell = null;
+                return;
+            }
+
+            EditorGUI.indentLevel++;
+
+            EditorGUILayout.LabelField("Coords", $"({c.x}, {c.y})");
+
+            byte costVal = tile.Cost[c.x, c.y];
+            EditorGUILayout.LabelField("Cost", costVal == CostField.Wall ? "Wall (255)" : costVal.ToString());
+
+            ushort bestCost = tile.Integration[c.x, c.y].BestCost;
+            EditorGUILayout.LabelField("Best Cost", bestCost == IntegrationField.Unreachable ? "Unreachable" : bestCost.ToString());
+
+            var flags = tile.Integration[c.x, c.y].Flags;
+            EditorGUILayout.LabelField("Flags", flags.ToString());
+
+            var flowCell = tile.Flow[c.x, c.y];
+            EditorGUILayout.LabelField("Flow Dir", flowCell.Direction.ToString());
+            EditorGUILayout.LabelField("Has LOS (Flow)", flowCell.HasLineOfSight.ToString());
+
+            EditorGUI.indentLevel--;
+        }
+
+        // ------------------------------------------------------------------
+        // Grid area
+        // ------------------------------------------------------------------
+
+        private void DrawGridArea(float viewWidth, float viewHeight)
+        {
+            if (Event.current.type == EventType.Repaint)
+                EditorGUI.DrawRect(new Rect(0, 0, viewWidth, viewHeight), new Color(0.1f, 0.1f, 0.1f));
+
+            if (tile == null)
+                RebuildAndRun();
+
+            gridScrollPos = GUILayout.BeginScrollView(gridScrollPos);
+
+            float drawCellSize = BaseCellSize * zoom;
+            float totalW = gridWidth * drawCellSize;
+            float totalH = gridHeight * drawCellSize;
+            currentCellSize = drawCellSize;
+
+            var rect = GUILayoutUtility.GetRect(totalW, totalH, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+
+            float startX = rect.x;
+            float startY = rect.y;
+            if (viewWidth > totalW)
+                startX += (viewWidth - totalW) * 0.5f;
+            if (viewHeight > totalH)
+                startY += (viewHeight - totalH) * 0.5f;
+
+            var gridRect = new Rect(startX, startY, totalW, totalH);
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                cachedGridRect = gridRect;
+                cachedStartX = startX;
+                cachedStartY = startY;
+            }
+
+            HandleMouseClick();
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                ushort maxCost = GetMaxIntegrationCost();
+
+                Handles.BeginGUI();
+
+                EditorGUI.DrawRect(gridRect, new Color(0.08f, 0.08f, 0.08f));
+
+                for (int y = 0; y < gridHeight; y++)
+                {
+                    for (int x = 0; x < gridWidth; x++)
+                    {
+                        int screenRow = gridHeight - 1 - y;
+                        var cellRect = new Rect(startX + x * currentCellSize, startY + screenRow * currentCellSize, currentCellSize, currentCellSize);
+                        DrawCell(x, y, cellRect, maxCost);
+                    }
+                }
+
+                // Grid lines
+                Handles.color = new Color(1f, 1f, 1f, 0.06f);
+                for (int x = 0; x <= gridWidth; x++)
+                {
+                    float px = startX + x * currentCellSize;
+                    Handles.DrawLine(new Vector3(px, startY), new Vector3(px, startY + totalH));
+                }
+                for (int y = 0; y <= gridHeight; y++)
+                {
+                    float py = startY + y * currentCellSize;
+                    Handles.DrawLine(new Vector3(startX, py), new Vector3(startX + totalW, py));
+                }
+
+                // Selected cell highlight
+                if (selectedCell.HasValue)
+                {
+                    var sc = selectedCell.Value;
+                    int selScreenRow = gridHeight - 1 - sc.y;
+                    var selRect = new Rect(startX + sc.x * currentCellSize, startY + selScreenRow * currentCellSize, currentCellSize, currentCellSize);
+                    DrawRectBorder(selRect, new Color(1f, 0.9f, 0.2f, 1f), 2.5f);
+                }
+
+                Handles.EndGUI();
+            }
+
+            GUILayout.EndScrollView();
+        }
+
+        private void HandleMouseClick()
+        {
+            var e = Event.current;
+            if (e == null || cachedGridRect.width <= 0f)
+                return;
+
+            if (e.type == EventType.MouseDown && e.button == 0 && cachedGridRect.Contains(e.mousePosition))
+            {
+                int mx = Mathf.FloorToInt((e.mousePosition.x - cachedStartX) / currentCellSize);
+                int screenRow = Mathf.FloorToInt((e.mousePosition.y - cachedStartY) / currentCellSize);
+                mx = Mathf.Clamp(mx, 0, gridWidth - 1);
+                int my = Mathf.Clamp(gridHeight - 1 - screenRow, 0, gridHeight - 1);
+
+                selectedCell = new Vector2Int(mx, my);
+                e.Use();
+                Repaint();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // Cell rendering
+        // ------------------------------------------------------------------
+
+        private void DrawCell(int x, int y, Rect rect, ushort maxCost)
+        {
+            byte cost = tile.Cost[x, y];
+            var integrationCell = tile.Integration[x, y];
+            var flowCell = tile.Flow[x, y];
+            bool isGoal = (x == goalX && y == goalY);
+            bool isWall = cost == CostField.Wall;
+
+            // Background
+            Color bg;
+            if (isWall)
+                bg = new Color(0.15f, 0.15f, 0.15f);
+            else if (integrationCell.BestCost != IntegrationField.Unreachable)
+                bg = GetIntegrationColor(integrationCell.BestCost, maxCost);
+            else
+                bg = GetCostColor(cost);
+
+            EditorGUI.DrawRect(rect, bg);
+
+            // Goal marker
+            if (isGoal)
+            {
+                EditorGUI.DrawRect(ContractRect(rect, currentCellSize * 0.08f), new Color(0.1f, 0.8f, 0.2f, 0.3f));
+                DrawRectBorder(rect, new Color(0.2f, 1f, 0.3f, 1f), 2f);
+            }
+
+            // LOS flag indicator
+            if (!isWall && (integrationCell.Flags & CellFlags.HasLineOfSight) != 0)
+            {
+                var dotRect = new Rect(rect.xMax - 7f, rect.y + 2f, 5f, 5f);
+                EditorGUI.DrawRect(dotRect, new Color(0.2f, 1f, 0.8f, 0.9f));
+            }
+
+            // WaveFrontBlocked flag indicator
+            if (!isWall && (integrationCell.Flags & CellFlags.WaveFrontBlocked) != 0)
+            {
+                var dotRect = new Rect(rect.x + 2f, rect.y + 2f, 5f, 5f);
+                EditorGUI.DrawRect(dotRect, new Color(1f, 0.3f, 0.1f, 0.9f));
+            }
+
+            // Flow arrow
+            if (!isWall && enableFlowBuilder)
+            {
+                if (flowCell.HasLineOfSight)
+                    DrawCrosshair(rect, new Color(0.2f, 1f, 0.8f, 0.8f));
+                else if (flowCell.Direction != Direction.None)
+                    DrawArrow(rect, flowCell.Direction, new Color(0.95f, 0.95f, 0.95f, 0.85f));
+            }
+
+            // Label
+            if (currentCellSize >= 22f)
+            {
+                string labelText = "";
+                Color labelColor = Color.white;
+
+                if (isWall)
+                {
+                    labelText = "W";
+                    labelColor = new Color(0.5f, 0.5f, 0.5f);
+                }
+                else if (isGoal)
+                {
+                    labelText = "G";
+                    labelColor = Color.green;
+                }
+                else if (integrationCell.BestCost != IntegrationField.Unreachable)
+                {
+                    labelText = integrationCell.BestCost.ToString();
+                    labelColor = new Color(1f, 1f, 1f, 0.7f);
+                }
+                else
+                {
+                    labelText = cost == CostField.DefaultCost ? "" : cost.ToString();
+                    labelColor = new Color(0.7f, 0.7f, 0.7f, 0.5f);
+                }
+
+                if (!string.IsNullOrEmpty(labelText))
+                {
+                    var labelStyle = new GUIStyle(EditorStyles.miniLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = Mathf.Clamp(Mathf.RoundToInt(currentCellSize * 0.32f), 8, 14)
+                    };
+                    labelStyle.normal.textColor = labelColor;
+                    GUI.Label(rect, labelText, labelStyle);
+                }
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // Drawing helpers
+        // ------------------------------------------------------------------
+
+        private Rect ContractRect(Rect rect, float padding) =>
+            new Rect(rect.x + padding, rect.y + padding, rect.width - padding * 2, rect.height - padding * 2);
+
+        private void DrawRectBorder(Rect rect, Color color, float thickness)
+        {
+            Handles.color = color;
+            Handles.DrawAAPolyLine(thickness,
+                new Vector3(rect.x, rect.y),
+                new Vector3(rect.xMax, rect.y),
+                new Vector3(rect.xMax, rect.yMax),
+                new Vector3(rect.x, rect.yMax),
+                new Vector3(rect.x, rect.y));
+        }
+
+        private void DrawCrosshair(Rect rect, Color color)
+        {
+            var center = rect.center;
+            float size = Mathf.Min(rect.width, rect.height) * 0.18f;
+            Handles.color = color;
+            Handles.DrawAAPolyLine(2f, new Vector3(center.x - size, center.y), new Vector3(center.x + size, center.y));
+            Handles.DrawAAPolyLine(2f, new Vector3(center.x, center.y - size), new Vector3(center.x, center.y + size));
+        }
+
+        private void DrawArrow(Rect rect, Direction dir, Color color)
+        {
+            if (dir == Direction.None)
+                return;
+
+            var center = rect.center;
+            float size = Mathf.Min(rect.width, rect.height) * 0.38f;
+
+            var dirOffset = Directions.Offset(dir);
+            var forward = new Vector2(dirOffset.x, -dirOffset.y).normalized;
+            var right = new Vector2(forward.y, -forward.x);
+
+            var start = center - forward * (size * 0.5f);
+            var end = center + forward * (size * 0.6f);
+
+            Handles.color = color;
+            Handles.DrawAAPolyLine(2.5f, start, end);
+
+            float headSize = size * 0.35f;
+            Handles.DrawAAPolyLine(2.5f, end, (Vector3)(end - forward * headSize + right * headSize));
+            Handles.DrawAAPolyLine(2.5f, end, (Vector3)(end - forward * headSize - right * headSize));
+        }
+
+        // ------------------------------------------------------------------
+        // Color helpers
+        // ------------------------------------------------------------------
+
+        private Color GetCostColor(byte cost)
+        {
+            if (cost == CostField.Wall)
+                return new Color(0.15f, 0.15f, 0.15f);
+            if (cost == CostField.DefaultCost)
+                return new Color(0.12f, 0.15f, 0.18f);
+
+            float t = (cost - 2) / 252f;
+            return Color.Lerp(new Color(0.1f, 0.6f, 0.4f), new Color(0.8f, 0.2f, 0.1f), t);
+        }
+
+        private Color GetIntegrationColor(ushort bestCost, ushort maxCost)
+        {
+            if (bestCost == IntegrationField.Unreachable)
+                return new Color(0.1f, 0.1f, 0.1f);
+
+            float t = maxCost > 0 ? (float)bestCost / maxCost : 0f;
+            return Color.Lerp(new Color(0.0f, 0.55f, 0.8f), new Color(0.25f, 0.0f, 0.45f), t);
+        }
+
+        private ushort GetMaxIntegrationCost()
+        {
+            ushort max = 0;
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int x = 0; x < gridWidth; x++)
+                {
+                    ushort c = tile.Integration[x, y].BestCost;
+                    if (c != IntegrationField.Unreachable && c > max)
+                        max = c;
+                }
+            }
+            return max;
+        }
+
+        // ------------------------------------------------------------------
+        // Tile rebuild & pass execution
+        // ------------------------------------------------------------------
+
+        private void RebuildAndRun()
+        {
+            tile = new FlowTile(gridWidth, gridHeight);
+            RunPasses();
+        }
+
+        private void RunPasses()
+        {
+            if (tile == null)
+                return;
+
+            tile.ResetComputed();
+
+            var goal = new Vector2Int(goalX, goalY);
+            if (!tile.Cost.InBounds(goal.x, goal.y))
+                return;
+
+            // Manually seed the goal (replaces SeedWavefrontPass)
+            ref var goalIntCell = ref tile.Integration[goal.x, goal.y];
+            goalIntCell.BestCost = 0;
+            goalIntCell.Flags |= CellFlags.ActiveWaveFront;
+
+            var wavefront = new Queue<Vector2Int>();
+            wavefront.Enqueue(goal);
+
+            // 1. Line of Sight
+            if (enableLOS)
+                LineOfSightPass.ComputeLineOfSight(tile, goal, wavefront);
+
+            // 2. Cost Integration
+            if (enableCostIntegration)
+                CostIntegrationPass.IntegrateCosts(tile, wavefront);
+
+            // 3. Flow Field Builder
+            if (enableFlowBuilder)
+                FlowFieldBuilderPass.BuildFlowField(tile);
+
+            Repaint();
+        }
+    }
+}
