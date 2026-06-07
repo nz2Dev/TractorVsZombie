@@ -407,7 +407,7 @@ namespace FlowFieldPro.Editor
             // WaveFrontBlocked flag indicator
             if (!isWall && (integrationCell.Flags & CellFlags.WaveFrontBlocked) != 0)
             {
-                DrawRectBorder(ContractRect(rect, currentCellSize * 0.08f), new Color(0.2f, 0.2f, 0.2f, 1f), 2f);
+                DrawRectBorder(ContractRect(rect, currentCellSize * 0.08f), new Color(0.8f, 0.2f, 0.2f, 1f), 2f);
             }
 
             // Flow arrow
