@@ -81,14 +81,14 @@ namespace FlowFieldPro.EditorTests
             // The corner cell is (2, 2).
             // When (2, 2) is hit, a shadow ray is projected away from (1, 0).
             // Verify that cells directly behind the wall row do not have LOS.
-            Assert.IsFalse((tile.Integration[0, 3].Flags & CellFlags.HasLineOfSight) != 0, "Cell (0,3) should be in shadow");
-            Assert.IsFalse((tile.Integration[1, 3].Flags & CellFlags.HasLineOfSight) != 0, "Cell (1,3) should be in shadow");
-            Assert.IsFalse((tile.Integration[2, 3].Flags & CellFlags.HasLineOfSight) != 0, "Cell (2,3) should be in shadow");
+            Assert.IsFalse(tile.Integration[0, 3].Flags.HasFlag(CellFlags.HasLineOfSight), "Cell (0,3) should be in shadow");
+            Assert.IsFalse(tile.Integration[1, 3].Flags.HasFlag(CellFlags.HasLineOfSight), "Cell (1,3) should be in shadow");
+            Assert.IsFalse(tile.Integration[2, 3].Flags.HasFlag(CellFlags.HasLineOfSight), "Cell (2,3) should be in shadow");
 
-            // On the other hand, cells to the right of the wall (3, 2), (4, 2), etc. should have LOS
-            Assert.IsTrue((tile.Integration[3, 0].Flags & CellFlags.HasLineOfSight) != 0);
-            Assert.IsTrue((tile.Integration[3, 1].Flags & CellFlags.HasLineOfSight) != 0);
-            Assert.IsTrue((tile.Integration[3, 2].Flags & CellFlags.HasLineOfSight) != 0);
+            // On the other hand, cells before the wall should have line of sight
+            Assert.IsTrue(tile.Integration[0, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
+            Assert.IsTrue(tile.Integration[1, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
+            Assert.IsTrue(tile.Integration[2, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
         }
     }
 }
