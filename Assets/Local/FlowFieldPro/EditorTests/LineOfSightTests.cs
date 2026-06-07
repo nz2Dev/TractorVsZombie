@@ -159,5 +159,26 @@ namespace FlowFieldPro.EditorTests
             var result = LineOfSightPass.IsLosCorner(costField, test, wall, goal);
             Assert.IsTrue(result);
         }
+
+        [Test]
+        public void IsLosCorner_TestToTheNorthNeighborToTheSouth_IsCorner() {
+            //(y)
+            //
+            // 4  . . . . .
+            // 3  T . . . .
+            // 2  W . G . .
+            // 1  . . . . .
+            // 0  . . . . .
+            //
+            // #  0 1 2 3 4  (x)
+            var test = new Vector2Int(0, 3);
+            var wall = new Vector2Int(0, 2);
+            var goal = new Vector2Int(2, 2);
+            var costField = new CostField(5, 5);
+            costField.SetWall(wall.x, wall.y);
+
+            var result = LineOfSightPass.IsLosCorner(costField, test, wall, goal);
+            Assert.IsTrue(result);
+        }
     }
 }

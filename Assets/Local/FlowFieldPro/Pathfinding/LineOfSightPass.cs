@@ -93,12 +93,13 @@ namespace FlowFieldPro
             }
             else
             {
-                int gx = cell.x - goal.x;
+                int gx = goal.x - cell.x;
                 if (gx == 0)
                     return false;
 
                 int gy = goal.y - cell.y;
-                if (gy < 0)
+                int dy = neighbor.y - cell.y;
+                if (gy < 0 && dy > 0)
                     return false;
 
                 var awayCell = new Vector2Int(cell.x + Math.Sign(gx), cell.y);
