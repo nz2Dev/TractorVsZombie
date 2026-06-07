@@ -54,6 +54,7 @@ public class BFSVisualizationWindow : EditorWindow {
                 cell.index = 0;
             }
             enqueuIndex = 0;
+            queue.Clear();
             queue.Enqueue(new Vector2Int(2, 2));
             ref Cell goal = ref cells[2 * Size + 2];
             goal.activeWaveFront = true;
@@ -101,15 +102,15 @@ public class BFSVisualizationWindow : EditorWindow {
         if (!cell.visited) {
             EditorGUI.DrawRect(cellRect, Color.Lerp(Color.white, Color.black, (float) i / cells.Length));
         } else {
-            EditorGUI.DrawRect(cellRect, Color.Lerp(Color.white, Color.aliceBlue, (float) cell.index / cells.Length));
+            EditorGUI.DrawRect(cellRect, Color.Lerp(Color.aliceBlue, Color.black, (float) cell.index / cells.Length));
         }
 
-        if (cell.activeWaveFront) {
+        if (cell.visited) {
             var labelStyle = new GUIStyle(EditorStyles.miniLabel) {
                 alignment = TextAnchor.MiddleCenter
             };
             labelStyle.normal.textColor = Color.black;
-            GUI.Label(cellRect, "A", labelStyle);
+            GUI.Label(cellRect, $"{cell.index}" + (cell.activeWaveFront ? "A" : ""), labelStyle);
         }
     }
 }
