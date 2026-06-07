@@ -45,7 +45,13 @@ namespace FlowFieldPro
                     if (tile.Cost[neighbor.x, neighbor.y] > CostField.DefaultCost)
                     {
                         if (IsLosCorner(tile, current, neighbor))
-                            CastShadowRay(tile, current, goalCell);
+                        {
+                            var distance = CastShadowRay(tile, current, goalCell);
+                            var shadowLosCorner = distance > 1;
+                            if (shadowLosCorner) {
+                                tile.Integration[current.x, current.y].Flags &= ~CellFlags.HasLineOfSight;
+                            }
+                        }
                         continue;
                     }
 
