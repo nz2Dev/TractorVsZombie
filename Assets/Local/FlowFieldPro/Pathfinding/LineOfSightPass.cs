@@ -81,10 +81,11 @@ namespace FlowFieldPro
             if (dx != 0)
             {
                 int gy = goal.y - cell.y;
-                if (gy == 0)
+                int gx = goal.x - cell.x;
+                
+                if (gy == 0 || gx == 0)
                     return false;
 
-                int gx = goal.x - cell.x;
                 if (gx < 0 && dx > 0 || gx > 0 && dx < 0)
                     return false;
 
@@ -98,10 +99,11 @@ namespace FlowFieldPro
             else
             {
                 int gx = goal.x - cell.x;
-                if (gx == 0)
+                int gy = goal.y - cell.y;
+                
+                if (gx == 0 || gy == 0)
                     return false;
 
-                int gy = goal.y - cell.y;
                 int dy = neighbor.y - cell.y;
                 if (gy < 0 && dy > 0 || gy > 0 && dy < 0)
                     return false;
