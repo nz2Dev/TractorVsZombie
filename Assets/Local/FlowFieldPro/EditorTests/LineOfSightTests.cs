@@ -117,5 +117,47 @@ namespace FlowFieldPro.EditorTests
             Assert.IsTrue(LineOfSightPass.IsLosCorner(costField, eastCell, wallCell, goalCell));
             Assert.IsTrue(LineOfSightPass.IsLosCorner(costField, westCell, wallCell, goalCell));
         }
+
+        [Test]
+        public void IsLosCorner_TestAndNeigborhToTheNorth_IsNotCorner() {
+            //(y)
+            //
+            // 4  . . . W .
+            // 3  . . . T .
+            // 2  . . G . .
+            // 1  . . . . .
+            // 0  . . . . .
+            //
+            // #  0 1 2 3 4  (x)
+            var test = new Vector2Int(3, 3);
+            var wall = new Vector2Int(3, 4);
+            var goal = new Vector2Int(2, 2);
+            var costField = new CostField(5, 5);
+            costField.SetWall(wall.x, wall.y);
+            
+            var result = LineOfSightPass.IsLosCorner(costField, test, wall, goal);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void IsLosCorner_TestToTheSouthNeighborToTheNorth_IsCorner() {
+            //(y)
+            //
+            // 4  . . . . .
+            // 3  . . . . .
+            // 2  W . G . .
+            // 1  T . . . .
+            // 0  . . . . .
+            //
+            // #  0 1 2 3 4  (x)
+            var test = new Vector2Int(0, 1);
+            var wall = new Vector2Int(0, 2);
+            var goal = new Vector2Int(2, 2);
+            var costField = new CostField(5, 5);
+            costField.SetWall(wall.x, wall.y);
+
+            var result = LineOfSightPass.IsLosCorner(costField, test, wall, goal);
+            Assert.IsTrue(result);
+        }
     }
 }

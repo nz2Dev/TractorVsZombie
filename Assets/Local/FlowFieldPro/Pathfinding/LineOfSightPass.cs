@@ -75,7 +75,7 @@ namespace FlowFieldPro
             }
         }
 
-        internal static bool IsLosCorner(CostField tile, Vector2Int goal, Vector2Int cell, Vector2Int neighbor)
+        internal static bool IsLosCorner(CostField tile, Vector2Int cell, Vector2Int neighbor, Vector2Int goal)
         {
             int dx = neighbor.x - cell.x;
             if (dx != 0)
@@ -93,10 +93,14 @@ namespace FlowFieldPro
             }
             else
             {
-                int gx = goal.x - cell.x;
+                int gx = cell.x - goal.x;
                 if (gx == 0)
                     return false;
-                    
+
+                int gy = goal.y - cell.y;
+                if (gy < 0)
+                    return false;
+
                 var awayCell = new Vector2Int(cell.x + Math.Sign(gx), cell.y);
                 if (!tile.InBounds(awayCell.x, awayCell.y))
                     return true;
