@@ -224,7 +224,7 @@ namespace FlowFieldPro.EditorTests
         }
 
         [Test]
-        public void ComputeLineOfSight_NoLosBehindWalls() {
+        public void ComputeLineOfSight_SouthCorridor_NoLosBehindWalls() {
             //(y)
             //
             // 2  . W .
@@ -246,7 +246,35 @@ namespace FlowFieldPro.EditorTests
 
             Assert.IsTrue(tile.Integration[2, 2].Flags == CellFlags.None);
             Assert.IsTrue(tile.Integration[2, 1].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[2, 0].Flags == CellFlags.None);
             Assert.IsTrue(tile.Integration[1, 0].Flags == CellFlags.WaveFrontBlocked);
+        }
+
+        [Test]
+        public void ComputeLineOfSight_NorthCorridor_NoLosBehindWalls() {
+            //(y)
+            //
+            // 2  . . .
+            // 1  G W .
+            // 0  . W .
+            //
+            // #  0 1 2  (x)
+
+            var goal =       new Vector2Int(0, 1);
+            var middleWall = new Vector2Int(1, 1);
+            var bottomWall = new Vector2Int(1, 0);
+            var costField = new CostField(3, 3);
+            costField.SetWall(bottomWall.x, bottomWall.y);
+            costField.SetWall(middleWall.x, middleWall.y);
+            var tile = new FlowTile(costField);
+            var waveFront = new Queue<Vector2Int>();
+
+            LineOfSightPass.ComputeLineOfSight(tile, goal, waveFront);
+
+            Assert.IsTrue(tile.Integration[2, 2].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[2, 1].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[2, 0].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[1, 2].Flags == CellFlags.WaveFrontBlocked);
         }
     }
 }
