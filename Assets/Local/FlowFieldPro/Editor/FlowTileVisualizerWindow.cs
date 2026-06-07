@@ -54,7 +54,8 @@ namespace FlowFieldPro.Editor
         {
             if (costsPaint == null) {
                 costsPaint = new byte[MaxGridSize * MaxGridSize];
-                costsPaint.SetValue(1, 0, costsPaint.Length^1);
+                for (int i = 0; i < costsPaint.Length; i++)
+                    costsPaint[i] = 1;
             }
             RebuildAndRun();
         }
