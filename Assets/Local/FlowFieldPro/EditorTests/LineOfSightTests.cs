@@ -123,11 +123,11 @@ namespace FlowFieldPro.EditorTests
 
         [Test]
         public void CastShadowRay_OnLosCorner_MarksAllAsWaveFrontBlocked() {
-            // 4 . . .
-            // 3 . . G
-            // 2 . . .
-            // 1 . B W
-            // 0 . B .
+            // 4 . . . . .
+            // 3 . . G . .
+            // 2 . . . . .
+            // 1 . B W B .
+            // 0 . B . B .
             //   0 1 2 3 4
 
             var goalCell = new Vector2Int(2, 3);
@@ -138,6 +138,10 @@ namespace FlowFieldPro.EditorTests
             LineOfSightPass.CastShadowRay(tile, new Vector2Int(1, 1), goalCell);
             Assert.IsTrue(tile.Integration[1, 1].Flags.HasFlag(CellFlags.WaveFrontBlocked));
             Assert.IsTrue(tile.Integration[1, 0].Flags.HasFlag(CellFlags.WaveFrontBlocked));
+
+            LineOfSightPass.CastShadowRay(tile, new Vector2Int(3, 1), goalCell);
+            Assert.IsTrue(tile.Integration[3, 1].Flags.HasFlag(CellFlags.WaveFrontBlocked));
+            Assert.IsTrue(tile.Integration[3, 0].Flags.HasFlag(CellFlags.WaveFrontBlocked));
         }
     }
 }
