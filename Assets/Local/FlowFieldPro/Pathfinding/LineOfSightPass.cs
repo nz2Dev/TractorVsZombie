@@ -85,7 +85,7 @@ namespace FlowFieldPro
                             neighborInt.BestCost = potentialCost;
                             costWavefront.Enqueue(neighbor);
                         }
-                        break;
+                        continue;
                     }
 
                     int neighborIdx = neighbor.y * w + neighbor.x;
