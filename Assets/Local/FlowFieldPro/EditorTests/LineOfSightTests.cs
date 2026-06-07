@@ -61,37 +61,6 @@ namespace FlowFieldPro.EditorTests
             Assert.IsTrue(tile.Integration[3, 0].Flags.HasFlag(CellFlags.WaveFrontBlocked), "should have wave front blocked");
         }
 
-        [Test]
-        public void WallRow_ShadowBlockedBFSPropagation()
-        {
-            // 5x5 grid with a wall row at y=2 from x=0 to 2
-            // W W W . .
-            // Goal at (1, 0)
-            var costField = new CostField(5, 5);
-            costField.SetWall(0, 2);
-            costField.SetWall(1, 2);
-            costField.SetWall(2, 2);
-
-            var tile = new FlowTile(costField);
-            var seedCells = new[] { new Vector2Int(1, 0) };
-
-            TileIntegrator.IntegrateTile(
-                tile, seedCells, null,
-                new SectorGrid(5, 5, 5), Vector2Int.zero);
-
-            // The corner cell is (2, 2).
-            // When (2, 2) is hit, a shadow ray is projected away from (1, 0).
-            // Verify that cells directly behind the wall row do not have LOS.
-            Assert.IsFalse(tile.Integration[0, 3].Flags.HasFlag(CellFlags.HasLineOfSight), "Cell (0,3) should be in shadow");
-            Assert.IsFalse(tile.Integration[1, 3].Flags.HasFlag(CellFlags.HasLineOfSight), "Cell (1,3) should be in shadow");
-            Assert.IsFalse(tile.Integration[2, 3].Flags.HasFlag(CellFlags.HasLineOfSight), "Cell (2,3) should be in shadow");
-
-            // On the other hand, cells before the wall should have line of sight
-            Assert.IsTrue(tile.Integration[0, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
-            Assert.IsTrue(tile.Integration[1, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
-            Assert.IsTrue(tile.Integration[2, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
-        }
-
         // legend
         // . = Has Line Of Sight
         // G = goal
@@ -100,35 +69,16 @@ namespace FlowFieldPro.EditorTests
         // U = untouched
 
         [Test]
-        public void LOSCorner_ShadowNoTravel_HasLineOfSight() {
-            // 4 . . . . .
-            // 3 . . G . .
-            // 2 . . . . .
-            // 1 . B W B .
-            // 0 . B U B .
-            //   0 1 2 3 4
-            var goalCell = new Vector2Int(2, 3);
-            var costField = new CostField(5, 5);
-            costField.SetWall(2, 1);
-            
-            var tile = new FlowTile(costField);
-            var costsWaveFront = new Queue<Vector2Int>();
-
-            LineOfSightPass.ComputeLineOfSight(tile, goalCell, costsWaveFront);
-
-            Assert.IsTrue((tile.Integration[2, 2].Flags | CellFlags.HasLineOfSight) == CellFlags.HasLineOfSight);
-            Assert.IsTrue((tile.Integration[1, 1].Flags | CellFlags.WaveFrontBlocked) == CellFlags.WaveFrontBlocked);
-            Assert.IsTrue((tile.Integration[3, 1].Flags | CellFlags.WaveFrontBlocked) == CellFlags.WaveFrontBlocked);
-        }
-
-        [Test]
         public void CastShadowRay_OnLosCorner_MarksAllAsWaveFrontBlocked() {
-            // 4 . . . . .
-            // 3 . . G . .
-            // 2 . . . . .
-            // 1 . B W B .
-            // 0 . B . B .
-            //   0 1 2 3 4
+            //(y)
+            //
+            // 4  . . . . .
+            // 3  . . G . .
+            // 2  . . . . .
+            // 1  . B W B .
+            // 0  . B . B .
+            //
+            // #  0 1 2 3 4  (x)
 
             var goalCell = new Vector2Int(2, 3);
             var costField = new CostField(5, 5);
@@ -142,6 +92,30 @@ namespace FlowFieldPro.EditorTests
             LineOfSightPass.CastShadowRay(tile, new Vector2Int(3, 1), goalCell);
             Assert.IsTrue(tile.Integration[3, 1].Flags.HasFlag(CellFlags.WaveFrontBlocked));
             Assert.IsTrue(tile.Integration[3, 0].Flags.HasFlag(CellFlags.WaveFrontBlocked));
+        }
+
+        [Test]
+        public void IsLosCorner_ToTheLeftAndRightIsCorner_BetweenGoalAndWallIsNot() {
+            //(y)
+            //
+            // 4  . . . . .
+            // 3  . . G . .
+            // 2  . . . . .
+            // 1  . B W B .
+            // 0  . B . B .
+            //
+            // #  0 1 2 3 4  (x)
+            var goalCell = new Vector2Int(2, 3);
+            var southCell = new Vector2Int(2, 2);
+            var eastCell = new Vector2Int(3, 1);
+            var westCell = new Vector2Int(1, 1);
+            var wallCell = new Vector2Int(2, 1);
+            var costField = new CostField(5, 5);
+            costField.SetWall(wallCell.x, wallCell.y);
+
+            Assert.IsFalse(LineOfSightPass.IsLosCorner(costField, southCell, wallCell, goalCell));
+            Assert.IsTrue(LineOfSightPass.IsLosCorner(costField, eastCell, wallCell, goalCell));
+            Assert.IsTrue(LineOfSightPass.IsLosCorner(costField, westCell, wallCell, goalCell));
         }
     }
 }

@@ -44,13 +44,10 @@ namespace FlowFieldPro
 
                     if (tile.Cost[neighbor.x, neighbor.y] > CostField.DefaultCost)
                     {
-                        if (IsLosCorner(tile, current, neighbor))
+                        if (IsLosCorner(tile.Cost, current, neighbor, goalCell))
                         {
-                            var distance = CastShadowRay(tile, current, goalCell);
-                            var shadowLosCorner = distance > 1;
-                            if (shadowLosCorner) {
-                                tile.Integration[current.x, current.y].Flags &= ~CellFlags.HasLineOfSight;
-                            }
+                            CastShadowRay(tile, current, goalCell);
+                            // tile.Integration[current.x, current.y].Flags &= ~CellFlags.HasLineOfSight;
                         }
                         continue;
                     }
@@ -78,31 +75,38 @@ namespace FlowFieldPro
             }
         }
 
-        private static int GetCostOutOfBoundsAsWalls(FlowTile tile, int x, int y)
-        {
-            if (!tile.Cost.InBounds(x, y))
-                return CostField.Wall;
-            return tile.Cost[x, y];
-        }
-
-        private static bool IsLosCorner(FlowTile tile, Vector2Int cell, Vector2Int neighbor)
+        internal static bool IsLosCorner(CostField tile, Vector2Int goal, Vector2Int cell, Vector2Int neighbor)
         {
             int dx = neighbor.x - cell.x;
             if (dx != 0)
             {
-                bool west = GetCostOutOfBoundsAsWalls(tile, cell.x - 1, cell.y) > 1;
-                bool east = GetCostOutOfBoundsAsWalls(tile, cell.x + 1, cell.y) > 1;
-                return west != east;
+                int gy = goal.y - cell.y;
+                if (gy == 0)
+                    return false;
+
+                var awayCell = new Vector2Int(cell.x, cell.y + Math.Sign(gy));
+                if (!tile.InBounds(awayCell.x, awayCell.y))
+                    return true;
+
+                var awayIsBlocked = tile[awayCell.x, awayCell.y] > 1;
+                return !awayIsBlocked;
             }
             else
             {
-                bool north = GetCostOutOfBoundsAsWalls(tile, cell.x, cell.y - 1) > 1;
-                bool south = GetCostOutOfBoundsAsWalls(tile, cell.x, cell.y + 1) > 1;
-                return north != south;
+                int gx = goal.x - cell.x;
+                if (gx == 0)
+                    return false;
+                    
+                var awayCell = new Vector2Int(cell.x + Math.Sign(gx), cell.y);
+                if (!tile.InBounds(awayCell.x, awayCell.y))
+                    return true;
+
+                var awayIsBlocked = tile[awayCell.x, awayCell.y] > 1;
+                return !awayIsBlocked;
             }
         }
 
-        internal static int CastShadowRay(FlowTile tile, Vector2Int corner, Vector2Int goal)
+        internal static void CastShadowRay(FlowTile tile, Vector2Int corner, Vector2Int goal)
         {
             int w = tile.Width;
             int h = tile.Height;
@@ -122,9 +126,8 @@ namespace FlowFieldPro
             int cy = y1;
 
             if (cx == x0 && cy == y0)
-                return 0;
+                return;
 
-            int distance = 0;
             while (true)
             {
                 if (cx < 0 || cx >= w || cy < 0 || cy >= h)
@@ -134,11 +137,8 @@ namespace FlowFieldPro
                     break;
 
                 ref var cell = ref tile.Integration[cx, cy];
-                if (cx != x1 || cy != y1) {
-                    cell.Flags |= CellFlags.WaveFrontBlocked;
-                }
+                cell.Flags |= CellFlags.WaveFrontBlocked;
 
-                distance++;
                 int e2 = 2 * err;
                 if (e2 > -dy)
                 {
@@ -151,11 +151,6 @@ namespace FlowFieldPro
                     cy += sy;
                 }
             }
-            if (distance > 1) {
-                ref var cell = ref tile.Integration[x1, y1];
-                cell.Flags |= CellFlags.WaveFrontBlocked;
-            }
-            return distance;
         }
     }
 }
