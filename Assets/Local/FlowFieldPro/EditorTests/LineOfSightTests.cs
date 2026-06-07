@@ -222,5 +222,31 @@ namespace FlowFieldPro.EditorTests
             var result = LineOfSightPass.IsLosCorner(costField, test, wall, goal);
             Assert.IsFalse(result);
         }
+
+        [Test]
+        public void ComputeLineOfSight_NoLosBehindWalls() {
+            //(y)
+            //
+            // 2  . W .
+            // 1  G W .
+            // 0  . . .
+            //
+            // #  0 1 2  (x)
+
+            var goal =       new Vector2Int(0, 1);
+            var middleWall = new Vector2Int(1, 1);
+            var topWall =    new Vector2Int(1, 2);
+            var costField = new CostField(3, 3);
+            costField.SetWall(topWall.x, topWall.y);
+            costField.SetWall(middleWall.x, middleWall.y);
+            var tile = new FlowTile(costField);
+            var waveFront = new Queue<Vector2Int>();
+
+            LineOfSightPass.ComputeLineOfSight(tile, goal, waveFront);
+
+            Assert.IsTrue(tile.Integration[2, 2].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[2, 1].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[1, 0].Flags == CellFlags.WaveFrontBlocked);
+        }
     }
 }

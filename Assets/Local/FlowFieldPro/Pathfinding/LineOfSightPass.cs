@@ -47,7 +47,8 @@ namespace FlowFieldPro
                         if (IsLosCorner(tile.Cost, current, neighbor, goalCell))
                         {
                             CastShadowRay(tile, current, goalCell);
-                            // tile.Integration[current.x, current.y].Flags &= ~CellFlags.HasLineOfSight;
+                            tile.Integration[current.x, current.y].Flags &= ~CellFlags.HasLineOfSight;
+                            break;
                         }
                         continue;
                     }
