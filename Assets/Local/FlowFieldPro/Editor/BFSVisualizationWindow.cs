@@ -23,6 +23,7 @@ public class BFSVisualizationWindow : EditorWindow {
     private const float SidebarWidth = 200;
     private Queue<Vector2Int> queue;
     private int enqueuIndex;
+    private Vector2Int? lastDequeued;
 
     private readonly Vector2Int[] Directions = new [] {
         new Vector2Int(0, 1),
@@ -56,6 +57,7 @@ public class BFSVisualizationWindow : EditorWindow {
             enqueuIndex = 0;
             queue.Clear();
             queue.Enqueue(new Vector2Int(2, 2));
+            lastDequeued = null;
             ref Cell goal = ref cells[2 * Size + 2];
             goal.activeWaveFront = true;
             goal.visited = true;
@@ -66,6 +68,7 @@ public class BFSVisualizationWindow : EditorWindow {
             var current = queue.Dequeue();
             ref var currentCell = ref cells[current.y * Size + current.x];
             currentCell.activeWaveFront = false;
+            lastDequeued = current;
             
             foreach (var direction in Directions) {
                 var neighbor = current + direction;
@@ -99,13 +102,14 @@ public class BFSVisualizationWindow : EditorWindow {
     private void DrawCell(Rect cellRect, int i, int x, int y) {
         var cell = cells[i];
         if (!cell.visited) {
-            EditorGUI.DrawRect(cellRect, Color.Lerp(Color.white, Color.black, (float) i / cells.Length));
+            EditorGUI.DrawRect(cellRect, Color.Lerp(Color.lightGray, Color.gray, (float) i / cells.Length));
         } else {
-            EditorGUI.DrawRect(cellRect, Color.Lerp(Color.aliceBlue, Color.black, (float) cell.index / cells.Length));
+            EditorGUI.DrawRect(cellRect, Color.Lerp(Color.aliceBlue, Color.blueViolet, (float) cell.index / cells.Length));
         }
 
         if (cell.visited) {
-            var labelStyle = new GUIStyle(EditorStyles.miniLabel) {
+            var isLastDequeued = lastDequeued.HasValue && lastDequeued.Value.x == x && lastDequeued.Value.y == y;
+            var labelStyle = new GUIStyle(isLastDequeued ? EditorStyles.boldLabel : EditorStyles.miniLabel) {
                 alignment = TextAnchor.MiddleCenter
             };
             labelStyle.normal.textColor = Color.black;
