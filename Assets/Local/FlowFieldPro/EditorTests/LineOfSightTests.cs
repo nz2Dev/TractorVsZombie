@@ -92,6 +92,13 @@ namespace FlowFieldPro.EditorTests
             Assert.IsTrue(tile.Integration[2, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
         }
 
+        // legend
+        // . = Has Line Of Sight
+        // G = goal
+        // W = wall
+        // B = WaveFrontBlocked
+        // U = untouched
+
         [Test]
         public void LOSCorner_ShadowNoTravel_HasLineOfSight() {
             // 4 . . . . .
@@ -100,17 +107,11 @@ namespace FlowFieldPro.EditorTests
             // 1 . B W B .
             // 0 . B U B .
             //   0 1 2 3 4
-            // 
-            // legend
-            // . = Has Line Of Sight
-            // G = goal
-            // W = wall
-            // B = WaveFrontBlocked
-            // U = untouched
+            var goalCell = new Vector2Int(2, 3);
             var costField = new CostField(5, 5);
             costField.SetWall(2, 1);
+            
             var tile = new FlowTile(costField);
-            var goalCell = new Vector2Int(2, 3);
             var costsWaveFront = new Queue<Vector2Int>();
 
             LineOfSightPass.ComputeLineOfSight(tile, goalCell, costsWaveFront);
@@ -118,6 +119,25 @@ namespace FlowFieldPro.EditorTests
             Assert.IsTrue((tile.Integration[2, 2].Flags | CellFlags.HasLineOfSight) == CellFlags.HasLineOfSight);
             Assert.IsTrue((tile.Integration[1, 1].Flags | CellFlags.WaveFrontBlocked) == CellFlags.WaveFrontBlocked);
             Assert.IsTrue((tile.Integration[3, 1].Flags | CellFlags.WaveFrontBlocked) == CellFlags.WaveFrontBlocked);
+        }
+
+        [Test]
+        public void CastShadowRay_OnLosCorner_MarksAllAsWaveFrontBlocked() {
+            // 4 . . .
+            // 3 . . G
+            // 2 . . .
+            // 1 . B W
+            // 0 . B .
+            //   0 1 2 3 4
+
+            var goalCell = new Vector2Int(2, 3);
+            var costField = new CostField(5, 5);
+            costField.SetWall(2, 1);
+            var tile = new FlowTile(costField);
+
+            LineOfSightPass.CastShadowRay(tile, new Vector2Int(1, 1), goalCell);
+            Assert.IsTrue(tile.Integration[1, 1].Flags.HasFlag(CellFlags.WaveFrontBlocked));
+            Assert.IsTrue(tile.Integration[1, 0].Flags.HasFlag(CellFlags.WaveFrontBlocked));
         }
     }
 }

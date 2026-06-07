@@ -96,7 +96,7 @@ namespace FlowFieldPro
             }
         }
 
-        private static int CastShadowRay(FlowTile tile, Vector2Int corner, Vector2Int goal)
+        internal static int CastShadowRay(FlowTile tile, Vector2Int corner, Vector2Int goal)
         {
             int w = tile.Width;
             int h = tile.Height;
@@ -128,7 +128,7 @@ namespace FlowFieldPro
                     break;
 
                 ref var cell = ref tile.Integration[cx, cy];
-                if (cx != x1 && cy != y1) {
+                if (cx != x1 || cy != y1) {
                     cell.Flags |= CellFlags.WaveFrontBlocked;
                 }
 
