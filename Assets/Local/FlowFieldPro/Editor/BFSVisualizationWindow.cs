@@ -89,12 +89,11 @@ public class BFSVisualizationWindow : EditorWindow {
         EditorGUI.DrawRect(gridRect, new Color(0.08f, 0.08f, 0.08f));
         
         var cellSize = minAreaSize / Size;
-        for (int i = 0; i < cells.Length; i++) {
-            var row = i / Size;
-            var column = i - (row * Size);
-            var cellRect = new Rect(row * cellSize, column * cellSize, cellSize, cellSize);
-            DrawCell(cellRect, i, row, column);
-        }
+        for (int x = 0; x < Size; x++) 
+            for (int y = 0; y < Size; y++) {
+                var cellRect = new Rect(x * cellSize, viewHeight - (y * cellSize + cellSize), cellSize, cellSize);
+                DrawCell(cellRect, y * Size + x, x, y);
+            }
     }
 
     private void DrawCell(Rect cellRect, int i, int x, int y) {
