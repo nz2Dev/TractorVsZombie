@@ -333,5 +333,34 @@ namespace FlowFieldPro.EditorTests
             Assert.IsTrue(tile.Integration[1, 3].Flags == CellFlags.WaveFrontBlocked);
             Assert.IsTrue(tile.Integration[1, 2].Flags == CellFlags.WaveFrontBlocked);
         }
+
+        [Test]
+        public void ComputeLos_NarrowCorrider_DontStopOtherNonWaveFrontBlocked() {
+            //(y)
+            //
+            // 4  . . . . .
+            // 3  . . . . .
+            // 2  . . . . .
+            // 1  . W . . .
+            // 0  G . . . .
+            //
+            // #  0 1 2 3 4  (x)
+
+            var goal =       new Vector2Int(0, 0);
+            var wall = new Vector2Int(1, 1);
+            var costField = new CostField(5, 5);
+            costField.SetWall(wall.x, wall.y);
+            var tile = new FlowTile(costField);
+            var waveFront = new Queue<Vector2Int>();
+
+            LineOfSightPass.ComputeLineOfSight(tile, goal, waveFront);
+
+            Assert.IsTrue(tile.Integration[4, 0].Flags == CellFlags.HasLineOfSight);
+            Assert.IsTrue(tile.Integration[4, 1].Flags == CellFlags.HasLineOfSight);
+            
+            Assert.IsTrue(tile.Integration[2, 1].Flags == CellFlags.WaveFrontBlocked);
+            Assert.IsTrue(tile.Integration[3, 1].Flags == CellFlags.WaveFrontBlocked);
+            Assert.IsTrue(tile.Integration[4, 2].Flags == CellFlags.WaveFrontBlocked);
+        }
     }
 }
