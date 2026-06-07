@@ -128,9 +128,11 @@ namespace FlowFieldPro
                     break;
 
                 ref var cell = ref tile.Integration[cx, cy];
-                cell.Flags |= CellFlags.WaveFrontBlocked;
-                distance++;
+                if (cx != x1 && cy != y1) {
+                    cell.Flags |= CellFlags.WaveFrontBlocked;
+                }
 
+                distance++;
                 int e2 = 2 * err;
                 if (e2 > -dy)
                 {
@@ -142,6 +144,10 @@ namespace FlowFieldPro
                     err += dx;
                     cy += sy;
                 }
+            }
+            if (distance > 1) {
+                ref var cell = ref tile.Integration[x1, y1];
+                cell.Flags |= CellFlags.WaveFrontBlocked;
             }
             return distance;
         }

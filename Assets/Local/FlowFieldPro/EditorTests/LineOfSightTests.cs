@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
 using FlowFieldPro;
+using System.Collections.Generic;
 
 namespace FlowFieldPro.EditorTests
 {
@@ -89,6 +90,34 @@ namespace FlowFieldPro.EditorTests
             Assert.IsTrue(tile.Integration[0, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
             Assert.IsTrue(tile.Integration[1, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
             Assert.IsTrue(tile.Integration[2, 1].Flags.HasFlag(CellFlags.HasLineOfSight));
+        }
+
+        [Test]
+        public void LOSCorner_ShadowNoTravel_HasLineOfSight() {
+            // 4 . . . . .
+            // 3 . . G . .
+            // 2 . . . . .
+            // 1 . B W B .
+            // 0 . B U B .
+            //   0 1 2 3 4
+            // 
+            // legend
+            // . = Has Line Of Sight
+            // G = goal
+            // W = wall
+            // B = WaveFrontBlocked
+            // U = untouched
+            var costField = new CostField(5, 5);
+            costField.SetWall(2, 1);
+            var tile = new FlowTile(costField);
+            var goalCell = new Vector2Int(2, 3);
+            var costsWaveFront = new Queue<Vector2Int>();
+
+            LineOfSightPass.ComputeLineOfSight(tile, goalCell, costsWaveFront);
+
+            Assert.IsTrue((tile.Integration[2, 2].Flags | CellFlags.HasLineOfSight) == CellFlags.HasLineOfSight);
+            Assert.IsTrue((tile.Integration[1, 1].Flags | CellFlags.WaveFrontBlocked) == CellFlags.WaveFrontBlocked);
+            Assert.IsTrue((tile.Integration[3, 1].Flags | CellFlags.WaveFrontBlocked) == CellFlags.WaveFrontBlocked);
         }
     }
 }
