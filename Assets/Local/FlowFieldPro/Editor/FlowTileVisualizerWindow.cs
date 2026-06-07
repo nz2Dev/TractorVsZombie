@@ -22,6 +22,8 @@ namespace FlowFieldPro.Editor
         [SerializeField] private bool enableCostIntegration = true;
         [SerializeField] private bool enableFlowBuilder = true;
 
+        [SerializeField] private byte[] costsPaint;
+
         private FlowTile tile;
         private Vector2Int? selectedCell;
         private bool editingWalls;
@@ -37,6 +39,7 @@ namespace FlowFieldPro.Editor
 
         private const float BaseCellSize = 36f;
         private const float SidebarWidth = 380f;
+        private const int MaxGridSize = 64;
 
         [MenuItem("Tools/FlowFieldPro/FlowTile Visualizer")]
         public static void ShowWindow()
@@ -49,6 +52,10 @@ namespace FlowFieldPro.Editor
 
         private void OnEnable()
         {
+            if (costsPaint == null) {
+                costsPaint = new byte[MaxGridSize * MaxGridSize];
+                costsPaint.SetValue(1, 0, costsPaint.Length^1);
+            }
             RebuildAndRun();
         }
 
@@ -89,7 +96,7 @@ namespace FlowFieldPro.Editor
             bool sizeChanged = false;
             bool passesChanged = false;
 
-            int newSize = EditorGUILayout.IntSlider("Size", gridSize, 2, 64);
+            int newSize = EditorGUILayout.IntSlider("Size", gridSize, 2, MaxGridSize);
             if (newSize != gridSize)
             {
                 gridSize = newSize;
@@ -361,10 +368,16 @@ namespace FlowFieldPro.Editor
             bool placing = wallBrushPlacing.GetValueOrDefault(true);
             byte current = tile.Cost[cell.x, cell.y];
 
-            if (placing && current != CostField.Wall)
+            if (placing && current != CostField.Wall) 
+            {
+                costsPaint[cell.y * MaxGridSize + cell.x] = CostField.Wall;
                 tile.Cost[cell.x, cell.y] = CostField.Wall;
+            }
             else if (!placing && current == CostField.Wall)
+            {
+                costsPaint[cell.y * MaxGridSize + cell.x] = CostField.DefaultCost;
                 tile.Cost[cell.x, cell.y] = CostField.DefaultCost;
+            }
             else
                 return;
 
@@ -555,6 +568,10 @@ namespace FlowFieldPro.Editor
         private void RebuildAndRun()
         {
             tile = new FlowTile(gridSize, gridSize);
+            for (int y = 0; y < gridSize; y++)
+                for (int x = 0; x < gridSize; x++)
+                    tile.Cost[x, y] = costsPaint[y * MaxGridSize + x];
+
             RunPasses();
         }
 
