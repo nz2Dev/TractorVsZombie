@@ -54,7 +54,10 @@ namespace FlowFieldPro
                 }
 
                 if (isLosCorner)
+                {
+                    costWavefront.Enqueue(current);
                     continue;
+                }
 
                 foreach (var dir in Directions.Cardinal)
                 {
