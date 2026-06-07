@@ -300,5 +300,38 @@ namespace FlowFieldPro.EditorTests
             LineOfSightPass.ComputeLineOfSight(tile, goal, waveFront);
             Assert.That(waveFront, Has.Exactly(1).EqualTo(new Vector2Int(1, 2)));
         }
+
+        [Test]
+        public void ComputeLineOfSight_SteepCornerWithTwoPassCells_WaveFrontBlockedWithTwoCells() {
+            //(y)
+            //
+            // 3  . . . .
+            // 2  . . . .
+            // 1  . W . .
+            // 0  G W . .
+            //
+            // #  0 1 2 3  (x)
+
+            var goal =       new Vector2Int(0, 0);
+            var middleWall = new Vector2Int(1, 1);
+            var bottomWall = new Vector2Int(1, 0);
+            var costField = new CostField(4, 4);
+            costField.SetWall(bottomWall.x, bottomWall.y);
+            costField.SetWall(middleWall.x, middleWall.y);
+            var tile = new FlowTile(costField);
+            var waveFront = new Queue<Vector2Int>();
+
+            LineOfSightPass.ComputeLineOfSight(tile, goal, waveFront);
+
+            Assert.That(waveFront, Is.EquivalentTo(new [] {new Vector2Int(1, 2), new Vector2Int(1, 3)}));
+
+            Assert.IsTrue(tile.Integration[2, 3].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[2, 2].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[2, 1].Flags == CellFlags.None);
+            Assert.IsTrue(tile.Integration[2, 0].Flags == CellFlags.None);
+
+            Assert.IsTrue(tile.Integration[1, 3].Flags == CellFlags.WaveFrontBlocked);
+            Assert.IsTrue(tile.Integration[1, 2].Flags == CellFlags.WaveFrontBlocked);
+        }
     }
 }

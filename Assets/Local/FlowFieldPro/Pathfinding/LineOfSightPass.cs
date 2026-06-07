@@ -23,13 +23,14 @@ namespace FlowFieldPro
 
             ref var goalIntCell = ref tile.Integration[goalCell.x, goalCell.y];
             goalIntCell.Flags |= CellFlags.HasLineOfSight;
+            goalIntCell.BestCost = 0;
             visited[goalCell.y * w + goalCell.x] = true;
             queue.Enqueue(goalCell);
 
             while (queue.Count > 0)
             {
                 var current = queue.Dequeue();
-                ushort currentCost = tile.Integration[current.x, current.y].BestCost;
+                ref var currentInteg = ref tile.Integration[current.x, current.y];
 
                 bool isLosCorner = false;
                 foreach (var dir in Directions.Cardinal)
@@ -45,8 +46,6 @@ namespace FlowFieldPro
                         if (IsLosCorner(tile.Cost, current, neighbor, goalCell))
                         {
                             CastShadowRay(tile, current, goalCell);
-                            ref var currentInt = ref tile.Integration[current.x, current.y];
-                            currentInt.Flags &= ~CellFlags.HasLineOfSight;
                             isLosCorner = true;
                             break;
                         }
@@ -55,6 +54,13 @@ namespace FlowFieldPro
 
                 if (isLosCorner)
                 {
+                    currentInteg.Flags &= ~CellFlags.HasLineOfSight;
+                    costWavefront.Enqueue(current);
+                    continue;
+                }
+                
+                if ((currentInteg.Flags & CellFlags.WaveFrontBlocked) != 0) {
+                    currentInteg.Flags &= ~CellFlags.HasLineOfSight;
                     costWavefront.Enqueue(current);
                     continue;
                 }
@@ -73,13 +79,13 @@ namespace FlowFieldPro
                     ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
                     if ((neighborInt.Flags & CellFlags.WaveFrontBlocked) != 0)
                     {
-                        ushort potentialCost = (ushort)(currentCost + 1);
+                        ushort potentialCost = (ushort)(currentInteg.BestCost + 1);
                         if (potentialCost < neighborInt.BestCost)
                         {
                             neighborInt.BestCost = potentialCost;
                             costWavefront.Enqueue(neighbor);
                         }
-                        continue;
+                        break;
                     }
 
                     int neighborIdx = neighbor.y * w + neighbor.x;
@@ -88,7 +94,7 @@ namespace FlowFieldPro
 
                     visited[neighborIdx] = true;
 
-                    neighborInt.BestCost = (ushort)(currentCost + 1);
+                    neighborInt.BestCost = (ushort)(currentInteg.BestCost + 1);
                     neighborInt.Flags |= CellFlags.HasLineOfSight;
                     queue.Enqueue(neighbor);
                 }
