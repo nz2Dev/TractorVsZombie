@@ -129,5 +129,7 @@ Shader "Custom/EntityToonInstanced"
 
             ENDCG
         }
+
+        UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
     }
 }
