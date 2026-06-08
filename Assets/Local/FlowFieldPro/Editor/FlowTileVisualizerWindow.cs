@@ -645,7 +645,7 @@ namespace FlowFieldPro.Editor
             goalIntCell.Flags |= CellFlags.ActiveWaveFront;
 
             var wavefront = new Queue<Vector2Int>();
-            wavefront.Enqueue(goal);
+            // wavefront.Enqueue(goal);
 
             // 1. Line of Sight
             if (enableLOS) 
