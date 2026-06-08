@@ -21,6 +21,7 @@ namespace FlowFieldPro.Editor
         [SerializeField] private bool enableLOS = true;
         [SerializeField] private bool enableCostIntegration = true;
         [SerializeField] private bool enableFlowBuilder = true;
+        [SerializeField] private bool stepLOS;
 
         [SerializeField] private byte[] costsPaint;
 
@@ -36,10 +37,14 @@ namespace FlowFieldPro.Editor
         private float cachedStartX;
         private float cachedStartY;
         private float currentCellSize;
-
         private const float BaseCellSize = 36f;
         private const float SidebarWidth = 380f;
         private const int MaxGridSize = 64;
+        
+        private Queue<Vector2Int> stepLosQueue;
+        private bool[] stepLosVisited;
+        private Queue<Vector2Int> stepLosWavefront;
+        private Vector2Int stepGoal;
 
         [MenuItem("Tools/FlowFieldPro/FlowTile Visualizer")]
         public static void ShowWindow()
@@ -132,6 +137,28 @@ namespace FlowFieldPro.Editor
                 enableCostIntegration = newCost;
                 enableFlowBuilder = newFlow;
                 passesChanged = true;
+            }
+
+            if (enableLOS) 
+            {
+                GUILayout.Space(12);
+                var newStepLOS = EditorGUILayout.Toggle("Step line of sight pass", stepLOS);
+                passesChanged = passesChanged || newStepLOS != stepLOS;
+                stepLOS = newStepLOS;
+                if (stepLOS) 
+                {
+                    if (GUILayout.Button("Reset")) 
+                        RunPasses();
+                    
+                    if (stepLosQueue != null && stepLosQueue.Count > 0) 
+                    {
+                        if (GUILayout.Button("Step"))
+                            StepLineOfSightPass();
+                     
+                        if (GUILayout.Button("Finish"))
+                            FinishLineOfSightPass();
+                    }
+                }
             }
 
             if (sizeChanged)
@@ -596,12 +623,61 @@ namespace FlowFieldPro.Editor
             wavefront.Enqueue(goal);
 
             // 1. Line of Sight
-            if (enableLOS)
-                LineOfSightPass.ComputeLineOfSight(tile, goal, wavefront);
+            if (enableLOS) 
+            {
+                if (stepLOS) 
+                {   
+                    stepLosQueue = new Queue<Vector2Int>();
+                    stepLosVisited = new bool[tile.Width * tile.Height];
+                    stepLosWavefront = new Queue<Vector2Int>();
+                    stepGoal = goal;
+                    
+                    // stepLosWavefront.Enqueue(goal);??
+                    stepLosVisited[stepGoal.y * tile.Width + stepGoal.x] = true;
+                    stepLosQueue.Enqueue(stepGoal);
+                    LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, goal, stepLosWavefront);
+                    Repaint();
+                    return;
+                } else {
+                    LineOfSightPass.ComputeLineOfSight(tile, goal, wavefront);
+                }
+            }
 
             // 2. Cost Integration
             if (enableCostIntegration)
                 CostIntegrationPass.IntegrateCosts(tile, wavefront);
+
+            // 3. Flow Field Builder
+            if (enableFlowBuilder)
+                FlowFieldBuilderPass.BuildFlowField(tile);
+
+            Repaint();
+        }
+
+        private void StepLineOfSightPass() 
+        {
+            LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, stepGoal, stepLosWavefront);
+            if (stepLosQueue.Count == 0) 
+            {
+                // 2. Cost Integration
+                if (enableCostIntegration)
+                    CostIntegrationPass.IntegrateCosts(tile, stepLosWavefront);
+
+                // 3. Flow Field Builder
+                if (enableFlowBuilder)
+                    FlowFieldBuilderPass.BuildFlowField(tile);
+            }
+
+            Repaint();
+        }
+
+        private void FinishLineOfSightPass() {
+            while (stepLosQueue.Count > 0)
+                LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, stepGoal, stepLosWavefront);
+            
+            // 2. Cost Integration
+            if (enableCostIntegration)
+                CostIntegrationPass.IntegrateCosts(tile, stepLosWavefront);
 
             // 3. Flow Field Builder
             if (enableFlowBuilder)

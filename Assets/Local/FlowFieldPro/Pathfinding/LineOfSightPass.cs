@@ -28,76 +28,81 @@ namespace FlowFieldPro
             queue.Enqueue(goalCell);
 
             while (queue.Count > 0)
+                StepLineOfSight(queue, visited, tile, goalCell, costWavefront);
+        }
+
+        internal static void StepLineOfSight(Queue<Vector2Int> queue, bool[] visited, FlowTile tile, Vector2Int goalCell, Queue<Vector2Int> costWavefront) {
+            int w = tile.Width;
+            int h = tile.Height;
+
+            var current = queue.Dequeue();
+            ref var currentInteg = ref tile.Integration[current.x, current.y];
+
+            bool isLosCorner = false;
+            foreach (var dir in Directions.Cardinal)
             {
-                var current = queue.Dequeue();
-                ref var currentInteg = ref tile.Integration[current.x, current.y];
+                var offset = Directions.Offset(dir);
+                var neighbor = current + offset;
 
-                bool isLosCorner = false;
-                foreach (var dir in Directions.Cardinal)
+                if (neighbor.x < 0 || neighbor.x >= w || neighbor.y < 0 || neighbor.y >= h)
+                    continue;
+
+                if (tile.Cost[neighbor.x, neighbor.y] > CostField.DefaultCost)
                 {
-                    var offset = Directions.Offset(dir);
-                    var neighbor = current + offset;
-
-                    if (neighbor.x < 0 || neighbor.x >= w || neighbor.y < 0 || neighbor.y >= h)
-                        continue;
-
-                    if (tile.Cost[neighbor.x, neighbor.y] > CostField.DefaultCost)
+                    if (IsLosCorner(tile.Cost, current, neighbor, goalCell))
                     {
-                        if (IsLosCorner(tile.Cost, current, neighbor, goalCell))
-                        {
-                            CastShadowRay(tile, current, goalCell);
-                            isLosCorner = true;
-                            break;
-                        }
+                        CastShadowRay(tile, current, goalCell);
+                        isLosCorner = true;
+                        break;
                     }
                 }
+            }
 
-                if (isLosCorner)
-                {
-                    currentInteg.Flags &= ~CellFlags.HasLineOfSight;
-                    costWavefront.Enqueue(current);
+            if (isLosCorner)
+            {
+                currentInteg.Flags &= ~CellFlags.HasLineOfSight;
+                costWavefront.Enqueue(current);
+                return;
+            }
+            
+            if ((currentInteg.Flags & CellFlags.WaveFrontBlocked) != 0) {
+                currentInteg.Flags &= ~CellFlags.HasLineOfSight;
+                costWavefront.Enqueue(current);
+                return;
+            }
+
+            foreach (var dir in Directions.Cardinal)
+            {
+                var offset = Directions.Offset(dir);
+                var neighbor = current + offset;
+
+                if (neighbor.x < 0 || neighbor.x >= w || neighbor.y < 0 || neighbor.y >= h)
                     continue;
-                }
+
+                if (tile.Cost[neighbor.x, neighbor.y] > CostField.DefaultCost)
+                    continue;
                 
-                if ((currentInteg.Flags & CellFlags.WaveFrontBlocked) != 0) {
-                    currentInteg.Flags &= ~CellFlags.HasLineOfSight;
-                    costWavefront.Enqueue(current);
+                ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
+                if ((neighborInt.Flags & CellFlags.WaveFrontBlocked) != 0)
+                {
+                    ushort potentialCost = (ushort)(currentInteg.BestCost + 1);
+                    if (potentialCost < neighborInt.BestCost)
+                    {
+                        neighborInt.BestCost = potentialCost;
+                        costWavefront.Enqueue(neighbor);
+                    }
                     continue;
                 }
 
-                foreach (var dir in Directions.Cardinal)
-                {
-                    var offset = Directions.Offset(dir);
-                    var neighbor = current + offset;
+                int neighborIdx = neighbor.y * w + neighbor.x;
+                if (visited[neighborIdx])
+                    continue;
 
-                    if (neighbor.x < 0 || neighbor.x >= w || neighbor.y < 0 || neighbor.y >= h)
-                        continue;
+                visited[neighborIdx] = true;
 
-                    if (tile.Cost[neighbor.x, neighbor.y] > CostField.DefaultCost)
-                        continue;
-                    
-                    ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
-                    if ((neighborInt.Flags & CellFlags.WaveFrontBlocked) != 0)
-                    {
-                        ushort potentialCost = (ushort)(currentInteg.BestCost + 1);
-                        if (potentialCost < neighborInt.BestCost)
-                        {
-                            neighborInt.BestCost = potentialCost;
-                            costWavefront.Enqueue(neighbor);
-                        }
-                        continue;
-                    }
-
-                    int neighborIdx = neighbor.y * w + neighbor.x;
-                    if (visited[neighborIdx])
-                        continue;
-
-                    visited[neighborIdx] = true;
-
-                    neighborInt.BestCost = (ushort)(currentInteg.BestCost + 1);
-                    neighborInt.Flags |= CellFlags.HasLineOfSight;
-                    queue.Enqueue(neighbor);
-                }
+                neighborInt.BestCost = (ushort)(currentInteg.BestCost + 1);
+                neighborInt.Flags |= CellFlags.HasLineOfSight;
+                queue.Enqueue(neighbor);
             }
         }
 
