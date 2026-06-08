@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -5,22 +7,25 @@ using UnityEngine;
 [RequireComponent(typeof(IVehicleTowingConnectorProvider))]
 public class VehicleTowing : MonoBehaviour {
     
-    [SerializeField, Inline] internal ConfigurableJoint towingJoint;
-
-    private UnityVehicle thisVehicle;
     [SerializeField, ReadOnly] internal VehicleTowingConnector towingConnector;
-
-    private void Awake() {
-        thisVehicle = GetComponent<UnityVehicle>();
-        var towingConnectorProvider = thisVehicle.GetComponent<IVehicleTowingConnectorProvider>();
-        towingConnector = towingConnectorProvider.GetTowingConnector();
-    }
+    [SerializeField, Inline] internal ConfigurableJoint towingJoint;
 
 #if UNITY_EDITOR
     private void OnValidate() {
-        AdjustTowingJoint();
+        var towingConnectorProvider = GetComponent<IVehicleTowingConnectorProvider>();
+        towingConnector = towingConnectorProvider.GetTowingConnector();
+        
+        if (towingJoint != null)
+            AdjustTowingJoint();
     }
 #endif
+
+    private void Awake() {
+        if (towingConnector.rigidbody == null || towingJoint == null)
+            throw new InvalidOperationException();
+        
+        AdjustTowingJoint();
+    }
 
     private void AdjustTowingJoint() {
         towingJoint.autoConfigureConnectedAnchor = false;

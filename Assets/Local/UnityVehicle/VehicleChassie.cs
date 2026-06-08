@@ -15,6 +15,10 @@ public struct WheelAxis {
     public float width;
     [Inline] public WheelCollider leftWheel;
     [Inline] public WheelCollider rightWheel;
+
+    public readonly bool AreWheelsSet() {
+        return leftWheel != null && rightWheel != null;
+    }
 }
 
 [ExecuteInEditMode]
@@ -22,24 +26,30 @@ public struct WheelAxis {
 [RequireComponent(typeof(Rigidbody))]
 public class VehicleChassie : MonoBehaviour, IVehiclePullingConnectorProvider {
 
-    [SerializeField, Inline, Local]internal BoxCollider baseCollider;
+    [SerializeField, Inline, Local] internal BoxCollider baseCollider;
     [SerializeField] internal WheelAxis frontAxis;
     [SerializeField] internal WheelAxis rearAxis;
-
-    private Rigidbody physics;
-
-    private void Awake() {
-        physics = GetComponent<Rigidbody>();
-    }
+    
+    [SerializeField, HideInInspector] Rigidbody physics;
 
 #if UNITY_EDITOR
     private void OnValidate() {
-        AdjustAxisWheels(frontAxis);
-        AdjustAxisWheels(rearAxis);
+        if (physics == null)
+            physics = GetComponent<Rigidbody>();
+
+        if (frontAxis.AreWheelsSet() && rearAxis.AreWheelsSet())
+            AdjustAxes();
     }
 #endif
 
-    public void SetAxisfMotorTorque(WheelAxisName name, float torque) {
+    private void Awake() {
+        if (physics == null || baseCollider == null || !frontAxis.AreWheelsSet() || !rearAxis.AreWheelsSet())
+            throw new InvalidOperationException();
+        
+        AdjustAxes();
+    }
+
+    internal void SetAxisfMotorTorque(WheelAxisName name, float torque) {
         var wheelAxis = GetAxisByName(name);
         wheelAxis.leftWheel.motorTorque = torque;
         wheelAxis.rightWheel.motorTorque = torque;
@@ -62,6 +72,11 @@ public class VehicleChassie : MonoBehaviour, IVehiclePullingConnectorProvider {
         var axis = GetAxisByName(axisName);
         axis.leftWheel.GetWorldPose(out lPos, out lRot);
         axis.rightWheel.GetWorldPose(out rPos, out rRot);
+    }
+
+    private void AdjustAxes() {
+        AdjustAxisWheels(frontAxis);
+        AdjustAxisWheels(rearAxis);
     }
 
     private void AdjustAxisWheels(WheelAxis axis) {

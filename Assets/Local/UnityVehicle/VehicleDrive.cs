@@ -13,15 +13,23 @@ public class VehicleDrive : MonoBehaviour {
     [SerializeField] private float speedCeilingForSteering = 20f;
     [SerializeField] private float minSteerAmount = 0.15f;
     [SerializeField] private float speedKFactor = 2f;
-
-    private Rigidbody physics;
+    
+    [SerializeField, HideInInspector] private Rigidbody physics;
 
     internal float MotorTorque { get; private set; }
     internal float BrakesTorque { get; private set; }
     internal float SteeringDegree { get; private set; }
 
+#if UNITY_EDITOR
+    private void OnValidate() {
+        if (physics == null)
+            physics = GetComponent<Rigidbody>();
+    }
+#endif
+
     private void Awake() {
-        physics = GetComponent<Rigidbody>();
+        if (physics == null)
+            throw new InvalidOperationException();
     }
 
     public void SetGas(float gas) {

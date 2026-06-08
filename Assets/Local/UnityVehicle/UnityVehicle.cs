@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 [SelectionBase]
@@ -8,12 +10,13 @@ using UnityEngine;
 public class UnityVehicle : MonoBehaviour {
 
     [SerializeField] private float mass = 1000f;
-
-    private Rigidbody physics;
-    private VehicleChassie chassie;
-    private VehicleDrive drive;
-    private VehicleSteeringAxle steeringAxle;
-    private VehicleTowing towing;
+    [Space]
+    [SerializeField, ReadOnly] private VehicleChassie chassie;
+    [SerializeField, ReadOnly] private VehicleDrive drive;
+    [SerializeField, ReadOnly] private VehicleSteeringAxle steeringAxle;
+    [SerializeField, ReadOnly] private VehicleTowing towing;
+    
+    [SerializeField, HideInInspector] private Rigidbody physics;
 
     public VehicleDrive Drive => drive;
     public VehicleChassie Chassie => chassie;
@@ -23,19 +26,31 @@ public class UnityVehicle : MonoBehaviour {
     public Quaternion Rotation => transform.rotation;
     public Vector3 Velocity => physics.linearVelocity;
 
-    private void Awake() {
-        physics = GetComponent<Rigidbody>();
-        chassie = GetComponent<VehicleChassie>();
+#if UNITY_EDITOR
+    private void OnValidate() {
+        if (physics == null)
+            physics = GetComponent<Rigidbody>();
+        if (chassie == null)
+            chassie = GetComponent<VehicleChassie>();
+        
         drive = GetComponent<VehicleDrive>();
         steeringAxle = GetComponent<VehicleSteeringAxle>();
         towing = GetComponent<VehicleTowing>();
-    }
 
-#if UNITY_EDITOR
-    private void OnValidate() {
-        physics.mass = mass;
+        AdjustVehicleMass();
     }
 #endif
+
+    private void Awake() {
+        if (physics == null || chassie == null)
+            throw new InvalidOperationException();
+
+        AdjustVehicleMass();
+    }
+
+    private void FixedUpdate() {
+        ReadChassieInput();
+    }
 
     public void Transform(Vector3 position, Quaternion rotation) {
         transform.SetPositionAndRotation(position, rotation);
@@ -50,7 +65,11 @@ public class UnityVehicle : MonoBehaviour {
         physics.angularVelocity = Vector3.zero;
     }
 
-    private void FixedUpdate() {
+    private void AdjustVehicleMass() {
+        physics.mass = mass;
+    }
+
+    private void ReadChassieInput() {
         if (drive != null) {
             chassie.SetAxisfMotorTorque(WheelAxisName.Front, drive.MotorTorque);
             chassie.SetAxisfMotorTorque(WheelAxisName.Rear, drive.MotorTorque);
@@ -61,5 +80,4 @@ public class UnityVehicle : MonoBehaviour {
             chassie.SetAxisSteerAngle(WheelAxisName.Front, steeringAxle.FrontAxisSteeringDegree);
         }
     }
-
 }
