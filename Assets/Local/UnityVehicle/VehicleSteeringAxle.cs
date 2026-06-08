@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -8,6 +10,7 @@ public class VehicleSteeringAxle : MonoBehaviour, IVehicleTowingConnectorProvide
     
     [SerializeField] private float axleSize = 0.1f;
     [SerializeField] private float axleLength = 1.0f;
+    [Space]
     [SerializeField] internal Rigidbody axleRigidbody;
     [SerializeField] internal BoxCollider axleBoxCollider;
     [SerializeField] internal ConfigurableJoint axleBodyJoint;
@@ -19,18 +22,30 @@ public class VehicleSteeringAxle : MonoBehaviour, IVehicleTowingConnectorProvide
     internal float RearAxisMotorTorque => -1f;
     internal float FrontAxisSteeringDegree { get; private set; }
 
-    private void Awake() {
-        physics = GetComponent<Rigidbody>();
-        chassie = GetComponent<VehicleChassie>();
-    }
-
 #if UNITY_EDITOR
     private void OnValidate() {
-        AdjustAxleVolume();
-        AdjustAxlePlacement();     
-        AdjustAxleJoint();   
+        if (physics == null)
+            physics = GetComponent<Rigidbody>();
+        if (chassie == null)
+            chassie = GetComponent<VehicleChassie>();
+
+        if (axleRigidbody != null && axleBoxCollider != null && axleBodyJoint != null)
+            AdjustAxle();
     }
 #endif
+
+    private void Awake() {
+        if (physics == null || chassie == null) 
+            throw new InvalidOperationException();
+        if (axleRigidbody == null || axleBoxCollider == null || axleBodyJoint == null) 
+            throw new InvalidOperationException();
+
+        AdjustAxle();
+    }
+
+    private void FixedUpdate() {
+        DetectAxleAngle();
+    }
 
     public VehicleTowingConnector GetTowingConnector() {
         return new VehicleTowingConnector {
@@ -39,9 +54,10 @@ public class VehicleSteeringAxle : MonoBehaviour, IVehicleTowingConnectorProvide
         };
     }
 
-    private void FixedUpdate() {
-        var axleAngle = Vector3.SignedAngle(physics.transform.forward, axleRigidbody.transform.forward, Vector3.up);
-        FrontAxisSteeringDegree = axleAngle;
+    private void AdjustAxle() {
+        AdjustAxleVolume();
+        AdjustAxlePlacement();     
+        AdjustAxleJoint();
     }
 
     private void AdjustAxleVolume() {
@@ -70,6 +86,11 @@ public class VehicleSteeringAxle : MonoBehaviour, IVehicleTowingConnectorProvide
         axleBodyJoint.angularYMotion = ConfigurableJointMotion.Limited;
         axleBodyJoint.angularYLimit = new SoftJointLimit { limit = 180 };
         axleBodyJoint.angularZMotion = ConfigurableJointMotion.Locked;
+    }
+
+    private void DetectAxleAngle() {
+        var axleAngle = Vector3.SignedAngle(physics.transform.forward, axleRigidbody.transform.forward, Vector3.up);
+        FrontAxisSteeringDegree = axleAngle;
     }
 
 }
