@@ -34,7 +34,7 @@ namespace FlowFieldPro
                         continue;
                     }
 
-                    ushort bestCost = integrationCell.BestCost;
+                    var bestCost = integrationCell.BestCost;
                     Direction bestDir = Direction.None;
 
                     foreach (var dir in Directions.All)
@@ -49,7 +49,7 @@ namespace FlowFieldPro
                         if (tile.Cost.IsWall(nx, ny))
                             continue;
 
-                        ushort neighborCost = tile.Integration[nx, ny].BestCost;
+                        var neighborCost = tile.Integration[nx, ny].BestCost;
                         if (neighborCost < bestCost)
                         {
                             bestCost = neighborCost;

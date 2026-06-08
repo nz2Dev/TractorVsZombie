@@ -74,7 +74,7 @@ namespace FlowFieldPro
                     for (int i = 0; i < currentSideCells.Length; i++)
                     {
                         var currentLocal = grid.WorldToLocal(currentSideCells[i]);
-                        ushort carriedCost = currentTile.Integration[currentLocal.x, currentLocal.y].BestCost;
+                        var carriedCost = currentTile.Integration[currentLocal.x, currentLocal.y].BestCost;
                         if (carriedCost == IntegrationField.Unreachable)
                             continue;
 

@@ -226,7 +226,7 @@ namespace FlowFieldPro.Editor
             byte costVal = tile.Cost[c.x, c.y];
             EditorGUILayout.LabelField("Cost", costVal == CostField.Wall ? "Wall (255)" : costVal.ToString());
 
-            ushort bestCost = tile.Integration[c.x, c.y].BestCost;
+            var bestCost = tile.Integration[c.x, c.y].BestCost;
             EditorGUILayout.LabelField("Best Cost", bestCost == IntegrationField.Unreachable ? "Unreachable" : bestCost.ToString());
 
             var flags = tile.Integration[c.x, c.y].Flags;
@@ -280,7 +280,7 @@ namespace FlowFieldPro.Editor
 
             if (Event.current.type == EventType.Repaint)
             {
-                ushort maxCost = GetMaxIntegrationCost();
+                var maxCost = GetMaxIntegrationCost();
 
                 Handles.BeginGUI();
 
@@ -419,7 +419,7 @@ namespace FlowFieldPro.Editor
         // Cell rendering
         // ------------------------------------------------------------------
 
-        private void DrawCell(int x, int y, Rect rect, ushort maxCost)
+        private void DrawCell(int x, int y, Rect rect, double maxCost)
         {
             byte cost = tile.Cost[x, y];
             var integrationCell = tile.Integration[x, y];
@@ -502,7 +502,7 @@ namespace FlowFieldPro.Editor
                 {
                     if (!enableFlowBuilder)
                     {
-                        labelText = integrationCell.BestCost.ToString();
+                        labelText = integrationCell.BestCost.ToString("F2");
                         if (integrationCell.Flags.HasFlag(CellFlags.HasLineOfSight)) 
                             labelColor = new Color(.3f, .3f, .3f, 1f);
                         else
@@ -593,23 +593,23 @@ namespace FlowFieldPro.Editor
             return Color.Lerp(new Color(0.1f, 0.6f, 0.4f), new Color(0.8f, 0.2f, 0.1f), t);
         }
 
-        private Color GetIntegrationColor(ushort bestCost, ushort maxCost)
+        private Color GetIntegrationColor(double bestCost, double maxCost)
         {
             if (bestCost == IntegrationField.Unreachable)
                 return new Color(0.1f, 0.1f, 0.1f);
 
-            float t = maxCost > 0 ? (float)bestCost / maxCost : 0f;
+            float t = (float) (maxCost > 0 ? bestCost / maxCost : 0f);
             return Color.Lerp(new Color(0.0f, 0.55f, 0.8f), new Color(0.25f, 0.0f, 0.45f), t);
         }
 
-        private ushort GetMaxIntegrationCost()
+        private double GetMaxIntegrationCost()
         {
-            ushort max = 0;
+            var max = 0d;
             for (int y = 0; y < gridSize; y++)
             {
                 for (int x = 0; x < gridSize; x++)
                 {
-                    ushort c = tile.Integration[x, y].BestCost;
+                    var c = tile.Integration[x, y].BestCost;
                     if (c != IntegrationField.Unreachable && c > max)
                         max = c;
                 }

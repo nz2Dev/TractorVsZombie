@@ -98,7 +98,8 @@ namespace FlowFieldPro
                         travelTimes[neighborIndex] = newCost;
 
                         ref var neighborCell = ref tile.Integration[neighborX, neighborY];
-                        neighborCell.BestCost = QuantizeCost(newCost);
+                        // neighborCell.BestCost = QuantizeCost(newCost);
+                        neighborCell.BestCost = newCost;
                         neighborCell.Flags |= CellFlags.ActiveWaveFront;
 
                         trialHeap.Push(new TrialNode(neighborIndex, newCost));
@@ -122,7 +123,7 @@ namespace FlowFieldPro
             if (tile.Cost.IsWall(seed.x, seed.y))
                 return;
 
-            ushort seedCost = tile.Integration[seed.x, seed.y].BestCost;
+            var seedCost = tile.Integration[seed.x, seed.y].BestCost;
             if (seedCost == IntegrationField.Unreachable)
                 return;
 
@@ -198,19 +199,19 @@ namespace FlowFieldPro
             return y * width + x;
         }
 
-        private static ushort QuantizeCost(double cost)
-        {
-            if (cost >= IntegrationField.Unreachable)
-                return IntegrationField.Unreachable;
+        // private static ushort QuantizeCost(double cost)
+        // {
+        //     if (cost >= IntegrationField.Unreachable)
+        //         return IntegrationField.Unreachable;
 
-            int quantized = Mathf.CeilToInt((float)cost);
-            if (quantized < 0)
-                return 0;
-            if (quantized >= IntegrationField.Unreachable)
-                return IntegrationField.Unreachable;
+        //     int quantized = Mathf.CeilToInt((float)cost);
+        //     if (quantized < 0)
+        //         return 0;
+        //     if (quantized >= IntegrationField.Unreachable)
+        //         return IntegrationField.Unreachable;
 
-            return (ushort)quantized;
-        }
+        //     return (ushort)quantized;
+        // }
 
         private static bool ApproximatelyEqual(double a, double b)
         {

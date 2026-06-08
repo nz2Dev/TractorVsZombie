@@ -23,7 +23,7 @@ namespace FlowFieldPro
     /// </summary>
     public struct IntegrationCell
     {
-        public ushort BestCost;
+        public double BestCost;
         public CellFlags Flags;
     }
 
@@ -41,7 +41,7 @@ namespace FlowFieldPro
         /// Sentinel value meaning "this cell has not been reached by the wavefront".
         /// Any cell with this cost is either a wall or unreachable.
         /// </summary>
-        public const ushort Unreachable = ushort.MaxValue;
+        public const double Unreachable = double.MaxValue;
 
         private readonly IntegrationCell[] cells;
         private readonly int width;

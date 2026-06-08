@@ -85,7 +85,7 @@ namespace FlowFieldPro
                 ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
                 if ((neighborInt.Flags & CellFlags.WaveFrontBlocked) != 0)
                 {
-                    ushort potentialCost = (ushort)(currentInteg.BestCost + 1);
+                    var potentialCost = (currentInteg.BestCost + 1);
                     if (potentialCost < neighborInt.BestCost)
                     {
                         neighborInt.BestCost = potentialCost;
@@ -100,7 +100,7 @@ namespace FlowFieldPro
 
                 visited[neighborIdx] = true;
 
-                neighborInt.BestCost = (ushort)(currentInteg.BestCost + 1);
+                neighborInt.BestCost = (currentInteg.BestCost + 1);
                 neighborInt.Flags |= CellFlags.HasLineOfSight;
                 queue.Enqueue(neighbor);
             }
