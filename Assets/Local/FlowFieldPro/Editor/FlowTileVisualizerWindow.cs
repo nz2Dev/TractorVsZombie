@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using UnityEditor;
 using UnityEngine;
 
@@ -42,6 +44,7 @@ namespace FlowFieldPro.Editor
         private const int MaxGridSize = 64;
         
         private Queue<Vector2Int> stepLosQueue;
+        private List<Vector2Int> stepLosQueueOrder;
         private bool[] stepLosVisited;
         private Queue<Vector2Int> stepLosWavefront;
         private Vector2Int stepGoal;
@@ -430,7 +433,7 @@ namespace FlowFieldPro.Editor
                 bg = new Color(0.15f, 0.15f, 0.15f);
             else if (integrationCell.BestCost != IntegrationField.Unreachable)
                 if (integrationCell.Flags.HasFlag(CellFlags.HasLineOfSight))
-                    bg = new Color(0.7f, 0.7f, 0.7f);
+                    bg = new Color(0.9f, 0.9f, 0.9f);
                 else 
                     bg = GetIntegrationColor(integrationCell.BestCost, maxCost);
             else
@@ -449,6 +452,25 @@ namespace FlowFieldPro.Editor
             if (!isWall && (integrationCell.Flags & CellFlags.WaveFrontBlocked) != 0)
             {
                 DrawRectBorder(ContractRect(rect, currentCellSize * 0.08f), new Color(0.8f, 0.2f, 0.2f, 1f), 2f);
+            }
+
+            // InQueue
+            if (stepLOS && stepLosQueue != null) 
+            {
+                var queueIndex = stepLosQueueOrder.IndexOf(new Vector2Int(x, y));
+                if (queueIndex >= 0) {
+                    var colorT = (float) queueIndex / stepLosQueueOrder.Count;
+                    var color = Color.Lerp(Color.lightGray, Color.black, 1 - colorT);
+                    DrawRectBorder(ContractRect(rect, currentCellSize * 0.2f), color, 3f);
+
+                    var labelStyle = new GUIStyle(EditorStyles.miniLabel)
+                    {
+                        alignment = TextAnchor.UpperRight,
+                        fontSize = Mathf.Clamp(Mathf.RoundToInt(currentCellSize * 0.32f), 6, 12)
+                    };
+                    labelStyle.normal.textColor = color;
+                    GUI.Label(rect, $"{queueIndex}", labelStyle);
+                }
             }
 
             // Flow arrow
@@ -479,7 +501,7 @@ namespace FlowFieldPro.Editor
                 else if (integrationCell.BestCost != IntegrationField.Unreachable)
                 {
                     labelText = integrationCell.BestCost.ToString();
-                    labelColor = new Color(1f, 1f, 1f, 0.7f);
+                    labelColor = new Color(.3f, .3f, .3f, 1f);
                 }
                 else
                 {
@@ -636,6 +658,7 @@ namespace FlowFieldPro.Editor
                     stepLosVisited[stepGoal.y * tile.Width + stepGoal.x] = true;
                     stepLosQueue.Enqueue(stepGoal);
                     LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, goal, stepLosWavefront);
+                    stepLosQueueOrder = stepLosQueue.ToList();
                     Repaint();
                     return;
                 } else {
@@ -657,6 +680,7 @@ namespace FlowFieldPro.Editor
         private void StepLineOfSightPass() 
         {
             LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, stepGoal, stepLosWavefront);
+            stepLosQueueOrder = stepLosQueue.ToList();
             if (stepLosQueue.Count == 0) 
             {
                 // 2. Cost Integration
