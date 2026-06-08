@@ -433,7 +433,7 @@ namespace FlowFieldPro.Editor
                 bg = new Color(0.15f, 0.15f, 0.15f);
             else if (integrationCell.BestCost != IntegrationField.Unreachable)
                 if (integrationCell.Flags.HasFlag(CellFlags.HasLineOfSight))
-                    bg = new Color(0.9f, 0.9f, 0.9f);
+                    bg = new Color(0.8f, 0.8f, 0.8f);
                 else 
                     bg = GetIntegrationColor(integrationCell.BestCost, maxCost);
             else
@@ -477,7 +477,7 @@ namespace FlowFieldPro.Editor
             if (!isWall && enableFlowBuilder)
             {
                 if (flowCell.HasLineOfSight)
-                    DrawCrosshair(rect, new Color(0.2f, 1f, 0.8f, 0.8f));
+                    DrawCrosshair(rect, Color.black);
                 else if (flowCell.Direction != Direction.None)
                     DrawArrow(rect, flowCell.Direction, new Color(0.95f, 0.95f, 0.95f, 0.85f));
             }
@@ -502,7 +502,7 @@ namespace FlowFieldPro.Editor
                 {
                     if (!enableFlowBuilder)
                     {
-                        labelText = integrationCell.BestCost.ToString("F2");
+                        labelText = integrationCell.BestCost.ToString("F1");
                         if (integrationCell.Flags.HasFlag(CellFlags.HasLineOfSight)) 
                             labelColor = new Color(.3f, .3f, .3f, 1f);
                         else
