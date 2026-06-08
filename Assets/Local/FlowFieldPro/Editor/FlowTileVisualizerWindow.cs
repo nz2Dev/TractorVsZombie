@@ -455,7 +455,7 @@ namespace FlowFieldPro.Editor
             }
 
             // InQueue
-            if (stepLOS && stepLosQueue != null) 
+            if (stepLOS && stepLosQueue != null && stepLosQueue.Count > 0) 
             {
                 var queueIndex = stepLosQueueOrder.IndexOf(new Vector2Int(x, y));
                 if (queueIndex >= 0) {
@@ -501,7 +501,10 @@ namespace FlowFieldPro.Editor
                 else if (integrationCell.BestCost != IntegrationField.Unreachable)
                 {
                     labelText = integrationCell.BestCost.ToString();
-                    labelColor = new Color(.3f, .3f, .3f, 1f);
+                    if (integrationCell.Flags.HasFlag(CellFlags.HasLineOfSight)) 
+                        labelColor = new Color(.3f, .3f, .3f, 1f);
+                    else
+                        labelColor = new Color(.7f, .7f, .7f, 1f);
                 }
                 else
                 {
