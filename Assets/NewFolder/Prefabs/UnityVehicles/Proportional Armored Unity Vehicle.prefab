@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 3289705216818827196}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -285,6 +285,7 @@ MonoBehaviour:
     width: 2
     leftWheel: {fileID: 6476999723630897593}
     rightWheel: {fileID: 6772736566611728227}
+  physics: {fileID: 9108905763789636849}
 --- !u!114 &2749731636635307362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,6 +304,7 @@ MonoBehaviour:
   speedCeilingForSteering: 15
   minSteerAmount: 0.1
   speedKFactor: 2
+  physics: {fileID: 9108905763789636849}
 --- !u!114 &1457614994046877841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,6 +318,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Local::UnityVehicle
   mass: 500
+  chassie: {fileID: 8491128124494887147}
+  drive: {fileID: 2749731636635307362}
+  steeringAxle: {fileID: 0}
+  towing: {fileID: 0}
+  physics: {fileID: 9108905763789636849}
 --- !u!1 &7016341106111714901
 GameObject:
   m_ObjectHideFlags: 0

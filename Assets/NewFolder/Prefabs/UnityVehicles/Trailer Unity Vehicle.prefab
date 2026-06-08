@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 6287480572618348}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0.45, z: 1.25}
+  m_LocalPosition: {x: 1, y: 0.45, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -153,7 +153,7 @@ Transform:
   m_GameObject: {fileID: 1615887813691626480}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.45, z: 1.25}
+  m_LocalPosition: {x: 0, y: 0.45, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -220,7 +220,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: 0, y: 0.45, z: 1.25}
+  m_ConnectedAnchor: {x: 0, y: 0.45, z: 1}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -437,7 +437,7 @@ Transform:
   m_GameObject: {fileID: 2065883294110015478}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0.45, z: -1.25}
+  m_LocalPosition: {x: 1, y: 0.45, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -508,7 +508,7 @@ Transform:
   m_GameObject: {fileID: 3025482940273803768}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0.45, z: -1.25}
+  m_LocalPosition: {x: -1, y: 0.45, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -579,7 +579,7 @@ Transform:
   m_GameObject: {fileID: 3236637592163879441}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0.45, z: 1.25}
+  m_LocalPosition: {x: -1, y: 0.45, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -707,15 +707,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Local::VehicleChassie
   baseCollider: {fileID: 348024632108773573}
   frontAxis:
-    depth: 1.25
+    depth: 1
     width: 2
     leftWheel: {fileID: 7670700374184298500}
     rightWheel: {fileID: 3839733415428299441}
   rearAxis:
-    depth: -1.25
+    depth: -1
     width: 2
     leftWheel: {fileID: 1283283747750132100}
     rightWheel: {fileID: 3178156590119114254}
+  physics: {fileID: 7006158005595033464}
 --- !u!114 &1218431161578446385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,6 +734,8 @@ MonoBehaviour:
   axleRigidbody: {fileID: 8939905539661027224}
   axleBoxCollider: {fileID: 3275998511737942848}
   axleBodyJoint: {fileID: 7158297638791994403}
+  physics: {fileID: 7006158005595033464}
+  chassie: {fileID: 898983556577155311}
 --- !u!114 &6609883790062176369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,10 +748,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5cfaf44cae7d45538e75884256ab901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Local::VehicleTowing
-  towingJoint: {fileID: 2938794648065758583}
   towingConnector:
     rigidbody: {fileID: 8939905539661027224}
     anchorOffsetLocalSpace: {x: 0, y: 0, z: 2.5}
+  towingJoint: {fileID: 2938794648065758583}
 --- !u!114 &296123987818187350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,3 +765,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Local::UnityVehicle
   mass: 500
+  chassie: {fileID: 898983556577155311}
+  drive: {fileID: 0}
+  steeringAxle: {fileID: 1218431161578446385}
+  towing: {fileID: 6609883790062176369}
+  physics: {fileID: 7006158005595033464}
