@@ -37,26 +37,26 @@ namespace FlowFieldPro
             // Some editor flows seed the goal cell directly instead of enqueueing it.
             // ActiveWaveFront keeps those cells participating without freezing every
             // LOS-populated cost as an accepted value.
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    if (tile.Cost.IsWall(x, y))
-                        continue;
+            // for (int y = 0; y < h; y++)
+            // {
+            //     for (int x = 0; x < w; x++)
+            //     {
+            //         if (tile.Cost.IsWall(x, y))
+            //             continue;
 
-                    ref var cell = ref tile.Integration[x, y];
-                    int index = ToIndex(x, y, w);
+            //         ref var cell = ref tile.Integration[x, y];
+            //         int index = ToIndex(x, y, w);
 
-                    if ((cell.Flags & CellFlags.ActiveWaveFront) != 0)
-                    {
-                        AddSource(tile, sources, travelTimes, trialHeap, new Vector2Int(x, y));
-                    }
-                    else if (!sources[index])
-                    {
-                        cell.BestCost = IntegrationField.Unreachable;
-                    }
-                }
-            }
+            //         if ((cell.Flags & CellFlags.ActiveWaveFront) != 0)
+            //         {
+            //             AddSource(tile, sources, travelTimes, trialHeap, new Vector2Int(x, y));
+            //         }
+            //         else if (!sources[index])
+            //         {
+            //             cell.BestCost = IntegrationField.Unreachable;
+            //         }
+            //     }
+            // }
 
             while (trialHeap.Count > 0)
             {
@@ -86,7 +86,7 @@ namespace FlowFieldPro
                         continue;
 
                     int neighborIndex = ToIndex(neighborX, neighborY, w);
-                    if (accepted[neighborIndex])
+                    if (accepted[neighborIndex] || (tile.Integration[neighborX, neighborY].Flags & CellFlags.HasLineOfSight) != 0)
                         continue;
 
                     double newCost = ComputeFastMarchingCost(tile, accepted, travelTimes, neighborX, neighborY);
