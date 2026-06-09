@@ -670,6 +670,8 @@ namespace FlowFieldPro.Editor
                 } else {
                     LineOfSightPass.ComputeLineOfSight(tile, goal, wavefront);
                 }
+            } else {
+                wavefront.Enqueue(goal);
             }
 
             // 2. Cost Integration
