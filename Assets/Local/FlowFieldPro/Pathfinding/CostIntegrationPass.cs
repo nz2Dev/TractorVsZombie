@@ -20,7 +20,6 @@ namespace FlowFieldPro
             int cellCount = w * h;
 
             var accepted = new bool[cellCount];
-            var sources = new bool[cellCount];
             var travelTimes = new double[cellCount];
             var trialHeap = new MinHeap(cellCount);
 
@@ -31,7 +30,7 @@ namespace FlowFieldPro
             // transition cells, and LOS shadow-boundary cells from earlier passes.
             while (wavefront.Count > 0)
             {
-                AddSource(tile, sources, travelTimes, trialHeap, wavefront.Dequeue());
+                AddSource(tile, accepted, travelTimes, trialHeap, wavefront.Dequeue());
             }
 
             // Some editor flows seed the goal cell directly instead of enqueueing it.
@@ -61,8 +60,8 @@ namespace FlowFieldPro
             while (trialHeap.Count > 0)
             {
                 var current = trialHeap.Pop();
-                if (accepted[current.Index])
-                    continue;
+                // if (accepted[current.Index])
+                //     continue;
                 if (!ApproximatelyEqual(current.Cost, travelTimes[current.Index]))
                     continue;
 
@@ -110,7 +109,7 @@ namespace FlowFieldPro
 
         private static void AddSource(
             FlowTile tile,
-            bool[] sources,
+            bool[] accepted,
             double[] travelTimes,
             MinHeap trialHeap,
             Vector2Int seed)
@@ -128,7 +127,7 @@ namespace FlowFieldPro
                 return;
 
             int seedIndex = ToIndex(seed.x, seed.y, w);
-            sources[seedIndex] = true;
+            // accepted[seedIndex] = true;
 
             if (seedCost < travelTimes[seedIndex])
             {
