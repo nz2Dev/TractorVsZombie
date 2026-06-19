@@ -323,7 +323,7 @@ namespace FlowFieldPro.EditorTests
 
             LineOfSightPass.ComputeLineOfSight(tile, goal, waveFront);
 
-            Assert.That(waveFront, Is.EquivalentTo(new [] {new Vector2Int(1, 2), new Vector2Int(1, 3)}));
+            Assert.That(waveFront, Is.EquivalentTo(new [] {new Vector2Int(1, 2)}));
 
             Assert.IsTrue(tile.Integration[2, 3].Flags == CellFlags.None);
             Assert.IsTrue(tile.Integration[2, 2].Flags == CellFlags.None);

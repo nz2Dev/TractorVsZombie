@@ -67,7 +67,6 @@ namespace FlowFieldPro
             
             if ((currentInteg.Flags & CellFlags.WaveFrontBlocked) != 0) {
                 currentInteg.Flags &= ~CellFlags.HasLineOfSight;
-                costWavefront.Enqueue(current);
                 return;
             }
 
@@ -84,15 +83,7 @@ namespace FlowFieldPro
                 
                 ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
                 if ((neighborInt.Flags & CellFlags.WaveFrontBlocked) != 0)
-                {
-                    var potentialCost = (currentInteg.BestCost + 1);
-                    if (potentialCost < neighborInt.BestCost)
-                    {
-                        neighborInt.BestCost = potentialCost;
-                        costWavefront.Enqueue(neighbor);
-                    }
                     continue;
-                }
 
                 int neighborIdx = neighbor.y * w + neighbor.x;
                 if (visited[neighborIdx])
