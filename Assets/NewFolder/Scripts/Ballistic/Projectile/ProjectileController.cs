@@ -50,9 +50,9 @@ public class ProjectileController {
             if (projectile.IsDead)
                 continue;
 
-            if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectile.Config.damage)) {
+            if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectile.Config.damage, out var hitDirection)) {
                 projectile.IsDead = true;
-                view.ShowBulletCrash(projectile.Id);
+                view.ShowBulletCrash(projectile.Id, projectile.Position, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitDirection);
             }
         }
     }

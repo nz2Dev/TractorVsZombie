@@ -23,8 +23,12 @@ public class ProjectileView {
         soundManager.PlayEffect(position, shootSFX);
     }
 
-    internal void ShowBulletCrash(int projectileId) {
+    internal void ShowBulletCrash(int projectileId, Vector3 position, AudioClip[] impactSFX, ParticleSystem impactParticlesPrefab, Vector3 hitDirection) {
         KillBuletParticleById(projectileId);
+        if (impactSFX != null)
+            soundManager.PlayEffect(position, impactSFX);
+        if (impactParticlesPrefab != null)
+            GameObject.Instantiate(impactParticlesPrefab, position, Quaternion.LookRotation(hitDirection));
     }
 
     internal void ShowBulletDisappear(int projectileId) {

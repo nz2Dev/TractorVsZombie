@@ -36,8 +36,8 @@ public class CollisionLookup<T> where T : IMetadata {
         GameObject.Destroy(marker.gameObject);
     }
 
-    public bool Raycast(Vector3 origin, Vector3 direction, float distance, out T hitMetadata) {
-        var result = Physics.Raycast(origin, direction, out var hitInfo, distance, 1 << layer);
+    public bool Raycast(Vector3 origin, Vector3 direction, float distance, out T hitMetadata, out RaycastHit hitInfo) {
+        var result = Physics.Raycast(origin, direction, out hitInfo, distance, 1 << layer);
         hitMetadata = default;
         if (result) hitMetadata = colliderToMetadata[hitInfo.collider];
         return result;

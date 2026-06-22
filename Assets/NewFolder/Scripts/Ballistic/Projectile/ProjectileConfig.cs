@@ -7,4 +7,6 @@ public class ProjectileConfig : ScriptableObject {
     public float lifetime;
     public AudioClip[] shootAudioClips;
     public ProjectileStyle style;
+    public AudioClip[] impactAudioClips;
+    public ParticleSystem impactParticlesPrefab;
 }
