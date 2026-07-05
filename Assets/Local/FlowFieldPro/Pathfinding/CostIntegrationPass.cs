@@ -213,7 +213,7 @@ namespace FlowFieldPro
             return accepted[index];
         }
 
-        private static int ToIndex(int x, int y, int width)
+        internal static int ToIndex(int x, int y, int width)
         {
             return y * width + x;
         }

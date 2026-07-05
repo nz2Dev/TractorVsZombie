@@ -508,6 +508,21 @@ namespace FlowFieldPro.Editor
                 }
             }
 
+            if (stepCostIntegration && constIntegrationState.TrialHeap != null && constIntegrationState.TrialHeap.Count > 0) 
+            {
+                var payloadIndex = CostIntegrationPass.ToIndex(x, y, tile.Width);
+                var labelStyle = new GUIStyle(EditorStyles.miniLabel)
+                {
+                    alignment = TextAnchor.LowerRight,
+                    fontSize = Mathf.Clamp(Mathf.RoundToInt(currentCellSize * 0.32f), 6, 12)
+                };
+                
+                var color = constIntegrationState.Accepted[payloadIndex] ? Color.green : Color.red;
+                var acceptedChar = constIntegrationState.Accepted[payloadIndex] ? "✔" : "✘";
+                labelStyle.normal.textColor = color;
+                GUI.Label(rect, acceptedChar, labelStyle);
+            }
+
             // Flow arrow
             if (!isWall && enableFlowBuilder)
             {
