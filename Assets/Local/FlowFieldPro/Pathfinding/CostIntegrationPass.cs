@@ -7,7 +7,7 @@ namespace FlowFieldPro
     /// <summary>
     /// Phase C: Cost integration — fast marching wavefront expansion.
     /// </summary>
-    public static class CostIntegrationPass
+    public static partial class CostIntegrationPass
     {
         /// <summary>
         /// Solves the integration field with the fast marching method using
@@ -21,7 +21,7 @@ namespace FlowFieldPro
 
             var accepted = new bool[cellCount];
             var travelTimes = new double[cellCount];
-            var trialHeap = new MinHeap(cellCount);
+            var trialHeap = new MinHeap<TrialNode>(cellCount);
 
             for (int i = 0; i < travelTimes.Length; i++)
                 travelTimes[i] = double.PositiveInfinity;
@@ -111,7 +111,7 @@ namespace FlowFieldPro
             FlowTile tile,
             bool[] accepted,
             double[] travelTimes,
-            MinHeap trialHeap,
+            MinHeap<TrialNode> trialHeap,
             Vector2Int seed)
         {
             int w = tile.Width;
@@ -217,7 +217,7 @@ namespace FlowFieldPro
             return Math.Abs(a - b) <= 0.000001;
         }
 
-        private struct TrialNode
+        private readonly struct TrialNode : IHeapNode
         {
             public readonly int Index;
             public readonly double Cost;
@@ -227,78 +227,8 @@ namespace FlowFieldPro
                 Index = index;
                 Cost = cost;
             }
-        }
 
-        private sealed class MinHeap
-        {
-            private readonly List<TrialNode> nodes;
-
-            public int Count => nodes.Count;
-
-            public MinHeap(int capacity)
-            {
-                nodes = new List<TrialNode>(capacity);
-            }
-
-            public void Push(TrialNode node)
-            {
-                nodes.Add(node);
-                SiftUp(nodes.Count - 1);
-            }
-
-            public TrialNode Pop()
-            {
-                var result = nodes[0];
-                int lastIndex = nodes.Count - 1;
-                nodes[0] = nodes[lastIndex];
-                nodes.RemoveAt(lastIndex);
-
-                if (nodes.Count > 0)
-                    SiftDown(0);
-
-                return result;
-            }
-
-            private void SiftUp(int index)
-            {
-                while (index > 0)
-                {
-                    int parent = (index - 1) / 2;
-                    if (nodes[parent].Cost <= nodes[index].Cost)
-                        break;
-
-                    Swap(parent, index);
-                    index = parent;
-                }
-            }
-
-            private void SiftDown(int index)
-            {
-                while (true)
-                {
-                    int left = index * 2 + 1;
-                    int right = left + 1;
-                    int smallest = index;
-
-                    if (left < nodes.Count && nodes[left].Cost < nodes[smallest].Cost)
-                        smallest = left;
-                    if (right < nodes.Count && nodes[right].Cost < nodes[smallest].Cost)
-                        smallest = right;
-
-                    if (smallest == index)
-                        break;
-
-                    Swap(index, smallest);
-                    index = smallest;
-                }
-            }
-
-            private void Swap(int a, int b)
-            {
-                var temp = nodes[a];
-                nodes[a] = nodes[b];
-                nodes[b] = temp;
-            }
+            readonly double IHeapNode.Cost => Cost;
         }
     }
 }
