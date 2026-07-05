@@ -21,9 +21,10 @@ namespace FlowFieldPro.Editor
         [SerializeField] private int goalY;
 
         [SerializeField] private bool enableLOS = true;
-        [SerializeField] private bool enableCostIntegration = true;
-        [SerializeField] private bool enableFlowBuilder = true;
         [SerializeField] private bool stepLOS;
+        [SerializeField] private bool enableCostIntegration = true;
+        [SerializeField] private bool stepCostIntegration;
+        [SerializeField] private bool enableFlowBuilder = true;
 
         [SerializeField] private byte[] costsPaint;
 
@@ -46,8 +47,9 @@ namespace FlowFieldPro.Editor
         private Queue<Vector2Int> stepLosQueue;
         private List<Vector2Int> stepLosQueueOrder;
         private bool[] stepLosVisited;
-        private Queue<Vector2Int> stepLosWavefront;
         private Vector2Int stepGoal;
+        private CostIntegrationPass.PassState constIntegrationState;
+        private Queue<Vector2Int> wavefront;
 
         [MenuItem("Tools/FlowFieldPro/FlowTile Visualizer")]
         public static void ShowWindow()
@@ -156,10 +158,43 @@ namespace FlowFieldPro.Editor
                     if (stepLosQueue != null && stepLosQueue.Count > 0) 
                     {
                         if (GUILayout.Button("Step"))
+                        {
                             StepLineOfSightPass();
+                            Repaint();
+                        }
                      
                         if (GUILayout.Button("Finish"))
+                        {
                             FinishLineOfSightPass();
+                            Repaint();
+                        }
+                    }
+                }
+            }
+
+            if (enableCostIntegration) 
+            {
+                var newStepCost = EditorGUILayout.Toggle("Step cost integration pass", stepCostIntegration);
+                passesChanged = passesChanged || newStepCost != stepCostIntegration;
+                stepCostIntegration = newStepCost;
+                if (stepCostIntegration) 
+                {
+                    if (GUILayout.Button("Reset")) 
+                        RunPasses();
+                    
+                    if (constIntegrationState.TrialHeap != null && constIntegrationState.TrialHeap.Count > 0) 
+                    {
+                        if (GUILayout.Button("Step"))
+                        {
+                            StepCostIntegrationPass();
+                            Repaint();
+                        }
+                     
+                        if (GUILayout.Button("Finish"))
+                        {
+                            FinishCostIntegrationPass();
+                            Repaint();
+                        }
                     }
                 }
             }
@@ -647,7 +682,7 @@ namespace FlowFieldPro.Editor
             goalIntCell.BestCost = 0;
             goalIntCell.Flags |= CellFlags.ActiveWaveFront;
 
-            var wavefront = new Queue<Vector2Int>();
+            wavefront = new Queue<Vector2Int>();
             // wavefront.Enqueue(goal);
 
             // 1. Line of Sight
@@ -657,65 +692,79 @@ namespace FlowFieldPro.Editor
                 {   
                     stepLosQueue = new Queue<Vector2Int>();
                     stepLosVisited = new bool[tile.Width * tile.Height];
-                    stepLosWavefront = new Queue<Vector2Int>();
                     stepGoal = goal;
                     
                     // stepLosWavefront.Enqueue(goal);??
                     stepLosVisited[stepGoal.y * tile.Width + stepGoal.x] = true;
                     stepLosQueue.Enqueue(stepGoal);
-                    LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, goal, stepLosWavefront);
+                    LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, goal, wavefront);
                     stepLosQueueOrder = stepLosQueue.ToList();
                     Repaint();
                     return;
                 } else {
                     LineOfSightPass.ComputeLineOfSight(tile, goal, wavefront);
+                    OnLineOfSightPassFinished();
                 }
             } else {
                 wavefront.Enqueue(goal);
+                OnLineOfSightPassFinished();
             }
-
-            // 2. Cost Integration
-            if (enableCostIntegration)
-                CostIntegrationPass.IntegrateCosts(tile, wavefront);
-
-            // 3. Flow Field Builder
-            if (enableFlowBuilder)
-                FlowFieldBuilderPass.BuildFlowField(tile);
 
             Repaint();
         }
 
         private void StepLineOfSightPass() 
         {
-            LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, stepGoal, stepLosWavefront);
+            LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, stepGoal, wavefront);
             stepLosQueueOrder = stepLosQueue.ToList();
             if (stepLosQueue.Count == 0) 
-            {
-                // 2. Cost Integration
-                if (enableCostIntegration)
-                    CostIntegrationPass.IntegrateCosts(tile, stepLosWavefront);
-
-                // 3. Flow Field Builder
-                if (enableFlowBuilder)
-                    FlowFieldBuilderPass.BuildFlowField(tile);
-            }
-
-            Repaint();
+                OnLineOfSightPassFinished();
         }
 
         private void FinishLineOfSightPass() {
             while (stepLosQueue.Count > 0)
-                LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, stepGoal, stepLosWavefront);
+                LineOfSightPass.StepLineOfSight(stepLosQueue, stepLosVisited, tile, stepGoal, wavefront);
             
-            // 2. Cost Integration
-            if (enableCostIntegration)
-                CostIntegrationPass.IntegrateCosts(tile, stepLosWavefront);
+            OnLineOfSightPassFinished();
+        }
 
+        private void OnLineOfSightPassFinished() 
+        {
+            if (enableCostIntegration)
+            {
+                if (stepCostIntegration) 
+                {
+                    constIntegrationState = CostIntegrationPass.InitIntegateCosts(tile, wavefront);
+                    CostIntegrationPass.StepIntegrateCosts(constIntegrationState);
+                    Repaint();
+                    return;
+                } else {
+                    CostIntegrationPass.IntegrateCosts(tile, wavefront);
+                    OnCostIntegrationPassFinished();
+                }
+            } else {
+                OnCostIntegrationPassFinished();
+            }
+        }
+
+        private void StepCostIntegrationPass() 
+        {
+            CostIntegrationPass.StepIntegrateCosts(constIntegrationState);
+            if (constIntegrationState.TrialHeap.Count == 0) 
+                OnCostIntegrationPassFinished();
+        }
+
+        private void FinishCostIntegrationPass() {
+            while (constIntegrationState.TrialHeap.Count > 0)
+                CostIntegrationPass.StepIntegrateCosts(constIntegrationState);
+            
+            OnCostIntegrationPassFinished();
+        }
+
+        private void OnCostIntegrationPassFinished() {
             // 3. Flow Field Builder
             if (enableFlowBuilder)
                 FlowFieldBuilderPass.BuildFlowField(tile);
-
-            Repaint();
         }
     }
 }
