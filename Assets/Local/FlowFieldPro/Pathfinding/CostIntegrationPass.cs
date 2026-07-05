@@ -7,13 +7,34 @@ namespace FlowFieldPro
     /// <summary>
     /// Phase C: Cost integration — fast marching wavefront expansion.
     /// </summary>
-    public static partial class CostIntegrationPass
+    public static class CostIntegrationPass
     {
+
+        internal struct PassState 
+        {
+            public FlowTile Tile;
+            public MinHeap<TrialNode> TrialHeap;
+            public bool[] Accepted;
+            public double[] TravelTimes;
+        }
+
         /// <summary>
         /// Solves the integration field with the fast marching method using
         /// cardinal upwind differences.
         /// </summary>
         public static void IntegrateCosts(FlowTile tile, Queue<Vector2Int> wavefront)
+        {
+            var state = InitIntegateCosts(tile, wavefront);
+
+            var trialHeap = state.TrialHeap;
+            
+            while (trialHeap.Count > 0)
+            {
+                StepIntegrateCosts(state);
+            }
+        }
+
+        internal static PassState InitIntegateCosts(FlowTile tile, Queue<Vector2Int> wavefront) 
         {
             int w = tile.Width;
             int h = tile.Height;
@@ -33,77 +54,76 @@ namespace FlowFieldPro
                 AddSource(tile, accepted, travelTimes, trialHeap, wavefront.Dequeue());
             }
 
-            // Some editor flows seed the goal cell directly instead of enqueueing it.
-            // ActiveWaveFront keeps those cells participating without freezing every
-            // LOS-populated cost as an accepted value.
-            // for (int y = 0; y < h; y++)
-            // {
-            //     for (int x = 0; x < w; x++)
-            //     {
-            //         if (tile.Cost.IsWall(x, y))
-            //             continue;
-
-            //         ref var cell = ref tile.Integration[x, y];
-            //         int index = ToIndex(x, y, w);
-
-            //         if ((cell.Flags & CellFlags.ActiveWaveFront) != 0)
-            //         {
-            //             AddSource(tile, sources, travelTimes, trialHeap, new Vector2Int(x, y));
-            //         }
-            //         else if (!sources[index])
-            //         {
-            //             cell.BestCost = IntegrationField.Unreachable;
-            //         }
-            //     }
-            // }
-
-            while (trialHeap.Count > 0)
+            return new PassState
             {
-                var current = trialHeap.Pop();
-                // if (accepted[current.Index])
-                //     continue;
-                if (!ApproximatelyEqual(current.Cost, travelTimes[current.Index]))
+                Tile = tile,
+                TrialHeap = trialHeap,
+                Accepted = accepted,
+                TravelTimes = travelTimes
+            };
+        }
+
+        internal static void StepIntegrateCosts(PassState state)
+        {
+            var trialHeap = state.TrialHeap;
+            var accepted = state.Accepted;
+            var travelTimes = state.TravelTimes;
+            var tile = state.Tile;
+
+            int w = tile.Width;
+            int h = tile.Height;
+
+            var current = trialHeap.Pop();
+            if (!ApproximatelyEqual(current.Cost, travelTimes[current.Index]))
+                return;
+
+            accepted[current.Index] = true;
+
+            int currentX = current.Index % w;
+            int currentY = current.Index / w;
+            ref var currentCell = ref tile.Integration[currentX, currentY];
+            currentCell.Flags &= ~CellFlags.ActiveWaveFront;
+
+            foreach (var dir in Directions.Cardinal)
+            {
+                var offset = Directions.Offset(dir);
+                int neighborX = currentX + offset.x;
+                int neighborY = currentY + offset.y;
+
+                if (neighborX < 0 || neighborX >= w || neighborY < 0 || neighborY >= h)
                     continue;
 
-                accepted[current.Index] = true;
+                if (tile.Cost.IsWall(neighborX, neighborY))
+                    continue;
 
-                int currentX = current.Index % w;
-                int currentY = current.Index / w;
-                ref var currentCell = ref tile.Integration[currentX, currentY];
-                currentCell.Flags &= ~CellFlags.ActiveWaveFront;
+                int neighborIndex = ToIndex(neighborX, neighborY, w);
+                if (accepted[neighborIndex] || (tile.Integration[neighborX, neighborY].Flags & CellFlags.HasLineOfSight) != 0)
+                    continue;
 
-                foreach (var dir in Directions.Cardinal)
+                double newCost = ComputeFastMarchingCost(tile, accepted, travelTimes, neighborX, neighborY);
+                if (double.IsInfinity(newCost) || newCost >= IntegrationField.Unreachable)
+                    continue;
+
+                if (newCost + double.Epsilon < travelTimes[neighborIndex])
                 {
-                    var offset = Directions.Offset(dir);
-                    int neighborX = currentX + offset.x;
-                    int neighborY = currentY + offset.y;
+                    travelTimes[neighborIndex] = newCost;
 
-                    if (neighborX < 0 || neighborX >= w || neighborY < 0 || neighborY >= h)
-                        continue;
+                    ref var neighborCell = ref tile.Integration[neighborX, neighborY];
+                    // neighborCell.BestCost = QuantizeCost(newCost);
+                    neighborCell.BestCost = newCost;
+                    neighborCell.Flags |= CellFlags.ActiveWaveFront;
 
-                    if (tile.Cost.IsWall(neighborX, neighborY))
-                        continue;
-
-                    int neighborIndex = ToIndex(neighborX, neighborY, w);
-                    if (accepted[neighborIndex] || (tile.Integration[neighborX, neighborY].Flags & CellFlags.HasLineOfSight) != 0)
-                        continue;
-
-                    double newCost = ComputeFastMarchingCost(tile, accepted, travelTimes, neighborX, neighborY);
-                    if (double.IsInfinity(newCost) || newCost >= IntegrationField.Unreachable)
-                        continue;
-
-                    if (newCost + double.Epsilon < travelTimes[neighborIndex])
-                    {
-                        travelTimes[neighborIndex] = newCost;
-
-                        ref var neighborCell = ref tile.Integration[neighborX, neighborY];
-                        // neighborCell.BestCost = QuantizeCost(newCost);
-                        neighborCell.BestCost = newCost;
-                        neighborCell.Flags |= CellFlags.ActiveWaveFront;
-
-                        trialHeap.Push(new TrialNode(neighborIndex, newCost));
-                    }
+                    trialHeap.Push(new TrialNode(neighborIndex, newCost));
                 }
+            }
+        }
+
+        internal static void FinishIntegrateCosts(PassState state)
+        {
+            var trialHeap = state.TrialHeap;
+            while (trialHeap.Count > 0)
+            {
+                StepIntegrateCosts(state);
             }
         }
 
@@ -217,7 +237,7 @@ namespace FlowFieldPro
             return Math.Abs(a - b) <= 0.000001;
         }
 
-        private readonly struct TrialNode : IHeapNode
+        internal readonly struct TrialNode : IHeapNode
         {
             public readonly int Index;
             public readonly double Cost;
