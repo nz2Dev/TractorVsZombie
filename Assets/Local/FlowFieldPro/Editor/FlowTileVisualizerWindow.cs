@@ -50,6 +50,7 @@ namespace FlowFieldPro.Editor
         private Vector2Int stepGoal;
         private CostIntegrationPass.PassState constIntegrationState;
         private Queue<Vector2Int> wavefront;
+        private List<int> costIntegrationQueueOrder;
 
         [MenuItem("Tools/FlowFieldPro/FlowTile Visualizer")]
         public static void ShowWindow()
@@ -511,6 +512,23 @@ namespace FlowFieldPro.Editor
             if (stepCostIntegration && constIntegrationState.TrialHeap != null && constIntegrationState.TrialHeap.Count > 0) 
             {
                 var payloadIndex = CostIntegrationPass.ToIndex(x, y, tile.Width);
+                var queueIndex = costIntegrationQueueOrder.IndexOf(payloadIndex);
+                if (queueIndex >= 0) 
+                {
+                    var queueColor = queueIndex == 0 ? Color.white : Color.lightGray;
+                    DrawRectBorder(ContractRect(rect, currentCellSize * 0.2f), queueColor, 3f);
+                    if (queueIndex == 0) 
+                    {
+                        var queueLabelStyle = new GUIStyle(EditorStyles.miniLabel)
+                        {
+                            alignment = TextAnchor.UpperRight,
+                            fontSize = Mathf.Clamp(Mathf.RoundToInt(currentCellSize * 0.42f), 6, 16)
+                        };
+                        queueLabelStyle.normal.textColor = queueColor;
+                        GUI.Label(rect, "o", queueLabelStyle);
+                    }
+                }
+
                 var labelStyle = new GUIStyle(EditorStyles.miniLabel)
                 {
                     alignment = TextAnchor.LowerRight,
@@ -764,6 +782,7 @@ namespace FlowFieldPro.Editor
         private void StepCostIntegrationPass() 
         {
             CostIntegrationPass.StepIntegrateCosts(constIntegrationState);
+            costIntegrationQueueOrder = constIntegrationState.TrialHeap.Nodes.Select(node => node.Index).ToList();
             if (constIntegrationState.TrialHeap.Count == 0) 
                 OnCostIntegrationPassFinished();
         }

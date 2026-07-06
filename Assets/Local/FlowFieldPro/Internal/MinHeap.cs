@@ -13,6 +13,8 @@ namespace FlowFieldPro
 
         public int Count => nodes.Count;
 
+        internal List <T> Nodes => nodes;
+
         public MinHeap(int capacity)
         {
             nodes = new List<T>(capacity);
