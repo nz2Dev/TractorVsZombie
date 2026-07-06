@@ -769,6 +769,7 @@ namespace FlowFieldPro.Editor
                 if (stepCostIntegration) 
                 {
                     constIntegrationState = CostIntegrationPass.InitIntegateCosts(tile, wavefront);
+                    costIntegrationQueueOrder = constIntegrationState.TrialHeap.Nodes.Select(node => node.Index).ToList();
                     // CostIntegrationPass.StepIntegrateCosts(constIntegrationState);
                     return;
                 } else {
