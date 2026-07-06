@@ -53,6 +53,17 @@ namespace FlowFieldPro
             {
                 AddSource(tile, accepted, travelTimes, trialHeap, wavefront.Dequeue());
             }
+            
+            // count all line of sight cells as accepted and set their travel times to their best costs
+            // for (int x = 0; x < w; x++)
+            //     for (int y = 0; y < h; y++)
+            //     {
+            //         if (tile.Integration[x, y].Flags.HasFlag(CellFlags.HasLineOfSight))
+            //         {
+            //             accepted[ToIndex(x, y, w)] = true;
+            //             travelTimes[ToIndex(x, y, w)] = tile.Integration[x, y].BestCost;
+            //         }
+            //     }
 
             return new PassState
             {
