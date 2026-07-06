@@ -750,8 +750,7 @@ namespace FlowFieldPro.Editor
                 if (stepCostIntegration) 
                 {
                     constIntegrationState = CostIntegrationPass.InitIntegateCosts(tile, wavefront);
-                    CostIntegrationPass.StepIntegrateCosts(constIntegrationState);
-                    Repaint();
+                    // CostIntegrationPass.StepIntegrateCosts(constIntegrationState);
                     return;
                 } else {
                     CostIntegrationPass.IntegrateCosts(tile, wavefront);
