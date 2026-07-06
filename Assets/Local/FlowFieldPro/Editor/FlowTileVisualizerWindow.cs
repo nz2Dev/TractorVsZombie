@@ -705,6 +705,7 @@ namespace FlowFieldPro.Editor
                 return;
 
             tile.ResetComputed();
+            costIntegrationQueueOrder = new List<int>();
 
             var goal = new Vector2Int(goalX, goalY);
             if (!tile.Cost.InBounds(goal.x, goal.y))
