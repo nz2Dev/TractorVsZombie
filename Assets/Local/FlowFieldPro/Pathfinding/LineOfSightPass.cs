@@ -61,12 +61,15 @@ namespace FlowFieldPro
             if (isLosCorner)
             {
                 currentInteg.Flags &= ~CellFlags.HasLineOfSight;
+                currentInteg.Flags |= CellFlags.ActiveWaveFront;
                 costWavefront.Enqueue(current);
                 return;
             }
             
             if ((currentInteg.Flags & CellFlags.WaveFrontBlocked) != 0) {
                 currentInteg.Flags &= ~CellFlags.HasLineOfSight;
+                currentInteg.Flags |= CellFlags.ActiveWaveFront;
+                costWavefront.Enqueue(current);
                 return;
             }
 
@@ -82,16 +85,20 @@ namespace FlowFieldPro
                     continue;
                 
                 ref var neighborInt = ref tile.Integration[neighbor.x, neighbor.y];
-                if ((neighborInt.Flags & CellFlags.WaveFrontBlocked) != 0)
-                    continue;
-
                 int neighborIdx = neighbor.y * w + neighbor.x;
                 if (visited[neighborIdx])
                     continue;
-
+                
                 visited[neighborIdx] = true;
-
                 neighborInt.BestCost = (currentInteg.BestCost + 1);
+
+                if ((neighborInt.Flags & CellFlags.WaveFrontBlocked) != 0)
+                {
+                    neighborInt.Flags |= CellFlags.ActiveWaveFront;
+                    costWavefront.Enqueue(neighbor);
+                    continue;
+                }
+
                 neighborInt.Flags |= CellFlags.HasLineOfSight;
                 queue.Enqueue(neighbor);
             }
