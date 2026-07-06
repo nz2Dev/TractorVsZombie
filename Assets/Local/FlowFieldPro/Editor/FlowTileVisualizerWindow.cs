@@ -555,6 +555,7 @@ namespace FlowFieldPro.Editor
             {
                 string labelText = "";
                 Color labelColor = Color.white;
+                int labelFontSize = Mathf.Clamp(Mathf.RoundToInt(currentCellSize * 0.32f), 8, 14);
 
                 if (isWall)
                 {
@@ -571,6 +572,14 @@ namespace FlowFieldPro.Editor
                     if (!enableFlowBuilder)
                     {
                         labelText = integrationCell.BestCost.ToString("F1");
+                        if (stepCostIntegration)
+                        {
+                            var payloadIndex = CostIntegrationPass.ToIndex(x, y, tile.Width);
+                            if (constIntegrationState.TravelTimes[payloadIndex] != double.PositiveInfinity) {
+                                labelText += $"\n({constIntegrationState.TravelTimes[payloadIndex]:F1})";
+                                labelFontSize = Mathf.Clamp(Mathf.RoundToInt(currentCellSize * 0.32f), 8, 8);
+                            }
+                        }
                         if (integrationCell.Flags.HasFlag(CellFlags.HasLineOfSight)) 
                             labelColor = new Color(.3f, .3f, .3f, 1f);
                         else
@@ -588,7 +597,7 @@ namespace FlowFieldPro.Editor
                     var labelStyle = new GUIStyle(EditorStyles.miniLabel)
                     {
                         alignment = TextAnchor.MiddleCenter,
-                        fontSize = Mathf.Clamp(Mathf.RoundToInt(currentCellSize * 0.32f), 8, 14)
+                        fontSize = labelFontSize
                     };
                     labelStyle.normal.textColor = labelColor;
                     GUI.Label(rect, labelText, labelStyle);
