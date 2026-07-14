@@ -25,9 +25,9 @@ MonoBehaviour:
   agentAvoidanceConfig:
     height: 2
     radius: 0.6
-    radiusObst: 2
+    radiusObst: 0.7
     maxSpeed: 2
-    maxNeighbors: 15
-    neighborDist: 20
+    maxNeighbors: 8
+    neighborDist: 5
     timeHorizon: 1.5
     timeHorizonObst: 2.5
