@@ -99,7 +99,7 @@ public class FlowFieldDebugWindow : EditorWindow {
         for (int x = 0; x < flowField.Size; x++) {
             for (int y = 0; y < flowField.Size; y++) {
                 var worldPos = space.ConvertToWorld(new Vector2Int(x, y), atCenter: true);
-                var flowVectorGrid = flowField.GetFlowVector(x, y);
+                var flowVectorGrid = flowField[x, y].flowVector;
                 var flowVectorWorld = new Vector3(flowVectorGrid.x, 0, flowVectorGrid.y) * 0.5f;
                 Handles.DrawLine(worldPos, worldPos + flowVectorWorld, thickness: 2);
             }

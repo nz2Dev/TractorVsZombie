@@ -25,10 +25,9 @@ public class FlowFieldSystem {
 
         foreach (var flowFieldHandle in flowFieldsHandles) {
             if (flowFieldHandle.computeIsDirty) {
-                var fields = flowFieldHandle.flowField;
-                fields.SetNextGoal(space.ConvertToGridClampled(flowFieldHandle.goal));
-                fields.ComputeCosts();
-                fields.ComputeFlow();
+                var field = flowFieldHandle.flowField;
+                var goal = space.ConvertToGridClampled(flowFieldHandle.goal);
+                FlowFieldIntegrator.Integrate(field, goal);
                 flowFieldHandle.computeIsDirty = false;
             }
         }
@@ -59,7 +58,7 @@ public class FlowFieldSystem {
     }
 
     public FlowFieldHandle CreateField(Vector3 initialGoal) {
-        var flowField = new FlowField(space.Size, blockedCells, space.ConvertToGridClampled(initialGoal));
+        var flowField = new FlowField(space.Size, blockedCells);
         var handle = new FlowFieldHandle { flowField = flowField, goal = initialGoal, computeIsDirty = true };
         flowFieldsHandles.Add(handle);
         return handle;
@@ -76,7 +75,7 @@ public class FlowFieldSystem {
 
     public Vector3 GetFlowVector(FlowFieldHandle handle, Vector3 position) {
         var gridPosition = space.ConvertToGridClampled(position);
-        var flowDirection = handle.flowField.GetFlowVector(gridPosition.x, gridPosition.y);
+        var flowDirection = handle.flowField[gridPosition.x, gridPosition.y].flowVector;
         return new Vector3(flowDirection.x, 0, flowDirection.y).normalized;
     }
 

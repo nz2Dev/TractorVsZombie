@@ -9,19 +9,18 @@ public class FlowFieldPerformanceTests {
     [Test]
     public void ComputeField100_Performance_Smoke() {
         int size = 100;
-        var flowField = new FlowField(size, null, new Vector2Int(size - 1, size - 1));
+        var goal = new Vector2Int(size - 1, size - 1);
+        var flowField = new FlowField(size, null);
 
         // warmup
         for (int i = 0; i < 5; i++) {
-            flowField.ComputeCosts();
-            flowField.ComputeFlow();
+            FlowFieldIntegrator.Integrate(flowField, goal);
         }
 
         var times = new List<double>();
         for (int i = 0; i < 20; i++) {
             var watch = System.Diagnostics.Stopwatch.StartNew();
-            flowField.ComputeCosts();
-            flowField.ComputeFlow();
+            FlowFieldIntegrator.Integrate(flowField, goal);
             watch.Stop();
             times.Add(watch.Elapsed.TotalMilliseconds);
         }
