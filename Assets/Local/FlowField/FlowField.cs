@@ -8,11 +8,11 @@ public class Cell {
     public int integratedCost;
     public Vector2Int flowVector;
 
-    internal void SetBlocked() {
+    internal void SetBlockedCost() {
         cost = 255;
     }
 
-    internal void ClearBlocked() {
+    internal void SetDefaultCost() {
         cost = 1;
     }
 
@@ -26,14 +26,14 @@ public class FlowField : Grid2D<Cell> {
     public FlowField(int gridSize, IEnumerable<Vector2Int> blockedCells) : base(gridSize){
         for (int x = 0; x < Size; x++) {
             for (int y = 0; y < Size; y++) {
-                this[x, y].cost = 1;
+                this[x, y].SetDefaultCost();
             }
         }
 
         if (blockedCells != null) {
             foreach (var blocked in blockedCells) {
                 if (IsInBounds(blocked)) {
-                    this[blocked].SetBlocked();
+                    this[blocked].SetBlockedCost();
                 }
             }
         }
@@ -42,7 +42,7 @@ public class FlowField : Grid2D<Cell> {
     public void UpdateBlockedCells(IEnumerable<Vector2Int> cells) {
         for (int x = 0; x < Size; x++)
             for (int y = 0; y < Size; y++)
-                this[x, y].ClearBlocked();    
+                this[x, y].SetDefaultCost();    
         
 
         if (cells == null)
@@ -50,7 +50,7 @@ public class FlowField : Grid2D<Cell> {
 
         foreach (var cell in cells) 
             if (IsInBounds(cell)) 
-                this[cell].SetBlocked();
+                this[cell].SetBlockedCost();
     }    
 
 }
