@@ -1,5 +1,5 @@
 {
-    "name": "FlowFields.EditorTests",
+    "name": "FlowField.EditorTests",
     "rootNamespace": "",
     "references": [
         "GUID:5f4f8504fea3a4af99f43142c765fa3a",
