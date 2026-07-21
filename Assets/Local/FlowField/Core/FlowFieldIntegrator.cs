@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public static class FlowFieldIntegrator {
+public static partial class FlowFieldIntegrator {
 
     private static readonly List<Vector2Int> wavefrontBuffer = new();
 

@@ -11,10 +11,10 @@
   <Project Path="Local.csproj" />
   <Project Path="ORCAHelper.csproj" />
   <Project Path="FlowFieldPro.Editor.csproj" />
+  <Project Path="FlowField.EditorTests.csproj" />
   <Project Path="FlowFieldPro.EditorTests.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
-  <Project Path="FlowField.EditorTests.csproj" />
   <Project Path="VehiclePhysics.PlayTests.csproj" />
   <Project Path="VehiclePhysics.csproj" />
   <Project Path="CaravanPlaygroundEditor.csproj" />

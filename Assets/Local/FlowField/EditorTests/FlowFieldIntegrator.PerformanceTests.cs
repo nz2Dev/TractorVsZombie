@@ -6,7 +6,7 @@ using UnityEngine;
 
 [TestFixture]
 [Ignore("Is running manually")]
-public class FlowFieldIntegratorPerformanceTests {
+public class FlowFieldIntegrator_PerformanceTests {
     
     [Test]
     public void IntegrateField_Size100_Under1Mills() {
