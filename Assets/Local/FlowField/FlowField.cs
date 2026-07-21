@@ -24,6 +24,10 @@ public class Cell {
     public CellFlags flags;
     public Vector2Int flowVector;
 
+    internal void SetFlag(CellFlags flag) {
+        flags |= flag;
+    }
+
     internal bool NoFlags() {
         return flags == CellFlags.None;
     }
@@ -47,6 +51,7 @@ public class Cell {
     internal bool IsBlocked() {
         return cost == 255;
     }
+
 }
 
 public class FlowField : Grid2D<Cell> {
