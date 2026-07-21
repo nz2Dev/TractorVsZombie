@@ -11,7 +11,7 @@ public static class FlowFieldCostIntegrationPass {
         new(-1, 0),
     };
     
-    internal static void ComputeCosts(FlowField field, Vector2Int goal) {
+    internal static void ComputeCosts(FlowField field, Vector2Int goal, IEnumerable<Vector2Int> wavefrontInput) {
         for (int x = 0; x < field.Size; x++) {
             for (int y = 0; y < field.Size; y++) {
                 field[x, y].integratedCost = 0;
@@ -19,7 +19,10 @@ public static class FlowFieldCostIntegrationPass {
         }
 
         var inSearch = new Queue<Vector2Int>();
-        inSearch.Enqueue(goal);
+        foreach (var cell in wavefrontInput) {
+            inSearch.Enqueue(cell);
+        }
+
         while (inSearch.Count > 0) {    
             var nextLocation = inSearch.Dequeue();
             var nextCell = field[nextLocation];
