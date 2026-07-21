@@ -5,9 +5,11 @@ using NUnit.Framework;
 using UnityEngine;
 
 [TestFixture]
-public class FlowFieldPerformanceTests {
+[Ignore("Is running manually")]
+public class FlowFieldIntegratorPerformanceTests {
+    
     [Test]
-    public void ComputeField100_Performance_Smoke() {
+    public void IntegrateField_Size100_Under1Mills() {
         int size = 100;
         var goal = new Vector2Int(size - 1, size - 1);
         var flowField = new FlowField(size, null);

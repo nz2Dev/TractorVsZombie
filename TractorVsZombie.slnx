@@ -6,10 +6,10 @@
   <Project Path="SpatialLookup.csproj" />
   <Project Path="GenerationPlaygroundEditor.csproj" />
   <Project Path="Playground.Exmample.EditorTests.csproj" />
-  <Project Path="FlowField.EditorTests.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Local.csproj" />
   <Project Path="ORCAHelper.csproj" />
+  <Project Path="FlowField.EditorTests.csproj" />
   <Project Path="FlowFieldPro.Editor.csproj" />
   <Project Path="FlowFieldPro.EditorTests.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />
