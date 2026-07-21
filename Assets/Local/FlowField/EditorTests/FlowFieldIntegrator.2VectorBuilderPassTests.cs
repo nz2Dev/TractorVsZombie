@@ -36,8 +36,8 @@ public class FlowFieldIntegrator_2VectorBuilderPassTests {
         FlowFieldIntegrator.Integrate(flowField, goal);
         int radius = size / 2;
         var center = goal;
-        foreach (var offset in FlowFieldIntegrator.CostIntegrationPass.CostNeighborsOffsets) {
-            var cirularLocation = center + offset * radius;
+        foreach (var direction in Directions.Cardinal) {
+            var cirularLocation = center + Directions.Offset(direction) * radius;
             var locationToCenter = center - cirularLocation;
             var flowVector = flowField[cirularLocation.x, cirularLocation.y].flowVector;
             locationToCenter.Clamp(-Vector2Int.one, Vector2Int.one);

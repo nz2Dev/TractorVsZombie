@@ -9,13 +9,6 @@ public static partial class FlowFieldIntegrator {
 
         public static bool enabled = false;
 
-        public static readonly Vector2Int[] CardinalNeighborsOffsets = new Vector2Int[] {
-            new(0, -1),
-            new(+1, 0),
-            new(0, +1),
-            new(-1, 0),
-        };
-
         public static void ComputeLineOfSight(FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
             var queue = new Queue<Vector2Int>();
             if (!enabled) {
@@ -37,8 +30,8 @@ public static partial class FlowFieldIntegrator {
             var currentCell = field[current.x, current.y]; // ref was used here
 
             bool isLosCorner = false;
-            foreach (var offset in CardinalNeighborsOffsets) {
-                var neighbor = current + offset;
+            foreach (var direction in Directions.Cardinal) {
+                var neighbor = current + Directions.Offset(direction);
 
                 if (!field.IsInBounds(neighbor.x, neighbor.y))
                     continue;
@@ -64,8 +57,8 @@ public static partial class FlowFieldIntegrator {
                 return;
             }
 
-            foreach (var offset in CardinalNeighborsOffsets) {
-                var neighbor = current + offset;
+            foreach (var direction in Directions.Cardinal) {
+                var neighbor = current + Directions.Offset(direction);
 
                 if (!field.IsInBounds(neighbor.x, neighbor.y))
                     continue;

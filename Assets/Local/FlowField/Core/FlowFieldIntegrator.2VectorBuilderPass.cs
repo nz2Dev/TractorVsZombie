@@ -4,17 +4,6 @@ public static partial class FlowFieldIntegrator {
 
     public static class VectorBuilderPass {
 
-        public static readonly Vector2Int[] FlowNeighborsOffsets = new Vector2Int[] {
-            new(0, -1),
-            new(+1, -1),
-            new(+1, 0),
-            new(+1, +1),
-            new(0, +1),
-            new(-1, +1),
-            new(-1, 0),
-            new(-1, -1),
-        };
-
         internal static void ComputeFlow(FlowField field, Vector2Int goal) {
             for (int x = 0; x < field.Size; x++) {
                 for (int y = 0; y < field.Size; y++) {
@@ -27,8 +16,9 @@ public static partial class FlowFieldIntegrator {
 
                     var lowestCost = int.MaxValue;
                     Vector2Int lowestCostLocation = new Vector2Int(x, y);
-                    foreach (var offset in FlowNeighborsOffsets) {
-                        var neighborLocation = cellLocation + offset;
+                    foreach (var direction in Directions.All) {
+                        var neighborLocation = cellLocation + Directions.Offset(direction);
+                        
                         if (!field.IsInBounds(neighborLocation))
                             continue;
 

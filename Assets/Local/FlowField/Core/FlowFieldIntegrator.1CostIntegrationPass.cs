@@ -5,13 +5,6 @@ using UnityEngine;
 public static partial class FlowFieldIntegrator {
     
     public static class CostIntegrationPass {
-
-        public static readonly Vector2Int[] CostNeighborsOffsets = new Vector2Int[] {
-            new(0, -1),
-            new(+1, 0),
-            new(0, +1),
-            new(-1, 0),
-        };
         
         internal static void ComputeCosts(FlowField field, Vector2Int goal, IEnumerable<Vector2Int> wavefrontInput) {
             for (int x = 0; x < field.Size; x++) {
@@ -29,8 +22,9 @@ public static partial class FlowFieldIntegrator {
                 var nextLocation = inSearch.Dequeue();
                 var nextCell = field[nextLocation];
 
-                foreach (var offset in CostNeighborsOffsets) {
-                    var neighborLocation = nextLocation + offset;
+                foreach (var direction in Directions.Cardinal) {
+                    var neighborLocation = nextLocation + Directions.Offset(direction);
+                    
                     if (!field.IsInBounds(neighborLocation) || neighborLocation == goal)
                         continue;
 
