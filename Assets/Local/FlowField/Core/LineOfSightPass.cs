@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public static class FlowFieldLineOfSightPass {
+public static class LineOfSightPass {
 
     public static bool enabled = false;
 

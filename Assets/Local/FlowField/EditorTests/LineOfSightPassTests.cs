@@ -5,16 +5,16 @@ using NUnit.Framework;
 using UnityEngine;
 
 [TestFixture]
-public class FlowFieldLineOfsightPassTests {
+public class LineOfSightPassTests {
 
     [SetUp]
     public void Setup() {
-        FlowFieldLineOfSightPass.enabled = true;
+        LineOfSightPass.enabled = true;
     }
 
     [TearDown]
     public void TearDown() {
-        FlowFieldLineOfSightPass.enabled = false;
+        LineOfSightPass.enabled = false;
     }
 
     [Test]
@@ -23,7 +23,7 @@ public class FlowFieldLineOfsightPassTests {
         var field = new FlowField(5, null);
         var wavefrontBuffer = new List<Vector2Int>();
 
-        FlowFieldLineOfSightPass.ComputeLineOfSight(field, goal, wavefrontBuffer);
+        LineOfSightPass.ComputeLineOfSight(field, goal, wavefrontBuffer);
 
         // In a completely clear grid, all cells should have LOS
         for (int y = 0; y < 5; y++) {
@@ -43,7 +43,7 @@ public class FlowFieldLineOfsightPassTests {
         var field = new FlowField(5, new [] { wall });
         var wavefrontBuffer = new List<Vector2Int>();
 
-        FlowFieldLineOfSightPass.ComputeLineOfSight(field, goal, wavefrontBuffer);
+        LineOfSightPass.ComputeLineOfSight(field, goal, wavefrontBuffer);
 
         // The cell (1, 1) is a wall, so it doesn't have LOS.
         Assert.IsFalse(field[2, 0].HasFlag(CellFlags.HasLineOfSight), "Wall cell should have no line of sight");
@@ -84,11 +84,11 @@ public class FlowFieldLineOfsightPassTests {
         var rightCorner = new Vector2Int(3, 1);
         var field = new FlowField(5, new [] { wall });
 
-        FlowFieldLineOfSightPass.CastShadowRay(field, leftCorner, goal);
+        LineOfSightPass.CastShadowRay(field, leftCorner, goal);
         Assert.IsTrue(field[1, 1].HasFlag(CellFlags.WaveFrontBlocked));
         Assert.IsTrue(field[1, 0].HasFlag(CellFlags.WaveFrontBlocked));
 
-        FlowFieldLineOfSightPass.CastShadowRay(field, rightCorner, goal);
+        LineOfSightPass.CastShadowRay(field, rightCorner, goal);
         Assert.IsTrue(field[3, 1].HasFlag(CellFlags.WaveFrontBlocked));
         Assert.IsTrue(field[3, 0].HasFlag(CellFlags.WaveFrontBlocked));
     }
@@ -111,9 +111,9 @@ public class FlowFieldLineOfsightPassTests {
         var wallCell = new Vector2Int(2, 1);
         var field = new FlowField(5, new [] { wallCell });
 
-        Assert.IsFalse(FlowFieldLineOfSightPass.IsLosCorner(field, southCell, wallCell, goalCell));
-        Assert.IsTrue(FlowFieldLineOfSightPass.IsLosCorner(field, eastCell, wallCell, goalCell));
-        Assert.IsTrue(FlowFieldLineOfSightPass.IsLosCorner(field, westCell, wallCell, goalCell));
+        Assert.IsFalse(LineOfSightPass.IsLosCorner(field, southCell, wallCell, goalCell));
+        Assert.IsTrue(LineOfSightPass.IsLosCorner(field, eastCell, wallCell, goalCell));
+        Assert.IsTrue(LineOfSightPass.IsLosCorner(field, westCell, wallCell, goalCell));
     }
 
     [Test]
@@ -132,7 +132,7 @@ public class FlowFieldLineOfsightPassTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = FlowFieldLineOfSightPass.IsLosCorner(field, test, wall, goal);
+        var result = LineOfSightPass.IsLosCorner(field, test, wall, goal);
         Assert.IsFalse(result);
     }
 
@@ -152,7 +152,7 @@ public class FlowFieldLineOfsightPassTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = FlowFieldLineOfSightPass.IsLosCorner(field, test, wall, goal);
+        var result = LineOfSightPass.IsLosCorner(field, test, wall, goal);
         Assert.IsTrue(result);
     }
 
@@ -172,7 +172,7 @@ public class FlowFieldLineOfsightPassTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = FlowFieldLineOfSightPass.IsLosCorner(field, test, wall, goal);
+        var result = LineOfSightPass.IsLosCorner(field, test, wall, goal);
         Assert.IsTrue(result);
     }
 
@@ -192,7 +192,7 @@ public class FlowFieldLineOfsightPassTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = FlowFieldLineOfSightPass.IsLosCorner(field, test, wall, goal);
+        var result = LineOfSightPass.IsLosCorner(field, test, wall, goal);
         Assert.IsFalse(result);
     }
 
@@ -212,7 +212,7 @@ public class FlowFieldLineOfsightPassTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = FlowFieldLineOfSightPass.IsLosCorner(field, test, wall, goal);
+        var result = LineOfSightPass.IsLosCorner(field, test, wall, goal);
         Assert.IsFalse(result);
     }
 
@@ -232,7 +232,7 @@ public class FlowFieldLineOfsightPassTests {
         var field = new FlowField(3, new [] { topWall, middleWall });
         var wavefront = new List<Vector2Int>();
 
-        FlowFieldLineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
+        LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
 
         Assert.IsTrue(field[2, 2].NoFlags());
         Assert.IsTrue(field[2, 1].NoFlags());
@@ -256,7 +256,7 @@ public class FlowFieldLineOfsightPassTests {
         var field = new FlowField(3, new [] { bottomWall, middleWall });
         var wavefront = new List<Vector2Int>();
 
-        FlowFieldLineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
+        LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
 
         Assert.IsTrue(field[2, 2].NoFlags());
         Assert.IsTrue(field[2, 1].NoFlags());
@@ -280,7 +280,7 @@ public class FlowFieldLineOfsightPassTests {
         var field = new FlowField(3, new [] { bottomWall, middleWall });
         var wavefront = new List<Vector2Int>();
 
-        FlowFieldLineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
+        LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
         Assert.That(wavefront, Has.Exactly(1).EqualTo(new Vector2Int(1, 2)));
     }
 
@@ -301,7 +301,7 @@ public class FlowFieldLineOfsightPassTests {
         var field = new FlowField(4, new [] { bottomWall, middleWall });
         var wavefront = new List<Vector2Int>();
 
-        FlowFieldLineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
+        LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
 
         Assert.That(wavefront, Is.EquivalentTo(new[] { new Vector2Int(1, 2) }));
 
@@ -331,7 +331,7 @@ public class FlowFieldLineOfsightPassTests {
         var field = new FlowField(5, new [] { wall });
         var wavefront = new List<Vector2Int>();
 
-        FlowFieldLineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
+        LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
 
         Assert.IsTrue(field[4, 0].HasFlag(CellFlags.HasLineOfSight));
         Assert.IsTrue(field[4, 1].HasFlag(CellFlags.HasLineOfSight));

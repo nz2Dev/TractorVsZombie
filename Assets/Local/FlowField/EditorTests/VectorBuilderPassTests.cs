@@ -5,7 +5,7 @@ using NUnit.Framework;
 using UnityEngine;
 
 [TestFixture]
-public class FlowFieldVectorBuilderPassTests {
+public class VectorBuilderPassTests {
     
     [Test]
     public void GoalAtTopRightCornern_FlowVectorsPointingToIt() {
@@ -17,7 +17,7 @@ public class FlowFieldVectorBuilderPassTests {
         field[1, 0].integratedCost = 1;
         field[1, 1].integratedCost = 0;
         
-        FlowFieldVectorBuilderPass.ComputeFlow(field, goal);
+        VectorBuilderPass.ComputeFlow(field, goal);
         
         var centerFV = field[0, 0].flowVector;
         Assert.That(centerFV, Is.EqualTo(Vector2Int.one));
@@ -36,7 +36,7 @@ public class FlowFieldVectorBuilderPassTests {
         FlowFieldIntegrator.Integrate(flowField, goal);
         int radius = size / 2;
         var center = goal;
-        foreach (var offset in FlowFieldCostIntegrationPass.CostNeighborsOffsets) {
+        foreach (var offset in CostIntegrationPass.CostNeighborsOffsets) {
             var cirularLocation = center + offset * radius;
             var locationToCenter = center - cirularLocation;
             var flowVector = flowField[cirularLocation.x, cirularLocation.y].flowVector;

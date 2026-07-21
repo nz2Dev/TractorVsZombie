@@ -3,14 +3,14 @@ using NUnit.Framework;
 using UnityEngine;
 
 [TestFixture]
-public class FlowFieldCostIntegrationPassTests {
+public class CostIntegrationPassTests {
     [Test]
     public void ComputeCostsInOpositeCorner_IsMaximum() {
         int size = 5;
         var flowField = new FlowField(size, null);
         var goal = new Vector2Int(size - 1, size - 1);
 
-        FlowFieldCostIntegrationPass.ComputeCosts(flowField, goal, new [] { goal });
+        CostIntegrationPass.ComputeCosts(flowField, goal, new [] { goal });
         
         var computedCost = flowField[0, 0].integratedCost;
         Assert.That(computedCost, Is.EqualTo((size - 1) * 2));
@@ -23,7 +23,7 @@ public class FlowFieldCostIntegrationPassTests {
         var goal = new Vector2Int(radius, radius);
         var flowField = new FlowField(size, null);
 
-        FlowFieldCostIntegrationPass.ComputeCosts(flowField, goal, new [] { goal });
+        CostIntegrationPass.ComputeCosts(flowField, goal, new [] { goal });
         
         var cornerCost = flowField[0, 0].integratedCost;
         var edgeCost = flowField[0, radius].integratedCost;

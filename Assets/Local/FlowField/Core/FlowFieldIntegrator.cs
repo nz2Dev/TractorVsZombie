@@ -8,9 +8,9 @@ public static class FlowFieldIntegrator {
 
     public static void Integrate(FlowField flowField, Vector2Int goal) {
         wavefrontBuffer.Clear();
-        FlowFieldLineOfSightPass.ComputeLineOfSight(flowField, goal, wavefrontBuffer);
-        FlowFieldCostIntegrationPass.ComputeCosts(flowField, goal, wavefrontBuffer);
-        FlowFieldVectorBuilderPass.ComputeFlow(flowField, goal);
+        LineOfSightPass.ComputeLineOfSight(flowField, goal, wavefrontBuffer);
+        CostIntegrationPass.ComputeCosts(flowField, goal, wavefrontBuffer);
+        VectorBuilderPass.ComputeFlow(flowField, goal);
     }
 
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public static class FlowFieldCostIntegrationPass {
+public static class CostIntegrationPass {
 
     public static readonly Vector2Int[] CostNeighborsOffsets = new Vector2Int[] {
         new(0, -1),

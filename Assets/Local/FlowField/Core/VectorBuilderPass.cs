@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class FlowFieldVectorBuilderPass {
+public static class VectorBuilderPass {
     
     public static readonly Vector2Int[] FlowNeighborsOffsets = new Vector2Int[] {
         new(0, -1),
