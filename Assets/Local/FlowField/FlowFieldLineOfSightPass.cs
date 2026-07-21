@@ -5,9 +5,86 @@ using UnityEngine;
 
 public static class FlowFieldLineOfSightPass {
 
-    public static void ComputeLineOfSight(FlowField flowField, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
-        wavefrontOutput.Clear();
-        wavefrontOutput.Add(goal);
+    public static bool enabled = false;
+
+    public static readonly Vector2Int[] CardinalNeighborsOffsets = new Vector2Int[] {
+        new(0, -1),
+        new(+1, 0),
+        new(0, +1),
+        new(-1, 0),
+    };
+
+    public static void ComputeLineOfSight(FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
+        var queue = new Queue<Vector2Int>();
+        if (!enabled) {
+            wavefrontOutput.Add(goal);
+            return;
+        }
+
+        var goalIntCell = field[goal.x, goal.y]; // ref was used here
+        goalIntCell.SetFlag(CellFlags.HasLineOfSight);
+        goalIntCell.integratedCost = 0;
+        queue.Enqueue(goal);
+
+        while (queue.Count > 0)
+            StepLineOfSight(queue, field, goal, wavefrontOutput);
+    }
+
+    internal static void StepLineOfSight(Queue<Vector2Int> queue, FlowField field, Vector2Int goalCell, List<Vector2Int> wavefrontOutput) {
+        var current = queue.Dequeue();
+        var currentCell = field[current.x, current.y]; // ref was used here
+
+        bool isLosCorner = false;
+        foreach (var offset in CardinalNeighborsOffsets) {
+            var neighbor = current + offset;
+
+            if (!field.IsInBounds(neighbor.x, neighbor.y))
+                continue;
+
+            if (field[neighbor.x, neighbor.y].cost > Cell.DefaultCost) {
+                if (IsLosCorner(field, current, neighbor, goalCell)) {
+                    CastShadowRay(field, current, goalCell);
+                    isLosCorner = true;
+                    break;
+                }
+            }
+        }
+
+        if (isLosCorner) {
+            currentCell.UnsetFlag(CellFlags.HasLineOfSight);
+            wavefrontOutput.Add(current);
+            return;
+        }
+
+        if (currentCell.HasFlag(CellFlags.WaveFrontBlocked)) {
+            currentCell.UnsetFlag(CellFlags.HasLineOfSight);
+            wavefrontOutput.Add(current);
+            return;
+        }
+
+        foreach (var offset in CardinalNeighborsOffsets) {
+            var neighbor = current + offset;
+
+            if (!field.IsInBounds(neighbor.x, neighbor.y))
+                continue;
+
+            if (field[neighbor.x, neighbor.y].cost > Cell.DefaultCost)
+                continue;
+
+            var neighborCell = field[neighbor.x, neighbor.y]; // ref was used here
+            if (neighborCell.HasFlag(CellFlags.HasLineOfSight))
+                continue;
+
+            neighborCell.integratedCost = currentCell.integratedCost + 1;
+
+            if (neighborCell.HasFlag(CellFlags.WaveFrontBlocked)) {
+                wavefrontOutput.Add(neighbor);
+                continue;
+            }
+
+            neighborCell.SetFlag(CellFlags.HasLineOfSight);
+            queue.Enqueue(neighbor);
+        }
     }
 
     internal static void CastShadowRay(FlowField field, Vector2Int corner, Vector2Int goal) {
@@ -32,7 +109,7 @@ public static class FlowFieldLineOfSightPass {
             return;
 
         while (true) {
-            if (cx < 0 || cx >= w || cy < 0 || cy >= h)
+            if (!field.IsInBounds(cx, cy))
                 break;
 
             if (field[cx, cy].IsBlocked())

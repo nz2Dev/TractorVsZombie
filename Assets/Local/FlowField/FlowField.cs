@@ -19,6 +19,8 @@ public enum CellFlags : byte {
 
 public class Cell {
 
+    public static int DefaultCost = 1;
+
     public int cost;
     public int integratedCost;
     public CellFlags flags;
@@ -26,6 +28,10 @@ public class Cell {
 
     internal void SetFlag(CellFlags flag) {
         flags |= flag;
+    }
+
+    internal void UnsetFlag(CellFlags flag) {
+        flags &= ~flag;
     }
 
     internal bool NoFlags() {
@@ -45,7 +51,7 @@ public class Cell {
     }
 
     internal void SetDefaultCost() {
-        cost = 1;
+        cost = DefaultCost;
     }
 
     internal bool IsBlocked() {
