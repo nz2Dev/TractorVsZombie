@@ -8,9 +8,9 @@ public static partial class FlowFieldIntegrator {
     public static class LineOfSightPass {
 
         public static void ComputeLineOfSight(FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
-            var goalIntCell = field[goal.x, goal.y]; // ref was used here
-            goalIntCell.SetFlag(CellFlags.HasLineOfSight);
-            goalIntCell.integratedCost = 0;
+            var goalCell = field[goal.x, goal.y]; // ref was used here
+            goalCell.SetFlag(CellFlags.HasLineOfSight);
+            goalCell.integratedCost = 0;
             
             var queue = new Queue<Vector2Int>();
             queue.Enqueue(goal);
@@ -19,7 +19,7 @@ public static partial class FlowFieldIntegrator {
             }
         }
 
-        internal static void StepLineOfSight(Queue<Vector2Int> queue, FlowField field, Vector2Int goalCell, List<Vector2Int> wavefrontOutput) {
+        internal static void StepLineOfSight(Queue<Vector2Int> queue, FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
             var current = queue.Dequeue();
             var currentCell = field[current.x, current.y]; // ref was used here
 
@@ -31,8 +31,8 @@ public static partial class FlowFieldIntegrator {
                     continue;
 
                 if (field[neighbor.x, neighbor.y].cost > Cell.DefaultCost) {
-                    if (CornerDetector.IsLosCorner(field, current, neighbor, goalCell)) {
-                        ShadowCaster.CastShadowRay(field, current, goalCell);
+                    if (CornerDetector.IsLosCorner(field, current, neighbor, goal)) {
+                        ShadowCaster.CastShadowRay(field, current, goal);
                         isLosCorner = true;
                         break;
                     }
