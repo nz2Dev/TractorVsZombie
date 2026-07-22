@@ -4,8 +4,8 @@ using NUnit.Framework;
 
 using UnityEngine;
 
+[Explicit]
 [TestFixture]
-[Ignore("Is running manually")]
 public class FlowFieldIntegrator_PerformanceTests {
     
     [Test]
