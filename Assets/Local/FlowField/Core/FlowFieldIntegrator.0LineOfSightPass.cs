@@ -15,47 +15,42 @@ public static partial class FlowFieldIntegrator {
             var queue = new Queue<Vector2Int>();
             queue.Enqueue(goal);
             while (queue.Count > 0) {
-                StepLineOfSight(queue, field, goal, wavefrontOutput);
-            }
-        }
+                var current = queue.Dequeue();
+                var currentCell = field[current.x, current.y]; // ref was used here
 
-        private static void StepLineOfSight(Queue<Vector2Int> queue, FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
-            var current = queue.Dequeue();
-            var currentCell = field[current.x, current.y]; // ref was used here
-
-            if (CornerDetector.IsLosCorner(field, current, goal)) {
-                ShadowCaster.CastShadowRay(field, current, goal);
-                currentCell.UnsetFlag(CellFlags.HasLineOfSight);
-                wavefrontOutput.Add(current);
-                return;
-            }
-
-            if (currentCell.HasFlag(CellFlags.WaveFrontBlocked)) {
-                currentCell.UnsetFlag(CellFlags.HasLineOfSight);
-                wavefrontOutput.Add(current);
-                return;
-            }
-
-            foreach (var direction in Directions.Cardinal) {
-                var neighbor = current + Directions.Offset(direction);
-
-                if (!field.IsInBounds(neighbor.x, neighbor.y))
-                    continue;
-
-                var neighborCell = field[neighbor.x, neighbor.y]; // ref was used here
-                if (neighborCell.cost > Cell.DefaultCost || neighborCell.HasFlag(CellFlags.HasLineOfSight))
-                    continue;
-
-                neighborCell.integratedCost = currentCell.integratedCost + 1;
-                if (neighborCell.HasFlag(CellFlags.WaveFrontBlocked)) {
-                    wavefrontOutput.Add(neighbor);
+                if (CornerDetector.IsLosCorner(field, current, goal)) {
+                    ShadowCaster.CastShadowRay(field, current, goal);
+                    currentCell.UnsetFlag(CellFlags.HasLineOfSight);
+                    wavefrontOutput.Add(current);
                     continue;
                 }
 
-                neighborCell.SetFlag(CellFlags.HasLineOfSight);
-                queue.Enqueue(neighbor);
+                if (currentCell.HasFlag(CellFlags.WaveFrontBlocked)) {
+                    currentCell.UnsetFlag(CellFlags.HasLineOfSight);
+                    wavefrontOutput.Add(current);
+                    continue;
+                }
+
+                foreach (var direction in Directions.Cardinal) {
+                    var neighbor = current + Directions.Offset(direction);
+
+                    if (!field.IsInBounds(neighbor.x, neighbor.y))
+                        continue;
+
+                    var neighborCell = field[neighbor.x, neighbor.y]; // ref was used here
+                    if (neighborCell.cost > Cell.DefaultCost || neighborCell.HasFlag(CellFlags.HasLineOfSight))
+                        continue;
+
+                    neighborCell.integratedCost = currentCell.integratedCost + 1;
+                    if (neighborCell.HasFlag(CellFlags.WaveFrontBlocked)) {
+                        wavefrontOutput.Add(neighbor);
+                        continue;
+                    }
+
+                    neighborCell.SetFlag(CellFlags.HasLineOfSight);
+                    queue.Enqueue(neighbor);
+                }
             }
         }
-
     }
 }
