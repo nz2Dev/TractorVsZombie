@@ -7,12 +7,6 @@ public static partial class FlowFieldIntegrator {
     public static class CostIntegrationPass {
         
         internal static void ComputeCosts(FlowField field, Vector2Int goal, IEnumerable<Vector2Int> wavefrontInput) {
-            for (int x = 0; x < field.Size; x++) {
-                for (int y = 0; y < field.Size; y++) {
-                    field[x, y].integratedCost = 0;
-                }
-            }
-
             var inSearch = new Queue<Vector2Int>();
             foreach (var cell in wavefrontInput) {
                 inSearch.Enqueue(cell);
