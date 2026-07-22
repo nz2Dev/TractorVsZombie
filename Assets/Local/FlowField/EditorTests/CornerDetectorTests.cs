@@ -30,9 +30,9 @@ public class CornerDetectorTests {
         var wallCell = new Vector2Int(2, 1);
         var field = new FlowField(5, new [] { wallCell });
 
-        Assert.IsFalse(CornerDetector.IsLosCorner(field, southCell, wallCell, goalCell));
-        Assert.IsTrue(CornerDetector.IsLosCorner(field, eastCell, wallCell, goalCell));
-        Assert.IsTrue(CornerDetector.IsLosCorner(field, westCell, wallCell, goalCell));
+        Assert.IsFalse(CornerDetector.IsLosCorner(field, southCell, goalCell));
+        Assert.IsTrue(CornerDetector.IsLosCorner(field, eastCell, goalCell));
+        Assert.IsTrue(CornerDetector.IsLosCorner(field, westCell, goalCell));
     }
 
     [Test]
@@ -51,7 +51,7 @@ public class CornerDetectorTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = CornerDetector.IsLosCorner(field, test, wall, goal);
+        var result = CornerDetector.IsLosCorner(field, test, goal);
         Assert.IsFalse(result);
     }
 
@@ -71,7 +71,7 @@ public class CornerDetectorTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = CornerDetector.IsLosCorner(field, test, wall, goal);
+        var result = CornerDetector.IsLosCorner(field, test, goal);
         Assert.IsTrue(result);
     }
 
@@ -91,7 +91,7 @@ public class CornerDetectorTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = CornerDetector.IsLosCorner(field, test, wall, goal);
+        var result = CornerDetector.IsLosCorner(field, test, goal);
         Assert.IsTrue(result);
     }
 
@@ -111,7 +111,7 @@ public class CornerDetectorTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = CornerDetector.IsLosCorner(field, test, wall, goal);
+        var result = CornerDetector.IsLosCorner(field, test, goal);
         Assert.IsFalse(result);
     }
 
@@ -131,7 +131,7 @@ public class CornerDetectorTests {
         var goal = new Vector2Int(2, 2);
         var field = new FlowField(5, new [] { wall });
 
-        var result = CornerDetector.IsLosCorner(field, test, wall, goal);
+        var result = CornerDetector.IsLosCorner(field, test, goal);
         Assert.IsFalse(result);
     }
 }

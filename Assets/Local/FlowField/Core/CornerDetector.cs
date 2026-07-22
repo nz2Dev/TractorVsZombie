@@ -3,8 +3,27 @@ using System;
 using UnityEngine;
 
 public static class CornerDetector {
-    internal static bool IsLosCorner(FlowField field, Vector2Int cell, Vector2Int neighbor, Vector2Int goal) {
-        int dx = neighbor.x - cell.x;
+
+    internal static bool IsLosCorner(FlowField field, Vector2Int cell, Vector2Int goal) {
+        foreach (var direction in Directions.Cardinal) {
+            var neighbor = cell + Directions.Offset(direction);
+
+            if (!field.IsInBounds(neighbor.x, neighbor.y))
+                continue;
+
+            var neighborIsObstacle = field[neighbor.x, neighbor.y].cost > Cell.DefaultCost;
+            if (neighborIsObstacle) {
+                var obstacle = neighbor;
+                if (IsPerpendicularNotBlocked(field, cell, obstacle, goal)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    internal static bool IsPerpendicularNotBlocked(FlowField field, Vector2Int cell, Vector2Int obstacle, Vector2Int goal) {
+        int dx = obstacle.x - cell.x;
         if (dx != 0) {
             int gy = goal.y - cell.y;
             int gx = goal.x - cell.x;
@@ -19,8 +38,8 @@ public static class CornerDetector {
             if (!field.IsInBounds(awayCell.x, awayCell.y))
                 return true;
 
-            var awayIsBlocked = field[awayCell.x, awayCell.y].cost > 1;
-            return !awayIsBlocked;
+            var awayIsDefaultCost = field[awayCell.x, awayCell.y].cost == Cell.DefaultCost;
+            return awayIsDefaultCost;
         } else {
             int gx = goal.x - cell.x;
             int gy = goal.y - cell.y;
@@ -28,7 +47,7 @@ public static class CornerDetector {
             if (gx == 0 || gy == 0)
                 return false;
 
-            int dy = neighbor.y - cell.y;
+            int dy = obstacle.y - cell.y;
             if (gy < 0 && dy > 0 || gy > 0 && dy < 0)
                 return false;
 
@@ -36,8 +55,8 @@ public static class CornerDetector {
             if (!field.IsInBounds(awayCell.x, awayCell.y))
                 return true;
 
-            var awayIsBlocked = field[awayCell.x, awayCell.y].cost > 1;
-            return !awayIsBlocked;
+            var awayIsDefaultCost = field[awayCell.x, awayCell.y].cost == Cell.DefaultCost;
+            return awayIsDefaultCost;
         }
     }
 }

@@ -23,23 +23,8 @@ public static partial class FlowFieldIntegrator {
             var current = queue.Dequeue();
             var currentCell = field[current.x, current.y]; // ref was used here
 
-            bool isLosCorner = false;
-            foreach (var direction in Directions.Cardinal) {
-                var neighbor = current + Directions.Offset(direction);
-
-                if (!field.IsInBounds(neighbor.x, neighbor.y))
-                    continue;
-
-                if (field[neighbor.x, neighbor.y].cost > Cell.DefaultCost) {
-                    if (CornerDetector.IsLosCorner(field, current, neighbor, goal)) {
-                        ShadowCaster.CastShadowRay(field, current, goal);
-                        isLosCorner = true;
-                        break;
-                    }
-                }
-            }
-
-            if (isLosCorner) {
+            if (CornerDetector.IsLosCorner(field, current, goal)) {
+                ShadowCaster.CastShadowRay(field, current, goal);
                 currentCell.UnsetFlag(CellFlags.HasLineOfSight);
                 wavefrontOutput.Add(current);
                 return;
