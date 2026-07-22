@@ -19,7 +19,7 @@ public static partial class FlowFieldIntegrator {
             }
         }
 
-        internal static void StepLineOfSight(Queue<Vector2Int> queue, FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
+        private static void StepLineOfSight(Queue<Vector2Int> queue, FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
             var current = queue.Dequeue();
             var currentCell = field[current.x, current.y]; // ref was used here
 
@@ -42,15 +42,11 @@ public static partial class FlowFieldIntegrator {
                 if (!field.IsInBounds(neighbor.x, neighbor.y))
                     continue;
 
-                if (field[neighbor.x, neighbor.y].cost > Cell.DefaultCost)
-                    continue;
-
                 var neighborCell = field[neighbor.x, neighbor.y]; // ref was used here
-                if (neighborCell.HasFlag(CellFlags.HasLineOfSight))
+                if (neighborCell.cost > Cell.DefaultCost || neighborCell.HasFlag(CellFlags.HasLineOfSight))
                     continue;
 
                 neighborCell.integratedCost = currentCell.integratedCost + 1;
-
                 if (neighborCell.HasFlag(CellFlags.WaveFrontBlocked)) {
                     wavefrontOutput.Add(neighbor);
                     continue;
