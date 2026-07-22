@@ -104,7 +104,7 @@ public class FlowFieldDebugWindow : EditorWindow {
                 var flowVectorGrid = flowField[x, y].flowVector;
                 var flowVectorWorld = new Vector3(flowVectorGrid.x, 0, flowVectorGrid.y) * 0.5f;
                 if (!flowField[x, y].IsBlocked())
-                    DrawArrow(worldPos, flowVectorWorld, 0.8f, 0.3f);
+                    DrawArrow(worldPos, flowVectorWorld, space.Scale * 0.9f, space.Scale * 0.3f);
             }
         }
     }
@@ -136,6 +136,7 @@ public class FlowFieldDebugWindow : EditorWindow {
     }
 
     private static void DrawArrow(Vector3 start, Vector3 direction, float length, float headLength) {
+        start = start - (direction * length * 0.5f);
         Vector3 end = start + direction * length;
         
         Handles.DrawLine(start, end, thickness: 2);
