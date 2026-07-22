@@ -16,10 +16,16 @@ public class FlowFieldSystem {
 
     private HashSet<Vector2Int> blockedCells = new();
     private bool obstaclesIsDirty = false;
+    private bool spaceIsDirty = false;
 
     internal void Update() {
+        if (spaceIsDirty) {
+            RecreateFields();
+            spaceIsDirty = false;
+        }
+
         if (obstaclesIsDirty) {
-            RebuildFields();
+            RebuildObstacles();
             obstaclesIsDirty = false;
         }
 
@@ -36,6 +42,7 @@ public class FlowFieldSystem {
     public void SetSpace(FlowFieldSpace space) {
         // todo fix space overriding creates state desync, when fields use one space and system the newly assigned
         this.space = space;
+        spaceIsDirty = true;
     }
 
     public FlowFieldObstacle AddObstacle(Collider collider) {
@@ -79,7 +86,14 @@ public class FlowFieldSystem {
         return new Vector3(flowDirection.x, 0, flowDirection.y).normalized;
     }
 
-    private void RebuildFields() {
+    private void RecreateFields() {
+        foreach (var flowFieldHandle in flowFieldsHandles) {
+            flowFieldHandle.flowField = new FlowField(space.Size, blockedCells);
+            flowFieldHandle.computeIsDirty = true;
+        }
+    }
+
+    private void RebuildObstacles() {
         blockedCells.Clear();
         foreach (var obstacleData in obstacles) {
             foreach (var cell in obstacleData.CalculateCells(space)) {
