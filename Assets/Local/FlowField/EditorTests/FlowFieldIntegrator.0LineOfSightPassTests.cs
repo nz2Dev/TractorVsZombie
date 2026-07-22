@@ -7,16 +7,6 @@ using UnityEngine;
 [TestFixture]
 public class FlowFieldIntegrator_0LineOfSightPassTests {
 
-    [SetUp]
-    public void Setup() {
-        FlowFieldIntegrator.LineOfSightPass.enabled = true;
-    }
-
-    [TearDown]
-    public void TearDown() {
-        FlowFieldIntegrator.LineOfSightPass.enabled = false;
-    }
-
     [Test]
     public void ClearGrid_AllCellsHaveLineOfSight() {
         var goal = new Vector2Int(2, 2);

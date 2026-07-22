@@ -7,22 +7,16 @@ public static partial class FlowFieldIntegrator {
 
     public static class LineOfSightPass {
 
-        public static bool enabled = false;
-
         public static void ComputeLineOfSight(FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
-            var queue = new Queue<Vector2Int>();
-            if (!enabled) {
-                wavefrontOutput.Add(goal);
-                return;
-            }
-
             var goalIntCell = field[goal.x, goal.y]; // ref was used here
             goalIntCell.SetFlag(CellFlags.HasLineOfSight);
             goalIntCell.integratedCost = 0;
+            
+            var queue = new Queue<Vector2Int>();
             queue.Enqueue(goal);
-
-            while (queue.Count > 0)
+            while (queue.Count > 0) {
                 StepLineOfSight(queue, field, goal, wavefrontOutput);
+            }
         }
 
         internal static void StepLineOfSight(Queue<Vector2Int> queue, FlowField field, Vector2Int goalCell, List<Vector2Int> wavefrontOutput) {
