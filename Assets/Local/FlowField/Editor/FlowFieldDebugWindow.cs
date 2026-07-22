@@ -101,9 +101,29 @@ public class FlowFieldDebugWindow : EditorWindow {
                 var worldPos = space.ConvertToWorld(new Vector2Int(x, y), atCenter: true);
                 var flowVectorGrid = flowField[x, y].flowVector;
                 var flowVectorWorld = new Vector3(flowVectorGrid.x, 0, flowVectorGrid.y) * 0.5f;
-                Handles.DrawLine(worldPos, worldPos + flowVectorWorld, thickness: 2);
+                if (!flowField[x, y].IsBlocked())
+                    DrawArrow(worldPos, flowVectorWorld, 0.8f, 0.3f);
             }
         }
+    }
+
+    private static void DrawArrow(Vector3 start, Vector3 direction, float length, float headLength) {
+        Vector3 end = start + direction * length;
+        
+        Handles.DrawLine(start, end, thickness: 2);
+
+        var lookRotation = Quaternion.LookRotation(direction);
+
+        Vector3 right = lookRotation *
+                        Quaternion.Euler(0, 180 - 25, 0) *
+                        Vector3.forward;
+
+        Vector3 left = lookRotation *
+                    Quaternion.Euler(0, 180 + 25, 0) *
+                    Vector3.forward;
+
+        Handles.DrawLine(end, end + right * headLength, thickness: 2);
+        Handles.DrawLine(end, end + left * headLength, thickness: 2);
     }
 
 }
