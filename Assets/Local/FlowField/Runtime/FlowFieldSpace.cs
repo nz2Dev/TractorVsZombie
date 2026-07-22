@@ -33,12 +33,12 @@ public class FlowFieldSpace {
 
     public Vector3 ConvertToWorld(Vector2Int gridPosition, bool atCenter = false) {
         var localPosition = new Vector3(gridPosition.x, 0, gridPosition.y);
+        localPosition *= scale;
         if (atCenter) {
             var halfScale = scale * 0.5f;
             localPosition.x += halfScale;
             localPosition.z += halfScale;
         }
-        localPosition *= scale;
         return anchor + localPosition;
     }
 }
