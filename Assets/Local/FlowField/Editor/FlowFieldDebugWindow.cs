@@ -94,6 +94,8 @@ public class FlowFieldDebugWindow : EditorWindow {
         if (system.Handles.Count == 0)
             return;
 
+        DrawGrid(new Vector3(-space.Size * space.Scale * 0.5f, 0, -space.Size * space.Scale * 0.5f), space.Size, space.Size, space.Scale, 3);
+
         var selectedHandle = system.Handles[selectedIndex];
         var flowField = selectedHandle.flowField;
         for (int x = 0; x < flowField.Size; x++) {
@@ -104,6 +106,32 @@ public class FlowFieldDebugWindow : EditorWindow {
                 if (!flowField[x, y].IsBlocked())
                     DrawArrow(worldPos, flowVectorWorld, 0.8f, 0.3f);
             }
+        }
+    }
+
+    public static void DrawGrid(Vector3 origin, int width, int height, float cellSize, float lineThickness) {
+        // Vertical lines
+        for (int x = 0; x <= width; x++) {
+            Vector3 start = origin + new Vector3(x * cellSize, 0f, 0f);
+            Vector3 end = origin + new Vector3(x * cellSize, 0f, height * cellSize);
+
+            Handles.DrawAAPolyLine(
+                lineThickness,
+                start,
+                end
+            );
+        }
+
+        // Horizontal lines
+        for (int y = 0; y <= height; y++) {
+            Vector3 start = origin + new Vector3(0f, 0f, y * cellSize);
+            Vector3 end = origin + new Vector3(width * cellSize, 0f, y * cellSize);
+
+            Handles.DrawAAPolyLine(
+                lineThickness,
+                start,
+                end
+            );
         }
     }
 
