@@ -101,12 +101,12 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         var minViewSize = Mathf.Min(viewWidth, viewHeight) - 20;
         var gridRect = new Rect(viewWidth * 0.5f - minViewSize * 0.5f, viewHeight * 0.5f - minViewSize * 0.5f, minViewSize, minViewSize);
         GUILayout.BeginArea(gridRect);
-        DrawGrid(minViewSize);
+        DrawGrid(gridRect, minViewSize);
         OnGridInput(gridRect, minViewSize);
         GUILayout.EndArea();
     }
 
-    private void DrawGrid(float viewSize) {
+    private void DrawGrid(Rect gridRect, float viewSize) {
         EditorGUI.DrawRect(new Rect(0, 0, viewSize, viewSize), new Color(0.2f, 0.2f, 0.2f));
         var cellViewSize = viewSize / Mathf.Max(gridSize, 1);
 
@@ -126,7 +126,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         Handles.BeginGUI();
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
-                DrawCell(new Vector2Int(x, y), new Rect(x * cellViewSize, y * cellViewSize, cellViewSize, cellViewSize), cellViewSize);
+                DrawCell(new Vector2Int(x, y), new Rect(x * cellViewSize, gridRect.height - ((y + 1) * cellViewSize), cellViewSize, cellViewSize), cellViewSize);
             }
         }
         Handles.EndGUI();
@@ -249,7 +249,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
 
     private bool TryGetCellUnderMouse(Rect gridRect, float cellViewSize, Vector2 mousePosition, out Vector2Int cell) {
         int gridColumn = Mathf.FloorToInt((mousePosition.x - gridRect.x) / cellViewSize);
-        int gridRow = Mathf.FloorToInt((mousePosition.y - gridRect.y) / cellViewSize);
+        int gridRow = Mathf.FloorToInt((gridRect.height - (mousePosition.y - gridRect.y)) / cellViewSize);
         gridColumn = Mathf.Clamp(gridColumn, 0, gridSize - 1);
         gridRow = Mathf.Clamp(gridRow, 0, gridSize - 1);
         cell = new Vector2Int(gridColumn, gridRow);
