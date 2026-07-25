@@ -46,14 +46,16 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             sizeChanged = true;
             gridSize = newSize;
         }
+        if (sizeChanged) {
+            goal = new Vector2Int {
+                x = Mathf.Clamp(goal.x, 0, gridSize - 1),
+                y = Mathf.Clamp(goal.y, 0, gridSize - 1),
+            };
+        }
 
         GUILayout.Space(12);
+        DrawSectionHeader("Editing");
         editingType = GUILayout.Toolbar(editingType, GRID_EDITING_TYPES);
-
-        if (sizeChanged) {
-            goal.x = Mathf.Clamp(goal.x, 0, gridSize - 1);
-            goal.y = Mathf.Clamp(goal.y, 0, gridSize - 1);
-        }
     }
 
     private void DrawSectionHeader(string label) {
