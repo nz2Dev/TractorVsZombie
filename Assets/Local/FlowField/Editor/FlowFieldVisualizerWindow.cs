@@ -137,14 +137,12 @@ public class FlowFieldVisualizerWindow : EditorWindow {
                 ApplyWallBrush(cell);
                 e.Use();
             }
-        }
-        else if (e.type == EventType.MouseDrag && wallBrushPlacing.HasValue) {
+        } else if (e.type == EventType.MouseDrag && wallBrushPlacing.HasValue) {
             if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
                 ApplyWallBrush(cell);
                 e.Use();
             }
-        }
-        else if (e.type == EventType.MouseUp) {
+        } else if (e.type == EventType.MouseUp) {
             wallBrushPlacing = null;
         }
     }
@@ -165,8 +163,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         if (placing && current != Cell.WallCost) {
             costsPaint[cell.y * MaxGridSize + cell.x] = (byte) Cell.WallCost;
 
-        }
-        else if (!placing && current == Cell.WallCost) {
+        } else if (!placing && current == Cell.WallCost) {
             costsPaint[cell.y * MaxGridSize + cell.x] = (byte) Cell.DefaultCost;
         }
     }
