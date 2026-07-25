@@ -10,9 +10,9 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     [SerializeField] private int gridSize = 10;
     [SerializeField] private Vector2Int goal;
     [SerializeField] private byte[] costsPaint = new byte[MaxGridSize * MaxGridSize];
-    [SerializeField] private int editingType = 0;
+    [SerializeField] private int editingType = 2;
 
-    private static string[] GRID_EDITING_TYPES = new string[] { "Walls", "Goal" };
+    private static string[] GRID_EDITING_TYPES = new string[] { "Walls", "Goal", "None" };
     private bool? wallBrushPlacing;
 
 
