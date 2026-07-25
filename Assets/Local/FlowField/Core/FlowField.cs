@@ -20,6 +20,7 @@ public enum CellFlags : byte {
 public class Cell {
 
     public static int DefaultCost = 1;
+    public static int WallCost = 255;
 
     public int cost;
     public int integratedCost;
