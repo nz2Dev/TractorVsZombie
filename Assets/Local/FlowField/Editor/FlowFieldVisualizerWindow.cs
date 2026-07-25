@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class FlowFieldVisualizerWindow : EditorWindow {
 
@@ -16,11 +18,34 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     private bool? wallBrushPlacing;
     private Vector2Int? selectedCell;
 
+    private FlowField field;
+
     [MenuItem("Tools/FlowField/Visualizer")]
     private static void ShowWindow() {
         var window = GetWindow<FlowFieldVisualizerWindow>();
         window.titleContent = new GUIContent("FlowFieldVisualizerWindow");
         window.Show();
+    }
+
+    private void OnEnable() {
+        Rebuild();
+        Rerun();
+    }
+
+    private void Rebuild() {
+        var blockedCells = new List<Vector2Int>();
+        for (int x = 0; x < gridSize; x++) {
+            for (int y = 0; y < gridSize; y++) {
+                if (costsPaint[y * MaxGridSize + x] == (byte) Cell.WallCost) {
+                    blockedCells.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+        field = new FlowField(gridSize, blockedCells);
+    }
+
+    private void Rerun() {
+        FlowFieldIntegrator.Integrate(field, goal);
     }
 
     private void OnGUI() {
@@ -51,6 +76,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
                 x = Mathf.Clamp(goal.x, 0, gridSize - 1),
                 y = Mathf.Clamp(goal.y, 0, gridSize - 1),
             };
+            Rebuild();
         }
 
         GUILayout.Space(12);
@@ -111,7 +137,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         Color labelColor = Color.white;
         int labelFontSize = Mathf.Clamp(Mathf.RoundToInt(cellViewSize * 0.32f), 8, 14);
 
-        var isWall = costsPaint[cell.y * MaxGridSize + cell.x] == Cell.WallCost;
+        var isWall = field[cell.x, cell.y].cost == Cell.WallCost;
         if (isWall) {
             labelText = "W";
             labelColor = new Color(0.5f, 0.5f, 0.5f);
@@ -148,8 +174,8 @@ public class FlowFieldVisualizerWindow : EditorWindow {
 
         EditorGUILayout.LabelField("Coords", $"({cell.x}, {cell.y})");
 
-        // byte costVal = tile.Cost[cell.x, cell.y];
-        // EditorGUILayout.LabelField("Cost", costVal == CostField.Wall ? "Wall (255)" : costVal.ToString());
+        int costVal = field[cell.x, cell.y].cost;
+        EditorGUILayout.LabelField("Cost", costVal == Cell.WallCost ? "Wall (255)" : costVal.ToString());
 
         // var bestCost = tile.Integration[cell.x, cell.y].BestCost;
         // EditorGUILayout.LabelField("Best Cost", bestCost == IntegrationField.Unreachable ? "Unreachable" : bestCost.ToString());
@@ -192,6 +218,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
                 goal = cell;
                 Repaint();
+                Rerun();
             }
         }
     }
@@ -203,6 +230,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
                 wallBrushPlacing = e.button == 0;
                 ApplyWallBrush(cell);
                 e.Use();
+                Rebuild();
                 Repaint();
             }
         }
@@ -210,6 +238,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
                 ApplyWallBrush(cell);
                 e.Use();
+                Rebuild();
                 Repaint();
             }
         }
