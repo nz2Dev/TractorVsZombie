@@ -101,15 +101,19 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     }
 
     private void DrawCell(Vector2Int cell, Rect cellRect, float cellViewSize) {
-        var isWall = costsPaint[cell.y * MaxGridSize + cell.x] == Cell.WallCost;
-        
         string labelText = "";
         Color labelColor = Color.white;
         int labelFontSize = Mathf.Clamp(Mathf.RoundToInt(cellViewSize * 0.32f), 8, 14);
 
+        var isWall = costsPaint[cell.y * MaxGridSize + cell.x] == Cell.WallCost;
         if (isWall) {
             labelText = "W";
             labelColor = new Color(0.5f, 0.5f, 0.5f);
+        }
+        var isGoal = goal == cell;
+        if (isGoal) {
+            labelText = "G";
+            labelColor = Color.green;
         }
 
         if (!string.IsNullOrEmpty(labelText)) {
@@ -126,6 +130,18 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         var cellViewSize = gridViewSize / Mathf.Max(gridSize, 1);
         if (editingType == 0) {
             HandleWallEditing(gridRect, cellViewSize);
+        } else if (editingType == 1) {
+            HandleGoalEditing(gridRect, cellViewSize);
+        }
+    }
+
+    private void HandleGoalEditing(Rect gridRect, float cellViewSize) {
+        Event e = Event.current;
+        if (e.type == EventType.MouseDown || e.type == EventType.MouseDrag) {
+            if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
+                goal = cell;
+                Repaint();
+            }
         }
     }
 
