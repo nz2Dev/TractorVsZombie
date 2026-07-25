@@ -10,11 +10,11 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     [SerializeField] private int gridSize = 10;
     [SerializeField] private Vector2Int goal;
     [SerializeField] private byte[] costsPaint = new byte[MaxGridSize * MaxGridSize];
-    [SerializeField] private int editingType = 2;
+    [SerializeField] private int inputType = 2;
 
-    private static string[] GRID_EDITING_TYPES = new string[] { "Walls", "Goal", "None" };
+    private static string[] GRID_INPUT_TYPES = new string[] { "Wall Edit", "Goal Edit", "Inspection" };
     private bool? wallBrushPlacing;
-
+    private Vector2Int? selectedCell;
 
     [MenuItem("Tools/FlowField/Visualizer")]
     private static void ShowWindow() {
@@ -54,8 +54,12 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         }
 
         GUILayout.Space(12);
-        DrawSectionHeader("Editing");
-        editingType = GUILayout.Toolbar(editingType, GRID_EDITING_TYPES);
+        DrawSectionHeader("Input");
+        inputType = GUILayout.Toolbar(inputType, GRID_INPUT_TYPES);
+
+        if (inputType == 2) {
+            DrawCellInspector();
+        }
     }
 
     private void DrawSectionHeader(string label) {
@@ -128,12 +132,57 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         }
     }
 
+    private void DrawCellInspector() {
+        if (!selectedCell.HasValue) {
+            EditorGUILayout.HelpBox("Click a grid cell to inspect.", MessageType.Info);
+            return;
+        }
+
+        var cell = selectedCell.Value;
+        if (cell.x < 0 || cell.x >= gridSize || cell.y < 0 || cell.y >= gridSize) {
+            selectedCell = null;
+            return;
+        }
+
+        EditorGUI.indentLevel++;
+
+        EditorGUILayout.LabelField("Coords", $"({cell.x}, {cell.y})");
+
+        // byte costVal = tile.Cost[cell.x, cell.y];
+        // EditorGUILayout.LabelField("Cost", costVal == CostField.Wall ? "Wall (255)" : costVal.ToString());
+
+        // var bestCost = tile.Integration[cell.x, cell.y].BestCost;
+        // EditorGUILayout.LabelField("Best Cost", bestCost == IntegrationField.Unreachable ? "Unreachable" : bestCost.ToString());
+
+        // var flags = tile.Integration[cell.x, cell.y].Flags;
+        // EditorGUILayout.LabelField("Flags", flags.ToString());
+
+        // var flowCell = tile.Flow[cell.x, cell.y];
+        // EditorGUILayout.LabelField("Flow Dir", flowCell.Direction.ToString());
+        // EditorGUILayout.LabelField("Has LOS (Flow)", flowCell.HasLineOfSight.ToString());
+
+        EditorGUI.indentLevel--;
+    }
+
     private void OnGridInput(Rect gridRect, float gridViewSize) {
         var cellViewSize = gridViewSize / Mathf.Max(gridSize, 1);
-        if (editingType == 0) {
+        if (inputType == 0) {
             HandleWallEditing(gridRect, cellViewSize);
-        } else if (editingType == 1) {
+        }
+        else if (inputType == 1) {
             HandleGoalEditing(gridRect, cellViewSize);
+        }
+        else if (inputType == 2) {
+            HandleCellInspect(gridRect, cellViewSize);
+        }
+    }
+
+    private void HandleCellInspect(Rect gridRect, float cellViewSize) {
+        if (Event.current.type == EventType.MouseDown) {
+            if (TryGetCellUnderMouse(gridRect, cellViewSize, Event.current.mousePosition, out var cell)) {
+                selectedCell = cell;
+                Repaint();
+            }
         }
     }
 
@@ -154,13 +203,17 @@ public class FlowFieldVisualizerWindow : EditorWindow {
                 wallBrushPlacing = e.button == 0;
                 ApplyWallBrush(cell);
                 e.Use();
+                Repaint();
             }
-        } else if (e.type == EventType.MouseDrag && wallBrushPlacing.HasValue) {
+        }
+        else if (e.type == EventType.MouseDrag && wallBrushPlacing.HasValue) {
             if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
                 ApplyWallBrush(cell);
                 e.Use();
+                Repaint();
             }
-        } else if (e.type == EventType.MouseUp) {
+        }
+        else if (e.type == EventType.MouseUp) {
             wallBrushPlacing = null;
         }
     }
@@ -181,7 +234,8 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         if (placing && current != Cell.WallCost) {
             costsPaint[cell.y * MaxGridSize + cell.x] = (byte) Cell.WallCost;
 
-        } else if (!placing && current == Cell.WallCost) {
+        }
+        else if (!placing && current == Cell.WallCost) {
             costsPaint[cell.y * MaxGridSize + cell.x] = (byte) Cell.DefaultCost;
         }
     }
