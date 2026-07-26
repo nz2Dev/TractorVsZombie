@@ -119,10 +119,10 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     }
 
     private void DrawSectionHeader(string label) {
-        var style = new GUIStyle(EditorStyles.boldLabel) { fontSize = 12 };
-        style.normal.textColor = new Color(0.6f, 0.8f, 1f);
-        GUILayout.Label(label, style);
-        GUILayout.Space(2);
+        using (new GUIColorScope(new Color(0.6f, 0.8f, 1f))) {
+            GUILayout.Label(label, new GUIStyle(EditorStyles.boldLabel) { fontSize = 12} );
+            GUILayout.Space(2);
+        }
     }
 
     private void DrawRectBorder(Rect rect, Color color, float thickness) {
@@ -184,14 +184,13 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             DrawRectBorder(cellRect, cellDisplay.borderColor.Value, 4f);
         }
 
-        int labelFontSize = Mathf.Clamp(Mathf.RoundToInt(cellViewSize * 0.32f), 8, 14);
         if (!string.IsNullOrEmpty(cellDisplay.label)) {
-            var labelStyle = new GUIStyle(EditorStyles.miniLabel) {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = labelFontSize,
-            };
-            labelStyle.normal.textColor = cellDisplay.labelColor;
-            GUI.Label(cellRect, cellDisplay.label, labelStyle);
+            using (new GUIColorScope(cellDisplay.labelColor)) {
+                GUI.Label(cellRect, cellDisplay.label, new(EditorStyles.miniLabel) {
+                    fontSize = Mathf.Clamp(Mathf.RoundToInt(cellViewSize * 0.32f), 8, 14),
+                    alignment = TextAnchor.MiddleCenter,
+                });
+            }
         }
         
         if (cellDisplay.icon.HasValue) {
@@ -402,5 +401,14 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         else if (!placing && current == Cell.WallCost) {
             costsPaint[cell.y * MaxGridSize + cell.x] = (byte) Cell.DefaultCost;
         }
+    }
+
+    private struct GUIColorScope : IDisposable {
+        private readonly Color previous;
+        public GUIColorScope(Color color) {
+            previous = GUI.contentColor;
+            GUI.contentColor = color;
+        }
+        public void Dispose() => GUI.contentColor = previous;
     }
 }
