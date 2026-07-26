@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static partial class FlowFieldIntegrator {
 
-    private static readonly bool losEnabled = false;
+    internal static bool losEnabled = false;
     
     private static readonly List<Vector2Int> wavefrontBuffer = new();
 

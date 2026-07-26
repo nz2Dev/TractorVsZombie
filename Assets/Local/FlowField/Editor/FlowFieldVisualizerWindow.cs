@@ -14,6 +14,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     [SerializeField] private byte[] costsPaint = new byte[MaxGridSize * MaxGridSize];
     [SerializeField] private int inputType = 2;
     [SerializeField] private bool showCosts;
+    [SerializeField] private bool enableLineOfSight;
 
     private static string[] GRID_INPUT_TYPES = new string[] { "Wall Edit", "Goal Edit", "Inspection" };
     private bool? wallBrushPlacing;
@@ -81,11 +82,14 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             };
             Rebuild();
         }
+        
+        enableLineOfSight = EditorGUILayout.Toggle("Line Of Sight Pass", enableLineOfSight);
+        FlowFieldIntegrator.losEnabled = enableLineOfSight;
 
         GUILayout.Space(12);
         DrawSectionHeader("Display");
         var oldShowCosts = showCosts;
-        showCosts = GUILayout.Toggle(showCosts, " show costs?");
+        showCosts = EditorGUILayout.Toggle("Show Costs", showCosts);
         if (oldShowCosts != showCosts)
             Repaint();
 
@@ -245,6 +249,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
                 icon = showCosts ? null : (cellData.HasFlag(CellFlags.HasLineOfSight) ? Icon.Crosshair : Icon.Arrow),
                 iconDirection2D = cellData.flowVector,
                 iconColor = Color.white,
+                borderColor = cellData.HasFlag(CellFlags.WaveFrontBlocked) ? Color.red : null,
             };
         } else {
             return new CellDisplay {
