@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class FlowFieldVisualizerWindow : EditorWindow {
 
-    private const float SidebarWidth = 250f;
+    private const float SidebarWidth = 300f;
     private const int MaxGridSize = 32;
 
     [SerializeField] private int gridSize = 10;
