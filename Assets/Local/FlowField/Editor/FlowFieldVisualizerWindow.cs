@@ -103,6 +103,16 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         GUILayout.Space(2);
     }
 
+    private void DrawRectBorder(Rect rect, Color color, float thickness) {
+        Handles.color = color;
+        Handles.DrawAAPolyLine(thickness,
+            new Vector3(rect.x, rect.y),
+            new Vector3(rect.xMax - thickness, rect.y),
+            new Vector3(rect.xMax - thickness, rect.yMax - thickness),
+            new Vector3(rect.x, rect.yMax - thickness),
+            new Vector3(rect.x, rect.y));
+    }
+
     private void DrawGridArea(float viewWidth, float viewHeight) {
         EditorGUI.DrawRect(new Rect(0, 0, viewWidth, viewHeight), new Color(0.1f, 0.1f, 0.1f));
 
@@ -119,6 +129,14 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         var cellViewSize = viewSize / Mathf.Max(gridSize, 1);
 
         Handles.BeginGUI();
+        for (int x = 0; x < gridSize; x++) {
+            for (int y = 0; y < gridSize; y++) {
+                DrawCell(new Vector2Int(x, y), new Rect(x * cellViewSize, gridRect.height - ((y + 1) * cellViewSize), cellViewSize, cellViewSize), cellViewSize);
+            }
+        }
+        Handles.EndGUI();
+
+        Handles.BeginGUI();
         // Grid lines
         Handles.color = new Color(1f, 1f, 1f, 0.12f);
         for (int x = 0; x <= gridSize; x++) {
@@ -130,39 +148,56 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             Handles.DrawLine(new Vector3(0, py), new Vector3(viewSize, py));
         }
         Handles.EndGUI();
-
-        Handles.BeginGUI();
-        for (int x = 0; x < gridSize; x++) {
-            for (int y = 0; y < gridSize; y++) {
-                DrawCell(new Vector2Int(x, y), new Rect(x * cellViewSize, gridRect.height - ((y + 1) * cellViewSize), cellViewSize, cellViewSize), cellViewSize);
-            }
-        }
-        Handles.EndGUI();
     }
 
     private void DrawCell(Vector2Int cell, Rect cellRect, float cellViewSize) {
-        string labelText = "";
-        Color labelColor = Color.white;
+        var cellDisplay = GetCellDisplaay(cell);
+
+        EditorGUI.DrawRect(cellRect, cellDisplay.backgroundColor);
+
+        if (cellDisplay.borderColor.HasValue) {
+            DrawRectBorder(cellRect, cellDisplay.borderColor.Value, 4f);
+        }
+
         int labelFontSize = Mathf.Clamp(Mathf.RoundToInt(cellViewSize * 0.32f), 8, 14);
-
-        var isWall = field[cell.x, cell.y].cost == Cell.WallCost;
-        if (isWall) {
-            labelText = "W";
-            labelColor = new Color(0.5f, 0.5f, 0.5f);
-        }
-        var isGoal = goal == cell;
-        if (isGoal) {
-            labelText = "G";
-            labelColor = Color.green;
-        }
-
-        if (!string.IsNullOrEmpty(labelText)) {
+        if (!string.IsNullOrEmpty(cellDisplay.label)) {
             var labelStyle = new GUIStyle(EditorStyles.miniLabel) {
                 alignment = TextAnchor.MiddleCenter,
-                fontSize = labelFontSize
+                fontSize = labelFontSize,
             };
-            labelStyle.normal.textColor = labelColor;
-            GUI.Label(cellRect, labelText, labelStyle);
+            labelStyle.normal.textColor = cellDisplay.labelColor;
+            GUI.Label(cellRect, cellDisplay.label, labelStyle);
+        }
+    }
+
+    private struct CellDisplay {
+        public string label;
+        public Color labelColor;
+        public Color backgroundColor;
+        public Color? borderColor;
+    }
+
+    private CellDisplay GetCellDisplaay(Vector2Int cell) {
+        var cellData = field[cell.x, cell.y];
+        if (cellData.cost == Cell.WallCost) {
+            return new CellDisplay {
+                label = "W",
+                labelColor = new Color(0.5f, 0.5f, 0.5f),
+                backgroundColor = new Color(0.15f, 0.15f, 0.15f),
+            };
+        }
+        else if (cell == goal) {
+            return new CellDisplay {
+                label = "G",
+                labelColor = Color.green,
+                backgroundColor = Color.black,
+                borderColor = new Color(0.2f, 1f, 0.3f, 1f)
+            };
+        }
+        else {
+            return new CellDisplay {
+                backgroundColor = Color.gray
+            };
         }
     }
 
