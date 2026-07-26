@@ -202,6 +202,38 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         }
     }
 
+    private void DrawCellInspector() {
+        if (!selectedCell.HasValue) {
+            EditorGUILayout.HelpBox("Click a grid cell to inspect.", MessageType.Info);
+            return;
+        }
+
+        var cell = selectedCell.Value;
+        if (cell.x < 0 || cell.x >= gridSize || cell.y < 0 || cell.y >= gridSize) {
+            selectedCell = null;
+            return;
+        }
+
+        EditorGUI.indentLevel++;
+
+        EditorGUILayout.LabelField("Coords", $"({cell.x}, {cell.y})");
+
+        int costVal = field[cell.x, cell.y].cost;
+        EditorGUILayout.LabelField("Cost", costVal == Cell.WallCost ? "Wall (255)" : costVal.ToString());
+
+        var bestCost = field[cell.x, cell.y].integratedCost;
+        EditorGUILayout.LabelField("Integrated Cost", bestCost.ToString());
+
+        var flags = field[cell.x, cell.y].flags;
+        EditorGUILayout.LabelField("Flags", flags.ToString());
+
+        var flowCell = field[cell.x, cell.y];
+        EditorGUILayout.LabelField("Flow Dir", flowCell.flowVector.ToString());
+        EditorGUILayout.LabelField("Has LOS (Flow)", flowCell.HasFlag(CellFlags.HasLineOfSight).ToString());
+
+        EditorGUI.indentLevel--;
+    }
+
     private void DrawCrosshair(Rect rect, Color color) {
         var center = rect.center;
         float size = Mathf.Min(rect.width, rect.height) * 0.18f;
@@ -291,38 +323,6 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     private Color GetIntegrationColor(int integratedCost) {
         float t = maxIntegrationCost > 0 ? (float) integratedCost / maxIntegrationCost : 0f;
         return Color.Lerp(new Color(0.0f, 0.55f, 0.8f), new Color(0.25f, 0.0f, 0.45f), t);
-    }
-
-    private void DrawCellInspector() {
-        if (!selectedCell.HasValue) {
-            EditorGUILayout.HelpBox("Click a grid cell to inspect.", MessageType.Info);
-            return;
-        }
-
-        var cell = selectedCell.Value;
-        if (cell.x < 0 || cell.x >= gridSize || cell.y < 0 || cell.y >= gridSize) {
-            selectedCell = null;
-            return;
-        }
-
-        EditorGUI.indentLevel++;
-
-        EditorGUILayout.LabelField("Coords", $"({cell.x}, {cell.y})");
-
-        int costVal = field[cell.x, cell.y].cost;
-        EditorGUILayout.LabelField("Cost", costVal == Cell.WallCost ? "Wall (255)" : costVal.ToString());
-
-        // var bestCost = tile.Integration[cell.x, cell.y].BestCost;
-        // EditorGUILayout.LabelField("Best Cost", bestCost == IntegrationField.Unreachable ? "Unreachable" : bestCost.ToString());
-
-        // var flags = tile.Integration[cell.x, cell.y].Flags;
-        // EditorGUILayout.LabelField("Flags", flags.ToString());
-
-        // var flowCell = tile.Flow[cell.x, cell.y];
-        // EditorGUILayout.LabelField("Flow Dir", flowCell.Direction.ToString());
-        // EditorGUILayout.LabelField("Has LOS (Flow)", flowCell.HasLineOfSight.ToString());
-
-        EditorGUI.indentLevel--;
     }
 
     private void OnGridInput(Rect gridRect, float gridViewSize) {
