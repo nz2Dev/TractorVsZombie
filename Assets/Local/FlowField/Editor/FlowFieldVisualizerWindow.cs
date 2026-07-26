@@ -170,6 +170,40 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             labelStyle.normal.textColor = cellDisplay.labelColor;
             GUI.Label(cellRect, cellDisplay.label, labelStyle);
         }
+        
+        if (cellDisplay.icon.HasValue) {
+            if (cellDisplay.icon.Value == Icon.Arrow) {
+                DrawArrow(cellRect, cellDisplay.iconDirection2D, cellDisplay.iconColor);
+            } else if (cellDisplay.icon.Value == Icon.Crosshair) {
+                DrawCrosshair(cellRect, cellDisplay.iconColor);
+            }
+        }
+    }
+
+    private void DrawCrosshair(Rect rect, Color color) {
+        var center = rect.center;
+        float size = Mathf.Min(rect.width, rect.height) * 0.18f;
+        Handles.color = color;
+        Handles.DrawAAPolyLine(2f, new Vector3(center.x - size, center.y), new Vector3(center.x + size, center.y));
+        Handles.DrawAAPolyLine(2f, new Vector3(center.x, center.y - size), new Vector3(center.x, center.y + size));
+    }
+
+    private void DrawArrow(Rect rect, Vector2Int dirOffset, Color color) {
+        var center = rect.center;
+        float size = Mathf.Min(rect.width, rect.height) * 0.38f;
+
+        var forward = new Vector2(dirOffset.x, -dirOffset.y).normalized;
+        var right = new Vector2(forward.y, -forward.x);
+
+        var start = center - forward * (size * 0.5f);
+        var end = center + forward * (size * 0.6f);
+
+        Handles.color = color;
+        Handles.DrawAAPolyLine(2.5f, start, end);
+
+        float headSize = size * 0.35f;
+        Handles.DrawAAPolyLine(2.5f, end, (Vector3)(end - forward * headSize + right * headSize));
+        Handles.DrawAAPolyLine(2.5f, end, (Vector3)(end - forward * headSize - right * headSize));
     }
 
     private struct CellDisplay {
@@ -177,6 +211,14 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         public Color labelColor;
         public Color backgroundColor;
         public Color? borderColor;
+        public Icon? icon;
+        public Color iconColor;
+        public Vector2Int iconDirection2D;
+    }
+
+    private enum Icon {
+        Crosshair,
+        Arrow
     }
 
     private CellDisplay GetCellDisplaay(Vector2Int cell) {
@@ -199,7 +241,10 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             return new CellDisplay {
                 label = cellData.integratedCost.ToString("F1"),
                 labelColor = Color.white,
-                backgroundColor = GetIntegrationColor(cellData.integratedCost)
+                backgroundColor = GetIntegrationColor(cellData.integratedCost),
+                icon = showCosts ? null : (cellData.HasFlag(CellFlags.HasLineOfSight) ? Icon.Crosshair : Icon.Arrow),
+                iconDirection2D = cellData.flowVector,
+                iconColor = Color.white,
             };
         } else {
             return new CellDisplay {
