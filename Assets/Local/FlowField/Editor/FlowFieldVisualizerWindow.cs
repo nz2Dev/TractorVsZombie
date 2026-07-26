@@ -13,6 +13,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     [SerializeField] private Vector2Int goal;
     [SerializeField] private byte[] costsPaint = new byte[MaxGridSize * MaxGridSize];
     [SerializeField] private int inputType = 2;
+    [SerializeField] private bool showCosts;
 
     private static string[] GRID_INPUT_TYPES = new string[] { "Wall Edit", "Goal Edit", "Inspection" };
     private bool? wallBrushPlacing;
@@ -78,6 +79,13 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             };
             Rebuild();
         }
+
+        GUILayout.Space(12);
+        DrawSectionHeader("Display");
+        var oldShowCosts = showCosts;
+        showCosts = GUILayout.Toggle(showCosts, " show costs?");
+        if (oldShowCosts != showCosts)
+            Repaint();
 
         GUILayout.Space(12);
         DrawSectionHeader("Input");
