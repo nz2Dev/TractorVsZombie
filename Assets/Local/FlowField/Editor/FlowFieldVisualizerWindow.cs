@@ -174,6 +174,9 @@ public class FlowFieldVisualizerWindow : EditorWindow {
 
     private void DrawCell(Vector2Int cell, Rect cellRect, float cellViewSize) {
         var cellDisplay = GetCellDisplaay(cell);
+        if (cell == selectedCell) {
+            cellDisplay.borderColor = Color.yellow;
+        }
 
         EditorGUI.DrawRect(cellRect, cellDisplay.backgroundColor);
 
