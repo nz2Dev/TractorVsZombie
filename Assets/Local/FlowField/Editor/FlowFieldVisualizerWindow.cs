@@ -239,7 +239,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             };
         } else if (cellData.cost == Cell.DefaultCost) {
             return new CellDisplay {
-                label = cellData.integratedCost.ToString("F1"),
+                label = showCosts ? cellData.integratedCost.ToString("F1") : null,
                 labelColor = Color.white,
                 backgroundColor = GetIntegrationColor(cellData.integratedCost),
                 icon = showCosts ? null : (cellData.HasFlag(CellFlags.HasLineOfSight) ? Icon.Crosshair : Icon.Arrow),
