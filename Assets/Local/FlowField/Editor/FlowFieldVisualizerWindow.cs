@@ -340,7 +340,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     }
 
     private void HandleCellInspect(Rect gridRect, float cellViewSize) {
-        if (Event.current.type == EventType.MouseDown) {
+        if (Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag) {
             if (TryGetCellUnderMouse(gridRect, cellViewSize, Event.current.mousePosition, out var cell)) {
                 selectedCell = cell;
                 OnDisplayConfigChanged();
