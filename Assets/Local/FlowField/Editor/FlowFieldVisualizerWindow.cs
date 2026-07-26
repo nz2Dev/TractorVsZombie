@@ -341,7 +341,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
 
     private void HandleCellInspect(Rect gridRect, float cellViewSize) {
         if (Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag) {
-            if (TryGetCellUnderMouse(gridRect, cellViewSize, Event.current.mousePosition, out var cell)) {
+            if (TryGetCellUnderMouse(gridRect, cellViewSize, out var cell)) {
                 selectedCell = cell;
                 OnDisplayConfigChanged();
             }
@@ -351,7 +351,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     private void HandleGoalEditing(Rect gridRect, float cellViewSize) {
         Event e = Event.current;
         if (e.type == EventType.MouseDown || e.type == EventType.MouseDrag) {
-            if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
+            if (TryGetCellUnderMouse(gridRect, cellViewSize, out var cell)) {
                 goal = cell;
                 OnConfigChanged();
             }
@@ -361,7 +361,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     private void HandleWallEditing(Rect gridRect, float cellViewSize) {
         Event e = Event.current;
         if (e.type == EventType.MouseDown && (e.button == 0 || e.button == 1)) {
-            if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
+            if (TryGetCellUnderMouse(gridRect, cellViewSize, out var cell)) {
                 wallBrushPlacing = e.button == 0;
                 ApplyWallBrush(cell);
                 e.Use();
@@ -369,7 +369,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
             }
         }
         else if (e.type == EventType.MouseDrag && wallBrushPlacing.HasValue) {
-            if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
+            if (TryGetCellUnderMouse(gridRect, cellViewSize, out var cell)) {
                 ApplyWallBrush(cell);
                 e.Use();
                 OnStructureChanged();
@@ -380,9 +380,11 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         }
     }
 
-    private bool TryGetCellUnderMouse(Rect gridRect, float cellViewSize, Vector2 mousePosition, out Vector2Int cell) {
-        int gridColumn = Mathf.FloorToInt((mousePosition.x - gridRect.x) / cellViewSize);
-        int gridRow = Mathf.FloorToInt((gridRect.height - (mousePosition.y - gridRect.y)) / cellViewSize);
+    private bool TryGetCellUnderMouse(Rect gridRect, float cellViewSize, out Vector2Int cell) {
+        var mousePosition = Event.current.mousePosition;
+        // Debug.Log($"grid {gridRect} event mouse {Event.current.mousePosition} local mouse {mousePosition}");
+        int gridColumn = Mathf.FloorToInt(mousePosition.x / cellViewSize);
+        int gridRow = Mathf.FloorToInt((gridRect.height - mousePosition.y) / cellViewSize);
         gridColumn = Mathf.Clamp(gridColumn, 0, gridSize - 1);
         gridRow = Mathf.Clamp(gridRow, 0, gridSize - 1);
         cell = new Vector2Int(gridColumn, gridRow);
