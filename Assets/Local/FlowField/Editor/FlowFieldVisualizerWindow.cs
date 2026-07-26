@@ -69,29 +69,30 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         GUILayout.Space(12);
         DrawSectionHeader("Grid Size");
 
-        bool sizeChanged = false;
-        int newSize = EditorGUILayout.IntSlider("Size", gridSize, 2, MaxGridSize);
-        if (newSize != gridSize) {
-            sizeChanged = true;
-            gridSize = newSize;
-        }
-        if (sizeChanged) {
+        int oldSize = gridSize;
+        gridSize = EditorGUILayout.IntSlider("Size", gridSize, 2, MaxGridSize);
+        if (oldSize != gridSize) {
             goal = new Vector2Int {
                 x = Mathf.Clamp(goal.x, 0, gridSize - 1),
                 y = Mathf.Clamp(goal.y, 0, gridSize - 1),
             };
-            Rebuild();
+            OnStructureChanged();
         }
         
+        var oldLOS = enableLineOfSight;
         enableLineOfSight = EditorGUILayout.Toggle("Line Of Sight Pass", enableLineOfSight);
         FlowFieldIntegrator.losEnabled = enableLineOfSight;
+        if (oldLOS != enableLineOfSight) {
+            OnConfigChanged();
+        }
 
         GUILayout.Space(12);
         DrawSectionHeader("Display");
         var oldShowCosts = showCosts;
         showCosts = EditorGUILayout.Toggle("Show Costs", showCosts);
-        if (oldShowCosts != showCosts)
-            Repaint();
+        if (oldShowCosts != showCosts) {
+            OnDisplayConfigChanged();
+        }
 
         GUILayout.Space(12);
         DrawSectionHeader("Input");
@@ -100,6 +101,21 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         if (inputType == 2) {
             DrawCellInspector();
         }
+    }
+
+    private void OnDisplayConfigChanged() {
+        Repaint();
+    }
+
+    private void OnConfigChanged() {
+        Rerun();
+        Repaint();
+    }
+
+    private void OnStructureChanged() {
+        Rebuild();
+        Rerun();
+        Repaint();
     }
 
     private void DrawSectionHeader(string label) {
@@ -324,7 +340,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         if (Event.current.type == EventType.MouseDown) {
             if (TryGetCellUnderMouse(gridRect, cellViewSize, Event.current.mousePosition, out var cell)) {
                 selectedCell = cell;
-                Repaint();
+                OnDisplayConfigChanged();
             }
         }
     }
@@ -334,8 +350,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         if (e.type == EventType.MouseDown || e.type == EventType.MouseDrag) {
             if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
                 goal = cell;
-                Repaint();
-                Rerun();
+                OnConfigChanged();
             }
         }
     }
@@ -347,16 +362,14 @@ public class FlowFieldVisualizerWindow : EditorWindow {
                 wallBrushPlacing = e.button == 0;
                 ApplyWallBrush(cell);
                 e.Use();
-                Rebuild();
-                Repaint();
+                OnStructureChanged();
             }
         }
         else if (e.type == EventType.MouseDrag && wallBrushPlacing.HasValue) {
             if (TryGetCellUnderMouse(gridRect, cellViewSize, e.mousePosition, out var cell)) {
                 ApplyWallBrush(cell);
                 e.Use();
-                Rebuild();
-                Repaint();
+                OnStructureChanged();
             }
         }
         else if (e.type == EventType.MouseUp) {
