@@ -20,6 +20,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     private Vector2Int? selectedCell;
 
     private FlowField field;
+    private int maxIntegrationCost;
 
     [MenuItem("Tools/FlowField/Visualizer")]
     private static void ShowWindow() {
@@ -47,6 +48,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
 
     private void Rerun() {
         FlowFieldIntegrator.Integrate(field, goal);
+        maxIntegrationCost = GetMaxIntegrationCost();
     }
 
     private void OnGUI() {
@@ -193,12 +195,34 @@ public class FlowFieldVisualizerWindow : EditorWindow {
                 backgroundColor = Color.black,
                 borderColor = new Color(0.2f, 1f, 0.3f, 1f)
             };
-        }
-        else {
+        } else if (cellData.cost == Cell.DefaultCost) {
+            return new CellDisplay {
+                label = cellData.integratedCost.ToString("F1"),
+                labelColor = Color.white,
+                backgroundColor = GetIntegrationColor(cellData.integratedCost)
+            };
+        } else {
             return new CellDisplay {
                 backgroundColor = Color.gray
             };
         }
+    }
+
+    private int GetMaxIntegrationCost() {
+        var max = 0;
+        for (int y = 0; y < gridSize; y++) {
+            for (int x = 0; x < gridSize; x++) {
+                var c = field[x, y].integratedCost;
+                if (c > max)
+                    max = c;
+            }
+        }
+        return max;
+    }
+
+    private Color GetIntegrationColor(int integratedCost) {
+        float t = maxIntegrationCost > 0 ? (float) integratedCost / maxIntegrationCost : 0f;
+        return Color.Lerp(new Color(0.0f, 0.55f, 0.8f), new Color(0.25f, 0.0f, 0.45f), t);
     }
 
     private void DrawCellInspector() {
