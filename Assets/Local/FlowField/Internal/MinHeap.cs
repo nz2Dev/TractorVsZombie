@@ -1,18 +1,20 @@
 using System.Collections.Generic;
 
-internal interface IHeapNode {
-    bool IsLess(IHeapNode heapNode);
-    bool IsLessEqual(IHeapNode heapNode);
+internal interface INodeComparer<T> {
+    bool FirstIsLess(T first, T second);
+    bool FirstIsLessEqual(T first, T second);
 }
 
-internal sealed class MinHeap<T> where T : IHeapNode {
+internal sealed class MinHeap<T> {
     
     private readonly List<T> nodes;
+    private readonly INodeComparer<T> nodeComparer;
 
     public int Count => nodes.Count;
 
-    public MinHeap(int capacity) {
+    public MinHeap(int capacity, INodeComparer<T> nodeComparer) {
         nodes = new List<T>(capacity);
+        this.nodeComparer = nodeComparer;
     }
 
     public void Push(T node) {
@@ -35,7 +37,7 @@ internal sealed class MinHeap<T> where T : IHeapNode {
     private void SiftUp(int index) {
         while (index > 0) {
             int parent = (index - 1) / 2;
-            if (nodes[parent].IsLessEqual(nodes[index]))
+            if (nodeComparer.FirstIsLessEqual(nodes[parent], nodes[index]))
                 break;
 
             Swap(parent, index);
@@ -49,9 +51,9 @@ internal sealed class MinHeap<T> where T : IHeapNode {
             int right = left + 1;
             int smallest = index;
 
-            if (left < nodes.Count && nodes[left].IsLess(nodes[smallest]))
+            if (left < nodes.Count && nodeComparer.FirstIsLess(nodes[left], nodes[smallest]))
                 smallest = left;
-            if (right < nodes.Count && nodes[right].IsLess(nodes[smallest]))
+            if (right < nodes.Count && nodeComparer.FirstIsLess(nodes[right], nodes[smallest]))
                 smallest = right;
 
             if (smallest == index)
