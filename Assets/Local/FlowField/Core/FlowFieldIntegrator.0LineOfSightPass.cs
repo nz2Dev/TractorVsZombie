@@ -38,7 +38,7 @@ public static partial class FlowFieldIntegrator {
                         continue;
 
                     var neighborCell = field[neighbor.x, neighbor.y]; // ref was used here
-                    if (neighborCell.cost > Cell.DefaultCost || neighborCell.HasFlag(CellFlags.HasLineOfSight))
+                    if (neighborCell.cost > Cell.DefaultCost || neighborCell.integratedCost != 0)
                         continue;
 
                     neighborCell.integratedCost = currentCell.integratedCost + 1;
