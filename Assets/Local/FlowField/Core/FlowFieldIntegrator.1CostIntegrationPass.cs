@@ -3,17 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static partial class FlowFieldIntegrator {
-    
+
+    internal struct CostNode {
+        public Vector2Int cell;
+        public int distance;
+    }
+
+    internal class CostNodeComparer : INodeComparer<CostNode> {
+        public static CostNodeComparer Instance = new ();
+        public bool FirstIsLess(CostNode first, CostNode second) => first.distance < second.distance;
+        public bool FirstIsLessEqual(CostNode first, CostNode second) => first.distance <= second.distance;
+    }
+
     public static class CostIntegrationPass {
         
         internal static void ComputeCosts(FlowField field, Vector2Int goal, IEnumerable<Vector2Int> wavefrontInput) {
-            var inSearch = new Queue<Vector2Int>();
+            var inSearch = new MinHeap<CostNode>(field.Size, CostNodeComparer.Instance);
             foreach (var cell in wavefrontInput) {
-                inSearch.Enqueue(cell);
+                inSearch.Push(new CostNode { cell = cell, distance = field[cell.x, cell.y].integratedCost });
             }
 
             while (inSearch.Count > 0) {    
-                var nextLocation = inSearch.Dequeue();
+                var nextLocation = inSearch.Pop().cell;
                 var nextCell = field[nextLocation];
 
                 foreach (var direction in Directions.Cardinal) {
@@ -27,7 +38,7 @@ public static partial class FlowFieldIntegrator {
                         continue;
 
                     neighborCell.integratedCost = neighborCell.cost + nextCell.integratedCost;
-                    inSearch.Enqueue(neighborLocation);
+                    inSearch.Push(new CostNode { cell = neighborLocation, distance = neighborCell.integratedCost });
                 }
             }
         }
