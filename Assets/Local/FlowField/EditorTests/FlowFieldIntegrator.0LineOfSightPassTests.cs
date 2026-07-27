@@ -202,4 +202,24 @@ public class FlowFieldIntegrator_0LineOfSightPassTests {
         
         Assert.That(field[2, 2].integratedCost, Is.EqualTo(4));
     }
+
+    [Test]
+    // (y)
+    //
+    //  3  .   .   .   . 
+    //  2 [4] [3] [2] [1] 
+    //  1  .   W   .   G 
+    //  0  .   W   .   . 
+    //
+    //  #  0   1   2   3  (x)
+    public void ComputeLos_TwoCellShadow_ProducesManhatanDistanceLinearCosts() {
+        var goal = new Vector2Int(3, 1);
+        var field = new FlowField(4, new Vector2Int[] { new (1, 0), new (1, 1) });
+        var wavefront = new List<Vector2Int>();
+
+        FlowFieldIntegrator.LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
+
+        for (int x = field.Size - 1; x >= 1; x--)
+            Assert.That(field[x - 1, 2].integratedCost - field[x, 2].integratedCost, Is.EqualTo(1));
+    }
 }
