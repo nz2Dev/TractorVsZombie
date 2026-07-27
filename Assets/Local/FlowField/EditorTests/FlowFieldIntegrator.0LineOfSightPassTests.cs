@@ -219,6 +219,7 @@ public class FlowFieldIntegrator_0LineOfSightPassTests {
 
         FlowFieldIntegrator.LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
 
+        // TODO: Non linearity might causing precission problem, but still can function
         for (int x = field.Size - 1; x >= 1; x--)
             Assert.That(field[x - 1, 2].integratedCost - field[x, 2].integratedCost, Is.EqualTo(1));
     }
