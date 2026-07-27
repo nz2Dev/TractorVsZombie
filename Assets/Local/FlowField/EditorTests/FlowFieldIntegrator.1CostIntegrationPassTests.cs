@@ -56,4 +56,30 @@ public class FlowFieldIntegrator_1CostIntegrationPassTests {
         for (int x = 0; x < field.Size - 1; x++)
             Assert.That(field[x + 1, 1].integratedCost - field[x, 1].integratedCost, Is.EqualTo(1));
     }
+
+    [Test]
+    //(y)
+    //
+    // 2  S S B 
+    // 1  S B .
+    // 0  G W . 
+    //
+    // #  0 1 2   (x)
+    public void ComputeCost_FromFieldWithLineOfSight_DontOverwriteLOSCells() {
+        var goal = new Vector2Int(0, 0);
+        var wall = new Vector2Int(1, 0);
+        var field = new FlowField(3, new [] { wall });
+        var wavefront = new Vector2Int[] { new (1, 1), new (2, 2) };
+        field[0, 1] = new Cell { cost = 1, flags = CellFlags.HasLineOfSight, integratedCost = 1 };
+        field[0, 2] = new Cell { cost = 1, flags = CellFlags.HasLineOfSight, integratedCost = 2 };
+        field[1, 2] = new Cell { cost = 1, flags = CellFlags.HasLineOfSight, integratedCost = 3 };
+        field[1, 1] = new Cell { cost = 1, flags = CellFlags.WaveFrontBlocked, integratedCost = 2 };
+        field[2, 2] = new Cell { cost = 1, flags = CellFlags.WaveFrontBlocked, integratedCost = 4 };
+
+        FlowFieldIntegrator.CostIntegrationPass.ComputeCosts(field, goal, wavefront);
+
+        Assert.That(field[0, 1].integratedCost, Is.EqualTo(1));
+        Assert.That(field[0, 2].integratedCost, Is.EqualTo(2));
+        Assert.That(field[1, 2].integratedCost, Is.EqualTo(3));
+    }
 }
