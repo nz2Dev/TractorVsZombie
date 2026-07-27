@@ -49,7 +49,7 @@ public class FlowFieldIntegrator_1CostIntegrationPassTests {
         field[0, 2] = new Cell { cost = 1, flags = CellFlags.HasLineOfSight, integratedCost = 2 };
         field[1, 2] = new Cell { cost = 1, flags = CellFlags.HasLineOfSight, integratedCost = 3 };
         field[1, 1] = new Cell { cost = 1, flags = CellFlags.WaveFrontBlocked, integratedCost = 2 };
-        field[2, 1] = new Cell { cost = 1, flags = CellFlags.WaveFrontBlocked, integratedCost = 4 };
+        field[2, 2] = new Cell { cost = 1, flags = CellFlags.WaveFrontBlocked, integratedCost = 4 };
 
         FlowFieldIntegrator.CostIntegrationPass.ComputeCosts(field, goal, wavefront);
 
