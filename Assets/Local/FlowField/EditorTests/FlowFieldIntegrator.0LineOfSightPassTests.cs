@@ -151,13 +151,13 @@ public class FlowFieldIntegrator_0LineOfSightPassTests {
     public void ComputeLos_NarrowCorrider_DontStopOtherNonWaveFrontBlocked() {
         //(y)
         //
-        // 4  . . . . .
-        // 3  . . . . .
-        // 2  . . . . .
-        // 1  . W . . .
-        // 0  G . . . .
+        // 4  .  .  .  .  .
+        // 3  .  .  .  .  .
+        // 2  .  .  .  . [.]
+        // 1  .  W [.][.][.]
+        // 0  G  .  .  . [.]
         //
-        // #  0 1 2 3 4  (x)
+        // #  0  1  2  3  4  (x)
 
         var goal = new Vector2Int(0, 0);
         var wall = new Vector2Int(1, 1);
@@ -168,9 +168,9 @@ public class FlowFieldIntegrator_0LineOfSightPassTests {
 
         Assert.IsTrue(field[4, 0].HasFlag(CellFlags.HasLineOfSight));
         Assert.IsTrue(field[4, 1].HasFlag(CellFlags.HasLineOfSight));
+        Assert.IsTrue(field[4, 2].HasFlag(CellFlags.WaveFrontBlocked));
 
         Assert.IsTrue(field[2, 1].HasFlag(CellFlags.WaveFrontBlocked));
         Assert.IsTrue(field[3, 1].HasFlag(CellFlags.WaveFrontBlocked));
-        Assert.IsTrue(field[4, 2].HasFlag(CellFlags.WaveFrontBlocked));
     }
 }
