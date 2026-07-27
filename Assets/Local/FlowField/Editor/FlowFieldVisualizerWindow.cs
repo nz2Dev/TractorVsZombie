@@ -81,8 +81,8 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         
         var oldLOS = enableLineOfSight;
         enableLineOfSight = EditorGUILayout.Toggle("Line Of Sight Pass", enableLineOfSight);
-        FlowFieldIntegrator.losEnabled = enableLineOfSight;
         if (oldLOS != enableLineOfSight) {
+            FlowFieldIntegrator.losEnabled = enableLineOfSight;
             OnConfigChanged();
         }
 
