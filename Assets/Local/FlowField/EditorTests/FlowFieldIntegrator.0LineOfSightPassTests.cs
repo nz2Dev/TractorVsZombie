@@ -136,7 +136,7 @@ public class FlowFieldIntegrator_0LineOfSightPassTests {
 
         FlowFieldIntegrator.LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
 
-        Assert.That(wavefront, Is.EquivalentTo(new[] { new Vector2Int(1, 2) }));
+        Assert.That(wavefront, Is.EquivalentTo(new Vector2Int[] { new(1, 2), new(1, 3) }));
 
         Assert.IsTrue(field[2, 3].NoFlags());
         Assert.IsTrue(field[2, 2].NoFlags());
