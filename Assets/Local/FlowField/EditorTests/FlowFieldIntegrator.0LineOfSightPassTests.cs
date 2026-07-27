@@ -173,4 +173,33 @@ public class FlowFieldIntegrator_0LineOfSightPassTests {
         Assert.IsTrue(field[2, 1].HasFlag(CellFlags.WaveFrontBlocked));
         Assert.IsTrue(field[3, 1].HasFlag(CellFlags.WaveFrontBlocked));
     }
+
+    [Test]
+    // (y)
+    //
+    //  2 [2] [3] [4] 
+    //  1 [1] [2]  . 
+    //  0  G   W   . 
+    //
+    //  #  0   1   2  (x)
+    public void ComputeLos_WithWall_ProducesManhatanDistanceCosts() {
+        var goal = new Vector2Int(0, 0);
+        var wall = new Vector2Int(1, 0);
+        var field = new FlowField(3, new [] { wall });
+        var wavefront = new List<Vector2Int>();
+
+        FlowFieldIntegrator.LineOfSightPass.ComputeLineOfSight(field, goal, wavefront);
+
+        Assert.That(field[0, 1].integratedCost, Is.EqualTo(1));
+        Assert.That(field[1, 0].integratedCost, Is.EqualTo(0));
+
+        Assert.That(field[0, 2].integratedCost, Is.EqualTo(2));
+        Assert.That(field[1, 1].integratedCost, Is.EqualTo(2));
+        Assert.That(field[2, 0].integratedCost, Is.EqualTo(0));
+
+        Assert.That(field[1, 2].integratedCost, Is.EqualTo(3));
+        Assert.That(field[2, 1].integratedCost, Is.EqualTo(0));
+        
+        Assert.That(field[2, 2].integratedCost, Is.EqualTo(4));
+    }
 }
