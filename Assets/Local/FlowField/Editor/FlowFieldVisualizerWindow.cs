@@ -48,7 +48,7 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     }
 
     private void Rerun() {
-        FlowFieldIntegrator.Integrate(field, goal);
+        FlowFieldIntegrator.Integrate(field, goal, enableLineOfSight);
         maxIntegrationCost = GetMaxIntegrationCost();
     }
 
@@ -82,7 +82,6 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         var oldLOS = enableLineOfSight;
         enableLineOfSight = EditorGUILayout.Toggle("Line Of Sight Pass", enableLineOfSight);
         if (oldLOS != enableLineOfSight) {
-            FlowFieldIntegrator.losEnabled = enableLineOfSight;
             OnConfigChanged();
         }
 
