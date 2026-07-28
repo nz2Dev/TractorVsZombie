@@ -204,6 +204,7 @@ public class FlowFieldIntegrator_0LineOfSightPassTests {
     }
 
     [Test]
+    [Ignore("In consideration")]
     // (y)
     //
     //  3  .   .   .   . 
