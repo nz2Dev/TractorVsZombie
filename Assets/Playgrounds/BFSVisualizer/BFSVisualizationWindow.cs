@@ -11,7 +11,7 @@ public struct Cell {
 
 public class BFSVisualizationWindow : EditorWindow {
 
-    [MenuItem("Tools/BFSVisualization")]
+    [MenuItem("Window/Playground/BFSVisualization")]
     private static void ShowWindow() {
         var window = GetWindow<BFSVisualizationWindow>();
         window.titleContent = new GUIContent("BFSVisualizationWindow");
