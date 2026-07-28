@@ -34,11 +34,14 @@ public static partial class FlowFieldIntegrator {
                         continue;
 
                     var neighborCell = field[neighborLocation];
-                    if (neighborCell.IsBlocked() || neighborCell.integratedCost != 0)
+                    if (neighborCell.IsBlocked() || neighborCell.HasFlag(CellFlags.HasLineOfSight))
                         continue;
 
-                    neighborCell.integratedCost = neighborCell.cost + nextCell.integratedCost;
-                    inSearch.Push(new CostNode { cell = neighborLocation, distance = neighborCell.integratedCost });
+                    var newCost = neighborCell.cost + nextCell.integratedCost;
+                    if (neighborCell.integratedCost == 0 || newCost < neighborCell.integratedCost) {
+                        neighborCell.integratedCost = newCost;
+                        inSearch.Push(new CostNode { cell = neighborLocation, distance = neighborCell.integratedCost });
+                    }
                 }
             }
         }
