@@ -23,10 +23,10 @@ public class FlowFieldVisualizerWindow : EditorWindow {
     private FlowField field;
     private int maxIntegrationCost;
 
-    [MenuItem("Tools/FlowField/Visualizer")]
+    [MenuItem("Window/Local/Flow Field Visualizer")]
     private static void ShowWindow() {
         var window = GetWindow<FlowFieldVisualizerWindow>();
-        window.titleContent = new GUIContent("FlowFieldVisualizerWindow");
+        window.titleContent = new GUIContent("Flow Field Visualizer");
         window.Show();
     }
 

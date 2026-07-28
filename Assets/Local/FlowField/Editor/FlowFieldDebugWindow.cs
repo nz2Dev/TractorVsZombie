@@ -16,10 +16,10 @@ public class FlowFieldDebugWindow : EditorWindow {
     private int selectedIndex;
     private string[] flowFieldNames = new string[0];
     
-    [MenuItem("Tools/FlowField Debuger")]
+    [MenuItem("Window/Local/Flow Field Debuger")]
     private static void ShowWindow() {
         var window = GetWindow<FlowFieldDebugWindow>();
-        window.titleContent = new GUIContent("FlowField Debug");
+        window.titleContent = new GUIContent("Flow Field Debuger");
         window.Show();
     }
 
