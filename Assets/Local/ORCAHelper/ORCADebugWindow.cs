@@ -6,10 +6,10 @@ public class ORCADebugWindow : EditorWindow {
     private BaseObstacleSource[] obstacleSources;
     private int sceneRepaintCount;
 
-    [MenuItem("Tools/ORCA Debug Window")]
+    [MenuItem("Window/Local/ORCA Debuger")]
     public static void Open() {
         var window = GetWindow<ORCADebugWindow>();
-        window.titleContent = new GUIContent("ORCA Debug");
+        window.titleContent = new GUIContent("ORCA Debuger");
         window.Show();
     }
 
