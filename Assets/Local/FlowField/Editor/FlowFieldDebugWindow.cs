@@ -101,10 +101,14 @@ public class FlowFieldDebugWindow : EditorWindow {
         for (int x = 0; x < flowField.Size; x++) {
             for (int y = 0; y < flowField.Size; y++) {
                 var worldPos = space.ConvertToWorld(new Vector2Int(x, y), atCenter: true);
-                var flowVectorGrid = flowField[x, y].flowVector;
-                var flowVectorWorld = new Vector3(flowVectorGrid.x, 0, flowVectorGrid.y) * 0.5f;
+                var flowVector = system.GetFlowVector(selectedHandle, worldPos);
                 if (!flowField[x, y].IsBlocked()) {
-                    DrawArrow(worldPos, flowVectorWorld, space.Scale * 0.9f, space.Scale * 0.3f);
+                    if (flowField[x, y].HasFlag(CellFlags.HasLineOfSight)) {
+                        Handles.color = Color.yellow;
+                    } else {
+                        Handles.color = Color.white;
+                    }
+                    DrawArrow(worldPos, flowVector, space.Scale * 0.9f, space.Scale * 0.3f);
                 }
             }
         }
@@ -134,6 +138,12 @@ public class FlowFieldDebugWindow : EditorWindow {
                 end
             );
         }
+    }
+
+    private void DrawCrosshair(Vector3 worldPos, float size) {
+        var halfSize = size * 0.5f;
+        Handles.DrawLine(worldPos - halfSize * Vector3.left, worldPos + Vector3.right * halfSize, 2);
+        Handles.DrawLine(worldPos - halfSize * Vector3.forward, worldPos + Vector3.back * halfSize, 2);
     }
 
     private static void DrawArrow(Vector3 start, Vector3 direction, float length, float headLength) {
