@@ -30,7 +30,7 @@ public static partial class FlowFieldIntegrator {
                 foreach (var direction in Directions.Cardinal) {
                     var neighborLocation = nextLocation + Directions.Offset(direction);
                     
-                    if (!field.IsInBounds(neighborLocation) || neighborLocation == goal)
+                    if (!field.IsInBounds(neighborLocation))
                         continue;
 
                     var neighborCell = field[neighborLocation];
