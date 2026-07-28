@@ -103,8 +103,9 @@ public class FlowFieldDebugWindow : EditorWindow {
                 var worldPos = space.ConvertToWorld(new Vector2Int(x, y), atCenter: true);
                 var flowVectorGrid = flowField[x, y].flowVector;
                 var flowVectorWorld = new Vector3(flowVectorGrid.x, 0, flowVectorGrid.y) * 0.5f;
-                if (!flowField[x, y].IsBlocked())
+                if (!flowField[x, y].IsBlocked()) {
                     DrawArrow(worldPos, flowVectorWorld, space.Scale * 0.9f, space.Scale * 0.3f);
+                }
             }
         }
     }

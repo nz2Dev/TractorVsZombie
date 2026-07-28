@@ -33,7 +33,7 @@ public class FlowFieldSystem {
             if (flowFieldHandle.computeIsDirty) {
                 var field = flowFieldHandle.flowField;
                 var goal = space.ConvertToGridClampled(flowFieldHandle.goal);
-                FlowFieldIntegrator.Integrate(field, goal);
+                FlowFieldIntegrator.Integrate(field, goal, lineOfSightPass: true);
                 flowFieldHandle.computeIsDirty = false;
             }
         }
@@ -82,8 +82,13 @@ public class FlowFieldSystem {
 
     public Vector3 GetFlowVector(FlowFieldHandle handle, Vector3 position) {
         var gridPosition = space.ConvertToGridClampled(position);
-        var flowDirection = handle.flowField[gridPosition.x, gridPosition.y].flowVector;
-        return new Vector3(flowDirection.x, 0, flowDirection.y).normalized;
+        var gridCell = handle.flowField[gridPosition.x, gridPosition.y];
+        if (gridCell.HasFlag(CellFlags.HasLineOfSight)) {
+            return (handle.goal - position).normalized;
+        } else {
+            var flowDirection = gridCell.flowVector;
+            return new Vector3(flowDirection.x, 0, flowDirection.y).normalized;
+        }
     }
 
     private void RecreateFields() {
