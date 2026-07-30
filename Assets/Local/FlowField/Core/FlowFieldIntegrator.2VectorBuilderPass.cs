@@ -8,9 +8,9 @@ public static partial class FlowFieldIntegrator {
             for (int x = 0; x < field.Size; x++) {
                 for (int y = 0; y < field.Size; y++) {
                     var cellLocation = new Vector2Int(x, y);
-                    var cell = field[cellLocation];
+                    ref var cell = ref field.GetRef(x, y);
                     if (cell.IsBlocked()) {
-                        field[x, y].flowVector = Vector2Int.zero;
+                        cell.flowVector = Vector2Int.zero;
                         continue;
                     }
 
@@ -22,7 +22,7 @@ public static partial class FlowFieldIntegrator {
                         if (!field.IsInBounds(neighborLocation))
                             continue;
 
-                        var neighborCell = field[neighborLocation];
+                        ref var neighborCell = ref field.GetRef(neighborLocation);
                         if (neighborCell.IsBlocked() || neighborCell.integratedCost == 0 && neighborLocation != goal)
                             continue;
 
@@ -32,7 +32,7 @@ public static partial class FlowFieldIntegrator {
                         }
                     }
 
-                    field[x, y].flowVector = lowestCostLocation - cellLocation;
+                    cell.flowVector = lowestCostLocation - cellLocation;
                 }
             }
         }

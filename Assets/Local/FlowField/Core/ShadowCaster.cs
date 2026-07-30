@@ -28,18 +28,17 @@ public static class ShadowCaster {
             if (!field.IsInBounds(cx, cy))
                 break;
 
-            if (field[cx, cy].IsBlocked())
+            ref var current = ref field.GetRef(cx, cy);
+            if (current.IsBlocked())
                 break;
 
-            // ref var cell = ref field[cx, cy]; don't forget to use ref when migrate to structs
-            field[cx, cy].SetFlag(CellFlags.WaveFrontBlocked);
+            current.SetFlag(CellFlags.WaveFrontBlocked);
 
             int e2 = 2 * err;
             if (e2 > -dy) {
                 err -= dy;
                 cx += sx;
-            }
-            if (e2 < dx) {
+            } if (e2 < dx) {
                 err += dx;
                 cy += sy;
             }

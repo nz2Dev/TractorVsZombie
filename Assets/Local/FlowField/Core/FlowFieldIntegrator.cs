@@ -22,9 +22,10 @@ public static partial class FlowFieldIntegrator {
     private static void ClearField(FlowField field) {
         for (int x = 0; x < field.Size; x++) {
             for (int y = 0; y < field.Size; y++) {
-                field[x, y].integratedCost = 0;
-                field[x, y].flags = CellFlags.None;
-                field[x, y].flowVector = Vector2Int.zero;
+                ref var cell = ref field.GetRef(x, y);
+                cell.integratedCost = 0;
+                cell.flags = CellFlags.None;
+                cell.flowVector = Vector2Int.zero;
             }
         }
     }

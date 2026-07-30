@@ -8,7 +8,7 @@ public static partial class FlowFieldIntegrator {
     public static class LineOfSightPass {
 
         public static void ComputeLineOfSight(FlowField field, Vector2Int goal, List<Vector2Int> wavefrontOutput) {
-            var goalCell = field[goal.x, goal.y]; // ref was used here
+            ref var goalCell = ref field.GetRef(goal);
             goalCell.SetFlag(CellFlags.HasLineOfSight);
             goalCell.integratedCost = 0;
             
@@ -16,7 +16,7 @@ public static partial class FlowFieldIntegrator {
             queue.Enqueue(goal);
             while (queue.Count > 0) {
                 var current = queue.Dequeue();
-                var currentCell = field[current.x, current.y]; // ref was used here
+                ref var currentCell = ref field.GetRef(current);
 
                 if (CornerDetector.IsLosCorner(field, current, goal)) {
                     ShadowCaster.CastShadowRay(field, current, goal);
@@ -37,7 +37,7 @@ public static partial class FlowFieldIntegrator {
                     if (!field.IsInBounds(neighbor.x, neighbor.y))
                         continue;
 
-                    var neighborCell = field[neighbor.x, neighbor.y]; // ref was used here
+                    ref var neighborCell = ref field.GetRef(neighbor);
                     if (neighborCell.cost > Cell.DefaultCost || neighborCell.integratedCost != 0)
                         continue;
 

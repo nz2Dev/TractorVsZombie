@@ -25,7 +25,7 @@ public static partial class FlowFieldIntegrator {
 
             while (inSearch.Count > 0) {    
                 var nextLocation = inSearch.Pop().cell;
-                var nextCell = field[nextLocation];
+                ref var nextCell = ref field.GetRef(nextLocation);
 
                 foreach (var direction in Directions.Cardinal) {
                     var neighborLocation = nextLocation + Directions.Offset(direction);
@@ -33,7 +33,7 @@ public static partial class FlowFieldIntegrator {
                     if (!field.IsInBounds(neighborLocation))
                         continue;
 
-                    var neighborCell = field[neighborLocation];
+                    ref var neighborCell = ref field.GetRef(neighborLocation);
                     if (neighborCell.IsBlocked() || neighborCell.HasFlag(CellFlags.HasLineOfSight))
                         continue;
 

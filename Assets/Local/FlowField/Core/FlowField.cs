@@ -17,7 +17,7 @@ public enum CellFlags : byte {
     WaveFrontBlocked = 1 << 2,
 }
 
-public class Cell {
+public struct Cell {
 
     public static int DefaultCost = 1;
     public static int WallCost = 255;
@@ -35,15 +35,15 @@ public class Cell {
         flags &= ~flag;
     }
 
-    internal bool NoFlags() {
+    internal readonly bool NoFlags() {
         return flags == CellFlags.None;
     }
 
-    internal bool HasFlag(CellFlags flag) {
+    internal readonly bool HasFlag(CellFlags flag) {
         return (flags & flag) != 0;
     }
 
-    internal bool FlagsAre(CellFlags flag) {
+    internal readonly bool FlagsAre(CellFlags flag) {
         return flags == flag;
     }
 
@@ -55,7 +55,7 @@ public class Cell {
         cost = DefaultCost;
     }
 
-    internal bool IsBlocked() {
+    internal readonly bool IsBlocked() {
         return cost == 255;
     }
 
@@ -66,14 +66,18 @@ public class FlowField : Grid2D<Cell> {
     public FlowField(int gridSize, IEnumerable<Vector2Int> blockedCells) : base(gridSize) {
         for (int x = 0; x < Size; x++) {
             for (int y = 0; y < Size; y++) {
-                this[x, y].SetDefaultCost();
+                this[x, y] = new Cell {
+                    cost = Cell.DefaultCost
+                };
             }
         }
 
         if (blockedCells != null) {
             foreach (var blocked in blockedCells) {
                 if (IsInBounds(blocked)) {
-                    this[blocked].SetBlockedCost();
+                    this[blocked] = new Cell {
+                        cost = Cell.WallCost,
+                    };
                 }
             }
         }
@@ -82,7 +86,7 @@ public class FlowField : Grid2D<Cell> {
     public void UpdateBlockedCells(IEnumerable<Vector2Int> cells) {
         for (int x = 0; x < Size; x++)
             for (int y = 0; y < Size; y++)
-                this[x, y].SetDefaultCost();
+                this[x, y] = new Cell { cost = Cell.DefaultCost };
 
 
         if (cells == null)
@@ -90,7 +94,7 @@ public class FlowField : Grid2D<Cell> {
 
         foreach (var cell in cells)
             if (IsInBounds(cell))
-                this[cell].SetBlockedCost();
+                this[cell] = new Cell { cost = Cell.WallCost };
     }
 
 }

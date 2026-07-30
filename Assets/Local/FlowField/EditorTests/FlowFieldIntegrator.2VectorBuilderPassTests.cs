@@ -12,10 +12,10 @@ public class FlowFieldIntegrator_2VectorBuilderPassTests {
         int size = 2;
         var goal = new Vector2Int(1, 1);
         var field = new FlowField(size, null);
-        field[0, 0].integratedCost = 2;
-        field[0, 1].integratedCost = 1;
-        field[1, 0].integratedCost = 1;
-        field[1, 1].integratedCost = 0;
+        field[0, 0] = new Cell { integratedCost = 2 };
+        field[0, 1] = new Cell { integratedCost = 1 };
+        field[1, 0] = new Cell { integratedCost = 1 };
+        field[1, 1] = new Cell { integratedCost = 0 };
         
         FlowFieldIntegrator.VectorBuilderPass.ComputeFlow(field, goal);
         

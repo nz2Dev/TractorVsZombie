@@ -53,6 +53,14 @@ public class Grid2D<T> where T : new() {
         set => cells[pos.x, pos.y] = value;
     }
 
+    public ref T GetRef(int x, int y) {
+        return ref cells[x, y];
+    }
+
+    public ref T GetRef(Vector2Int position) {
+        return ref cells[position.x, position.y];
+    }
+
     /// <summary>
     /// Checks if the specified coordinates are within grid bounds.
     /// </summary>

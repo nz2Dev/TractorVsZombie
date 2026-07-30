@@ -11,7 +11,7 @@ public static class CornerDetector {
             if (!field.IsInBounds(neighbor.x, neighbor.y))
                 continue;
 
-            var neighborIsObstacle = field[neighbor.x, neighbor.y].cost > Cell.DefaultCost;
+            var neighborIsObstacle = field[neighbor.x, neighbor.y].cost > Cell.DefaultCost; // ask about ref vs copy
             if (neighborIsObstacle) {
                 var obstacle = neighbor;
                 if (IsPerpendicularNotBlocked(field, cell, obstacle, goal)) {
