@@ -59,6 +59,20 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         Profiler.enabled = false;
     }
 
+    private void RerunProfiledX100() {
+        var extraSize = 100;
+        var blockedCells = new List<Vector2Int>();
+        for (int x = 0; x < MaxGridSize; x++)
+            for (int y = 0; y < MaxGridSize; y++)
+                if (costsPaint[y * MaxGridSize + x] == (byte) Cell.WallCost)
+                    blockedCells.Add(new Vector2Int(x, y));
+                
+        var extraField = new FlowField(extraSize, blockedCells);
+        Profiler.enabled = true;
+        FlowFieldIntegrator.Integrate(extraField, goal, enableLineOfSight);
+        Profiler.enabled = false;
+    }
+
     private void OnGUI() {
         EditorGUI.DrawRect(new Rect(0, 0, SidebarWidth, position.height), new Color(0.18f, 0.18f, 0.18f));
         EditorGUI.DrawRect(new Rect(SidebarWidth - 1f, 0, 1f, position.height), new Color(0.12f, 0.12f, 0.12f));
@@ -109,8 +123,11 @@ public class FlowFieldVisualizerWindow : EditorWindow {
 
             GUILayout.Space(12);
             DrawSectionHeader("Profile");
-            if (GUILayout.Button("Run Profiler")) {
+            if (GUILayout.Button("Run Profiled")) {
                 RerunProfiled();
+            }
+            if (GUILayout.Button("Run Profiled x100")) {
+                RerunProfiledX100();
             }
         }
     }
