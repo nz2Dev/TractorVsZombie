@@ -11,7 +11,7 @@ public static class CornerDetector {
             if (!field.IsInBounds(neighbor.x, neighbor.y))
                 continue;
 
-            var neighborIsObstacle = field[neighbor.x, neighbor.y].cost > Cell.DefaultCost; // ask about ref vs copy
+            var neighborIsObstacle = field.GetRef(neighbor).cost > Cell.DefaultCost;
             if (neighborIsObstacle) {
                 var obstacle = neighbor;
                 if (IsPerpendicularNotBlocked(field, cell, obstacle, goal)) {
@@ -38,7 +38,7 @@ public static class CornerDetector {
             if (!field.IsInBounds(awayCell.x, awayCell.y))
                 return true;
 
-            var awayIsDefaultCost = field[awayCell.x, awayCell.y].cost == Cell.DefaultCost;
+            var awayIsDefaultCost = field.GetRef(awayCell).cost == Cell.DefaultCost;
             return awayIsDefaultCost;
         } else {
             int gx = goal.x - cell.x;
@@ -55,7 +55,7 @@ public static class CornerDetector {
             if (!field.IsInBounds(awayCell.x, awayCell.y))
                 return true;
 
-            var awayIsDefaultCost = field[awayCell.x, awayCell.y].cost == Cell.DefaultCost;
+            var awayIsDefaultCost = field.GetRef(awayCell).cost == Cell.DefaultCost;
             return awayIsDefaultCost;
         }
     }
