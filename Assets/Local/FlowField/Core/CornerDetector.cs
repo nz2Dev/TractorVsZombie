@@ -5,21 +5,23 @@ using UnityEngine;
 public static class CornerDetector {
 
     internal static bool IsLosCorner(FlowField field, Vector2Int cell, Vector2Int goal) {
-        foreach (var direction in Directions.Cardinal) {
-            var neighbor = cell + Directions.Offset(direction);
+        using (FlowFieldProfiling.CornerDetectionMarker.Auto()) {
+            foreach (var direction in Directions.Cardinal) {
+                var neighbor = cell + Directions.Offset(direction);
 
-            if (!field.IsInBounds(neighbor.x, neighbor.y))
-                continue;
+                if (!field.IsInBounds(neighbor.x, neighbor.y))
+                    continue;
 
-            var neighborIsObstacle = field.GetRef(neighbor).cost > Cell.DefaultCost;
-            if (neighborIsObstacle) {
-                var obstacle = neighbor;
-                if (IsPerpendicularNotBlocked(field, cell, obstacle, goal)) {
-                    return true;
+                var neighborIsObstacle = field.GetRef(neighbor).cost > Cell.DefaultCost;
+                if (neighborIsObstacle) {
+                    var obstacle = neighbor;
+                    if (IsPerpendicularNotBlocked(field, cell, obstacle, goal)) {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
     }
 
     internal static bool IsPerpendicularNotBlocked(FlowField field, Vector2Int cell, Vector2Int obstacle, Vector2Int goal) {

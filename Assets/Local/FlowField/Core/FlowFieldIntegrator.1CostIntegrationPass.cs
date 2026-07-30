@@ -18,29 +18,31 @@ public static partial class FlowFieldIntegrator {
     public static class CostIntegrationPass {
         
         internal static void ComputeCosts(FlowField field, Vector2Int goal, IEnumerable<Vector2Int> wavefrontInput) {
-            var inSearch = new MinHeap<CostNode>(field.Size, CostNodeComparer.Instance);
-            foreach (var cell in wavefrontInput) {
-                inSearch.Push(new CostNode { cell = cell, distance = field[cell.x, cell.y].integratedCost });
-            }
+            using (FlowFieldProfiling.CostIntegrationMarker.Auto()) {
+                var inSearch = new MinHeap<CostNode>(field.Size, CostNodeComparer.Instance);
+                foreach (var cell in wavefrontInput) {
+                    inSearch.Push(new CostNode { cell = cell, distance = field[cell.x, cell.y].integratedCost });
+                }
 
-            while (inSearch.Count > 0) {    
-                var nextLocation = inSearch.Pop().cell;
-                ref var nextCell = ref field.GetRef(nextLocation);
+                while (inSearch.Count > 0) {    
+                    var nextLocation = inSearch.Pop().cell;
+                    ref var nextCell = ref field.GetRef(nextLocation);
 
-                foreach (var direction in Directions.Cardinal) {
-                    var neighborLocation = nextLocation + Directions.Offset(direction);
-                    
-                    if (!field.IsInBounds(neighborLocation))
-                        continue;
+                    foreach (var direction in Directions.Cardinal) {
+                        var neighborLocation = nextLocation + Directions.Offset(direction);
+                        
+                        if (!field.IsInBounds(neighborLocation))
+                            continue;
 
-                    ref var neighborCell = ref field.GetRef(neighborLocation);
-                    if (neighborCell.IsBlocked() || neighborCell.HasFlag(CellFlags.HasLineOfSight))
-                        continue;
+                        ref var neighborCell = ref field.GetRef(neighborLocation);
+                        if (neighborCell.IsBlocked() || neighborCell.HasFlag(CellFlags.HasLineOfSight))
+                            continue;
 
-                    var newCost = neighborCell.cost + nextCell.integratedCost;
-                    if (neighborCell.integratedCost == 0 || newCost < neighborCell.integratedCost) {
-                        neighborCell.integratedCost = newCost;
-                        inSearch.Push(new CostNode { cell = neighborLocation, distance = neighborCell.integratedCost });
+                        var newCost = neighborCell.cost + nextCell.integratedCost;
+                        if (neighborCell.integratedCost == 0 || newCost < neighborCell.integratedCost) {
+                            neighborCell.integratedCost = newCost;
+                            inSearch.Push(new CostNode { cell = neighborLocation, distance = neighborCell.integratedCost });
+                        }
                     }
                 }
             }
