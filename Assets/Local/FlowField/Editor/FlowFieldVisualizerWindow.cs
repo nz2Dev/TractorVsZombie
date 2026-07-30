@@ -3,6 +3,7 @@ using UnityEditor;
 using System;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.Profiling;
 
 public class FlowFieldVisualizerWindow : EditorWindow {
 
@@ -52,6 +53,12 @@ public class FlowFieldVisualizerWindow : EditorWindow {
         maxIntegrationCost = GetMaxIntegrationCost();
     }
 
+    private void RerunProfiled() {
+        Profiler.enabled = true;
+        FlowFieldIntegrator.Integrate(field, goal, enableLineOfSight);
+        Profiler.enabled = false;
+    }
+
     private void OnGUI() {
         EditorGUI.DrawRect(new Rect(0, 0, SidebarWidth, position.height), new Color(0.18f, 0.18f, 0.18f));
         EditorGUI.DrawRect(new Rect(SidebarWidth - 1f, 0, 1f, position.height), new Color(0.12f, 0.12f, 0.12f));
@@ -99,6 +106,12 @@ public class FlowFieldVisualizerWindow : EditorWindow {
 
         if (inputType == 2) {
             DrawCellInspector();
+
+            GUILayout.Space(12);
+            DrawSectionHeader("Profile");
+            if (GUILayout.Button("Run Profiler")) {
+                RerunProfiled();
+            }
         }
     }
 
