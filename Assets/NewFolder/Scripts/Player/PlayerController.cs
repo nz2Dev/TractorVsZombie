@@ -19,6 +19,7 @@ public class PlayerController {
     private PlayerModel model;
     private DrivingController drivingController;
     private AssemblingController assemblingController;
+    private SelectingController selectingController;
 
     public PlayerController(PlayerView view, PlayerInput input, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
         RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController truckController) {
@@ -34,6 +35,8 @@ public class PlayerController {
 
         drivingController = new DrivingController(truckController);
         assemblingController = new AssemblingController(platformController, truckController);
+        selectingController = new SelectingController(new SelectingView(view.uiDocument), platformController);
+        selectingController.OnSelectedPlatformChanged += OnSelectedPlatformChanged;
     }
 
     public void Setup(PlayerPrototype prototype) {     
@@ -42,7 +45,7 @@ public class PlayerController {
         
         assemblingController.Init(prototype.assemblingPrototype);
         foreach (var item in assemblingController.ControlledPlatformIds) {
-            view.AddPlatform(platformController.ReadPlatformState(item));
+            selectingController.AddOption(item);
         }
     }
 
@@ -54,8 +57,8 @@ public class PlayerController {
         CollectRewards();
         
         drivingController.Update();
+        selectingController.Update();
 
-        ReadPlatformSelectionInput();
         ComputeAimInput();
         OperatePlatforms();
     }
@@ -66,7 +69,7 @@ public class PlayerController {
             if (rewardState.payload.type == RewardType.Loadout) {
                 assemblingController.AddLoadout(rewardState.position, 
                     rewardState.payload.loadoutPrototype, model.Config.startOrEndCouplingOfRewards, out var platformState);
-                view.AddPlatform(platformState);
+                selectingController.AddOption(platformState.platformId);
             }
         }
     }
@@ -76,53 +79,15 @@ public class PlayerController {
         view.UpdateFollowCamera(model.Position);
     }
 
-    private void ReadPlatformSelectionInput() {
-        var toggledIds = Enumerable.Empty<int>();
-
-        if (input.ReadSelectAllPressed()) {
-            bool partiallySelected = 
-                model.SelectedPlatformIds.Count != assemblingController.ControlledPlatformIds.Count;
-            
-            toggledIds = partiallySelected
-                ? assemblingController.ControlledPlatformIds.Except(model.SelectedPlatformIds)
-                : assemblingController.ControlledPlatformIds;
-        } else if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
-            toggledIds = new[] { assemblingController.ControlledPlatformIds[pressedIndex] };
-        }
-
-        bool hasEffect = false;
-        foreach (var id in toggledIds) {
-            hasEffect = true;
-            if (!model.SelectedPlatformIds.Remove(id))
-                model.SelectedPlatformIds.Add(id);
-        }
-        
-        if (hasEffect) {
-            OnSelectedPlatformChanged();
-        }
-    }
-
     private void OnSelectedPlatformChanged() {
-        DeactivateSelectionControl();
-        if (model.SelectedPlatformIds.Count != 0) {
-            ActivateSelectionControl();
-        }
-    }
-
-    private void ActivateSelectionControl() {
-        view.ShowAim(model.AimInput);
-        foreach (var selectedPlatformId in model.SelectedPlatformIds) {
-            view.ShowPlatformSelected(platformController.ReadPlatformState(selectedPlatformId));
-        }
-    }
-
-    private void DeactivateSelectionControl() {
         view.HideAim();
-        view.ShowNoPlatformSelected();
+        if (selectingController.SelectedPlatformCount != 0) {
+            view.ShowAim(model.AimInput);
+        }
     }
 
     private void ComputeAimInput() {
-        if (model.SelectedPlatformIds.Count == 0) {
+        if (selectingController.SelectedPlatformCount == 0) {
             return;
         }
         
@@ -139,7 +104,7 @@ public class PlayerController {
 
     private void OperatePlatforms() {
         foreach (var platformId in assemblingController.ControlledPlatformIds) {
-            if (model.SelectedPlatformIds.Contains(platformId)) {
+            if (selectingController.IsSelected(platformId)) {
                 OperateFromInput(platformController.ReadPlatformState(platformId));
             } else {
                 OperateAutomatically(platformController.ReadPlatformState(platformId));

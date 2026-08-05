@@ -13,7 +13,7 @@ public class PlayerModel {
     public PlayerConfig Config { get; }
 
     public Vector3 Position { get; set; }
-    public List<int> SelectedPlatformIds { get; set; } = new ();
+    
     
     public TopDownAimInput AimInput { get; set; }
 
