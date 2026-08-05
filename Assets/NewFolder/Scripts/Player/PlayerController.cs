@@ -7,29 +7,19 @@ using UnityEngine;
 public class PlayerController {
 
     private readonly PlayerView view;
-    private readonly CombatSystem combatSystem;
-    private readonly PhysicsService physicsService;
-    private readonly CameraProvider cameraProvider;
     private readonly RewardController rewardController;
-    private readonly WeaponController weaponController;
-    private readonly PlatformController platformController;
     private readonly TruckController truckController;
 
     private PlayerModel model;
-    private DrivingController drivingController;
-    private AssemblingController assemblingController;
-    private SelectingController selectingController;
-    private AimingController aimingController;
+    private readonly DrivingController drivingController;
+    private readonly AssemblingController assemblingController;
+    private readonly SelectingController selectingController;
+    private readonly AimingController aimingController;
 
     public PlayerController(PlayerView view, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
         RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController truckController) {
         this.view = view;
-        this.physicsService = physicsService;
-        this.combatSystem = combatSystem;
-        this.cameraProvider = cameraProvider;
         this.rewardController = rewardController;
-        this.weaponController = weaponController;
-        this.platformController = platformController;
         this.truckController = truckController;
 
         drivingController = new DrivingController(truckController);

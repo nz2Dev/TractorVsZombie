@@ -16,7 +16,6 @@ public class PlayerView {
         this.cameraManager = cameraManager;
     }
 
-    
     internal void UpdateFollowCamera(Vector3 position) {
         cameraManager.UpdateTopDownFollowPosition(position);
     }
