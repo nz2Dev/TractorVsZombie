@@ -18,7 +18,7 @@ public class AssemblingController {
         model = new AssemblingModel();
     }
 
-    public IReadOnlyList<int> ControlledPlatformIds => model.ControlledPlatformIds;
+    public Vector3 HeadPosition => truckController.ReadVehiclePosition();
 
     public void Init(AssemblingPrototype prototype) {
         model.TruckPrototype = prototype.initTruckPrototype;

@@ -2,8 +2,6 @@ using UnityEngine.UIElements;
 
 public class PlayerController {
 
-    private readonly TruckController truckController;
-
     private PlayerModel model;
     private readonly DrivingController drivingController;
     private readonly AssemblingController assemblingController;
@@ -14,8 +12,7 @@ public class PlayerController {
 
     public PlayerController(UIDocument rootDocument, CameraManager cameraManager, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
         RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController truckController) {
-        this.truckController = truckController;
-
+        
         drivingController = new DrivingController(truckController);
         assemblingController = new AssemblingController(platformController, truckController);
         selectingController = new SelectingController(new SelectingView(rootDocument), platformController);
@@ -46,13 +43,14 @@ public class PlayerController {
         if (model == null)
             return;
         
+        var headPosition = assemblingController.HeadPosition;
         drivingController.Update();
         selectingController.Update();
-        aimingController.SetAimSourcePosition(truckController.ReadVehiclePosition());
+        aimingController.SetAimSourcePosition(headPosition);
         aimingController.Update();
-        collectingController.SetPosition(truckController.ReadVehiclePosition());
+        collectingController.SetPosition(headPosition);
         collectingController.Update();
-        cameraController.SetVehiclePosition(truckController.ReadVehiclePosition());
+        cameraController.SetVehiclePosition(headPosition);
         cameraController.Update();
     }
 
