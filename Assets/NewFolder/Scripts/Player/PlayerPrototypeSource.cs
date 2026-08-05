@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerPrototypeSource : MonoBehaviour {
     [Inline] [SerializeField] private PlayerConfig configSource;
-    [SerializeField] private AimVisuals aimVisualsPrefab;
     [SerializeField] private AssemblingSource assemblingSource;
+    [SerializeField] private AimingSource aimingSource;
 
     public int LoadoutsLength => assemblingSource.LoadoutsLength;
     public PlatformPrototype PlatformPrototype => assemblingSource.PlatformPrototype;
@@ -14,7 +14,7 @@ public class PlayerPrototypeSource : MonoBehaviour {
     public PlayerPrototype Get() {
         return new PlayerPrototype {
             config = configSource,
-            aimVisualsPrefab = aimVisualsPrefab,
+            aimingPrototype = aimingSource.Get(),
             assemblingPrototype = assemblingSource.Get()
         };
     }

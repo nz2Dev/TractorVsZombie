@@ -15,7 +15,7 @@ public class PlayerModel {
     public Vector3 Position { get; set; }
     
     
-    public TopDownAimInput AimInput { get; set; }
+    
 
     public PlayerModel(PlayerConfig config) {
         this.Config = config;

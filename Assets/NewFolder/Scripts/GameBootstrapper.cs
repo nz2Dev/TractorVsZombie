@@ -176,8 +176,7 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         playerController = new PlayerController(
-            playerView, 
-            new PlayerInput(),
+            playerView,
             physicsService,
             combatSystem,
             cameraProvider,

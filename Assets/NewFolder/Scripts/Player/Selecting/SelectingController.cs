@@ -20,7 +20,7 @@ public class SelectingController {
     }
 
     public int SelectedPlatformCount => model.SelectedPlatformIds.Count;
-    public bool IsSelected(int platformId) => model.SelectedPlatformIds.Contains(platformId);
+    public IReadOnlyList<int> SelectedPlatformIds => model.SelectedPlatformIds;
 
     public void Update() {
         ReadPlatformSelectionInput();
