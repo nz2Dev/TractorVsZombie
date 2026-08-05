@@ -23,14 +23,16 @@ public class PlayerController {
         collectingController = new CollectingController(rewardController);
         cameraController = new CameraController(new CameraView(cameraManager));
         
-        selectingController.OnSelectedPlatformChanged += 
-            () => aimingController.SetManualPlatformIds(selectingController.SelectedPlatformIds);
+        selectingController.OnSelectedPlatformChanged += () => 
+            aimingController.SetManualPlatformIds(selectingController.SelectedPlatformIds);
 
-        collectingController.OnLoadoutCollected += (position, loadoutPrototype) => {
-            assemblingController.AddLoadout(position, loadoutPrototype, model.Config.startOrEndCouplingOfRewards, out var platformState);
-            selectingController.AddOption(platformState.platformId);
-            aimingController.AddControlledPlatformId(platformState.platformId);
+        assemblingController.OnPlatformAdded += (platformId) => {
+            selectingController.AddOption(platformId);
+            aimingController.AddControlledPlatformId(platformId);
         };
+
+        collectingController.OnLoadoutCollected += (position, loadoutPrototype) => 
+            assemblingController.AddLoadout(position, loadoutPrototype, model.Config.startOrEndCouplingOfRewards, out var platformState);
     }
 
     public void Setup(PlayerPrototype prototype) {     
@@ -38,11 +40,6 @@ public class PlayerController {
         aimingController.Init(prototype.aimingPrototype);
         assemblingController.Init(prototype.assemblingPrototype);
         collectingController.Init(prototype.collectingPrototype);
-        
-        foreach (var item in assemblingController.ControlledPlatformIds) {
-            selectingController.AddOption(item);
-            aimingController.AddControlledPlatformId(item);
-        }
     }
 
     public void Update() {

@@ -10,6 +10,8 @@ public class AssemblingController {
 
     private readonly AssemblingModel model;
 
+    public event Action<int> OnPlatformAdded;
+
     public AssemblingController(PlatformController platformController, TruckController truckController) {
         this.platformController = platformController;
         this.truckController = truckController;
@@ -31,6 +33,8 @@ public class AssemblingController {
             CouplePlatformToTheEnd(platformId);
             EquipPlatform(platformId, loadout);
             loadoutPosition += directionStep;
+
+            OnPlatformAdded?.Invoke(platformId);
         }
     }
 
@@ -42,6 +46,8 @@ public class AssemblingController {
             CouplePlatformInFront(platformId);
         else
             CouplePlatformToTheEnd(platformId);
+        
+        OnPlatformAdded?.Invoke(platformId);
     }
 
     private void SpawnDriver() {
