@@ -26,9 +26,9 @@ public class PlayerController {
         assemblingController = new AssemblingController(platformController, truckController);
         selectingController = new SelectingController(new SelectingView(view.uiDocument), platformController);
         aimingController = new AimingController(new AimingView(), cameraProvider, physicsService, combatSystem, platformController, weaponController);
-        selectingController.OnSelectedPlatformChanged += () => {
-            aimingController.SetManualPlatformIds(selectingController.SelectedPlatformIds);
-        };
+        
+        selectingController.OnSelectedPlatformChanged += 
+            () => aimingController.SetManualPlatformIds(selectingController.SelectedPlatformIds);
     }
 
     public void Setup(PlayerPrototype prototype) {     
