@@ -18,6 +18,7 @@ public class PlayerController {
 
     private PlayerModel model;
     private DrivingController drivingController;
+    private CouplingController couplingController;
 
     public PlayerController(PlayerView view, PlayerInput input, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
         RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController truckController) {
@@ -32,6 +33,7 @@ public class PlayerController {
         this.truckController = truckController;
 
         drivingController = new DrivingController(truckController);
+        couplingController = new CouplingController(platformController, truckController);
     }
 
     public void Setup(PlayerPrototype prototype) {     
@@ -47,7 +49,7 @@ public class PlayerController {
         Vector3 loadoutPosition = prototype.initTruckPrototype.position + directionStep; 
         foreach (var loadout in prototype.initLoadoutPrototypes) {    
             SpawnPlatform(loadoutPosition, out var platformId);
-            CouplePlatformToTheEnd(platformId);
+            couplingController.CouplePlatformToTheEnd(platformId);
             EquipPlatform(platformId, loadout);
             loadoutPosition += directionStep;
         }
@@ -74,9 +76,9 @@ public class PlayerController {
                 SpawnPlatform(rewardState.position, out var platformId);
                 EquipPlatform(platformId, rewardState.payload.loadoutPrototype);
                 if (model.Config.startOrEndCouplingOfRewards)
-                    CouplePlatformInFront(platformId);
+                    couplingController.CouplePlatformInFront(platformId);
                 else
-                    CouplePlatformToTheEnd(platformId);
+                    couplingController.CouplePlatformToTheEnd(platformId);
             }
         }
     }
@@ -181,32 +183,6 @@ public class PlayerController {
         if (combatSystem.GetClosestEnemyAgentInRange(platformState.combatId, searchRadius, out var agentInfo)) {
             weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
         }
-    }
-
-    private void CouplePlatformToTheEnd(int platformId) {
-        int targetVehiclePhysicsId;
-        if (model.CoupledPlatformIds.Count > 0) {
-            var lastPlatformId = model.CoupledPlatformIds[^1];
-            targetVehiclePhysicsId = platformController.GetVehiclePhysicsId(lastPlatformId);
-        } else {
-            targetVehiclePhysicsId = truckController.ReadVehiclePhysicsId();
-        }
-
-        platformController.Connect(platformId, targetVehiclePhysicsId);
-        model.CoupledPlatformIds.Add(platformId);
-    }
-
-    private void CouplePlatformInFront(int platformId) {
-        if (model.CoupledPlatformIds.Count > 0) {
-            var firstPlatformId = model.CoupledPlatformIds[0];
-            platformController.Disconnect(firstPlatformId);
-
-            var newPlatformVehiclePhysicsId = platformController.GetVehiclePhysicsId(platformId);
-            platformController.Connect(firstPlatformId, newPlatformVehiclePhysicsId);
-        }
-
-        platformController.Connect(platformId, truckController.ReadVehiclePhysicsId());
-        model.CoupledPlatformIds.Insert(0, platformId);
     }
 
 }

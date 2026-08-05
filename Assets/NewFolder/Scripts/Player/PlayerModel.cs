@@ -17,8 +17,8 @@ public class PlayerModel {
     
     public Vector3 Position { get; set; }
     public List<int> SelectedPlatformIds { get; set; } = new ();
-    public List<int> CoupledPlatformIds { get; } = new ();
     public List<int> ControlledPlatformIds { get; } = new ();
+    
     public TopDownAimInput AimInput { get; set; }
 
     public PlayerModel(PlayerConfig config) {
