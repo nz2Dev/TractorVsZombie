@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class AssemblingController {
 
-    private readonly CouplingController couplingController;
     private readonly PlatformController platformController;
     private readonly TruckController truckController;
 
     private readonly AssemblingModel model;
 
     public AssemblingController(PlatformController platformController, TruckController truckController) {
-        this.couplingController = couplingController = new CouplingController(platformController, truckController);;
         this.platformController = platformController;
         this.truckController = truckController;
         model = new AssemblingModel();
@@ -30,7 +28,7 @@ public class AssemblingController {
         Vector3 loadoutPosition = prototype.initTruckPrototype.position + directionStep; 
         foreach (var loadout in prototype.initLoadoutPrototypes) {    
             SpawnPlatform(loadoutPosition, out var platformId);
-            couplingController.CouplePlatformToTheEnd(platformId);
+            CouplePlatformToTheEnd(platformId);
             EquipPlatform(platformId, loadout);
             loadoutPosition += directionStep;
         }
@@ -41,9 +39,9 @@ public class AssemblingController {
         EquipPlatform(platformId, loadoutPrototype);
         platformState = platformController.ReadPlatformState(platformId);
         if (inFrontOrToTheEnd)
-            couplingController.CouplePlatformInFront(platformId);
+            CouplePlatformInFront(platformId);
         else
-            couplingController.CouplePlatformToTheEnd(platformId);
+            CouplePlatformToTheEnd(platformId);
     }
 
     private void SpawnDriver() {
@@ -57,5 +55,31 @@ public class AssemblingController {
 
     private void EquipPlatform(int platformId, LoadoutPrototype loadout) {
         platformController.SetLoadout(platformId, loadout);
+    }
+
+    public void CouplePlatformToTheEnd(int platformId) {
+        int targetVehiclePhysicsId;
+        if (model.CoupledPlatformIds.Count > 0) {
+            var lastPlatformId = model.CoupledPlatformIds[^1];
+            targetVehiclePhysicsId = platformController.GetVehiclePhysicsId(lastPlatformId);
+        } else {
+            targetVehiclePhysicsId = truckController.ReadVehiclePhysicsId();
+        }
+
+        platformController.Connect(platformId, targetVehiclePhysicsId);
+        model.CoupledPlatformIds.Add(platformId);
+    }
+
+    public void CouplePlatformInFront(int platformId) {
+        if (model.CoupledPlatformIds.Count > 0) {
+            var firstPlatformId = model.CoupledPlatformIds[0];
+            platformController.Disconnect(firstPlatformId);
+
+            var newPlatformVehiclePhysicsId = platformController.GetVehiclePhysicsId(platformId);
+            platformController.Connect(firstPlatformId, newPlatformVehiclePhysicsId);
+        }
+
+        platformController.Connect(platformId, truckController.ReadVehiclePhysicsId());
+        model.CoupledPlatformIds.Insert(0, platformId);
     }
 }
