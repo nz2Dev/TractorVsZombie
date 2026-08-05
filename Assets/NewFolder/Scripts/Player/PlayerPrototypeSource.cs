@@ -6,6 +6,7 @@ public class PlayerPrototypeSource : MonoBehaviour {
     [Inline] [SerializeField] private PlayerConfig configSource;
     [SerializeField] private AssemblingSource assemblingSource;
     [SerializeField] private AimingSource aimingSource;
+    [SerializeField] private CollectingSource collectingSource;
 
     public int LoadoutsLength => assemblingSource.LoadoutsLength;
     public PlatformPrototype PlatformPrototype => assemblingSource.PlatformPrototype;
@@ -15,7 +16,8 @@ public class PlayerPrototypeSource : MonoBehaviour {
         return new PlayerPrototype {
             config = configSource,
             aimingPrototype = aimingSource.Get(),
-            assemblingPrototype = assemblingSource.Get()
+            assemblingPrototype = assemblingSource.Get(),
+            collectingPrototype = collectingSource.Get(),
         };
     }
 
