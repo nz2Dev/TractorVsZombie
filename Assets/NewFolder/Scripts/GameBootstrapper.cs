@@ -56,7 +56,6 @@ public class GameBootstrapper : MonoBehaviour {
             obstacleLayer: LayerMask.NameToLayer(physicsObstacleLayer)
         );
 
-        var playerView = new PlayerView(uiDocument, cameraManager);
         var weaponView = new WeaponView();
         var armorView = new ArmorView(soundManager);
         var platformView = new PlatformView();
@@ -176,7 +175,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         playerController = new PlayerController(
-            playerView,
+            uiDocument,
+            cameraManager,
             physicsService,
             combatSystem,
             cameraProvider,
