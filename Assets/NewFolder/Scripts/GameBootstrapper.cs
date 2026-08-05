@@ -175,15 +175,12 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         playerController = new PlayerController(
-            uiDocument,
-            cameraManager,
-            physicsService,
-            combatSystem,
-            cameraProvider,
-            rewardController,
-            weaponController,
-            platformController,
-            truckController
+            new DrivingController(truckController),
+            new AssemblingController(platformController, truckController),
+            new SelectingController(new SelectingView(uiDocument), platformController),
+            new AimingController(new AimingView(), cameraProvider, physicsService, combatSystem, platformController, weaponController),
+            new CollectingController(rewardController),
+            new CameraController(new CameraView(cameraManager))
         );
 
         var producerFactory = new ProducerFactory(

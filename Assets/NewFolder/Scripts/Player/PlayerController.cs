@@ -10,17 +10,18 @@ public class PlayerController {
     private readonly CollectingController collectingController;
     private readonly CameraController cameraController;
 
-    public PlayerController(UIDocument rootDocument, CameraManager cameraManager, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
-        RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController truckController) {
+    public PlayerController(DrivingController drivingController, AssemblingController assemblingController, 
+        SelectingController selectingController, AimingController aimingController, 
+        CollectingController collectingController, CameraController cameraController) {
         
-        drivingController = new DrivingController(truckController);
-        assemblingController = new AssemblingController(platformController, truckController);
-        selectingController = new SelectingController(new SelectingView(rootDocument), platformController);
-        aimingController = new AimingController(new AimingView(), cameraProvider, physicsService, combatSystem, platformController, weaponController);
-        collectingController = new CollectingController(rewardController);
-        cameraController = new CameraController(new CameraView(cameraManager));
-        
-        selectingController.OnSelectedPlatformChanged += () => 
+        this.drivingController = drivingController;
+        this.assemblingController = assemblingController;
+        this.selectingController = selectingController;
+        this.aimingController = aimingController;
+        this.collectingController = collectingController;
+        this.cameraController = cameraController;
+
+        selectingController.OnSelectedPlatformChanged += () =>
             aimingController.SetManualPlatformIds(selectingController.SelectedPlatformIds);
 
         assemblingController.OnPlatformAdded += (platformId) => {
@@ -28,7 +29,7 @@ public class PlayerController {
             aimingController.AddControlledPlatformId(platformId);
         };
 
-        collectingController.OnLoadoutCollected += (position, loadoutPrototype) => 
+        collectingController.OnLoadoutCollected += (position, loadoutPrototype) =>
             assemblingController.AddLoadout(position, loadoutPrototype, model.Config.startOrEndCouplingOfRewards);
     }
 
