@@ -1,13 +1,7 @@
 using UnityEngine;
 
 public class PlayerInput {
-    internal DrivingInput ReadDrivingInput() {
-        return new DrivingInput {
-            gas = Input.GetAxis("Vertical"),
-            steering = Input.GetAxis("Horizontal"),
-            boost = Input.GetKey(KeyCode.Space),
-        };
-    }
+    
 
     internal bool ReadSelectAllPressed() {
         return Input.GetKeyDown(KeyCode.Alpha0);

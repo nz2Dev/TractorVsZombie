@@ -17,9 +17,10 @@ public class PlayerController {
     private readonly TruckController truckController;
 
     private PlayerModel model;
+    private DriverController driverController;
 
     public PlayerController(PlayerView view, PlayerInput input, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
-        RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController driverController) {
+        RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController truckController) {
         this.view = view;
         this.input = input;
         this.physicsService = physicsService;
@@ -28,7 +29,9 @@ public class PlayerController {
         this.rewardController = rewardController;
         this.weaponController = weaponController;
         this.platformController = platformController;
-        this.truckController = driverController;
+        this.truckController = truckController;
+
+        driverController = new DriverController(truckController);
     }
 
     public void Setup(PlayerPrototype prototype) {     
@@ -56,8 +59,9 @@ public class PlayerController {
             
         SyncPositions();
         CollectRewards();
-        ReadDrivingInput();
-        OperateDriver();
+        
+        driverController.Update();
+
         ReadPlatformSelectionInput();
         ComputeAimInput();
         OperatePlatforms();
@@ -77,17 +81,8 @@ public class PlayerController {
         }
     }
 
-    private void ReadDrivingInput() {
-        model.DrivingInput = input.ReadDrivingInput();
-    }
-
     private void SpawnDriver() {
         truckController.Create(model.TruckPrototype);
-    }
-
-    private void OperateDriver() {
-        truckController.Steer(model.DrivingInput.steering);
-        truckController.Drive(model.DrivingInput.gas, model.DrivingInput.boost);
     }
 
     private void SyncPositions() {
