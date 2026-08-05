@@ -32,7 +32,7 @@ public class PlayerController {
         };
 
         collectingController.OnLoadoutCollected += (position, loadoutPrototype) => 
-            assemblingController.AddLoadout(position, loadoutPrototype, model.Config.startOrEndCouplingOfRewards, out var platformState);
+            assemblingController.AddLoadout(position, loadoutPrototype, model.Config.startOrEndCouplingOfRewards);
     }
 
     public void Setup(PlayerPrototype prototype) {     

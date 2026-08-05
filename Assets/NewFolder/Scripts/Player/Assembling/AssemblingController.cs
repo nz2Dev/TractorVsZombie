@@ -25,33 +25,31 @@ public class AssemblingController {
         SpawnDriver();
         
         model.PickupPlatformPrototype = prototype.pickupPlatformPrototype;
-
-        Vector3 directionStep = prototype.initTruckPrototype.rotation * Vector3.back * 6;
-        Vector3 loadoutPosition = prototype.initTruckPrototype.position + directionStep; 
-        foreach (var loadout in prototype.initLoadoutPrototypes) {    
-            SpawnPlatform(loadoutPosition, out var platformId);
-            CouplePlatformToTheEnd(platformId);
-            EquipPlatform(platformId, loadout);
-            loadoutPosition += directionStep;
-
-            OnPlatformAdded?.Invoke(platformId);
-        }
-    }
-
-    public void AddLoadout(Vector3 position, LoadoutPrototype loadoutPrototype, bool inFrontOrToTheEnd, out PlatformState platformState) {
-        SpawnPlatform(position, out var platformId);
-        EquipPlatform(platformId, loadoutPrototype);
-        platformState = platformController.ReadPlatformState(platformId);
-        if (inFrontOrToTheEnd)
-            CouplePlatformInFront(platformId);
-        else
-            CouplePlatformToTheEnd(platformId);
-        
-        OnPlatformAdded?.Invoke(platformId);
+        SpawnInitPlatforms(prototype.initTruckPrototype.rotation, prototype.initTruckPrototype.position, prototype.initLoadoutPrototypes);
     }
 
     private void SpawnDriver() {
         truckController.Create(model.TruckPrototype);
+    }
+
+    private void SpawnInitPlatforms(Quaternion initRotation, Vector3 initPosition, IEnumerable<LoadoutPrototype> loadoutPrototypes) {
+        Vector3 directionStep = initRotation * Vector3.back * 6;
+        Vector3 loadoutPosition = initPosition + directionStep; 
+        foreach (var loadout in loadoutPrototypes) {    
+            AddLoadout(loadoutPosition, loadout, inFrontOrToTheEnd: false);
+            loadoutPosition += directionStep;
+        }
+    }
+
+    public void AddLoadout(Vector3 position, LoadoutPrototype loadoutPrototype, bool inFrontOrToTheEnd) {
+        SpawnPlatform(position, out var platformId);
+        EquipPlatform(platformId, loadoutPrototype);
+        if (inFrontOrToTheEnd) {
+            CouplePlatformInFront(platformId);
+        } else {
+            CouplePlatformToTheEnd(platformId);
+        }
+        OnPlatformAdded?.Invoke(platformId);
     }
 
     private void SpawnPlatform(Vector3 position, out int platformId) {
