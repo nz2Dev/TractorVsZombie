@@ -2,13 +2,13 @@ using System;
 
 using UnityEngine;
 
-public class DriverController {
+public class DrivingController {
     
     private readonly TruckController truckController;
 
     private DrivingInput input;
 
-    public DriverController(TruckController truckController) {
+    public DrivingController(TruckController truckController) {
         this.truckController = truckController;
     }
 

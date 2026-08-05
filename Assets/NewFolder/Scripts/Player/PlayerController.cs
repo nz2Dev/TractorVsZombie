@@ -17,7 +17,7 @@ public class PlayerController {
     private readonly TruckController truckController;
 
     private PlayerModel model;
-    private DriverController driverController;
+    private DrivingController drivingController;
 
     public PlayerController(PlayerView view, PlayerInput input, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
         RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController truckController) {
@@ -31,7 +31,7 @@ public class PlayerController {
         this.platformController = platformController;
         this.truckController = truckController;
 
-        driverController = new DriverController(truckController);
+        drivingController = new DrivingController(truckController);
     }
 
     public void Setup(PlayerPrototype prototype) {     
@@ -60,7 +60,7 @@ public class PlayerController {
         SyncPositions();
         CollectRewards();
         
-        driverController.Update();
+        drivingController.Update();
 
         ReadPlatformSelectionInput();
         ComputeAimInput();
