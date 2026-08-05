@@ -5,21 +5,17 @@ using UnityEngine;
 public class PlayerPrototypeSource : MonoBehaviour {
     [Inline] [SerializeField] private PlayerConfig configSource;
     [SerializeField] private AimVisuals aimVisualsPrefab;
-    [SerializeField] private TruckSource initTruckSource;
-    [SerializeField] private PlatformSource initPlatformSource;
-    [SerializeField] private LoadoutSource[] initLoadoutSources;
+    [SerializeField] private AssemblingSource assemblingSource;
 
-    public int LoadoutsLength => initLoadoutSources.Length;
-    public PlatformPrototype PlatformPrototype => initPlatformSource.GetPrototype();
-    public LoadoutPrototype GetLoadoutPrototype(int index) => initLoadoutSources[index].GetPrototype();
+    public int LoadoutsLength => assemblingSource.LoadoutsLength;
+    public PlatformPrototype PlatformPrototype => assemblingSource.PlatformPrototype;
+    public LoadoutPrototype GetLoadoutPrototype(int index) => assemblingSource.GetLoadoutPrototype(index);
 
     public PlayerPrototype Get() {
         return new PlayerPrototype {
             config = configSource,
             aimVisualsPrefab = aimVisualsPrefab,
-            initTruckPrototype = initTruckSource.GetPrototype(),
-            initLoadoutPrototypes = initLoadoutSources == null ? new LoadoutPrototype[0] : initLoadoutSources.Select(source => source.GetPrototype()).ToArray(),
-            pickupPlatformPrototype = initPlatformSource.GetPrototype()
+            assemblingPrototype = assemblingSource.Get()
         };
     }
 

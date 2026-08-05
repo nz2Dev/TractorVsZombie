@@ -18,7 +18,7 @@ public class PlayerController {
 
     private PlayerModel model;
     private DrivingController drivingController;
-    private CouplingController couplingController;
+    private AssemblingController assemblingController;
 
     public PlayerController(PlayerView view, PlayerInput input, PhysicsService physicsService, CombatSystem combatSystem, CameraProvider cameraProvider,
         RewardController rewardController, WeaponController weaponController, PlatformController platformController, TruckController truckController) {
@@ -33,25 +33,16 @@ public class PlayerController {
         this.truckController = truckController;
 
         drivingController = new DrivingController(truckController);
-        couplingController = new CouplingController(platformController, truckController);
+        assemblingController = new AssemblingController(platformController, truckController);
     }
 
     public void Setup(PlayerPrototype prototype) {     
         model = new PlayerModel(prototype.config);
         view.SetAimVisuals(prototype.aimVisualsPrefab);
         
-        model.TruckPrototype = prototype.initTruckPrototype;
-        SpawnDriver();
-        
-        model.PickupPlatformPrototype = prototype.pickupPlatformPrototype;
-
-        Vector3 directionStep = prototype.initTruckPrototype.rotation * Vector3.back * 6;
-        Vector3 loadoutPosition = prototype.initTruckPrototype.position + directionStep; 
-        foreach (var loadout in prototype.initLoadoutPrototypes) {    
-            SpawnPlatform(loadoutPosition, out var platformId);
-            couplingController.CouplePlatformToTheEnd(platformId);
-            EquipPlatform(platformId, loadout);
-            loadoutPosition += directionStep;
+        assemblingController.Init(prototype.assemblingPrototype);
+        foreach (var item in assemblingController.ControlledPlatformIds) {
+            view.AddPlatform(platformController.ReadPlatformState(item));
         }
     }
 
@@ -73,18 +64,11 @@ public class PlayerController {
         var collectedRewardStates = rewardController.CollectRewards(model.Position, 3f);
         foreach (var rewardState in collectedRewardStates) {
             if (rewardState.payload.type == RewardType.Loadout) {
-                SpawnPlatform(rewardState.position, out var platformId);
-                EquipPlatform(platformId, rewardState.payload.loadoutPrototype);
-                if (model.Config.startOrEndCouplingOfRewards)
-                    couplingController.CouplePlatformInFront(platformId);
-                else
-                    couplingController.CouplePlatformToTheEnd(platformId);
+                assemblingController.AddLoadout(rewardState.position, 
+                    rewardState.payload.loadoutPrototype, model.Config.startOrEndCouplingOfRewards, out var platformState);
+                view.AddPlatform(platformState);
             }
         }
-    }
-
-    private void SpawnDriver() {
-        truckController.Create(model.TruckPrototype);
     }
 
     private void SyncPositions() {
@@ -97,13 +81,13 @@ public class PlayerController {
 
         if (input.ReadSelectAllPressed()) {
             bool partiallySelected = 
-                model.SelectedPlatformIds.Count != model.ControlledPlatformIds.Count;
+                model.SelectedPlatformIds.Count != assemblingController.ControlledPlatformIds.Count;
             
             toggledIds = partiallySelected
-                ? model.ControlledPlatformIds.Except(model.SelectedPlatformIds)
-                : model.ControlledPlatformIds;
+                ? assemblingController.ControlledPlatformIds.Except(model.SelectedPlatformIds)
+                : assemblingController.ControlledPlatformIds;
         } else if (input.ReadSelectionIndexPressed(out var pressedIndex)) {
-            toggledIds = new[] { model.ControlledPlatformIds[pressedIndex] };
+            toggledIds = new[] { assemblingController.ControlledPlatformIds[pressedIndex] };
         }
 
         bool hasEffect = false;
@@ -153,19 +137,8 @@ public class PlayerController {
         view.UpdateAim(model.AimInput);
     }
 
-    private void SpawnPlatform(Vector3 position, out int platformId) {
-        platformId = platformController.Create(model.PickupPlatformPrototype, position);
-        model.ControlledPlatformIds.Add(platformId);
-        view.AddPlatform(platformController.ReadPlatformState(platformId));
-    }
-
-    private void EquipPlatform(int platformId, LoadoutPrototype loadout) {
-        platformController.SetLoadout(platformId, loadout);
-        view.UpdatePlatform(platformController.ReadPlatformState(platformId));
-    }
-
     private void OperatePlatforms() {
-        foreach (var platformId in model.ControlledPlatformIds) {
+        foreach (var platformId in assemblingController.ControlledPlatformIds) {
             if (model.SelectedPlatformIds.Contains(platformId)) {
                 OperateFromInput(platformController.ReadPlatformState(platformId));
             } else {

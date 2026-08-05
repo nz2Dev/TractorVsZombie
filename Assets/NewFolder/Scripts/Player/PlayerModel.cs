@@ -12,12 +12,8 @@ public class PlayerModel {
 
     public PlayerConfig Config { get; }
 
-    public TruckPrototype TruckPrototype { get; set; }
-    public PlatformPrototype PickupPlatformPrototype { get; set; }
-    
     public Vector3 Position { get; set; }
     public List<int> SelectedPlatformIds { get; set; } = new ();
-    public List<int> ControlledPlatformIds { get; } = new ();
     
     public TopDownAimInput AimInput { get; set; }
 
