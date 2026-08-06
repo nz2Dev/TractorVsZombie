@@ -95,7 +95,7 @@ public class AssemblingController {
             }
         }
 
-        if (tail.IsPlatformCreated && !tail.isConnected) {
+        if (tail.IsPlatformCreated) {
             int headPhysicsId = -1;
             if (head.isTruck) {
                 headPhysicsId = truckController.ReadVehiclePhysicsId();
@@ -103,9 +103,14 @@ public class AssemblingController {
                 headPhysicsId = platformController.GetVehiclePhysicsId(head.platformId);
             }
 
-            if (headPhysicsId != -1) {
+            if (tail.IsPlatformConnected && tail.connectedVehiclePhysicsId != headPhysicsId) {
+                platformController.Disconnect(tail.platformId);
+                tail.ResetConnectedPlatformId();
+            }
+
+            if (!tail.IsPlatformConnected && headPhysicsId != -1) {
                 platformController.Connect(tail.platformId, headPhysicsId);
-                tail.isConnected = true;
+                tail.connectedVehiclePhysicsId = headPhysicsId;
             }
         }
     }

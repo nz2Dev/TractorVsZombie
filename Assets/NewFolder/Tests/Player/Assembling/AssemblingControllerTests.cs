@@ -94,6 +94,8 @@ public class AssemblingControllerTests {
 
         platformMock.SetupSequence(m => m.Create(It.IsAny<PlatformPrototype>(), It.IsAny<Vector3>()))
             .Returns(1).Returns(2).Returns(3).Returns(4);
+        platformMock.Setup(m => m.GetVehiclePhysicsId(It.IsAny<int>()))
+            .Returns<int>(val => val);
 
         controller.Init(assemblingPrototype);
         // init loadout will have platformId = 1
@@ -105,6 +107,7 @@ public class AssemblingControllerTests {
 
         platformMock.Verify(m => m.Disconnect(1), Times.Once);
         platformMock.Verify(m => m.Connect(1, It.IsAny<int>()), Times.Exactly(2));
+        platformMock.Verify(m => m.Connect(2, It.IsAny<int>()), Times.Once);
     }
 
 }
