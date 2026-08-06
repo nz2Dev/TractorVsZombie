@@ -43,7 +43,7 @@ public class ArmorController {
         var model = new ArmorModel(nextId, prototype.position, prototype.config);
         registry[model.Id] = model;
         
-        model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.config.combatConfig);
+        model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.vehiclePrefab);
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
         

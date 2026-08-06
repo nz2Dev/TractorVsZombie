@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Unity.Jobs;
@@ -14,8 +15,8 @@ public class CombatSystem {
     private int idCounter;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
     private readonly SpatialLookup<CombatAgent> alieLookup = new SpatialLookup<CombatAgent>(128);
-    private readonly CollisionLookup<CombatAgent> alieCollisionsLookup;
     private readonly SpatialLookup<CombatAgent> foeLookup = new SpatialLookup<CombatAgent>(1024);
+    private readonly CollisionLookup<CombatAgent> alieCollisionsLookup;
     private readonly CollisionLookup<CombatAgent> foeCollisionLookup;
 
     public CombatSystem(int agentsLayer, int foeAgentsLayer, LayerMask obstaclesMask) {
@@ -61,20 +62,15 @@ public class CombatSystem {
         }
     }
 
-    public int RegisterAgent(Vector3 position, CombatAgentConfig config) {
-        return RegisterAgent(position, config.alie, config.maxHealth, config.collisionHeight, config.collisionRadius);
-    }
-
-    public int RegisterAgent(Vector3 position, bool alie, int maxHealth = 1, float height = 1f, float radius = .3f) {
+    public int RegisterAgent(Vector3 position, CombatAgentPrototype prototype) {
         var agentId = idCounter++;
-        var agent = new CombatAgent(agentId, alie, maxHealth, height) {
-            Position = position,
-            Health = maxHealth
-        };
+        var agent = new CombatAgent(agentId, prototype.alie, prototype.config, prototype.collider.height);
+        agent.Position = position;
+        agent.Health = agent.Config.maxHealth;
         agents[agentId] = agent;
         
-        if (alie) alieCollisionsLookup.Add(agent, position, height, radius);
-        else foeCollisionLookup.Add(agent, position, height, radius);
+        if (prototype.alie) alieCollisionsLookup.Add(agent, position, prototype.collider.height, prototype.collider.radius);
+        else foeCollisionLookup.Add(agent, position, prototype.collider.height, prototype.collider.radius);
         
         return agentId;
     }

@@ -4,7 +4,7 @@ internal class CombatAgent : IPositionSource, IMetadata {
     
     public int Id { get; }
     public bool Alie { get; }
-    public int MaxHealth { get; }
+    public CombatAgentConfig Config { get; }
     public float Height { get; }
 
     public Vector3 Position { get; set; }
@@ -19,10 +19,10 @@ internal class CombatAgent : IPositionSource, IMetadata {
 
     public CombatOutputInfo Output { get; set; }
 
-    public CombatAgent(int id, bool alie, int maxHealth, float height) {
+    public CombatAgent(int id, bool alie, CombatAgentConfig config, float height) {
         Id = id;
         Alie = alie;
-        MaxHealth = maxHealth;
+        Config = config;
         Height = height;
     }
 

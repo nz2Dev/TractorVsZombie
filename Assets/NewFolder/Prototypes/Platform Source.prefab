@@ -30,6 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4927973788717499444}
   - {fileID: 8187107323059989604}
   - {fileID: 8896390779058712844}
   - {fileID: 2843252585603288568}
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::PlatformSource
   config: {fileID: 11400000, guid: dac4c19d2445744d3a7e444a64102c1f, type: 2}
+  combatAgentSource: {fileID: 4358577396440551418}
   visualsPrefab: {fileID: 788712317402739098}
   vehiclePrefab: {fileID: 4776735525413602875}
   loadoutOffset: {x: 0, y: 0.75, z: 0}
@@ -97,6 +99,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::RamEffectSource
   config: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
+--- !u!1 &2731906827672177431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4927973788717499444}
+  - component: {fileID: 4358577396440551418}
+  m_Layer: 0
+  m_Name: Combat Agent Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4927973788717499444
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2731906827672177431}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2119333286541025500}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4358577396440551418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2731906827672177431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2b40557f116f4c489e0b5cb26e445b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::CombatAgentSource
+  alie: 1
+  configSource:
+    maxHealth: 100
+  colliderSource:
+    height: 1
+    radius: 3
 --- !u!1001 &5068331426846624877
 PrefabInstance:
   m_ObjectHideFlags: 0

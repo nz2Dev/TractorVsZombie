@@ -10,4 +10,5 @@ public struct ProductionBuildingPrototype {
     public ProductionBuildingConfig config;
     public SpawnSpot spawnSpot;
     public SpawnVariant spawnVariant;
+    public CombatAgentPrototype combatAgentPrototype;
 }

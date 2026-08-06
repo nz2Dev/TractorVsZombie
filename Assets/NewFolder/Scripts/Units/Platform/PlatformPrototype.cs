@@ -8,4 +8,5 @@ public struct PlatformPrototype {
     public UnityVehicle vehiclePrefab;
     public RamEffectPrototype ramPrototype;
     public Vector3 loadoutOffset;
+    public CombatAgentPrototype combatAgentPrototype;
 }

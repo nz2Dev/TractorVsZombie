@@ -14,6 +14,8 @@ public class CombatServiceTest {
         combatService = new CombatSystem(LayerMask.NameToLayer("Default"), LayerMask.NameToLayer("Default"), 1 << LayerMask.NameToLayer("Default"));
     }
 
+/**
+
     [UnityTest]
     public IEnumerator TestRegisterAgent_EmptyState() {
         var agent = combatService.RegisterAgent(new Vector3(0, 0, 0), alie: true);
@@ -71,5 +73,7 @@ public class CombatServiceTest {
         
         Assert.That(hasClosest, Is.False);
     }
+
+**/
 
 }

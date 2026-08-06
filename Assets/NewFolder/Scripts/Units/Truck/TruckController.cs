@@ -33,7 +33,7 @@ public class TruckController {
 
     public virtual void Create(TruckPrototype prototype, Vector3 position = default) {
         model = new TruckModel(prototype.config, position == default ? prototype.position : position);
-        model.CombatId = combatSystem.RegisterAgent(model.Position, alie: true);
+        model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.combatAgentPrototype);
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab, prototype.rotation);
         view.Show(model.Position, prototype.visualsPrefab, prototype.engineLoopSFX);

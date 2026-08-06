@@ -11,6 +11,7 @@ public class ProductionBuildingSource : MonoBehaviour {
     [SerializeField] private int uniqueId = 0;
     [Space]
     [Inline] [SerializeField] private ProductionBuildingConfig config;
+    [Inline, SerializeField] private CombatAgentSource combatAgentSource;
     [Local] [SerializeField] private PhysicsObstacle dimensionsPrefab;
     [Local] [SerializeField] private PhysicsObstacleNew physicsObstaclePrefab;
     [Local] [SerializeField] private GameObject visualsPrefab;
@@ -48,6 +49,7 @@ public class ProductionBuildingSource : MonoBehaviour {
             dimensionsPrefab = dimensionsPrefab,
             physicsObstaclePrefab = physicsObstaclePrefab,
             visualsPrefab = visualsPrefab,
+            combatAgentPrototype = combatAgentSource.Get(),
         };
     }
 }

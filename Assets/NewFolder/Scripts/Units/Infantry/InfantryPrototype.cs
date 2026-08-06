@@ -6,4 +6,5 @@ public struct InfantryPrototype {
     public InfantryVisuals visualsPrefab;
     public RewardPrototype rewardPrototype;
     public PhysicsBody physicsBodyPrefab;
+    public CombatAgentPrototype combatAgentPrototype;
 }

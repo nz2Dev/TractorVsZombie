@@ -33,7 +33,7 @@ public class PlatformController {
         registry[model.Id] = model;
         
         model.LoadoutOffset = prototype.loadoutOffset;
-        model.CombatId = combatSystem.RegisterAgent(model.Position, true);
+        model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.combatAgentPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab);
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
         view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab);

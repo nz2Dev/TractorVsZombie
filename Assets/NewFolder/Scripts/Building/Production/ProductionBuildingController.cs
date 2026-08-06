@@ -74,7 +74,7 @@ public class ProductionBuildingController {
         model.QueueAmount = prototype.config.initialQueueAmount;
         model.NextSpawnTime = Time.time;
 
-        model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.config.alie, model.Config.maxHealth, prototype.config.height);
+        model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.combatAgentPrototype);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.dimensionsPrefab);
         model.VehicleObstacleId = vehicleService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
         model.PhysicsObstacleId = physicsService.RegisterObstacle(model.Position, prototype.physicsObstaclePrefab);

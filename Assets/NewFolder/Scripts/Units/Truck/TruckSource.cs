@@ -3,6 +3,7 @@ using UnityEngine;
 public class TruckSource : MonoBehaviour {
 
     [Inline] [SerializeField] private TruckConfig config;
+    [Inline, SerializeField] private CombatAgentSource combatAgentSource;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [Local] [SerializeField] private TruckVisuals visualsPrefab;
     [Local] [SerializeField] private RamEffectSource ramSource;
@@ -21,6 +22,7 @@ public class TruckSource : MonoBehaviour {
             vehiclePrefab = vehiclePrefab,
             visualsPrefab = visualsPrefab,
             engineLoopSFX = engineLoopSFX,
+            combatAgentPrototype = combatAgentSource.Get()
         };
     }
 }

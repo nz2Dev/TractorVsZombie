@@ -38,10 +38,7 @@ public class InfantryController {
         registry[model.Id] = model;
         
         model.Position = prototype.position;
-        model.CombatId = combatSystem.RegisterAgent(
-            prototype.position, model.Config.alie, 
-            maxHealth: model.Config.maxHealth, height: model.Config.hitboxHeight, radius: model.Config.hitboxRadius
-        );
+        model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
         model.BodyPhysicsId = physicsService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, model.Config.agentAvoidanceConfig);
         model.RewardPrototype = prototype.rewardPrototype;

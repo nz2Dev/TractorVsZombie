@@ -8,4 +8,5 @@ public struct TruckPrototype {
     public UnityVehicle vehiclePrefab;
     public TruckVisuals visualsPrefab;
     public AudioClip engineLoopSFX;
+    public CombatAgentPrototype combatAgentPrototype;
 }

@@ -10,4 +10,5 @@ public struct ArmorPrototype {
     public WeaponPrototype localWeaponPrototype;
     public RamEffectPrototype ramPrototype;
     public RewardPrototype rewardPrototype;
+    public CombatAgentPrototype combatAgentPrototype;
 }
