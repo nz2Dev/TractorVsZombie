@@ -92,11 +92,11 @@ public class CombatSystem {
         else foeCollisionLookup.Update(agent, position);
     }
 
-    public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage) {
-        return ApplyProjectileDamage(agentId, position, direction, damage, out var _);
+    public bool ApplyProjectileDamage(int agentId, Vector3 position, float testDistance, Vector3 direction, int damage) {
+        return ApplyProjectileDamage(agentId, position, direction, testDistance, damage, out var _);
     }
 
-    public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, int damage, out Vector3 hitDirection) {
+    public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, float testDistance, int damage, out Vector3 hitDirection) {
         hitDirection = Vector3.zero;
         if (!agents.TryGetValue(agentId, out var agent)) {
             return false;
@@ -104,7 +104,7 @@ public class CombatSystem {
 
         // Combat System should only check for agents collisions (obstacles is projectile source responsibilities)
         var enemyCollisionLookup = agent.Alie ? foeCollisionLookup : alieCollisionsLookup;
-        if (!enemyCollisionLookup.Raycast(position, direction, 0.25f, out var hitAgent, out var hitInfo)) {
+        if (!enemyCollisionLookup.Raycast(position, direction, testDistance, out var hitAgent, out var hitInfo)) {
             return false;
         }
         

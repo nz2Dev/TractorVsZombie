@@ -28,7 +28,7 @@ public class CombatServiceTest {
         var agent1 = combatService.RegisterAgent(new Vector3(0, 0, 0), alie: true);
         var agent2 = combatService.RegisterAgent(new Vector3(0, 0, 2), alie: true);
         yield return new WaitForFixedUpdate();
-        var applyResult = combatService.ApplyProjectileDamage(agent1, new Vector3(0, 0, 1.9f), Vector3.forward, 1);
+        var applyResult = combatService.ApplyProjectileDamage(agent1, new Vector3(0, 0, 1.9f), 0.25f, Vector3.forward, 1);
         Assert.That(applyResult, Is.True);
         Assert.That(combatService.GetCombatOutput(agent2).wasProjectiled, Is.True);
     }
