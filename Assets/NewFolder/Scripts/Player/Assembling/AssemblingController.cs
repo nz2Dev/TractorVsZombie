@@ -87,6 +87,7 @@ public class AssemblingController {
             platformController.Connect(disconnectedPlatformId, platformController.GetVehiclePhysicsId(platformId));
             platformController.Connect(platformId, truckController.ReadVehiclePhysicsId());
             smoothLoadout = null;
+            OnPlatformAdded?.Invoke(platformId);
         }
     }
 
