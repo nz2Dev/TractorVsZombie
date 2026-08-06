@@ -59,4 +59,28 @@ public class AssemblingControllerTests {
         platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Once);
     }
 
+    [Test]
+    public void AddLoadout_AfterInitAndOutsideHeadPosition_SpawnAfterUpdate() {
+        var nearHeadPosition = new Vector3(2, 0, 0);
+        var outsideHeadPosition = new Vector3(8, 0, 0);
+        var addedLoadout = new LoadoutPrototype {
+            position = new Vector3(2, 0, 0),
+        };
+        var assemblingPrototype = new AssemblingPrototype { 
+            initLoadoutPrototypes = new LoadoutPrototype[] { new () }
+        };
+
+        controller.Init(assemblingPrototype);
+        truckMock.Setup(m => m.ReadVehiclePosition()).Returns(nearHeadPosition);
+        controller.AddLoadout(nearHeadPosition, addedLoadout, true);
+        controller.Update();
+
+        platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Once);
+
+        truckMock.Setup(m => m.ReadVehiclePosition()).Returns(outsideHeadPosition);
+        controller.Update();
+        
+        platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Exactly(2));
+    }
+
 }
