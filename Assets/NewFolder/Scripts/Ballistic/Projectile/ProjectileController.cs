@@ -6,16 +6,14 @@ using UnityEngine;
 public class ProjectileController {
 
     private readonly ProjectileView view;
-    private readonly SoundManager soundManager;
     private readonly CombatSystem combatSystem;
 
     private int idCounter = 0;
     private readonly Dictionary<int, ProjectileModel> registry = new ();
     private readonly List<int> removeBuffer = new(16);
 
-    public ProjectileController(CombatSystem combatSystem, SoundManager soundManager, ProjectileView view) {
+    public ProjectileController(CombatSystem combatSystem, ProjectileView view) {
         this.combatSystem = combatSystem;
-        this.soundManager = soundManager;
         this.view = view;
     }
 
