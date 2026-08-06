@@ -47,7 +47,7 @@ public class RaycastService {
         var overlapCount = physicsManager.OverlapReservedMarkers(position, radius, out var resultsBuffer, layerCode);
         metadataOverlapResultBuffer.Clear();
         for (int i = 0; i < overlapCount; i++) {
-            metadataOverlapResultBuffer[i] = markerToMetadata[resultsBuffer[i].gameObject];
+            metadataOverlapResultBuffer.Add(markerToMetadata[resultsBuffer[i].gameObject]);
         }
         metadataResultBuffer = metadataOverlapResultBuffer;
         return overlapCount;

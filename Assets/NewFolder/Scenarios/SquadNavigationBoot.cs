@@ -2,6 +2,7 @@ using UnityEditor;
 
 using UnityEngine;
 
+// TODO: remove this
 public class SquadNavigationBoot : MonoBehaviour {
 
     public static SquadNavigationBoot Instance;
@@ -20,7 +21,7 @@ public class SquadNavigationBoot : MonoBehaviour {
         var avoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
         
-        combatSystem = new CombatSystem(agentsLayer, foeAgentsLayer, obstaclesMask);
+        combatSystem = new CombatSystem(null);
         
         rewardController = new RewardController(new RewardView());
         infantryController = new InfantryController(combatSystem, new InfantryView(), rewardController, physicsService, avoidanceService);

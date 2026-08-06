@@ -7,25 +7,17 @@ using UnityEngine;
 
 public class CombatSystem {
 
-    private readonly LayerMask alieAgentsMask;
-    private readonly LayerMask alieAgentsAndObstaclesMask;
-    private readonly LayerMask foeAgentsMask;
-    private readonly LayerMask foeAgentsAndObstaclesMask;
+    private static ReservedLayerCode MapFactionToLayerCode(bool alie) => alie ? ReservedLayerCode.First : ReservedLayerCode.Second;
+
+    private readonly RaycastService raycastService;
 
     private int idCounter;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
     private readonly SpatialLookup<CombatAgent> alieLookup = new SpatialLookup<CombatAgent>(128);
     private readonly SpatialLookup<CombatAgent> foeLookup = new SpatialLookup<CombatAgent>(1024);
-    private readonly CollisionLookup<CombatAgent> alieCollisionsLookup;
-    private readonly CollisionLookup<CombatAgent> foeCollisionLookup;
 
-    public CombatSystem(int agentsLayer, int foeAgentsLayer, LayerMask obstaclesMask) {
-        this.alieAgentsMask = 1 << agentsLayer;
-        this.alieAgentsAndObstaclesMask = alieAgentsMask | obstaclesMask;
-        this.foeAgentsMask = 1 << foeAgentsLayer;
-        this.foeAgentsAndObstaclesMask = foeAgentsMask | obstaclesMask;
-        alieCollisionsLookup = new CollisionLookup<CombatAgent>(agentsLayer, 64);
-        foeCollisionLookup = new CollisionLookup<CombatAgent>(foeAgentsLayer, 512);
+    public CombatSystem(RaycastService raycastService) {
+        this.raycastService = raycastService;
     }
 
     public void Update() {
@@ -64,28 +56,24 @@ public class CombatSystem {
 
     public int RegisterAgent(Vector3 position, CombatAgentPrototype prototype) {
         var agentId = idCounter++;
-        var agent = new CombatAgent(agentId, prototype.alie, prototype.config, prototype.collider.height);
+        var agent = new CombatAgent(agentId, prototype.alie, prototype.config, prototype.markerPrefab.Height);
         agent.Position = position;
         agent.Health = agent.Config.maxHealth;
         agents[agentId] = agent;
-        
-        if (prototype.alie) alieCollisionsLookup.Add(agent, position, prototype.collider.height, prototype.collider.radius);
-        else foeCollisionLookup.Add(agent, position, prototype.collider.height, prototype.collider.radius);
-        
+        var layerCode = MapFactionToLayerCode(agent.Alie);
+        raycastService.RegisterMarker(agentId, position, prototype.markerPrefab, layerCode);
         return agentId;
     }
 
     public void UnregisterAgent(int agentId) {
         agents.Remove(agentId, out var agent);
-        if (agent.Alie) alieCollisionsLookup.Remove(agent);
-        else foeCollisionLookup.Remove(agent);
+        raycastService.UnregisterMarker(agentId);
     }
 
     public void UpdateAgentPosition(int agentId, Vector3 position) {
         var agent = agents[agentId];
         agent.Position = position;
-        if (agent.Alie) alieCollisionsLookup.Update(agent, position);
-        else foeCollisionLookup.Update(agent, position);
+        raycastService.UpdateMarker(agentId, position);
     }
 
     public bool ApplyProjectileDamage(int agentId, Vector3 position, float testDistance, Vector3 direction, int damage) {
@@ -98,12 +86,13 @@ public class CombatSystem {
             return false;
         }
 
-        // Combat System should only check for agents collisions (obstacles is projectile source responsibilities)
-        var enemyCollisionLookup = agent.Alie ? foeCollisionLookup : alieCollisionsLookup;
-        if (!enemyCollisionLookup.Raycast(position, direction, testDistance, out var hitAgent, out var hitInfo)) {
+        var enemyFaction = !agent.Alie;
+        var enemyLayerCode = MapFactionToLayerCode(enemyFaction);
+        if (!raycastService.Raycast(new Ray(position, direction), testDistance, enemyLayerCode, out var hitAgentId, out var hitInfo)) {
             return false;
         }
         
+        var hitAgent = agents[hitAgentId];
         if (hitAgent.Id != agentId) {
             hitAgent.DamageByProjectile = true;
             hitAgent.ReceivedDamage = damage;
@@ -115,11 +104,13 @@ public class CombatSystem {
 
     public int ApplyExplosionDamage(int sourceAgentId, Vector3 position, float triggerRadius, int damage, ExplosionData explosionData) {
         var sourceAgent = agents[sourceAgentId];
-        var collisionsLookup = sourceAgent.Alie ? foeCollisionLookup : alieCollisionsLookup;
-        var overlapCount = collisionsLookup.Overlap(position, triggerRadius, out var results);
+        var enemyFaction = !sourceAgent.Alie;
+        var enemyLayerCode = MapFactionToLayerCode(enemyFaction);
+        
+        var overlapCount = raycastService.Overlap(position, triggerRadius, enemyLayerCode, out var agentIdResults);
         int affectedCount = 0;
         for (int i = 0; i < overlapCount; i++) {
-            var affectedAgent = results[i];
+            var affectedAgent = agents[agentIdResults[i]];
             if (affectedAgent.Id != sourceAgentId) {
                 affectedAgent.DamageByExplosion = true;
                 affectedAgent.ExplosionData = explosionData;

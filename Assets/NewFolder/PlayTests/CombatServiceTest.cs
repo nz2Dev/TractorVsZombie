@@ -11,7 +11,7 @@ public class CombatServiceTest {
 
     [SetUp]
     public void SetUp() {
-        combatService = new CombatSystem(LayerMask.NameToLayer("Default"), LayerMask.NameToLayer("Default"), 1 << LayerMask.NameToLayer("Default"));
+        // combatService = new CombatSystem(LayerMask.NameToLayer("Default"), LayerMask.NameToLayer("Default"), 1 << LayerMask.NameToLayer("Default"));
     }
 
 /**

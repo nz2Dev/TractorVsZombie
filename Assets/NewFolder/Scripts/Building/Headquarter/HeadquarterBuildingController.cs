@@ -32,7 +32,7 @@ public class HeadquarterBuildingController {
         headquarter = new HeadquarterBuilding(prototype.config);
         headquarter.Position = prototype.position;
         headquarter.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
-        headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.position, (int) prototype.combatAgentPrototype.collider.radius); // need separate component for this
+        headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.position, (int) prototype.combatAgentPrototype.markerPrefab.Radius); // need separate component for this
         headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.position, prototype.rotation, prototype.config.avoidanceObstaclePrefab);
         headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(prototype.position, prototype.config.vehicleObstaclePrefab);
         headquarter.PhysicsObstacleId = physicsService.RegisterObstacle(prototype.position, prototype.config.physicsObstaclePrefab);
