@@ -264,11 +264,9 @@ MonoBehaviour:
   soundManager: {fileID: 1012605277}
   cameraManager: {fileID: 870686408}
   physicsManager: {fileID: 503836846}
-  physicsServiceLayer: UnitPhysics
   combatServiceLayer: Combat
   foeCombatServiceLayer: CombatFoe
   vehicleObstacleLayer: Walls
-  physicsObstacleLayer: Walls
   combatServiceEnvironmentMask:
     serializedVersion: 2
     m_Bits: 2177
@@ -316,12 +314,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9817a573e2e14ec7bd2215cacd4a631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::PhysicsManager
+  overlapBufferSize: 128
   groundMask:
     serializedVersion: 2
     m_Bits: 128
   environmentMask:
     serializedVersion: 2
     m_Bits: 2176
+  firstReservedRaycastLayer: 12
+  secondReservedRaycastLayer: 16
 --- !u!1 &804724241
 GameObject:
   m_ObjectHideFlags: 0
