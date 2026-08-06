@@ -10,6 +10,10 @@ public class VehicleTowing : MonoBehaviour {
     [SerializeField, ReadOnly] internal VehicleTowingConnector towingConnector;
     [SerializeField, Inline] internal ConfigurableJoint towingJoint;
 
+    private bool performConnection;
+    private bool performClearing;
+    private IVehiclePullingConnectorProvider newConnectorProvider;
+
 #if UNITY_EDITOR
     private void OnValidate() {
         var towingConnectorProvider = GetComponent<IVehicleTowingConnectorProvider>();
@@ -27,6 +31,27 @@ public class VehicleTowing : MonoBehaviour {
         AdjustTowingJoint();
     }
 
+    public void MakeConnection(IVehiclePullingConnectorProvider pullingConnectorProvider) {
+        newConnectorProvider = pullingConnectorProvider;
+        performConnection = true;
+        performClearing = false;
+    }
+
+    public void ClearConnection() {
+        performClearing = true;
+    }
+
+    private void FixedUpdate() {
+        if (performClearing) {
+            PerformConnectionClearing();
+            performClearing = false;
+        }
+        if (performConnection) {
+            PerformConnection(newConnectorProvider);
+            performConnection = false;
+        }
+    }
+
     private void AdjustTowingJoint() {
         towingJoint.autoConfigureConnectedAnchor = false;
         towingJoint.anchor = towingConnector.anchorOffsetLocalSpace;
@@ -40,7 +65,7 @@ public class VehicleTowing : MonoBehaviour {
         towingJoint.lowAngularXLimit = new SoftJointLimit { limit = -20 };
     }
 
-    public void MakeConnection(IVehiclePullingConnectorProvider pullingConnectorProvider) {
+    private void PerformConnection(IVehiclePullingConnectorProvider pullingConnectorProvider) {
         var pullingConnector = pullingConnectorProvider.GetPullingConnector();
         towingJoint.connectedBody = pullingConnector.rigidbody;
         towingJoint.connectedAnchor = pullingConnector.anchorOffsetLocalSpace;
@@ -49,7 +74,7 @@ public class VehicleTowing : MonoBehaviour {
         towingJoint.zMotion = ConfigurableJointMotion.Limited;
     }
 
-    public void ClearConnection() {
+    private void PerformConnectionClearing() {
         towingJoint.connectedBody = null;
         towingJoint.xMotion = ConfigurableJointMotion.Free;
         towingJoint.yMotion = ConfigurableJointMotion.Free;
