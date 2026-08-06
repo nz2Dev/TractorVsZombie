@@ -13,11 +13,11 @@
   <Project Path="NewFolder.PlayTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="VehiclePhysics.PlayTests.csproj" />
+  <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="VehiclePhysics.csproj" />
   <Project Path="CaravanPlaygroundEditor.csproj" />
   <Project Path="Playground.Example.PlayTests.csproj" />
   <Project Path="Playground.Example.csproj" />
-  <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
   <Project Path="CollisionLookup.csproj" />
 </Solution>
