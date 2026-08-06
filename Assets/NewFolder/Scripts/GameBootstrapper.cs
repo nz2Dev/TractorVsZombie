@@ -69,8 +69,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         projectileController = new ProjectileController(
             combatSystem,
-            soundManager,
-            projectileView
+            projectileView,
+            physicsService
         );
 
         rocketController = new RocketController(

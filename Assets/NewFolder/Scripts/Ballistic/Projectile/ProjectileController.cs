@@ -7,14 +7,16 @@ public class ProjectileController {
 
     private readonly ProjectileView view;
     private readonly CombatSystem combatSystem;
+    private readonly PhysicsService physicsService;
 
     private int idCounter = 0;
     private readonly Dictionary<int, ProjectileModel> registry = new ();
     private readonly List<int> removeBuffer = new(16);
 
-    public ProjectileController(CombatSystem combatSystem, ProjectileView view) {
+    public ProjectileController(CombatSystem combatSystem, ProjectileView view, PhysicsService physicsService) {
         this.combatSystem = combatSystem;
         this.view = view;
+        this.physicsService = physicsService;
     }
 
     public void Create(int shooterId, ProjectilePrototype prototype, Orientation orientation) {
@@ -33,7 +35,7 @@ public class ProjectileController {
     public void Update() {
         MoveProjectiles();
         UpdateProjectileHits();
-        AgeProjectiles();
+        ValidateProjectils();
         FilterDeadProjectiles();
     }
 
@@ -55,11 +57,19 @@ public class ProjectileController {
         }
     }
 
-    private void AgeProjectiles() {
+    private void ValidateProjectils() {
         foreach (var projectile in registry.Values) {
             if (!projectile.IsDead && projectile.SpawnTime + projectile.Config.lifetime < Time.time) {
                 projectile.IsDead = true;
                 view.ShowBulletDisappear(projectile.Id);
+            }
+            if (!projectile.IsDead) {
+                var projectileRay = new Ray(projectile.Position, projectile.Velocity);
+                var projectileHitCheckDistance = 0.5f;
+                if (physicsService.RaycastEnvironment(projectileRay, projectileHitCheckDistance, out var position, out var normal)) {
+                    view.ShowBulletCrash(projectile.Id, position, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, normal);
+                    projectile.IsDead = true;
+                }
             }
         }
     }

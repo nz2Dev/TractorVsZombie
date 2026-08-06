@@ -29,4 +29,7 @@ public class PhysicsManager : MonoBehaviour {
         return Physics.Raycast(ray, out hitInfo, maxDistance, groundMask);
     }
 
+    internal bool RaycastEnvironment(Ray ray, float maxDistance, out RaycastHit hitInfo) {
+        return Physics.Raycast(ray, out hitInfo, maxDistance, environmentMask);
+    }
 }

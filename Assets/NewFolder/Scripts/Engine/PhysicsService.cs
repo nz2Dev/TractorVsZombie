@@ -110,4 +110,11 @@ public class PhysicsService {
         }
     }
 
+    public bool RaycastEnvironment(Ray ray, float maxDistance, out Vector3 position, out Vector3 normal) {
+        var result = physicsManager.RaycastEnvironment(ray, maxDistance, out var hitInfo);
+        position = hitInfo.point;
+        normal = hitInfo.normal;
+        return result;
+    }
+
 }
