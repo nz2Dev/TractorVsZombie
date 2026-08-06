@@ -83,4 +83,28 @@ public class AssemblingControllerTests {
         platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Exactly(2));
     }
 
+    [Test]
+    public void AddLoadout_InFrontOfExistingInBetween_ShouldReconectInOrder() {
+        var headPosition = new Vector3(10, 0, 0);
+        var addedLoadoutPosition = new Vector3(5, 0, 0);
+        var addedLoadout = new LoadoutPrototype {};
+        var assemblingPrototype = new AssemblingPrototype { 
+            initLoadoutPrototypes = new LoadoutPrototype[] { new () }
+        };
+
+        platformMock.SetupSequence(m => m.Create(It.IsAny<PlatformPrototype>(), It.IsAny<Vector3>()))
+            .Returns(1).Returns(2).Returns(3).Returns(4);
+
+        controller.Init(assemblingPrototype);
+        // init loadout will have platformId = 1
+        controller.AddLoadout(addedLoadoutPosition, addedLoadout, 
+            trueInFront_falseToTheEnd: true);
+        // second loadout will have platformId = 2
+        truckMock.Setup(m => m.ReadVehiclePosition()).Returns(headPosition);
+        controller.Update();
+
+        platformMock.Verify(m => m.Disconnect(1), Times.Once);
+        platformMock.Verify(m => m.Connect(1, It.IsAny<int>()), Times.Exactly(2));
+    }
+
 }
