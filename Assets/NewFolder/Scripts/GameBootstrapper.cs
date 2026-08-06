@@ -10,12 +10,11 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
+    [SerializeField] private PhysicsManager physicsManager;
     [Space]
-    [SerializeField] private string physicsServiceLayer;
     [SerializeField] private string combatServiceLayer;
     [SerializeField] private string foeCombatServiceLayer;
     [SerializeField] private string vehicleObstacleLayer;
-    [SerializeField] private string physicsObstacleLayer;
     [SerializeField] private LayerMask combatServiceEnvironmentMask;
 
     private CombatSystem combatSystem;
@@ -50,11 +49,7 @@ public class GameBootstrapper : MonoBehaviour {
         var vehicleService = new VehicleService(LayerMask.NameToLayer(vehicleObstacleLayer));
         var localAvoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
-        var physicsService = new PhysicsService(
-            container: null, 
-            operationalLayer: LayerMask.NameToLayer(physicsServiceLayer), 
-            obstacleLayer: LayerMask.NameToLayer(physicsObstacleLayer)
-        );
+        var physicsService = new PhysicsService(physicsManager);
 
         var weaponView = new WeaponView();
         var armorView = new ArmorView(soundManager);

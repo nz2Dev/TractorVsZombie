@@ -12,6 +12,5 @@ public class InfantryConfig : ScriptableObject {
     public float attackCooldown = 1; // this one might be the infantry domain data
     public int damage = 1;
     
-    public BodyData bodyData; // those are the component (physics)
     public AgentAvoidanceConfig agentAvoidanceConfig; // and this are the component (avoidance)
 }

@@ -12,6 +12,7 @@ public class ProductionBuildingSource : MonoBehaviour {
     [Space]
     [Inline] [SerializeField] private ProductionBuildingConfig config;
     [Local] [SerializeField] private PhysicsObstacle dimensionsPrefab;
+    [Local] [SerializeField] private PhysicsObstacleNew physicsObstaclePrefab;
     [Local] [SerializeField] private GameObject visualsPrefab;
     [Inline] [Local] [SerializeField] private SpawnSpotSource spawnSpotSource;
     [SerializeField] SpawnVariantSource spawnVariantSource;
@@ -45,6 +46,7 @@ public class ProductionBuildingSource : MonoBehaviour {
             spawnSpot = spawnSpotSource.Get(),
             spawnVariant = spawnVariantSource.Get(),
             dimensionsPrefab = dimensionsPrefab,
+            physicsObstaclePrefab = physicsObstaclePrefab,
             visualsPrefab = visualsPrefab,
         };
     }

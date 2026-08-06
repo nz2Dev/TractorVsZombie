@@ -77,7 +77,7 @@ public class ProductionBuildingController {
         model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.config.alie, model.Config.maxHealth, prototype.config.height);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.dimensionsPrefab);
         model.VehicleObstacleId = vehicleService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
-        model.PhysicsObstacleId = physicsService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
+        model.PhysicsObstacleId = physicsService.RegisterObstacle(model.Position, prototype.physicsObstaclePrefab);
         registry[nextId] = model;
 
         view.AddVisuals(model.Id, model.Position, model.Rotation, prototype.visualsPrefab);

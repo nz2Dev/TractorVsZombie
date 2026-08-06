@@ -17,5 +17,5 @@ MonoBehaviour:
   alie: 1
   visualsPrefab: {fileID: 8720949481670791159, guid: a57955eb465f141188c4e6e801dfddf0, type: 3}
   vehicleObstaclePrefab: {fileID: 9198967994064705274, guid: 752a855cac13c4ba69906400830d12f8, type: 3}
-  physicsObstaclePrefab: {fileID: 9198967994064705274, guid: 752a855cac13c4ba69906400830d12f8, type: 3}
+  physicsObstaclePrefab: {fileID: 3132752260078934113, guid: 752a855cac13c4ba69906400830d12f8, type: 3}
   avoidanceObstaclePrefab: {fileID: 9198967994064705274, guid: 752a855cac13c4ba69906400830d12f8, type: 3}

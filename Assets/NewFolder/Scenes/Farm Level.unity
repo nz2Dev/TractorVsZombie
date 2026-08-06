@@ -5463,9 +5463,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 1729309590
+  uniqueId: 779865313
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   dimensionsPrefab: {fileID: 988582194}
+  physicsObstaclePrefab: {fileID: 988582192}
   visualsPrefab: {fileID: 1606119368}
   spawnSpotSource: {fileID: 2845072440889980232}
   spawnVariantSource:
@@ -8840,9 +8841,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 1031941849
+  uniqueId: -1157089476
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   dimensionsPrefab: {fileID: 1055208969}
+  physicsObstaclePrefab: {fileID: 2094310687}
   visualsPrefab: {fileID: 262992080}
   spawnSpotSource: {fileID: 252213607}
   spawnVariantSource:
@@ -20530,6 +20532,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e85ad169bd1e46ddb2e73850bb9d2c7, type: 3}
+--- !u!114 &988582192 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4174290018510949590, guid: 5e85ad169bd1e46ddb2e73850bb9d2c7, type: 3}
+  m_PrefabInstance: {fileID: 988582191}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9bbc8d168b164e34a99747dd8f505f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::PhysicsObstacleNew
 --- !u!4 &988582193 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3078969359432382274, guid: 5e85ad169bd1e46ddb2e73850bb9d2c7, type: 3}
@@ -21967,6 +21980,104 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &1032680939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1032680940}
+  - component: {fileID: 1032680943}
+  - component: {fileID: 1032680942}
+  - component: {fileID: 1032680941}
+  m_Layer: 14
+  m_Name: 'Capsule Physics Body '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1032680940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032680939}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1909830769}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1032680941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032680939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f68bc48ea81c42458a0f38d9016868d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::PhysicsBody
+  thisRigidbody: {fileID: 1032680943}
+  thisCollider: {fileID: 1032680942}
+--- !u!136 &1032680942
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032680939}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &1032680943
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032680939}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0.05
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1037670136
 GameObject:
   m_ObjectHideFlags: 0
@@ -33633,7 +33744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: 892161010
+  uniqueId: 395145040
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
@@ -35791,6 +35902,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1060467422}
+  - {fileID: 1032680940}
   - {fileID: 1373779127}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -35808,6 +35920,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::InfantrySource
   config: {fileID: 11400000, guid: 434c3c02ad2014cdd843637907fa633b, type: 2}
   visualsPrefab: {fileID: 1060467421}
+  physicsBodyPrefab: {fileID: 1032680941}
   rewardSource: {fileID: 1373779128}
 --- !u!43 &1919107180
 Mesh:
@@ -38351,6 +38464,17 @@ MonoBehaviour:
   weaponSource: {fileID: 787191737}
   ramSource: {fileID: 1882187328}
   loadoutRewardSource: {fileID: 6530768952594991425, guid: 48c638ce2be8649b7ba0f7b7d424bc43, type: 3}
+--- !u!114 &2094310687 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4174290018510949590, guid: 5e85ad169bd1e46ddb2e73850bb9d2c7, type: 3}
+  m_PrefabInstance: {fileID: 1055208968}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9bbc8d168b164e34a99747dd8f505f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::PhysicsObstacleNew
 --- !u!43 &2098590683
 Mesh:
   m_ObjectHideFlags: 0

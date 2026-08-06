@@ -42,7 +42,7 @@ public class InfantryController {
             prototype.position, model.Config.alie, 
             maxHealth: model.Config.maxHealth, height: model.Config.hitboxHeight, radius: model.Config.hitboxRadius
         );
-        model.BodyPhysicsId = physicsService.RegisterPhysicsEntity(prototype.position, model.Config.bodyData);
+        model.BodyPhysicsId = physicsService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, model.Config.agentAvoidanceConfig);
         model.RewardPrototype = prototype.rewardPrototype;
 
@@ -118,7 +118,7 @@ public class InfantryController {
                 model.Rotation = physicsPose.Rotation;
             } else if (becomeGrounded) {
                 model.Grounded = true;
-                model.Position = physicsService.GetGroundPosition(model.Position);
+                model.Position = physicsService.GetClosestVerticalGroundPoint(model.Position);
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 physicsService.SetPhysicsActive(model.BodyPhysicsId, false);
             } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {

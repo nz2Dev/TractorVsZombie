@@ -7,6 +7,9 @@ public class InfantrySource : MonoBehaviour {
 
     [Inline] [SerializeField] private InfantryConfig config;
     [Local] [SerializeField] private InfantryVisuals visualsPrefab;
+    // setting the layer to the one that vehicle physics can interact with give interesting results
+    // when the body is in "dynamic" state
+    [Local] [SerializeField] private PhysicsBody physicsBodyPrefab; 
     [SerializeField] private RewardSource rewardSource;
 
     private void Awake() {
@@ -19,19 +22,8 @@ public class InfantrySource : MonoBehaviour {
             config = config,
             visualsPrefab = visualsPrefab,
             rewardPrototype = rewardSource.GetPrototype(),
+            physicsBodyPrefab = physicsBodyPrefab,
         };
     }
 
-#if UNITY_EDITOR
-    private void OnDrawGizmos() {
-        if (config == null)
-            return;
-
-        Handles.DrawWireDisc(transform.position, Vector3.up, config.bodyData.radius);
-        Handles.DrawWireDisc(transform.position + Vector3.up * config.bodyData.height, Vector3.up, config.bodyData.radius);
-
-        Handles.color = Color.green;
-        Handles.DrawWireDisc(transform.position + Vector3.up * config.hitboxHeight * 0.5f, Vector3.up, config.hitboxRadius);
-    }
-#endif
 }

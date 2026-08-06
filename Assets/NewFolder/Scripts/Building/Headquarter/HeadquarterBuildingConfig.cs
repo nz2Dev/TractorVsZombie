@@ -7,6 +7,6 @@ public class HeadquarterBuildingConfig : ScriptableObject {
     public bool alie = false;
     public GameObject visualsPrefab;
     public PhysicsObstacle vehicleObstaclePrefab;
-    public PhysicsObstacle physicsObstaclePrefab;
+    public PhysicsObstacleNew physicsObstaclePrefab;
     public PhysicsObstacle avoidanceObstaclePrefab;
 }

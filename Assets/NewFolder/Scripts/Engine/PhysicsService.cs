@@ -2,63 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public struct BodyData {
-    public float height;
-    public float radius;
-    public float damping;
-}
-
 public class PhysicsService {
-
-    private readonly int operationalLayer;
-    private readonly int obstacleLayer;
-    private readonly Dictionary<int, PhysicsEntity> entities = new();
-    private readonly Dictionary<int, GameObject> obstacleRegistry = new();
-    private readonly Dictionary<Collider, int> colliderToId = new();
-    private readonly Transform container;
-    private const int MaxHits = 32;
-    private readonly Collider[] hitBuffer = new Collider[MaxHits];
-    private readonly List<int> sphereQueryResult = new List<int>(64);
-    private int idCounter;
-
-    public PhysicsService(Transform container = null, int operationalLayer = 0, int obstacleLayer = 0) {
-        this.container = container;
-        this.operationalLayer = operationalLayer;
-        this.obstacleLayer = obstacleLayer;
-    }
-
-    public int RegisterObstacle(Vector3 position, PhysicsObstacle prefab) {
-        var id = ++idCounter;
-        var go = GameObject.Instantiate(prefab.gameObject, position, Quaternion.identity);
-        go.name = $"PhysicsObstacle_{id}";
-        go.layer = obstacleLayer;
-        go.transform.SetParent(container, false);
-        obstacleRegistry[id] = go;
-        return id;
-    }
-
-    public void UnregisterObstacle(int id) {
-        if (obstacleRegistry.TryGetValue(id, out var go)) {
-            GameObject.Destroy(go);
-            obstacleRegistry.Remove(id);
-        }
-    }
-
-    internal class PhysicsEntity {
-        public int Id { get; }
-        public GameObject GameObject { get; }
-        public CapsuleCollider Collider { get; }
-        public Rigidbody Rigidbody { get; }
-        public float ExplosionTime { get; set; } = float.NegativeInfinity;
-
-        public PhysicsEntity(int id, GameObject go, CapsuleCollider collider, Rigidbody rb) {
-            Id = id;
-            GameObject = go;
-            Collider = collider;
-            Rigidbody = rb;
-        }
-    }
 
     public struct PhysicsEntityPose {
         public Vector3 Position;
@@ -76,83 +20,82 @@ public class PhysicsService {
         }
     }
 
-    public int RegisterPhysicsEntity(Vector3 position, BodyData bodyData) {
-        return RegisterPhysicsEntity(position, bodyData.height, bodyData.radius, bodyData.damping);
+    private int idCounter;
+    private readonly Dictionary<int, PhysicsBody> bodyRegistry = new();
+    private readonly Dictionary<int, PhysicsObstacleNew> obstacleRegistry = new();
+    
+    private readonly PhysicsManager physicsManager;
+
+    public PhysicsService(PhysicsManager physicsManager) {
+        this.physicsManager = physicsManager;
     }
 
-    public int RegisterPhysicsEntity(Vector3 position, float height, float radius, float damping = 0) {
+    public int RegisterObstacle(Vector3 position, PhysicsObstacleNew obstaclePrefab) {
+        var id = ++idCounter;
+        var obstacleInstance = physicsManager.InstantiateObstacle(obstaclePrefab, position, Quaternion.identity);
+        obstacleRegistry[id] = obstacleInstance;
+        return id;
+    }
+
+    public void UnregisterObstacle(int id) {
+        if (obstacleRegistry.TryGetValue(id, out var obstacle)) {
+            physicsManager.DestroyObstacle(obstacle);
+            obstacleRegistry.Remove(id);
+        }
+    }
+
+    // register physics body
+    public int RegisterPhysicsEntity(Vector3 position, PhysicsBody physicsBodyPrefab) {
         var entityId = idCounter++;
-        var go = new GameObject($"Physics Entity {entityId} (New)", typeof(CapsuleCollider), typeof(Rigidbody));
-        go.layer = operationalLayer;
-        go.transform.SetParent(container, false);
-        go.transform.position = position;
-        var capsule = go.GetComponent<CapsuleCollider>();
-        capsule.isTrigger = true;
-        capsule.height = height;
-        capsule.radius = Mathf.Min(radius, height * 0.5f);
-        capsule.direction = 1;
-        capsule.center = new Vector3(0f, height * 0.5f, 0f);
-        var rb = go.GetComponent<Rigidbody>();
-        rb.isKinematic = true;
-        rb.useGravity = false;
-        rb.linearDamping = damping;
-        entities[entityId] = new PhysicsEntity(entityId, go, capsule, rb);
-        colliderToId[capsule] = entityId;
+        var physicsBodyInstance = physicsManager.InstantiateBody(physicsBodyPrefab, position, Quaternion.identity);
+        bodyRegistry[entityId] = physicsBodyInstance;
         return entityId;
     }
 
+    public void UnregisterPhysicsEntity(int id) {
+        if (bodyRegistry.TryGetValue(id, out var entity)) {
+            physicsManager.DestroyBody(entity);
+            bodyRegistry.Remove(id);
+        }
+    }
+
     public void SetPhysicsActive(int id, bool active) {
-        if (entities.TryGetValue(id, out var entity)) {
-            entity.Rigidbody.isKinematic = !active;
-            entity.Rigidbody.useGravity = active;
-            entity.Collider.isTrigger = !active;
+        // make access consisten: either fail hard or play safe silently
+        if (bodyRegistry.TryGetValue(id, out var entity)) {
+            entity.SetDynamics(active);
         }
     }
 
     public void AddExplosionForce(int id, float force, Vector3 position, float radius, float upwardsModifier = 0, ForceMode mode = ForceMode.Force) {
-        var entity = entities[id];
-        entity.Rigidbody.AddExplosionForce(force, position, radius, upwardsModifier, mode);
-        entity.ExplosionTime = Time.time;
+        var entity = bodyRegistry[id];
+        entity.AddExplosionForce(force, position, radius, upwardsModifier, mode);
     }
 
-    public void UpdatePhysicsEntityShape(int id, float height, float radius) {
-        if (entities.TryGetValue(id, out var entity)) {
-            entity.Collider.height = height;
-            entity.Collider.radius = radius;
-            entity.Collider.direction = 1;
-            entity.Collider.center = new Vector3(0f, height * 0.5f, 0f);
-        }
-    }
-
+    // consistency name, access: physics body 
     public void UpdatePhysicsEntityPosition(int id, Vector3 position) {
-        if (entities.TryGetValue(id, out var entity)) {
-            entity.GameObject.transform.position = position;
-            entity.Rigidbody.position = position;
+        if (bodyRegistry.TryGetValue(id, out var entity)) {
+            entity.Teleport(position);
         }
     }
 
-    public IReadOnlyList<int> QuerySphere(Vector3 center, float radius) {
-        sphereQueryResult.Clear();
-        int hitCount = Physics.OverlapSphereNonAlloc(center, radius, hitBuffer, 1 << operationalLayer, QueryTriggerInteraction.Collide);
-        for (int i = 0; i < hitCount; i++) {
-            if (colliderToId.TryGetValue(hitBuffer[i], out var id)) {
-                sphereQueryResult.Add(id);
-            }
+    public PhysicsEntityPose GetEntityPose(int id) {
+        if (bodyRegistry.TryGetValue(id, out var entity)) {
+            const float minFlyTime = 0.5f;
+            // domain logic here, keep this closer to usage, e.g in Infantry
+            var isInMotion = entity.ExplosionTime + minFlyTime > Time.time || entity.LinearVelocity.sqrMagnitude > 0.75f;
+            return new PhysicsEntityPose(
+                entity.Position,
+                entity.Rotation,
+                entity.LinearVelocity,
+                inMotion: isInMotion,
+                pending: entity.IsDynamic
+            );
         }
-        return sphereQueryResult;
+        return default;
     }
 
-    public void UnregisterPhysicsEntity(int id) {
-        if (entities.TryGetValue(id, out var entity)) {
-            colliderToId.Remove(entity.Collider);
-            UnityEngine.Object.Destroy(entity.GameObject);
-            entities.Remove(id);
-        }
-    }
-
-    public Vector3 GetGroundPosition(Vector3 position) {
-        var groundLayer = LayerMask.NameToLayer("Default"); // TODO use input variable;
-        if (Physics.Raycast(position + Vector3.up, Vector3.down, out var hitInfo, 100, 1 << groundLayer)) {
+    public Vector3 GetClosestVerticalGroundPoint(Vector3 position) {
+        if (physicsManager.RaycastGround(new Ray(position + Vector3.up, Vector3.down), 100, out var hitInfo)) {
             return hitInfo.point;
         } else {
             return Vector3.zero;
@@ -160,27 +103,11 @@ public class PhysicsService {
     }
 
     public Vector3 GetGroundHitPosition(Ray ray) {
-        var groundLayer = LayerMask.NameToLayer("Default"); // TODO use input variable;
-        if (Physics.Raycast(ray, out var hitInfo, 100, 1 << groundLayer)) {
+        if (physicsManager.RaycastGround(ray, 1000, out var hitInfo)) {
             return hitInfo.point;
         } else {
             return Vector3.zero;
         }
     }
 
-    public PhysicsEntityPose GetEntityPose(int id) {
-        if (entities.TryGetValue(id, out var entity)) {
-            var rb = entity.Rigidbody;
-            const float minFlyTime = 0.5f;
-            var isInMotion = entity.ExplosionTime + minFlyTime > Time.time || rb.linearVelocity.sqrMagnitude > 0.75f;
-            return new PhysicsEntityPose(
-                rb.position,
-                rb.rotation,
-                rb.linearVelocity,
-                inMotion: isInMotion,
-                pending: !rb.isKinematic
-            );
-        }
-        return default;
-    }
 }

@@ -5,4 +5,5 @@ public struct InfantryPrototype {
     public InfantryConfig config;
     public InfantryVisuals visualsPrefab;
     public RewardPrototype rewardPrototype;
+    public PhysicsBody physicsBodyPrefab;
 }

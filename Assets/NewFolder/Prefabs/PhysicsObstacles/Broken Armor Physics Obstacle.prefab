@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3078969359432382274}
   - component: {fileID: 6608183701695887708}
   - component: {fileID: 6470828191781318376}
+  - component: {fileID: 4174290018510949590}
   m_Layer: 11
   m_Name: Broken Armor Physics Obstacle
   m_TagString: Untagged
@@ -67,3 +68,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Local::PhysicsObstacle
   bakedSize: {x: 2.3351142, y: 1.6007441, z: 3.9818602}
+--- !u!114 &4174290018510949590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3497752860432891126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9bbc8d168b164e34a99747dd8f505f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::PhysicsObstacleNew
