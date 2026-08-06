@@ -5463,7 +5463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 1948770257
+  uniqueId: 1729309590
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   dimensionsPrefab: {fileID: 988582194}
   visualsPrefab: {fileID: 1606119368}
@@ -8840,7 +8840,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 146696166
+  uniqueId: 1031941849
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   dimensionsPrefab: {fileID: 1055208969}
   visualsPrefab: {fileID: 262992080}
@@ -19683,7 +19683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb343145858a742588bc6f2cb2f6b77d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::AssemblingSource
-  platformPreviewPrefab: {fileID: 5858173997722926588, guid: 7309a86063f1f454a8b70b5449251a64, type: 3}
+  platformPreviewPrefab: {fileID: 3371121685155722078, guid: 6321345344532445fbf7ea0e39b1b4d0, type: 3}
   initTruckSource: {fileID: 1117709943}
   initPlatformSource: {fileID: 269684097}
   initLoadoutSources:
@@ -33633,7 +33633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: 2133810224
+  uniqueId: 892161010
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
