@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class AssemblingController {
 
@@ -30,64 +31,82 @@ public class AssemblingController {
         
         model.PickupPlatformPrototype = prototype.pickupPlatformPrototype;
         GenerateChainRow(prototype.initTruckPrototype.rotation, prototype.initTruckPrototype.position, prototype.initLoadoutPrototypes);
+        ProcessChain();
     }
 
     public void AddLoadout(Vector3 position, LoadoutPrototype loadout, bool trueInFront_falseToTheEnd) {
-        GenerateChainSmoothly(position, loadout, trueInFront_falseToTheEnd);
+        AddSegment(position, loadout, trueInFront_falseToTheEnd);
     }
 
     public void Update() {
-        UpdateSmoothChains();
+        ProcessChain();
     }
 
     private void GenerateChainRow(Quaternion initRotation, Vector3 initPosition, IEnumerable<LoadoutPrototype> loadoutPrototypes) {
         Vector3 directionStep = initRotation * Vector3.back * 6;
         Vector3 loadoutPosition = initPosition + directionStep; 
         foreach (var loadout in loadoutPrototypes) {    
-            GenerateChainInstantly(loadoutPosition, loadout, trueInFront_falseToTheEnd: false);
+            AddSegment(loadoutPosition, loadout, trueInFront_falseToTheEnd: false);
             loadoutPosition += directionStep;
         }
     }
 
-    private void GenerateChainInstantly(Vector3 position, LoadoutPrototype loadout, bool trueInFront_falseToTheEnd) {
-        SpawnPlatform(position, out var platformId);
-        EquipPlatform(platformId, loadout);
-        CouplePlatform(platformId, trueInFront_falseToTheEnd);
-        OnPlatformAdded?.Invoke(platformId);
+    private void AddSegment(Vector3 position, LoadoutPrototype prototype, bool trueInFront_falseToTheEnd) {
+        var insertIndex = trueInFront_falseToTheEnd ? 0 : model.Chain.Count;
+        model.Chain.Insert(insertIndex, new SegmentState {
+            activationPosition = position,
+            activationLoadout = prototype
+        });
     }
 
-    private Vector3 smoothPosition;
-    private LoadoutPrototype? smoothLoadout;
-    private int disconnectedPlatformId;
-    private float startTime;
-
-    private void GenerateChainSmoothly(Vector3 position, LoadoutPrototype loadout, bool trueInFront_falseToTheEnd) {
-        view.ShowPlatformPreview(position);
-        var headPlatform = model.ControlledPlatformIds[0];
-        platformController.Disconnect(headPlatform);
-        disconnectedPlatformId = headPlatform;
-        smoothLoadout = loadout;
-        smoothPosition = position;
-        startTime = Time.time;
+    private void ProcessChain() {
+        var headState = new SegmentState { isTruck = true };
+        for (int i = 0; i < model.Chain.Count; i++) {
+            var state = model.Chain[i];
+            ProcessCouple(state, headState);
+            headState = state;
+        }
     }
 
-    private void UpdateSmoothChains() {
-        if (!smoothLoadout.HasValue)
-            return;
+    private void ProcessCouple(SegmentState tail, SegmentState head) {
+        if (!tail.IsPlatformCreated) {
+            Assert.IsFalse(tail.isTruck);
 
-        var isSafeToConnect = false;
-        var headPosition = truckController.ReadVehiclePosition();
-        isSafeToConnect = Vector3.Distance(headPosition, smoothPosition) > 4f || Time.time - startTime > 3f;
+            if (!tail.waitsActivation) {
+                view.ShowPlatformPreview(tail.activationPosition);
+                tail.waitsActivation = true;
+            }
 
-        if (isSafeToConnect) {
-            view.HidePlatformPreview();
-            SpawnPlatform(smoothPosition, out var platformId);
-            EquipPlatform(platformId, smoothLoadout.Value);
+            Vector3? headPosition = null;
+            if (head.isTruck) {
+                headPosition = truckController.ReadVehiclePosition();
+            } else if (head.IsPlatformCreated) {
+                headPosition = platformController.ReadPlatformState(head.platformId).position;
+            }
 
-            platformController.Connect(disconnectedPlatformId, platformController.GetVehiclePhysicsId(platformId));
-            platformController.Connect(platformId, truckController.ReadVehiclePhysicsId());
-            smoothLoadout = null;
-            OnPlatformAdded?.Invoke(platformId);
+            if (headPosition.HasValue && Vector3.Distance(headPosition.Value, tail.activationPosition) > 4) {
+                var platformId = platformController.Create(model.PickupPlatformPrototype, tail.activationPosition);
+                platformController.SetLoadout(platformId, tail.activationLoadout);
+                model.ControlledPlatformIds.Add(platformId);
+                tail.waitsActivation = false;
+                tail.platformId = platformId;
+                view.HidePlatformPreview();
+                OnPlatformAdded?.Invoke(platformId);
+            }
+        }
+
+        if (tail.IsPlatformCreated && !tail.isConnected) {
+            int headPhysicsId = -1;
+            if (head.isTruck) {
+                headPhysicsId = truckController.ReadVehiclePhysicsId();
+            } else if (head.IsPlatformCreated) {
+                headPhysicsId = platformController.GetVehiclePhysicsId(head.platformId);
+            }
+
+            if (headPhysicsId != -1) {
+                platformController.Connect(tail.platformId, headPhysicsId);
+                tail.isConnected = true;
+            }
         }
     }
 
@@ -95,46 +114,4 @@ public class AssemblingController {
         truckController.Create(model.TruckPrototype);
     }
 
-    private void SpawnPlatform(Vector3 position, out int platformId) {
-        platformId = platformController.Create(model.PickupPlatformPrototype, position);
-        model.ControlledPlatformIds.Add(platformId);
-    }
-
-    private void EquipPlatform(int platformId, LoadoutPrototype loadout) {
-        platformController.SetLoadout(platformId, loadout);
-    }
-
-    private void CouplePlatform(int platformId, bool trueInFront_falseToTheEnd) {
-        if (trueInFront_falseToTheEnd) {
-            CouplePlatformInFront(platformId);
-        } else {
-            CouplePlatformToTheEnd(platformId);
-        }
-    }
-
-    private void CouplePlatformInFront(int platformId) {
-        if (model.CoupledPlatformIds.Count > 0) {
-            var firstPlatformId = model.CoupledPlatformIds[0];
-            platformController.Disconnect(firstPlatformId);
-
-            var newPlatformVehiclePhysicsId = platformController.GetVehiclePhysicsId(platformId);
-            platformController.Connect(firstPlatformId, newPlatformVehiclePhysicsId);
-        }
-
-        platformController.Connect(platformId, truckController.ReadVehiclePhysicsId());
-        model.CoupledPlatformIds.Insert(0, platformId);
-    }
-
-    private void CouplePlatformToTheEnd(int platformId) {
-        int targetVehiclePhysicsId;
-        if (model.CoupledPlatformIds.Count > 0) {
-            var lastPlatformId = model.CoupledPlatformIds[^1];
-            targetVehiclePhysicsId = platformController.GetVehiclePhysicsId(lastPlatformId);
-        } else {
-            targetVehiclePhysicsId = truckController.ReadVehiclePhysicsId();
-        }
-
-        platformController.Connect(platformId, targetVehiclePhysicsId);
-        model.CoupledPlatformIds.Add(platformId);
-    }
 }
