@@ -19,8 +19,8 @@ public class TruckController {
         this.vehicleService = vehicleService;
     }
 
-    public int ReadVehiclePhysicsId() => model.VehiclePhysicsId;
-    public Vector3 ReadVehiclePosition() => model.Position;
+    public virtual int ReadVehiclePhysicsId() => model.VehiclePhysicsId;
+    public virtual Vector3 ReadVehiclePosition() => model.Position;
 
     public void Update() {
         if (model == null)
@@ -31,7 +31,7 @@ public class TruckController {
         UpdateView();
     }
 
-    public void Create(TruckPrototype prototype, Vector3 position = default) {
+    public virtual void Create(TruckPrototype prototype, Vector3 position = default) {
         model = new TruckModel(prototype.config, position == default ? prototype.position : position);
         model.CombatId = combatSystem.RegisterAgent(model.Position, alie: true);
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
@@ -39,12 +39,12 @@ public class TruckController {
         view.Show(model.Position, prototype.visualsPrefab, prototype.engineLoopSFX);
     }
 
-    public void Drive(float driveInput, bool boostInput) {
+    public virtual void Drive(float driveInput, bool boostInput) {
         var boostMultiplier = boostInput ? 2f : 1f;   // gameplay rule: boost doubles throttle
         model.Gas = driveInput * boostMultiplier;
     }
 
-    public void Steer(float steerInput) {
+    public virtual void Steer(float steerInput) {
         model.Steer = steerInput;   // -1..1; traction limiting happens inside VehiclePhysics
     }
 

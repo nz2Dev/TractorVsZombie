@@ -6,7 +6,7 @@ public class AssemblingView {
     
     private GameObject previewVisuals;
 
-    public void SetPlatformPreviewPrefab(GameObject previewPrefab) {
+    public virtual void SetPlatformPreviewPrefab(GameObject previewPrefab) {
         if (previewVisuals != null) {
             GameObject.Destroy(previewVisuals);
         }
@@ -14,12 +14,12 @@ public class AssemblingView {
         previewVisuals.SetActive(false);
     }
 
-    public void ShowPlatformPreview(Vector3 position) {
+    public virtual void ShowPlatformPreview(Vector3 position) {
         previewVisuals.SetActive(true);
         previewVisuals.transform.position = position;
     }
 
-    public void HidePlatformPreview() {
+    public virtual void HidePlatformPreview() {
         previewVisuals.SetActive(false);
     }
 

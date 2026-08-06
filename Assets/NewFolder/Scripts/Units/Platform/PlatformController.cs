@@ -26,7 +26,7 @@ public class PlatformController {
         SyncPositions();
     }
     
-    public int Create(PlatformPrototype prototype, Vector3 position = default) {
+    public virtual int Create(PlatformPrototype prototype, Vector3 position = default) {
         var nextId = ++idCounter;
         var initPosition = position == default ? prototype.position : position;
         var model = new PlatformModel(nextId, initPosition, prototype.config);
@@ -41,7 +41,7 @@ public class PlatformController {
         return model.Id;
     }
 
-    public void Connect(int tailPlatformId, int headVehiclePhysicsId) {
+    public virtual void Connect(int tailPlatformId, int headVehiclePhysicsId) {
         var tailPlatform = registry[tailPlatformId];
         var headState = vehicleService.GetVehicleState(headVehiclePhysicsId);
         
@@ -50,12 +50,12 @@ public class PlatformController {
         vehicleService.MakeTowingConnection(headVehiclePhysicsId, tailPlatform.VehiclePhysicsId);
     }
 
-    public void Disconnect(int platformId) {
+    public virtual void Disconnect(int platformId) {
         var platform = registry[platformId];
         vehicleService.ClearTowingConnection(platform.VehiclePhysicsId);
     }
 
-    public void SetLoadout(int platformId, LoadoutPrototype loadoutPrototype) {
+    public virtual void SetLoadout(int platformId, LoadoutPrototype loadoutPrototype) {
         var platform = registry[platformId];
         
         if (platform.LoadoutId != 0) {
@@ -66,11 +66,11 @@ public class PlatformController {
         platform.LoadoutId = loadoutController.SpawnLoadout(platform.CombatId, loadoutPrototype);
     }
 
-    public int GetVehiclePhysicsId(int platformId) {
+    public virtual int GetVehiclePhysicsId(int platformId) {
         return registry[platformId].VehiclePhysicsId;
     }
 
-    public PlatformState ReadPlatformState(int platformId) {
+    public virtual  PlatformState ReadPlatformState(int platformId) {
         var platform = registry[platformId];
         var loadoutState = default (LoadoutState);
         if (platform.LoadoutId != 0) {
