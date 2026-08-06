@@ -176,7 +176,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         playerController = new PlayerController(
             new DrivingController(truckController),
-            new AssemblingController(platformController, truckController),
+            new AssemblingController(new AssemblingView(), platformController, truckController),
             new SelectingController(new SelectingView(uiDocument), platformController),
             new AimingController(new AimingView(), cameraProvider, physicsService, combatSystem, platformController, weaponController),
             new CollectingController(rewardController),

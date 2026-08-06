@@ -3,6 +3,8 @@ using System.Linq;
 using UnityEngine;
 
 public class AssemblingSource : MonoBehaviour {
+
+    [SerializeField] private GameObject platformPreviewPrefab;
     [SerializeField] private TruckSource initTruckSource;
     [SerializeField] private PlatformSource initPlatformSource;
     [SerializeField] private LoadoutSource[] initLoadoutSources;
@@ -13,6 +15,7 @@ public class AssemblingSource : MonoBehaviour {
 
     public AssemblingPrototype Get() {
         return new AssemblingPrototype {
+            platformPreviewPrefab = platformPreviewPrefab,
             initTruckPrototype = initTruckSource.GetPrototype(),
             pickupPlatformPrototype = initPlatformSource.GetPrototype(),
             initLoadoutPrototypes = initLoadoutSources == null ? new LoadoutPrototype[0] : initLoadoutSources.Select(source => source.GetPrototype()).ToArray()

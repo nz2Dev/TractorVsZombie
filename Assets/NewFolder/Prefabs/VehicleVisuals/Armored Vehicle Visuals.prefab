@@ -455,9 +455,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Proportional Armored Vehicle Geometry
       objectReference: {fileID: 0}
+    - target: {fileID: 3296253035601904032, guid: 6d4ef3bc0657c454c88281fc3cb6de18, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3463695612866162322, guid: 6d4ef3bc0657c454c88281fc3cb6de18, type: 3}
       propertyPath: m_VersionIndex
       value: 3962
+      objectReference: {fileID: 0}
+    - target: {fileID: 3463695612866162322, guid: 6d4ef3bc0657c454c88281fc3cb6de18, type: 3}
+      propertyPath: m_SelectedEdges.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3463695612866162322, guid: 6d4ef3bc0657c454c88281fc3cb6de18, type: 3}
+      propertyPath: m_SelectedFaces.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3463695612866162322, guid: 6d4ef3bc0657c454c88281fc3cb6de18, type: 3}
       propertyPath: m_SelectedVertices.Array.size

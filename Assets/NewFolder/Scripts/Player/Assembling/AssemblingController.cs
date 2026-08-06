@@ -9,10 +9,12 @@ public class AssemblingController {
     private readonly TruckController truckController;
 
     private readonly AssemblingModel model;
+    private readonly AssemblingView view;
 
     public event Action<int> OnPlatformAdded;
 
-    public AssemblingController(PlatformController platformController, TruckController truckController) {
+    public AssemblingController(AssemblingView view, PlatformController platformController, TruckController truckController) {
+        this.view = view;
         this.platformController = platformController;
         this.truckController = truckController;
         model = new AssemblingModel();
@@ -21,6 +23,8 @@ public class AssemblingController {
     public Vector3 HeadPosition => truckController.ReadVehiclePosition();
 
     public void Init(AssemblingPrototype prototype) {
+        view.SetPlatformPreviewPrefab(prototype.platformPreviewPrefab);
+
         model.TruckPrototype = prototype.initTruckPrototype;
         SpawnDriver();
         
@@ -29,7 +33,11 @@ public class AssemblingController {
     }
 
     public void AddLoadout(Vector3 position, LoadoutPrototype loadout, bool trueInFront_falseToTheEnd) {
-        GenerateChainInstantly(position, loadout, trueInFront_falseToTheEnd);
+        GenerateChainSmoothly(position, loadout, trueInFront_falseToTheEnd);
+    }
+
+    public void Update() {
+        UpdateSmoothChains();
     }
 
     private void GenerateChainRow(Quaternion initRotation, Vector3 initPosition, IEnumerable<LoadoutPrototype> loadoutPrototypes) {
@@ -46,6 +54,40 @@ public class AssemblingController {
         EquipPlatform(platformId, loadout);
         CouplePlatform(platformId, trueInFront_falseToTheEnd);
         OnPlatformAdded?.Invoke(platformId);
+    }
+
+    private Vector3 smoothPosition;
+    private LoadoutPrototype? smoothLoadout;
+    private int disconnectedPlatformId;
+    private float startTime;
+
+    private void GenerateChainSmoothly(Vector3 position, LoadoutPrototype loadout, bool trueInFront_falseToTheEnd) {
+        view.ShowPlatformPreview(position);
+        var headPlatform = model.ControlledPlatformIds[0];
+        platformController.Disconnect(headPlatform);
+        disconnectedPlatformId = headPlatform;
+        smoothLoadout = loadout;
+        smoothPosition = position;
+        startTime = Time.time;
+    }
+
+    private void UpdateSmoothChains() {
+        if (!smoothLoadout.HasValue)
+            return;
+
+        var isSafeToConnect = false;
+        var headPosition = truckController.ReadVehiclePosition();
+        isSafeToConnect = Vector3.Distance(headPosition, smoothPosition) > 4f || Time.time - startTime > 3f;
+
+        if (isSafeToConnect) {
+            view.HidePlatformPreview();
+            SpawnPlatform(smoothPosition, out var platformId);
+            EquipPlatform(platformId, smoothLoadout.Value);
+
+            platformController.Connect(disconnectedPlatformId, platformController.GetVehiclePhysicsId(platformId));
+            platformController.Connect(platformId, truckController.ReadVehiclePhysicsId());
+            smoothLoadout = null;
+        }
     }
 
     private void SpawnDriver() {

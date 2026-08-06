@@ -47,6 +47,7 @@ public class PlayerController {
         var headPosition = assemblingController.HeadPosition;
         drivingController.Update();
         selectingController.Update();
+        assemblingController.Update();
         aimingController.SetAimSourcePosition(headPosition);
         aimingController.Update();
         collectingController.SetPosition(headPosition);
