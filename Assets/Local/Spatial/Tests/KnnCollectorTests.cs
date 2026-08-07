@@ -40,4 +40,35 @@ public class KnnCollectorTests {
         }
     }
 
+    [Test]
+    public void RemovePoint_AfterIsAdded_ReverseTheEffect() {
+        using (var collector = new KnnCollector(8)) {
+            Assert.That(collector.BuildPoints().Length, Is.Zero);
+            
+            var firstPointId = collector.AddPoint(new float3());
+            collector.RemovePoint(firstPointId);
+            
+            Assert.That(collector.BuildPoints().Length, Is.Zero);
+        }
+    }
+
+    [Test]
+    public void UpdatePoint_ToDifferentValue_ReflectsInBuildedPoints() {
+        using (var collector = new KnnCollector(8)) {
+            var valueA = new float3(1, 0, 0);
+            var valueB = new float3(0, 0, 1);
+            Assert.That(valueA, Is.Not.EqualTo(valueB));
+            
+            var firstPointId = collector.AddPoint(valueA);
+            var pointsBuilt = collector.BuildPoints();
+            Assert.That(pointsBuilt[0], Is.EqualTo(valueA));
+            Assert.That(pointsBuilt.Length, Is.EqualTo(1));
+
+            collector.UpdatePoint(firstPointId, valueB);
+            pointsBuilt = collector.BuildPoints();
+            Assert.That(pointsBuilt[0], Is.EqualTo(valueB));
+            Assert.That(pointsBuilt.Length, Is.EqualTo(1));
+        }
+    }
+
 }
