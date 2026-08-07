@@ -20,7 +20,7 @@ public class KnnRunner : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        knnSolver.ScheduleSolve().Complete();
+        knnSolver.Solve();
     }
 
     private void OnDestroy() {

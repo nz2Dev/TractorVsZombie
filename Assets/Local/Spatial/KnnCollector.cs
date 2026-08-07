@@ -13,6 +13,8 @@ public class KnnCollector : IDisposable {
     private int idCounter;
     private Dictionary<int, float3> pointsRegistry = new ();
     private Dictionary<int, int> indexToId = new();
+    
+    internal int Count => pointsRegistry.Count;
 
     public KnnCollector(int capacity) {
         pointsBuffer = new NativeArray<float3>(capacity, Allocator.Persistent);

@@ -1,5 +1,7 @@
 using System;
 
+using AiEditorToolsSdk.Components.Organization.Responses;
+
 using KNN;
 using KNN.Jobs;
 
@@ -9,7 +11,7 @@ using Unity.Mathematics;
 
 public class KnnSolver : IDisposable {
 
-    private KnnContainer container;
+    private KnnContainer? container;
     private readonly KnnCollector collector;
 
     private NativeArray<int> resultBuffer;
@@ -17,8 +19,6 @@ public class KnnSolver : IDisposable {
 
     public KnnSolver(int intiSizeCapacity, int resultCapacity) {
         collector = new KnnCollector(intiSizeCapacity);
-        container = new KnnContainer(collector.BuildPoints(), false, Allocator.TempJob);
-
         resultBuffer = new NativeArray<int>(1, Allocator.Persistent);
         variableResultBuffer = new NativeList<int>(resultCapacity, Allocator.Persistent);
     }
@@ -35,22 +35,32 @@ public class KnnSolver : IDisposable {
         collector.RemovePoint(id);
     }
 
-    internal JobHandle ScheduleSolve() {
-        container.Dispose();
+    internal void Solve() {
+        if (collector.Count == 0) {
+            return;
+        }
+
+        if (container.HasValue) {
+            container.Value.Dispose();
+        }
+
         var points = collector.BuildPoints();
-        container = new KnnContainer(points, false, Allocator.TempJob);
-        return new KnnRebuildJob(container).Schedule();
+        container = new KnnContainer(points, buildNow: true, Allocator.TempJob);
     }
 
     public int QueryNearest(float3 position) {
-        container.QueryKNearest(position, resultBuffer);
+        if (!container.HasValue)
+            return -1;
+        
+        container.Value.QueryKNearest(position, resultBuffer);
         return collector.GetIndexId(resultBuffer[0]);
     }
 
     public void Dispose() {
         collector.Dispose();
-        container.Dispose();
+        container?.Dispose();
         resultBuffer.Dispose();
         variableResultBuffer.Dispose();
     }
+
 }
