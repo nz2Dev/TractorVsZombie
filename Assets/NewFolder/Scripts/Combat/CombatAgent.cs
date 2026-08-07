@@ -1,6 +1,6 @@
 using UnityEngine;
 
-internal class CombatAgent : IPositionSource, IMetadata {
+internal class CombatAgent : IPositionSource {
     
     public int Id { get; }
     public bool Alie { get; }
