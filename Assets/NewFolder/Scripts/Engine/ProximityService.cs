@@ -14,19 +14,19 @@ public class ProximityService {
     }
 
     public void AddBeacon(int metadata, Vector3 position) {
-        var pointId = knnRunner.AddPoint(position);
+        var pointId = knnRunner.Solver.AddPoint(position);
         metadataToBeaconId[metadata] = pointId;
         beaconIdToMetadata[pointId] = metadata;
     }
 
     public void UpdateBeacon(int metadata, Vector3 position) {
         var pointId = metadataToBeaconId[metadata];
-        knnRunner.UpdatePoint(pointId, position);
+        knnRunner.Solver.UpdatePoint(pointId, position);
     }
 
     public void RemoveBeacon(int metadata) {
         var pointId = metadataToBeaconId[metadata];
-        knnRunner.RemovePoint(pointId);
+        knnRunner.Solver.RemovePoint(pointId);
         metadataToBeaconId.Remove(metadata);
         beaconIdToMetadata.Remove(pointId);
     }
