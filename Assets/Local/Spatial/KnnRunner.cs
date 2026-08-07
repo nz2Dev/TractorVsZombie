@@ -1,9 +1,4 @@
-using KNN;
-using KNN.Jobs;
-
-using Unity.Collections;
-using Unity.Jobs;
-using Unity.Mathematics;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -12,19 +7,32 @@ public class KnnRunner : MonoBehaviour {
     [SerializeField] private int intiSizeCapacity = 256;
     [SerializeField] private int intiResultCapacity = 256;
 
-    private KnnSolver knnSolver;
-    public KnnSolver Solver => knnSolver;
+    private List<KnnSolver> solvers;
 
     private void Awake() {
-        knnSolver = new KnnSolver(intiSizeCapacity, intiResultCapacity);
+        solvers = new ();
     }
 
     void FixedUpdate() {
-        knnSolver.Solve();
+        foreach (var solver in solvers)
+            solver.Solve();
     }
 
     private void OnDestroy() {
-        knnSolver.Dispose();
+        foreach (var solver in solvers)
+            solver.Dispose();
+        
+        solvers.Clear();
+    }
+
+    public KnnSolver CreateSolver() {
+        var solver = new KnnSolver(intiSizeCapacity, intiResultCapacity);
+        solvers.Add(solver);
+        return solver;
+    }
+
+    public void DeleteSolver(KnnSolver solver) {
+        solvers.Remove(solver);
     }
 
 }
