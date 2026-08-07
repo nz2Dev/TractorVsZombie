@@ -12,7 +12,7 @@ public class KnnCollector : IDisposable {
 
     private int idCounter;
     private Dictionary<int, float3> pointsRegistry = new ();
-    private Dictionary<int, int> idToIndex = new();
+    private Dictionary<int, int> indexToId = new();
 
     public KnnCollector(int capacity) {
         pointsBuffer = new NativeArray<float3>(capacity, Allocator.Persistent);
@@ -22,10 +22,10 @@ public class KnnCollector : IDisposable {
         var assignIndex = 0;
         foreach (var id in pointsRegistry.Keys) {
             pointsBuffer[assignIndex] = pointsRegistry[id];
-            idToIndex[id] = assignIndex;
+            indexToId[assignIndex] = id;
             assignIndex++;
         }
-        return pointsBuffer.GetSubArray(0, Mathf.Max(pointsRegistry.Count, 1));
+        return pointsBuffer.GetSubArray(0, pointsRegistry.Count);
     }
 
     public void Clear() {
@@ -43,12 +43,12 @@ public class KnnCollector : IDisposable {
     }
 
     public int GetIndexId(int index) {
-        return idToIndex[index];
+        return indexToId[index];
     }
 
     public void RemovePoint(int id) {
         pointsRegistry.Remove(id);
-        idToIndex.Remove(id);
+        indexToId.Remove(id);
     }
 
     public void Dispose() {

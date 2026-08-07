@@ -166,6 +166,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::CollisionMarker
   thisCollider: {fileID: 1731116661892981599}
+  Height: 0
+  Radius: 0
 --- !u!1 &2731906827672177431
 GameObject:
   m_ObjectHideFlags: 0

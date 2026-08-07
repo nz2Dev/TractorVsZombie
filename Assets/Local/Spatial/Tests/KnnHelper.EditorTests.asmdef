@@ -1,0 +1,22 @@
+{
+    "name": "KnnHelper.EditorTests",
+    "rootNamespace": "",
+    "references": [
+        "SpatialLookup",
+        "UnityEditor.TestRunner",
+        "Unity.Mathematics"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
