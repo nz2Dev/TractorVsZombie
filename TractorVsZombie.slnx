@@ -19,5 +19,4 @@
   <Project Path="Playground.Example.PlayTests.csproj" />
   <Project Path="Playground.Example.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
-  <Project Path="CollisionLookup.csproj" />
 </Solution>
