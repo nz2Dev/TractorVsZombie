@@ -13,7 +13,7 @@ public class KnnRunner : MonoBehaviour {
         solvers = new ();
     }
 
-    void FixedUpdate() {
+    void Update() {
         foreach (var solver in solvers)
             solver.Solve();
     }

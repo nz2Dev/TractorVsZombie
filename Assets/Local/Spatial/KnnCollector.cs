@@ -45,12 +45,19 @@ public class KnnCollector : IDisposable {
     }
 
     public int GetIndexId(int index) {
-        return indexToId[index];
+        var pointId = indexToId[index];
+        if (pointsRegistry.ContainsKey(pointId)) {
+            return pointId;
+        } else {
+            return -1;
+        }
     }
 
     public void RemovePoint(int id) {
         pointsRegistry.Remove(id);
-        indexToId.Remove(id);
+        // as removing point from registry do not invalidate the built points
+        // this alone can't prevent GetIndexId(int) return next valid id from the built points.
+        // the solution is in Solver, that query K nearest, and increase the K, until it find first valid index that successfully maps to the point id here.
     }
 
     public void Dispose() {

@@ -6,7 +6,7 @@ using Unity.Mathematics;
 
 [TestFixture]
 public class KnnSolverTests {
-    
+
     [Test]
     public void QueryNearest_IsEmpty_ReturnNegativePointId() {
         using var solver = new KnnSolver(8, 8);
@@ -34,6 +34,21 @@ public class KnnSolverTests {
         var nearestPointId = solver.QueryNearest(testPoint);
 
         Assert.That(nearestPointId, Is.EqualTo(fiveMetersAwayPointId));
+    }
+
+    [Test]
+    public void QueryNearest_AfterNearestPointIsRemoved_ShouldTemporarlyReturnNegative() {
+        var tenMetersAway = new float3(10, 0, 0);
+        var fiveMetersAway = new float3(5, 0, 0);
+        var testPoint = new float3(0, 0, 0);
+        using var solver = new KnnSolver(8, 8);
+
+        var tenMetersAwayPointId = solver.AddPoint(tenMetersAway);
+        var fiveMetersAwayPointId = solver.AddPoint(fiveMetersAway);
+        solver.Solve();
+        solver.RemovePoint(fiveMetersAwayPointId);
+
+        Assert.That(solver.QueryNearest(testPoint), Is.Negative);
     }
 
 }
