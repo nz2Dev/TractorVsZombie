@@ -62,6 +62,7 @@ public class AimingController {
         }
         
         var mousePosition = Input.mousePosition;
+        // if GetScreePointRay is moved to the View, there is no need in CameraProvider at all
         var mouseRay = cameraProvider.GetScreenPointRay(mousePosition);
         var mouseHitPoint = physicsService.GetGroundHitPosition(mouseRay);
         model.AimInput = new TopDownAimInput {
