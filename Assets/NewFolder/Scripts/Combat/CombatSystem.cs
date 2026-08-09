@@ -10,24 +10,26 @@ public class CombatSystem {
     private static ReservedLayerCode MapFactionToLayerCode(bool alie) => alie ? ReservedLayerCode.First : ReservedLayerCode.Second;
 
     private readonly RaycastService raycastService;
+    private readonly ProximityService proximityService;
 
     private int idCounter;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
-    private readonly SpatialLookup<CombatAgent> alieLookup = new SpatialLookup<CombatAgent>(128);
-    private readonly SpatialLookup<CombatAgent> foeLookup = new SpatialLookup<CombatAgent>(1024);
 
-    public CombatSystem(RaycastService raycastService) {
+    private readonly int alieProximityLayer;
+    private readonly int foeProximityLayer;
+
+    private int MapFactionToProximityLayer(bool alie) => alie ? alieProximityLayer : foeProximityLayer;
+
+    public CombatSystem(RaycastService raycastService, ProximityService proximityService) {
         this.raycastService = raycastService;
+        this.proximityService = proximityService;
+
+        alieProximityLayer = proximityService.CreateLayer();
+        foeProximityLayer = proximityService.CreateLayer();
     }
 
     public void Update() {
         ResolveDamage();
-        UpdateLookups();
-    }
-
-    public void Destroy() {
-        alieLookup.Dispose();
-        foeLookup.Dispose();
     }
 
     private void ResolveDamage() {
@@ -62,18 +64,24 @@ public class CombatSystem {
         agents[agentId] = agent;
         var layerCode = MapFactionToLayerCode(agent.Alie);
         raycastService.RegisterMarker(agentId, position, prototype.markerPrefab, layerCode);
+        var proximityLayer = MapFactionToProximityLayer(agent.Alie);
+        proximityService.RegisterPoint(position, agentId, proximityLayer);
         return agentId;
     }
 
     public void UnregisterAgent(int agentId) {
         agents.Remove(agentId, out var agent);
         raycastService.UnregisterMarker(agentId);
+        var proximityLayer = MapFactionToProximityLayer(agent.Alie);
+        proximityService.RemoveBeacon(agentId, proximityLayer);
     }
 
     public void UpdateAgentPosition(int agentId, Vector3 position) {
         var agent = agents[agentId];
         agent.Position = position;
         raycastService.UpdateMarker(agentId, position);
+        var proximityLayer = MapFactionToProximityLayer(agent.Alie);
+        proximityService.UpdatePoint(agentId, position, proximityLayer);
     }
 
     public bool ApplyProjectileDamage(int agentId, Vector3 position, float testDistance, Vector3 direction, int damage) {
@@ -133,18 +141,19 @@ public class CombatSystem {
     public bool GetClosestEnemyAgentInRange(int combatAgentId, float radius, out CombatAgentInfo agentInfo) {
         var sourceAgent = agents[combatAgentId];
         var sourceAgentPosition = sourceAgent.Position;
-        var enemyLookup = sourceAgent.Alie ? foeLookup : alieLookup;
+        var enemyFaction = !sourceAgent.Alie;
+        var enemyProximityLayer = MapFactionToProximityLayer(enemyFaction);
+        
+        if (proximityService.QueryNearestBeacon(sourceAgentPosition, out var closestEnemyId, enemyProximityLayer)) {
+            var closestEnemy = agents[closestEnemyId];
+            if (Vector3.Distance(sourceAgentPosition, closestEnemy.Position) < radius) {
+                agentInfo = GetAgentInfo(closestEnemy);
+                return true;
+            }
+        }
         
         agentInfo = default;
-        if (enemyLookup.SourceCount == 0)
-            return false;
-        
-        var closestEnemy = enemyLookup.QueryNearest(sourceAgentPosition);
-        if (Vector3.Distance(sourceAgentPosition, closestEnemy.Position) >= radius)
-            return false;
-        
-        agentInfo = GetAgentInfo(closestEnemy);
-        return true;
+        return false;
     }
 
     public CombatOutputInfo GetCombatOutput(int agentId) {
@@ -159,22 +168,6 @@ public class CombatSystem {
             position = agent.Position,
             height = agent.Height
         };
-    }
-
-    private void UpdateLookups() {
-        alieLookup.Reset();
-        foeLookup.Reset();
-        
-        foreach (var agent in agents.Values)
-            if (agent.Alie) alieLookup.Add(agent);
-            else foeLookup.Add(agent);
-        
-        alieLookup.Fixate();
-        foeLookup.Fixate();
-        if (foeLookup.SourceCount != 0 && alieLookup.SourceCount != 0) {
-            JobHandle.CombineDependencies(alieLookup.ScheduleBuild(), foeLookup.ScheduleBuild())
-                .Complete();
-        }
     }
 
 }
