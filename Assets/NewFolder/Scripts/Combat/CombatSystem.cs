@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-using Unity.Jobs;
-
 using UnityEngine;
 
 public class CombatSystem {
 
     private static ReservedLayerCode MapFactionToLayerCode(bool alie) => alie ? ReservedLayerCode.First : ReservedLayerCode.Second;
+    private static ProximityService.Layer MapFactionToProximityLayer(bool alie) => alie ? ProximityService.Layer.CombatReservedA : ProximityService.Layer.CombatReservedB;
 
     private readonly RaycastService raycastService;
     private readonly ProximityService proximityService;
@@ -15,17 +14,9 @@ public class CombatSystem {
     private int idCounter;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
 
-    private readonly int alieProximityLayer;
-    private readonly int foeProximityLayer;
-
-    private int MapFactionToProximityLayer(bool alie) => alie ? alieProximityLayer : foeProximityLayer;
-
     public CombatSystem(RaycastService raycastService, ProximityService proximityService) {
         this.raycastService = raycastService;
         this.proximityService = proximityService;
-
-        alieProximityLayer = proximityService.CreateLayer();
-        foeProximityLayer = proximityService.CreateLayer();
     }
 
     public void Update() {

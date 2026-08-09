@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class ProximityService {
 
+    public enum Layer {
+        CombatReservedA,
+        CombatReservedB
+    }
+
     internal class SolverLayer {
         
         private readonly KnnSolver solver;
@@ -47,33 +52,36 @@ public class ProximityService {
 
     private readonly KnnRunner knnRunner;
 
-    private Dictionary<int, SolverLayer> layers = new();
-    private int layerIdCounter = 0;
+    private readonly List<SolverLayer> layers = new();
 
     public ProximityService(KnnRunner knnRunner) {
         this.knnRunner = knnRunner;
+        // still requires the central object that holds and manages this, but we will keep it this simple for now
+        // NOTE: instantiating ProximityService twise, will recreate layers
+        CreateLayers();
     }
 
-    public int CreateLayer() {
-        var nextLayerId = ++layerIdCounter;
-        layers[nextLayerId] = new SolverLayer(knnRunner.CreateSolver());
-        return nextLayerId;
+    private void CreateLayers() {
+        var values = Enum.GetValues(typeof(Layer));
+        for (int i = 0; i < values.Length; i++) {
+            layers.Add(new SolverLayer(knnRunner.CreateSolver()));
+        }
     }
 
-    public void RegisterPoint(Vector3 position, int metadata, int layerId) {
-        layers[layerId].RegisterPoint(metadata, position);
+    public void RegisterPoint(Vector3 position, int metadata, Layer layer) {
+        layers[(int) layer].RegisterPoint(metadata, position);
     }
 
-    public void UpdatePoint(int metadata, Vector3 position, int layerId) {
-        layers[layerId].UpdatePoint(metadata, position);
+    public void UpdatePoint(int metadata, Vector3 position, Layer layer) {
+        layers[(int) layer].UpdatePoint(metadata, position);
     }
 
-    public void RemoveBeacon(int metadata, int layerId) {
-        layers[layerId].RemovePoint(metadata);
+    public void RemoveBeacon(int metadata, Layer layer) {
+        layers[(int) layer].RemovePoint(metadata);
     }
 
-    public bool QueryNearestBeacon(Vector3 position, out int metadata, int layerId) {
-        return layers[layerId].QueryNearest(position, out metadata);
+    public bool QueryNearestBeacon(Vector3 position, out int metadata, Layer layer) {
+        return layers[(int) layer].QueryNearest(position, out metadata);
     }
 
 }
