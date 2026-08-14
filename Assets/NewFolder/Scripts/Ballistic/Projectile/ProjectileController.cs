@@ -51,9 +51,21 @@ public class ProjectileController {
                 continue;
 
             var projectileHitCheckDistance = 0.25f;
-            if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectileHitCheckDistance, projectile.Config.damage, out var hitDirection)) {
+            if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectileHitCheckDistance, 
+                projectile.Config.damage, out var hitDirection, out var hitSurface)) {
                 projectile.IsDead = true;
-                view.ShowBulletCrash(projectile.Id, projectile.Position, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitDirection);
+                
+                AudioClip[] impactAudioClips;
+                ParticleSystem impactVFXPrefab;
+                if (hitSurface == ContactSurface.Metal) {
+                    impactAudioClips = projectile.Config.metalImpactAudioClips;
+                    impactVFXPrefab = projectile.Config.metalImpactParticlesPrefab;
+                } else {
+                    impactAudioClips = projectile.Config.softImpactAudioClips;
+                    impactVFXPrefab = projectile.Config.softImpactParticlesPrefab;
+                }
+                
+                view.ShowBulletCrash(projectile.Id, projectile.Position, impactAudioClips, impactVFXPrefab, hitDirection);
             }
         }
     }

@@ -216,6 +216,7 @@ MonoBehaviour:
   alie: 1
   configSource:
     maxHealth: 100
+    surface: 0
   markerPrefab: {fileID: 744558205689055514}
 --- !u!1001 &5068331426846624877
 PrefabInstance:

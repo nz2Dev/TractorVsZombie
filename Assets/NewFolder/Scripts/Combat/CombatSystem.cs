@@ -75,12 +75,9 @@ public class CombatSystem {
         proximityService.UpdatePoint(agentId, position, proximityLayer);
     }
 
-    public bool ApplyProjectileDamage(int agentId, Vector3 position, float testDistance, Vector3 direction, int damage) {
-        return ApplyProjectileDamage(agentId, position, direction, testDistance, damage, out var _);
-    }
-
-    public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, float testDistance, int damage, out Vector3 hitDirection) {
+    public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, float testDistance, int damage, out Vector3 hitDirection, out ContactSurface surface) {
         hitDirection = Vector3.zero;
+        surface = ContactSurface.None;
         if (!agents.TryGetValue(agentId, out var agent)) {
             return false;
         }
@@ -97,6 +94,7 @@ public class CombatSystem {
             hitAgent.ReceivedDamage = damage;
             hitAgent.DamageSourcePosition = position;
             hitDirection = hitInfo.normal;
+            surface = hitAgent.Config.surface;
         }
         return true;
     }

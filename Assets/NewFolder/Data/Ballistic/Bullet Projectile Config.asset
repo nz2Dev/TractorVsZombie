@@ -29,3 +29,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c59c9a7736f294146bb6ff0d98e771ad, type: 3}
   - {fileID: 8300000, guid: 7b4fb058987b948618f55731d748e85c, type: 3}
   impactParticlesPrefab: {fileID: 5912674624765925704, guid: 291b3df8345aa45988f22757cf889ec0, type: 3}
+  metalImpactAudioClips:
+  - {fileID: 8300000, guid: 80822f22ceb1c428d9c95d9fdb17016d, type: 3}
+  - {fileID: 8300000, guid: d0bd95846038b40f2b606547e33cd8a9, type: 3}
+  - {fileID: 8300000, guid: 8f2c7f1c2357c41afa40710ac8727119, type: 3}
+  - {fileID: 8300000, guid: 7e121f01ebb9d4a1da6aabb4a09cf9d9, type: 3}
+  - {fileID: 8300000, guid: c59c9a7736f294146bb6ff0d98e771ad, type: 3}
+  - {fileID: 8300000, guid: 7b4fb058987b948618f55731d748e85c, type: 3}
+  metalImpactParticlesPrefab: {fileID: 5912674624765925704, guid: 291b3df8345aa45988f22757cf889ec0, type: 3}
+  softImpactAudioClips:
+  - {fileID: 8300000, guid: 34fecd2174246452bb659bb498d9be16, type: 3}
+  softImpactParticlesPrefab: {fileID: 5912674624765925704, guid: 9a542a3172c2740a585d64e2b4dc17d1, type: 3}
