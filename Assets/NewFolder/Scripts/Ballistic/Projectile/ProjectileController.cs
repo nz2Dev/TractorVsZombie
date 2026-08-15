@@ -50,7 +50,7 @@ public class ProjectileController {
             if (projectile.IsDead)
                 continue;
 
-            var projectileHitCheckDistance = 0.25f;
+            var projectileHitCheckDistance = projectile.Velocity.magnitude * Time.fixedDeltaTime;
             if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectileHitCheckDistance, 
                 projectile.Config.damage, out var hitDirection, out var hitSurface)) {
                 projectile.IsDead = true;
@@ -78,9 +78,8 @@ public class ProjectileController {
             }
             if (!projectile.IsDead) {
                 var projectileRay = new Ray(projectile.Position, projectile.Velocity);
-                var projectileHitCheckDistance = 0.20f;
-                if (physicsService.RaycastEnvironment(projectileRay, projectileHitCheckDistance, out var position, out var normal)) {
-                    view.ShowBulletCrash(projectile.Id, position, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, normal);
+                if (physicsService.RaycastEnvironment(projectileRay, projectile.Velocity.magnitude * Time.fixedDeltaTime, out var hitInfo)) {
+                    view.ShowBulletCrash(projectile.Id, hitInfo.point, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitInfo.normal);
                     projectile.IsDead = true;
                 }
             }
