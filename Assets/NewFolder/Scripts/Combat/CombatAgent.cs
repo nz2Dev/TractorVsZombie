@@ -16,6 +16,7 @@ internal class CombatAgent : IPositionSource {
     public bool DamageByExplosion { get; set; }
     public ExplosionData ExplosionData { get; set; }
     public bool DamageByPunch { get; set; }
+    public bool Exploded { get; set; }
 
     public CombatOutputInfo Output { get; set; }
 

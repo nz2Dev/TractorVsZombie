@@ -99,6 +99,12 @@ public class CombatSystem {
         return true;
     }
 
+    public void RecoverFromExplosion(int agentId) {
+        if (agents.TryGetValue(agentId, out var agent)) {
+            agent.Exploded = false;
+        }
+    }
+
     public int ApplyExplosionDamage(int sourceAgentId, Vector3 position, float triggerRadius, int damage, ExplosionData explosionData) {
         var sourceAgent = agents[sourceAgentId];
         var enemyFaction = !sourceAgent.Alie;
@@ -108,7 +114,8 @@ public class CombatSystem {
         int affectedCount = 0;
         for (int i = 0; i < overlapCount; i++) {
             var affectedAgent = agents[agentIdResults[i]];
-            if (affectedAgent.Id != sourceAgentId) {
+            if (affectedAgent.Id != sourceAgentId && !affectedAgent.Exploded) {
+                affectedAgent.Exploded = true;
                 affectedAgent.DamageByExplosion = true;
                 affectedAgent.ExplosionData = explosionData;
                 affectedAgent.ReceivedDamage = damage;

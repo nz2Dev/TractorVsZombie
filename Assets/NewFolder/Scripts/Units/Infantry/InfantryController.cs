@@ -118,6 +118,7 @@ public class InfantryController {
                 model.Position = physicsService.GetClosestVerticalGroundPoint(model.Position);
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 physicsService.SetPhysicsActive(model.BodyPhysicsId, false);
+                combatSystem.RecoverFromExplosion(model.CombatId);
             } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {
                 model.Velocity = rvoVelocity;
                 model.Position = model.Position += rvoVelocity * Time.deltaTime;

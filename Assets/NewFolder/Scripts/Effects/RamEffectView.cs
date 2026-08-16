@@ -28,7 +28,7 @@ public class RamEffectView {
         var audioSource = audioSourceRegistry[entityId];
         audioSource.transform.position = position;
         var state = stateRegistry[entityId];
-        if (Time.time - state.lastImpactTime > 0.1f) {
+        if (Time.time - state.lastImpactTime > 0f) {
             state.lastImpactTime = Time.time;
             for (int i = 0; i < maxImpacts; i++) {
                 audioSource.PlayOneShot(SelectRandom(audioClips));
