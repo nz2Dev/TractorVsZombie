@@ -24,6 +24,7 @@ public class RamEffectController {
         var model = new RamEffectModel(nextId, combatId, prototype.config);
         model.Position = prototype.position;
         registry[nextId] = model;
+        view.AddEffect(nextId, prototype.audioSourcePrefab);
         return nextId;
     }
 
@@ -40,7 +41,7 @@ public class RamEffectController {
         foreach (var model in registry.Values) {
             var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position, 
                 model.Config.triggerRadius, model.Config.damage, model.Config.explosionData);
-            view.PlayImpact(model.Position, model.Config.triggerRadius, affectedCount, model.Config.impactSFX);
+            view.ShowImpact(model.Id, model.Position, affectedCount, model.Config.impactSFX);
         }
     }
 }
