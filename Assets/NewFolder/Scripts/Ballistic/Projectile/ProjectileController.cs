@@ -28,7 +28,8 @@ public class ProjectileController {
         model.Velocity = orientation.direction * prototype.config.speed;
         model.SpawnTime = Time.time;
 
-        view.ShowBulletShoot(model.Id, orientation.origin, model.Velocity, 
+        view.SetupShooter(shooterId, prototype.shootAudioSourcePrefab, prototype.crashAudioSourcePrefab);
+        view.ShowBulletShoot(shooterId, model.Id, orientation.origin, model.Velocity, 
             prototype.config.style, prototype.config.shootAudioClips);
     }
 
@@ -65,7 +66,7 @@ public class ProjectileController {
                     impactVFXPrefab = projectile.Config.softImpactParticlesPrefab;
                 }
                 
-                view.ShowBulletCrash(projectile.Id, projectile.Position, impactAudioClips, impactVFXPrefab, hitDirection);
+                view.ShowBulletCrash(projectile.ShooterCombatId, projectile.Id, projectile.Position, impactAudioClips, impactVFXPrefab, hitDirection);
             }
         }
     }
@@ -79,7 +80,7 @@ public class ProjectileController {
             if (!projectile.IsDead) {
                 var projectileRay = new Ray(projectile.Position, projectile.Velocity);
                 if (physicsService.RaycastEnvironment(projectileRay, projectile.Velocity.magnitude * Time.fixedDeltaTime, out var hitInfo)) {
-                    view.ShowBulletCrash(projectile.Id, hitInfo.point, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitInfo.normal);
+                    view.ShowBulletCrash(projectile.ShooterCombatId, projectile.Id, hitInfo.point, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitInfo.normal);
                     projectile.IsDead = true;
                 }
             }

@@ -10,6 +10,9 @@ public class ProjectileView {
     private ParticleSystem.Particle[] bulletParticles;
     private List<Vector4> customData;
 
+    private Dictionary<int, AudioSource> shooterShootRegistry = new();
+    private Dictionary<int, AudioSource> shooterCrashRegistry = new();
+
     public ProjectileView(SoundManager soundManager) {
         var prefab = Resources.Load<ParticleSystem>("Projectile ParticlesSystem");
         bulletSystem = GameObject.Instantiate(prefab);
@@ -18,17 +21,36 @@ public class ProjectileView {
         this.soundManager = soundManager;
     }
 
-    internal void ShowBulletShoot(int projectileId, Vector3 position, Vector3 velocity, ProjectileStyle style, AudioClip[] shootSFX) {
-        EmitBulletParticle(projectileId, position, velocity, style);
-        soundManager.PlayEffect(position, shootSFX);
+    internal void SetupShooter(int shooterId, AudioSource shootAudioSourcePrefab, AudioSource crashAudioSourcePrefab) {
+        if (shooterShootRegistry.ContainsKey(shooterId))
+            return;
+        
+        shooterShootRegistry[shooterId] = GameObject.Instantiate(shootAudioSourcePrefab);
+        shooterCrashRegistry[shooterId] = GameObject.Instantiate(crashAudioSourcePrefab);
     }
 
-    internal void ShowBulletCrash(int projectileId, Vector3 position, AudioClip[] impactSFX, ParticleSystem impactParticlesPrefab, Vector3 hitDirection) {
+    internal void ShowBulletShoot(int shooterId, int projectileId, Vector3 position, Vector3 velocity, ProjectileStyle style, AudioClip[] shootSFX) {
+        EmitBulletParticle(projectileId, position, velocity, style);
+        
+        var audioSource = shooterShootRegistry[shooterId];
+        audioSource.transform.position = position;
+        audioSource.pitch = UnityEngine.Random.Range(0.8f, 1.4f);
+        audioSource.PlayOneShot(SoundManager.SelectRandom(shootSFX));
+    }
+
+    internal void ShowBulletCrash(int shooterId, int projectileId, Vector3 position, AudioClip[] impactSFX, ParticleSystem impactParticlesPrefab, Vector3 hitDirection) {
         KillBuletParticleById(projectileId);
-        if (impactSFX != null)
-            soundManager.PlayEffect(position, impactSFX);
-        if (impactParticlesPrefab != null)
+        
+        if (impactSFX != null) {
+            var audioSource = shooterCrashRegistry[shooterId];
+            audioSource.transform.position = position;
+            audioSource.pitch = UnityEngine.Random.Range(0.8f, 1.4f);
+            audioSource.PlayOneShot(SoundManager.SelectRandom(impactSFX));
+        }
+
+        if (impactParticlesPrefab != null) {
             GameObject.Instantiate(impactParticlesPrefab, position, Quaternion.LookRotation(hitDirection));
+        }
     }
 
     internal void ShowBulletDisappear(int projectileId) {

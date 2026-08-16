@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Armor Production Space Config
   m_EditorClassIdentifier: NewFolder::ProductionSpaceConfig
   spawnInterval: 5
-  initialQueue: 0
+  initialQueue: 1

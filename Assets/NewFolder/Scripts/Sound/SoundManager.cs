@@ -101,7 +101,7 @@ public class SoundManager : MonoBehaviour {
         return effectSources[longestIndex];
     }
 
-    private AudioClip SelectRandom(AudioClip[] clips) {
+    public static AudioClip SelectRandom(AudioClip[] clips) {
         return clips[Random.Range(0, clips.Length)];
     }
 
