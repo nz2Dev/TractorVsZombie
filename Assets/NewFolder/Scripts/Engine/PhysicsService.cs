@@ -8,15 +8,17 @@ public class PhysicsService {
         public Vector3 Position;
         public Quaternion Rotation;
         public Vector3 Velocity;
+        public bool IsDynamic;
         public bool InMotion;
         public bool Pending;
 
-        public PhysicsEntityPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool inMotion, bool pending) {
+        public PhysicsEntityPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool inMotion, bool pending, bool isActive) {
             Position = position;
             Rotation = rotation;
             Velocity = velocity;
             InMotion = inMotion;
             Pending = pending;
+            IsDynamic = isActive;
         }
     }
 
@@ -66,7 +68,7 @@ public class PhysicsService {
         }
     }
 
-    public void AddExplosionForce(int id, float force, Vector3 position, float radius, float upwardsModifier = 0, ForceMode mode = ForceMode.Force) {
+    public virtual void AddExplosionForce(int id, float force, Vector3 position, float radius, float upwardsModifier = 0, ForceMode mode = ForceMode.Force) {
         var entity = bodyRegistry[id];
         entity.AddExplosionForce(force, position, radius, upwardsModifier, mode);
     }
@@ -78,7 +80,7 @@ public class PhysicsService {
         }
     }
 
-    public PhysicsEntityPose GetEntityPose(int id) {
+    public virtual PhysicsEntityPose GetEntityPose(int id) {
         if (bodyRegistry.TryGetValue(id, out var entity)) {
             const float minFlyTime = 0.5f;
             // domain logic here, keep this closer to usage, e.g in Infantry
@@ -88,7 +90,8 @@ public class PhysicsService {
                 entity.Rotation,
                 entity.LinearVelocity,
                 inMotion: isInMotion,
-                pending: entity.IsDynamic
+                pending: entity.IsDynamic,
+                isActive: entity.IsDynamic
             );
         }
         return default;
