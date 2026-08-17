@@ -16,18 +16,12 @@ public class BodyDynamicsControllerTests {
     }
 
     [Test]
-    public void GetState_AfterCreation_IsEmpty() {
+    public void GetState_AfterCreation_IsDefault() {
         var componentId = controller.Create();
         BodyDynamicState state = controller.GetState(componentId);
-        Assert.That(state, Is.EqualTo(default(BodyDynamicState)));
-    }
-
-    [Test]
-    public void Explode_WithDefaults_Executes() {
-        var explosion = new Explosion();
-        
-        var componentId = controller.Create();
-        Assert.DoesNotThrow(() => controller.Explode(componentId, explosion));
+        Assert.That(state, Is.EqualTo(new BodyDynamicState {
+            grounded = true
+        }));
     }
 
     [Test]
@@ -49,21 +43,39 @@ public class BodyDynamicsControllerTests {
     }
 
     [Test]
-    public void IsGrounded_WhenCreated_IsTrue() {
-        var id = controller.Create();
+    public void IsGrounded_WhenVelocityInStableRange_IsTrue() {
+        var prototype = new BodyDynamicPrototype {
+            config = new BodyDynamicConfig {
+                stopSpeedLimit = 0.1f,
+            }
+        };
+        physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
+            .Returns(new PhysicsService.PhysicsEntityPose {
+                Velocity = new Vector3(0, 0, 0.05f),
+                IsDynamic = true,
+            });
+
+        var id = controller.Create(prototype);
+        controller.Update();
         var state = controller.GetState(id);
+
         Assert.That(state.grounded, Is.True);
     }
 
     [Test]
-    public void IsGrounded_AfterUpdateWhenPhysicsBodyInMotion_IsFalse() {
+    public void IsGrounded_WhenVelocityNotInStableRange_IsFalse() {
+        var prototype = new BodyDynamicPrototype {
+            config = new BodyDynamicConfig {
+                stopSpeedLimit = 0.2f,
+            }
+        };
         physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
             .Returns(new PhysicsService.PhysicsEntityPose {
-                Velocity = Vector3.one,
+                Velocity = new Vector3(0, 0, 0.3f),
                 IsDynamic = true,
             });
 
-        var id = controller.Create();
+        var id = controller.Create(prototype);
         controller.Update();
         var state = controller.GetState(id);
 

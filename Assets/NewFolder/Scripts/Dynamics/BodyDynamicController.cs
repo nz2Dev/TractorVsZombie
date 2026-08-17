@@ -8,12 +8,22 @@ public class BodyDynamicController {
     private readonly PhysicsService physicsService;
 
     private bool grounded = true;
+    private BodyDynamicConfig config;
 
     public BodyDynamicController(PhysicsService physicsService) {
         this.physicsService = physicsService;
     }
 
     public int Create() {
+        return Create(new BodyDynamicPrototype {
+            config = new BodyDynamicConfig {
+                stopSpeedLimit = 0.1f
+            }
+        });
+    }
+
+    public int Create(BodyDynamicPrototype prototype) {
+        config = prototype.config;
         return -1;
     }
 
@@ -29,7 +39,8 @@ public class BodyDynamicController {
 
     public void Update() {
         var pose = physicsService.GetEntityPose(-1);
-        if (grounded && pose.Velocity.sqrMagnitude > 0 && pose.IsDynamic) {
+        var limitSqared = config.stopSpeedLimit * config.stopSpeedLimit;
+        if (grounded && pose.Velocity.sqrMagnitude > limitSqared && pose.IsDynamic) {
             grounded = false;
         }
     }
