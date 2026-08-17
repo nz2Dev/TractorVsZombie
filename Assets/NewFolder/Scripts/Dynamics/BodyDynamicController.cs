@@ -34,14 +34,22 @@ public class BodyDynamicController {
     }
 
     public void Explode(int componentId, Explosion explosion) {
+        physicsService.SetPhysicsActive(-1, true);
         physicsService.AddExplosionForce(-1, explosion.force, explosion.epicentr, explosion.radius, explosion.upwardModifier, ForceMode.Force);
     }
 
     public void Update() {
         var pose = physicsService.GetEntityPose(-1);
         var limitSqared = config.stopSpeedLimit * config.stopSpeedLimit;
-        if (grounded && pose.Velocity.sqrMagnitude > limitSqared && pose.IsDynamic) {
-            grounded = false;
+        var inMotion = pose.Velocity.sqrMagnitude > limitSqared;
+        if (inMotion) {
+            if (grounded) {
+                grounded = false;
+            }
+        } else {
+            if (!grounded || pose.IsInteractive) {
+                physicsService.SetPhysicsActive(-1, false);
+            }
         }
     }
 }

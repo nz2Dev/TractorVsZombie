@@ -16,7 +16,7 @@ public class BodyDynamicsControllerTests {
     }
 
     [Test]
-    public void GetState_AfterCreation_IsDefault() {
+    public void Create_ReturnDefaultState() {
         var componentId = controller.Create();
         BodyDynamicState state = controller.GetState(componentId);
         Assert.That(state, Is.EqualTo(new BodyDynamicState {
@@ -52,7 +52,6 @@ public class BodyDynamicsControllerTests {
         physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
             .Returns(new PhysicsService.PhysicsEntityPose {
                 Velocity = new Vector3(0, 0, 0.05f),
-                IsDynamic = true,
             });
 
         var id = controller.Create(prototype);
@@ -72,7 +71,6 @@ public class BodyDynamicsControllerTests {
         physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
             .Returns(new PhysicsService.PhysicsEntityPose {
                 Velocity = new Vector3(0, 0, 0.3f),
-                IsDynamic = true,
             });
 
         var id = controller.Create(prototype);
@@ -80,6 +78,36 @@ public class BodyDynamicsControllerTests {
         var state = controller.GetState(id);
 
         Assert.That(state.grounded, Is.False);
+    }
+
+    [Test]
+    public void Explode_ActivatesServiceProcessing() {
+        var explosion = new Explosion {};
+        var id = controller.Create();
+        controller.Explode(id, explosion);
+        physicsService.Verify(s => s.SetPhysicsActive(It.IsAny<int>(), true), Times.Once);
+    }
+
+    [Test]
+    public void Update_WhenBecomeGrounded_StopsServiceProcessing() {
+        var prototype = new BodyDynamicPrototype { 
+            config = new BodyDynamicConfig { 
+                stopSpeedLimit = 0.1f 
+            }
+        };
+        
+        var id = controller.Create();
+        physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
+            .Returns(new PhysicsService.PhysicsEntityPose {
+                Velocity = new Vector3(0.0f, 0, 0),
+                IsInteractive = true, // physics is processing
+            });
+        controller.Explode(id, default);
+        controller.Update();
+
+        physicsService.Verify(
+            s => s.SetPhysicsActive(It.IsAny<int>(), false), 
+            Times.AtLeast(1));
     }
 
 }

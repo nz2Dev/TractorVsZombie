@@ -8,7 +8,7 @@ public class PhysicsService {
         public Vector3 Position;
         public Quaternion Rotation;
         public Vector3 Velocity;
-        public bool IsDynamic;
+        public bool IsInteractive;
         public bool InMotion;
         public bool Pending;
 
@@ -18,7 +18,7 @@ public class PhysicsService {
             Velocity = velocity;
             InMotion = inMotion;
             Pending = pending;
-            IsDynamic = isActive;
+            IsInteractive = isActive;
         }
     }
 
@@ -61,7 +61,7 @@ public class PhysicsService {
         }
     }
 
-    public void SetPhysicsActive(int id, bool active) {
+    public virtual void SetPhysicsActive(int id, bool active) {
         // make access consisten: either fail hard or play safe silently
         if (bodyRegistry.TryGetValue(id, out var entity)) {
             entity.SetDynamics(active);
