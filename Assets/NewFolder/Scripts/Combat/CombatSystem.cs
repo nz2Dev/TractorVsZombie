@@ -13,6 +13,7 @@ public class CombatSystem {
 
     private int idCounter;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
+    private readonly Dictionary<int, int> proximityToAgent = new Dictionary<int, int>();
 
     public CombatSystem(RaycastService raycastService, ProximityService proximityService) {
         this.raycastService = raycastService;
@@ -53,26 +54,26 @@ public class CombatSystem {
         agent.Position = position;
         agent.Health = agent.Config.maxHealth;
         agents[agentId] = agent;
+        var proximityLayer = MapFactionToProximityLayer(agent.Alie);
+        agent.ProximityId = proximityService.AddPoint(position, proximityLayer);
+        proximityToAgent[agent.ProximityId] = agentId;
         var layerCode = MapFactionToLayerCode(agent.Alie);
         raycastService.RegisterMarker(agentId, position, prototype.markerPrefab, layerCode);
-        var proximityLayer = MapFactionToProximityLayer(agent.Alie);
-        proximityService.RegisterPoint(position, agentId, proximityLayer);
         return agentId;
     }
 
     public void UnregisterAgent(int agentId) {
         agents.Remove(agentId, out var agent);
         raycastService.UnregisterMarker(agentId);
-        var proximityLayer = MapFactionToProximityLayer(agent.Alie);
-        proximityService.RemoveBeacon(agentId, proximityLayer);
+        proximityService.RemovePoint(agent.ProximityId);
+        proximityToAgent.Remove(agent.ProximityId);
     }
 
     public void UpdateAgentPosition(int agentId, Vector3 position) {
         var agent = agents[agentId];
         agent.Position = position;
         raycastService.UpdateMarker(agentId, position);
-        var proximityLayer = MapFactionToProximityLayer(agent.Alie);
-        proximityService.UpdatePoint(agentId, position, proximityLayer);
+        proximityService.UpdatePoint(agent.ProximityId, position);
     }
 
     public bool ApplyProjectileDamage(int agentId, Vector3 position, Vector3 direction, float testDistance, int damage, out Vector3 hitDirection, out ContactSurface surface) {
@@ -140,8 +141,8 @@ public class CombatSystem {
         var enemyFaction = !sourceAgent.Alie;
         var enemyProximityLayer = MapFactionToProximityLayer(enemyFaction);
         
-        if (proximityService.QueryNearestBeacon(sourceAgentPosition, out var closestEnemyId, enemyProximityLayer)) {
-            var closestEnemy = agents[closestEnemyId];
+        if (proximityService.QueryNearestPoint(sourceAgentPosition, enemyProximityLayer, out var closestProximtyId)) {
+            var closestEnemy = agents[proximityToAgent[closestProximtyId]];
             if (Vector3.Distance(sourceAgentPosition, closestEnemy.Position) < radius) {
                 agentInfo = GetAgentInfo(closestEnemy);
                 return true;

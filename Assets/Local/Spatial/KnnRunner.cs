@@ -1,38 +1,23 @@
-using System.Collections.Generic;
-
 using UnityEngine;
 
 public class KnnRunner : MonoBehaviour {
     
     [SerializeField] private int intiSizeCapacity = 256;
     [SerializeField] private int intiResultCapacity = 256;
+    [SerializeField] private int layersCount = 3;
 
-    private List<KnnSolver> solvers;
+    public KnnSystem System { get; private set; }
 
     private void Awake() {
-        solvers = new ();
+        System = new KnnSystem(intiResultCapacity, intiSizeCapacity, layersCount);
     }
 
-    void Update() {
-        foreach (var solver in solvers)
-            solver.Solve();
+    private void Update() {
+        System.Update();
     }
 
     private void OnDestroy() {
-        foreach (var solver in solvers)
-            solver.Dispose();
-        
-        solvers.Clear();
-    }
-
-    public KnnSolver CreateSolver() {
-        var solver = new KnnSolver(intiSizeCapacity, intiResultCapacity);
-        solvers.Add(solver);
-        return solver;
-    }
-
-    public void DeleteSolver(KnnSolver solver) {
-        solvers.Remove(solver);
+        System.Dispose();
     }
 
 }

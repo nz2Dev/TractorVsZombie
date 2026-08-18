@@ -6,6 +6,7 @@ internal class CombatAgent : IPositionSource {
     public bool Alie { get; }
     public CombatAgentConfig Config { get; }
     public float Height { get; }
+    public int ProximityId { get; set; }
 
     public Vector3 Position { get; set; }
     public int Health { get; set; }

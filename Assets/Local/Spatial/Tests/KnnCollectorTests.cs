@@ -17,7 +17,7 @@ public class KnnCollectorTests {
     [Test]
     public void BuildPoints_AddOnePoint_ContainsInResult() {
         using (var collector = new KnnCollector(8)) {
-            collector.AddPoint(new float3(0, 0, 1));
+            collector.AddPoint(id: 1, new float3(0, 0, 1));
             var points = collector.BuildPoints();
             Assert.That(points[0], Is.EqualTo(new float3(0, 0, 1)));
         }
@@ -26,7 +26,8 @@ public class KnnCollectorTests {
     [Test]
     public void GetIndexId_WithoutBuild_ThrowException() {
         using (var collector = new KnnCollector(8)) {
-            var firstPointId = collector.AddPoint(new float3());
+            var firstPointId = 1; 
+            collector.AddPoint(id: firstPointId, new float3());
             Assert.Catch(() => collector.GetIndexId(0));
         }
     }
@@ -34,7 +35,8 @@ public class KnnCollectorTests {
     [Test]
     public void GetIndexId_AfterPointsAreBuilt_ReturnProperId() {
         using (var collector = new KnnCollector(8)) {
-            var firstPointId = collector.AddPoint(new float3());
+            var firstPointId = 1;
+            collector.AddPoint(firstPointId, new float3());
             collector.BuildPoints();
             Assert.That(collector.GetIndexId(0), Is.EqualTo(firstPointId));
         }
@@ -45,7 +47,8 @@ public class KnnCollectorTests {
         using (var collector = new KnnCollector(8)) {
             Assert.That(collector.BuildPoints().Length, Is.Zero);
             
-            var firstPointId = collector.AddPoint(new float3());
+            var firstPointId = 1;
+            collector.AddPoint(firstPointId, new float3());
             collector.RemovePoint(firstPointId);
             
             Assert.That(collector.BuildPoints().Length, Is.Zero);
@@ -59,7 +62,8 @@ public class KnnCollectorTests {
             var valueB = new float3(0, 0, 1);
             Assert.That(valueA, Is.Not.EqualTo(valueB));
             
-            var firstPointId = collector.AddPoint(valueA);
+            var firstPointId = 1;
+            collector.AddPoint(firstPointId, valueA);
             var pointsBuilt = collector.BuildPoints();
             Assert.That(pointsBuilt[0], Is.EqualTo(valueA));
             Assert.That(pointsBuilt.Length, Is.EqualTo(1));

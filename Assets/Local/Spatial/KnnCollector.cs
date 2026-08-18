@@ -10,7 +10,6 @@ public class KnnCollector : IDisposable {
     
     private NativeArray<float3> pointsBuffer;
 
-    private int idCounter;
     private Dictionary<int, float3> pointsRegistry = new ();
     private Dictionary<int, int> indexToId = new();
     
@@ -34,10 +33,8 @@ public class KnnCollector : IDisposable {
         pointsRegistry.Clear();
     }
 
-    public int AddPoint(float3 point) {
-        var nextId = ++idCounter;
-        pointsRegistry[nextId] = point;
-        return nextId;
+    public void AddPoint(int id, float3 point) {
+        pointsRegistry[id] = point;
     }
 
     public void UpdatePoint(int id, float3 point) {

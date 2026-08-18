@@ -10,78 +10,27 @@ public class ProximityService {
         CombatReservedB
     }
 
-    internal class SolverLayer {
-        
-        private readonly KnnSolver solver;
-        private readonly Dictionary<int, int> metadataToBeaconId = new ();
-        private readonly Dictionary<int, int> beaconIdToMetadata = new ();
-
-        public SolverLayer(KnnSolver solver) {
-            this.solver = solver;
-        }
-
-        internal void RegisterPoint(int metadata, Vector3 position) {
-            var pointId = solver.AddPoint(position);
-            metadataToBeaconId[metadata] = pointId;
-            beaconIdToMetadata[pointId] = metadata;
-        }
-
-        internal void UpdatePoint(int metadata, Vector3 position) {
-            var pointId = metadataToBeaconId[metadata];
-            solver.UpdatePoint(pointId, position);
-        }
-
-        internal void RemovePoint(int metadata) {
-            var pointId = metadataToBeaconId[metadata];
-            solver.RemovePoint(pointId);
-            metadataToBeaconId.Remove(metadata);
-            beaconIdToMetadata.Remove(pointId);
-        }
-
-        internal bool QueryNearest(Vector3 position, out int metadata) {
-            var beaconId = solver.QueryNearest(position);
-            if (beaconId != -1) {
-                metadata = beaconIdToMetadata[beaconId];
-                return true;
-            } else {
-                metadata = -1;
-                return false;
-            }
-        }
-    }
-
     private readonly KnnRunner knnRunner;
-
-    private readonly List<SolverLayer> layers = new();
 
     public ProximityService(KnnRunner knnRunner) {
         this.knnRunner = knnRunner;
-        // still requires the central object that holds and manages this, but we will keep it this simple for now
-        // NOTE: instantiating ProximityService twise, will recreate layers
-        CreateLayers();
     }
 
-    private void CreateLayers() {
-        var values = Enum.GetValues(typeof(Layer));
-        for (int i = 0; i < values.Length; i++) {
-            layers.Add(new SolverLayer(knnRunner.CreateSolver()));
-        }
+    public int AddPoint(Vector3 position, Layer layer) {
+        return knnRunner.System.AddPoint(position, (int) layer);
     }
 
-    public void RegisterPoint(Vector3 position, int metadata, Layer layer) {
-        layers[(int) layer].RegisterPoint(metadata, position);
+    public void UpdatePoint(int id, Vector3 position) {
+        knnRunner.System.UpdatePoint(id, position);
     }
 
-    public void UpdatePoint(int metadata, Vector3 position, Layer layer) {
-        layers[(int) layer].UpdatePoint(metadata, position);
+    public void RemovePoint(int metadata) {
+        knnRunner.System.RemovePoint(metadata);
     }
 
-    public void RemoveBeacon(int metadata, Layer layer) {
-        layers[(int) layer].RemovePoint(metadata);
-    }
-
-    public bool QueryNearestBeacon(Vector3 position, out int metadata, Layer layer) {
-        return layers[(int) layer].QueryNearest(position, out metadata);
+    public bool QueryNearestPoint(Vector3 position, Layer layer, out int id) {
+        id = knnRunner.System.QueryNearest(position, (int) layer);
+        return id != -1;
     }
 
 }
