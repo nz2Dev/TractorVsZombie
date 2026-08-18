@@ -11,6 +11,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private PhysicsManager physicsManager;
+    [SerializeField] private RaycastConfig raycastConfig;
     [SerializeField] private KnnRunner knnRunner;
     [Space]
     [SerializeField] private string vehicleObstacleLayer;
@@ -48,7 +49,7 @@ public class GameBootstrapper : MonoBehaviour {
         var localAvoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
         var physicsService = new PhysicsService(physicsManager);
-        var raycastService = new RaycastService(physicsManager);
+        var raycastService = new RaycastService(raycastConfig);
         var proximityService = new ProximityService(knnRunner);
 
         var weaponView = new WeaponView();

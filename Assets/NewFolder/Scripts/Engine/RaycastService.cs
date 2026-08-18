@@ -2,21 +2,29 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+public enum ReservedLayerCode {
+    First,
+    Second
+}
+
 public class RaycastService {
     
-    private readonly PhysicsManager physicsManager;
-
     private readonly Dictionary<int, GameObject> metadataToMarker = new();
     private readonly Dictionary<GameObject, int> markerToMetadata = new();
     private readonly List<int> metadataOverlapResultBuffer;
 
-    public RaycastService(PhysicsManager physicsManager) {
-        this.physicsManager = physicsManager;
-        metadataOverlapResultBuffer = new (physicsManager.OverlapBufferSize);
+    private readonly RaycastConfig config;
+    private readonly Collider[] overlapBuffer;
+
+    public RaycastService(RaycastConfig config) {
+        this.config = config;
+        overlapBuffer = new Collider[config.overlapBufferSize];
+        metadataOverlapResultBuffer = new (config.overlapBufferSize);
     }
 
     public void RegisterMarker(int metadata, Vector3 position, CollisionMarker markerPrefab, ReservedLayerCode layerCode) {
-        var marker = physicsManager.InstantiateReservedRaycastMarker(markerPrefab, position, layerCode);
+        var marker = GameObject.Instantiate(markerPrefab, position, Quaternion.identity);
+        marker.gameObject.layer = config.LayerCodeToIndex(layerCode);
         metadataToMarker[metadata] = marker.gameObject;
         markerToMetadata[marker.gameObject] = metadata;
     }
@@ -25,7 +33,7 @@ public class RaycastService {
         var marker = metadataToMarker[metadata];
         markerToMetadata.Remove(marker);
         metadataToMarker.Remove(metadata);
-        physicsManager.DestroyReservedRaycastMarker(marker.GetComponent<CollisionMarker>());
+        UnityEngine.Object.Destroy(marker);
     }
 
     public void UpdateMarker(int metadata, Vector3 position) {
@@ -34,7 +42,7 @@ public class RaycastService {
     }
 
     public bool Raycast(Ray ray, float maxDistance, ReservedLayerCode layerCode, out int metadata, out RaycastHit hitInfo) {
-        if (physicsManager.RaycastReservedMarkers(ray, out hitInfo, maxDistance, layerCode)) {
+        if (Physics.Raycast(ray, out hitInfo, maxDistance, 1 << config.LayerCodeToIndex(layerCode))) {
             metadata = markerToMetadata[hitInfo.collider.gameObject];
             return true;
         } else {
@@ -44,17 +52,17 @@ public class RaycastService {
     }
 
     public int Overlap(Vector3 position, float radius, ReservedLayerCode layerCode, out List<int> metadataResultBuffer) {
-        var overlapCount = physicsManager.OverlapReservedMarkers(position, radius, out var resultsBuffer, layerCode);
+        int overlapCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, config.LayerCodeToMask(layerCode));
         metadataOverlapResultBuffer.Clear();
         for (int i = 0; i < overlapCount; i++) {
-            metadataOverlapResultBuffer.Add(markerToMetadata[resultsBuffer[i].gameObject]);
+            metadataOverlapResultBuffer.Add(markerToMetadata[overlapBuffer[i].gameObject]);
         }
         metadataResultBuffer = metadataOverlapResultBuffer;
         return overlapCount;
     }
 
     public Vector3 GetClosestVerticalGroundPoint(Vector3 position) {
-        if (physicsManager.RaycastGround(new Ray(position + Vector3.up, Vector3.down), 100, out var hitInfo)) {
+        if (Physics.Raycast(new Ray(position + Vector3.up, Vector3.down), out var hitInfo, maxDistance: 100, config.groundMask)) {
             return hitInfo.point;
         } else {
             return Vector3.zero;
@@ -62,7 +70,7 @@ public class RaycastService {
     }
 
     public Vector3 GetGroundHitPosition(Ray ray) {
-        if (physicsManager.RaycastGround(ray, 1000, out var hitInfo)) {
+        if (Physics.Raycast(ray, out var hitInfo, maxDistance: 1000, config.groundMask)) {
             return hitInfo.point;
         } else {
             return Vector3.zero;
@@ -70,7 +78,7 @@ public class RaycastService {
     }
 
     public bool RaycastEnvironment(Ray ray, float maxDistance, out RaycastHit hitInfo) {
-        return physicsManager.RaycastEnvironment(ray, maxDistance, out hitInfo);
+        return Physics.Raycast(ray, out hitInfo,  maxDistance, config.environmentMask);
     }
 
 }
