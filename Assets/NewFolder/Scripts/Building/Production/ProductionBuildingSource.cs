@@ -13,7 +13,7 @@ public class ProductionBuildingSource : MonoBehaviour {
     [Inline] [SerializeField] private ProductionBuildingConfig config;
     [Inline, SerializeField] private CombatAgentSource combatAgentSource;
     [Local] [SerializeField] private PhysicsObstacle dimensionsPrefab;
-    [Local] [SerializeField] private PhysicsObstacleNew physicsObstaclePrefab;
+    [Local] [SerializeField] private RagdollObstacle physicsObstaclePrefab;
     [Local] [SerializeField] private GameObject visualsPrefab;
     [Inline] [Local] [SerializeField] private SpawnSpotSource spawnSpotSource;
     [SerializeField] SpawnVariantSource spawnVariantSource;

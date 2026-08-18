@@ -4,6 +4,6 @@ using UnityEngine;
 public class HeadquarterBuildingConfig : ScriptableObject {
     public GameObject visualsPrefab; // move to prototype
     public PhysicsObstacle vehicleObstaclePrefab; // prototype component
-    public PhysicsObstacleNew physicsObstaclePrefab; // prototpye component
+    public RagdollObstacle physicsObstaclePrefab; // prototpye component
     public PhysicsObstacle avoidanceObstaclePrefab; // prototpe component
 }

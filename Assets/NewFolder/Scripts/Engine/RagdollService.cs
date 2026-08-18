@@ -24,12 +24,13 @@ public class RagdollService {
 
     private int idCounter;
     private readonly Dictionary<int, RagdollBody> bodyRegistry = new();
-    private readonly Dictionary<int, PhysicsObstacleNew> obstacleRegistry = new();
+    private readonly Dictionary<int, RagdollObstacle> obstacleRegistry = new();
     
     public RagdollService() {
     }
 
-    public int RegisterObstacle(Vector3 position, PhysicsObstacleNew obstaclePrefab) {
+    // this is implicitly also obstacle for vehicle?, raycasting? as it just adds collider into the scene, potentially interacting with those
+    public int RegisterObstacle(Vector3 position, RagdollObstacle obstaclePrefab) {
         var id = ++idCounter;
         var obstacleInstance = GameObject.Instantiate(obstaclePrefab, position, Quaternion.identity);
         obstacleRegistry[id] = obstacleInstance;

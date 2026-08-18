@@ -6,7 +6,7 @@ public struct ProductionBuildingPrototype {
     public Quaternion rotation;
     public GameObject visualsPrefab;
     public PhysicsObstacle dimensionsPrefab;
-    public PhysicsObstacleNew physicsObstaclePrefab;
+    public RagdollObstacle physicsObstaclePrefab;
     public ProductionBuildingConfig config;
     public SpawnSpot spawnSpot;
     public SpawnVariant spawnVariant;
