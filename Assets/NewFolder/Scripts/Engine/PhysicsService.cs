@@ -80,6 +80,12 @@ public class PhysicsService {
         }
     }
 
+    public void UpdateEntityPose(int id, Vector3 position, Quaternion rotation) {
+        if (bodyRegistry.TryGetValue(id, out var entity)) {
+            entity.Set(position, rotation);
+        }
+    }
+
     public virtual PhysicsEntityPose GetEntityPose(int id) {
         if (bodyRegistry.TryGetValue(id, out var entity)) {
             const float minFlyTime = 0.5f;

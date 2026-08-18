@@ -36,4 +36,10 @@ public class PhysicsBody : MonoBehaviour {
         thisRigidbody.position = position;
     }
 
+    internal void Set(Vector3 position, Quaternion rotation) {
+        transform.SetPositionAndRotation(position, rotation);
+        thisRigidbody.position = position;
+        thisRigidbody.rotation = rotation;
+    }
+
 }
