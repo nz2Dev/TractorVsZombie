@@ -14,6 +14,7 @@ public class CombatSystem {
     private int idCounter;
     private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
     private readonly Dictionary<int, int> proximityToAgent = new Dictionary<int, int>();
+    private readonly Dictionary<int, int> hitboxToAgent = new Dictionary<int, int>();
 
     public CombatSystem(RaycastService raycastService, ProximityService proximityService) {
         this.raycastService = raycastService;
@@ -58,13 +59,15 @@ public class CombatSystem {
         agent.ProximityId = proximityService.AddPoint(position, proximityLayer);
         proximityToAgent[agent.ProximityId] = agentId;
         var layerCode = MapFactionToLayerCode(agent.Alie);
-        raycastService.RegisterMarker(agentId, position, prototype.markerPrefab, layerCode);
+        agent.HitboxId = raycastService.RegisterMarker(position, prototype.markerPrefab, layerCode);
+        hitboxToAgent[agent.HitboxId] = agentId;
         return agentId;
     }
 
     public void UnregisterAgent(int agentId) {
         agents.Remove(agentId, out var agent);
-        raycastService.UnregisterMarker(agentId);
+        raycastService.UnregisterMarker(agent.HitboxId);
+        hitboxToAgent.Remove(agent.HitboxId);
         proximityService.RemovePoint(agent.ProximityId);
         proximityToAgent.Remove(agent.ProximityId);
     }
@@ -72,7 +75,7 @@ public class CombatSystem {
     public void UpdateAgentPosition(int agentId, Vector3 position) {
         var agent = agents[agentId];
         agent.Position = position;
-        raycastService.UpdateMarker(agentId, position);
+        raycastService.UpdateMarker(agent.HitboxId, position);
         proximityService.UpdatePoint(agent.ProximityId, position);
     }
 
@@ -85,11 +88,11 @@ public class CombatSystem {
 
         var enemyFaction = !agent.Alie;
         var enemyLayerCode = MapFactionToLayerCode(enemyFaction);
-        if (!raycastService.Raycast(new Ray(position, direction), testDistance, enemyLayerCode, out var hitAgentId, out var hitInfo)) {
+        if (!raycastService.Raycast(new Ray(position, direction), testDistance, enemyLayerCode, out var hitboxId, out var hitInfo)) {
             return false;
         }
         
-        var hitAgent = agents[hitAgentId];
+        var hitAgent = agents[hitboxToAgent[hitboxId]];
         if (hitAgent.Id != agentId) {
             hitAgent.DamageByProjectile = true;
             hitAgent.ReceivedDamage = damage;
@@ -111,10 +114,10 @@ public class CombatSystem {
         var enemyFaction = !sourceAgent.Alie;
         var enemyLayerCode = MapFactionToLayerCode(enemyFaction);
         
-        var overlapCount = raycastService.Overlap(position, triggerRadius, enemyLayerCode, out var agentIdResults);
+        var overlapCount = raycastService.Overlap(position, triggerRadius, enemyLayerCode, out var hitboxIdResults);
         int affectedCount = 0;
         for (int i = 0; i < overlapCount; i++) {
-            var affectedAgent = agents[agentIdResults[i]];
+            var affectedAgent = agents[hitboxToAgent[hitboxIdResults[i]]];
             if (affectedAgent.Id != sourceAgentId && !affectedAgent.Exploded) {
                 affectedAgent.Exploded = true;
                 affectedAgent.DamageByExplosion = true;

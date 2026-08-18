@@ -9,41 +9,45 @@ public enum ReservedLayerCode {
 
 public class RaycastService {
     
-    private readonly Dictionary<int, GameObject> metadataToMarker = new();
-    private readonly Dictionary<GameObject, int> markerToMetadata = new();
-    private readonly List<int> metadataOverlapResultBuffer;
+    private readonly Dictionary<int, GameObject> markersRegistry = new();
+    private readonly Dictionary<GameObject, int> markerToId = new();
 
     private readonly RaycastConfig config;
     private readonly Collider[] overlapBuffer;
+    private readonly List<int> idsResultBuffer;
+
+    private int idCounter;
 
     public RaycastService(RaycastConfig config) {
         this.config = config;
         overlapBuffer = new Collider[config.overlapBufferSize];
-        metadataOverlapResultBuffer = new (config.overlapBufferSize);
+        idsResultBuffer = new (config.overlapBufferSize);
     }
 
-    public void RegisterMarker(int metadata, Vector3 position, RaycastMarker markerPrefab, ReservedLayerCode layerCode) {
+    public int RegisterMarker(Vector3 position, RaycastMarker markerPrefab, ReservedLayerCode layerCode) {
+        var nextId = ++idCounter;
         var marker = GameObject.Instantiate(markerPrefab, position, Quaternion.identity);
         marker.gameObject.layer = config.LayerCodeToIndex(layerCode);
-        metadataToMarker[metadata] = marker.gameObject;
-        markerToMetadata[marker.gameObject] = metadata;
+        markersRegistry[nextId] = marker.gameObject;
+        markerToId[marker.gameObject] = nextId;
+        return nextId;
     }
 
-    public void UnregisterMarker(int metadata) {
-        var marker = metadataToMarker[metadata];
-        markerToMetadata.Remove(marker);
-        metadataToMarker.Remove(metadata);
+    public void UnregisterMarker(int id) {
+        var marker = markersRegistry[id];
+        markerToId.Remove(marker);
+        markersRegistry.Remove(id);
         UnityEngine.Object.Destroy(marker);
     }
 
-    public void UpdateMarker(int metadata, Vector3 position) {
-        var marker = metadataToMarker[metadata];
+    public void UpdateMarker(int id, Vector3 position) {
+        var marker = markersRegistry[id];
         marker.transform.position = position;
     }
 
     public bool Raycast(Ray ray, float maxDistance, ReservedLayerCode layerCode, out int metadata, out RaycastHit hitInfo) {
         if (Physics.Raycast(ray, out hitInfo, maxDistance, 1 << config.LayerCodeToIndex(layerCode))) {
-            metadata = markerToMetadata[hitInfo.collider.gameObject];
+            metadata = markerToId[hitInfo.collider.gameObject];
             return true;
         } else {
             metadata = -1;
@@ -51,13 +55,14 @@ public class RaycastService {
         }
     }
 
-    public int Overlap(Vector3 position, float radius, ReservedLayerCode layerCode, out List<int> metadataResultBuffer) {
+    public int Overlap(Vector3 position, float radius, ReservedLayerCode layerCode, out List<int> idsResult) {
+        idsResultBuffer.Clear();
         int overlapCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, config.LayerCodeToMask(layerCode));
-        metadataOverlapResultBuffer.Clear();
         for (int i = 0; i < overlapCount; i++) {
-            metadataOverlapResultBuffer.Add(markerToMetadata[overlapBuffer[i].gameObject]);
+            idsResultBuffer.Add(markerToId[overlapBuffer[i].gameObject]);
         }
-        metadataResultBuffer = metadataOverlapResultBuffer;
+
+        idsResult = idsResultBuffer;
         return overlapCount;
     }
 
