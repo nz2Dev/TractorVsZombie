@@ -12,7 +12,7 @@ using UnityEngine.TestTools.Utils;
 public class PhysicsServiceTest : IPrebuildSetup, IPostBuildCleanup {
 
     private string originalScene;
-    private PhysicsService physicsService;
+    private RagdollService physicsService;
     private readonly string TestEnvironmentScenePath = Path.Combine(
         "Assets", "NewFolder", "Scenes", "Physics Test Environment.unity");
 
@@ -31,7 +31,7 @@ public class PhysicsServiceTest : IPrebuildSetup, IPostBuildCleanup {
         originalScene = SceneManager.GetActiveScene().path;
         SceneManager.LoadScene(TestEnvironmentScenePath);
         yield return null;
-        physicsService = new PhysicsService(GameObject.FindFirstObjectByType<PhysicsManager>());
+        physicsService = new RagdollService(GameObject.FindFirstObjectByType<PhysicsManager>());
     }
 
 /**

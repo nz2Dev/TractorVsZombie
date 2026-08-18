@@ -8,18 +8,18 @@ public class InfantryController {
     private readonly InfantryView view;
     private readonly CombatSystem combatSystem;
     private readonly LocalAvoidanceService avoidanceService;
-    private readonly PhysicsService physicsService;
+    private readonly RagdollService ragdollService;
     private readonly RaycastService raycastService;
     private readonly RewardController rewardController;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, PhysicsService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService) {
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
-        this.physicsService = physicsService;
+        this.ragdollService = physicsService;
         this.raycastService = raycastService;
         this.avoidanceService = avoidanceService;
     }
@@ -41,7 +41,7 @@ public class InfantryController {
         
         model.Position = prototype.position;
         model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
-        model.BodyPhysicsId = physicsService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
+        model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, model.Config.agentAvoidanceConfig);
         model.RewardPrototype = prototype.rewardPrototype;
 
@@ -57,7 +57,7 @@ public class InfantryController {
     public void Position(int infantryId, Vector3 position) {
         var model = registry[infantryId];
         model.Position = position;
-        physicsService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, position);
+        ragdollService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, position);
     }
 
     public void Attack(int infantryId, int targetCombatId) {
@@ -99,7 +99,7 @@ public class InfantryController {
 
     private void DeleteInfantry(InfantryModel model) {
         registry.Remove(model.Id);
-        physicsService.UnregisterPhysicsEntity(model.BodyPhysicsId);
+        ragdollService.UnregisterPhysicsEntity(model.BodyPhysicsId);
         avoidanceService.RemoveAgent(model.AvoidanceId);
         view.RemoveVisuals(model.Id);
     }
@@ -107,7 +107,7 @@ public class InfantryController {
     private void UpdateMovements() {
         foreach (var model in registry.Values) {
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
-            var physicsPose = physicsService.GetEntityPose(model.BodyPhysicsId);
+            var physicsPose = ragdollService.GetEntityPose(model.BodyPhysicsId);
             var keepFlying = !model.Grounded && physicsPose.InMotion;
             var becomeGrounded = !model.Grounded && !physicsPose.InMotion;
             var keepsGrouned = model.Grounded && !physicsPose.InMotion;
@@ -119,7 +119,7 @@ public class InfantryController {
                 model.Grounded = true;
                 model.Position = raycastService.GetClosestVerticalGroundPoint(model.Position);
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
-                physicsService.SetPhysicsActive(model.BodyPhysicsId, false);
+                ragdollService.SetPhysicsActive(model.BodyPhysicsId, false);
                 combatSystem.RecoverFromExplosion(model.CombatId);
             } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {
                 model.Velocity = rvoVelocity;
@@ -139,10 +139,10 @@ public class InfantryController {
             var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
             if (combatOutput.wasExploded && model.Grounded) {
                 model.Grounded = false;
-                physicsService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, model.Position);
-                physicsService.SetPhysicsActive(model.BodyPhysicsId, true);
+                ragdollService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, model.Position);
+                ragdollService.SetPhysicsActive(model.BodyPhysicsId, true);
                 var explosion = combatOutput.explosionData;
-                physicsService.AddExplosionForce(model.BodyPhysicsId, explosion.force, combatOutput.damageSourcePosition, explosion.radius, explosion.upwardModifier, ForceMode.Impulse);
+                ragdollService.AddExplosionForce(model.BodyPhysicsId, explosion.force, combatOutput.damageSourcePosition, explosion.radius, explosion.upwardModifier, ForceMode.Impulse);
             }
 
             // base visual effects on combat effects irregarding of logic damage

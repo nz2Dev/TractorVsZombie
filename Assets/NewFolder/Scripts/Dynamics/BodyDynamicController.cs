@@ -5,12 +5,12 @@ using UnityEngine.LowLevelPhysics2D;
 
 public class BodyDynamicController {
     
-    private readonly PhysicsService physicsService;
+    private readonly RagdollService physicsService;
 
     private bool grounded = true;
     private BodyDynamicConfig config;
 
-    public BodyDynamicController(PhysicsService physicsService) {
+    public BodyDynamicController(RagdollService physicsService) {
         this.physicsService = physicsService;
     }
 

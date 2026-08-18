@@ -10,7 +10,7 @@ public class InfantrySource : MonoBehaviour {
     [Local] [SerializeField] private InfantryVisuals visualsPrefab;
     // setting the layer to the one that vehicle physics can interact with give interesting results
     // when the body is in "dynamic" state
-    [Local] [SerializeField] private PhysicsBody physicsBodyPrefab; 
+    [Local] [SerializeField] private RagdollBody physicsBodyPrefab; 
     [SerializeField] private RewardSource rewardSource;
 
     private void Awake() {

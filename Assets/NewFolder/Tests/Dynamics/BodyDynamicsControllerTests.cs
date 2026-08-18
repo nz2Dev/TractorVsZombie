@@ -7,11 +7,11 @@ using UnityEngine;
 [TestFixture]
 public class BodyDynamicsControllerTests {
     private BodyDynamicController controller;
-    private Mock<PhysicsService> physicsService;
+    private Mock<RagdollService> physicsService;
 
     [SetUp]
     public void Setup() {
-        physicsService = new Mock<PhysicsService>(null);
+        physicsService = new Mock<RagdollService>(null);
         controller = new BodyDynamicController(physicsService.Object);
     }
 
@@ -50,7 +50,7 @@ public class BodyDynamicsControllerTests {
             }
         };
         physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
-            .Returns(new PhysicsService.PhysicsEntityPose {
+            .Returns(new RagdollService.RagdollPose {
                 Velocity = new Vector3(0, 0, 0.05f),
             });
 
@@ -69,7 +69,7 @@ public class BodyDynamicsControllerTests {
             }
         };
         physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
-            .Returns(new PhysicsService.PhysicsEntityPose {
+            .Returns(new RagdollService.RagdollPose {
                 Velocity = new Vector3(0, 0, 0.3f),
             });
 
@@ -98,7 +98,7 @@ public class BodyDynamicsControllerTests {
         
         var id = controller.Create();
         physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
-            .Returns(new PhysicsService.PhysicsEntityPose {
+            .Returns(new RagdollService.RagdollPose {
                 Velocity = new Vector3(0.0f, 0, 0),
                 IsInteractive = true, // physics is processing
             });

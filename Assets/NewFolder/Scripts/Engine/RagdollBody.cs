@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-public class PhysicsBody : MonoBehaviour {
+public class RagdollBody : MonoBehaviour {
     
     [SerializeField] private Rigidbody thisRigidbody;
     [SerializeField] private CapsuleCollider thisCollider;

@@ -10,7 +10,7 @@ public class ProductionBuildingController {
     private readonly ProductionBuildingView view;
     private readonly CombatSystem combatSystem;
     private readonly VehicleService vehicleService;
-    private readonly PhysicsService physicsService;
+    private readonly RagdollService physicsService;
     private readonly LocalAvoidanceService localAvoidanceService;
     private readonly SpawnService spawnService;
     
@@ -23,7 +23,7 @@ public class ProductionBuildingController {
         ProductionBuildingView view,
         CombatSystem combatSystem,
         VehicleService vehicleService,
-        PhysicsService physicsService,
+        RagdollService physicsService,
         LocalAvoidanceService localAvoidanceService,
         SpawnService spawnService) {
         this.view = view;

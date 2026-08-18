@@ -48,7 +48,7 @@ public class GameBootstrapper : MonoBehaviour {
         var vehicleService = new VehicleService(LayerMask.NameToLayer(vehicleObstacleLayer));
         var localAvoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
-        var physicsService = new PhysicsService(physicsManager);
+        var physicsService = new RagdollService(physicsManager);
         var raycastService = new RaycastService(raycastConfig);
         var proximityService = new ProximityService(knnRunner);
 

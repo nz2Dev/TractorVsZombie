@@ -10,12 +10,12 @@ public class HeadquarterBuildingController {
     private readonly PathfindingService pathfindingService;
     private readonly LocalAvoidanceService localAvoidanceService;
     private readonly VehicleService vehicleService;
-    private readonly PhysicsService physicsService;
+    private readonly RagdollService physicsService;
 
     private GameObject visuals;
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, VehicleService vehicleService, PhysicsService physicsService, LocalAvoidanceService localAvoidanceService) {
+    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, VehicleService vehicleService, RagdollService physicsService, LocalAvoidanceService localAvoidanceService) {
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.vehicleService = vehicleService;
