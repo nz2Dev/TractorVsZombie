@@ -34053,7 +34053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: 2086461534
+  uniqueId: 1503299429
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
@@ -36016,6 +36016,15 @@ MonoBehaviour:
   combatAgentSource: {fileID: 737995065}
   visualsPrefab: {fileID: 1060467421}
   physicsBodyPrefab: {fileID: 1032680941}
+  agentAvoidanceConfigSource:
+    height: 2
+    radius: 0.6
+    radiusObst: 0.7
+    maxSpeed: 2
+    maxNeighbors: 8
+    neighborDist: 5
+    timeHorizon: 1.5
+    timeHorizonObst: 2.5
   rewardSource: {fileID: 1373779128}
 --- !u!43 &1914613764
 Mesh:

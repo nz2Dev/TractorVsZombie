@@ -6,6 +6,4 @@ using UnityEngine;
 public class InfantryConfig : ScriptableObject {
     public int damage = 1;
     public float attackCooldown = 1; // this one might be the infantry domain data
-    
-    public AgentAvoidanceConfig agentAvoidanceConfig; // and this are the component (avoidance)
 }

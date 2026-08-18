@@ -36,13 +36,13 @@ public class InfantryController {
 
     public int SpawnInfantry(InfantryPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new InfantryModel(nextId, prototype.config);
+        var model = new InfantryModel(nextId, prototype.config, prototype.agentAvoidanceConfig.maxSpeed);
         registry[model.Id] = model;
         
         model.Position = prototype.position;
         model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
         model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
-        model.AvoidanceId = avoidanceService.AddAgent(prototype.position, model.Config.agentAvoidanceConfig);
+        model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
         model.RewardPrototype = prototype.rewardPrototype;
 
         view.AddVisuals(model.Id, prototype.position, prototype.visualsPrefab);
@@ -74,16 +74,12 @@ public class InfantryController {
         return new InfantryState {
             position = model.Position,
             movementVelocity = model.Velocity,
-            maxSpeed = model.Config.agentAvoidanceConfig.maxSpeed,
+            maxSpeed = model.MaxSpeed,
             isAlive = !model.IsDead,
             isGrounded = model.Grounded,
             combatId = model.CombatId,
             bodyId = model.BodyPhysicsId,
         };
-    }
-
-    public AgentAvoidanceConfig GetAvoidanceConfig(int infantryId) {
-        return registry[infantryId].Config.agentAvoidanceConfig;
     }
 
     private void ClearDeadInfantry() {

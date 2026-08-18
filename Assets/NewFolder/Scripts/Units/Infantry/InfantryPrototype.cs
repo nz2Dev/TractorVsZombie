@@ -7,4 +7,5 @@ public struct InfantryPrototype {
     public RewardPrototype rewardPrototype;
     public RagdollBody physicsBodyPrefab;
     public CombatAgentPrototype combatAgentPrototype;
+    public AgentAvoidanceConfig agentAvoidanceConfig;
 }
