@@ -31,7 +31,7 @@ public class PhysicsServiceTest : IPrebuildSetup, IPostBuildCleanup {
         originalScene = SceneManager.GetActiveScene().path;
         SceneManager.LoadScene(TestEnvironmentScenePath);
         yield return null;
-        physicsService = new RagdollService(GameObject.FindFirstObjectByType<PhysicsManager>());
+        // physicsService = new RagdollService(GameObject.FindFirstObjectByType<PhysicsManager>());
     }
 
 /**

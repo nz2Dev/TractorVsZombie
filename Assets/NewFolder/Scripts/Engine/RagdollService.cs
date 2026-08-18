@@ -26,10 +26,7 @@ public class RagdollService {
     private readonly Dictionary<int, RagdollBody> bodyRegistry = new();
     private readonly Dictionary<int, PhysicsObstacleNew> obstacleRegistry = new();
     
-    private readonly PhysicsManager physicsManager;
-
-    public RagdollService(PhysicsManager physicsManager) {
-        this.physicsManager = physicsManager;
+    public RagdollService() {
     }
 
     public int RegisterObstacle(Vector3 position, PhysicsObstacleNew obstaclePrefab) {

@@ -10,7 +10,6 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
-    [SerializeField] private PhysicsManager physicsManager;
     [SerializeField] private RaycastConfig raycastConfig;
     [SerializeField] private KnnRunner knnRunner;
     [Space]
@@ -48,7 +47,7 @@ public class GameBootstrapper : MonoBehaviour {
         var vehicleService = new VehicleService(LayerMask.NameToLayer(vehicleObstacleLayer));
         var localAvoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
-        var physicsService = new RagdollService(physicsManager);
+        var physicsService = new RagdollService();
         var raycastService = new RaycastService(raycastConfig);
         var proximityService = new ProximityService(knnRunner);
 

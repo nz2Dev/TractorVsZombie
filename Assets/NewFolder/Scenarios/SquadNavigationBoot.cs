@@ -17,7 +17,7 @@ public class SquadNavigationBoot : MonoBehaviour {
     public SquadAIController squadController;
 
     private void Awake() {
-        var physicsService = new RagdollService(null);
+        var physicsService = new RagdollService();
         var avoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
         
