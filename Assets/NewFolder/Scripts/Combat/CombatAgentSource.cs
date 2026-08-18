@@ -4,7 +4,7 @@ public class CombatAgentSource : MonoBehaviour {
 
     [SerializeField] private bool alie = false;
     [SerializeField] private CombatAgentConfig configSource;
-    [Local, SerializeField] private CollisionMarker markerPrefab;
+    [Local, SerializeField] private RaycastMarker markerPrefab;
 
     public CombatAgentPrototype Get() {
         return new CombatAgentPrototype {

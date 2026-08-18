@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
-public class CollisionMarker : MonoBehaviour {
+public class RaycastMarker : MonoBehaviour {
     
     [SerializeField] private Collider thisCollider;
 

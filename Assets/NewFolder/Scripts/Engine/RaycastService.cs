@@ -22,7 +22,7 @@ public class RaycastService {
         metadataOverlapResultBuffer = new (config.overlapBufferSize);
     }
 
-    public void RegisterMarker(int metadata, Vector3 position, CollisionMarker markerPrefab, ReservedLayerCode layerCode) {
+    public void RegisterMarker(int metadata, Vector3 position, RaycastMarker markerPrefab, ReservedLayerCode layerCode) {
         var marker = GameObject.Instantiate(markerPrefab, position, Quaternion.identity);
         marker.gameObject.layer = config.LayerCodeToIndex(layerCode);
         metadataToMarker[metadata] = marker.gameObject;
