@@ -9,16 +9,18 @@ public class InfantryController {
     private readonly CombatSystem combatSystem;
     private readonly LocalAvoidanceService avoidanceService;
     private readonly PhysicsService physicsService;
+    private readonly RaycastService raycastService;
     private readonly RewardController rewardController;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, PhysicsService physicsService, LocalAvoidanceService avoidanceService) {
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, PhysicsService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
         this.physicsService = physicsService;
+        this.raycastService = raycastService;
         this.avoidanceService = avoidanceService;
     }
 
@@ -115,7 +117,7 @@ public class InfantryController {
                 model.Rotation = physicsPose.Rotation;
             } else if (becomeGrounded) {
                 model.Grounded = true;
-                model.Position = physicsService.GetClosestVerticalGroundPoint(model.Position);
+                model.Position = raycastService.GetClosestVerticalGroundPoint(model.Position);
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 physicsService.SetPhysicsActive(model.BodyPhysicsId, false);
                 combatSystem.RecoverFromExplosion(model.CombatId);

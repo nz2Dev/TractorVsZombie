@@ -7,7 +7,7 @@ public class AimingController {
     
     private readonly CameraProvider cameraProvider;
 
-    private readonly PhysicsService physicsService;
+    private readonly RaycastService raycastService;
     private readonly CombatSystem combatSystem;
 
     private readonly PlatformController platformController;
@@ -16,10 +16,10 @@ public class AimingController {
     private readonly AimingView view;
     private readonly AimingModel model;
 
-    public AimingController(AimingView view, CameraProvider cameraProvider, PhysicsService physicsService, CombatSystem combatSystem, PlatformController platformController, WeaponController weaponController) {
+    public AimingController(AimingView view, CameraProvider cameraProvider, RaycastService raycastService, CombatSystem combatSystem, PlatformController platformController, WeaponController weaponController) {
         this.view = view;
         this.cameraProvider = cameraProvider;
-        this.physicsService = physicsService;
+        this.raycastService = raycastService;
         this.combatSystem = combatSystem;
         this.platformController = platformController;
         this.weaponController = weaponController;
@@ -64,7 +64,7 @@ public class AimingController {
         var mousePosition = Input.mousePosition;
         // if GetScreePointRay is moved to the View, there is no need in CameraProvider at all
         var mouseRay = cameraProvider.GetScreenPointRay(mousePosition);
-        var mouseHitPoint = physicsService.GetGroundHitPosition(mouseRay);
+        var mouseHitPoint = raycastService.GetGroundHitPosition(mouseRay);
         model.AimInput = new TopDownAimInput {
             position = mouseHitPoint,
             direction = (mouseHitPoint - model.AimSourcePosition).normalized,

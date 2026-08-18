@@ -24,7 +24,7 @@ public class SquadNavigationBoot : MonoBehaviour {
         combatSystem = new CombatSystem(null, null);
         
         rewardController = new RewardController(new RewardView());
-        infantryController = new InfantryController(combatSystem, new InfantryView(), rewardController, physicsService, avoidanceService);
+        // infantryController = new InfantryController(combatSystem, new InfantryView(), rewardController, physicsService, avoidanceService);
         squadController = new SquadAIController(infantryController, pathfindingService, combatSystem);
         
         Instance = this;

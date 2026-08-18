@@ -103,24 +103,4 @@ public class PhysicsService {
         return default;
     }
 
-    public Vector3 GetClosestVerticalGroundPoint(Vector3 position) {
-        if (physicsManager.RaycastGround(new Ray(position + Vector3.up, Vector3.down), 100, out var hitInfo)) {
-            return hitInfo.point;
-        } else {
-            return Vector3.zero;
-        }
-    }
-
-    public Vector3 GetGroundHitPosition(Ray ray) {
-        if (physicsManager.RaycastGround(ray, 1000, out var hitInfo)) {
-            return hitInfo.point;
-        } else {
-            return Vector3.zero;
-        }
-    }
-
-    public bool RaycastEnvironment(Ray ray, float maxDistance, out RaycastHit hitInfo) {
-        return physicsManager.RaycastEnvironment(ray, maxDistance, out hitInfo);
-    }
-
 }
