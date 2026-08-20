@@ -55,12 +55,6 @@ public class InfantryController {
         avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
     }
 
-    public void Position(int infantryId, Vector3 position) {
-        var model = registry[infantryId];
-        model.Position = position;
-        ragdollService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, position);
-    }
-
     public void Attack(int infantryId, int targetCombatId) {
         var model = registry[infantryId];
         if (model.LastAttackTime + model.Config.attackCooldown < Time.time) {
