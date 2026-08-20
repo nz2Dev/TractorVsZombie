@@ -7,6 +7,8 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 
+using UnityEngine;
+
 internal class KnnLayer : IDisposable {
 
     private KnnContainer? container;
@@ -24,6 +26,10 @@ internal class KnnLayer : IDisposable {
 
     public void UpdatePoint(int id, float3 point) {
         collector.UpdatePoint(id, point);
+    }
+
+    public Vector3 GetPoint(int id) {
+        return collector.GetPoint(id);
     }
 
     public void RemovePoint(int id) {

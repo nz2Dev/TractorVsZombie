@@ -21,6 +21,10 @@ public class ProximityService {
         knnRunner.System.UpdatePoint(id.Value, position);
     }
 
+    public Vector3 GetPoint(ProximityId id) {
+        return knnRunner.System.GetPoint(id.Value);
+    }
+
     public void RemovePoint(ProximityId id) {
         knnRunner.System.RemovePoint(id.Value);
     }

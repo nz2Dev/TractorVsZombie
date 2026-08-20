@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Mathematics;
 
+using UnityEngine;
+
 public class KnnSystem : IDisposable {
     
     private int idCounter;
@@ -44,6 +46,12 @@ public class KnnSystem : IDisposable {
         idToLayer.Remove(id);
     }
 
+    public Vector3 GetPoint(int id) {
+        var layerIndex = idToLayer[id];
+        var layer = layers[layerIndex];
+        return layer.GetPoint(id);
+    }
+
     public int QueryNearest(float3 position, int layerIndex) {
         var layer = layers[layerIndex];
         if (!layer.Container.HasValue)
@@ -68,4 +76,5 @@ public class KnnSystem : IDisposable {
         resultBuffer.Dispose();
         variableResultBuffer.Dispose();
     }
+
 }

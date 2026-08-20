@@ -41,6 +41,10 @@ public class KnnCollector : IDisposable {
         pointsRegistry[id] = point;
     }
 
+    internal float3 GetPoint(int id) {
+        return pointsRegistry[id];
+    }
+
     public int GetIndexId(int index) {
         var pointId = indexToId[index];
         if (pointsRegistry.ContainsKey(pointId)) {
