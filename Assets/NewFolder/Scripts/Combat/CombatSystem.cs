@@ -3,6 +3,11 @@ using System.Collections.Generic;
 namespace Combat  {
     public class CombatSystem {
 
+        public static ReservedLayerCode GetRaycastLayerForFaction(bool alie) => 
+            alie ? ReservedLayerCode.First : ReservedLayerCode.Second;
+        public static ProximityService.Layer GetProximityLayerForFaction(bool alie) => 
+            alie ? ProximityService.Layer.CombatReservedA : ProximityService.Layer.CombatReservedB;
+
         private int idCounter;
         private readonly Dictionary<CombatId, CombatModel> models = new();
 
