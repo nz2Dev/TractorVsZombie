@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlatformSource : MonoBehaviour {
 
     [Inline] [SerializeField] private PlatformConfig config;
-    [Inline, SerializeField] private CombatAgentSource combatAgentSource;
+    [Inline, SerializeField] private CombatPrototypeSource combatSource;
     [Local] [SerializeField] private PlatformVisuals visualsPrefab;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [SerializeField] private Vector3 loadoutOffset; // TODO: consider making it visuals, by adding util TransformSource, that returns struct that contain Position/Rotation
@@ -23,7 +23,7 @@ public class PlatformSource : MonoBehaviour {
             vehiclePrefab = vehiclePrefab,
             ramPrototype = ramSource != null ? ramSource.GetPrototype() : default,
             loadoutOffset = loadoutOffset,
-            combatAgentPrototype = combatAgentSource.Get()
+            combatPrototype = combatSource.Get()
         };
     }
 }

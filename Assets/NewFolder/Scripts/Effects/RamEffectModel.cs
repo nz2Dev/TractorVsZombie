@@ -1,16 +1,20 @@
+using Combat;
+
 using UnityEngine;
 
 public class RamEffectModel {
 
-    public RamEffectConfig Config { get; }
-    public int Id { get; private set; }
-    public int CombatId { get; private set; }
-
-    public RamEffectModel(int id, int combatId, RamEffectConfig config) {
+    public RamEffectModel(int id, RamEffectConfig config, CombatId combatId, bool holderIsAlie) {
         Id = id;
-        CombatId = combatId;
         Config = config;
+        HolderCombatId = combatId;
+        HolderIsAlie = holderIsAlie;
     }
+
+    public int Id { get; }
+    public RamEffectConfig Config { get; }
+    public CombatId HolderCombatId { get; }
+    public bool HolderIsAlie { get; }
     
     public Vector3 Position { get; set; }
 

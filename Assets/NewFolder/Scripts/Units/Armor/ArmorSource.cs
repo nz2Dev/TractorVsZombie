@@ -1,11 +1,11 @@
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
 public class ArmorSource : MonoBehaviour {
 
     [Inline] [SerializeField] private ArmorConfig config;
-    [Inline, SerializeField] private CombatAgentSource combatAgentSource;
+    [Inline, SerializeField] private CombatPrototypeSource combatSource;
     [Local] [SerializeField] private ArmorVisuals visualsPrefab;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [SerializeField] private AudioClip engineLoopSFX;
@@ -27,7 +27,7 @@ public class ArmorSource : MonoBehaviour {
             ramPrototype = ramSource != null ? ramSource.GetPrototype() : default,
             localWeaponPrototype = weaponSource != null ? weaponSource.GetPrototype(localTransform: true) : default,
             rewardPrototype = loadoutRewardSource.GetPrototype(),
-            combatAgentPrototype = combatAgentSource.Get()
+            combatPrototype = combatSource.Get()
         };
     }
 }

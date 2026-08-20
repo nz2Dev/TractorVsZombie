@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -85,9 +84,10 @@ public class SquadAIController {
                 var formationVector = state.Formation.GetFormationVector(subordinateIndex);
                 infantryController.Move(infantryId, Vector3.Lerp(flowVector, formationVector, state.Config.formationBlendFactor) * infantry.maxSpeed);
 
-                if (combatSystem.GetClosestEnemyAgentInRange(infantry.combatId, 2, out var closestFoe)) {
-                    infantryController.Attack(infantryId, closestFoe.id);
-                }
+                // TODO: recover disabled infantry attack
+                // if (combatSystem.GetClosestEnemyAgentInRange(infantry.combatId, 2, out var closestFoe)) {
+                //     infantryController.Attack(infantryId, closestFoe.id);
+                // }
             }
         }
     }

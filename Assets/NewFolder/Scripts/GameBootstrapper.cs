@@ -1,8 +1,4 @@
-using Codice.Client.Common.GameUI;
-
-using Compatibility;
-
-using Unity.Profiling;
+using Combat;
 
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -63,35 +59,11 @@ public class GameBootstrapper : MonoBehaviour {
         var projectileView = new ProjectileView(soundManager);
         var productionBuildingView = new ProductionBuildingView();
 
-        combatSystem = new CombatSystem(
-            raycastService,
-            proximityService
-        );
+        combatSystem = new CombatSystem();
 
-        projectileController = new ProjectileController(
-            combatSystem,
-            projectileView,
-            raycastService
-        );
-
-        rocketController = new RocketController(
-            rocketView,
-            combatSystem
-        );
-
-        ramEffect = new RamEffectController(
-            new RamEffectView(soundManager),
-            combatSystem
-        );
 
         rewardController = new RewardController(
             rewardView
-        );
-
-        weaponController = new WeaponController(
-            weaponView,
-            rocketController,
-            projectileController
         );
 
         infantryController = new InfantryController(
@@ -100,7 +72,37 @@ public class GameBootstrapper : MonoBehaviour {
             rewardController,
             physicsService,
             raycastService,
-            localAvoidanceService
+            localAvoidanceService,
+            proximityService
+        );
+
+        rocketController = new RocketController(
+            rocketView,
+            combatSystem,
+            infantryController,
+            raycastService
+        );
+
+        projectileController = new ProjectileController(
+            combatSystem,
+            projectileView,
+            raycastService,
+            infantryController
+        );
+
+        weaponController = new WeaponController(
+            weaponView,
+            rocketController,
+            projectileController
+        );
+
+        // rocket controller used to be initialized before infantry controller
+
+        ramEffect = new RamEffectController(
+            new RamEffectView(soundManager),
+            combatSystem,
+            infantryController,
+            raycastService
         );
 
         loadoutController = new LoadoutController(
@@ -141,7 +143,8 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             pathfindingService,
             armorController,
-            weaponController
+            weaponController,
+            proximityService
         );
 
         squadAIController = new SquadAIController(
@@ -175,7 +178,7 @@ public class GameBootstrapper : MonoBehaviour {
             new DrivingController(truckController),
             new AssemblingController(new AssemblingView(), platformController, truckController),
             new SelectingController(new SelectingView(uiDocument), platformController),
-            new AimingController(new AimingView(), cameraProvider, raycastService, combatSystem, platformController, weaponController),
+            new AimingController(new AimingView(), cameraProvider, raycastService, combatSystem, platformController, weaponController, proximityService),
             new CollectingController(rewardController),
             new CameraController(new CameraView(cameraManager))
         );

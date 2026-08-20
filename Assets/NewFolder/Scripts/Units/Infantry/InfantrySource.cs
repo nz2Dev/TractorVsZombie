@@ -9,11 +9,12 @@ public class InfantrySource : MonoBehaviour {
 
     [Inline] [SerializeField] private InfantryConfig config;
     [SerializeField] private AgentAvoidanceConfig agentAvoidanceConfigSource;
-    [Inline, SerializeField] private CombatAgentSource combatAgentSource;
+    [Inline, SerializeField] private CombatPrototypeSource combatPrototypeSource;
     [Local] [SerializeField] private InfantryVisuals visualsPrefab;
     // setting the layer to the one that vehicle physics can interact with give interesting results
     // when the body is in "dynamic" state
     [Local] [SerializeField] private RagdollBody physicsBodyPrefab;
+    [Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
     [SerializeField] private RewardSource rewardSource;
 
     private void Awake() {
@@ -27,8 +28,9 @@ public class InfantrySource : MonoBehaviour {
             visualsPrefab = visualsPrefab,
             rewardPrototype = rewardSource.GetPrototype(),
             physicsBodyPrefab = physicsBodyPrefab,
-            combatAgentPrototype = combatAgentSource.Get(),
+            combatPrototype = combatPrototypeSource.Get(),
             agentAvoidanceConfig = agentAvoidanceConfigSource,
+            raycastMarkerPrefab = raycastMarkerPrefab,
         };
     }
 

@@ -1,7 +1,4 @@
-
-using System;
-
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -35,8 +32,8 @@ public class TruckController {
 
     public virtual void Create(TruckPrototype prototype, Vector3 position = default) {
         model = new TruckModel(prototype.config, position == default ? prototype.position : position);
-        model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.combatAgentPrototype);
-        model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
+        model.CombatId = combatSystem.Add(prototype.combatPrototype);
+        model.RamId = ramEffect.StartNew(model.CombatId, prototype.combatPrototype.alie, prototype.ramPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab, prototype.rotation);
         view.Show(model.Position, prototype.visualsPrefab, prototype.engineLoopSFX);
     }
@@ -57,7 +54,7 @@ public class TruckController {
 
     private void WriteExternalInput() {
         ramEffect.Forward(model.RamId, model.Position);
-        combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
+        // todo: register proxmity and raycast components
         vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, brakes: 0f, model.Steer);
     }
 

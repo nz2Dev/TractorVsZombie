@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -76,7 +74,7 @@ public class ProductionBuildingController {
         model.QueueAmount = prototype.config.initialQueueAmount;
         model.NextSpawnTime = Time.time;
 
-        model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.combatAgentPrototype);
+        model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.dimensionsPrefab);
         model.VehicleObstacleId = vehicleService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
         model.PhysicsObstacleId = physicsService.RegisterObstacle(model.Position, prototype.physicsObstaclePrefab);
@@ -101,7 +99,7 @@ public class ProductionBuildingController {
 
     private void DestroyBuilding(int id) {
         registry.Remove(id, out var model);
-        combatSystem.UnregisterAgent(model.CombatId);
+        combatSystem.Remove(model.CombatId);
         localAvoidanceService.RemoveObstacle(model.AvoidanceObstacleId);
         vehicleService.UnregisterObstacle(model.VehicleObstacleId);
         physicsService.UnregisterObstacle(model.PhysicsObstacleId);
@@ -110,8 +108,8 @@ public class ProductionBuildingController {
 
     private void ReadCombatOutput() {
         foreach (var model in registry.Values) {
-            var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
-            if (combatOutput.damageWasFatal) {
+            var combatState = combatSystem.ReadState(model.CombatId);
+            if (combatState.damageResult?.damageWasFatal == true) {
                 model.Destroyed = true;
             }
         }

@@ -3787,7 +3787,7 @@ GameObject:
   - component: {fileID: 174666696}
   - component: {fileID: 174666697}
   m_Layer: 0
-  m_Name: Combat Agent Source
+  m_Name: Combat Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3805,8 +3805,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1785217253}
+  m_Children: []
   m_Father: {fileID: 377055306}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &174666697
@@ -3818,14 +3817,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 174666695}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b40557f116f4c489e0b5cb26e445b0, type: 3}
+  m_Script: {fileID: 11500000, guid: c5c3ef6a4b8334532b809e7b8e90af80, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: NewFolder::CombatAgentSource
+  m_EditorClassIdentifier: NewFolder::CombatPrototypeSource
   alie: 0
-  configSource:
-    maxHealth: 5
-    surface: 1
-  markerPrefab: {fileID: 1785217254}
+  configSource: {fileID: 11400000, guid: e77ee70402f1a4d498b35107339c66e0, type: 2}
 --- !u!1 &202097910
 GameObject:
   m_ObjectHideFlags: 0
@@ -5259,7 +5255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ArmorSource
   config: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}
-  combatAgentSource: {fileID: 174666697}
+  combatSource: {fileID: 174666697}
   visualsPrefab: {fileID: 601842209}
   vehiclePrefab: {fileID: 2016185206}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
@@ -5279,11 +5275,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 174666696}
   - {fileID: 601842210}
   - {fileID: 2016185207}
   - {fileID: 6416689459210672064}
   - {fileID: 1507988200}
+  - {fileID: 1785217253}
+  - {fileID: 174666696}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &380458028
@@ -12134,8 +12131,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 618815298}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3090656, y: 0.6351112, z: -0.30797577, w: 0.6373879}
-  m_LocalPosition: {x: -20.349375, y: 29.70676, z: 3.287078}
+  m_LocalRotation: {x: 0.4184007, y: 0.5700358, z: -0.4184008, w: 0.5700359}
+  m_LocalPosition: {x: -8.393368, y: 26.71238, z: -8.403113}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14471,7 +14468,7 @@ GameObject:
   - component: {fileID: 737995064}
   - component: {fileID: 737995065}
   m_Layer: 0
-  m_Name: Combat Agent Source
+  m_Name: Combat Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14489,8 +14486,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1128309738}
+  m_Children: []
   m_Father: {fileID: 1909830769}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &737995065
@@ -14502,14 +14498,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 737995063}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b40557f116f4c489e0b5cb26e445b0, type: 3}
+  m_Script: {fileID: 11500000, guid: c5c3ef6a4b8334532b809e7b8e90af80, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: NewFolder::CombatAgentSource
+  m_EditorClassIdentifier: NewFolder::CombatPrototypeSource
   alie: 0
-  configSource:
-    maxHealth: 2
-    surface: 2
-  markerPrefab: {fileID: 1128309740}
+  configSource: {fileID: 11400000, guid: 02238f37de7d34315aedb0b76eb96075, type: 2}
 --- !u!1 &745838711
 GameObject:
   m_ObjectHideFlags: 0
@@ -14522,7 +14515,7 @@ GameObject:
   - component: {fileID: 745838714}
   - component: {fileID: 745838713}
   m_Layer: 0
-  m_Name: Collision Marker
+  m_Name: Raycast Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14536,12 +14529,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745838711}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1587193268}
+  m_Father: {fileID: 2114227374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &745838713
 MonoBehaviour:
@@ -15628,7 +15621,7 @@ PrefabInstance:
       objectReference: {fileID: 1989649148}
     - target: {fileID: 514552520084137567, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4202
+      value: 4214
       objectReference: {fileID: 0}
     - target: {fileID: 694819620630992170, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15676,7 +15669,7 @@ PrefabInstance:
       objectReference: {fileID: 1914613764}
     - target: {fileID: 836341691340492081, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4202
+      value: 4214
       objectReference: {fileID: 0}
     - target: {fileID: 2081380259143579551, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_Mesh
@@ -15704,7 +15697,7 @@ PrefabInstance:
       objectReference: {fileID: 944766955}
     - target: {fileID: 3707419535845747254, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4004
+      value: 4016
       objectReference: {fileID: 0}
     - target: {fileID: 3807467337013135760, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_Mesh
@@ -15712,11 +15705,11 @@ PrefabInstance:
       objectReference: {fileID: 1062659733}
     - target: {fileID: 3807467337013135760, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4202
+      value: 4214
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: uniqueId
-      value: 1478668705
+      value: -1154758813
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: spawnVariantSource.infantrySource
@@ -15728,7 +15721,7 @@ PrefabInstance:
       objectReference: {fileID: 1517710922}
     - target: {fileID: 6003848239607631463, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4202
+      value: 4214
       objectReference: {fileID: 0}
     - target: {fileID: 8488276177249867402, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_Mesh
@@ -26332,9 +26325,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2126898963}
   - {fileID: 4350355989104226068}
   - {fileID: 1947877291}
+  - {fileID: 1890271679}
+  - {fileID: 2126898963}
   - {fileID: 1600251741}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -26351,7 +26345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::TruckSource
   config: {fileID: 11400000, guid: 8676e0ba7ac064d1e80b430935205f9b, type: 2}
-  combatAgentSource: {fileID: 2126898964}
+  combatSource: {fileID: 2126898964}
   vehiclePrefab: {fileID: 4350355989104226069}
   visualsPrefab: {fileID: 1947877290}
   ramSource: {fileID: 1600251742}
@@ -26630,7 +26624,7 @@ GameObject:
   - component: {fileID: 1128309739}
   - component: {fileID: 1128309740}
   m_Layer: 0
-  m_Name: Collision Marker
+  m_Name: Raycast Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26644,12 +26638,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1128309737}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 737995064}
+  m_Father: {fileID: 1909830769}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1128309739
 CapsuleCollider:
@@ -33322,9 +33316,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1587193268}
-  - component: {fileID: 1587193269}
+  - component: {fileID: 1587193270}
   m_Layer: 0
-  m_Name: Combat Agent Source
+  m_Name: Combat Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33342,11 +33336,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 745838712}
+  m_Children: []
   m_Father: {fileID: 2114227374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1587193269
+--- !u!114 &1587193270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -33355,14 +33348,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1587193267}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b40557f116f4c489e0b5cb26e445b0, type: 3}
+  m_Script: {fileID: 11500000, guid: c5c3ef6a4b8334532b809e7b8e90af80, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: NewFolder::CombatAgentSource
+  m_EditorClassIdentifier: NewFolder::CombatPrototypeSource
   alie: 1
-  configSource:
-    maxHealth: 100
-    surface: 0
-  markerPrefab: {fileID: 745838713}
+  configSource: {fileID: 11400000, guid: 852d9bcbaf69541fab429a326147c708, type: 2}
 --- !u!1 &1590555595
 GameObject:
   m_ObjectHideFlags: 0
@@ -33372,9 +33362,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1590555596}
-  - component: {fileID: 1590555597}
+  - component: {fileID: 1590555598}
   m_Layer: 0
-  m_Name: Combat Agent Source
+  m_Name: Combat Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33392,11 +33382,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2025953204}
+  m_Children: []
   m_Father: {fileID: 2083997502}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1590555597
+--- !u!114 &1590555598
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -33405,14 +33394,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1590555595}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b40557f116f4c489e0b5cb26e445b0, type: 3}
+  m_Script: {fileID: 11500000, guid: c5c3ef6a4b8334532b809e7b8e90af80, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: NewFolder::CombatAgentSource
+  m_EditorClassIdentifier: NewFolder::CombatPrototypeSource
   alie: 0
-  configSource:
-    maxHealth: 5
-    surface: 1
-  markerPrefab: {fileID: 2025953206}
+  configSource: {fileID: 11400000, guid: e77ee70402f1a4d498b35107339c66e0, type: 2}
 --- !u!1 &1600251740
 GameObject:
   m_ObjectHideFlags: 0
@@ -34053,7 +34039,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: -2075280888
+  uniqueId: -304406311
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
@@ -34901,7 +34887,7 @@ GameObject:
   - component: {fileID: 1785217255}
   - component: {fileID: 1785217254}
   m_Layer: 0
-  m_Name: Collision Marker
+  m_Name: Raycast Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34920,7 +34906,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 174666696}
+  m_Father: {fileID: 377055306}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1785217254
 MonoBehaviour:
@@ -35729,7 +35715,7 @@ GameObject:
   - component: {fileID: 1890271681}
   - component: {fileID: 1890271680}
   m_Layer: 0
-  m_Name: Collision Marker
+  m_Name: Raycast Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35743,12 +35729,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1890271678}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2126898963}
+  m_Father: {fileID: 1117709942}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1890271680
 MonoBehaviour:
@@ -35994,10 +35980,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 737995064}
   - {fileID: 1060467422}
-  - {fileID: 1032680940}
   - {fileID: 1373779127}
+  - {fileID: 1032680940}
+  - {fileID: 737995064}
+  - {fileID: 1128309738}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1909830770
@@ -36022,9 +36009,10 @@ MonoBehaviour:
     neighborDist: 5
     timeHorizon: 1.5
     timeHorizonObst: 2.5
-  combatAgentSource: {fileID: 737995065}
+  combatPrototypeSource: {fileID: 737995065}
   visualsPrefab: {fileID: 1060467421}
   physicsBodyPrefab: {fileID: 1032680941}
+  raycastMarkerPrefab: {fileID: 1128309740}
   rewardSource: {fileID: 1373779128}
 --- !u!43 &1914613764
 Mesh:
@@ -38290,7 +38278,7 @@ GameObject:
   - component: {fileID: 2025953205}
   - component: {fileID: 2025953206}
   m_Layer: 0
-  m_Name: Collision Marker
+  m_Name: Raycast Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38304,12 +38292,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2025953203}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1590555596}
+  m_Father: {fileID: 2083997502}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2025953205
 BoxCollider:
@@ -38790,11 +38778,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1590555596}
   - {fileID: 1931922712}
   - {fileID: 460880142}
   - {fileID: 787191738}
   - {fileID: 1882187327}
+  - {fileID: 2025953204}
+  - {fileID: 1590555596}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2083997503
@@ -38810,7 +38799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ArmorSource
   config: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}
-  combatAgentSource: {fileID: 1590555597}
+  combatSource: {fileID: 1590555598}
   visualsPrefab: {fileID: 1931922711}
   vehiclePrefab: {fileID: 460880143}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
@@ -39084,6 +39073,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 745838712}
   - {fileID: 1587193268}
   - {fileID: 4796720935335220873}
   - {fileID: 526922605}
@@ -39102,7 +39092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::HeadquarterBuildingSource
   config: {fileID: 11400000, guid: 6ee799a472e0b4c088633f1d76f011ba, type: 2}
-  combatAgentSource: {fileID: 1587193269}
+  combatSource: {fileID: 1587193270}
 --- !u!1 &2118106959
 GameObject:
   m_ObjectHideFlags: 0
@@ -40357,7 +40347,7 @@ GameObject:
   - component: {fileID: 2126898963}
   - component: {fileID: 2126898964}
   m_Layer: 0
-  m_Name: Combat Agent Source
+  m_Name: Combat Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40375,8 +40365,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1890271679}
+  m_Children: []
   m_Father: {fileID: 1117709942}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2126898964
@@ -40388,14 +40377,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2126898962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b40557f116f4c489e0b5cb26e445b0, type: 3}
+  m_Script: {fileID: 11500000, guid: c5c3ef6a4b8334532b809e7b8e90af80, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: NewFolder::CombatAgentSource
+  m_EditorClassIdentifier: NewFolder::CombatPrototypeSource
   alie: 1
-  configSource:
-    maxHealth: 1000
-    surface: 0
-  markerPrefab: {fileID: 1890271680}
+  configSource: {fileID: 11400000, guid: e77ee70402f1a4d498b35107339c66e0, type: 2}
 --- !u!1001 &1033508361369419222
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41489,7 +41475,7 @@ PrefabInstance:
       objectReference: {fileID: 937460628}
     - target: {fileID: 3715936134110833867, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4454
+      value: 4469
       objectReference: {fileID: 0}
     - target: {fileID: 3902048635732431051, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_IsActive
@@ -41501,7 +41487,7 @@ PrefabInstance:
       objectReference: {fileID: 2001128779}
     - target: {fileID: 3995790071150967799, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4454
+      value: 4469
       objectReference: {fileID: 0}
     - target: {fileID: 4231372914453914694, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
@@ -41513,7 +41499,7 @@ PrefabInstance:
       objectReference: {fileID: 1606120417}
     - target: {fileID: 4403027929564642176, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4454
+      value: 4469
       objectReference: {fileID: 0}
     - target: {fileID: 4474605614288331626, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Mesh
@@ -41525,7 +41511,7 @@ PrefabInstance:
       objectReference: {fileID: 25681712}
     - target: {fileID: 4599031156055082105, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4454
+      value: 4469
       objectReference: {fileID: 0}
     - target: {fileID: 5568538202423799192, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Mesh
@@ -41557,7 +41543,7 @@ PrefabInstance:
       objectReference: {fileID: 517396965}
     - target: {fileID: 8700669035646066024, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 352
+      value: 367
       objectReference: {fileID: 0}
     - target: {fileID: 8749679749334469805, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
@@ -41601,7 +41587,7 @@ PrefabInstance:
       objectReference: {fileID: 690334230}
     - target: {fileID: 514552520084137567, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4202
+      value: 4214
       objectReference: {fileID: 0}
     - target: {fileID: 694819620630992170, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_LocalPosition.x
@@ -41649,7 +41635,7 @@ PrefabInstance:
       objectReference: {fileID: 1523574602}
     - target: {fileID: 836341691340492081, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4202
+      value: 4214
       objectReference: {fileID: 0}
     - target: {fileID: 2081380259143579551, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_Mesh
@@ -41677,7 +41663,7 @@ PrefabInstance:
       objectReference: {fileID: 137652979}
     - target: {fileID: 3707419535845747254, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4004
+      value: 4016
       objectReference: {fileID: 0}
     - target: {fileID: 3807467337013135760, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_Mesh
@@ -41685,11 +41671,11 @@ PrefabInstance:
       objectReference: {fileID: 761540002}
     - target: {fileID: 3807467337013135760, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4202
+      value: 4214
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: uniqueId
-      value: -1771577272
+      value: -743220000
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: spawnVariantSource.infantrySource
@@ -41701,7 +41687,7 @@ PrefabInstance:
       objectReference: {fileID: 1177407351}
     - target: {fileID: 6003848239607631463, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4202
+      value: 4214
       objectReference: {fileID: 0}
     - target: {fileID: 8488276177249867402, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: m_Mesh

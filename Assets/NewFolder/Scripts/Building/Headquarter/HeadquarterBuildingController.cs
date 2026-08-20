@@ -1,8 +1,4 @@
-
-using System;
-using System.Collections.Generic;
-
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -33,8 +29,8 @@ public class HeadquarterBuildingController {
     public void Create(HeadquarterBuildingPrototype prototype) {
         headquarter = new HeadquarterBuilding(prototype.config);
         headquarter.Position = prototype.position;
-        headquarter.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
-        headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.position, (int) prototype.combatAgentPrototype.markerPrefab.Radius); // need separate component for this
+        headquarter.CombatId = combatSystem.Add(prototype.combatPrototype);
+        headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.position, (int) 4/* TODO: prototype.pathfindingObstacle*/); // need separate component for this
         headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.position, prototype.rotation, prototype.config.avoidanceObstaclePrefab);
         headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(prototype.position, prototype.config.vehicleObstaclePrefab);
         headquarter.PhysicsObstacleId = physicsService.RegisterObstacle(prototype.position, prototype.config.physicsObstaclePrefab);
@@ -42,8 +38,8 @@ public class HeadquarterBuildingController {
     }
 
     private void ReadCombatOutput() {
-        var combatOutput = combatSystem.GetCombatOutput(headquarter.CombatId);
-        if (combatOutput.damageWasFatal) {
+        var combatState = combatSystem.ReadState(headquarter.CombatId);
+        if (combatState.damageResult?.damageWasFatal == true) {
             headquarter.Destroyed = true;
             GameObject.Destroy(visuals);
             pathfindingService.UnregisterObstacle(headquarter.PathfindingObstacleId);

@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+
+using Combat;
+
 using UnityEngine;
 
 public class LoadoutController {
@@ -15,7 +18,7 @@ public class LoadoutController {
         this.weaponController = weaponController;
     }
 
-    public int SpawnLoadout(int ownerCombatId, LoadoutPrototype prototype) {
+    public int SpawnLoadout(CombatId ownerCombatId, LoadoutPrototype prototype) {
         var nextId = ++idCounter;
         var model = new LoadoutModel(nextId, prototype.config);
         registry[nextId] = model;

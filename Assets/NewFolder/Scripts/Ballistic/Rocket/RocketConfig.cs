@@ -9,7 +9,7 @@ public class RocketConfig : ScriptableObject {
     public FlyShape flyShape;
     public float flyDuration;
     public int damage;
-    public float explosionRadius;
+    public float explosionRadius; // NOTE: is duplicating explosion data
     public ExplosionData explosionData = new() {
         force = 10,
         radius = 5,

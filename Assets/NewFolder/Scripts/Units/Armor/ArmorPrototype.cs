@@ -1,4 +1,4 @@
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -12,5 +12,5 @@ public struct ArmorPrototype {
     public WeaponPrototype localWeaponPrototype;
     public RamEffectPrototype ramPrototype;
     public RewardPrototype rewardPrototype;
-    public CombatAgentPrototype combatAgentPrototype;
+    public CombatPrototype combatPrototype;
 }

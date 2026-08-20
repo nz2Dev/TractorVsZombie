@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -31,15 +30,14 @@ public class PlatformController {
     public virtual int Create(PlatformPrototype prototype, Vector3 position = default) {
         var nextId = ++idCounter;
         var initPosition = position == default ? prototype.position : position;
-        var model = new PlatformModel(nextId, initPosition, prototype.config);
+        var model = new PlatformModel(nextId, initPosition, prototype.config, prototype.loadoutOffset);
         registry[model.Id] = model;
 
-        model.LoadoutOffset = prototype.loadoutOffset;
-        model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.combatAgentPrototype);
+        model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab);
-        model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
+        model.RamId = ramEffect.StartNew(model.CombatId, prototype.combatPrototype.alie, prototype.ramPrototype);
+        
         view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab);
-
         return model.Id;
     }
 
@@ -72,7 +70,7 @@ public class PlatformController {
         return registry[platformId].VehiclePhysicsId;
     }
 
-    public virtual  PlatformState ReadPlatformState(int platformId) {
+    public virtual PlatformState ReadPlatformState(int platformId) {
         var platform = registry[platformId];
         var loadoutState = default (LoadoutState);
         if (platform.LoadoutId != 0) {
@@ -81,6 +79,7 @@ public class PlatformController {
         return new PlatformState {
             position = platform.Position,
             combatId = platform.CombatId,
+            combatState = combatSystem.ReadState(platform.CombatId),
             vehiclePhysicsId = platform.VehiclePhysicsId,
             weaponId = loadoutState.weaponId,
             weaponState = loadoutState.weaponState,
@@ -98,7 +97,7 @@ public class PlatformController {
                 loadoutController.MoveLoadout(host.LoadoutId, host.Position + host.LoadoutOffset, host.VehiclePhysicsState.rotation);
             }
 
-            combatSystem.UpdateAgentPosition(host.CombatId, host.Position);
+            // todo: register proximity and raycast components
             ramEffect.Forward(host.RamId, host.Position);
         }
     }

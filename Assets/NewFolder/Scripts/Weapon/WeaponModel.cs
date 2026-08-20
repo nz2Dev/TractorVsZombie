@@ -1,12 +1,14 @@
+using Combat;
+
 using UnityEngine;
 
 public class WeaponModel {
     
     public int Id { get; }
-    public int CombatId { get; }
+    public CombatId CombatId { get; }
     public WeaponConfig Config { get; }
 
-    public WeaponModel(int id, int combatId, WeaponConfig config) {
+    public WeaponModel(int id, CombatId combatId, WeaponConfig config) {
         Id = id;
         CombatId = combatId;
         Config = config;

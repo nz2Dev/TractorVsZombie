@@ -1,7 +1,8 @@
-using System;
 using System.Collections.Generic;
 
-using Compatibility;
+using Castle.Core;
+
+using Combat;
 
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class AimingController {
 
     private readonly CameraProvider cameraProvider;
 
+    private readonly ProximityService proximityService;
     private readonly RaycastService raycastService;
     private readonly CombatSystem combatSystem;
 
@@ -18,13 +20,14 @@ public class AimingController {
     private readonly AimingView view;
     private readonly AimingModel model;
 
-    public AimingController(AimingView view, CameraProvider cameraProvider, RaycastService raycastService, CombatSystem combatSystem, PlatformController platformController, WeaponController weaponController) {
+    public AimingController(AimingView view, CameraProvider cameraProvider, RaycastService raycastService, CombatSystem combatSystem, PlatformController platformController, WeaponController weaponController, ProximityService proximityService) {
         this.view = view;
         this.cameraProvider = cameraProvider;
         this.raycastService = raycastService;
         this.combatSystem = combatSystem;
         this.platformController = platformController;
         this.weaponController = weaponController;
+        this.proximityService = proximityService;
         model = new AimingModel();
     }
 
@@ -90,9 +93,13 @@ public class AimingController {
     }
 
     private void OperateAutomatically(PlatformState platformState) {
-        var searchRadius = platformState.weaponState.aimConfig.range;
-        if (combatSystem.GetClosestEnemyAgentInRange(platformState.combatId, searchRadius, out var agentInfo)) {
-            weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
+        var searchRadius = platformState.weaponState.aimConfig.range; // ?? where does radius filter should happen? here or in proximity service?
+        var searchFaction = !platformState.combatState.alie;
+        var serachProximityLayer = CombatSystem.GetProximityLayerForFaction(searchFaction);
+        
+        if (proximityService.QueryNearestPoint(platformState.position, serachProximityLayer, out var nearestProximityId)) {
+            var nearestPosition = proximityService.GetPoint(nearestProximityId);
+            weaponController.AimWeapon(platformState.weaponId, nearestPosition + 0.5f * Vector3.up);
         }
     }
 

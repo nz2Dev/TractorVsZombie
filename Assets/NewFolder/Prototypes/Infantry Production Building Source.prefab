@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8057315425895027949}
-  - component: {fileID: 312124635889568192}
+  - component: {fileID: 1159228095933072964}
   m_Layer: 0
-  m_Name: Combat Agent Source
+  m_Name: Combat Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,11 +29,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7196050754466600572}
+  m_Children: []
   m_Father: {fileID: 694819620630992170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &312124635889568192
+--- !u!114 &1159228095933072964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,13 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1852347364199177668}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b40557f116f4c489e0b5cb26e445b0, type: 3}
+  m_Script: {fileID: 11500000, guid: c5c3ef6a4b8334532b809e7b8e90af80, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: NewFolder::CombatAgentSource
+  m_EditorClassIdentifier: NewFolder::CombatPrototypeSource
   alie: 0
-  configSource:
-    maxHealth: 10
-  markerPrefab: {fileID: 314227725128860358}
+  configSource: {fileID: 11400000, guid: 852d9bcbaf69541fab429a326147c708, type: 2}
 --- !u!1 &2585800320623778281
 GameObject:
   m_ObjectHideFlags: 0
@@ -79,10 +76,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8057315425895027949}
   - {fileID: 3729433990717068248}
   - {fileID: 1094436988999250349}
   - {fileID: 6403658628140185900}
+  - {fileID: 8057315425895027949}
+  - {fileID: 7196050754466600572}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &5307129724459089617
@@ -98,9 +96,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -399563627
+  uniqueId: 1238185071
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
-  combatAgentSource: {fileID: 312124635889568192}
+  combatSource: {fileID: 1159228095933072964}
   dimensionsPrefab: {fileID: 8954973560333084679}
   physicsObstaclePrefab: {fileID: 2045905622344632889}
   visualsPrefab: {fileID: 2588060940734931284}
@@ -171,7 +169,7 @@ GameObject:
   - component: {fileID: 6678361329405444936}
   - component: {fileID: 314227725128860358}
   m_Layer: 0
-  m_Name: Collision Marker
+  m_Name: Raycast Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,12 +183,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6613415224752745726}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8057315425895027949}
+  m_Father: {fileID: 694819620630992170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6678361329405444936
 BoxCollider:
@@ -226,6 +224,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::CollisionMarker
   thisCollider: {fileID: 6678361329405444936}
+  Height: 0
+  Radius: 0
 --- !u!1001 &2705127311750874863
 PrefabInstance:
   m_ObjectHideFlags: 0

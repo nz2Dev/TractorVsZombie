@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-using Compatibility;
-
 using UnityEngine;
+using Combat;
 
 public class InfantryController {
 
@@ -12,18 +11,24 @@ public class InfantryController {
     private readonly LocalAvoidanceService avoidanceService;
     private readonly RagdollService ragdollService;
     private readonly RaycastService raycastService;
+    private readonly ProximityService proximityService;
     private readonly RewardController rewardController;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
+    private readonly Dictionary<ProximityId, int> proximityToAgent = new ();
+    private readonly Dictionary<RaycastId, int> raycastsToAgent = new ();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService) {
+    private readonly List<int> findInfantryIdsBuffer = new (32);
+
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService, ProximityService proximityService) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
         this.ragdollService = physicsService;
         this.raycastService = raycastService;
         this.avoidanceService = avoidanceService;
+        this.proximityService = proximityService;
     }
 
     public int InfantryCount => registry.Count;
@@ -42,9 +47,13 @@ public class InfantryController {
         registry[model.Id] = model;
 
         model.Position = prototype.position;
-        model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
+        model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
+        model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
+        proximityToAgent[model.ProximityId] = nextId;
+        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
+        raycastsToAgent[model.RaycastId] = nextId;
 
         view.AddVisuals(model.Id, prototype.position, prototype.visualsPrefab);
         return model.Id;
@@ -55,13 +64,45 @@ public class InfantryController {
         avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
     }
 
-    public void Attack(int infantryId, int targetCombatId) {
+    // should be part of component handling Explosion/Movement?
+    public bool Explode(int infantryId, MovementExplosion explosion) {
+        var entity = registry[infantryId];
+        if (entity.ExplosionForbiden)
+            return false;
+
+        entity.Grounded = false;
+        entity.ExplosionForbiden = true;
+        ragdollService.SetPhysicsActive(entity.BodyPhysicsId, true);
+        ragdollService.UpdatePhysicsEntityPosition(entity.BodyPhysicsId, entity.Position);
+        ragdollService.AddExplosionForce(entity.BodyPhysicsId, explosion.force, explosion.epicentr, explosion.radius, explosion.upwardModifier, ForceMode.Impulse);
+        return true;
+    }
+
+    public void Attack(int infantryId, CombatId targetCombatId) {
         var model = registry[infantryId];
         if (model.LastAttackTime + model.Config.attackCooldown < Time.time) {
             model.LastAttackTime = Time.time;
-            combatSystem.ApplyDirectDamage(model.CombatId, targetCombatId, model.Config.damage);
             view.ShowDirectFrontAttack(model.Id);
+            combatSystem.DealDamage(targetCombatId, new DamageInput {
+                damageSource = model.Position,
+                damageType = DamageType.Punch,
+                damage = model.Config.damage
+            });
         }
+    }
+
+    public bool TryFindByRaycastId(RaycastId raycastId, out int infantryId) {
+        return raycastsToAgent.TryGetValue(raycastId, out infantryId);
+    }
+
+    public void FindByRaycastIds(List<RaycastId> raycastIds, out List<int> infantryIdsResult) {
+        findInfantryIdsBuffer.Clear();
+        for (int i = 0; i < raycastIds.Count; i++) {
+            var nextRaycastId = raycastIds[i];
+            var infantryId = raycastsToAgent[nextRaycastId];
+            findInfantryIdsBuffer.Add(infantryId);
+        }
+        infantryIdsResult = findInfantryIdsBuffer;
     }
 
     public InfantryState GetInfantryState(int infantryId) {
@@ -90,8 +131,15 @@ public class InfantryController {
 
     private void DeleteInfantry(InfantryModel model) {
         registry.Remove(model.Id);
+        
+        combatSystem.Remove(model.CombatId);
         ragdollService.UnregisterPhysicsEntity(model.BodyPhysicsId);
         avoidanceService.RemoveAgent(model.AvoidanceId);
+        proximityService.RemovePoint(model.ProximityId);
+        proximityToAgent.Remove(model.ProximityId);
+        raycastService.UnregisterMarker(model.RaycastId);
+        raycastsToAgent.Remove(model.RaycastId);
+
         view.RemoveVisuals(model.Id);
     }
 
@@ -111,7 +159,7 @@ public class InfantryController {
                 model.Position = raycastService.GetClosestVerticalGroundPoint(model.Position);
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 ragdollService.SetPhysicsActive(model.BodyPhysicsId, false);
-                combatSystem.RecoverFromExplosion(model.CombatId);
+                model.ExplosionForbiden = false;
             } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {
                 model.Velocity = rvoVelocity;
                 model.Position = model.Position += rvoVelocity * Time.deltaTime;
@@ -127,30 +175,24 @@ public class InfantryController {
             if (model.IsDead)
                 continue;
 
-            var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
-            if (combatOutput.wasExploded && model.Grounded) {
-                model.Grounded = false;
-                ragdollService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, model.Position);
-                ragdollService.SetPhysicsActive(model.BodyPhysicsId, true);
-                var explosion = combatOutput.explosionData;
-                ragdollService.AddExplosionForce(model.BodyPhysicsId, explosion.force, combatOutput.damageSourcePosition, explosion.radius, explosion.upwardModifier, ForceMode.Impulse);
-            }
-
+            var combatState = combatSystem.ReadState(model.CombatId);
             // base visual effects on combat effects irregarding of logic damage
-            if (combatOutput.wasProjectiled || combatOutput.wasExploded) {
+            if (combatState.damageResult.HasValue) {
                 view.ShowTakeHit(model.Id);
             }
 
-            if (combatOutput.damageWasFatal) {
-                model.IsDead = true;
-                model.IsPhysicsOnlyMovement = true;
-                rewardController.Create(model.RewardPrototype, model.Position);
-                combatSystem.UnregisterAgent(model.CombatId); // TODO: keep registered, add combat system queries filters for IsAlive
-
-                if (combatOutput.wasProjectiled && model.Grounded) {
-                    view.ShowThrownAway(model.Id, combatOutput.damageSourcePosition);
-                } else {
-                    view.ShowDisolveDeath(model.Id);
+            if (combatState.damageResult.HasValue) {
+                var damageResult = combatState.damageResult.Value;
+                if (damageResult.damageWasFatal) {
+                    model.IsDead = true;
+                    model.IsPhysicsOnlyMovement = true;
+                    rewardController.Create(model.RewardPrototype, model.Position);
+                    
+                    if (damageResult.damageType == DamageType.Projectile && model.Grounded) {
+                        view.ShowThrownAway(model.Id, damageResult.damageSource);
+                    } else {
+                        view.ShowDisolveDeath(model.Id);
+                    }
                 }
             }
         }
@@ -160,9 +202,11 @@ public class InfantryController {
         foreach (var model in registry.Values) {
             view.UpdateTransform(model.Id, model.Position, model.Rotation);
             avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
-            if (!model.IsDead) {
-                combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
-            }
+            proximityService.UpdatePoint(model.ProximityId, model.Position);
+            raycastService.UpdateMarker(model.RaycastId, model.Position);
+            // if (!model.IsDead) {
+            //     combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
+            // }
         }
     }
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -8,10 +8,14 @@ public class RamEffectController {
 
     private readonly RamEffectView view;
     private readonly CombatSystem combatSystem;
+    private readonly RaycastService raycastService;
+    private readonly InfantryController infantryController;
 
-    public RamEffectController(RamEffectView view, CombatSystem combatSystem) {
+    public RamEffectController(RamEffectView view, CombatSystem combatSystem, InfantryController infantryController, RaycastService raycastService) {
         this.view = view;
         this.combatSystem = combatSystem;
+        this.infantryController = infantryController;
+        this.raycastService = raycastService;
     }
 
     private int idCounter;
@@ -21,9 +25,9 @@ public class RamEffectController {
         ComputeDamage();
     }
 
-    public int StartNew(int combatId, RamEffectPrototype prototype) {
+    public int StartNew(CombatId holderCombatId, bool holderIsAlie, RamEffectPrototype prototype) {
         var nextId = idCounter++;
-        var model = new RamEffectModel(nextId, combatId, prototype.config);
+        var model = new RamEffectModel(nextId, prototype.config, holderCombatId, holderIsAlie);
         model.Position = prototype.position;
         registry[nextId] = model;
         view.AddEffect(nextId, prototype.audioSourcePrefab);
@@ -41,15 +45,36 @@ public class RamEffectController {
 
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
-            // var overlappedHitboxes = hitboxSystem.Overlap(position, radius, combatSystem.GetFoeHitboxLayer(faction));
-            // var overlappedInfantries = infantryController.GetEntitiesByHitboxes(overlappedHitboxes);
-            // var groundedEntities = overlappedInfantries.Filter(entity => entity.movement.IsGrounded);
-            // movementSystem.Explode(groundedEntities.MovementIds, explosion);
-            // combatSystem.DealDamage(groundedEntities.CombatIds, explosionDamage);
+            var targetRaycastLayer = CombatSystem.GetRaycastLayerForFaction(!model.HolderIsAlie);
+            raycastService.Overlap(model.Position, model.Config.triggerRadius, targetRaycastLayer, out var idsResult);
+            infantryController.FindByRaycastIds(idsResult, out var infantryIdsResult);
+            
+            var affectedCount = 0;
+            foreach (var nextInfantryId in infantryIdsResult) {
+                var exploded = infantryController.Explode(nextInfantryId, new MovementExplosion {
+                    upwardModifier = model.Config.explosionData.upwardModifier,
+                    epicentr = model.Position,
+                    radius = model.Config.explosionData.radius,
+                    force = model.Config.explosionData.force,
+                });
+                
+                if (exploded) {
+                    affectedCount++;
+                }
 
-            var affectedCount = combatSystem.ApplyExplosionDamage(model.CombatId, model.Position,
-                model.Config.triggerRadius, model.Config.damage, model.Config.explosionData);
-            view.ShowImpact(model.Id, model.Position, affectedCount, model.Config.impactSFX);
+                var nextInfantryState = infantryController.GetInfantryState(nextInfantryId);
+                combatSystem.DealDamage(nextInfantryState.combatId, new DamageInput {
+                    damageSource = model.Position,
+                    damageType = DamageType.Exposion,
+                    damage = model.Config.damage,
+                });
+            }
+
+            // TODO: search for other entities..
+
+            if (affectedCount > 0) {
+                view.ShowImpact(model.Id, model.Position, affectedCount, model.Config.impactSFX);
+            }
         }
     }
 }

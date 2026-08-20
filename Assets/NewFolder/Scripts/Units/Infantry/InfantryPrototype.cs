@@ -1,3 +1,5 @@
+using Combat;
+
 using Compatibility;
 
 using UnityEngine;
@@ -7,7 +9,9 @@ public struct InfantryPrototype {
     public InfantryConfig config;
     public InfantryVisuals visualsPrefab;
     public RewardPrototype rewardPrototype;
+
     public RagdollBody physicsBodyPrefab;
-    public CombatAgentPrototype combatAgentPrototype;
+    public RaycastMarker raycastMarkerPrefab;
+    public CombatPrototype combatPrototype;
     public AgentAvoidanceConfig agentAvoidanceConfig;
 }

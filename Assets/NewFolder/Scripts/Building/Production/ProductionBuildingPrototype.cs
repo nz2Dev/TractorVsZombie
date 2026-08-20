@@ -1,3 +1,5 @@
+using Combat;
+
 using Compatibility;
 
 using UnityEngine;
@@ -12,5 +14,5 @@ public struct ProductionBuildingPrototype {
     public ProductionBuildingConfig config;
     public SpawnSpot spawnSpot;
     public SpawnVariant spawnVariant;
-    public CombatAgentPrototype combatAgentPrototype;
+    public CombatPrototype combatPrototype;
 }

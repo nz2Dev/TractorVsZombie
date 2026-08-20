@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -10,28 +10,32 @@ public class ProjectileController {
     private readonly ProjectileView view;
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
+    private readonly InfantryController infantryController;
 
     private int idCounter = 0;
     private readonly Dictionary<int, ProjectileModel> registry = new ();
     private readonly List<int> removeBuffer = new(16);
 
-    public ProjectileController(CombatSystem combatSystem, ProjectileView view, RaycastService raycastService) {
+    public ProjectileController(CombatSystem combatSystem, ProjectileView view, RaycastService raycastService, InfantryController infantryController) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.raycastService = raycastService;
+        this.infantryController = infantryController;
     }
 
-    public void Create(int shooterId, ProjectilePrototype prototype, Orientation orientation) {
+    public void Create(CombatId shooterCombatId, ProjectilePrototype prototype, Orientation orientation) {
+        var shootIsAlie = combatSystem.ReadState(shooterCombatId).alie;
+
         var nextId = ++idCounter;
-        var model = new ProjectileModel(nextId, prototype.config, shooterId);
+        var model = new ProjectileModel(nextId, prototype.config, shooterCombatId, shootIsAlie);
         registry[nextId] = model;
 
         model.Position = orientation.origin;
         model.Velocity = orientation.direction * prototype.config.speed;
         model.SpawnTime = Time.time;
 
-        view.SetupShooter(shooterId, prototype.shootAudioSourcePrefab, prototype.crashAudioSourcePrefab);
-        view.ShowBulletShoot(shooterId, model.Id, orientation.origin, model.Velocity,
+        view.SetupShooter(shooterCombatId.Value, prototype.shootAudioSourcePrefab, prototype.crashAudioSourcePrefab);
+        view.ShowBulletShoot(shooterCombatId.Value, model.Id, orientation.origin, model.Velocity,
             prototype.config.style, prototype.config.shootAudioClips);
     }
 
@@ -53,22 +57,29 @@ public class ProjectileController {
             if (projectile.IsDead)
                 continue;
 
-            var projectileHitCheckDistance = projectile.Velocity.magnitude * Time.fixedDeltaTime;
-            if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectileHitCheckDistance,
-                projectile.Config.damage, out var hitDirection, out var hitSurface)) {
+            var ray = new Ray(projectile.Position, projectile.Velocity);
+            var hitCheckDistance = projectile.Velocity.magnitude * Time.fixedDeltaTime;
+            var targetRaycastLayer = CombatSystem.GetRaycastLayerForFaction(!projectile.ShooterAlie);
+            if (raycastService.Raycast(ray, hitCheckDistance, targetRaycastLayer, out var hitRaycastId, out var hitInfo)) {
                 projectile.IsDead = true;
 
-                AudioClip[] impactAudioClips;
-                ParticleSystem impactVFXPrefab;
-                if (hitSurface == ContactSurface.Metal) {
-                    impactAudioClips = projectile.Config.metalImpactAudioClips;
-                    impactVFXPrefab = projectile.Config.metalImpactParticlesPrefab;
-                } else {
-                    impactAudioClips = projectile.Config.softImpactAudioClips;
-                    impactVFXPrefab = projectile.Config.softImpactParticlesPrefab;
+                var surface = Compatibility.ContactSurface.None;
+                if (infantryController.TryFindByRaycastId(hitRaycastId, out var hitInfantryId)) {
+                    var hitInfantry = infantryController.GetInfantryState(hitInfantryId);
+                    var hitCombat = combatSystem.ReadState(hitInfantry.combatId);
+                    surface = hitCombat.surface;
+
+                    combatSystem.DealDamage(hitInfantry.combatId, new DamageInput {
+                        damageSource = projectile.Position,
+                        damageType = DamageType.Projectile,
+                        damage = projectile.Config.damage
+                    });
                 }
 
-                view.ShowBulletCrash(projectile.ShooterCombatId, projectile.Id, projectile.Position, impactAudioClips, impactVFXPrefab, hitDirection);
+                // TODO: search for Armor/Platform/Truck entities
+
+                view.ShowBulletCrash(projectile.ShooterCombatId.Value, projectile.Id, projectile.Position, 
+                    projectile.Config.GetImapctAudioClips(surface), projectile.Config.GetImpactParticlesPrefab(surface), hitInfo.normal);
             }
         }
     }
@@ -82,7 +93,7 @@ public class ProjectileController {
             if (!projectile.IsDead) {
                 var projectileRay = new Ray(projectile.Position, projectile.Velocity);
                 if (raycastService.RaycastEnvironment(projectileRay, projectile.Velocity.magnitude * Time.fixedDeltaTime, out var hitInfo)) {
-                    view.ShowBulletCrash(projectile.ShooterCombatId, projectile.Id, hitInfo.point, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitInfo.normal);
+                    view.ShowBulletCrash(projectile.ShooterCombatId.Value, projectile.Id, hitInfo.point, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitInfo.normal);
                     projectile.IsDead = true;
                 }
             }

@@ -1,3 +1,5 @@
+using Combat;
+
 using UnityEngine;
 
 public struct InfantryState {
@@ -6,6 +8,6 @@ public struct InfantryState {
     public Vector3 position;
     public Vector3 movementVelocity;
     public float maxSpeed;
-    public int combatId;
+    public CombatId combatId;
     public RagdollId bodyId;
 }

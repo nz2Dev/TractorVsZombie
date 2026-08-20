@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -42,16 +42,15 @@ public class ArmorController {
 
     public int SpawnArmor(ArmorPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new ArmorModel(nextId, prototype.position, prototype.config);
+        var model = new ArmorModel(nextId, prototype.position, prototype.config, prototype.rewardPrototype, prototype.localWeaponPrototype.position);
         registry[model.Id] = model;
 
-        model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
+        model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.vehiclePrefab);
-        model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
+        // todo: register proxmity and raycast components
 
+        model.RamId = ramEffect.StartNew(model.CombatId, prototype.combatPrototype.alie, prototype.ramPrototype);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.localWeaponPrototype);
-        model.WeaponPlacementOffset = prototype.localWeaponPrototype.position;
-        model.RewardPrototype = prototype.rewardPrototype;
 
         view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.engineLoopSFX);
         return model.Id;
@@ -74,12 +73,14 @@ public class ArmorController {
     }
 
     private void DeleteArmor(ArmorModel model) {
+        registry.Remove(model.Id);
+        
+        combatSystem.Remove(model.CombatId);
         vehicleService.DeleteVehicle(model.VehiclePhysicsId);
-        combatSystem.UnregisterAgent(model.CombatId);
         weaponController.DeleteWeapon(model.WeaponId);
         ramEffect.Stop(model.RamId);
+        
         view.Hide(model.Id);
-        registry.Remove(model.Id);
     }
 
     public ArmorState ReadArmorState(int armorId) {
@@ -95,10 +96,10 @@ public class ArmorController {
 
     private void ReadCombatOutput() {
         foreach (var model in registry.Values) {
-            var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
-            if (combatOutput.damageWasFatal) {
-                model.Destroyed = true;
+            var combatState = combatSystem.ReadState(model.CombatId);
+            if (combatState.damageResult?.damageWasFatal == true) {
                 rewardController.Create(model.RewardPrototype, model.Position, model.VehiclePhysicsState.rotation);
+                model.Destroyed = true;
             }
         }
     }
@@ -121,7 +122,8 @@ public class ArmorController {
             model.Position = model.VehiclePhysicsState.position;
 
             weaponController.MoveWeapon(model.WeaponId, model.Position + model.WeaponPlacementOffset);
-            combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
+            // combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
+            // TODO: register proxmity and raycast components
             ramEffect.Forward(model.RamId, model.Position);
         }
     }

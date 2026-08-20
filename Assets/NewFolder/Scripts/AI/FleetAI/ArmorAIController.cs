@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using Compatibility;
+using Combat;
 
 using UnityEngine;
 
@@ -11,15 +11,17 @@ public class ArmorAIController {
     private readonly PathfindingService pathfindingService;
     private readonly ArmorController armorController;
     private readonly WeaponController weaponController;
+    private readonly ProximityService proximityService;
 
     private readonly List<int> controlledArmorIds = new();
     private readonly int flowFieldId;
 
-    public ArmorAIController(CombatSystem combatSystem, PathfindingService pathfindingService, ArmorController armorController, WeaponController weaponController) {
+    public ArmorAIController(CombatSystem combatSystem, PathfindingService pathfindingService, ArmorController armorController, WeaponController weaponController, ProximityService proximityService) {
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.armorController = armorController;
         this.weaponController = weaponController;
+        this.proximityService = proximityService;
 
         flowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
     }
@@ -63,8 +65,13 @@ public class ArmorAIController {
 
     private void OperateArmorCombat(ArmorState state) {
         var enemySearchRadius = state.weaponState.aimConfig.range;
-        if (combatSystem.GetClosestEnemyAgentInRange(state.combatId, enemySearchRadius, out var agentInfo)) {
-            weaponController.AimWeapon(state.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
+
+        var targetFaction = !state.combatIsAlie;
+        var targetProximityLayer = CombatSystem.GetProximityLayerForFaction(targetFaction);
+        if (proximityService.QueryNearestPoint(state.position, targetProximityLayer, out var nearestProximityId)) {
+            // todo: either find mapped raycastId and het height from there, or else?
+            var pointPosition = proximityService.GetPoint(nearestProximityId);
+            weaponController.AimWeapon(state.weaponId, pointPosition + 0.5f * Vector3.up);
         }
     }
 

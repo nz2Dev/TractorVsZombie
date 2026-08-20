@@ -1,3 +1,5 @@
+using Compatibility;
+
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ProjectileConfig", menuName = "Configs/ProjectileConfig")]
@@ -16,4 +18,20 @@ public class ProjectileConfig : ScriptableObject {
     [Space]
     public AudioClip[] softImpactAudioClips;
     public ParticleSystem softImpactParticlesPrefab;
+
+    public AudioClip[] GetImapctAudioClips(ContactSurface surface) {
+        if (surface == ContactSurface.Metal) {
+            return metalImpactAudioClips;
+        } else {
+            return softImpactAudioClips;
+        }
+    }
+
+    public ParticleSystem GetImpactParticlesPrefab(ContactSurface surface) {
+        if (surface == ContactSurface.Metal) {
+            return metalImpactParticlesPrefab;
+        } else {
+            return softImpactParticlesPrefab;
+        }
+    }
 }
