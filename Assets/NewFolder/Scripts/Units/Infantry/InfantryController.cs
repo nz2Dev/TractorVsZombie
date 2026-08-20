@@ -38,14 +38,13 @@ public class InfantryController {
 
     public int SpawnInfantry(InfantryPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new InfantryModel(nextId, prototype.config, prototype.agentAvoidanceConfig.maxSpeed);
+        var model = new InfantryModel(nextId, prototype.config, prototype.agentAvoidanceConfig.maxSpeed, prototype.rewardPrototype);
         registry[model.Id] = model;
 
         model.Position = prototype.position;
         model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
         model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
-        model.RewardPrototype = prototype.rewardPrototype;
 
         view.AddVisuals(model.Id, prototype.position, prototype.visualsPrefab);
         return model.Id;
