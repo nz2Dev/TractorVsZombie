@@ -1,5 +1,3 @@
-using Compatibility;
-
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RamConfig", menuName = "RamConfig", order = 0)]

@@ -1,5 +1,3 @@
-using Compatibility;
-
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RocketConfig", menuName = "Configs/RocketConfig")]
