@@ -1,5 +1,3 @@
-using Compatibility;
-
 namespace Combat {
     public struct CombatState {
         public bool alie;

@@ -1,7 +1,3 @@
-using System;
-
-using Compatibility;
-
 using UnityEngine;
 
 public class HeadquarterBuildingSource : MonoBehaviour {

@@ -1,7 +1,5 @@
 using Combat;
 
-using Compatibility;
-
 using UnityEngine;
 
 public struct ProductionBuildingPrototype {

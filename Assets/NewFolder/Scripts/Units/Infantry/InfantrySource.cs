@@ -1,5 +1,3 @@
-using Compatibility;
-
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;

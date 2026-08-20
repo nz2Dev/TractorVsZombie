@@ -1,5 +1,3 @@
-using Compatibility;
-
 using UnityEngine;
 
 public class TruckSource : MonoBehaviour {
