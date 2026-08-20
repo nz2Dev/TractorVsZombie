@@ -9,12 +9,12 @@ public enum ReservedLayerCode {
 
 public class RaycastService {
     
-    private readonly Dictionary<int, GameObject> markersRegistry = new();
-    private readonly Dictionary<GameObject, int> markerToId = new();
+    private readonly Dictionary<RaycastId, GameObject> markersRegistry = new();
+    private readonly Dictionary<GameObject, RaycastId> markerToId = new();
 
     private readonly RaycastConfig config;
     private readonly Collider[] overlapBuffer;
-    private readonly List<int> idsResultBuffer;
+    private readonly List<RaycastId> idsResultBuffer;
 
     private int idCounter;
 
@@ -24,8 +24,8 @@ public class RaycastService {
         idsResultBuffer = new (config.overlapBufferSize);
     }
 
-    public int RegisterMarker(Vector3 position, RaycastMarker markerPrefab, ReservedLayerCode layerCode) {
-        var nextId = ++idCounter;
+    public RaycastId RegisterMarker(Vector3 position, RaycastMarker markerPrefab, ReservedLayerCode layerCode) {
+        var nextId = new RaycastId(++idCounter);
         var marker = GameObject.Instantiate(markerPrefab, position, Quaternion.identity);
         marker.gameObject.layer = config.LayerCodeToIndex(layerCode);
         markersRegistry[nextId] = marker.gameObject;
@@ -33,29 +33,29 @@ public class RaycastService {
         return nextId;
     }
 
-    public void UnregisterMarker(int id) {
+    public void UnregisterMarker(RaycastId id) {
         var marker = markersRegistry[id];
         markerToId.Remove(marker);
         markersRegistry.Remove(id);
         UnityEngine.Object.Destroy(marker);
     }
 
-    public void UpdateMarker(int id, Vector3 position) {
+    public void UpdateMarker(RaycastId id, Vector3 position) {
         var marker = markersRegistry[id];
         marker.transform.position = position;
     }
 
-    public bool Raycast(Ray ray, float maxDistance, ReservedLayerCode layerCode, out int metadata, out RaycastHit hitInfo) {
+    public bool Raycast(Ray ray, float maxDistance, ReservedLayerCode layerCode, out RaycastId metadata, out RaycastHit hitInfo) {
         if (Physics.Raycast(ray, out hitInfo, maxDistance, 1 << config.LayerCodeToIndex(layerCode))) {
             metadata = markerToId[hitInfo.collider.gameObject];
             return true;
         } else {
-            metadata = -1;
+            metadata = default;
             return false;
         }
     }
 
-    public int Overlap(Vector3 position, float radius, ReservedLayerCode layerCode, out List<int> idsResult) {
+    public int Overlap(Vector3 position, float radius, ReservedLayerCode layerCode, out List<RaycastId> idsResult) {
         idsResultBuffer.Clear();
         int overlapCount = Physics.OverlapSphereNonAlloc(position, radius, overlapBuffer, config.LayerCodeToMask(layerCode));
         for (int i = 0; i < overlapCount; i++) {
