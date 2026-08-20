@@ -36,7 +36,8 @@ namespace Combat  {
             return new CombatState {
                 alie = model.Alie,
                 health = model.Health,
-                damageResult = model.DamageResult
+                damageResult = model.DamageResult,
+                surface = model.Config.surface,
             };
         }
 
