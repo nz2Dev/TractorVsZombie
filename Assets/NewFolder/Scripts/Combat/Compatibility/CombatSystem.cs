@@ -14,7 +14,7 @@ namespace Compatibility {
 
         private int idCounter;
         private readonly Dictionary<int, CombatAgent> agents = new Dictionary<int, CombatAgent>();
-        private readonly Dictionary<int, int> proximityToAgent = new Dictionary<int, int>();
+        private readonly Dictionary<ProximityId, int> proximityToAgent = new ();
         private readonly Dictionary<int, int> hitboxToAgent = new Dictionary<int, int>();
 
         public CombatSystem(RaycastService raycastService, ProximityService proximityService) {

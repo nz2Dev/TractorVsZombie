@@ -8,7 +8,7 @@ namespace Compatibility {
         public bool Alie { get; }
         public CombatAgentConfig Config { get; }
         public float Height { get; }
-        public int ProximityId { get; set; }
+        public ProximityId ProximityId { get; set; }
         public int HitboxId { get; set; }
 
         public Vector3 Position { get; set; }

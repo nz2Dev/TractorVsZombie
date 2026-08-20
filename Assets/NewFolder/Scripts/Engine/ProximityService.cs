@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 public class ProximityService {
@@ -16,21 +13,22 @@ public class ProximityService {
         this.knnRunner = knnRunner;
     }
 
-    public int AddPoint(Vector3 position, Layer layer) {
-        return knnRunner.System.AddPoint(position, (int) layer);
+    public ProximityId AddPoint(Vector3 position, Layer layer) {
+        return new ProximityId(knnRunner.System.AddPoint(position, (int) layer));
     }
 
-    public void UpdatePoint(int id, Vector3 position) {
-        knnRunner.System.UpdatePoint(id, position);
+    public void UpdatePoint(ProximityId id, Vector3 position) {
+        knnRunner.System.UpdatePoint(id.Value, position);
     }
 
-    public void RemovePoint(int metadata) {
-        knnRunner.System.RemovePoint(metadata);
+    public void RemovePoint(ProximityId id) {
+        knnRunner.System.RemovePoint(id.Value);
     }
 
-    public bool QueryNearestPoint(Vector3 position, Layer layer, out int id) {
-        id = knnRunner.System.QueryNearest(position, (int) layer);
-        return id != -1;
+    public bool QueryNearestPoint(Vector3 position, Layer layer, out ProximityId id) {
+        var pointId = knnRunner.System.QueryNearest(position, (int) layer);
+        id = new ProximityId(pointId);
+        return pointId != -1;
     }
 
 }
