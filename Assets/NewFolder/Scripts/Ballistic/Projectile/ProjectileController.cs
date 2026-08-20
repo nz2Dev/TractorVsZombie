@@ -63,7 +63,7 @@ public class ProjectileController {
             if (raycastService.Raycast(ray, hitCheckDistance, targetRaycastLayer, out var hitRaycastId, out var hitInfo)) {
                 projectile.IsDead = true;
 
-                var surface = Compatibility.ContactSurface.None;
+                var surface = ContactSurface.None;
                 if (infantryController.TryFindByRaycastId(hitRaycastId, out var hitInfantryId)) {
                     var hitInfantry = infantryController.GetInfantryState(hitInfantryId);
                     var hitCombat = combatSystem.ReadState(hitInfantry.combatId);

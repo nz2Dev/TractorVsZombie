@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Combat;
+
 using UnityEngine;
 
 namespace Compatibility {
