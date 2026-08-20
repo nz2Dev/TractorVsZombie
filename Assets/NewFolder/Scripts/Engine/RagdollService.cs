@@ -23,7 +23,7 @@ public class RagdollService {
     }
 
     private int idCounter;
-    private readonly Dictionary<int, RagdollBody> bodyRegistry = new();
+    private readonly Dictionary<RagdollId, RagdollBody> bodyRegistry = new();
     private readonly Dictionary<int, RagdollObstacle> obstacleRegistry = new();
     
     public RagdollService() {
@@ -45,46 +45,46 @@ public class RagdollService {
     }
 
     // register physics body
-    public int RegisterPhysicsEntity(Vector3 position, RagdollBody physicsBodyPrefab) {
-        var entityId = idCounter++;
+    public RagdollId RegisterPhysicsEntity(Vector3 position, RagdollBody physicsBodyPrefab) {
+        var entityId = new RagdollId(idCounter++);
         var physicsBodyInstance = GameObject.Instantiate(physicsBodyPrefab, position, Quaternion.identity);
         bodyRegistry[entityId] = physicsBodyInstance;
         return entityId;
     }
 
-    public void UnregisterPhysicsEntity(int id) {
+    public void UnregisterPhysicsEntity(RagdollId id) {
         if (bodyRegistry.TryGetValue(id, out var entity)) {
             GameObject.Destroy(entity.gameObject);
             bodyRegistry.Remove(id);
         }
     }
 
-    public virtual void SetPhysicsActive(int id, bool active) {
+    public virtual void SetPhysicsActive(RagdollId id, bool active) {
         // make access consisten: either fail hard or play safe silently
         if (bodyRegistry.TryGetValue(id, out var entity)) {
             entity.SetDynamics(active);
         }
     }
 
-    public virtual void AddExplosionForce(int id, float force, Vector3 position, float radius, float upwardsModifier = 0, ForceMode mode = ForceMode.Force) {
+    public virtual void AddExplosionForce(RagdollId id, float force, Vector3 position, float radius, float upwardsModifier = 0, ForceMode mode = ForceMode.Force) {
         var entity = bodyRegistry[id];
         entity.AddExplosionForce(force, position, radius, upwardsModifier, mode);
     }
 
     // consistency name, access: physics body 
-    public void UpdatePhysicsEntityPosition(int id, Vector3 position) {
+    public void UpdatePhysicsEntityPosition(RagdollId id, Vector3 position) {
         if (bodyRegistry.TryGetValue(id, out var entity)) {
             entity.Teleport(position);
         }
     }
 
-    public void UpdateEntityPose(int id, Vector3 position, Quaternion rotation) {
+    public void UpdateEntityPose(RagdollId id, Vector3 position, Quaternion rotation) {
         if (bodyRegistry.TryGetValue(id, out var entity)) {
             entity.Set(position, rotation);
         }
     }
 
-    public virtual RagdollPose GetEntityPose(int id) {
+    public virtual RagdollPose GetEntityPose(RagdollId id) {
         if (bodyRegistry.TryGetValue(id, out var entity)) {
             const float minFlyTime = 0.5f;
             // domain logic here, keep this closer to usage, e.g in Infantry

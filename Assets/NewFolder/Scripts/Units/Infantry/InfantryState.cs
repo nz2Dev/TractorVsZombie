@@ -7,5 +7,5 @@ public struct InfantryState {
     public Vector3 movementVelocity;
     public float maxSpeed;
     public int combatId;
-    public int bodyId;
+    public RagdollId bodyId;
 }

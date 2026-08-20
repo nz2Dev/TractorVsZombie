@@ -34,12 +34,12 @@ public class BodyDynamicController {
     }
 
     public void Explode(int componentId, Explosion explosion) {
-        physicsService.SetPhysicsActive(-1, true);
-        physicsService.AddExplosionForce(-1, explosion.force, explosion.epicentr, explosion.radius, explosion.upwardModifier, ForceMode.Force);
+        physicsService.SetPhysicsActive(default, true);
+        physicsService.AddExplosionForce(default, explosion.force, explosion.epicentr, explosion.radius, explosion.upwardModifier, ForceMode.Force);
     }
 
     public void Update() {
-        var pose = physicsService.GetEntityPose(-1);
+        var pose = physicsService.GetEntityPose(default);
         var limitSqared = config.stopSpeedLimit * config.stopSpeedLimit;
         var inMotion = pose.Velocity.sqrMagnitude > limitSqared;
         if (inMotion) {
@@ -48,7 +48,7 @@ public class BodyDynamicController {
             }
         } else {
             if (!grounded || pose.IsInteractive) {
-                physicsService.SetPhysicsActive(-1, false);
+                physicsService.SetPhysicsActive(default, false);
             }
         }
     }

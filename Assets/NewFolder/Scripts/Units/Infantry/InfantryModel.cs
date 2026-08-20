@@ -15,7 +15,7 @@ public class InfantryModel {
     public RewardPrototype RewardPrototype { get; }
 
     public int CombatId { get; set; }
-    public int BodyPhysicsId { get; set; }
+    public RagdollId BodyPhysicsId { get; set; }
     public int AvoidanceId { get; set; }
 
     public Vector3 Position { get; set; }

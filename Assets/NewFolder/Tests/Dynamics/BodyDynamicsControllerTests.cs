@@ -33,7 +33,7 @@ public class BodyDynamicsControllerTests {
 
         physicsService.Verify(
             s => s.AddExplosionForce(
-                It.IsAny<int>(), 
+                It.IsAny<RagdollId>(), 
                 explosion.force, 
                 explosion.epicentr, 
                 explosion.radius, 
@@ -49,7 +49,7 @@ public class BodyDynamicsControllerTests {
                 stopSpeedLimit = 0.1f,
             }
         };
-        physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
+        physicsService.Setup(s => s.GetEntityPose(It.IsAny<RagdollId>()))
             .Returns(new RagdollService.RagdollPose {
                 Velocity = new Vector3(0, 0, 0.05f),
             });
@@ -68,7 +68,7 @@ public class BodyDynamicsControllerTests {
                 stopSpeedLimit = 0.2f,
             }
         };
-        physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
+        physicsService.Setup(s => s.GetEntityPose(It.IsAny<RagdollId>()))
             .Returns(new RagdollService.RagdollPose {
                 Velocity = new Vector3(0, 0, 0.3f),
             });
@@ -85,7 +85,7 @@ public class BodyDynamicsControllerTests {
         var explosion = new Explosion {};
         var id = controller.Create();
         controller.Explode(id, explosion);
-        physicsService.Verify(s => s.SetPhysicsActive(It.IsAny<int>(), true), Times.Once);
+        physicsService.Verify(s => s.SetPhysicsActive(It.IsAny<RagdollId>(), true), Times.Once);
     }
 
     [Test]
@@ -97,7 +97,7 @@ public class BodyDynamicsControllerTests {
         };
         
         var id = controller.Create();
-        physicsService.Setup(s => s.GetEntityPose(It.IsAny<int>()))
+        physicsService.Setup(s => s.GetEntityPose(It.IsAny<RagdollId>()))
             .Returns(new RagdollService.RagdollPose {
                 Velocity = new Vector3(0.0f, 0, 0),
                 IsInteractive = true, // physics is processing
@@ -106,7 +106,7 @@ public class BodyDynamicsControllerTests {
         controller.Update();
 
         physicsService.Verify(
-            s => s.SetPhysicsActive(It.IsAny<int>(), false), 
+            s => s.SetPhysicsActive(It.IsAny<RagdollId>(), false), 
             Times.AtLeast(1));
     }
 
