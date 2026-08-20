@@ -1,3 +1,5 @@
+using Compatibility;
+
 using UnityEngine;
 
 public struct TruckPrototype {

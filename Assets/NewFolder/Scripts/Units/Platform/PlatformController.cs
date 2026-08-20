@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class PlatformController {
@@ -25,13 +27,13 @@ public class PlatformController {
     public void Update() {
         SyncPositions();
     }
-    
+
     public virtual int Create(PlatformPrototype prototype, Vector3 position = default) {
         var nextId = ++idCounter;
         var initPosition = position == default ? prototype.position : position;
         var model = new PlatformModel(nextId, initPosition, prototype.config);
         registry[model.Id] = model;
-        
+
         model.LoadoutOffset = prototype.loadoutOffset;
         model.CombatId = combatSystem.RegisterAgent(model.Position, prototype.combatAgentPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab);
@@ -44,7 +46,7 @@ public class PlatformController {
     public virtual void Connect(int tailPlatformId, int headVehiclePhysicsId) {
         var tailPlatform = registry[tailPlatformId];
         var headState = vehicleService.GetVehicleState(headVehiclePhysicsId);
-        
+
         var towardHeadRotation = Quaternion.LookRotation((headState.position - tailPlatform.Position).normalized, Vector3.up);
         vehicleService.UpdateVehiclePose(tailPlatform.VehiclePhysicsId, tailPlatform.Position, towardHeadRotation);
         vehicleService.MakeTowingConnection(headVehiclePhysicsId, tailPlatform.VehiclePhysicsId);
@@ -57,7 +59,7 @@ public class PlatformController {
 
     public virtual void SetLoadout(int platformId, LoadoutPrototype loadoutPrototype) {
         var platform = registry[platformId];
-        
+
         if (platform.LoadoutId != 0) {
             loadoutController.DeleteLoadout(platform.LoadoutId);
         }
@@ -91,7 +93,7 @@ public class PlatformController {
             host.VehiclePhysicsState = vehicleService.GetVehicleState(host.VehiclePhysicsId);
             host.Position = host.VehiclePhysicsState.position;
             view.UpdatePlatformPose(host.Id, host.VehiclePhysicsState);
-            
+
             if (host.LoadoutId != 0) {
                 loadoutController.MoveLoadout(host.LoadoutId, host.Position + host.LoadoutOffset, host.VehiclePhysicsState.rotation);
             }

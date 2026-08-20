@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class RocketController {
-    
+
     private readonly RocketView view;
     private readonly CombatSystem combatSystem;
 
@@ -19,8 +21,8 @@ public class RocketController {
         var nextRocketId = ++idCounter;
         var rocket = new RocketModel(nextRocketId, shooterId, Time.time, trajectory, prototype.config);
         registry[nextRocketId] = rocket;
-        
-        view.ShowRocketFly(rocket.Id, prototype.visualsPrefab, rocket.LaunchTime, 
+
+        view.ShowRocketFly(rocket.Id, prototype.visualsPrefab, rocket.LaunchTime,
             prototype.config.flyDuration, trajectory, prototype.config.flyShape, prototype.config.launchEffectClips);
     }
 
@@ -35,11 +37,11 @@ public class RocketController {
                 rocket.Landed = true;
 
             if (rocket.Landed) {
-                combatSystem.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint, 
+                combatSystem.ApplyExplosionDamage(rocket.ShooterId, rocket.Trajectory.landPoint,
                     rocket.Config.explosionRadius, rocket.Config.damage, rocket.Config.explosionData);
                 view.ShowRocketExplosion(rocket.Id, rocket.Trajectory.landPoint, rocket.Config.explodeEffectClips);
             }
-        }   
+        }
     }
 
     private void FilterElapsedRockets() {

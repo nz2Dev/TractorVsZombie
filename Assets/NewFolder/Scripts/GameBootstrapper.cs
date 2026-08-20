@@ -1,12 +1,14 @@
 using Codice.Client.Common.GameUI;
 
+using Compatibility;
+
 using Unity.Profiling;
 
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class GameBootstrapper : MonoBehaviour {
-    
+
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
@@ -60,7 +62,7 @@ public class GameBootstrapper : MonoBehaviour {
         var rocketView = new RocketView(soundManager);
         var projectileView = new ProjectileView(soundManager);
         var productionBuildingView = new ProductionBuildingView();
-        
+
         combatSystem = new CombatSystem(
             raycastService,
             proximityService
@@ -73,7 +75,7 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         rocketController = new RocketController(
-            rocketView, 
+            rocketView,
             combatSystem
         );
 
@@ -223,7 +225,7 @@ public class GameBootstrapper : MonoBehaviour {
         armorController.Update();
         platformController.Update();
         truckController.Update();
-        
+
         armorAIController.Update();
         squadAIController.Update();
 
@@ -239,7 +241,7 @@ public class GameBootstrapper : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        rewardController.Destroy();       
+        rewardController.Destroy();
     }
 
 }

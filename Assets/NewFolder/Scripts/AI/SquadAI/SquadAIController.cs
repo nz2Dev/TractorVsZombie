@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class SquadAIController {

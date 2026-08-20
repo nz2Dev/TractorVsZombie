@@ -1,3 +1,5 @@
+using Compatibility;
+
 using UnityEngine;
 
 public class PlatformSource : MonoBehaviour {
@@ -6,7 +8,7 @@ public class PlatformSource : MonoBehaviour {
     [Inline, SerializeField] private CombatAgentSource combatAgentSource;
     [Local] [SerializeField] private PlatformVisuals visualsPrefab;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
-    [SerializeField] private Vector3 loadoutOffset; // TODO: consider making it visuals, by adding util TransformSource, that returns struct that contain Position/Rotation 
+    [SerializeField] private Vector3 loadoutOffset; // TODO: consider making it visuals, by adding util TransformSource, that returns struct that contain Position/Rotation
     [Local] [SerializeField] private RamEffectSource ramSource;
 
     private void Awake() {

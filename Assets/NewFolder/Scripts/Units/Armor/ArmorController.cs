@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class ArmorController {
@@ -12,7 +14,7 @@ public class ArmorController {
     private readonly RewardController rewardController;
     private readonly ArmorView view;
 
-    private int idCounter;    
+    private int idCounter;
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
     public ArmorController(CombatSystem combatSystem, WeaponController weaponController, VehicleService vehicleService, RamEffectController ramEffect, RewardController rewardController, ArmorView view) {
@@ -32,7 +34,7 @@ public class ArmorController {
     public void Update() {
         ReadCombatOutput();
         RemoveDeadArmor();
-        
+
         SyncVehiclesPositions();
         UpdateVehiclePhysics();
         UpdateView();
@@ -42,11 +44,11 @@ public class ArmorController {
         var nextId = ++idCounter;
         var model = new ArmorModel(nextId, prototype.position, prototype.config);
         registry[model.Id] = model;
-        
+
         model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.vehiclePrefab);
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.ramPrototype);
-        
+
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.localWeaponPrototype);
         model.WeaponPlacementOffset = prototype.localWeaponPrototype.position;
         model.RewardPrototype = prototype.rewardPrototype;
@@ -79,13 +81,13 @@ public class ArmorController {
         view.Hide(model.Id);
         registry.Remove(model.Id);
     }
-    
+
     public ArmorState ReadArmorState(int armorId) {
         var armor = registry[armorId];
         return new ArmorState {
             position = armor.Position,
             combatId = armor.CombatId,
-            vehiclePhysicsId = armor.VehiclePhysicsId, // Kept as 'vehicleId' in state struct for compatibility 
+            vehiclePhysicsId = armor.VehiclePhysicsId, // Kept as 'vehicleId' in state struct for compatibility
             weaponId = armor.WeaponId,
             weaponState = weaponController.ReadWeaponState(armor.WeaponId)
         };
@@ -117,7 +119,7 @@ public class ArmorController {
         foreach (var model in registry.Values) {
             model.VehiclePhysicsState = vehicleService.GetVehicleState(model.VehiclePhysicsId);
             model.Position = model.VehiclePhysicsState.position;
-            
+
             weaponController.MoveWeapon(model.WeaponId, model.Position + model.WeaponPlacementOffset);
             combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
             ramEffect.Forward(model.RamId, model.Position);

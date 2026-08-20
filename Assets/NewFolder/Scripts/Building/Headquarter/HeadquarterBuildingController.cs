@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class HeadquarterBuildingController {
-    
+
     private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
     private readonly LocalAvoidanceService localAvoidanceService;

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class InfantryController {
@@ -38,7 +40,7 @@ public class InfantryController {
         var nextId = ++idCounter;
         var model = new InfantryModel(nextId, prototype.config, prototype.agentAvoidanceConfig.maxSpeed);
         registry[model.Id] = model;
-        
+
         model.Position = prototype.position;
         model.CombatId = combatSystem.RegisterAgent(prototype.position, prototype.combatAgentPrototype);
         model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
@@ -84,11 +86,11 @@ public class InfantryController {
 
     private void ClearDeadInfantry() {
         List<InfantryModel> infantryToRemove = new();
-        
-        foreach (var model in registry.Values) 
-            if (model.IsDead && model.Grounded) 
+
+        foreach (var model in registry.Values)
+            if (model.IsDead && model.Grounded)
                 infantryToRemove.Add(model);
-            
+
         foreach (var model in infantryToRemove)
             DeleteInfantry(model);
     }
@@ -107,7 +109,7 @@ public class InfantryController {
             var keepFlying = !model.Grounded && physicsPose.InMotion;
             var becomeGrounded = !model.Grounded && !physicsPose.InMotion;
             var keepsGrouned = model.Grounded && !physicsPose.InMotion;
-            
+
             if (keepFlying) {
                 model.Position = physicsPose.Position;
                 model.Rotation = physicsPose.Rotation;
@@ -131,7 +133,7 @@ public class InfantryController {
         foreach (var model in registry.Values) {
             if (model.IsDead)
                 continue;
-            
+
             var combatOutput = combatSystem.GetCombatOutput(model.CombatId);
             if (combatOutput.wasExploded && model.Grounded) {
                 model.Grounded = false;

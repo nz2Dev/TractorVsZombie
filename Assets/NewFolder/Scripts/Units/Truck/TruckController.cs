@@ -1,10 +1,12 @@
 
 using System;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class TruckController {
-    
+
     private readonly TruckView view;
     private readonly CombatSystem combatSystem;
     private readonly VehicleService vehicleService;
@@ -25,7 +27,7 @@ public class TruckController {
     public void Update() {
         if (model == null)
             return;
-            
+
         ReadExternalState();
         WriteExternalInput();
         UpdateView();

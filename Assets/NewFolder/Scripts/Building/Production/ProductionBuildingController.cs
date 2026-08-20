@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Compatibility;
+
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -13,7 +15,7 @@ public class ProductionBuildingController {
     private readonly RagdollService physicsService;
     private readonly LocalAvoidanceService localAvoidanceService;
     private readonly SpawnService spawnService;
-    
+
     private int idCounter;
     private readonly Dictionary<int, ProductionBuildingModel> registry = new();
     private readonly Dictionary<int, int> uniqueIdRegistry = new();

@@ -1,4 +1,6 @@
 
+using Compatibility;
+
 using UnityEngine;
 
 public struct HeadquarterBuildingPrototype {

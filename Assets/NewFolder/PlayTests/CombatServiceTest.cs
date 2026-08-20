@@ -1,12 +1,14 @@
 using System.Collections;
 
+using Compatibility;
+
 using NUnit.Framework;
 
 using UnityEngine;
 using UnityEngine.TestTools;
 
 public class CombatServiceTest {
-    
+
     private CombatSystem combatService;
 
     [SetUp]
@@ -66,11 +68,11 @@ public class CombatServiceTest {
     [UnityTest]
     public IEnumerator TestGetClosestEnemyOnEmpty_ReturnFalse() {
         var alie = combatService.RegisterAgent(new Vector3(2, 0, 2), alie: true);
-        
+
         yield return new WaitForFixedUpdate();
         combatService.Update();
         var hasClosest = combatService.GetClosestEnemyAgentInRange(alie, 3, out var closest);
-        
+
         Assert.That(hasClosest, Is.False);
     }
 

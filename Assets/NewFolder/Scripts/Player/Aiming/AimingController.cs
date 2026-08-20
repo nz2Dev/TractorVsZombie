@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class AimingController {
-    
+
     private readonly CameraProvider cameraProvider;
 
     private readonly RaycastService raycastService;
@@ -60,7 +62,7 @@ public class AimingController {
         if (model.ManualPlatformIds.Count == 0) {
             return;
         }
-        
+
         var mousePosition = Input.mousePosition;
         // if GetScreePointRay is moved to the View, there is no need in CameraProvider at all
         var mouseRay = cameraProvider.GetScreenPointRay(mousePosition);
@@ -93,5 +95,5 @@ public class AimingController {
             weaponController.AimWeapon(platformState.weaponId, agentInfo.position + 0.5f * agentInfo.height * Vector3.up);
         }
     }
-    
+
 }

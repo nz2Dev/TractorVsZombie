@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class ArmorAIController {
-    
+
     private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
     private readonly ArmorController armorController;
@@ -50,7 +52,7 @@ public class ArmorAIController {
         var gasDistance = 10;
         var gas = Mathf.Floor(Mathf.Clamp(distance, 0, gasDistance) / gasDistance);
         armorController.Drive(armorId, gas, false);
-        
+
         var stopDistance = 5f;
         var brakes = 1 - Mathf.Floor(Mathf.Clamp(distance, 0, stopDistance) / stopDistance);
         armorController.Brake(armorId, brakes);

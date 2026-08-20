@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Compatibility;
+
 using UnityEngine;
 
 public class ProjectileController {
@@ -29,7 +31,7 @@ public class ProjectileController {
         model.SpawnTime = Time.time;
 
         view.SetupShooter(shooterId, prototype.shootAudioSourcePrefab, prototype.crashAudioSourcePrefab);
-        view.ShowBulletShoot(shooterId, model.Id, orientation.origin, model.Velocity, 
+        view.ShowBulletShoot(shooterId, model.Id, orientation.origin, model.Velocity,
             prototype.config.style, prototype.config.shootAudioClips);
     }
 
@@ -46,16 +48,16 @@ public class ProjectileController {
         }
     }
 
-    private void UpdateProjectileHits() {   
+    private void UpdateProjectileHits() {
         foreach (var projectile in registry.Values) {
             if (projectile.IsDead)
                 continue;
 
             var projectileHitCheckDistance = projectile.Velocity.magnitude * Time.fixedDeltaTime;
-            if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectileHitCheckDistance, 
+            if (combatSystem.ApplyProjectileDamage(projectile.ShooterCombatId, projectile.Position, projectile.Velocity, projectileHitCheckDistance,
                 projectile.Config.damage, out var hitDirection, out var hitSurface)) {
                 projectile.IsDead = true;
-                
+
                 AudioClip[] impactAudioClips;
                 ParticleSystem impactVFXPrefab;
                 if (hitSurface == ContactSurface.Metal) {
@@ -65,7 +67,7 @@ public class ProjectileController {
                     impactAudioClips = projectile.Config.softImpactAudioClips;
                     impactVFXPrefab = projectile.Config.softImpactParticlesPrefab;
                 }
-                
+
                 view.ShowBulletCrash(projectile.ShooterCombatId, projectile.Id, projectile.Position, impactAudioClips, impactVFXPrefab, hitDirection);
             }
         }
@@ -94,7 +96,7 @@ public class ProjectileController {
                 removeBuffer.Add(model.Id);
             }
         }
-        
+
         foreach (var id in removeBuffer) {
             registry.Remove(id);
         }

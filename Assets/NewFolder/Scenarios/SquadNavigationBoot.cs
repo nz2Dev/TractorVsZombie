@@ -1,3 +1,5 @@
+using Compatibility;
+
 using UnityEditor;
 
 using UnityEngine;
@@ -6,7 +8,7 @@ using UnityEngine;
 public class SquadNavigationBoot : MonoBehaviour {
 
     public static SquadNavigationBoot Instance;
-    
+
     public int agentsLayer;
     public int foeAgentsLayer;
     public LayerMask obstaclesMask;
@@ -20,13 +22,13 @@ public class SquadNavigationBoot : MonoBehaviour {
         var physicsService = new RagdollService();
         var avoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
-        
+
         combatSystem = new CombatSystem(null, null);
-        
+
         rewardController = new RewardController(new RewardView());
         // infantryController = new InfantryController(combatSystem, new InfantryView(), rewardController, physicsService, avoidanceService);
         squadController = new SquadAIController(infantryController, pathfindingService, combatSystem);
-        
+
         Instance = this;
     }
 
