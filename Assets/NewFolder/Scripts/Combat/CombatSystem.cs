@@ -47,6 +47,7 @@ namespace Combat  {
                         model.DamageResult = new DamageResult {
                             damageType = input.damageType,
                             damageWasFatal = model.Health <= 0,
+                            damageSource = input.damageSource,
                             damage = input.damage,
                         };
                     }
