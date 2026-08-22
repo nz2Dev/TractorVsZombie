@@ -13,17 +13,17 @@ public class RocketController {
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
     private readonly InteractionRegistry interactionRegistry;
-    private readonly InfantryController infantryController;
+    private readonly EntityMapping entityMapping;
 
     private int idCounter = 0;
     private readonly Dictionary<int, RocketModel> registry = new ();
 
-    public RocketController(RocketView view, CombatSystem combatSystem, InfantryController infantryController, RaycastService raycastService, InteractionRegistry interactionRegistry) {
+    public RocketController(RocketView view, CombatSystem combatSystem, RaycastService raycastService, InteractionRegistry interactionRegistry, EntityMapping entityMapping) {
         this.view = view;
         this.combatSystem = combatSystem;
-        this.infantryController = infantryController;
         this.raycastService = raycastService;
         this.interactionRegistry = interactionRegistry;
+        this.entityMapping = entityMapping;
     }
 
     public void Create(CombatId shooterCombatId, RocketPrototype prototype, FlyPath trajectory) {
@@ -56,24 +56,24 @@ public class RocketController {
                     targetRaycastLayer, out var overlappedRaycastIds);
 
                 if (overlappedRaycastIds.Count > 0) {
-                    infantryController.FindByRaycastIds(overlappedRaycastIds, out var overlappedInfantryIds);
+                    entityMapping.FindByRaycastIds(overlappedRaycastIds, out var overlappedComponents);
                     
-                    foreach (var nextInfantryId in overlappedInfantryIds) {    
-                        var nextInfantry = infantryController.GetInfantryState(nextInfantryId);
+                    foreach (var nextComponents in overlappedComponents) {   
+                        if (nextComponents.interactionId.HasValue) {
+                            interactionRegistry.AddExplosionEffect(nextComponents.interactionId.Value, new Explosion {
+                                epicentr = rocket.Trajectory.landPoint,
+                                config = rocket.Config.explosionData
+                            });
+                        } 
                         
-                        interactionRegistry.AddExplosionEffect(nextInfantry.interactionId, new Explosion {
-                            epicentr = rocket.Trajectory.landPoint,
-                            config = rocket.Config.explosionData
-                        });
-                        
-                        combatSystem.DealDamage(nextInfantry.combatId, new DamageInput {
-                            damageSource = rocket.Trajectory.landPoint,
-                            damageType = DamageType.Exposion,
-                            damage = rocket.Config.damage,
-                        });
+                        if (nextComponents.combatId.HasValue) {
+                            combatSystem.DealDamage(nextComponents.combatId.Value, new DamageInput {
+                                damageSource = rocket.Trajectory.landPoint,
+                                damageType = DamageType.Exposion,
+                                damage = rocket.Config.damage,
+                            });
+                        }
                     }
-
-                    // TODO: search for Armor/Platform/Truck entities
                 }
             }
         }

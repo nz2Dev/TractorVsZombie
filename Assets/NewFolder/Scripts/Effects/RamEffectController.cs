@@ -12,14 +12,14 @@ public class RamEffectController {
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
     private readonly InteractionRegistry interactionRegistry;
-    private readonly InfantryController infantryController;
+    private readonly EntityMapping entityMapping;
 
-    public RamEffectController(RamEffectView view, CombatSystem combatSystem, InfantryController infantryController, RaycastService raycastService, InteractionRegistry interactionRegistry) {
+    public RamEffectController(RamEffectView view, CombatSystem combatSystem, RaycastService raycastService, InteractionRegistry interactionRegistry, EntityMapping entityMapping) {
         this.view = view;
         this.combatSystem = combatSystem;
-        this.infantryController = infantryController;
         this.raycastService = raycastService;
         this.interactionRegistry = interactionRegistry;
+        this.entityMapping = entityMapping;
     }
 
     private int idCounter;
@@ -51,23 +51,34 @@ public class RamEffectController {
         foreach (var model in registry.Values) {
             var targetRaycastLayer = CombatSystem.GetRaycastLayerForFaction(!model.HolderIsAlie);
             raycastService.Overlap(model.Position, model.Config.triggerRadius, targetRaycastLayer, out var idsResult);
-            infantryController.FindByRaycastIds(idsResult, out var infantryIdsResult);
             
-            var affectedCount = 0;
-            foreach (var nextInfantryId in infantryIdsResult) {
-                var nextInfantry = infantryController.GetInfantryState(nextInfantryId);
-                var interactionState = interactionRegistry.Read(nextInfantry.interactionId);
-                
-                if (nextInfantry.isGrounded && interactionState.activeEffect != EffectType.Explosion) {
-                    affectedCount++;
-                    // todo: keep track of raycasted objects "in contact", to prevent continuous explosion effects triggering
-                    // instead of relying on internal state IsGrounded
-                    interactionRegistry.AddExplosionEffect(nextInfantry.interactionId, new Explosion {
+            model.LostContactBuffer.Clear();
+            model.LostContactBuffer.AddRange(model.InContact);
+            model.ReceiveContactBuffer.Clear();
+            foreach (var overlapedId in idsResult) {
+                if (model.InContact.Contains(overlapedId)) {
+                    model.LostContactBuffer.Remove(overlapedId);
+                } else {
+                    model.ReceiveContactBuffer.Add(overlapedId);
+                }
+            }
+
+            model.InContact.AddRange(model.ReceiveContactBuffer);
+            foreach (var lostId in model.LostContactBuffer) {
+                model.InContact.Remove(lostId);
+            }
+
+            entityMapping.FindByRaycastIds(model.ReceiveContactBuffer, out var receiveContactComponents);
+            foreach (var nextComponents in receiveContactComponents) {
+                if (nextComponents.interactionId.HasValue) {
+                    interactionRegistry.AddExplosionEffect(nextComponents.interactionId.Value, new Explosion {
                         epicentr = model.Position, 
                         config = model.Config.explosionData
                     });
-                    
-                    combatSystem.DealDamage(nextInfantry.combatId, new DamageInput {
+                }
+                
+                if (nextComponents.combatId.HasValue) {
+                    combatSystem.DealDamage(nextComponents.combatId.Value, new DamageInput {
                         damageSource = model.Position,
                         damageType = DamageType.Exposion,
                         damage = model.Config.damage,
@@ -75,10 +86,8 @@ public class RamEffectController {
                 }
             }
 
-            // TODO: search for other entities..
-
-            if (affectedCount > 0) {
-                view.ShowImpact(model.Id, model.Position, /*affectedCont*/1, model.Config.impactSFX);
+            if (model.ReceiveContactBuffer.Count > 0) {
+                view.ShowImpact(model.Id, model.Position, model.ReceiveContactBuffer.Count, model.Config.impactSFX);
             }
         }
     }

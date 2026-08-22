@@ -60,8 +60,9 @@ public class GameBootstrapper : MonoBehaviour {
         var projectileView = new ProjectileView(soundManager);
         var productionBuildingView = new ProductionBuildingView();
 
-        combatSystem = new CombatSystem();
+        var entityMapping = new EntityMapping();
 
+        combatSystem = new CombatSystem();
         interactionRegistry = new InteractionRegistry();
 
         rewardController = new RewardController(
@@ -76,22 +77,23 @@ public class GameBootstrapper : MonoBehaviour {
             raycastService,
             localAvoidanceService,
             proximityService,
-            interactionRegistry
+            interactionRegistry,
+            entityMapping
         );
 
         rocketController = new RocketController(
             rocketView,
             combatSystem,
-            infantryController,
             raycastService,
-            interactionRegistry
+            interactionRegistry,
+            entityMapping
         );
 
         projectileController = new ProjectileController(
             combatSystem,
             projectileView,
             raycastService,
-            infantryController
+            entityMapping
         );
 
         weaponController = new WeaponController(
@@ -105,9 +107,9 @@ public class GameBootstrapper : MonoBehaviour {
         ramEffect = new RamEffectController(
             new RamEffectView(soundManager),
             combatSystem,
-            infantryController,
             raycastService,
-            interactionRegistry
+            interactionRegistry,
+            entityMapping
         );
 
         loadoutController = new LoadoutController(

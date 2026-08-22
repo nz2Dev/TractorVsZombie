@@ -10,17 +10,17 @@ public class ProjectileController {
     private readonly ProjectileView view;
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
-    private readonly InfantryController infantryController;
+    private readonly EntityMapping entityMapping;
 
     private int idCounter = 0;
     private readonly Dictionary<int, ProjectileModel> registry = new ();
     private readonly List<int> removeBuffer = new(16);
 
-    public ProjectileController(CombatSystem combatSystem, ProjectileView view, RaycastService raycastService, InfantryController infantryController) {
+    public ProjectileController(CombatSystem combatSystem, ProjectileView view, RaycastService raycastService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.raycastService = raycastService;
-        this.infantryController = infantryController;
+        this.entityMapping = entityMapping;
     }
 
     public void Create(CombatId shooterCombatId, ProjectilePrototype prototype, Orientation orientation) {
@@ -60,23 +60,21 @@ public class ProjectileController {
             var ray = new Ray(projectile.Position, projectile.Velocity);
             var hitCheckDistance = projectile.Velocity.magnitude * Time.fixedDeltaTime;
             var targetRaycastLayer = CombatSystem.GetRaycastLayerForFaction(!projectile.ShooterAlie);
+            
             if (raycastService.Raycast(ray, hitCheckDistance, targetRaycastLayer, out var hitRaycastId, out var hitInfo)) {
                 projectile.IsDead = true;
 
                 var surface = ContactSurface.None;
-                if (infantryController.TryFindByRaycastId(hitRaycastId, out var hitInfantryId)) {
-                    var hitInfantry = infantryController.GetInfantryState(hitInfantryId);
-                    var hitCombat = combatSystem.ReadState(hitInfantry.combatId);
-                    surface = hitCombat.surface;
+                if (entityMapping.TryFindByRaycastId(hitRaycastId, out var components)) {
+                    var combatState = combatSystem.ReadState(components.combatId.Value);
+                    surface = combatState.surface;
 
-                    combatSystem.DealDamage(hitInfantry.combatId, new DamageInput {
+                    combatSystem.DealDamage(components.combatId.Value, new DamageInput {
                         damageSource = projectile.Position,
                         damageType = DamageType.Projectile,
                         damage = projectile.Config.damage
                     });
                 }
-
-                // TODO: search for Armor/Platform/Truck entities
 
                 view.ShowBulletCrash(projectile.ShooterCombatId.Value, projectile.Id, projectile.Position, 
                     projectile.Config.GetImapctAudioClips(surface), projectile.Config.GetImpactParticlesPrefab(surface), hitInfo.normal);

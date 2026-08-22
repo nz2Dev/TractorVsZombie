@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using Combat;
 
 using UnityEngine;
@@ -17,5 +19,8 @@ public class RamEffectModel {
     public bool HolderIsAlie { get; }
     
     public Vector3 Position { get; set; }
+    public List<RaycastId> InContact { get; } = new ();
+    public List<RaycastId> ReceiveContactBuffer = new ();
+    public List<RaycastId> LostContactBuffer = new ();
 
 }

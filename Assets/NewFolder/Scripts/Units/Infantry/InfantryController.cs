@@ -14,15 +14,12 @@ public class InfantryController {
     private readonly ProximityService proximityService;
     private readonly RewardController rewardController;
     private readonly InteractionRegistry interactionRegistry;
+    private readonly EntityMapping entityMapping;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
-    private readonly Dictionary<ProximityId, int> proximityToAgent = new ();
-    private readonly Dictionary<RaycastId, int> raycastsToAgent = new ();
-
-    private readonly List<int> findInfantryIdsBuffer = new (32);
-
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService, ProximityService proximityService, InteractionRegistry interactionRegistry) {
+    
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService, ProximityService proximityService, InteractionRegistry interactionRegistry, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
@@ -31,6 +28,7 @@ public class InfantryController {
         this.avoidanceService = avoidanceService;
         this.proximityService = proximityService;
         this.interactionRegistry = interactionRegistry;
+        this.entityMapping = entityMapping;
     }
 
     public int InfantryCount => registry.Count;
@@ -54,9 +52,14 @@ public class InfantryController {
         model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
-        proximityToAgent[model.ProximityId] = nextId;
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
-        raycastsToAgent[model.RaycastId] = nextId;
+
+        entityMapping.CreateMappings(new EntityComponents {
+            proximityId = model.ProximityId,
+            raycastId = model.RaycastId,
+            combatId = model.CombatId,
+            interactionId = model.InteractionId
+        });
 
         view.AddVisuals(model.Id, prototype.position, prototype.visualsPrefab);
         return model.Id;
@@ -78,20 +81,6 @@ public class InfantryController {
                 damage = model.Config.damage
             });
         }
-    }
-
-    public bool TryFindByRaycastId(RaycastId raycastId, out int infantryId) {
-        return raycastsToAgent.TryGetValue(raycastId, out infantryId);
-    }
-
-    public void FindByRaycastIds(List<RaycastId> raycastIds, out List<int> infantryIdsResult) {
-        findInfantryIdsBuffer.Clear();
-        for (int i = 0; i < raycastIds.Count; i++) {
-            var nextRaycastId = raycastIds[i];
-            var infantryId = raycastsToAgent[nextRaycastId];
-            findInfantryIdsBuffer.Add(infantryId);
-        }
-        infantryIdsResult = findInfantryIdsBuffer;
     }
 
     public InfantryState GetInfantryState(int infantryId) {
@@ -127,9 +116,9 @@ public class InfantryController {
         ragdollService.UnregisterPhysicsEntity(model.BodyPhysicsId);
         avoidanceService.RemoveAgent(model.AvoidanceId);
         proximityService.RemovePoint(model.ProximityId);
-        proximityToAgent.Remove(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
-        raycastsToAgent.Remove(model.RaycastId);
+
+        entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
 
         view.RemoveVisuals(model.Id);
     }
