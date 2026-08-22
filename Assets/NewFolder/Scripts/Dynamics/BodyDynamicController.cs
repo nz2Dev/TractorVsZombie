@@ -33,7 +33,7 @@ public class BodyDynamicController {
         };
     }
 
-    public void Explode(int componentId, Explosion explosion) {
+    public void Explode(int componentId, BodyExplosion explosion) {
         physicsService.SetPhysicsActive(default, true);
         physicsService.AddExplosionForce(default, explosion.force, explosion.epicentr, explosion.radius, explosion.upwardModifier, ForceMode.Force);
     }

@@ -26,7 +26,7 @@ public class BodyDynamicsControllerTests {
 
     [Test]
     public void Explode_AddsExplosionForce() {
-        var explosion = new Explosion {};
+        var explosion = new BodyExplosion {};
         
         var componentId = controller.Create();
         controller.Explode(componentId, explosion);
@@ -82,7 +82,7 @@ public class BodyDynamicsControllerTests {
 
     [Test]
     public void Explode_ActivatesServiceProcessing() {
-        var explosion = new Explosion {};
+        var explosion = new BodyExplosion {};
         var id = controller.Create();
         controller.Explode(id, explosion);
         physicsService.Verify(s => s.SetPhysicsActive(It.IsAny<RagdollId>(), true), Times.Once);

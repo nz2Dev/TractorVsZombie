@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public struct Explosion {
+public struct BodyExplosion {
     public float force;
     public float radius;
     public Vector3 epicentr;
