@@ -10,4 +10,5 @@ public struct InfantryState {
     public float maxSpeed;
     public CombatId combatId;
     public RagdollId bodyId;
+    public InteractionId interactionId;
 }

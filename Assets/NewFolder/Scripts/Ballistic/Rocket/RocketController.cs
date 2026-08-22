@@ -3,6 +3,8 @@ using System.ComponentModel;
 
 using Combat;
 
+using Interactions;
+
 using UnityEngine;
 
 public class RocketController {
@@ -10,16 +12,18 @@ public class RocketController {
     private readonly RocketView view;
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
+    private readonly InteractionRegistry interactionRegistry;
     private readonly InfantryController infantryController;
 
     private int idCounter = 0;
     private readonly Dictionary<int, RocketModel> registry = new ();
 
-    public RocketController(RocketView view, CombatSystem combatSystem, InfantryController infantryController, RaycastService raycastService) {
+    public RocketController(RocketView view, CombatSystem combatSystem, InfantryController infantryController, RaycastService raycastService, InteractionRegistry interactionRegistry) {
         this.view = view;
         this.combatSystem = combatSystem;
         this.infantryController = infantryController;
         this.raycastService = raycastService;
+        this.interactionRegistry = interactionRegistry;
     }
 
     public void Create(CombatId shooterCombatId, RocketPrototype prototype, FlyPath trajectory) {
@@ -55,10 +59,13 @@ public class RocketController {
                     infantryController.FindByRaycastIds(overlappedRaycastIds, out var overlappedInfantryIds);
                     
                     foreach (var nextInfantryId in overlappedInfantryIds) {    
-                        infantryController.Explode(nextInfantryId, rocket.Trajectory.landPoint,
-                            rocket.Config.explosionData);
-                        
                         var nextInfantry = infantryController.GetInfantryState(nextInfantryId);
+                        
+                        interactionRegistry.AddExplosionEffect(nextInfantry.interactionId, new Explosion {
+                            epicentr = rocket.Trajectory.landPoint,
+                            config = rocket.Config.explosionData
+                        });
+                        
                         combatSystem.DealDamage(nextInfantry.combatId, new DamageInput {
                             damageSource = rocket.Trajectory.landPoint,
                             damageType = DamageType.Exposion,

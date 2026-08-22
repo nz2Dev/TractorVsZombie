@@ -16,6 +16,7 @@ public class InfantryModel {
     public RewardPrototype RewardPrototype { get; }
 
     public CombatId CombatId { get; set; }
+    public InteractionId InteractionId { get; set; }
     public RagdollId BodyPhysicsId { get; set; }
     public ProximityId ProximityId { get; set; }
     public RaycastId RaycastId { get; set; }

@@ -13,6 +13,7 @@ public class InfantryController {
     private readonly RaycastService raycastService;
     private readonly ProximityService proximityService;
     private readonly RewardController rewardController;
+    private readonly InteractionRegistry interactionRegistry;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
@@ -21,7 +22,7 @@ public class InfantryController {
 
     private readonly List<int> findInfantryIdsBuffer = new (32);
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService, ProximityService proximityService) {
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService, ProximityService proximityService, InteractionRegistry interactionRegistry) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
@@ -29,6 +30,7 @@ public class InfantryController {
         this.raycastService = raycastService;
         this.avoidanceService = avoidanceService;
         this.proximityService = proximityService;
+        this.interactionRegistry = interactionRegistry;
     }
 
     public int InfantryCount => registry.Count;
@@ -48,6 +50,7 @@ public class InfantryController {
 
         model.Position = prototype.position;
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
+        model.InteractionId = interactionRegistry.Add();
         model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
@@ -62,20 +65,6 @@ public class InfantryController {
     public void Move(int infantryId, Vector3 velocity) {
         var model = registry[infantryId];
         avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
-    }
-
-    // should be part of component handling Explosion/Movement?
-    public bool Explode(int infantryId, Vector3 epicentr, ExplosionConfig explosion) {
-        var entity = registry[infantryId];
-        if (entity.ExplosionForbiden)
-            return false;
-
-        entity.Grounded = false;
-        entity.ExplosionForbiden = true;
-        ragdollService.SetPhysicsActive(entity.BodyPhysicsId, true);
-        ragdollService.UpdatePhysicsEntityPosition(entity.BodyPhysicsId, entity.Position);
-        ragdollService.AddExplosionForce(entity.BodyPhysicsId, explosion.force, epicentr, explosion.radius, explosion.upwardModifier, ForceMode.Impulse);
-        return true;
     }
 
     public void Attack(int infantryId, CombatId targetCombatId) {
@@ -115,6 +104,7 @@ public class InfantryController {
             isGrounded = model.Grounded,
             combatId = model.CombatId,
             bodyId = model.BodyPhysicsId,
+            interactionId = model.InteractionId,
         };
     }
 
@@ -133,6 +123,7 @@ public class InfantryController {
         registry.Remove(model.Id);
         
         combatSystem.Remove(model.CombatId);
+        interactionRegistry.Remove(model.InteractionId);
         ragdollService.UnregisterPhysicsEntity(model.BodyPhysicsId);
         avoidanceService.RemoveAgent(model.AvoidanceId);
         proximityService.RemovePoint(model.ProximityId);
@@ -147,6 +138,7 @@ public class InfantryController {
         foreach (var model in registry.Values) {
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
             var physicsPose = ragdollService.GetEntityPose(model.BodyPhysicsId);
+
             var keepFlying = !model.Grounded && physicsPose.InMotion;
             var becomeGrounded = !model.Grounded && !physicsPose.InMotion;
             var keepsGrouned = model.Grounded && !physicsPose.InMotion;
@@ -155,7 +147,7 @@ public class InfantryController {
                 model.Position = physicsPose.Position;
                 model.Rotation = physicsPose.Rotation;
             } else if (becomeGrounded) {
-                model.Grounded = true;
+                model.Grounded = true; // todo: "Grounded", doesn't really reflect the state it represent. It's currently more like "Stable on the ground/ Stays on feet"
                 model.Position = raycastService.GetClosestVerticalGroundPoint(model.Position);
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 ragdollService.SetPhysicsActive(model.BodyPhysicsId, false);
@@ -166,6 +158,16 @@ public class InfantryController {
                 if (rvoVelocity.sqrMagnitude > 0) {
                     model.Rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
                 }
+            }
+
+            var interactions = interactionRegistry.Read(model.InteractionId);
+            if (interactions.activeEffect == EffectType.Explosion) {
+                model.Grounded = false;
+                var explosion = interactions.explosionData;
+                ragdollService.SetPhysicsActive(model.BodyPhysicsId, true);
+                ragdollService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, model.Position);
+                ragdollService.AddExplosionForce(model.BodyPhysicsId, explosion.config.force, explosion.epicentr, 
+                    explosion.config.radius, explosion.config.upwardModifier, ForceMode.Impulse);
             }
         }
     }

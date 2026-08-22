@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 using Combat;
 
+using Interactions;
+
 using UnityEngine;
 
 public class RamEffectController {
@@ -9,13 +11,15 @@ public class RamEffectController {
     private readonly RamEffectView view;
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
+    private readonly InteractionRegistry interactionRegistry;
     private readonly InfantryController infantryController;
 
-    public RamEffectController(RamEffectView view, CombatSystem combatSystem, InfantryController infantryController, RaycastService raycastService) {
+    public RamEffectController(RamEffectView view, CombatSystem combatSystem, InfantryController infantryController, RaycastService raycastService, InteractionRegistry interactionRegistry) {
         this.view = view;
         this.combatSystem = combatSystem;
         this.infantryController = infantryController;
         this.raycastService = raycastService;
+        this.interactionRegistry = interactionRegistry;
     }
 
     private int idCounter;
@@ -51,25 +55,30 @@ public class RamEffectController {
             
             var affectedCount = 0;
             foreach (var nextInfantryId in infantryIdsResult) {
-                var exploded = infantryController.Explode(nextInfantryId, 
-                    model.Position, model.Config.explosionData);
+                var nextInfantry = infantryController.GetInfantryState(nextInfantryId);
+                var interactionState = interactionRegistry.Read(nextInfantry.interactionId);
                 
-                if (exploded) {
+                if (nextInfantry.isGrounded && interactionState.activeEffect != EffectType.Explosion) {
                     affectedCount++;
+                    // todo: keep track of raycasted objects "in contact", to prevent continuous explosion effects triggering
+                    // instead of relying on internal state IsGrounded
+                    interactionRegistry.AddExplosionEffect(nextInfantry.interactionId, new Explosion {
+                        epicentr = model.Position, 
+                        config = model.Config.explosionData
+                    });
+                    
+                    combatSystem.DealDamage(nextInfantry.combatId, new DamageInput {
+                        damageSource = model.Position,
+                        damageType = DamageType.Exposion,
+                        damage = model.Config.damage,
+                    });
                 }
-
-                var nextInfantryState = infantryController.GetInfantryState(nextInfantryId);
-                combatSystem.DealDamage(nextInfantryState.combatId, new DamageInput {
-                    damageSource = model.Position,
-                    damageType = DamageType.Exposion,
-                    damage = model.Config.damage,
-                });
             }
 
             // TODO: search for other entities..
 
             if (affectedCount > 0) {
-                view.ShowImpact(model.Id, model.Position, affectedCount, model.Config.impactSFX);
+                view.ShowImpact(model.Id, model.Position, /*affectedCont*/1, model.Config.impactSFX);
             }
         }
     }
