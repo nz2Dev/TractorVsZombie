@@ -167,7 +167,6 @@ public class InfantryController {
                 continue;
 
             var combatState = combatSystem.ReadState(model.CombatId);
-            // base visual effects on combat effects irregarding of logic damage
             if (combatState.damageResult.HasValue) {
                 view.ShowTakeHit(model.Id);
             }
