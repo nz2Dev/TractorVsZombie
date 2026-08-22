@@ -12,18 +12,24 @@ public class ArmorController {
     private readonly WeaponController weaponController;
     private readonly VehicleService vehicleService;
     private readonly RewardController rewardController;
+    private readonly ProximityService proximityService;
+    private readonly RaycastService raycastService;
+    private readonly EntityMapping entityMapping;
     private readonly ArmorView view;
 
     private int idCounter;
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
-    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, VehicleService vehicleService, RamEffectController ramEffect, RewardController rewardController, ArmorView view) {
+    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, VehicleService vehicleService, RamEffectController ramEffect, RewardController rewardController, ArmorView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.weaponController = weaponController;
         this.vehicleService = vehicleService;
         this.ramEffect = ramEffect;
         this.rewardController = rewardController;
         this.view = view;
+        this.proximityService = proximityService;
+        this.raycastService = raycastService;
+        this.entityMapping = entityMapping;
     }
 
     public int ArmorCount => registry.Count;
@@ -47,10 +53,17 @@ public class ArmorController {
 
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.vehiclePrefab);
-        // todo: register proxmity and raycast components
+        model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
+        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
 
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.combatPrototype.alie, prototype.ramPrototype);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.localWeaponPrototype);
+
+        entityMapping.CreateMappings(new EntityComponents {
+            proximityId = model.ProximityId,
+            raycastId = model.RaycastId,
+            combatId = model.CombatId
+        });
 
         view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.engineLoopSFX);
         return model.Id;
@@ -79,6 +92,10 @@ public class ArmorController {
         vehicleService.DeleteVehicle(model.VehiclePhysicsId);
         weaponController.DeleteWeapon(model.WeaponId);
         ramEffect.Stop(model.RamId);
+
+        proximityService.RemovePoint(model.ProximityId);
+        raycastService.UnregisterMarker(model.RaycastId);
+        entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
         
         view.Hide(model.Id);
     }
@@ -125,6 +142,8 @@ public class ArmorController {
             // combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
             // TODO: register proxmity and raycast components
             ramEffect.Forward(model.RamId, model.Position);
+            proximityService.UpdatePoint(model.ProximityId, model.Position);
+            raycastService.UpdateMarker(model.RaycastId, model.Position);
         }
     }
 

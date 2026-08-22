@@ -20,6 +20,9 @@ public class ArmorModel {
     
     public CombatId CombatId { get; set; }
     public int VehiclePhysicsId { get; set; }
+    public ProximityId ProximityId { get; set; }
+    public RaycastId RaycastId { get; set; }
+
     public int WeaponId { get; set; }
     public int RamId { get; set; }
 

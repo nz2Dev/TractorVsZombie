@@ -123,7 +123,10 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleService,
             ramEffect,
             rewardController,
-            armorView
+            armorView,
+            proximityService,
+            raycastService,
+            entityMapping
         );
 
         platformController = new PlatformController(
