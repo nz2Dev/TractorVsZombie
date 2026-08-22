@@ -21,6 +21,8 @@ public class ProductionBuildingModel {
     public int AvoidanceObstacleId { get; set; }
     public int VehicleObstacleId { get; set; }
     public int PhysicsObstacleId { get; set; }
+    public ProximityId ProximityId { get; set; }
+    public RaycastId RaycastId { get; set; }
 
     public Vector3 Position { get; set; }
     public Quaternion Rotation { get; set; }
@@ -28,5 +30,4 @@ public class ProductionBuildingModel {
     public float NextSpawnTime { get; set; }
     public bool Destroyed { get; set; }
     public SpawnResult SpawnResult { get; set; }
-
 }

@@ -36,6 +36,13 @@ public class GameBootstrapper : MonoBehaviour {
     private HeadquarterBuildingController headquarterBuildingController;
     private ProductionSpaceController productionSpaceController;
 
+    private void Awake() {
+        if (!NonNullValidator.ValidateScene()) {
+            Debug.LogError("Game initialization aborted because the scene is invalid.", this);
+            enabled = false;
+        }
+    }
+
     private void Start() {
         Build();
         Init();
@@ -172,7 +179,10 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleService,
             physicsService,
             localAvoidanceService,
-            spawnService
+            spawnService,
+            proximityService,
+            raycastService,
+            entityMapping
         );
 
         headquarterBuildingController = new HeadquarterBuildingController(
@@ -180,7 +190,10 @@ public class GameBootstrapper : MonoBehaviour {
             pathfindingService,
             vehicleService,
             physicsService,
-            localAvoidanceService
+            localAvoidanceService,
+            raycastService,
+            entityMapping,
+            proximityService
         );
 
         productionSpaceController = new ProductionSpaceController(

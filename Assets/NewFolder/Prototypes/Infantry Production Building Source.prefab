@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 1238185071
+  uniqueId: 1887823127
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   combatSource: {fileID: 1159228095933072964}
   dimensionsPrefab: {fileID: 8954973560333084679}
@@ -107,6 +107,7 @@ MonoBehaviour:
     type: 0
     infantrySource: {fileID: 0}
     armorSource: {fileID: 0}
+  raycastMarkerPrefab: {fileID: 314227725128860358}
 --- !u!1 &3858228865796293992
 GameObject:
   m_ObjectHideFlags: 0

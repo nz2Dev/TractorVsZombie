@@ -17,6 +17,7 @@ public class ProductionBuildingSource : MonoBehaviour {
     [Local] [SerializeField] private GameObject visualsPrefab;
     [Inline] [Local] [SerializeField] private SpawnSpotSource spawnSpotSource;
     [SerializeField] SpawnVariantSource spawnVariantSource;
+    [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
 
     private bool lastUniqueFlag;
 
@@ -39,17 +40,18 @@ public class ProductionBuildingSource : MonoBehaviour {
     }
 
     public ProductionBuildingPrototype GetPrototype() {
-        return new ProductionBuildingPrototype {
-            uniqueId = uniqueId,
-            position = transform.position,
-            rotation = transform.rotation,
-            config = config,
-            spawnSpot = spawnSpotSource.Get(),
-            spawnVariant = spawnVariantSource.Get(),
-            dimensionsPrefab = dimensionsPrefab,
-            physicsObstaclePrefab = physicsObstaclePrefab,
-            visualsPrefab = visualsPrefab,
-            combatPrototype = combatSource.Get(),
-        };
+        return new ProductionBuildingPrototype (
+            uniqueId: uniqueId,
+            position: transform.position,
+            rotation: transform.rotation,
+            config: config,
+            spawnSpot: spawnSpotSource.Get(),
+            spawnVariant: spawnVariantSource.Get(),
+            dimensionsPrefab: dimensionsPrefab,
+            physicsObstaclePrefab: physicsObstaclePrefab,
+            visualsPrefab: visualsPrefab,
+            combatPrototype: combatSource.Get(),
+            raycastMarkerPrefab: raycastMarkerPrefab
+        );
     }
 }
