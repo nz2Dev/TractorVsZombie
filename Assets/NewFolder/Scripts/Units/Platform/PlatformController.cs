@@ -10,17 +10,23 @@ public class PlatformController {
     private readonly LoadoutController loadoutController;
     private readonly RamEffectController ramEffect;
     private readonly VehicleService vehicleService;
+    private readonly ProximityService proximityService;
+    private readonly RaycastService raycastService;
+    private readonly EntityMapping entityMapping;
     private readonly PlatformView view;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatSystem combatSystem, LoadoutController loadoutController, RamEffectController ramEffect, VehicleService vehicleService, PlatformView view) {
+    public PlatformController(CombatSystem combatSystem, LoadoutController loadoutController, RamEffectController ramEffect, VehicleService vehicleService, PlatformView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.loadoutController = loadoutController;
         this.ramEffect = ramEffect;
         this.vehicleService = vehicleService;
         this.view = view;
+        this.proximityService = proximityService;
+        this.raycastService = raycastService;
+        this.entityMapping = entityMapping;
     }
 
     public void Update() {
@@ -35,7 +41,16 @@ public class PlatformController {
 
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab);
+        model.ProximityId = proximityService.AddPoint(initPosition, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
+        model.RaycastId = raycastService.RegisterMarker(initPosition, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
+
         model.RamId = ramEffect.StartNew(model.CombatId, prototype.combatPrototype.alie, prototype.ramPrototype);
+
+        entityMapping.CreateMappings(new EntityComponents {
+            proximityId = model.ProximityId,
+            raycastId = model.RaycastId,
+            combatId = model.CombatId
+        });
         
         view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab);
         return model.Id;
@@ -76,15 +91,15 @@ public class PlatformController {
         if (platform.LoadoutId != 0) {
             loadoutState = loadoutController.ReadLoadoutState(platform.LoadoutId);
         }
-        return new PlatformState {
-            position = platform.Position,
-            combatId = platform.CombatId,
-            combatState = combatSystem.ReadState(platform.CombatId),
-            vehiclePhysicsId = platform.VehiclePhysicsId,
-            weaponId = loadoutState.weaponId,
-            weaponState = loadoutState.weaponState,
-            platformId = platform.Id
-        };
+        return new PlatformState (
+            position: platform.Position,
+            combatId: platform.CombatId,
+            combatState: combatSystem.ReadState(platform.CombatId),
+            vehiclePhysicsId: platform.VehiclePhysicsId,
+            weaponId: loadoutState.weaponId,
+            weaponState: loadoutState.weaponState,
+            platformId: platform.Id
+        );
     }
 
     private void SyncPositions() {
@@ -97,7 +112,8 @@ public class PlatformController {
                 loadoutController.MoveLoadout(host.LoadoutId, host.Position + host.LoadoutOffset, host.VehiclePhysicsState.rotation);
             }
 
-            // todo: register proximity and raycast components
+            proximityService.UpdatePoint(host.ProximityId, host.Position);
+            raycastService.UpdateMarker(host.RaycastId, host.Position);
             ramEffect.Forward(host.RamId, host.Position);
         }
     }

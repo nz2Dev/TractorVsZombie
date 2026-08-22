@@ -134,7 +134,10 @@ public class GameBootstrapper : MonoBehaviour {
             loadoutController,
             ramEffect,
             vehicleService,
-            platformView
+            platformView,
+            proximityService,
+            raycastService,
+            entityMapping
         );
 
         truckController = new TruckController(
