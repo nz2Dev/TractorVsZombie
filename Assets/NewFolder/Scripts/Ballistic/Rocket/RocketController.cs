@@ -55,12 +55,8 @@ public class RocketController {
                     infantryController.FindByRaycastIds(overlappedRaycastIds, out var overlappedInfantryIds);
                     
                     foreach (var nextInfantryId in overlappedInfantryIds) {    
-                        infantryController.Explode(nextInfantryId, new MovementExplosion {
-                            epicentr = rocket.Trajectory.landPoint,
-                            upwardModifier = rocket.Config.explosionData.upwardModifier,
-                            force = rocket.Config.explosionData.force,
-                            radius = rocket.Config.explosionData.radius,
-                        });
+                        infantryController.Explode(nextInfantryId, rocket.Trajectory.landPoint,
+                            rocket.Config.explosionData);
                         
                         var nextInfantry = infantryController.GetInfantryState(nextInfantryId);
                         combatSystem.DealDamage(nextInfantry.combatId, new DamageInput {

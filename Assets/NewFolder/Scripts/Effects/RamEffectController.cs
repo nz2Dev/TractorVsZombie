@@ -51,12 +51,8 @@ public class RamEffectController {
             
             var affectedCount = 0;
             foreach (var nextInfantryId in infantryIdsResult) {
-                var exploded = infantryController.Explode(nextInfantryId, new MovementExplosion {
-                    upwardModifier = model.Config.explosionData.upwardModifier,
-                    epicentr = model.Position,
-                    radius = model.Config.explosionData.radius,
-                    force = model.Config.explosionData.force,
-                });
+                var exploded = infantryController.Explode(nextInfantryId, 
+                    model.Position, model.Config.explosionData);
                 
                 if (exploded) {
                     affectedCount++;

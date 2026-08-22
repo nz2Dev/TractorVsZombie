@@ -65,7 +65,7 @@ public class InfantryController {
     }
 
     // should be part of component handling Explosion/Movement?
-    public bool Explode(int infantryId, MovementExplosion explosion) {
+    public bool Explode(int infantryId, Vector3 epicentr, ExplosionConfig explosion) {
         var entity = registry[infantryId];
         if (entity.ExplosionForbiden)
             return false;
@@ -74,7 +74,7 @@ public class InfantryController {
         entity.ExplosionForbiden = true;
         ragdollService.SetPhysicsActive(entity.BodyPhysicsId, true);
         ragdollService.UpdatePhysicsEntityPosition(entity.BodyPhysicsId, entity.Position);
-        ragdollService.AddExplosionForce(entity.BodyPhysicsId, explosion.force, explosion.epicentr, explosion.radius, explosion.upwardModifier, ForceMode.Impulse);
+        ragdollService.AddExplosionForce(entity.BodyPhysicsId, explosion.force, epicentr, explosion.radius, explosion.upwardModifier, ForceMode.Impulse);
         return true;
     }
 

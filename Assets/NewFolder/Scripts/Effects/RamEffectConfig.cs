@@ -5,5 +5,5 @@ public class RamEffectConfig : ScriptableObject {
     public int damage;
     public float triggerRadius;
     public AudioClip[] impactSFX;
-    public ExplosionData explosionData;
+    public ExplosionConfig explosionData;
 }
