@@ -26327,7 +26327,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7295302377222804672, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
       propertyPath: m_Name
-      value: Proportional Capsule Infantry Visuals
+      value: Capsule Infantry Visuals
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36849,10 +36849,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1060467422}
-  - {fileID: 1373779127}
   - {fileID: 1032680940}
   - {fileID: 737995064}
   - {fileID: 1128309738}
+  - {fileID: 1373779127}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1909830770
