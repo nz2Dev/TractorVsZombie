@@ -5,6 +5,8 @@ public class InfantryVisuals : MonoBehaviour {
     
     public Color AnimatedColor; //temporaly disabled
 
+    [SerializeField] private float rotationSpeed = 720f;
+
     private Animator animator;
     private Renderer visualsRenderer;
 
@@ -15,11 +17,20 @@ public class InfantryVisuals : MonoBehaviour {
     private float hitFlash;
     private float hitFlashBottom = 0;
 
+    private Quaternion currentRotation;
+    private Quaternion targetRotation;
+
+    private Quaternion overridedQuaterion;
+    private bool overrideRotation;
+
     private void Awake() {
         animator = GetComponent<Animator>();
         dynamicProps = new MaterialPropertyBlock();
         visualsRenderer = GetComponentInChildren<Renderer>();
         hitFlashPropertyID = Shader.PropertyToID("_HitFlash");
+
+        currentRotation = transform.rotation;
+        targetRotation = currentRotation;
     }
 
     private void Start() {
@@ -28,6 +39,8 @@ public class InfantryVisuals : MonoBehaviour {
 
     private void Update() {
         hitFlash = Mathf.MoveTowards(hitFlash, hitFlashBottom, Time.deltaTime);
+
+        currentRotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     void LateUpdate() {
@@ -47,15 +60,15 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     internal void UpdatePositionAndRotation(Vector3 position, Quaternion rotation) {
-        transform.SetPositionAndRotation(position, overrideRotation ? overridedQuaterion: rotation);
+        targetRotation = overrideRotation ? overridedQuaterion : rotation;
+        transform.SetPositionAndRotation(position, currentRotation);
     }
-
-    private Quaternion overridedQuaterion;
-    private bool overrideRotation;
 
     internal void SetOverrideRotation(Quaternion quaternion) {
         overridedQuaterion = quaternion;
         overrideRotation = true;
+        currentRotation = quaternion;
+        targetRotation = quaternion;
     }
 
     internal void PlayTakeHit() {
