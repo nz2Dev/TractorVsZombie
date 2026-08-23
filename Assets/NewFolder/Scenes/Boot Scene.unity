@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b98be28c665040ecbffd05a2f4088b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpatialLookup::KnnRunner
-  intiSizeCapacity: 256
+  intiSizeCapacity: 2048
   intiResultCapacity: 256
   layersCount: 3
 --- !u!1 &2063572847
