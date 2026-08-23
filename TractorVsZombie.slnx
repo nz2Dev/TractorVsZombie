@@ -4,6 +4,7 @@
   <Project Path="Prototype.csproj" />
   <Project Path="SpatialLookup.csproj" />
   <Project Path="GenerationPlaygroundEditor.csproj" />
+  <Project Path="PhysicsCollisionsTests.csproj" />
   <Project Path="Playground.Exmample.EditorTests.csproj" />
   <Project Path="FlowField.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
