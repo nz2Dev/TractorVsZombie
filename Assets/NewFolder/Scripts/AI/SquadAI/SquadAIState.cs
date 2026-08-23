@@ -8,6 +8,7 @@ public class SquadAIState {
     public CohesionFormation Formation { get; set; }
     public List<int> SubordinateIds { get; } = new();
     public bool ChaseCenter { get; set; } = true;
+    public Vector3 GoalPosition { get; set; }
 
     public SquadAIState(SquadAIConfig config) {
         Config = config;

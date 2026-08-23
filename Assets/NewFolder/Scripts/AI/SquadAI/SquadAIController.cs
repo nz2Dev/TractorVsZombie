@@ -42,6 +42,7 @@ public class SquadAIController {
     public void SetStrategy(int id, bool chaseCenter, Vector3 position) {
         var state = registry[id];
         state.ChaseCenter = chaseCenter;
+        state.GoalPosition = position;
         pathfindingService.UpdateGoal(state.FlowFieldId, position);
     }
 
@@ -82,7 +83,7 @@ public class SquadAIController {
 
                 var flowVector = pathfindingService.GetFlowVector(state.FlowFieldId, infantry.position);
                 var formationVector = state.Formation.GetFormationVector(subordinateIndex);
-                infantryController.Move(infantryId, Vector3.Lerp(flowVector, formationVector, state.Config.formationBlendFactor) * infantry.maxSpeed);
+                infantryController.MoveTo(infantryId, state.GoalPosition, Vector3.Lerp(flowVector, formationVector, state.Config.formationBlendFactor) * infantry.maxSpeed);
 
                 // TODO: recover disabled infantry attack
                 // if (combatSystem.GetClosestEnemyAgentInRange(infantry.combatId, 2, out var closestFoe)) {

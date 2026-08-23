@@ -70,6 +70,13 @@ public class InfantryController {
         avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
     }
 
+    public void MoveTo(int infantryId, Vector3 destination, Vector3 velocity) {
+        var model = registry[infantryId];
+        var distance = Vector3.Distance(model.Position, destination);
+        var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
+        avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity * speedFactor);
+    }
+
     public void Attack(int infantryId, CombatId targetCombatId) {
         var model = registry[infantryId];
         if (model.LastAttackTime + model.Config.attackCooldown < Time.time) {
