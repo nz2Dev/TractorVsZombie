@@ -16,3 +16,5 @@ MonoBehaviour:
   attackCooldown: 1
   settleSpeedSquaredThreashold: 4
   minUnsettleTimeSec: 0.5
+  maxTimeOnTheFloor: 1
+  stoppingDistance: 2

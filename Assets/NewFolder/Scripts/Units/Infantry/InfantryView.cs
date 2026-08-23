@@ -11,8 +11,10 @@ public class InfantryView {
         visualsRegistry.Add(infantryId, visuals);
     }
 
-    public void UpdateTransform(int infantryId, Vector3 position, Quaternion rotation) {
-        visualsRegistry[infantryId].UpdatePositionAndRotation(position, rotation);
+    public void UpdateTransform(int infantryId, Vector3 position, Quaternion rotation, float speedNormalized) {
+        var visuals = visualsRegistry[infantryId];
+        visuals.UpdatePositionAndRotation(position, rotation);
+        visuals.SetSpeed(speedNormalized);
     }
 
     internal void ShowTakeHit(int infantryId) {

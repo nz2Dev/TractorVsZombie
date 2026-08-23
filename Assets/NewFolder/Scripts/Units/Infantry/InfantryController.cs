@@ -209,7 +209,7 @@ public class InfantryController {
 
     private void SyncPositions() {
         foreach (var model in registry.Values) {
-            view.UpdateTransform(model.Id, model.Position, model.Rotation);
+            view.UpdateTransform(model.Id, model.Position, model.Rotation, model.Velocity.magnitude / model.MaxSpeed);
             avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
             proximityService.UpdatePoint(model.ProximityId, model.Position);
             raycastService.UpdateMarker(model.RaycastId, model.Position);

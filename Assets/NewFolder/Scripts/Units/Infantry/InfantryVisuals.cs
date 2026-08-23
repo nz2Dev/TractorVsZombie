@@ -92,4 +92,8 @@ public class InfantryVisuals : MonoBehaviour {
     internal void DestroySelfOnIdle() {
         sheduledForDestruction = true;
     }
+
+    internal void SetSpeed(float speedNormalized) {
+        animator.SetFloat("Speed", speedNormalized);
+    }
 }
