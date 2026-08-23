@@ -47,16 +47,13 @@ namespace Combat  {
                 if (model.DamageInput.HasValue) {
                     var input = model.DamageInput.Value;
                     model.DamageInput = null;
-
-                    if (input.damage > 0) {
-                        model.Health -= input.damage;
-                        model.DamageResult = new DamageResult {
-                            damageType = input.damageType,
-                            damageWasFatal = model.Health <= 0,
-                            damageSource = input.damageSource,
-                            damage = input.damage,
-                        };
-                    }
+                    model.Health -= input.damage;
+                    model.DamageResult = new DamageResult {
+                        damageType = input.damageType,
+                        damageWasFatal = model.Health <= 0,
+                        damageSource = input.damageSource,
+                        damage = input.damage,
+                    };
                 }
             }
         }
