@@ -22679,6 +22679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::PhysicsBody
   thisRigidbody: {fileID: 1032680943}
   thisCollider: {fileID: 1032680942}
+  groundLayer: 7
 --- !u!136 &1032680942
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -34728,7 +34729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: -31521863
+  uniqueId: -1898276546
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:

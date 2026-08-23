@@ -32,5 +32,7 @@ public class InfantryModel {
 
     public bool Grounded { get; set; }
     public float UnsettleStartTime { get; set; } = float.NegativeInfinity;
+    public bool OnTheFloor { get; set; } = true;
+    public float ContactWithGroundStartTime { get; set; } = float.PositiveInfinity;
 
 }

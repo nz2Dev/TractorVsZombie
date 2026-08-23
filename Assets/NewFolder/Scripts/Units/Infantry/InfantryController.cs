@@ -128,9 +128,17 @@ public class InfantryController {
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
             var physicsPose = ragdollService.GetEntityPose(model.BodyPhysicsId);
 
+            if (model.OnTheFloor && !physicsPose.ContactWithGround) {
+                model.OnTheFloor = false;
+            } else if (!model.OnTheFloor && physicsPose.ContactWithGround) {
+                model.OnTheFloor = true;
+                model.ContactWithGroundStartTime = Time.time;
+            }
+
             var inMotion = physicsPose.Velocity.sqrMagnitude > model.Config.settleSpeedSquaredThreashold;
             var minUnsettleTimeReached = Time.time - model.UnsettleStartTime > model.Config.minUnsettleTimeSec;
-            var settled = !inMotion && minUnsettleTimeReached;
+            var maxTimeOnTheFloorReached = Time.time - model.ContactWithGroundStartTime > model.Config.maxTimeOnTheFloor;
+            var settled = !inMotion && minUnsettleTimeReached || model.OnTheFloor && maxTimeOnTheFloorReached;
             
             var keepFlying = !model.Grounded && !settled;
             var becomeGrounded = !model.Grounded && settled;

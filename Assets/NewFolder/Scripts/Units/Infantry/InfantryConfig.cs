@@ -9,4 +9,5 @@ public class InfantryConfig : ScriptableObject {
     
     public float settleSpeedSquaredThreashold = 0.75f;
     public float minUnsettleTimeSec = 0.5f;
+    public float maxTimeOnTheFloor = 1;
 }

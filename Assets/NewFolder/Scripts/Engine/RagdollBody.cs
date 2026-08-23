@@ -8,11 +8,13 @@ public class RagdollBody : MonoBehaviour {
     
     [SerializeField] private Rigidbody thisRigidbody;
     [SerializeField] private CapsuleCollider thisCollider;
+    [SerializeField] private int groundLayer;
     
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
     public Vector3 LinearVelocity => thisRigidbody.linearVelocity;
     public bool IsDynamic => !thisRigidbody.isKinematic;
+    public bool ContactWithGround { get; private set; }
 
     private void Awake() {
         SetDynamics(false);
@@ -37,6 +39,18 @@ public class RagdollBody : MonoBehaviour {
         transform.SetPositionAndRotation(position, rotation);
         thisRigidbody.position = position;
         thisRigidbody.rotation = rotation;
+    }
+
+    void OnCollisionEnter(Collision collision) {
+        if (collision.gameObject.layer == groundLayer) {
+            ContactWithGround = true;
+        }
+    }
+
+    void OnCollisionExit(Collision collision) {
+        if (collision.gameObject.layer == groundLayer) {
+            ContactWithGround = false;
+        }
     }
 
 }

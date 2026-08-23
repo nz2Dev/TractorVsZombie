@@ -9,12 +9,14 @@ public class RagdollService {
         public Quaternion Rotation;
         public Vector3 Velocity;
         public bool IsInteractive;
+        public bool ContactWithGround;
 
-        public RagdollPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool isActive) {
+        public RagdollPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool isActive, bool contactWithGround) {
             Position = position;
             Rotation = rotation;
             Velocity = velocity;
             IsInteractive = isActive;
+            ContactWithGround = contactWithGround;
         }
     }
 
@@ -86,7 +88,8 @@ public class RagdollService {
                 entity.Position,
                 entity.Rotation,
                 entity.LinearVelocity,
-                isActive: entity.IsDynamic
+                isActive: entity.IsDynamic,
+                entity.ContactWithGround
             );
         }
         return default;
