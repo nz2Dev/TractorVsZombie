@@ -57,6 +57,7 @@ MonoBehaviour:
   damage: 1
   explosionRadius: 3
   explosionData:
-    radius: 10
-    force: 10
-    upwardModifier: 5
+    radius: 8
+    force: 500
+    upwardModifier: 3
+    forceMode: 1

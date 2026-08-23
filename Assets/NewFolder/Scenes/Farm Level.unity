@@ -20246,7 +20246,6 @@ MonoBehaviour:
   initTruckSource: {fileID: 1117709943}
   initPlatformSource: {fileID: 269684097}
   initLoadoutSources:
-  - {fileID: 1537397113}
   - {fileID: 923747800}
 --- !u!43 &937460628
 Mesh:
@@ -33914,17 +33913,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!114 &1537397113 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2894644294875906351, guid: 00a793380f6cc4bb98036a4d3a025f7f, type: 3}
-  m_PrefabInstance: {fileID: 6252191640500887066}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!1 &1561915671
 GameObject:
   m_ObjectHideFlags: 0
@@ -34729,7 +34717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: -1898276546
+  uniqueId: 1653049576
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
