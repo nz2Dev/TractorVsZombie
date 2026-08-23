@@ -9,15 +9,11 @@ public class RagdollService {
         public Quaternion Rotation;
         public Vector3 Velocity;
         public bool IsInteractive;
-        public bool InMotion;
-        public bool Pending;
 
-        public RagdollPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool inMotion, bool pending, bool isActive) {
+        public RagdollPose(Vector3 position, Quaternion rotation, Vector3 velocity, bool isActive) {
             Position = position;
             Rotation = rotation;
             Velocity = velocity;
-            InMotion = inMotion;
-            Pending = pending;
             IsInteractive = isActive;
         }
     }
@@ -86,15 +82,10 @@ public class RagdollService {
 
     public virtual RagdollPose GetEntityPose(RagdollId id) {
         if (bodyRegistry.TryGetValue(id, out var entity)) {
-            const float minFlyTime = 0.5f;
-            // domain logic here, keep this closer to usage, e.g in Infantry
-            var isInMotion = entity.ExplosionTime + minFlyTime > Time.time || entity.LinearVelocity.sqrMagnitude > 0.75f;
             return new RagdollPose(
                 entity.Position,
                 entity.Rotation,
                 entity.LinearVelocity,
-                inMotion: isInMotion,
-                pending: entity.IsDynamic,
                 isActive: entity.IsDynamic
             );
         }

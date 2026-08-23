@@ -26,10 +26,11 @@ public class InfantryModel {
     public Vector3 Velocity { get; set; }
     public Quaternion Rotation { get; set; }
     
-    public bool Grounded { get; set; }
-    public bool ExplosionForbiden { get; set; }
-    public bool IsPhysicsOnlyMovement { get; set; }
     public bool IsDead { get; set; }
     public float LastAttackTime { get; set; }
+    public bool IsPhysicsOnlyMovement { get; set; }
+
+    public bool Grounded { get; set; }
+    public float UnsettleStartTime { get; set; } = float.NegativeInfinity;
 
 }

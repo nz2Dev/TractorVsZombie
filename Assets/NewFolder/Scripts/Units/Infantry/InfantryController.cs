@@ -128,9 +128,13 @@ public class InfantryController {
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
             var physicsPose = ragdollService.GetEntityPose(model.BodyPhysicsId);
 
-            var keepFlying = !model.Grounded && physicsPose.InMotion;
-            var becomeGrounded = !model.Grounded && !physicsPose.InMotion;
-            var keepsGrouned = model.Grounded && !physicsPose.InMotion;
+            var inMotion = physicsPose.Velocity.sqrMagnitude > model.Config.settleSpeedSquaredThreashold;
+            var minUnsettleTimeReached = Time.time - model.UnsettleStartTime > model.Config.minUnsettleTimeSec;
+            var settled = !inMotion && minUnsettleTimeReached;
+            
+            var keepFlying = !model.Grounded && !settled;
+            var becomeGrounded = !model.Grounded && settled;
+            var keepsGrouned = model.Grounded && settled;
 
             if (keepFlying) {
                 model.Position = physicsPose.Position;
@@ -140,7 +144,6 @@ public class InfantryController {
                 model.Position = raycastService.GetClosestVerticalGroundPoint(model.Position);
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 ragdollService.SetPhysicsActive(model.BodyPhysicsId, false);
-                model.ExplosionForbiden = false;
             } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {
                 model.Velocity = rvoVelocity;
                 model.Position = model.Position += rvoVelocity * Time.deltaTime;
@@ -152,11 +155,12 @@ public class InfantryController {
             var interactions = interactionRegistry.Read(model.InteractionId);
             if (interactions.activeEffect == EffectType.Explosion) {
                 model.Grounded = false;
+                model.UnsettleStartTime = Time.time;
                 var explosion = interactions.explosionData;
                 ragdollService.SetPhysicsActive(model.BodyPhysicsId, true);
                 ragdollService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, model.Position);
                 ragdollService.AddExplosionForce(model.BodyPhysicsId, explosion.config.force, explosion.epicentr, 
-                    explosion.config.radius, explosion.config.upwardModifier, ForceMode.Impulse);
+                    explosion.config.radius, explosion.config.upwardModifier, explosion.config.forceMode);
             }
         }
     }

@@ -9,8 +9,6 @@ public class RagdollBody : MonoBehaviour {
     [SerializeField] private Rigidbody thisRigidbody;
     [SerializeField] private CapsuleCollider thisCollider;
     
-    public float ExplosionTime { get; private set; } = float.NegativeInfinity;
-
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
     public Vector3 LinearVelocity => thisRigidbody.linearVelocity;
@@ -22,7 +20,6 @@ public class RagdollBody : MonoBehaviour {
 
     public void AddExplosionForce(float force, Vector3 position, float radius, float upwardsModifier, ForceMode mode) {
         thisRigidbody.AddExplosionForce(force, position, radius, upwardsModifier, mode);
-        ExplosionTime = Time.time;
     }
 
     public void SetDynamics(bool active) {

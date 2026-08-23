@@ -22711,8 +22711,8 @@ Rigidbody:
   m_GameObject: {fileID: 1032680939}
   serializedVersion: 5
   m_Mass: 50
-  m_LinearDamping: 0.05
-  m_AngularDamping: 0.05
+  m_LinearDamping: 0.1
+  m_AngularDamping: 0.15
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -34728,7 +34728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: -1585507479
+  uniqueId: -31521863
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
@@ -36287,7 +36287,7 @@ GameObject:
   m_Layer: 0
   m_Name: Level Start Cutscene
   m_TagString: Untagged
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -37953,7 +37953,7 @@ GameObject:
   m_Layer: 0
   m_Name: Enemy Source
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
