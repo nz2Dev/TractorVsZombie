@@ -25,6 +25,7 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _Power: 1
     - _ToonSmoothness: 0.084
     - _ToonThreshold: 0.156
     m_Colors:

@@ -54,10 +54,10 @@ MonoBehaviour:
       m_RotationOrder: 4
     amplitude: 10
   flyDuration: 1.5
-  damage: 1
-  explosionRadius: 3
+  damage: 3
+  explosionRadius: 5
   explosionData:
-    radius: 8
-    force: 500
-    upwardModifier: 3
+    radius: 5
+    force: 700
+    upwardModifier: 2
     forceMode: 1

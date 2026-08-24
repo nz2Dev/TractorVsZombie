@@ -6,20 +6,21 @@ public class InfantryVisuals : MonoBehaviour {
     public Color AnimatedColor; //temporaly disabled
 
     [SerializeField] private float rotationSpeed = 720f;
+    [SerializeField] private float powerBottom = .3f;
 
     private Animator animator;
     private Renderer visualsRenderer;
 
-    private int hitFlashPropertyID;
-    private MaterialPropertyBlock dynamicProps;
-    private bool sheduledForDestruction;
-
     private float hitFlash;
-    private float hitFlashBottom = 0;
+    private int hitFlashPropertyID;
+    private float power = 1;
+    private float powerSubtractor = 0;
+    private int powerPropertyID;
+    private MaterialPropertyBlock dynamicProps;
 
+    private bool sheduledForDestruction;
     private Quaternion currentRotation;
     private Quaternion targetRotation;
-
     private Quaternion overridedQuaterion;
     private bool overrideRotation;
 
@@ -28,6 +29,7 @@ public class InfantryVisuals : MonoBehaviour {
         dynamicProps = new MaterialPropertyBlock();
         visualsRenderer = GetComponentInChildren<Renderer>();
         hitFlashPropertyID = Shader.PropertyToID("_HitFlash");
+        powerPropertyID = Shader.PropertyToID("_Power");
 
         currentRotation = transform.rotation;
         targetRotation = currentRotation;
@@ -38,18 +40,19 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     private void Update() {
-        hitFlash = Mathf.MoveTowards(hitFlash, hitFlashBottom, Time.deltaTime);
-
+        hitFlash = Mathf.MoveTowards(hitFlash, 0, Time.deltaTime);
+        power = Mathf.MoveTowards(power, powerBottom, Time.deltaTime * powerSubtractor);
         currentRotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     void LateUpdate() {
         if (dynamicProps != null) {
             dynamicProps.SetFloat(hitFlashPropertyID, hitFlash);
+            dynamicProps.SetFloat(powerPropertyID, Mathf.Clamp01(power));
             visualsRenderer.SetPropertyBlock(dynamicProps);
         }
 
-        if (sheduledForDestruction && !IsAnimatorPlaying()) {
+        if (sheduledForDestruction && !IsAnimatorPlaying() && hitFlash < float.Epsilon && power < powerBottom * 1.1f) {
             Destroy(gameObject);
         }
     }
@@ -82,11 +85,14 @@ public class InfantryVisuals : MonoBehaviour {
 
     internal void PlayPushedAwayDeathAnimation() {
         animator.SetTrigger("Throw Death");
+        power = 1.5f;
+        powerSubtractor = 1;
     }
 
     internal void PlayDisolveAnimation() {
         animator.SetTrigger("Disolve Death");
-        hitFlashBottom = -1;
+        power = 1;
+        powerSubtractor = 1;
     }
 
     internal void DestroySelfOnIdle() {

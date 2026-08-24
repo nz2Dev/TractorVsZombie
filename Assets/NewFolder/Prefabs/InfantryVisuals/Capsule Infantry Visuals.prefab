@@ -159,6 +159,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::InfantryVisuals
   AnimatedColor: {r: 0.67058825, g: 0.67058825, b: 0.67058825, a: 1}
+  rotationSpeed: 720
+  powerBottom: 0.4
 --- !u!1 &7759045767458773609
 GameObject:
   m_ObjectHideFlags: 0

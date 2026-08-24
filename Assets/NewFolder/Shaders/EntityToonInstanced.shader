@@ -9,6 +9,7 @@ Shader "Custom/EntityToonInstanced"
         _ToonSmoothness ("Toon Smoothness", Range(0.001,0.5)) = 0.05
 
         _HitEmissionColor ("Hit Emission Color", Color) = (1,0.2,0.2,1)
+        _Power ("Power", Range(0, 1)) = 1
     }
 
     SubShader
@@ -59,6 +60,7 @@ Shader "Custom/EntityToonInstanced"
             UNITY_INSTANCING_BUFFER_START(Props)
 
                 UNITY_DEFINE_INSTANCED_PROP(float, _HitFlash)
+                UNITY_DEFINE_INSTANCED_PROP(float, _Power)
 
             UNITY_INSTANCING_BUFFER_END(Props)
 
@@ -124,7 +126,12 @@ Shader "Custom/EntityToonInstanced"
                 float3 finalColor =
                     litColor + emission;
 
-                return float4(finalColor, 1);
+                float power =
+                UNITY_ACCESS_INSTANCED_PROP(
+                    Props,
+                    _Power);
+
+                return float4(finalColor, 1) * power;
             }
 
             ENDCG
