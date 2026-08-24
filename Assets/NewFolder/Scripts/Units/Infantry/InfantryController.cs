@@ -156,15 +156,20 @@ public class InfantryController {
                 model.Rotation = physicsPose.Rotation;
             } else if (becomeGrounded) {
                 model.Grounded = true; // todo: "Grounded", doesn't really reflect the state it represent. It's currently more like "Stable on the ground/ Stays on feet"
-                model.Position = raycastService.GetClosestVerticalGroundPoint(model.Position);
+                model.Position = !model.IsPhysicsOnlyMovement ? raycastService.GetClosestVerticalGroundPoint(model.Position) : model.Position;
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
-                ragdollService.SetPhysicsActive(model.BodyPhysicsId, false);
+                if (!model.IsPhysicsOnlyMovement) {
+                    ragdollService.SetPhysicsActive(model.BodyPhysicsId, false);
+                }
             } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {
                 model.Velocity = rvoVelocity;
                 model.Position = model.Position += rvoVelocity * Time.deltaTime;
                 if (rvoVelocity.sqrMagnitude > 0) {
                     model.Rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
                 }
+            } else if (keepsGrouned && model.IsPhysicsOnlyMovement) {
+                model.Position = physicsPose.Position;
+                model.Rotation = physicsPose.Rotation;
             }
 
             var interactions = interactionRegistry.Read(model.InteractionId);
