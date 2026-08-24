@@ -49,4 +49,7 @@ public class EntityMapping {
         infantryIdsResult = findInfantryIdsBuffer;
     }
 
+    public bool TryFindByProximityId(ProximityId proximityId, out EntityComponents components) {
+        return proximityMappings.TryGetValue(proximityId, out components);
+    }
 }

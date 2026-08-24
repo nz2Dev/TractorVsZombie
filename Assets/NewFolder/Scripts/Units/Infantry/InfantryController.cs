@@ -48,6 +48,7 @@ public class InfantryController {
 
         model.Position = prototype.position;
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
+        model.CombatIsAlie = prototype.combatPrototype.alie;
         model.InteractionId = interactionRegistry.Add();
         model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
@@ -77,11 +78,11 @@ public class InfantryController {
         avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity * speedFactor);
     }
 
-    public void Attack(int infantryId, CombatId targetCombatId) {
+    public void Attack(int infantryId, CombatId targetCombatId, Vector3 targetPosition) {
         var model = registry[infantryId];
         if (model.LastAttackTime + model.Config.attackCooldown < Time.time) {
             model.LastAttackTime = Time.time;
-            view.ShowDirectFrontAttack(model.Id);
+            view.ShowDirectFrontAttack(model.Id, targetPosition);
             combatSystem.DealDamage(targetCombatId, new DamageInput {
                 damageSource = model.Position,
                 damageType = DamageType.Punch,
@@ -92,16 +93,17 @@ public class InfantryController {
 
     public InfantryState GetInfantryState(int infantryId) {
         var model = registry[infantryId];
-        return new InfantryState {
-            position = model.Position,
-            movementVelocity = model.Velocity,
-            maxSpeed = model.MaxSpeed,
-            isAlive = !model.IsDead,
-            isGrounded = model.Grounded,
-            combatId = model.CombatId,
-            bodyId = model.BodyPhysicsId,
-            interactionId = model.InteractionId,
-        };
+        return new InfantryState (
+            position: model.Position,
+            movementVelocity: model.Velocity,
+            maxSpeed: model.MaxSpeed,
+            isAlive: !model.IsDead,
+            isGrounded: model.Grounded,
+            combatId: model.CombatId,
+            combatIsAlie: model.CombatIsAlie,
+            bodyId: model.BodyPhysicsId,
+            interactionId: model.InteractionId
+        );
     }
 
     private void ClearDeadInfantry() {

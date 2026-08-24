@@ -21,8 +21,9 @@ public class InfantryView {
         visualsRegistry[infantryId].PlayTakeHit();
     }
 
-    public void ShowDirectFrontAttack(int infantryId) {
-        visualsRegistry[infantryId].PlayDirectAttackAnimation();
+    public void ShowDirectFrontAttack(int infantryId, Vector3 targetPosition) {
+        var visuals = visualsRegistry[infantryId];
+        visuals.PlayDirectAttackAnimation();
     }
 
     public void ShowThrownAway(int infantryId, Vector3 sourcePosition) {

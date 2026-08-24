@@ -170,7 +170,9 @@ public class GameBootstrapper : MonoBehaviour {
         squadAIController = new SquadAIController(
             infantryController,
             pathfindingService,
-            combatSystem
+            combatSystem,
+            proximityService,
+            entityMapping
         );
 
         buildingController = new ProductionBuildingController(

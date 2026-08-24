@@ -9,14 +9,18 @@ public class SquadAIController {
     private readonly CombatSystem combatSystem;
     private readonly InfantryController infantryController;
     private readonly PathfindingService pathfindingService;
+    private readonly ProximityService proximityService;
+    private readonly EntityMapping entityMapping;
 
     private int idCounter;
     private readonly Dictionary<int, SquadAIState> registry = new();
 
-    public SquadAIController(InfantryController infantryController, PathfindingService pathfindingService, CombatSystem combatSystem) {
+    public SquadAIController(InfantryController infantryController, PathfindingService pathfindingService, CombatSystem combatSystem, ProximityService proximityService, EntityMapping entityMapping) {
         this.infantryController = infantryController;
         this.pathfindingService = pathfindingService;
         this.combatSystem = combatSystem;
+        this.proximityService = proximityService;
+        this.entityMapping = entityMapping;
     }
 
     public void Update() {
@@ -85,10 +89,12 @@ public class SquadAIController {
                 var formationVector = state.Formation.GetFormationVector(subordinateIndex);
                 infantryController.MoveTo(infantryId, state.GoalPosition, Vector3.Lerp(flowVector, formationVector, state.Config.formationBlendFactor) * infantry.maxSpeed);
 
-                // TODO: recover disabled infantry attack
-                // if (combatSystem.GetClosestEnemyAgentInRange(infantry.combatId, 2, out var closestFoe)) {
-                //     infantryController.Attack(infantryId, closestFoe.id);
-                // }
+                if (proximityService.QueryNearestPoint(infantry.position, CombatSystem.GetProximityLayerForFaction(!infantry.combatIsAlie), out var proximityId)) {
+                    var point = proximityService.GetPoint(proximityId);
+                    if (Vector3.Distance(point, infantry.position) < 5f && entityMapping.TryFindByProximityId(proximityId, out var components)) {
+                        infantryController.Attack(infantryId, components.combatId.Value, point);
+                    }
+                }
             }
         }
     }
