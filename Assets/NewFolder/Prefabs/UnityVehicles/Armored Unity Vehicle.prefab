@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 2749731636635307362}
   - component: {fileID: 1457614994046877841}
   m_Layer: 13
-  m_Name: Proportional Armored Unity Vehicle
+  m_Name: Armored Unity Vehicle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9ad78e8cc924134886a389d7268aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::RewardSource
-  type: 1
   visualsPrefab: {fileID: 7751872019131341770}
+  type: 1
   loadoutSource: {fileID: 2248895191762497786, guid: 697de765863b048a7a82e00beb0eb422, type: 3}
 --- !u!1001 &3338411815528485105
 PrefabInstance:
@@ -98,7 +98,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7810165690695881823, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: m_Name
-      value: MLRS Weapon Visuals (1)
+      value: MLRS Weapon Visuals
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -160,7 +160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2529982957386298620, guid: 940f4b094f0954abcbf04e762742bd65, type: 3}
       propertyPath: m_Name
-      value: Armor With MLRS Weapong Visuals
+      value: Broken Armored Vehicle Geometry
       objectReference: {fileID: 0}
     - target: {fileID: 5470140349461563470, guid: 940f4b094f0954abcbf04e762742bd65, type: 3}
       propertyPath: m_VersionIndex

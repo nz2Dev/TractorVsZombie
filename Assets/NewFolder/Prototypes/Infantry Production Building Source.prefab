@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 6403658628140185900}
   - component: {fileID: 5601172961921829115}
   m_Layer: 0
-  m_Name: Infantry Spawn Spot Source
+  m_Name: Spawn Spot Source
   m_TagString: Untagged
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -321,15 +321,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 690965884833191343, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4169
+      value: 4175
       objectReference: {fileID: 0}
     - target: {fileID: 5862685832795428601, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4169
+      value: 4175
       objectReference: {fileID: 0}
     - target: {fileID: 6765311743526321559, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4169
+      value: 4175
       objectReference: {fileID: 0}
     - target: {fileID: 7567918266966525968, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -373,15 +373,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7616817913435156990, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 3971
+      value: 3977
       objectReference: {fileID: 0}
     - target: {fileID: 7931382907696681560, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4169
+      value: 4175
       objectReference: {fileID: 0}
     - target: {fileID: 8731804934214662812, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_Name
-      value: Broken Armor Visuals
+      value: Broken Armor Spawn Point Visuals
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 7583517970865713962}
   - component: {fileID: 568629578806078278}
   m_Layer: 13
-  m_Name: Proportional Tractor Unity Vehicle
+  m_Name: Tractor Unity Vehicle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -161,6 +161,7 @@ MonoBehaviour:
     width: 2
     leftWheel: {fileID: 4495872882688886938}
     rightWheel: {fileID: 3174082325308362371}
+  physics: {fileID: 5235435775488318499}
 --- !u!114 &7583517970865713962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,6 +180,7 @@ MonoBehaviour:
   speedCeilingForSteering: 15
   minSteerAmount: 0.1
   speedKFactor: 2
+  physics: {fileID: 5235435775488318499}
 --- !u!114 &568629578806078278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,6 +194,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Local::UnityVehicle
   mass: 2000
+  chassie: {fileID: 6652199006423643288}
+  drive: {fileID: 7583517970865713962}
+  steeringAxle: {fileID: 0}
+  towing: {fileID: 0}
+  physics: {fileID: 5235435775488318499}
 --- !u!1 &5487853700845329361
 GameObject:
   m_ObjectHideFlags: 0

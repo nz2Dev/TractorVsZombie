@@ -453,7 +453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1767390440917992114, guid: 6d4ef3bc0657c454c88281fc3cb6de18, type: 3}
       propertyPath: m_Name
-      value: Proportional Armored Vehicle Geometry
+      value: Armored Vehicle Geometry
       objectReference: {fileID: 0}
     - target: {fileID: 3296253035601904032, guid: 6d4ef3bc0657c454c88281fc3cb6de18, type: 3}
       propertyPath: m_Enabled

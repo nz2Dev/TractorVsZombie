@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9ad78e8cc924134886a389d7268aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::RewardSource
-  type: 1
   visualsPrefab: {fileID: 7065393763898134048}
+  type: 1
   loadoutSource: {fileID: 2894644294875906351, guid: 00a793380f6cc4bb98036a4d3a025f7f, type: 3}
 --- !u!1001 &4688559653005949660
 PrefabInstance:
@@ -98,7 +98,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2529982957386298620, guid: 940f4b094f0954abcbf04e762742bd65, type: 3}
       propertyPath: m_Name
-      value: Reward Visuals
+      value: Broken Armored Vehicle Geomtry
       objectReference: {fileID: 0}
     - target: {fileID: 5470140349461563470, guid: 940f4b094f0954abcbf04e762742bd65, type: 3}
       propertyPath: m_VersionIndex
@@ -188,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2801353324334895931, guid: c6da62660cdb141f984a797360695798, type: 3}
       propertyPath: m_Name
-      value: Red Turel Weapon Visuals (1)
+      value: Red Turel Weapon Visuals
       objectReference: {fileID: 0}
     - target: {fileID: 3003737117274242674, guid: c6da62660cdb141f984a797360695798, type: 3}
       propertyPath: m_IsActive
