@@ -6,6 +6,10 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
+/*
+    KNN - K Nearest Neighbors runtime for KNN algorithm implementation by https://github.com/ArthurBrussee/KNN
+    NOTE: actual package is imported from git fork where Demo folder is removed
+*/
 public class KnnSystem : IDisposable {
     
     private int idCounter;

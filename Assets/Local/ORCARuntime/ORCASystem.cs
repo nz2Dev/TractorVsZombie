@@ -8,6 +8,9 @@ using Unity.Mathematics;
 
 using UnityEditor;
 
+/*
+    ORCA - optimal reciprocal collision avoidance runtime for algorithm implemented by https://github.com/Nebukam/com.nebukam.orca.git
+*/
 public class ORCASystem {
 
     public static ORCASystem Instance { get; set; }

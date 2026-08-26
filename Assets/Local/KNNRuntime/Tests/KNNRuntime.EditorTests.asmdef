@@ -1,8 +1,8 @@
 {
-    "name": "KnnHelper.EditorTests",
+    "name": "KNNRuntime.EditorTests",
     "rootNamespace": "",
     "references": [
-        "SpatialLookup",
+        "KNNRuntime",
         "UnityEditor.TestRunner",
         "Unity.Mathematics"
     ],

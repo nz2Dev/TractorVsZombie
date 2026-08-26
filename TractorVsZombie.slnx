@@ -1,13 +1,13 @@
 ﻿<Solution>
   <Project Path="NewFolder.csproj" />
-  <Project Path="SpatialLookup.csproj" />
+  <Project Path="KNNRuntime.csproj" />
   <Project Path="Prototype.csproj" />
   <Project Path="PhysicsCollisionsTests.csproj" />
   <Project Path="Playground.Exmample.EditorTests.csproj" />
   <Project Path="FlowField.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Local.csproj" />
-  <Project Path="ORCAHelper.csproj" />
+  <Project Path="ORCARuntime.csproj" />
   <Project Path="FlowField.EditorTests.csproj" />
   <Project Path="GenerationPlaygroundEditor.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />
@@ -16,7 +16,7 @@
   <Project Path="Playground.Example.PlayTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="Playground.Example.csproj" />
+  <Project Path="KNNRuntime.EditorTests.csproj" />
   <Project Path="CaravanPlaygroundEditor.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
-  <Project Path="KnnHelper.EditorTests.csproj" />
 </Solution>
