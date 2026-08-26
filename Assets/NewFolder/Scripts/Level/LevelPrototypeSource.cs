@@ -9,6 +9,7 @@ public class LevelPrototypeSource : MonoBehaviour {
     [SerializeField] private PlayerPrototypeSource playerPrototypeSource;
     [SerializeField] private EnemyPrototypeSource enemyPrototypeSource;
     [SerializeField] private HeadquarterBuildingSource headquarterBuildingSource;
+    [SerializeField] private Transform startTransform;
 
     [ContextMenu("Find In Scene")]
     public void FindInScene() {
@@ -31,11 +32,12 @@ public class LevelPrototypeSource : MonoBehaviour {
     }
     
     public LevelPrototype Get() {
-        return new LevelPrototype {
-            entranceCutscene = entranceCutscene,
-            enemyPrototype = enemyPrototypeSource.Get(),
-            playerPrototype = playerPrototypeSource.Get(),
-            headquarterBuildingPrototype = headquarterBuildingSource.GetPrototype(),
-        };
+        return new LevelPrototype (
+            entranceCutscene: entranceCutscene,
+            enemyPrototype: enemyPrototypeSource.Get(),
+            playerPrototype: playerPrototypeSource.Get(),
+            headquarterBuildingPrototype: headquarterBuildingSource.GetPrototype(),
+            startPosition: startTransform.position
+        );
     }
 }

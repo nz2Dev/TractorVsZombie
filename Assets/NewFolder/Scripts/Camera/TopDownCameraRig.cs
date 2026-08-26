@@ -10,8 +10,9 @@ public class TopDownCameraRig : MonoBehaviour {
     [SerializeField] private float distance = 28;
     [SerializeField] private Transform targetTransform;
     
-    private CinemachineVirtualCamera virtualCamera;
     private CinemachineFramingTransposer framingTransposer;
+    
+    internal CinemachineVirtualCamera VirtualCamera { get; private set; }
 
 #if UNITY_EDITOR
     private void OnValidate() {
@@ -22,11 +23,8 @@ public class TopDownCameraRig : MonoBehaviour {
 #endif
 
     private void Awake() {
-        virtualCamera = GetComponent<CinemachineVirtualCamera>();
-        framingTransposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-        
-        var cameraManager = GameObject.FindFirstObjectByType<CameraManager>();
-        cameraManager.SetTopDownCameraRig(this);
+        VirtualCamera = GetComponent<CinemachineVirtualCamera>();
+        framingTransposer = VirtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
     }
 
     private void Update() {

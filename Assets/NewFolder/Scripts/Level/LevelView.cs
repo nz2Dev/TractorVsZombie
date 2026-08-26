@@ -14,8 +14,9 @@ public class LevelView {
         this.cameraManager = cameraManager;
     }
 
-    public void ShowEnteringCutscene(PlayableDirector cutsceneDirector) {
+    public void ShowEnteringCutscene(PlayableDirector cutsceneDirector, Vector3 startPosition) {
         cameraManager.BindToDirector(cutsceneDirector);
+        cameraManager.UpdateTopDownFollowPosition(startPosition);
         cutsceneDirector.stopped += OnStopped;
         cutsceneDirector.Play();
     }

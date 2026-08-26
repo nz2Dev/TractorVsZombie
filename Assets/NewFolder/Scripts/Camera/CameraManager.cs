@@ -15,27 +15,19 @@ using UnityEngine.Playables;
 // It doesn't fit inside Local/ "packages" semantic as it's not a library in its sense, it's tight to the application we develop
 public class CameraManager : MonoBehaviour {
 
-    private CinemachineSource cinemachineSource;
-    private TopDownCameraRig topDownCameraRig;
-
-    internal void SetCinemachineSource(CinemachineSource cinemachineSource) {
-        this.cinemachineSource = cinemachineSource;
-    }
+    [SerializeField] private TopDownCameraRig topDownCameraRig;
+    [SerializeField] private CinemachineBrain cinemachineBrain;
 
     public Camera GetActiveCamera() {
-        return cinemachineSource.cameraRef;
+        return cinemachineBrain.OutputCamera;
     }
 
     public void BindToDirector(PlayableDirector director) {
         foreach (var output in director.playableAsset.outputs) {
             if (output.sourceObject is CinemachineTrack) {
-                director.SetGenericBinding(output.sourceObject, cinemachineSource.cinemachineBrain);
+                director.SetGenericBinding(output.sourceObject, cinemachineBrain);
             }
         }
-    }
-
-    public void SetTopDownCameraRig(TopDownCameraRig topDownCameraRig) {
-        this.topDownCameraRig = topDownCameraRig;
     }
 
     public void UpdateTopDownFollowPosition(Vector3 position) {
