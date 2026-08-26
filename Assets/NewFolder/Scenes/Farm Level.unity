@@ -22016,6 +22016,17 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &923747800 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2248895191762497786, guid: 697de765863b048a7a82e00beb0eb422, type: 3}
+  m_PrefabInstance: {fileID: 5781962541767908237}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!43 &927129013
 Mesh:
   m_ObjectHideFlags: 0
@@ -22421,6 +22432,7 @@ MonoBehaviour:
   initPlatformSource: {fileID: 269684097}
   initLoadoutSources:
   - {fileID: 495707957}
+  - {fileID: 923747800}
 --- !u!43 &937460628
 Mesh:
   m_ObjectHideFlags: 0
