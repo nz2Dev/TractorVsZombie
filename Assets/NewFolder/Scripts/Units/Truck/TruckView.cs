@@ -26,7 +26,7 @@ public class TruckView {
 
     internal void UpdateSound(float gasThrottle) {
         var enginePitch = 0.5f + gasThrottle;
-        var engineVolume = 0.5f + gasThrottle;
+        var engineVolume = 0.1f + gasThrottle;
         soundManager.UpdateLoop(sfxLoopId, visuals.transform.position, enginePitch, engineVolume);
     }
 }
