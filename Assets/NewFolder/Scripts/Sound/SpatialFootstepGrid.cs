@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 public struct FootstepGridCell {
+    public Vector2Int index;
     public Vector3 averagePosition;
     public int requestsCount;
     public float minSpeed;
@@ -26,6 +27,7 @@ public struct FootstepGridCell {
 }
 
 public class SpatialFootstepGrid {
+
     private readonly float cellSize;
     private readonly int gridWidth;
     private readonly int gridHeight;
@@ -50,7 +52,7 @@ public class SpatialFootstepGrid {
         activeCellCount = 0;
     }
 
-    public void Clear() {
+    public void ClearActiveRecords() {
         for (int i = 0; i < activeCellCount; i++) {
             int cellIdx = activeCellIndices[i];
             cells[cellIdx].Clear();
@@ -72,6 +74,7 @@ public class SpatialFootstepGrid {
 
         int flatIndex = gridIdx.x * gridHeight + gridIdx.y;
         if (cells[flatIndex].requestsCount == 0) {
+            cells[flatIndex].index = gridIdx;
             activeCellIndices[activeCellCount] = flatIndex;
             activeCellCount++;
         }

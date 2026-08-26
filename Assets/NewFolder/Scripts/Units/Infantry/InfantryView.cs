@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class InfantryView {
     
+    private readonly FootstepSoundSystem footstepSound;
     private readonly Dictionary<int, InfantryVisuals> visualsRegistry = new Dictionary<int, InfantryVisuals>();
+
+    public InfantryView(FootstepSoundSystem footstepSound) {
+        this.footstepSound = footstepSound;
+    }
 
     public void AddVisuals(int infantryId, Vector3 position, InfantryVisuals visualsPrefab) {
         var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
@@ -15,6 +20,7 @@ public class InfantryView {
         var visuals = visualsRegistry[infantryId];
         visuals.UpdatePositionAndRotation(position, rotation);
         visuals.SetSpeed(speedNormalized);
+        footstepSound.RegisterFootstep(position, speedNormalized);
     }
 
     internal void ShowTakeHit(int infantryId) {

@@ -10,6 +10,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private RaycastConfig raycastConfig;
     [SerializeField] private KnnRunner knnRunner;
+    [SerializeField] private FootstepSoundSystem footstepSoundSystem;
     [Space]
     [SerializeField] private string vehicleObstacleLayer;
 
@@ -61,7 +62,7 @@ public class GameBootstrapper : MonoBehaviour {
         var armorView = new ArmorView(soundManager);
         var platformView = new PlatformView();
         var rewardView = new RewardView();
-        var infantryView = new InfantryView();
+        var infantryView = new InfantryView(footstepSoundSystem);
         var truckView = new TruckView(soundManager);
         var rocketView = new RocketView(soundManager);
         var projectileView = new ProjectileView(soundManager);
