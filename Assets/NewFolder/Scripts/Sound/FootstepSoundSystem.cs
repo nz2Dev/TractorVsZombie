@@ -10,16 +10,20 @@ public class FootstepSoundSystem : MonoBehaviour {
         internal AudioSource audioSource;
         internal float lastStartTime;
         internal float lastDuration;
+        internal int pendingShots;
+        internal float nextShotTime;
+        internal float minSpeed;
+        internal float maxSpeed;
 
         public CellSound(AudioSource audioSource) {
             this.audioSource = audioSource;
             lastStartTime = float.NegativeInfinity;
-
         }
     }
     
     [SerializeField] private AudioSource footstepSourcePrefab;
     [SerializeField] private AudioClip[] footstepSounds;
+    [SerializeField] private float minSequenceInterval = 0.1f;
 
     private ObjectPool<AudioSource> audioSourcePool;
     private SpatialFootstepGrid footstepGrid;
@@ -54,17 +58,38 @@ public class FootstepSoundSystem : MonoBehaviour {
 
     private void LateUpdate() {
         ReleaseNonPlayingAudioSources();
-        footstepGrid.GetSortedCells(referencePoint, resultBuffer);
+        int activeCount = footstepGrid.GetSortedCells(referencePoint, resultBuffer);
         footstepGrid.ClearActiveRecords();
-        foreach (var cell in resultBuffer) {
-            var sound = PrepareCellSound(cell.index);
-            if (sound.lastStartTime + sound.lastDuration < Time.time) {
-                var nextFootstepClip = GetNextFootstepClip();
 
-                sound.lastStartTime = Time.time;
-                sound.lastDuration = nextFootstepClip.length;
-                sound.audioSource.PlayOneShot(nextFootstepClip);
+        for (int i = 0; i < activeCount; i++) {
+            var cell = resultBuffer[i];
+            var sound = PrepareCellSound(cell.index);
+            if (sound.lastStartTime + sound.lastDuration < Time.time && sound.pendingShots == 0) {
                 sound.audioSource.transform.position = cell.averagePosition;
+                sound.pendingShots = Mathf.Clamp(cell.requestsCount, 1, 3);
+                sound.nextShotTime = Time.time;
+                sound.minSpeed = cell.minSpeed;
+                sound.maxSpeed = cell.maxSpeed;
+                sound.lastStartTime = Time.time;
+                sound.lastDuration = 0f;
+            }
+        }
+
+        foreach (var sound in cellSounds.Values) {
+            if (sound.pendingShots > 0 && Time.time >= sound.nextShotTime) {
+                var clip = GetNextFootstepClip();
+                float speed = Mathf.Lerp(sound.minSpeed, sound.maxSpeed, UnityEngine.Random.value);
+                float pitch = Mathf.Lerp(0.3f, 1.1f, Mathf.Clamp01(speed));
+
+                sound.audioSource.pitch = pitch;
+                sound.audioSource.PlayOneShot(clip);
+
+                sound.pendingShots--;
+                sound.nextShotTime = Time.time + minSequenceInterval;
+
+                float clipEndTime = Time.time + clip.length;
+                if (clipEndTime > sound.lastStartTime + sound.lastDuration)
+                    sound.lastDuration = clipEndTime - sound.lastStartTime;
             }
         }
     }
@@ -81,7 +106,7 @@ public class FootstepSoundSystem : MonoBehaviour {
         var soundsToRemove = new List<Vector2Int>();
         foreach (var cell in cellSounds.Keys) {
             var sounds = cellSounds[cell];
-            if (!sounds.audioSource.isPlaying) {
+            if (!sounds.audioSource.isPlaying && sounds.pendingShots == 0) {
                 audioSourcePool.Release(sounds.audioSource);
                 soundsToRemove.Add(cell);
             }
