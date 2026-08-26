@@ -14,11 +14,11 @@
   <Project Path="NewFolder.PlayTests.csproj" />
   <Project Path="PrototypeEditor.csproj" />
   <Project Path="NewFolder.EditorTests.csproj" />
+  <Project Path="Local.csproj" />
   <Project Path="Playground.Example.PlayTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="Playground.Example.csproj" />
   <Project Path="KNNRuntime.EditorTests.csproj" />
   <Project Path="CaravanPlaygroundEditor.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
-  <Project Path="Local.csproj" />
 </Solution>
