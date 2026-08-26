@@ -43,6 +43,10 @@ public class TruckController {
         model.Gas = driveInput * boostMultiplier;
     }
 
+    public virtual void Brake(float brakes) {
+        model.Brakes = brakes;
+    } 
+
     public virtual void Steer(float steerInput) {
         model.Steer = steerInput;   // -1..1; traction limiting happens inside VehiclePhysics
     }
@@ -55,7 +59,7 @@ public class TruckController {
     private void WriteExternalInput() {
         ramEffect.Forward(model.RamId, model.Position);
         // todo: register proxmity and raycast components
-        vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, brakes: 0f, model.Steer);
+        vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, model.Brakes, model.Steer);
     }
 
     private void UpdateView() {

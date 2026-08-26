@@ -71,12 +71,14 @@ public class UnityVehicle : MonoBehaviour {
 
     private void ReadChassieInput() {
         if (drive != null) {
-            chassie.SetAxisfMotorTorque(WheelAxisName.Front, drive.MotorTorque);
-            chassie.SetAxisfMotorTorque(WheelAxisName.Rear, drive.MotorTorque);
+            chassie.SetAxisMotorTorque(WheelAxisName.Front, drive.MotorTorque);
+            chassie.SetAxisMotorTorque(WheelAxisName.Rear, drive.MotorTorque);
+            chassie.SetAxisBrakesTorque(WheelAxisName.Front, drive.BrakesTorque);
+            chassie.SetAxisBrakesTorque(WheelAxisName.Rear, drive.BrakesTorque);
             chassie.SetAxisSteerAngle(WheelAxisName.Front, drive.SteeringDegree);
         } else if (steeringAxle != null) {
-            chassie.SetAxisfMotorTorque(WheelAxisName.Front, steeringAxle.FrontAxisMotorTorque);
-            chassie.SetAxisfMotorTorque(WheelAxisName.Rear, steeringAxle.RearAxisMotorTorque);
+            chassie.SetAxisMotorTorque(WheelAxisName.Front, steeringAxle.FrontAxisMotorTorque);
+            chassie.SetAxisMotorTorque(WheelAxisName.Rear, steeringAxle.RearAxisMotorTorque);
             chassie.SetAxisSteerAngle(WheelAxisName.Front, steeringAxle.FrontAxisSteeringDegree);
         }
     }

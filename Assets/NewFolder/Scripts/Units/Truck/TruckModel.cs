@@ -17,6 +17,7 @@ public class TruckModel {
     
     public Vector3 Position { get; set; }
     public float Gas { get; set; }
+    public float Brakes { get; set; }
     public float Steer { get; set; }
     public VehicleState VehiclePhysicsState { get; set; }
 

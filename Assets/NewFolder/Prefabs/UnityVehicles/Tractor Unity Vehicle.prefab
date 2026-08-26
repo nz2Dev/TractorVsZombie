@@ -55,7 +55,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 2
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
@@ -174,8 +174,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ec530cc77e34dfeb85ac24e8413e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Local::VehicleDrive
-  maxEngineTorque: 2000
-  maxBrakesTorque: 1000
+  maxEngineTorque: 1500
+  maxBrakesTorque: 2000
   maxSteerDegrees: 40
   speedCeilingForSteering: 15
   minSteerAmount: 0.1
@@ -254,7 +254,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 2
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1

@@ -49,10 +49,16 @@ public class VehicleChassie : MonoBehaviour, IVehiclePullingConnectorProvider {
         AdjustAxes();
     }
 
-    internal void SetAxisfMotorTorque(WheelAxisName name, float torque) {
+    internal void SetAxisMotorTorque(WheelAxisName name, float torque) {
         var wheelAxis = GetAxisByName(name);
         wheelAxis.leftWheel.motorTorque = torque;
         wheelAxis.rightWheel.motorTorque = torque;
+    }
+
+    internal void SetAxisBrakesTorque(WheelAxisName name, float torque) {
+        var wheelAxis = GetAxisByName(name);
+        wheelAxis.leftWheel.brakeTorque = torque;
+        wheelAxis.rightWheel.brakeTorque = torque;
     }
 
     internal void SetAxisSteerAngle(WheelAxisName axisName, float steeringDegree) {

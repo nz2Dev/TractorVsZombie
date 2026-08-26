@@ -37425,7 +37425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: 791803480
+  uniqueId: -61044124
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
@@ -43600,9 +43600,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3174082325308362371, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4441451520058313787, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: m_Name
       value: Tractor Unity Vehicle
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090169952234316199, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
