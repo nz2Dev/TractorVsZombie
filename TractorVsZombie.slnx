@@ -11,10 +11,8 @@
   <Project Path="FlowField.EditorTests.csproj" />
   <Project Path="GenerationPlaygroundEditor.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />
-  <Project Path="VehiclePhysics.PlayTests.csproj" />
   <Project Path="PrototypeEditor.csproj" />
   <Project Path="NewFolder.EditorTests.csproj" />
-  <Project Path="VehiclePhysics.csproj" />
   <Project Path="Playground.Example.PlayTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="Playground.Example.csproj" />
