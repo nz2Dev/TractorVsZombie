@@ -1,9 +1,7 @@
 ﻿<Solution>
-  <Project Path="PrototypeEditor.csproj" />
   <Project Path="NewFolder.csproj" />
-  <Project Path="Prototype.csproj" />
   <Project Path="SpatialLookup.csproj" />
-  <Project Path="GenerationPlaygroundEditor.csproj" />
+  <Project Path="Prototype.csproj" />
   <Project Path="PhysicsCollisionsTests.csproj" />
   <Project Path="Playground.Exmample.EditorTests.csproj" />
   <Project Path="FlowField.csproj" />
@@ -11,14 +9,16 @@
   <Project Path="Local.csproj" />
   <Project Path="ORCAHelper.csproj" />
   <Project Path="FlowField.EditorTests.csproj" />
+  <Project Path="GenerationPlaygroundEditor.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />
-  <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="VehiclePhysics.PlayTests.csproj" />
+  <Project Path="PrototypeEditor.csproj" />
   <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="VehiclePhysics.csproj" />
-  <Project Path="CaravanPlaygroundEditor.csproj" />
   <Project Path="Playground.Example.PlayTests.csproj" />
+  <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="Playground.Example.csproj" />
+  <Project Path="CaravanPlaygroundEditor.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
   <Project Path="KnnHelper.EditorTests.csproj" />
 </Solution>
