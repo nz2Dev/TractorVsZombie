@@ -1,0 +1,16 @@
+{
+    "name": "UnityVehicle",
+    "rootNamespace": "",
+    "references": [
+        "GUID:d99672ceeb9ca45e795ced7ec8596108"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
