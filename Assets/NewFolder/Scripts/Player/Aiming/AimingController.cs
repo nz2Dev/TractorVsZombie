@@ -8,11 +8,9 @@ using UnityEngine;
 
 public class AimingController {
 
-    private readonly CameraProvider cameraProvider;
-
     private readonly ProximityService proximityService;
     private readonly RaycastService raycastService;
-    private readonly CombatSystem combatSystem;
+    private readonly CombatSystem combatSystem; // todo remove
 
     private readonly PlatformController platformController;
     private readonly WeaponController weaponController;
@@ -20,9 +18,8 @@ public class AimingController {
     private readonly AimingView view;
     private readonly AimingModel model;
 
-    public AimingController(AimingView view, CameraProvider cameraProvider, RaycastService raycastService, CombatSystem combatSystem, PlatformController platformController, WeaponController weaponController, ProximityService proximityService) {
+    public AimingController(AimingView view, RaycastService raycastService, CombatSystem combatSystem, PlatformController platformController, WeaponController weaponController, ProximityService proximityService) {
         this.view = view;
-        this.cameraProvider = cameraProvider;
         this.raycastService = raycastService;
         this.combatSystem = combatSystem;
         this.platformController = platformController;
@@ -67,8 +64,7 @@ public class AimingController {
         }
 
         var mousePosition = Input.mousePosition;
-        // if GetScreePointRay is moved to the View, there is no need in CameraProvider at all
-        var mouseRay = cameraProvider.GetScreenPointRay(mousePosition);
+        var mouseRay = view.GetCameraRay(mousePosition);
         var mouseHitPoint = raycastService.GetGroundHitPosition(mouseRay);
         model.AimInput = new TopDownAimInput {
             position = mouseHitPoint,

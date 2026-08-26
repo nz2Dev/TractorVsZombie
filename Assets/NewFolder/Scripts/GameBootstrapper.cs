@@ -50,7 +50,6 @@ public class GameBootstrapper : MonoBehaviour {
     }
 
     private void Build() {
-        var cameraProvider = new CameraProvider(cameraManager);
         var vehicleService = new VehicleService(LayerMask.NameToLayer(vehicleObstacleLayer));
         var localAvoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
@@ -207,7 +206,7 @@ public class GameBootstrapper : MonoBehaviour {
             new DrivingController(truckController),
             new AssemblingController(new AssemblingView(), platformController, truckController),
             new SelectingController(new SelectingView(uiDocument), platformController),
-            new AimingController(new AimingView(), cameraProvider, raycastService, combatSystem, platformController, weaponController, proximityService),
+            new AimingController(new AimingView(cameraManager), raycastService, combatSystem, platformController, weaponController, proximityService),
             new CollectingController(rewardController),
             new CameraController(new CameraView(cameraManager))
         );
