@@ -1,24 +1,32 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
 public class DrivingController {
     
     private readonly TruckController truckController;
+    private readonly PlatformController platformController;
     private readonly VehicleService vehicleService;
 
+    private readonly List<int> controlledPlatformIds = new ();
     private DrivingInput input;
     private VehicleState vehicleState;
 
-    public DrivingController(TruckController truckController, VehicleService vehicleService) {
+    public DrivingController(TruckController truckController, VehicleService vehicleService, PlatformController platformController) {
         this.truckController = truckController;
         this.vehicleService = vehicleService;
+        this.platformController = platformController;
     }
 
     public void Update() {
         ReadDrivingInput();
         ReadVehicleState();
         ApplyDrivingInput();
+    }
+
+    internal void AddControlledPlatform(int platformId) {
+        controlledPlatformIds.Add(platformId);
     }
 
     private void ReadVehicleState() {
@@ -54,5 +62,10 @@ public class DrivingController {
         truckController.Drive(gasThrottle, input.boost);
         truckController.Brake(brakesThrottle);
         truckController.Steer(input.steering);
+
+        foreach (var platformId in controlledPlatformIds) {
+            var vehicleId = platformController.GetVehiclePhysicsId(platformId);
+            vehicleService.SetVehiclePowertrain(vehicleId, gasThrottle, brakesThrottle);
+        }
     }
 }

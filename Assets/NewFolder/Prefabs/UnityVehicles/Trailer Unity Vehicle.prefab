@@ -636,6 +636,7 @@ GameObject:
   - component: {fileID: 7006158005595033464}
   - component: {fileID: 898983556577155311}
   - component: {fileID: 1218431161578446385}
+  - component: {fileID: 34627808015877285}
   - component: {fileID: 6609883790062176369}
   - component: {fileID: 296123987818187350}
   m_Layer: 13
@@ -736,6 +737,21 @@ MonoBehaviour:
   axleBodyJoint: {fileID: 7158297638791994403}
   physics: {fileID: 7006158005595033464}
   chassie: {fileID: 898983556577155311}
+--- !u!114 &34627808015877285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8102125379990674598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6cd5dd60c364da78ac6f06f8757fe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityVehicle::VehiclePowertrain
+  maxEngineTorque: 500
+  maxBrakesTorque: 100
+  physics: {fileID: 7006158005595033464}
 --- !u!114 &6609883790062176369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -766,7 +782,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Local::UnityVehicle
   mass: 500
   chassie: {fileID: 898983556577155311}
-  powertrain: {fileID: 0}
+  powertrain: {fileID: 34627808015877285}
   steeringWheel: {fileID: 0}
   steeringAxle: {fileID: 1218431161578446385}
   towing: {fileID: 6609883790062176369}

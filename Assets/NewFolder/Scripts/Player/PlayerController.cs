@@ -27,6 +27,7 @@ public class PlayerController {
         assemblingController.OnPlatformAdded += (platformId) => {
             selectingController.AddOption(platformId);
             aimingController.AddControlledPlatformId(platformId);
+            drivingController.AddControlledPlatform(platformId);
         };
 
         collectingController.OnLoadoutCollected += (position, loadoutPrototype) =>
