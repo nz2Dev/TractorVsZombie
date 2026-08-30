@@ -116,7 +116,8 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             raycastService,
             interactionRegistry,
-            entityMapping
+            entityMapping,
+            vehicleService
         );
 
         loadoutController = new LoadoutController(

@@ -6,16 +6,18 @@ using UnityEngine;
 
 public class RamEffectModel {
 
-    public RamEffectModel(int id, RamEffectConfig config, CombatId combatId, bool holderIsAlie) {
+    public RamEffectModel(int id, RamEffectConfig config, CombatId combatId, int vehicleId, bool holderIsAlie) {
         Id = id;
         Config = config;
         HolderCombatId = combatId;
+        HolderVehicleId = vehicleId;
         HolderIsAlie = holderIsAlie;
     }
 
     public int Id { get; }
     public RamEffectConfig Config { get; }
     public CombatId HolderCombatId { get; }
+    public int HolderVehicleId { get; }
     public bool HolderIsAlie { get; }
     
     public Vector3 Position { get; set; }

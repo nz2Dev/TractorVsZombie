@@ -11,15 +11,17 @@ public class RamEffectController {
     private readonly RamEffectView view;
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
+    private readonly VehicleService vehicleService;
     private readonly InteractionRegistry interactionRegistry;
     private readonly EntityMapping entityMapping;
 
-    public RamEffectController(RamEffectView view, CombatSystem combatSystem, RaycastService raycastService, InteractionRegistry interactionRegistry, EntityMapping entityMapping) {
+    public RamEffectController(RamEffectView view, CombatSystem combatSystem, RaycastService raycastService, InteractionRegistry interactionRegistry, EntityMapping entityMapping, VehicleService vehicleService) {
         this.view = view;
         this.combatSystem = combatSystem;
         this.raycastService = raycastService;
         this.interactionRegistry = interactionRegistry;
         this.entityMapping = entityMapping;
+        this.vehicleService = vehicleService;
     }
 
     private int idCounter;
@@ -29,9 +31,9 @@ public class RamEffectController {
         ComputeDamage();
     }
 
-    public int StartNew(CombatId holderCombatId, bool holderIsAlie, RamEffectPrototype prototype) {
+    public int StartNew(CombatId holderCombatId, int holderVehicleId, bool holderIsAlie, RamEffectPrototype prototype) {
         var nextId = idCounter++;
-        var model = new RamEffectModel(nextId, prototype.config, holderCombatId, holderIsAlie);
+        var model = new RamEffectModel(nextId, prototype.config, holderCombatId, holderVehicleId, holderIsAlie);
         model.Position = prototype.position;
         registry[nextId] = model;
         view.AddEffect(nextId, prototype.audioSourcePrefab);
@@ -85,6 +87,9 @@ public class RamEffectController {
                     });
                 }
             }
+
+            var dragAmount = Mathf.Min(model.ReceiveContactBuffer.Count, model.Config.maxDragInteraction) / (float) model.Config.maxDragInteraction;
+            vehicleService.ApplyDragForce(model.HolderVehicleId, dragAmount * model.Config.maxDragForce, model.Config.dragForceMode);
 
             if (model.ReceiveContactBuffer.Count > 0) {
                 view.ShowImpact(model.Id, model.Position, model.ReceiveContactBuffer.Count, model.Config.impactSFX);

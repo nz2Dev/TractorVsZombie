@@ -78,6 +78,11 @@ public class VehicleService {
         steeringWheel.SetSteer(steer);
     }
 
+    public void ApplyDragForce(int vehicleIndex, float force, ForceMode forceMode) {
+        var vehicle = vehiclesRegistry[vehicleIndex];
+        vehicle.Physics.AddRelativeForce(Vector3.back * force, forceMode);
+    }
+
     public void UpdateVehiclePose(int vehicleIndex, Vector3 position, Quaternion rotation) {
         var vehiclePhysics = vehiclesRegistry[vehicleIndex];
         vehiclePhysics.Transform(position, rotation);

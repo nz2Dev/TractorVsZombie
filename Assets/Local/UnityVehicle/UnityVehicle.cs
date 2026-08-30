@@ -19,6 +19,7 @@ public class UnityVehicle : MonoBehaviour {
     
     [SerializeField, HideInInspector] private Rigidbody physics;
 
+    public Rigidbody Physics => physics;
     public VehiclePowertrain Powertrain => powertrain;
     public VehicleSteeringWheel SteeringWheel => steeringWheel;
     public VehicleChassie Chassie => chassie;

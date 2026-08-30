@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::RamEffectConfig
   damage: 0
   triggerRadius: 2
+  maxDragInteraction: 3
+  maxDragForce: 1500
+  dragForceMode: 1
   impactSFX:
   - {fileID: 8300000, guid: 846273779798d48abb5ca63fe4a42bec, type: 3}
   - {fileID: 8300000, guid: 5f642b9534cee4c7ca8bfaa6351f3e24, type: 3}
