@@ -12,13 +12,15 @@ public class UnityVehicle : MonoBehaviour {
     [SerializeField] private float mass = 1000f;
     [Space]
     [SerializeField, ReadOnly] private VehicleChassie chassie;
-    [SerializeField, ReadOnly] private VehicleDrive drive;
+    [SerializeField, ReadOnly] private VehiclePowertrain powertrain;
+    [SerializeField, ReadOnly] private VehicleSteeringWheel steeringWheel;
     [SerializeField, ReadOnly] private VehicleSteeringAxle steeringAxle;
     [SerializeField, ReadOnly] private VehicleTowing towing;
     
     [SerializeField, HideInInspector] private Rigidbody physics;
 
-    public VehicleDrive Drive => drive;
+    public VehiclePowertrain Powertrain => powertrain;
+    public VehicleSteeringWheel SteeringWheel => steeringWheel;
     public VehicleChassie Chassie => chassie;
     public VehicleTowing Towing => towing;
 
@@ -33,9 +35,13 @@ public class UnityVehicle : MonoBehaviour {
         if (chassie == null)
             chassie = GetComponent<VehicleChassie>();
         
-        drive = GetComponent<VehicleDrive>();
+        powertrain = GetComponent<VehiclePowertrain>();
+        steeringWheel = GetComponent<VehicleSteeringWheel>();
         steeringAxle = GetComponent<VehicleSteeringAxle>();
         towing = GetComponent<VehicleTowing>();
+
+        if (steeringWheel != null && steeringAxle != null)
+            Debug.LogWarning($"both {steeringWheel} and {steeringAxle} exist");
 
         AdjustVehicleMass();
     }
@@ -45,11 +51,28 @@ public class UnityVehicle : MonoBehaviour {
         if (physics == null || chassie == null)
             throw new InvalidOperationException();
 
+        if (steeringWheel != null && steeringAxle != null)
+            throw new InvalidOperationException($"steering component conflict {steeringWheel} and {steeringAxle}");
+
         AdjustVehicleMass();
     }
 
     private void FixedUpdate() {
-        ReadChassieInput();
+        if (powertrain != null) {
+            chassie.SetAxisMotorTorque(WheelAxisName.Front, powertrain.MotorTorque);
+            chassie.SetAxisMotorTorque(WheelAxisName.Rear, powertrain.MotorTorque);
+            chassie.SetAxisBrakesTorque(WheelAxisName.Front, powertrain.BrakesTorque);
+            chassie.SetAxisBrakesTorque(WheelAxisName.Rear, powertrain.BrakesTorque);
+        } else if (towing != null) {
+            chassie.SetAxisMotorTorque(WheelAxisName.Front, 1f);
+            chassie.SetAxisMotorTorque(WheelAxisName.Rear, -1f);
+        }
+        
+        if (steeringWheel != null) {
+            chassie.SetAxisSteerAngle(WheelAxisName.Front, steeringWheel.FrontAxisSteeringDegree);
+        } else if (steeringAxle != null) {
+            chassie.SetAxisSteerAngle(WheelAxisName.Front, steeringAxle.FrontAxisSteeringDegree);
+        }
     }
 
     public void Transform(Vector3 position, Quaternion rotation) {
@@ -68,18 +91,5 @@ public class UnityVehicle : MonoBehaviour {
     private void AdjustVehicleMass() {
         physics.mass = mass;
     }
-
-    private void ReadChassieInput() {
-        if (drive != null) {
-            chassie.SetAxisMotorTorque(WheelAxisName.Front, drive.MotorTorque);
-            chassie.SetAxisMotorTorque(WheelAxisName.Rear, drive.MotorTorque);
-            chassie.SetAxisBrakesTorque(WheelAxisName.Front, drive.BrakesTorque);
-            chassie.SetAxisBrakesTorque(WheelAxisName.Rear, drive.BrakesTorque);
-            chassie.SetAxisSteerAngle(WheelAxisName.Front, drive.SteeringDegree);
-        } else if (steeringAxle != null) {
-            chassie.SetAxisMotorTorque(WheelAxisName.Front, steeringAxle.FrontAxisMotorTorque);
-            chassie.SetAxisMotorTorque(WheelAxisName.Rear, steeringAxle.RearAxisMotorTorque);
-            chassie.SetAxisSteerAngle(WheelAxisName.Front, steeringAxle.FrontAxisSteeringDegree);
-        }
-    }
+    
 }

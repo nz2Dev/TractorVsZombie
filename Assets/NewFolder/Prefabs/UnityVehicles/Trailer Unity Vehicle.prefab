@@ -766,7 +766,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Local::UnityVehicle
   mass: 500
   chassie: {fileID: 898983556577155311}
-  drive: {fileID: 0}
+  powertrain: {fileID: 0}
+  steeringWheel: {fileID: 0}
   steeringAxle: {fileID: 1218431161578446385}
   towing: {fileID: 6609883790062176369}
   physics: {fileID: 7006158005595033464}

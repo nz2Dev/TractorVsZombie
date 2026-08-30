@@ -59,15 +59,16 @@ public class VehicleService {
     }
 
     public void SetVehicleSteerAngle(int vehicleIndex, float steerAngle) {
-        vehiclesRegistry[vehicleIndex].Drive.SetSteerAngle(steerAngle);
+        vehiclesRegistry[vehicleIndex].SteeringWheel.SetSteerAngle(steerAngle);
     }
 
     public void SetVehicleInput(int vehicleIndex, float gas, float brakes, float steer) {
         var vehicle = vehiclesRegistry[vehicleIndex];
-        var vehicleDrive =vehicle.Drive;
-        vehicleDrive.SetGas(gas);
-        vehicleDrive.SetBrakes(brakes);
-        vehicleDrive.SetSteer(steer);
+        var powertrain = vehicle.Powertrain;
+        powertrain.SetGas(gas);
+        powertrain.SetBrakes(brakes);
+        var steeringWheel = vehicle.SteeringWheel;
+        steeringWheel.SetSteer(steer);
     }
 
     public void UpdateVehiclePose(int vehicleIndex, Vector3 position, Quaternion rotation) {

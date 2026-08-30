@@ -206,7 +206,8 @@ GameObject:
   - component: {fileID: 4194833051042550664}
   - component: {fileID: 9108905763789636849}
   - component: {fileID: 8491128124494887147}
-  - component: {fileID: 2749731636635307362}
+  - component: {fileID: 5385033690518006579}
+  - component: {fileID: 802346038392834487}
   - component: {fileID: 1457614994046877841}
   m_Layer: 13
   m_Name: Armored Unity Vehicle
@@ -286,7 +287,7 @@ MonoBehaviour:
     leftWheel: {fileID: 6476999723630897593}
     rightWheel: {fileID: 6772736566611728227}
   physics: {fileID: 9108905763789636849}
---- !u!114 &2749731636635307362
+--- !u!114 &5385033690518006579
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -295,11 +296,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 6619691701472962229}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50ec530cc77e34dfeb85ac24e8413e04, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a6cd5dd60c364da78ac6f06f8757fe0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Local::VehicleDrive
+  m_EditorClassIdentifier: UnityVehicle::VehiclePowertrain
   maxEngineTorque: 500
   maxBrakesTorque: 500
+  physics: {fileID: 9108905763789636849}
+--- !u!114 &802346038392834487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6619691701472962229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04fa80baa73334d3a9ce36ad05cb3f47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityVehicle::VehicleSteeringWheel
   maxSteerDegrees: 40
   speedCeilingForSteering: 15
   minSteerAmount: 0.1
@@ -319,7 +333,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Local::UnityVehicle
   mass: 500
   chassie: {fileID: 8491128124494887147}
-  drive: {fileID: 2749731636635307362}
+  powertrain: {fileID: 5385033690518006579}
+  steeringWheel: {fileID: 802346038392834487}
   steeringAxle: {fileID: 0}
   towing: {fileID: 0}
   physics: {fileID: 9108905763789636849}

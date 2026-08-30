@@ -18,8 +18,6 @@ public class VehicleSteeringAxle : MonoBehaviour, IVehicleTowingConnectorProvide
     [SerializeField, HideInInspector] private Rigidbody physics;
     [SerializeField, HideInInspector] private VehicleChassie chassie;
 
-    internal float FrontAxisMotorTorque => 1f;
-    internal float RearAxisMotorTorque => -1f;
     internal float FrontAxisSteeringDegree { get; private set; }
 
 #if UNITY_EDITOR

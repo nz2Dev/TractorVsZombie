@@ -82,7 +82,8 @@ GameObject:
   - component: {fileID: 2073150202005040668}
   - component: {fileID: 5235435775488318499}
   - component: {fileID: 6652199006423643288}
-  - component: {fileID: 7583517970865713962}
+  - component: {fileID: 6378353914802326287}
+  - component: {fileID: 5593154855076482630}
   - component: {fileID: 568629578806078278}
   m_Layer: 13
   m_Name: Tractor Unity Vehicle
@@ -162,7 +163,7 @@ MonoBehaviour:
     leftWheel: {fileID: 4495872882688886938}
     rightWheel: {fileID: 3174082325308362371}
   physics: {fileID: 5235435775488318499}
---- !u!114 &7583517970865713962
+--- !u!114 &6378353914802326287
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,11 +172,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 4441451520058313787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50ec530cc77e34dfeb85ac24e8413e04, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a6cd5dd60c364da78ac6f06f8757fe0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Local::VehicleDrive
+  m_EditorClassIdentifier: UnityVehicle::VehiclePowertrain
   maxEngineTorque: 1500
   maxBrakesTorque: 2000
+  physics: {fileID: 5235435775488318499}
+--- !u!114 &5593154855076482630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441451520058313787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04fa80baa73334d3a9ce36ad05cb3f47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityVehicle::VehicleSteeringWheel
   maxSteerDegrees: 40
   speedCeilingForSteering: 15
   minSteerAmount: 0.1
@@ -195,7 +209,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Local::UnityVehicle
   mass: 2000
   chassie: {fileID: 6652199006423643288}
-  drive: {fileID: 7583517970865713962}
+  powertrain: {fileID: 6378353914802326287}
+  steeringWheel: {fileID: 5593154855076482630}
   steeringAxle: {fileID: 0}
   towing: {fileID: 0}
   physics: {fileID: 5235435775488318499}
@@ -325,7 +340,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 2
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
@@ -449,7 +464,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 2
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
