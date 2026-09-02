@@ -10,17 +10,19 @@ public class ProjectileController {
     private readonly ProjectileView view;
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
+    private readonly CollisionService collisionService;
     private readonly EntityMapping entityMapping;
 
     private int idCounter = 0;
     private readonly Dictionary<int, ProjectileModel> registry = new ();
     private readonly List<int> removeBuffer = new(16);
 
-    public ProjectileController(CombatSystem combatSystem, ProjectileView view, RaycastService raycastService, EntityMapping entityMapping) {
+    public ProjectileController(CombatSystem combatSystem, ProjectileView view, RaycastService raycastService, EntityMapping entityMapping, CollisionService collisionService) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.raycastService = raycastService;
         this.entityMapping = entityMapping;
+        this.collisionService = collisionService;
     }
 
     public void Create(CombatId shooterCombatId, ProjectilePrototype prototype, Orientation orientation) {
@@ -90,7 +92,7 @@ public class ProjectileController {
             }
             if (!projectile.IsDead) {
                 var projectileRay = new Ray(projectile.Position, projectile.Velocity);
-                if (raycastService.RaycastEnvironment(projectileRay, projectile.Velocity.magnitude * Time.fixedDeltaTime, out var hitInfo)) {
+                if (collisionService.RaycastEnvironment(projectileRay, projectile.Velocity.magnitude * Time.fixedDeltaTime, out var hitInfo)) {
                     view.ShowBulletCrash(projectile.ShooterCombatId.Value, projectile.Id, hitInfo.point, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitInfo.normal);
                     projectile.IsDead = true;
                 }

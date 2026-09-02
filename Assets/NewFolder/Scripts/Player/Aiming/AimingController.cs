@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 
-using Castle.Core;
-
 using Combat;
 
 using UnityEngine;
@@ -9,22 +7,19 @@ using UnityEngine;
 public class AimingController {
 
     private readonly ProximityService proximityService;
-    private readonly RaycastService raycastService;
-    private readonly CombatSystem combatSystem; // todo remove
-
+    private readonly CollisionService collisionService;
     private readonly PlatformController platformController;
     private readonly WeaponController weaponController;
 
     private readonly AimingView view;
     private readonly AimingModel model;
 
-    public AimingController(AimingView view, RaycastService raycastService, CombatSystem combatSystem, PlatformController platformController, WeaponController weaponController, ProximityService proximityService) {
+    public AimingController(AimingView view, PlatformController platformController, WeaponController weaponController, ProximityService proximityService, CollisionService collisionService) {
         this.view = view;
-        this.raycastService = raycastService;
-        this.combatSystem = combatSystem;
         this.platformController = platformController;
         this.weaponController = weaponController;
         this.proximityService = proximityService;
+        this.collisionService = collisionService;
         model = new AimingModel();
     }
 
@@ -65,7 +60,7 @@ public class AimingController {
 
         var mousePosition = Input.mousePosition;
         var mouseRay = view.GetCameraRay(mousePosition);
-        var mouseHitPoint = raycastService.GetGroundHitPosition(mouseRay);
+        var mouseHitPoint = collisionService.GetGroundHitPosition(mouseRay);
         model.AimInput = new TopDownAimInput {
             position = mouseHitPoint,
             direction = (mouseHitPoint - model.AimSourcePosition).normalized,

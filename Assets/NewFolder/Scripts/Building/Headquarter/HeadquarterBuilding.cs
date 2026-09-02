@@ -13,8 +13,7 @@ public class HeadquarterBuilding {
     public CombatId CombatId { get; set; }
     public int PathfindingObstacleId { get; set; }
     public int AvoidanceObstacleId { get; set; }
-    public int VehicleObstacleId { get; set; }
-    public int PhysicsObstacleId { get; set; }
+    public CollisionObstacleId CollisionObstacleId { get; set; }
     public ProximityId ProximityId { get; set; }
     public RaycastId RaycastId { get; set; }
     

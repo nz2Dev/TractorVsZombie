@@ -7,8 +7,7 @@ public class HeadquarterBuildingController {
     private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
     private readonly LocalAvoidanceService localAvoidanceService;
-    private readonly VehicleService vehicleService;
-    private readonly RagdollService physicsService;
+    private readonly CollisionService collisionService;
     private readonly RaycastService raycastService;
     private readonly ProximityService proximityService;
     private readonly EntityMapping entityMapping;
@@ -16,11 +15,10 @@ public class HeadquarterBuildingController {
     private GameObject visuals;
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, VehicleService vehicleService, RagdollService physicsService, LocalAvoidanceService localAvoidanceService, RaycastService raycastService, EntityMapping entityMapping, ProximityService proximityService) {
+    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, CollisionService collisionService, LocalAvoidanceService localAvoidanceService, RaycastService raycastService, EntityMapping entityMapping, ProximityService proximityService) {
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
-        this.vehicleService = vehicleService;
-        this.physicsService = physicsService;
+        this.collisionService = collisionService;
         this.localAvoidanceService = localAvoidanceService;
         this.raycastService = raycastService;
         this.entityMapping = entityMapping;
@@ -38,8 +36,7 @@ public class HeadquarterBuildingController {
         headquarter.CombatId = combatSystem.Add(prototype.combatPrototype);
         headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.position, (int) 4/* TODO: prototype.pathfindingObstacle*/); // need separate component for this
         headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.position, prototype.rotation, prototype.avoidanceObstaclePrefab);
-        headquarter.VehicleObstacleId = vehicleService.RegisterObstacle(prototype.position, prototype.vehicleObstaclePrefab);
-        headquarter.PhysicsObstacleId = physicsService.RegisterObstacle(prototype.position, prototype.physicsObstaclePrefab);
+        headquarter.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
         headquarter.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
         headquarter.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
 
@@ -59,8 +56,7 @@ public class HeadquarterBuildingController {
             
             pathfindingService.UnregisterObstacle(headquarter.PathfindingObstacleId);
             localAvoidanceService.RemoveObstacle(headquarter.AvoidanceObstacleId);
-            vehicleService.UnregisterObstacle(headquarter.VehicleObstacleId);
-            physicsService.UnregisterObstacle(headquarter.PhysicsObstacleId);
+            collisionService.UnregisterObstacle(headquarter.CollisionObstacleId);
             proximityService.RemovePoint(headquarter.ProximityId);
             raycastService.UnregisterMarker(headquarter.RaycastId);
 

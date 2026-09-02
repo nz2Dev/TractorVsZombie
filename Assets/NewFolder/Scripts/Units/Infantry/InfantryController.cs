@@ -11,6 +11,7 @@ public class InfantryController {
     private readonly LocalAvoidanceService avoidanceService;
     private readonly RagdollService ragdollService;
     private readonly RaycastService raycastService;
+    private readonly CollisionService collisionService;
     private readonly ProximityService proximityService;
     private readonly RewardController rewardController;
     private readonly InteractionRegistry interactionRegistry;
@@ -18,8 +19,8 @@ public class InfantryController {
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
-    
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService, ProximityService proximityService, InteractionRegistry interactionRegistry, EntityMapping entityMapping) {
+
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService, ProximityService proximityService, InteractionRegistry interactionRegistry, EntityMapping entityMapping, CollisionService collisionService) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
@@ -29,6 +30,7 @@ public class InfantryController {
         this.proximityService = proximityService;
         this.interactionRegistry = interactionRegistry;
         this.entityMapping = entityMapping;
+        this.collisionService = collisionService;
     }
 
     public int InfantryCount => registry.Count;
@@ -158,7 +160,7 @@ public class InfantryController {
                 model.Rotation = physicsPose.Rotation;
             } else if (becomeGrounded) {
                 model.Grounded = true; // todo: "Grounded", doesn't really reflect the state it represent. It's currently more like "Stable on the ground/ Stays on feet"
-                model.Position = !model.IsPhysicsOnlyMovement ? raycastService.GetClosestVerticalGroundPoint(model.Position) : model.Position;
+                model.Position = !model.IsPhysicsOnlyMovement ? collisionService.GetClosestVerticalGroundPoint(model.Position) : model.Position;
                 model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
                 if (!model.IsPhysicsOnlyMovement) {
                     ragdollService.SetPhysicsActive(model.BodyPhysicsId, false);

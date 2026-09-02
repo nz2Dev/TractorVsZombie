@@ -11,8 +11,7 @@ public class ProductionBuildingController {
 
     private readonly ProductionBuildingView view;
     private readonly CombatSystem combatSystem;
-    private readonly VehicleService vehicleService;
-    private readonly RagdollService physicsService;
+    private readonly CollisionService collisionService;
     private readonly LocalAvoidanceService localAvoidanceService;
     private readonly SpawnService spawnService;
     private readonly ProximityService proximityService;
@@ -27,8 +26,7 @@ public class ProductionBuildingController {
     public ProductionBuildingController(
         ProductionBuildingView view,
         CombatSystem combatSystem,
-        VehicleService vehicleService,
-        RagdollService physicsService,
+        CollisionService collisionService,
         LocalAvoidanceService localAvoidanceService,
         SpawnService spawnService,
         ProximityService proximityService,
@@ -36,8 +34,7 @@ public class ProductionBuildingController {
         EntityMapping entityMapping) {
         this.view = view;
         this.combatSystem = combatSystem;
-        this.vehicleService = vehicleService;
-        this.physicsService = physicsService;
+        this.collisionService = collisionService;
         this.localAvoidanceService = localAvoidanceService;
         this.spawnService = spawnService;
         this.proximityService = proximityService;
@@ -88,8 +85,7 @@ public class ProductionBuildingController {
 
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.dimensionsPrefab);
-        model.VehicleObstacleId = vehicleService.RegisterObstacle(model.Position, prototype.dimensionsPrefab);
-        model.PhysicsObstacleId = physicsService.RegisterObstacle(model.Position, prototype.physicsObstaclePrefab);
+        model.CollisionObstacleId = collisionService.RegisterObstacle(model.Position, prototype.collisionObstaclePrefab);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
 
@@ -121,8 +117,7 @@ public class ProductionBuildingController {
         
         combatSystem.Remove(model.CombatId);
         localAvoidanceService.RemoveObstacle(model.AvoidanceObstacleId);
-        vehicleService.UnregisterObstacle(model.VehicleObstacleId);
-        physicsService.UnregisterObstacle(model.PhysicsObstacleId);
+        collisionService.UnregisterObstacle(model.CollisionObstacleId);
         raycastService.UnregisterMarker(model.RaycastId);
         proximityService.RemovePoint(model.ProximityId);
 

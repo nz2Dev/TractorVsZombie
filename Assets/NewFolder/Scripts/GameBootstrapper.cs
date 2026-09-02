@@ -8,12 +8,11 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private CameraManager cameraManager;
-    [SerializeField] private RaycastConfig raycastConfig;
+    [Inline, SerializeField] private RaycastServiceConfig raycastConfig;
+    [Inline, SerializeField] private CollisionServiceConfig collisionServiceConfig;
     [SerializeField] private KnnRunner knnRunner;
     [SerializeField] private FootstepSoundSystem footstepSoundSystem;
-    [Space]
-    [SerializeField] private string vehicleObstacleLayer;
-
+    
     private CombatSystem combatSystem;
     private InteractionRegistry interactionRegistry;
     private PlayerController playerController;
@@ -50,12 +49,13 @@ public class GameBootstrapper : MonoBehaviour {
     }
 
     private void Build() {
-        var vehicleService = new VehicleService(LayerMask.NameToLayer(vehicleObstacleLayer));
+        var vehicleService = new VehicleService();
         var localAvoidanceService = new LocalAvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
         var physicsService = new RagdollService();
         var raycastService = new RaycastService(raycastConfig);
         var proximityService = new ProximityService(knnRunner);
+        var collisionService = new CollisionService(collisionServiceConfig);
 
         var weaponView = new WeaponView();
         var armorView = new ArmorView(soundManager);
@@ -85,7 +85,8 @@ public class GameBootstrapper : MonoBehaviour {
             localAvoidanceService,
             proximityService,
             interactionRegistry,
-            entityMapping
+            entityMapping,
+            collisionService
         );
 
         rocketController = new RocketController(
@@ -100,7 +101,8 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             projectileView,
             raycastService,
-            entityMapping
+            entityMapping,
+            collisionService
         );
 
         weaponController = new WeaponController(
@@ -179,8 +181,7 @@ public class GameBootstrapper : MonoBehaviour {
         buildingController = new ProductionBuildingController(
             productionBuildingView,
             combatSystem,
-            vehicleService,
-            physicsService,
+            collisionService,
             localAvoidanceService,
             spawnService,
             proximityService,
@@ -191,8 +192,7 @@ public class GameBootstrapper : MonoBehaviour {
         headquarterBuildingController = new HeadquarterBuildingController(
             combatSystem,
             pathfindingService,
-            vehicleService,
-            physicsService,
+            collisionService,
             localAvoidanceService,
             raycastService,
             entityMapping,
@@ -207,7 +207,7 @@ public class GameBootstrapper : MonoBehaviour {
             new DrivingController(truckController, vehicleService, platformController),
             new AssemblingController(new AssemblingView(), platformController, truckController),
             new SelectingController(new SelectingView(uiDocument), platformController),
-            new AimingController(new AimingView(cameraManager), raycastService, combatSystem, platformController, weaponController, proximityService),
+            new AimingController(new AimingView(cameraManager), platformController, weaponController, proximityService, collisionService),
             new CollectingController(rewardController),
             new CameraController(new CameraView(cameraManager))
         );

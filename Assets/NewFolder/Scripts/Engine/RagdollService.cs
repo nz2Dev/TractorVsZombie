@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RagdollService {
 
+    // extract to file
     public struct RagdollPose {
         public Vector3 Position;
         public Quaternion Rotation;
@@ -22,24 +23,8 @@ public class RagdollService {
 
     private int idCounter;
     private readonly Dictionary<RagdollId, RagdollBody> bodyRegistry = new();
-    private readonly Dictionary<int, RagdollObstacle> obstacleRegistry = new();
     
     public RagdollService() {
-    }
-
-    // this is implicitly also obstacle for vehicle?, raycasting? as it just adds collider into the scene, potentially interacting with those
-    public int RegisterObstacle(Vector3 position, RagdollObstacle obstaclePrefab) {
-        var id = ++idCounter;
-        var obstacleInstance = GameObject.Instantiate(obstaclePrefab, position, Quaternion.identity);
-        obstacleRegistry[id] = obstacleInstance;
-        return id;
-    }
-
-    public void UnregisterObstacle(int id) {
-        if (obstacleRegistry.TryGetValue(id, out var obstacle)) {
-            GameObject.Destroy(obstacle.gameObject);
-            obstacleRegistry.Remove(id);
-        }
     }
 
     // register physics body

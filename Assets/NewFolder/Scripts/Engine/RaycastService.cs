@@ -12,13 +12,13 @@ public class RaycastService {
     private readonly Dictionary<RaycastId, GameObject> markersRegistry = new();
     private readonly Dictionary<GameObject, RaycastId> markerToId = new();
 
-    private readonly RaycastConfig config;
     private readonly Collider[] overlapBuffer;
     private readonly List<RaycastId> idsResultBuffer;
+    private readonly RaycastServiceConfig config;
 
     private int idCounter;
 
-    public RaycastService(RaycastConfig config) {
+    public RaycastService(RaycastServiceConfig config) {
         this.config = config;
         overlapBuffer = new Collider[config.overlapBufferSize];
         idsResultBuffer = new (config.overlapBufferSize);
@@ -45,6 +45,7 @@ public class RaycastService {
         marker.transform.position = position;
     }
 
+    // todo: can also be configured to register static collision obstacles in one raycast?
     public bool Raycast(Ray ray, float maxDistance, ReservedLayerCode layerCode, out RaycastId metadata, out RaycastHit hitInfo) {
         if (Physics.Raycast(ray, out hitInfo, maxDistance, 1 << config.LayerCodeToIndex(layerCode))) {
             metadata = markerToId[hitInfo.collider.gameObject];
@@ -64,26 +65,6 @@ public class RaycastService {
 
         idsResult = idsResultBuffer;
         return overlapCount;
-    }
-
-    public Vector3 GetClosestVerticalGroundPoint(Vector3 position) {
-        if (Physics.Raycast(new Ray(position + Vector3.up, Vector3.down), out var hitInfo, maxDistance: 100, config.groundMask)) {
-            return hitInfo.point;
-        } else {
-            return Vector3.zero;
-        }
-    }
-
-    public Vector3 GetGroundHitPosition(Ray ray) {
-        if (Physics.Raycast(ray, out var hitInfo, maxDistance: 1000, config.groundMask)) {
-            return hitInfo.point;
-        } else {
-            return Vector3.zero;
-        }
-    }
-
-    public bool RaycastEnvironment(Ray ray, float maxDistance, out RaycastHit hitInfo) {
-        return Physics.Raycast(ray, out hitInfo,  maxDistance, config.environmentMask);
     }
 
 }

@@ -22,27 +22,8 @@ public class VehicleService {
     
     private int idCounter;
     private Dictionary<int, UnityVehicle> vehiclesRegistry = new ();
-    private Dictionary<int, GameObject> obstacleRegistry = new ();
-    private readonly int obstacleLayer;
 
-    public VehicleService(int obstacleLayer = 0) {
-        this.obstacleLayer = obstacleLayer;
-    }
-
-    public int RegisterObstacle(Vector3 position, PhysicsObstacle prefab) {
-        var id = ++idCounter;
-        var go = GameObject.Instantiate(prefab.gameObject, position, Quaternion.identity);
-        go.name = $"VehicleObstacle_{id}";
-        go.layer = obstacleLayer;
-        obstacleRegistry[id] = go;
-        return id;
-    }
-
-    public void UnregisterObstacle(int id) {
-        if (obstacleRegistry.TryGetValue(id, out var go)) {
-            GameObject.Destroy(go);
-            obstacleRegistry.Remove(id);
-        }
+    public VehicleService() {
     }
 
     public int CreateVehicle(Vector3 position, UnityVehicle vehiclePrefab, Quaternion rotation = default) {

@@ -3,10 +3,8 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RaycastConfig", menuName = "RaycastConfig", order = 0)]
-public class RaycastConfig : ScriptableObject {
+public class RaycastServiceConfig : ScriptableObject {
     public int overlapBufferSize = 128;
-    public LayerMask groundMask;
-    public LayerMask environmentMask;
     [Space]
     public int firstReservedRaycastLayer;
     public int secondReservedRaycastLayer;

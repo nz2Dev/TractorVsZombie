@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9198967994064705274}
   - component: {fileID: 3132752260078934113}
   m_Layer: 11
-  m_Name: Farm House Physics Obstacle
+  m_Name: Farm House Collision Obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

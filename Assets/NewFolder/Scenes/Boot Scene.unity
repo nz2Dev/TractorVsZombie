@@ -264,9 +264,9 @@ MonoBehaviour:
   soundManager: {fileID: 1012605277}
   cameraManager: {fileID: 870686408}
   raycastConfig: {fileID: 11400000, guid: 135626e0de4894c148e9ce7417146482, type: 2}
+  collisionServiceConfig: {fileID: 11400000, guid: cf437f861fcf74b13b914ab675d08ea7, type: 2}
   knnRunner: {fileID: 1921179983}
   footstepSoundSystem: {fileID: 319944807}
-  vehicleObstacleLayer: Walls
 --- !u!1 &319944805
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,8 +429,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 618815298}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3090656, y: 0.6351112, z: -0.30797577, w: 0.6373879}
-  m_LocalPosition: {x: -20.349375, y: 29.70676, z: 3.287078}
+  m_LocalRotation: {x: 0.4184007, y: 0.5700358, z: -0.4184008, w: 0.5700359}
+  m_LocalPosition: {x: -8.393368, y: 26.71238, z: -8.403113}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
