@@ -14,7 +14,7 @@
   <Project Path="PrototypeEditor.csproj" />
   <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="ORCARuntime.csproj" />
-  <Project Path="Local.csproj" />
+  <Project Path="Profiling.csproj" />
   <Project Path="Playground.Example.PlayTests.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="Playground.Example.csproj" />
