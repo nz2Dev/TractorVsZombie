@@ -2522,57 +2522,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!1 &130093668
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 130093669}
-  - component: {fileID: 130093670}
-  m_Layer: 0
-  m_Name: Commander Source
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &130093669
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130093668}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24.1, y: 0, z: -22.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &130093670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130093668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0aeb09bd07f3408bb5bcb9ade7e84a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::WaveSource
-  commanderConfig: {fileID: 11400000, guid: 7cf0122b3f05e43fd8c52be8c44b04ac, type: 2}
-  productionBuildingSource:
-  - {fileID: 349445394}
-  - {fileID: 1428135631}
-  - {fileID: 17602908}
-  productionSpaceSources:
-  - {fileID: 1654976757}
 --- !u!43 &134372286
 Mesh:
   m_ObjectHideFlags: 0
@@ -37604,7 +37553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: -1710135516
+  uniqueId: -383633048
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
@@ -40515,8 +40464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::EnemyPrototypeSource
   configSource: {fileID: 11400000, guid: 5209ee6577e6c4dabb8f13feea30f913, type: 2}
-  commanderSources:
-  - {fileID: 130093670}
+  infantryAIConfig: {fileID: 11400000, guid: cdc8ced221e2c4536879833069c57da2, type: 2}
   productionBuildingSources:
   - {fileID: 349445394}
   - {fileID: 17602908}
@@ -44849,7 +44797,6 @@ SceneRoots:
   - {fileID: 2114227374}
   - {fileID: 1117709942}
   - {fileID: 8109012791594186153}
-  - {fileID: 130093669}
   - {fileID: 1654976756}
   - {fileID: 2083997502}
   - {fileID: 6252191640500887066}

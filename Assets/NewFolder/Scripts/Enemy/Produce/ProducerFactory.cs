@@ -10,15 +10,17 @@ public class ProducerFactory {
         this.productionSpaceController = productionSpaceController;
     }
 
-    public IProducer Create(ProducerReference reference) {
+    public IProducer Create(ProducerPrototypeVariant reference) {
         return reference.type switch {
             ProducerType.ProductionSpace => new SpaceProducer(
                 productionSpaceController.RegisterUniqueId(reference.producerUniqueId), 
-                productionSpaceController
+                productionSpaceController,
+                reference.productionSpacePrototype
             ),
             ProducerType.ProductionBuilding => new StructureProducer(
                 productionBuildingController.RegisterUniqueId(reference.producerUniqueId), 
-                productionBuildingController
+                productionBuildingController,
+                reference.productionBuildingPrototype
             ),
             _ => throw new Exception($"{reference.type}"),
         };

@@ -29,7 +29,6 @@ public class GameBootstrapper : MonoBehaviour {
     private PlatformController platformController;
     private TruckController truckController;
     private SpawnService spawnService;
-    private CommanderController commanderController;
     private ArmorAIController armorAIController;
     private InfantryAIController squadAIController;
     private ProductionBuildingController buildingController;
@@ -211,22 +210,14 @@ public class GameBootstrapper : MonoBehaviour {
             new CameraController(new CameraView(cameraManager))
         );
 
-        var producerFactory = new ProducerFactory(
-            buildingController,
-            productionSpaceController
-        );
-
-        commanderController = new CommanderController(
+        enemyController = new EnemyController(
             squadAIController,
             armorAIController,
-            producerFactory,
+            new ProducerFactory(
+                buildingController,
+                productionSpaceController
+            ),
             pathfindingService
-        );
-
-        enemyController = new EnemyController(
-            commanderController,
-            buildingController,
-            productionSpaceController
         );
 
         levelController = new LevelController(
@@ -265,7 +256,6 @@ public class GameBootstrapper : MonoBehaviour {
         headquarterBuildingController.Update();
         productionSpaceController.Update();
 
-        commanderController.Update();
         enemyController.Update();
         playerController.Update();
 
