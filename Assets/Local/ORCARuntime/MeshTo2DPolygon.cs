@@ -1,19 +1,18 @@
 using System.Collections.Generic;
 
+using Unity.Mathematics;
+
 using UnityEngine;
 
 public static class MeshTo2DPolygon {
-    public static List<Vector3> ExtractXZHull(MeshFilter meshFilter) {
-        var mesh = meshFilter.sharedMesh;
-        var transform = meshFilter.transform;
-
-        var points = new List<Vector3>();
+    public static List<float3> ExtractXZHull(Mesh mesh) {
+        var points = new List<float3>();
 
         // 1. Collect all vertices projected to XZ (y = 0)
         var vertices = mesh.vertices;
         for (int i = 0; i < vertices.Length; i++) {
-            Vector3 world = transform.TransformPoint(vertices[i]);
-            points.Add(new Vector3(world.x, 0f, world.z));
+            float3 vertex = vertices[i];
+            points.Add(new float3(vertex.x, 0f, vertex.z));
         }
 
         // 2. Compute convex hull
@@ -21,14 +20,14 @@ public static class MeshTo2DPolygon {
     }
 
     // Monotone Chain Convex Hull
-    private static List<Vector3> ComputeHull(List<Vector3> points) {
+    private static List<float3> ComputeHull(List<float3> points) {
         if (points.Count <= 3)
-            return new List<Vector3>(points);
+            return new List<float3>(points);
 
         points.Sort((a, b) =>
             a.x == b.x ? a.z.CompareTo(b.z) : a.x.CompareTo(b.x));
 
-        var lower = new List<Vector3>();
+        var lower = new List<float3>();
         foreach (var p in points) {
             while (lower.Count >= 2 &&
                    Cross(lower[^2], lower[^1], p) <= 0) {
@@ -37,7 +36,7 @@ public static class MeshTo2DPolygon {
             lower.Add(p);
         }
 
-        var upper = new List<Vector3>();
+        var upper = new List<float3>();
         for (int i = points.Count - 1; i >= 0; i--) {
             var p = points[i];
             while (upper.Count >= 2 &&
@@ -56,7 +55,7 @@ public static class MeshTo2DPolygon {
     }
 
     // Cross product on XZ plane
-    private static float Cross(Vector3 a, Vector3 b, Vector3 c) {
+    private static float Cross(float3 a, float3 b, float3 c) {
         float abx = b.x - a.x;
         float abz = b.z - a.z;
         float acx = c.x - a.x;

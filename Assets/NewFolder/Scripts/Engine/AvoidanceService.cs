@@ -19,28 +19,29 @@ public struct AgentAvoidanceConfig {
     public float timeHorizonObst; // = 1.2f;
 }
 
-public class LocalAvoidanceService {
+public class AvoidanceService {
 
     private int nextId = 0;
     private readonly Dictionary<int, Agent> agentRegistry = new();
 
     private int obstacleIdCounter;
-    private readonly Dictionary<int, Obstacle> obstacleRegistry = new();
+    private readonly Dictionary<AvoidanceObstacleId, Obstacle> obstacleRegistry = new();
 
-    public LocalAvoidanceService() {
+    private readonly List<float3> verticesReadBuffer = new (32);
+
+    public AvoidanceService() {
     }
 
-    public int AddObstacle(Vector3 position, Quaternion rotation, PhysicsObstacle prefab) {
-        var nextObstacleId = ++obstacleIdCounter;
+    public AvoidanceObstacleId AddObstacle(Vector3 position, Quaternion rotation, ORCAObstacleVertices verticesPrefab) {
+        var nextObstacleId = new AvoidanceObstacleId(++obstacleIdCounter);
         
-        var computedVerticies = ObstaclesConverter.ComputeBoxVerticies(position, rotation, prefab.bakedSize * 0.5f);
-        var boxObstacle = ORCASystem.Instance.AddObstacle(isStatic: false, inverseOrder: true, computedVerticies);
-        obstacleRegistry[nextObstacleId] = boxObstacle;
-
+        verticesPrefab.ReadWorldVertices(verticesReadBuffer);
+        var obstacle = ORCASystem.Instance.AddObstacle(isStatic: false, verticesPrefab.InverseORCAOrder, verticesReadBuffer);
+        obstacleRegistry[nextObstacleId] = obstacle;
         return nextObstacleId;
     }
 
-    public void RemoveObstacle(int obstacleId) {
+    public void RemoveObstacle(AvoidanceObstacleId obstacleId) {
         obstacleRegistry.Remove(obstacleId, out var orcaObstacle);
         ORCASystem.Instance.RemoveObstacle(orcaObstacle);
     }

@@ -8,7 +8,7 @@ public class InfantryController {
 
     private readonly InfantryView view;
     private readonly CombatSystem combatSystem;
-    private readonly LocalAvoidanceService avoidanceService;
+    private readonly AvoidanceService avoidanceService;
     private readonly RagdollService ragdollService;
     private readonly RaycastService raycastService;
     private readonly CollisionService collisionService;
@@ -20,7 +20,7 @@ public class InfantryController {
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, LocalAvoidanceService avoidanceService, ProximityService proximityService, InteractionRegistry interactionRegistry, EntityMapping entityMapping, CollisionService collisionService) {
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, AvoidanceService avoidanceService, ProximityService proximityService, InteractionRegistry interactionRegistry, EntityMapping entityMapping, CollisionService collisionService) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;

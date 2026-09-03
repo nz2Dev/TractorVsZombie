@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+
+using Unity.Mathematics;
+
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -18,6 +22,15 @@ public class ORCARunner : MonoBehaviour {
 
         ORCASystem.Instance = new ORCASystem();
         system = ORCASystem.Instance;
+
+        var verticesBuffer = new List<float3>();
+        var obstacleVertices = FindObjectsByType<ORCAObstacleVertices>(FindObjectsSortMode.None);
+        foreach (var vertices in obstacleVertices) {
+            if (vertices.gameObject.isStatic) {
+                vertices.ReadWorldVertices(verticesBuffer);
+                system.AddObstacle(isStatic: true, vertices.InverseORCAOrder, verticesBuffer);
+            }
+        }
     }
 
     private void Update() {

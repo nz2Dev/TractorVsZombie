@@ -6,7 +6,7 @@ public class HeadquarterBuildingController {
 
     private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
-    private readonly LocalAvoidanceService localAvoidanceService;
+    private readonly AvoidanceService localAvoidanceService;
     private readonly CollisionService collisionService;
     private readonly RaycastService raycastService;
     private readonly ProximityService proximityService;
@@ -15,7 +15,7 @@ public class HeadquarterBuildingController {
     private GameObject visuals;
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, CollisionService collisionService, LocalAvoidanceService localAvoidanceService, RaycastService raycastService, EntityMapping entityMapping, ProximityService proximityService) {
+    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, CollisionService collisionService, AvoidanceService localAvoidanceService, RaycastService raycastService, EntityMapping entityMapping, ProximityService proximityService) {
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.collisionService = collisionService;

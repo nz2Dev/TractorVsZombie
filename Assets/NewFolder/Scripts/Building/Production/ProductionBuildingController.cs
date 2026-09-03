@@ -12,7 +12,7 @@ public class ProductionBuildingController {
     private readonly ProductionBuildingView view;
     private readonly CombatSystem combatSystem;
     private readonly CollisionService collisionService;
-    private readonly LocalAvoidanceService localAvoidanceService;
+    private readonly AvoidanceService localAvoidanceService;
     private readonly SpawnService spawnService;
     private readonly ProximityService proximityService;
     private readonly RaycastService raycastService;
@@ -27,7 +27,7 @@ public class ProductionBuildingController {
         ProductionBuildingView view,
         CombatSystem combatSystem,
         CollisionService collisionService,
-        LocalAvoidanceService localAvoidanceService,
+        AvoidanceService localAvoidanceService,
         SpawnService spawnService,
         ProximityService proximityService,
         RaycastService raycastService,
@@ -84,7 +84,7 @@ public class ProductionBuildingController {
         model.NextSpawnTime = Time.time;
 
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
-        model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.dimensionsPrefab);
+        model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.avoidanceObstaclePrefab);
         model.CollisionObstacleId = collisionService.RegisterObstacle(model.Position, prototype.collisionObstaclePrefab);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));

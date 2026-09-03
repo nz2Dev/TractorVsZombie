@@ -50,7 +50,7 @@ public class GameBootstrapper : MonoBehaviour {
 
     private void Build() {
         var vehicleService = new VehicleService();
-        var localAvoidanceService = new LocalAvoidanceService();
+        var localAvoidanceService = new AvoidanceService();
         var pathfindingService = new PathfindingService(FlowFieldSystem.Instance);
         var physicsService = new RagdollService();
         var raycastService = new RaycastService(raycastConfig);

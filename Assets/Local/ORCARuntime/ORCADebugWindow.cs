@@ -1,9 +1,13 @@
+using System.Collections.Generic;
+
+using Unity.Mathematics;
+
 using UnityEditor;
 using UnityEngine;
 
 public class ORCADebugWindow : EditorWindow {
     private SceneView boundSceneView;
-    private BaseObstacleSource[] obstacleSources;
+    private ORCAObstacleVertices[] obstacleSources;
     private int sceneRepaintCount;
 
     [MenuItem("Window/Local/ORCA Debuger")]
@@ -16,7 +20,7 @@ public class ORCADebugWindow : EditorWindow {
     private void OnBecameVisible() {
         SceneView.duringSceneGui += OnSceneGUI;
         boundSceneView = SceneView.lastActiveSceneView;
-        obstacleSources = GameObject.FindObjectsByType<BaseObstacleSource>(FindObjectsSortMode.None);
+        obstacleSources = GameObject.FindObjectsByType<ORCAObstacleVertices>(FindObjectsSortMode.None);
     }
 
     private void OnBecameInvisible() {
@@ -64,11 +68,13 @@ public class ORCADebugWindow : EditorWindow {
     }
 
     private void DrawEditTimeSources() {
+        var verticesBuffer = new List<float3>();
         foreach (var source in obstacleSources) {
             Handles.color = Color.white;
-            for (int v = 1; v < source.Vertices.Length; v++) {
-                var vertexA = source.Vertices[v - 1];
-                var vertexB = source.Vertices[v];
+            source.ReadWorldVertices(verticesBuffer);
+            for (int v = 1; v < verticesBuffer.Count; v++) {
+                var vertexA = verticesBuffer[v - 1];
+                var vertexB = verticesBuffer[v];
                 Handles.DrawLine(vertexA, vertexB);
             }    
         }

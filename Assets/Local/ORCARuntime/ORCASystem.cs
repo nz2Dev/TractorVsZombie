@@ -30,7 +30,7 @@ public class ORCASystem {
         Recreate();
     }
 
-    public Obstacle AddObstacle(bool isStatic, bool inverseOrder, float3[] vertices) {
+    public Obstacle AddObstacle(bool isStatic, bool inverseOrder, IList<float3> vertices) {
         var targetGroup = isStatic ? StaticObstacles : DynamicObstacles;
         if (isStatic) staticIsDirty = true;
         return targetGroup.Add(vertices, inverseOrder);

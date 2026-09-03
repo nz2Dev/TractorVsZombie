@@ -10,7 +10,7 @@ using UnityEngine.TestTools.Utils;
 public class LocalAvoidanceServiceTest {
     
     private GameObject testContainer;
-    private LocalAvoidanceService service;
+    private AvoidanceService service;
 
     private void InstantiateORCAEnvironement() {
     }
@@ -24,7 +24,7 @@ public class LocalAvoidanceServiceTest {
     }
 
     private void InstantiateService() {
-        service = new LocalAvoidanceService();
+        service = new AvoidanceService();
     }
 
     [SetUp]
