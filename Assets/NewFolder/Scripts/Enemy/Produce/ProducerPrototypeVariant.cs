@@ -1,12 +1,6 @@
 using System;
 
 [Serializable]
-public enum ProducerType {
-    ProductionSpace,
-    ProductionBuilding
-}
-
-[Serializable]
 public struct ProducerPrototypeVariant {
     
     public ProducerType type;
@@ -20,12 +14,4 @@ public struct ProducerPrototypeVariant {
         this.productionBuildingPrototype = productionBuildingPrototype;
         this.productionSpacePrototype = productionSpacePrototype;
     }
-}
-
-public interface IProducer {
-
-    bool IsValid();
-    void SpawnEntity();
-    bool TryGetSpawnResult(out SpawnResult spawnResult);
-
 }

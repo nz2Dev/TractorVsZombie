@@ -9,6 +9,5 @@ public class EnemyModel {
     public InfantryAIConfig InfantryAIConfig { get; }
 
     public bool ChasingCenter { get; set; }
-    public List<IProducer> Producers { get; } = new ();
     public int MainGoalFlowFieldId { get; set; }
 }

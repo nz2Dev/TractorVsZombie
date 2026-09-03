@@ -29,8 +29,6 @@ public class GameBootstrapper : MonoBehaviour {
     private PlatformController platformController;
     private TruckController truckController;
     private SpawnService spawnService;
-    private ArmorAIController armorAIController;
-    private InfantryAIController squadAIController;
     private ProductionBuildingController buildingController;
     private HeadquarterBuildingController headquarterBuildingController;
     private ProductionSpaceController productionSpaceController;
@@ -161,21 +159,6 @@ public class GameBootstrapper : MonoBehaviour {
             armorController
         );
 
-        armorAIController = new ArmorAIController(
-            combatSystem,
-            pathfindingService,
-            armorController,
-            weaponController,
-            proximityService
-        );
-
-        squadAIController = new InfantryAIController(
-            infantryController,
-            pathfindingService,
-            proximityService,
-            entityMapping
-        );
-
         buildingController = new ProductionBuildingController(
             productionBuildingView,
             combatSystem,
@@ -211,12 +194,9 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         enemyController = new EnemyController(
-            squadAIController,
-            armorAIController,
-            new ProducerFactory(
-                buildingController,
-                productionSpaceController
-            ),
+            new InfantryAIController(infantryController, pathfindingService, proximityService, entityMapping),
+            new ArmorAIController(combatSystem, pathfindingService, armorController, weaponController, proximityService),
+            new ProductionController(new ProducerFactory(buildingController, productionSpaceController)),
             pathfindingService
         );
 
@@ -248,9 +228,6 @@ public class GameBootstrapper : MonoBehaviour {
         armorController.Update();
         platformController.Update();
         truckController.Update();
-
-        armorAIController.Update();
-        squadAIController.Update();
 
         buildingController.Update();
         headquarterBuildingController.Update();
