@@ -13,8 +13,7 @@ public class CommanderModel {
     public Vector3 Position { get; }
     public CommanderConfig Config { get; }
     public List<IProducer> Producers { get; } = new ();
-
-    public List<int> SquadIds { get; } = new ();
-    public int LastSquadId { get; set; }
+    public bool ChasingCenter { get; set; }
+    public int MainGoalFlowFieldId { get; set; }
     
 }

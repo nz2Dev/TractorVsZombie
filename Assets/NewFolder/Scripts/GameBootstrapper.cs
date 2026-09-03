@@ -31,7 +31,7 @@ public class GameBootstrapper : MonoBehaviour {
     private SpawnService spawnService;
     private CommanderController commanderController;
     private ArmorAIController armorAIController;
-    private SquadAIController squadAIController;
+    private InfantryAIController squadAIController;
     private ProductionBuildingController buildingController;
     private HeadquarterBuildingController headquarterBuildingController;
     private ProductionSpaceController productionSpaceController;
@@ -170,10 +170,9 @@ public class GameBootstrapper : MonoBehaviour {
             proximityService
         );
 
-        squadAIController = new SquadAIController(
+        squadAIController = new InfantryAIController(
             infantryController,
             pathfindingService,
-            combatSystem,
             proximityService,
             entityMapping
         );
@@ -220,7 +219,8 @@ public class GameBootstrapper : MonoBehaviour {
         commanderController = new CommanderController(
             squadAIController,
             armorAIController,
-            producerFactory
+            producerFactory,
+            pathfindingService
         );
 
         enemyController = new EnemyController(

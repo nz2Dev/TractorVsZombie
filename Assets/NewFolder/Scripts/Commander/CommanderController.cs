@@ -6,16 +6,16 @@ using UnityEngine;
 
 public class CommanderController {
 
-    private readonly SquadAIController squadAIController;
+    private readonly PathfindingService pathfindingService;
+    private readonly InfantryAIController infantryAIController;
     private readonly ArmorAIController armorAIController;
     private readonly ProducerFactory producerFactory;
 
-    public CommanderController(
-        SquadAIController squadAIController, ArmorAIController armorAIController,
-        ProducerFactory producerFactory) {
-        this.squadAIController = squadAIController;
+    public CommanderController(InfantryAIController squadAIController, ArmorAIController armorAIController, ProducerFactory producerFactory, PathfindingService pathfindingService) {
+        this.infantryAIController = squadAIController;
         this.armorAIController = armorAIController;
         this.producerFactory = producerFactory;
+        this.pathfindingService = pathfindingService;
     }
 
     private int idCounter;
@@ -25,7 +25,9 @@ public class CommanderController {
         var nextId = idCounter++;
         var model = new CommanderModel(nextId, prototype.position, prototype.commanderConfig);
         
-        model.LastSquadId = squadAIController.CreateSquad(model.Config.squadAIConfig);
+        model.MainGoalFlowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
+        infantryAIController.SetMainGoalFiled(model.MainGoalFlowFieldId);
+
         var producers = prototype.producerHandles.Select(handle => producerFactory.Create(handle));
         model.Producers.AddRange(producers);
         
@@ -34,21 +36,9 @@ public class CommanderController {
     }
 
     public void Update() {
-        MakeNewSquads();
         ValidateProducers();
         AssignProducedEntities();
         ReadBehaviorChanges();
-    }
-
-    private void MakeNewSquads() {
-        foreach (var model in registry.Values) {
-            var lastSquadSnapshot = squadAIController.GetSquadSnapshot(model.LastSquadId);
-            if (lastSquadSnapshot.subordinateCount > 50) {
-                var nextSquadId = squadAIController.CreateSquad(model.Config.squadAIConfig);
-                model.SquadIds.Add(nextSquadId);
-                model.LastSquadId = nextSquadId;
-            }
-        }
     }
 
     private void ValidateProducers() {
@@ -71,7 +61,7 @@ public class CommanderController {
                 switch (spawnResult.spawnType) {
                     case SpawnType.Infantry:
                         foreach (var producedInfantry in spawnResult.spawnedIds)
-                            squadAIController.AddSubordinate(model.LastSquadId, producedInfantry);
+                            infantryAIController.AddInfantryBehavior(producedInfantry, model.Config.infantryAIConfig);
                         break;
                     case SpawnType.Armor:
                         foreach (var producedArmor in spawnResult.spawnedIds)
@@ -88,12 +78,9 @@ public class CommanderController {
     private void ReadBehaviorChanges() {
         if (Input.GetKeyDown(KeyCode.R)) {
             foreach (var commander in registry.Values) {
-                foreach (var squadId in commander.SquadIds) {
-                    var snapshot = squadAIController.GetSquadSnapshot(squadId);
-                    var switchedStrategyToChaseCenter = !snapshot.isChasingCenter;
-                    var targetPosition = switchedStrategyToChaseCenter ? Vector3.zero : commander.Position;
-                    squadAIController.SetStrategy(squadId, switchedStrategyToChaseCenter, targetPosition);
-                }
+                var switchedStrategyToChaseCenter = !commander.ChasingCenter;
+                var targetPosition = switchedStrategyToChaseCenter ? Vector3.zero : commander.Position;
+                pathfindingService.UpdateGoal(commander.MainGoalFlowFieldId, targetPosition);
             }
         }
     }

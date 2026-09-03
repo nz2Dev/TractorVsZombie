@@ -12,10 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdec78ba87c174955802f8e0591cd548, type: 3}
   m_Name: Commander Config
   m_EditorClassIdentifier: NewFolder::WaveConfig
-  spawnInterval: 10
-  initialQueue: 2
-  spawnType: 1
-  spawnConfig:
-    infantryConfig: {fileID: 0}
-    armorConfig: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}
-  squadAIConfig: {fileID: 11400000, guid: cdc8ced221e2c4536879833069c57da2, type: 2}
+  infantryAIConfig: {fileID: 11400000, guid: cdc8ced221e2c4536879833069c57da2, type: 2}

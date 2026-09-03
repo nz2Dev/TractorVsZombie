@@ -10,10 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81c6489080d4e43d680beed323c4bc4c, type: 3}
-  m_Name: SquadAI Config
+  m_Name: Infantry AI Config
   m_EditorClassIdentifier: NewFolder::SquadAIConfig
-  formationBlendFactor: 0
-  cohesionConfig:
-    speedAdjustFactor: 1
-    minSpeedClamped: 3
-    lookaheadDistance: 4
+  formationBlendFactor: 0.478

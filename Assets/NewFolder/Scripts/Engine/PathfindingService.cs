@@ -29,6 +29,11 @@ public class PathfindingService {
         system.SetFieldGoal(flowFieldHandle, positionWorldSpace);
     }
 
+    public Vector3 GetGoal(int fieldId) {
+        var flowFieldHandle = registry[fieldId];
+        return flowFieldHandle.Goal;
+    }
+
     public virtual Vector3 GetFlowVector(int fieldId, Vector3 positionWorldSpace) {
         var flowFieldHandle = registry[fieldId];
         return system.GetFlowVector(flowFieldHandle, positionWorldSpace);
