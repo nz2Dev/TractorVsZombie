@@ -37426,7 +37426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: 1773374379
+  uniqueId: -1710135516
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
@@ -41917,6 +41917,7 @@ MonoBehaviour:
   raycastMarkerPrefab: {fileID: 745838713}
   collisionObstaclePrefab: {fileID: 4796720935335220874}
   avoidanceObstaclePrefab: {fileID: 4796720935335220877}
+  pathfindingObstaclePrefab: {fileID: 4796720935335220876}
   visualsPrefab: {fileID: 26029160}
 --- !u!1 &2118106959
 GameObject:
@@ -43963,6 +43964,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9bbc8d168b164e34a99747dd8f505f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::PhysicsObstacleNew
+--- !u!65 &4796720935335220876 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 7285042239893104190, guid: 752a855cac13c4ba69906400830d12f8, type: 3}
+  m_PrefabInstance: {fileID: 4866990494399731254}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4796720935335220877 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3584891932185934411, guid: 752a855cac13c4ba69906400830d12f8, type: 3}

@@ -11,7 +11,7 @@ public class HeadquarterBuilding {
     public HeadquarterBuildingConfig Config { get; }
 
     public CombatId CombatId { get; set; }
-    public int PathfindingObstacleId { get; set; }
+    public PathfindingObstacleId PathfindingObstacleId { get; set; }
     public AvoidanceObstacleId AvoidanceObstacleId { get; set; }
     public CollisionObstacleId CollisionObstacleId { get; set; }
     public ProximityId ProximityId { get; set; }

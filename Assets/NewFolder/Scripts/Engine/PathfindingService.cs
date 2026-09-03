@@ -11,7 +11,7 @@ public class PathfindingService {
     private Dictionary<int, FlowFieldHandle> registry = new();
 
     private int obstacleIdCounter;
-    private Dictionary<int, FlowFieldObstacle> obstacleRegistry = new();
+    private Dictionary<PathfindingObstacleId, FlowFieldObstacle> obstacleRegistry = new();
 
     public PathfindingService(FlowFieldSystem system) {
         this.system = system;
@@ -34,14 +34,21 @@ public class PathfindingService {
         return system.GetFlowVector(flowFieldHandle, positionWorldSpace);
     }
 
-    public int RegisterObstacle(Vector3 position, int radius) {
-        var obstacle = system.AddObstacle(position, radius);
-        var nextObstacleId = ++obstacleIdCounter;
+    public PathfindingObstacleId RegisterObstacle(Collider collider) {
+        var nextObstacleId = new PathfindingObstacleId(++obstacleIdCounter);
+        var obstacle = system.AddObstacle(collider);
         obstacleRegistry[nextObstacleId] = obstacle;
         return nextObstacleId;
     }
 
-    public void UnregisterObstacle(int obstacleId) {
+    public PathfindingObstacleId RegisterObstacle(Vector3 position, int radius) {
+        var nextObstacleId = new PathfindingObstacleId(++obstacleIdCounter);
+        var obstacle = system.AddObstacle(position, radius);
+        obstacleRegistry[nextObstacleId] = obstacle;
+        return nextObstacleId;
+    }
+
+    public void UnregisterObstacle(PathfindingObstacleId obstacleId) {
         obstacleRegistry.Remove(obstacleId, out var obstacle);
         system.RemoveObstacle(obstacle);
     }

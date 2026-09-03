@@ -7,6 +7,7 @@ public class HeadquarterBuildingSource : MonoBehaviour {
     [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
     [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
+    [NonNull, Local, SerializeField] private Collider pathfindingObstaclePrefab;
     [NonNull, Local, SerializeField] private GameObject visualsPrefab;
 
     public HeadquarterBuildingPrototype GetPrototype() {
@@ -18,7 +19,8 @@ public class HeadquarterBuildingSource : MonoBehaviour {
             raycastMarkerPrefab: raycastMarkerPrefab,
             collisionObstaclePrefab: collisionObstaclePrefab,
             avoidanceObstaclePrefab: avoidanceObstaclePrefab,
-            visualsPrefab: visualsPrefab
+            visualsPrefab: visualsPrefab,
+            pathfindingObstaclePrefab: pathfindingObstaclePrefab
         );
     }
 }
