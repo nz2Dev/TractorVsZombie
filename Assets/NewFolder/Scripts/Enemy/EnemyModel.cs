@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 public class EnemyModel {
     
     public EnemyModel(InfantryAIConfig infantryAIConfig) {
@@ -8,6 +6,4 @@ public class EnemyModel {
 
     public InfantryAIConfig InfantryAIConfig { get; }
 
-    public bool ChasingCenter { get; set; }
-    public int MainGoalFlowFieldId { get; set; }
 }

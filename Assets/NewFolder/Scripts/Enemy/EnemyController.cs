@@ -5,24 +5,26 @@ public class EnemyController {
     private readonly ProductionController productionController;
     private readonly InfantryAIController infantryAIController;
     private readonly ArmorAIController armorAIController;
-    private readonly PathfindingService pathfindingService;
+    private readonly GoalsController goalsController;
 
     private EnemyModel model;
 
-    public EnemyController(InfantryAIController infantryAIController, ArmorAIController armorAIController, ProductionController productionController, PathfindingService pathfindingService) {
+    public EnemyController(InfantryAIController infantryAIController, ArmorAIController armorAIController, ProductionController productionController, GoalsController goalsController) {
         this.infantryAIController = infantryAIController;
         this.armorAIController = armorAIController;
         this.productionController = productionController;
-        this.pathfindingService = pathfindingService;
+        this.goalsController = goalsController;
     }
 
     public void Setup(EnemyPrototype enemyPrototype) {
         model = new EnemyModel(enemyPrototype.infantryAIConfig);
 
+        goalsController.Init(enemyPrototype.goalsPrototype);
         productionController.Init(enemyPrototype.productionPrototype);
-
-        model.MainGoalFlowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
-        infantryAIController.SetMainGoalFiled(model.MainGoalFlowFieldId);
+        
+        if (goalsController.AnyGoalsChanged) {
+            infantryAIController.SetMainGoalFiled(goalsController.MainGoalFlowField);
+        }
     }
 
     public void Update() {
@@ -39,18 +41,13 @@ public class EnemyController {
             }
         }
 
+        goalsController.Update();
+        if (goalsController.AnyGoalsChanged) {
+            infantryAIController.SetMainGoalFiled(goalsController.MainGoalFlowField);
+        }
+
         infantryAIController.Update();
         armorAIController.Update();
-        
-        ReadBehaviorChanges();
-    }
-
-    private void ReadBehaviorChanges() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            var switchedStrategyToChaseCenter = !model.ChasingCenter;
-            var targetPosition = switchedStrategyToChaseCenter ? Vector3.zero : new Vector3(10, 0, 0);
-            pathfindingService.UpdateGoal(model.MainGoalFlowFieldId, targetPosition);
-        }
     }
 
 }
