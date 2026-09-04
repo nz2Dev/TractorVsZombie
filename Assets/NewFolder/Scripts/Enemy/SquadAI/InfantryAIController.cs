@@ -62,10 +62,16 @@ public class InfantryAIController {
 
             if (HasFoeInRange(infantryState, out var foeComponents, out var foePosition)) {
                 Attack(infantryId, foeComponents, foePosition);
+            } else if (IsPathGoalInCostRange(targetFlowFieldId, behaviorModel.Config.targetAgroCostRange, infantryState.position)) {
+                FollowPath(infantryId, behaviorModel, infantryState, targetFlowFieldId);
             } else {
                 FollowPath(infantryId, behaviorModel, infantryState, mainGoalFlowFieldId);
             }
         }
+    }
+
+    private bool IsPathGoalInCostRange(int flowFieldId, float costRange, Vector3 position) {
+        return pathfindingService.GetFlowCost(flowFieldId, position) < costRange;
     }
 
     private bool HasFoeInRange(InfantryState infantryState, out EntityComponents foeComponents, out Vector3 foePositon) {

@@ -39,6 +39,11 @@ public class PathfindingService {
         return system.GetFlowVector(flowFieldHandle, positionWorldSpace);
     }
 
+    public virtual float GetFlowCost(int fieldId, Vector3 positionWorldSpace) {
+        var flowFieldHandle = registry[fieldId];
+        return system.GetIntegrationCost(flowFieldHandle, positionWorldSpace);
+    }
+
     public PathfindingObstacleId RegisterObstacle(Collider collider) {
         var nextObstacleId = new PathfindingObstacleId(++obstacleIdCounter);
         var obstacle = system.AddObstacle(collider);

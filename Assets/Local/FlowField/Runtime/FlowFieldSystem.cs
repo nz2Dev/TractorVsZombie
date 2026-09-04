@@ -91,6 +91,12 @@ public class FlowFieldSystem {
         }
     }
 
+    public float GetIntegrationCost(FlowFieldHandle handle, Vector3 position) {
+        var gridPosition = space.ConvertToGridClampled(position);
+        var gridCell = handle.flowField[gridPosition.x, gridPosition.y];
+        return gridCell.integratedCost;
+    }
+
     private void RecreateFields() {
         foreach (var flowFieldHandle in flowFieldsHandles) {
             flowFieldHandle.flowField = new FlowField(space.Size, blockedCells);
