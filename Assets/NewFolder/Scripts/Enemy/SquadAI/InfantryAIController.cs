@@ -15,6 +15,7 @@ public class InfantryAIController {
 
     private readonly List<InfantryAIModel> models = new();
     private int mainGoalFlowFieldId;
+    private int targetFlowFieldId;
 
     public InfantryAIController(InfantryController infantryController, PathfindingService pathfindingService,
         ProximityService proximityService, EntityMapping entityMapping, FormationController formationController) {
@@ -27,11 +28,15 @@ public class InfantryAIController {
 
     public void Update() {
         ValidateBehaviors();
-        ProcessCommands();
+        ProcessBehaviors();
     }
 
     public void SetMainGoalFiled(int flowFieldId) {
         mainGoalFlowFieldId = flowFieldId;
+    }
+
+    public void SetTargetField(int flowFieldId) {
+        targetFlowFieldId = flowFieldId;
     }
 
     public void AddInfantryBehavior(int infantryId, InfantryAIConfig config, FormationId formationId) {
@@ -48,27 +53,45 @@ public class InfantryAIController {
         }
     }
 
-    private void ProcessCommands() {
-        foreach (var state in models) {
-            var infantryId = state.InfantryId;
-            var infantry = infantryController.GetInfantryState(infantryId);
-            if (!infantry.isAlive || !infantry.isGrounded)
+    private void ProcessBehaviors() {
+        foreach (var behaviorModel in models) {
+            var infantryId = behaviorModel.InfantryId;
+            var infantryState = infantryController.GetInfantryState(infantryId);
+            if (!infantryState.isAlive || !infantryState.isGrounded)
                 continue;
 
-            var flowGoal = pathfindingService.GetGoal(mainGoalFlowFieldId);
-            var flowVector = pathfindingService.GetFlowVector(mainGoalFlowFieldId, infantry.position) * infantry.maxSpeed;
-            var formationForce = formationController.GetFormationForce(state.FormationId, infantry.position);
-            var movementVector = Vector3.ClampMagnitude(flowVector + formationForce * state.Config.formationBlendFactor, infantry.maxSpeed);
-            infantryController.MoveTo(infantryId, flowGoal, movementVector);
-
-            var foeProximityLayer = CombatSystem.GetProximityLayerForFaction(!infantry.combatIsAlie);
-            if (proximityService.QueryNearestPoint(infantry.position, foeProximityLayer, out var proximityId)) {
-                var point = proximityService.GetPoint(proximityId);
-                if (Vector3.Distance(point, infantry.position) < 5f && entityMapping.TryFindByProximityId(proximityId, out var components)) {
-                    infantryController.Attack(infantryId, components.combatId.Value, point);
-                }
+            if (HasFoeInRange(infantryState, out var foeComponents, out var foePosition)) {
+                Attack(infantryId, foeComponents, foePosition);
+            } else {
+                FollowPath(infantryId, behaviorModel, infantryState, mainGoalFlowFieldId);
             }
         }
+    }
+
+    private bool HasFoeInRange(InfantryState infantryState, out EntityComponents foeComponents, out Vector3 foePositon) {
+        var foeProximityLayer = CombatSystem.GetProximityLayerForFaction(!infantryState.combatIsAlie);
+        if (proximityService.QueryNearestPoint(infantryState.position, foeProximityLayer, out var proximityId)) {
+            var point = proximityService.GetPoint(proximityId);
+            if (Vector3.Distance(point, infantryState.position) < 5f && entityMapping.TryFindByProximityId(proximityId, out foeComponents)) {
+                foePositon = point;
+                return true;
+            }
+        }
+        foeComponents = default;
+        foePositon = default;
+        return false;
+    }
+
+    private void Attack(int infantryId, EntityComponents foeComponents, Vector3 foePosition) {
+        infantryController.Attack(infantryId, foeComponents.combatId.Value, foePosition);
+    }
+
+    private void FollowPath(int infantryId, InfantryAIModel behaviorModel, InfantryState infantryState, int flowFieldId) {
+        var flowGoal = pathfindingService.GetGoal(flowFieldId);
+        var flowVector = pathfindingService.GetFlowVector(flowFieldId, infantryState.position) * infantryState.maxSpeed;
+        var formationForce = formationController.GetFormationForce(behaviorModel.FormationId, infantryState.position);
+        var movementVector = Vector3.ClampMagnitude(flowVector + formationForce * behaviorModel.Config.formationBlendFactor, infantryState.maxSpeed);
+        infantryController.MoveTo(infantryId, flowGoal, movementVector);
     }
 
 }

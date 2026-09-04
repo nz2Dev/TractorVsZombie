@@ -85,8 +85,18 @@ public class PlatformController {
         return registry[platformId].VehiclePhysicsId;
     }
 
+    public void ReadAllPlatforms(IList<PlatformState> statesBuffer) {
+        statesBuffer.Clear();
+        foreach (var platform in registry.Values) {
+            statesBuffer.Add(ReadPlatformState(platform));
+        }
+    }
+
     public virtual PlatformState ReadPlatformState(int platformId) {
-        var platform = registry[platformId];
+        return ReadPlatformState(registry[platformId]);
+    }
+
+    public virtual PlatformState ReadPlatformState(PlatformModel platform) {
         var loadoutState = default (LoadoutState);
         if (platform.LoadoutId != 0) {
             loadoutState = loadoutController.ReadLoadoutState(platform.LoadoutId);

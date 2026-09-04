@@ -24,9 +24,8 @@ public class EnemyController {
         goalsController.Init(enemyPrototype.goalsPrototype);
         productionController.Init(enemyPrototype.productionPrototype);
         
-        if (goalsController.AnyGoalsChanged) {
-            infantryAIController.SetMainGoalFiled(goalsController.MainGoalFlowField);
-        }
+        infantryAIController.SetMainGoalFiled(goalsController.MainGoalFlowField);
+        infantryAIController.SetTargetField(goalsController.TargetFlowField);
     }
 
     public void Update() {
@@ -45,10 +44,6 @@ public class EnemyController {
         }
 
         goalsController.Update();
-        if (goalsController.AnyGoalsChanged) {
-            infantryAIController.SetMainGoalFiled(goalsController.MainGoalFlowField);
-        }
-
         infantryAIController.Update();
         armorAIController.Update();
     }
