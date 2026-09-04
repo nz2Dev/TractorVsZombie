@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Combat;
@@ -6,6 +7,7 @@ using UnityEngine;
 
 public class InfantryAIController {
 
+    private readonly FormationController formationController;
     private readonly InfantryController infantryController;
     private readonly PathfindingService pathfindingService;
     private readonly ProximityService proximityService;
@@ -15,11 +17,12 @@ public class InfantryAIController {
     private int mainGoalFlowFieldId;
 
     public InfantryAIController(InfantryController infantryController, PathfindingService pathfindingService,
-        ProximityService proximityService, EntityMapping entityMapping) {
+        ProximityService proximityService, EntityMapping entityMapping, FormationController formationController) {
         this.infantryController = infantryController;
         this.pathfindingService = pathfindingService;
         this.proximityService = proximityService;
         this.entityMapping = entityMapping;
+        this.formationController = formationController;
     }
 
     public void Update() {
@@ -31,8 +34,8 @@ public class InfantryAIController {
         mainGoalFlowFieldId = flowFieldId;
     }
 
-    public void AddInfantryBehavior(int infantryId, InfantryAIConfig config) {
-        var model = new InfantryAIModel(config, infantryId);
+    public void AddInfantryBehavior(int infantryId, InfantryAIConfig config, FormationId formationId) {
+        var model = new InfantryAIModel(config, infantryId, formationId);
         models.Add(model);
     }
 
@@ -53,9 +56,10 @@ public class InfantryAIController {
                 continue;
 
             var flowGoal = pathfindingService.GetGoal(mainGoalFlowFieldId);
-            var flowVector = pathfindingService.GetFlowVector(mainGoalFlowFieldId, infantry.position);
-            // var formationVector = state.Formation.GetFormationVector(subordinateIndex);
-            infantryController.MoveTo(infantryId, flowGoal, flowVector * infantry.maxSpeed);
+            var flowVector = pathfindingService.GetFlowVector(mainGoalFlowFieldId, infantry.position) * infantry.maxSpeed;
+            var formationForce = formationController.GetFormationForce(state.FormationId, infantry.position);
+            var movementVector = Vector3.ClampMagnitude(flowVector + formationForce * state.Config.formationBlendFactor, infantry.maxSpeed);
+            infantryController.MoveTo(infantryId, flowGoal, movementVector);
 
             var foeProximityLayer = CombatSystem.GetProximityLayerForFaction(!infantry.combatIsAlie);
             if (proximityService.QueryNearestPoint(infantry.position, foeProximityLayer, out var proximityId)) {

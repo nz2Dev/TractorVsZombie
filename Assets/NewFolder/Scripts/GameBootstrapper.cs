@@ -22,6 +22,7 @@ public class GameBootstrapper : MonoBehaviour {
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
+    private FormationController formationController;
     private RamEffectController ramEffect;
     private InfantryController infantryController;
     private LoadoutController loadoutController;
@@ -110,6 +111,10 @@ public class GameBootstrapper : MonoBehaviour {
 
         // rocket controller used to be initialized before infantry controller
 
+        formationController = new FormationController(
+            infantryController
+        );
+
         ramEffect = new RamEffectController(
             new RamEffectView(soundManager),
             combatSystem,
@@ -194,10 +199,11 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         enemyController = new EnemyController(
-            new InfantryAIController(infantryController, pathfindingService, proximityService, entityMapping),
+            new InfantryAIController(infantryController, pathfindingService, proximityService, entityMapping, formationController),
             new ArmorAIController(combatSystem, pathfindingService, armorController, weaponController, proximityService),
             new ProductionController(new ProducerFactory(buildingController, productionSpaceController)),
-            new GoalsController(pathfindingService)
+            new GoalsController(pathfindingService),
+            new SquadsService(formationController, infantryController)
         );
 
         levelController = new LevelController(
@@ -229,6 +235,7 @@ public class GameBootstrapper : MonoBehaviour {
         platformController.Update();
         truckController.Update();
 
+        formationController.Update();
         buildingController.Update();
         headquarterBuildingController.Update();
         productionSpaceController.Update();

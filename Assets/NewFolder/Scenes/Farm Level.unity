@@ -10841,17 +10841,6 @@ MonoBehaviour:
   enemyPrototypeSource: {fileID: 1953986830}
   headquarterBuildingSource: {fileID: 2114227375}
   startTransform: {fileID: 1117709942}
---- !u!114 &495707957 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2894644294875906351, guid: 00a793380f6cc4bb98036a4d3a025f7f, type: 3}
-  m_PrefabInstance: {fileID: 6252191640500887066}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!1 &505729554
 GameObject:
   m_ObjectHideFlags: 0
@@ -22404,9 +22393,7 @@ MonoBehaviour:
   platformPreviewPrefab: {fileID: 3371121685155722078, guid: 6321345344532445fbf7ea0e39b1b4d0, type: 3}
   initTruckSource: {fileID: 1117709943}
   initPlatformSource: {fileID: 269684097}
-  initLoadoutSources:
-  - {fileID: 495707957}
-  - {fileID: 1821081217}
+  initLoadoutSources: []
 --- !u!43 &937460628
 Mesh:
   m_ObjectHideFlags: 0
@@ -37599,7 +37586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionSpaceSource
   unique: 1
-  uniqueId: -164561845
+  uniqueId: -1579910550
   config: {fileID: 11400000, guid: c8a97c2f1b2264142909454e49942007, type: 2}
   spawnSpotSource: {fileID: 155815523}
   spawnVariantSource:
@@ -38611,17 +38598,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::CollectingSource
   config: {fileID: 11400000, guid: 76193696b3051417a884b42c2a210830, type: 2}
---- !u!114 &1821081217 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2248895191762497786, guid: 697de765863b048a7a82e00beb0eb422, type: 3}
-  m_PrefabInstance: {fileID: 5781962541767908237}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!43 &1836711814
 Mesh:
   m_ObjectHideFlags: 0
@@ -40538,8 +40514,8 @@ Transform:
   - {fileID: 897389540}
   - {fileID: 1428135632}
   - {fileID: 1654976756}
-  - {fileID: 2026042507}
   - {fileID: 774786560}
+  - {fileID: 2026042507}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1989649148
