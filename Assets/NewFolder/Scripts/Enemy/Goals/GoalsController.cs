@@ -28,7 +28,8 @@ public class GoalsController {
 
     public void Update() {
         ReadGoalToggle();
-        TrackPlatforms();
+        if (Time.frameCount % 2 == 0)
+            TrackPlatforms();
     }
 
     private void ReadGoalToggle() {
