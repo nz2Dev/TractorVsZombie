@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fa80baa73334d3a9ce36ad05cb3f47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityVehicle::VehicleSteeringWheel
-  maxSteerDegrees: 40
+  maxSteerDegrees: 60
   speedCeilingForSteering: 15
   minSteerAmount: 0.1
   speedKFactor: 2
