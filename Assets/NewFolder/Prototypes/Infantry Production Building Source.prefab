@@ -96,11 +96,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -1743783317
+  uniqueId: 386288163
   spawnerSource:
-    config: {fileID: 11400000, guid: b1129bb370ab24c34a3ea74978921ceb, type: 2}
-    spawnSpotSource: {fileID: 5601172961921829115}
-    spawnVariantSource:
+    initConfig:
+      times: 10
+      interval: 5
+    initSpotSource: {fileID: 5601172961921829115}
+    initVariantSource:
       type: 0
       infantrySource: {fileID: 0}
       armorSource: {fileID: 0}
@@ -155,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnPointSource
   shape:
-    width: 2
+    width: 4
     height: 2
     spaceScale: 1
     randomOffset: 0

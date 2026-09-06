@@ -3,13 +3,13 @@ using System;
 
 public struct SpawnerPrototype {
     
-    public SpawnerConfig config;
-    public SpawnSpot spawnSpot;
-    public SpawnVariant spawnVariant;
+    public SpawnConfig initConfig;
+    public SpawnSpot initSpawnSpot;
+    public SpawnVariant initSpawnVariant;
 
-    public SpawnerPrototype(SpawnerConfig config, SpawnSpot spawnSpot, SpawnVariant spawnVariant) {
-        this.config = config;
-        this.spawnSpot = spawnSpot;
-        this.spawnVariant = spawnVariant;
+    public SpawnerPrototype(SpawnConfig config, SpawnSpot spawnSpot, SpawnVariant spawnVariant) {
+        this.initConfig = config;
+        this.initSpawnSpot = spawnSpot;
+        this.initSpawnVariant = spawnVariant;
     }
 }

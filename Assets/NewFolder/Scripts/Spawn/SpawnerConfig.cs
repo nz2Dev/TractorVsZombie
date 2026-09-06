@@ -1,7 +1,7 @@
-using UnityEngine;
+using System;
 
-[CreateAssetMenu(fileName = "SpawnerConfig", menuName = "SpawnerConfig", order = 0)]
-public class SpawnerConfig : ScriptableObject {
-    public int spawnInterval;
-    public int initialQueue;
+[Serializable]
+public class SpawnConfig {
+    public int times;
+    public int interval;
 }

@@ -20,39 +20,45 @@ public class SpawnerController {
 
     public SpawnerId Create(SpawnerPrototype prototype) {
         var nextId = new SpawnerId(++idCounter);
-        var model = new SpawnerModel(nextId, prototype.config, prototype.spawnSpot, prototype.spawnVariant);
-        model.Queue = model.Config.initialQueue;
-        model.NextSpawnTime = Time.time;
+        var model = new SpawnerModel(nextId);
+        ResetSpawner(model, prototype.initConfig, prototype.initSpawnSpot, prototype.initSpawnVariant);
         registry[nextId] = model;
         return nextId;
     }
 
-    public void Destroy(SpawnerId spawnerId) {
-        registry.Remove(spawnerId, out var model);
+    public void Configure(SpawnerId spawnerId, SpawnConfig config, SpawnSpot spot, SpawnVariant variant) {
+        ResetSpawner(registry[spawnerId], config, spot, variant);
     }
 
-    public SpawnResult GetLastSpawnResult(SpawnerId spawnerId) {
-        return registry[spawnerId].LastSpawnEvent;
+    private void ResetSpawner(SpawnerModel model, SpawnConfig config, SpawnSpot spot, SpawnVariant variant) {
+        model.SpawnCount = 0;
+        model.NextSpawnTime = Time.time;
+        model.SpawnSpot = spot;
+        model.SpawnVariant = variant;
+        model.SpawnConfig = config;
+    }
+
+    public void Destroy(SpawnerId spawnerId) {
+        registry.Remove(spawnerId);
     }
 
     public void Update() {
         foreach (var model in registry.Values) {
             model.LastSpawnEvent = null;
-            if (model.Queue <= 0 || Time.time < model.NextSpawnTime)
+            if (model.SpawnCount >= model.SpawnConfig.times || Time.time < model.NextSpawnTime)
                 continue;
 
-            model.NextSpawnTime = Time.time + model.Config.spawnInterval;
-            var availableSpawn = model.Queue;
-            Spawn(model, model.SpawnSpot, model.SpawnVariant, availableSpawn);
-            model.Queue -= model.LastSpawnEvent.spawnedIds.Length;
+            Spawn(model, model.SpawnSpot, model.SpawnVariant);
+            model.NextSpawnTime = Time.time + model.SpawnConfig.interval;
+            model.SpawnCount++;;
         }
     }
 
-    private void Spawn(SpawnerModel model, SpawnSpot spot, SpawnVariant variant, int limit) {
+    private void Spawn(SpawnerModel model, SpawnSpot spot, SpawnVariant variant) {
         model.IdsBuffer.Clear();
         spot.shape.CalculateSpawnPoints(spawnPointsBuffer);
         
-        foreach (var spawnPoint in spawnPointsBuffer.Take(limit)) {
+        foreach (var spawnPoint in spawnPointsBuffer) { // todo limit logic was removed, consider restoring
             var worldSpaceSpawnPoint = spot.position + spot.rotation * spawnPoint;
             
             if (variant.type == SpawnVariantType.Infantry) {
@@ -72,6 +78,10 @@ public class SpawnerController {
             spawnType = variant.type,
             spawnedIds = model.IdsBuffer.ToArray(),
         };
+    }
+
+    public SpawnResult GetLastSpawnResult(SpawnerId spawnerId) {
+        return registry[spawnerId].LastSpawnEvent;
     }
 
 }
