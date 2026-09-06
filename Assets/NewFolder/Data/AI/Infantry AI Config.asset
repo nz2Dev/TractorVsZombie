@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c6489080d4e43d680beed323c4bc4c, type: 3}
   m_Name: Infantry AI Config
   m_EditorClassIdentifier: NewFolder::SquadAIConfig
-  formationBlendFactor: 1
+  formationBlendFactor: 0
+  targetAgroCostRange: 10
