@@ -96,17 +96,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -549250649
+  uniqueId: -1743783317
+  spawnerSource:
+    config: {fileID: 11400000, guid: b1129bb370ab24c34a3ea74978921ceb, type: 2}
+    spawnSpotSource: {fileID: 5601172961921829115}
+    spawnVariantSource:
+      type: 0
+      infantrySource: {fileID: 0}
+      armorSource: {fileID: 0}
+  visualsPrefab: {fileID: 2588060940734931284}
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   combatSource: {fileID: 1159228095933072964}
   avoidanceObstaclePrefab: {fileID: 377023672943240842}
   collisionObstaclePrefab: {fileID: 2045905622344632889}
-  visualsPrefab: {fileID: 2588060940734931284}
-  spawnSpotSource: {fileID: 5601172961921829115}
-  spawnVariantSource:
-    type: 0
-    infantrySource: {fileID: 0}
-    armorSource: {fileID: 0}
   raycastMarkerPrefab: {fileID: 314227725128860358}
 --- !u!1 &3858228865796293992
 GameObject:

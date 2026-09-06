@@ -1,5 +1,5 @@
 [System.Serializable]
-public enum SpawnType {
+public enum SpawnVariantType {
     Infantry,
     Armor
 }

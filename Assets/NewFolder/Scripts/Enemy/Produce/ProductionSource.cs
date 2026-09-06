@@ -4,7 +4,7 @@ using System;
 public struct ProductionSource {
     
     public ProductionBuildingSource[] productionBuildingSources;
-    public ProductionSpaceSource[] productionSpaceSources;
+    public SpawnerSource[] spawnerSources;
 
     public readonly ProductionPrototype Build() {
         return new ProductionPrototype (
@@ -13,7 +13,7 @@ public struct ProductionSource {
     }
 
     private readonly ProducerPrototypeVariant[] BuildProducerVariants() {
-        var referencesLength = productionBuildingSources.Length + productionSpaceSources.Length;
+        var referencesLength = productionBuildingSources.Length + spawnerSources.Length;
         var variant = new ProducerPrototypeVariant[referencesLength];
 
         var index = 0;
@@ -22,15 +22,15 @@ public struct ProductionSource {
                 producerUniqueId: buildingSource.GetUniqueId(),
                 type: ProducerType.ProductionBuilding,
                 productionBuildingPrototype: buildingSource.GetPrototype(),
-                productionSpacePrototype: default
+                spawnerPrototype: default
             );
         }
 
-        foreach (var spaceSource in productionSpaceSources) {
+        foreach (var spawnerSource in spawnerSources) {
             variant[index++] = new ProducerPrototypeVariant (
-                producerUniqueId: spaceSource.GetUniqueId(),
-                type: ProducerType.ProductionSpace,
-                productionSpacePrototype: spaceSource.GetPrototype(),
+                producerUniqueId: -1,
+                type: ProducerType.Spawner,
+                spawnerPrototype: spawnerSource.Get(),
                 productionBuildingPrototype: default
             );
         }

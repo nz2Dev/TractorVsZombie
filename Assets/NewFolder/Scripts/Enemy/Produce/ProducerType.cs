@@ -2,6 +2,6 @@ using System;
 
 [Serializable]
 public enum ProducerType {
-    ProductionSpace,
+    Spawner,
     ProductionBuilding
 }

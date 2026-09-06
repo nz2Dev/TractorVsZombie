@@ -6,12 +6,12 @@ public struct ProducerPrototypeVariant {
     public ProducerType type;
     public int producerUniqueId;
     public ProductionBuildingPrototype productionBuildingPrototype;
-    public ProductionSpacePrototype productionSpacePrototype;
+    public SpawnerPrototype spawnerPrototype;
 
-    public ProducerPrototypeVariant(int producerUniqueId, ProducerType type, ProductionBuildingPrototype productionBuildingPrototype, ProductionSpacePrototype productionSpacePrototype) {
+    public ProducerPrototypeVariant(int producerUniqueId, ProducerType type, ProductionBuildingPrototype productionBuildingPrototype, SpawnerPrototype spawnerPrototype) {
         this.producerUniqueId = producerUniqueId;
         this.type = type;
         this.productionBuildingPrototype = productionBuildingPrototype;
-        this.productionSpacePrototype = productionSpacePrototype;
+        this.spawnerPrototype = spawnerPrototype;
     }
 }

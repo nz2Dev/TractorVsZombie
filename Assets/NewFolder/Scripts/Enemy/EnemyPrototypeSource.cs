@@ -10,7 +10,6 @@ public class EnemyPrototypeSource : MonoBehaviour {
     [SerializeField] private GoalsSource goalsSource;
 
     public void FindInScene() {
-        var sources = GameObject.FindObjectsByType<ProductionSpaceSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         var productionBuildingSources = GameObject.FindObjectsByType<ProductionBuildingSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
     }
 

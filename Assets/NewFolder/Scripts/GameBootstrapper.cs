@@ -29,10 +29,9 @@ public class GameBootstrapper : MonoBehaviour {
     private ArmorController armorController;
     private PlatformController platformController;
     private TruckController truckController;
-    private SpawnService spawnService;
+    private SpawnerController spawnerController;
     private ProductionBuildingController buildingController;
     private HeadquarterBuildingController headquarterBuildingController;
-    private ProductionSpaceController productionSpaceController;
 
     private void Awake() {
         if (!NonNullValidator.ValidateScene()) {
@@ -159,7 +158,7 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleService
         );
 
-        spawnService = new SpawnService(
+        spawnerController = new SpawnerController(
             infantryController,
             armorController
         );
@@ -169,7 +168,7 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             collisionService,
             localAvoidanceService,
-            spawnService,
+            spawnerController,
             proximityService,
             raycastService,
             entityMapping
@@ -185,10 +184,6 @@ public class GameBootstrapper : MonoBehaviour {
             proximityService
         );
 
-        productionSpaceController = new ProductionSpaceController(
-            spawnService
-        );
-
         playerController = new PlayerController(
             new DrivingController(truckController, vehicleService, platformController),
             new AssemblingController(new AssemblingView(), platformController, truckController),
@@ -201,7 +196,7 @@ public class GameBootstrapper : MonoBehaviour {
         enemyController = new EnemyController(
             new InfantryAIController(infantryController, pathfindingService, proximityService, entityMapping, formationController),
             new ArmorAIController(combatSystem, pathfindingService, armorController, weaponController, proximityService),
-            new ProductionController(new ProducerFactory(buildingController, productionSpaceController)),
+            new ProductionController(new ProducerFactory(buildingController, spawnerController)),
             new GoalsController(pathfindingService, platformController),
             new SquadsService(formationController, infantryController)
         );
@@ -229,6 +224,7 @@ public class GameBootstrapper : MonoBehaviour {
         rocketController.Update();
         weaponController.Update();
 
+        spawnerController.Update();
         loadoutController.Update();
         infantryController.Update();
         armorController.Update();
@@ -238,7 +234,6 @@ public class GameBootstrapper : MonoBehaviour {
         formationController.Update();
         buildingController.Update();
         headquarterBuildingController.Update();
-        productionSpaceController.Update();
 
         enemyController.Update();
         playerController.Update();

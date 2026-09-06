@@ -32,7 +32,7 @@ public class AvoidanceService {
     public AvoidanceService() {
     }
 
-    public AvoidanceObstacleId AddObstacle(Vector3 position, Quaternion rotation, ORCAObstacleVertices verticesPrefab) {
+    public AvoidanceObstacleId AddObstacle(ORCAObstacleVertices verticesPrefab) {
         var nextObstacleId = new AvoidanceObstacleId(++obstacleIdCounter);
         
         verticesPrefab.ReadWorldVertices(verticesReadBuffer);

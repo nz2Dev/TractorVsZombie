@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public struct SpawnVariantSource {
     
-    public SpawnType type;
+    public SpawnVariantType type;
     public InfantrySource infantrySource;
     public ArmorSource armorSource;
 

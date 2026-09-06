@@ -13,7 +13,7 @@ public class ProductionBuildingController {
     private readonly CombatSystem combatSystem;
     private readonly CollisionService collisionService;
     private readonly AvoidanceService localAvoidanceService;
-    private readonly SpawnService spawnService;
+    private readonly SpawnerController spawnerController;
     private readonly ProximityService proximityService;
     private readonly RaycastService raycastService;
     private readonly EntityMapping entityMapping;
@@ -28,7 +28,7 @@ public class ProductionBuildingController {
         CombatSystem combatSystem,
         CollisionService collisionService,
         AvoidanceService localAvoidanceService,
-        SpawnService spawnService,
+        SpawnerController spawnService,
         ProximityService proximityService,
         RaycastService raycastService,
         EntityMapping entityMapping) {
@@ -36,17 +36,15 @@ public class ProductionBuildingController {
         this.combatSystem = combatSystem;
         this.collisionService = collisionService;
         this.localAvoidanceService = localAvoidanceService;
-        this.spawnService = spawnService;
+        this.spawnerController = spawnService;
         this.proximityService = proximityService;
         this.raycastService = raycastService;
         this.entityMapping = entityMapping;
     }
 
     public void Update() {
-        ClearEvents();
         ReadCombatOutput();
         ValidateBuildings();
-        ProduceSpawns();
     }
 
     public bool IsExist(int buildingId) {
@@ -76,18 +74,15 @@ public class ProductionBuildingController {
             nextId = uniqueIdRegistry[prototype.uniqueId];
         }
 
-        var model = new ProductionBuildingModel(nextId, prototype.config, prototype.spawnSpot, prototype.spawnVariant);
+        var model = new ProductionBuildingModel(nextId, prototype.config);
         registry[nextId] = model;
-        model.Position = prototype.position;
-        model.Rotation = prototype.rotation;
-        model.QueueAmount = prototype.config.initialQueueAmount;
-        model.NextSpawnTime = Time.time;
-
+        
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
-        model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(model.Position, model.Rotation, prototype.avoidanceObstaclePrefab);
-        model.CollisionObstacleId = collisionService.RegisterObstacle(model.Position, prototype.collisionObstaclePrefab);
+        model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.avoidanceObstaclePrefab);
+        model.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
+        model.SpawnerId = spawnerController.Create(prototype.spawnerPrototype);
 
         entityMapping.CreateMappings(new EntityComponents {
             proximityId = model.ProximityId,
@@ -95,21 +90,15 @@ public class ProductionBuildingController {
             combatId = model.CombatId
         });
 
-        view.AddVisuals(model.Id, model.Position, model.Rotation, prototype.visualsPrefab);
+        view.AddVisuals(model.Id, prototype.position, prototype.rotation, prototype.visualsPrefab);
         return nextId;
     }
 
     public ProductionBuildingState ReadState(int buildingId) {
         var model = registry[buildingId];
         return new ProductionBuildingState {
-            lastResult = model.SpawnResult
+            lastResult = spawnerController.GetLastSpawnResult(model.SpawnerId)
         };
-    }
-
-    private void ClearEvents() {
-        foreach (var building in registry.Values) {
-            building.SpawnResult = null;
-        }
     }
 
     private void DestroyBuilding(int id) {
@@ -120,6 +109,7 @@ public class ProductionBuildingController {
         collisionService.UnregisterObstacle(model.CollisionObstacleId);
         raycastService.UnregisterMarker(model.RaycastId);
         proximityService.RemovePoint(model.ProximityId);
+        spawnerController.Destroy(model.SpawnerId);
 
         entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
 
@@ -144,19 +134,6 @@ public class ProductionBuildingController {
 
         foreach (var id in removalBuffer)
             DestroyBuilding(id);
-    }
-
-    private void ProduceSpawns() {
-        foreach (var model in registry.Values) {
-            if (model.QueueAmount <= 0 || Time.time < model.NextSpawnTime)
-                continue;
-
-            var availableSpawn = model.QueueAmount;
-            model.NextSpawnTime = Time.time + model.Config.spawnInterval;
-            var spawnResult = spawnService.Spawn(model.SpawnSpot, model.SpawnVariant, availableSpawn);
-            model.QueueAmount -= spawnResult.spawnedIds.Length;
-            model.SpawnResult = spawnResult;
-        }
     }
 
 }

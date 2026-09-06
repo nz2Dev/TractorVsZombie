@@ -48,11 +48,11 @@ public class ProductionController {
                 continue;
 
             switch (spawnResult.spawnType) {
-                case SpawnType.Infantry:
+                case SpawnVariantType.Infantry:
                     foreach (var producedInfantry in spawnResult.spawnedIds)
                         model.ProducedInfantries.Add(producedInfantry);
                     break;
-                case SpawnType.Armor:
+                case SpawnVariantType.Armor:
                     foreach (var producedArmor in spawnResult.spawnedIds)
                         model.ProducedArmors.Add(producedArmor);
                     break;
