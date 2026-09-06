@@ -71,11 +71,15 @@ public class RamEffectController {
             }
 
             entityMapping.FindByRaycastIds(model.ReceiveContactBuffer, out var receiveContactComponents);
+            var vehicleSpeed = vehicleService.GetVehicleState(model.HolderVehicleId).velocity.magnitude;
             foreach (var nextComponents in receiveContactComponents) {
                 if (nextComponents.interactionId.HasValue) {
+                    var explosionData = model.Config.explosionData;
+                    explosionData.force *= Mathf.Clamp01(vehicleSpeed / model.Config.maxImpactSpeed);
+
                     interactionRegistry.AddExplosionEffect(nextComponents.interactionId.Value, new Explosion {
                         epicentr = model.Position, 
-                        config = model.Config.explosionData
+                        config = explosionData
                     });
                 }
                 

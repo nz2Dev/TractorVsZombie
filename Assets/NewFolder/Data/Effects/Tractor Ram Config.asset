@@ -22,7 +22,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5f642b9534cee4c7ca8bfaa6351f3e24, type: 3}
   - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
   explosionData:
-    radius: 6
+    radius: 3
     force: 1000
-    upwardModifier: 1
+    upwardModifier: 0.7
     forceMode: 1
+  maxImpactSpeed: 10

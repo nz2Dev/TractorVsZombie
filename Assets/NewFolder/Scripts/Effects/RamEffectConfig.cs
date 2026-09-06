@@ -9,4 +9,5 @@ public class RamEffectConfig : ScriptableObject {
     public ForceMode dragForceMode = ForceMode.Impulse;
     public AudioClip[] impactSFX;
     public ExplosionConfig explosionData;
+    public float maxImpactSpeed = 2;
 }
