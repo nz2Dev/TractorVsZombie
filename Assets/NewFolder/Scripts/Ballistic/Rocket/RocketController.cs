@@ -60,9 +60,14 @@ public class RocketController {
                     
                     foreach (var nextComponents in overlappedComponents) {   
                         if (nextComponents.interactionId.HasValue) {
+                            var explosionConfig = rocket.Config.explosionData;
+
+                            var forceVariation = explosionConfig.force * rocket.Config.forceRangeVariation;
+                            explosionConfig.force += Random.Range(-1, 1) * forceVariation;
+
                             interactionRegistry.AddExplosionEffect(nextComponents.interactionId.Value, new Explosion {
                                 epicentr = rocket.Trajectory.landPoint,
-                                config = rocket.Config.explosionData
+                                config = explosionConfig
                             });
                         } 
                         

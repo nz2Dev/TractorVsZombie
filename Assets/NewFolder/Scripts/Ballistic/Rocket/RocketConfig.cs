@@ -8,6 +8,7 @@ public class RocketConfig : ScriptableObject {
     public float flyDuration;
     public int damage;
     public float explosionRadius; // NOTE: is duplicating explosion data
+    [Range(0, 1)] public float forceRangeVariation = 0.2f;
     public ExplosionConfig explosionData = new() {
         force = 10,
         radius = 5,
