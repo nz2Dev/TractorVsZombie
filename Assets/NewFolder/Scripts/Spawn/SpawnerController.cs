@@ -21,21 +21,19 @@ public class SpawnerController {
     public SpawnerId Create(SpawnerPrototype prototype) {
         var nextId = new SpawnerId(++idCounter);
         var model = new SpawnerModel(nextId);
-        ResetSpawner(model, prototype.initConfig, prototype.initSpawnSpot, prototype.initSpawnVariant);
+        ResetSpawner(model, prototype.initSetup);
         registry[nextId] = model;
         return nextId;
     }
 
-    public void Configure(SpawnerId spawnerId, SpawnConfig config, SpawnSpot spot, SpawnVariant variant) {
-        ResetSpawner(registry[spawnerId], config, spot, variant);
+    public void Configure(SpawnerId spawnerId, SpawnSetup setup) {
+        ResetSpawner(registry[spawnerId], setup);
     }
 
-    private void ResetSpawner(SpawnerModel model, SpawnConfig config, SpawnSpot spot, SpawnVariant variant) {
+    private void ResetSpawner(SpawnerModel model, SpawnSetup setup) {
         model.SpawnCount = 0;
         model.NextSpawnTime = Time.time;
-        model.SpawnSpot = spot;
-        model.SpawnVariant = variant;
-        model.SpawnConfig = config;
+        model.Setup = setup;
     }
 
     public void Destroy(SpawnerId spawnerId) {
@@ -45,11 +43,11 @@ public class SpawnerController {
     public void Update() {
         foreach (var model in registry.Values) {
             model.LastSpawnEvent = null;
-            if (model.SpawnCount >= model.SpawnConfig.times || Time.time < model.NextSpawnTime)
+            if (model.SpawnCount >= model.Setup.config.times || Time.time < model.NextSpawnTime)
                 continue;
 
-            Spawn(model, model.SpawnSpot, model.SpawnVariant);
-            model.NextSpawnTime = Time.time + model.SpawnConfig.interval;
+            Spawn(model, model.Setup.spot, model.Setup.variant);
+            model.NextSpawnTime = Time.time + model.Setup.config.interval;
             model.SpawnCount++;;
         }
     }

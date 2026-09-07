@@ -3,13 +3,9 @@ using System;
 
 public struct SpawnerPrototype {
     
-    public SpawnConfig initConfig;
-    public SpawnSpot initSpawnSpot;
-    public SpawnVariant initSpawnVariant;
+    public SpawnSetup initSetup;
 
-    public SpawnerPrototype(SpawnConfig config, SpawnSpot spawnSpot, SpawnVariant spawnVariant) {
-        this.initConfig = config;
-        this.initSpawnSpot = spawnSpot;
-        this.initSpawnVariant = spawnVariant;
+    public SpawnerPrototype(SpawnSetup initSetup) {
+        this.initSetup = initSetup;
     }
 }

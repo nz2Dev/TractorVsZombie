@@ -8,10 +8,10 @@ public struct SpawnerSource {
     public SpawnVariantSource initVariantSource;
 
     public SpawnerPrototype Get() {
-        return new SpawnerPrototype {
-            initConfig = initConfig,
-            initSpawnSpot = initSpotSource == null ? default : initSpotSource.Get(),
-            initSpawnVariant = initVariantSource.Get()
-        };
+        return new SpawnerPrototype ( initSetup: new SpawnSetup {
+            config = initConfig,
+            spot = initSpotSource == null ? default : initSpotSource.Get(),
+            variant = initVariantSource.Get()
+        });
     }
 }

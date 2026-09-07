@@ -8,9 +8,7 @@ public class SpawnerModel {
 
     public SpawnerId Id { get; }
 
-    public SpawnSpot SpawnSpot { get; set; }
-    public SpawnConfig SpawnConfig { get; set; }
-    public SpawnVariant SpawnVariant { get; set; }
+    public SpawnSetup Setup { get; set; }
 
     public int SpawnCount { get; set; }
     public float SpawnInterval { get; set; }
