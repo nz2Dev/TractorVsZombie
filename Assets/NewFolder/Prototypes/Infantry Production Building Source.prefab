@@ -96,10 +96,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -1081456041
+  uniqueId: 1348752557
   spawnerSource:
     initConfig:
-      times: 10
+      times: 0
       interval: 10
     initSpotSource: {fileID: 5601172961921829115}
     initVariantSource:
@@ -157,8 +157,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnPointSource
   shape:
-    width: 6
-    height: 6
+    width: 5
+    height: 5
     spaceScale: 1
     randomOffset: 0
     randomScale: 1

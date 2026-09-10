@@ -10,16 +10,19 @@ public class ProducerFactory {
         this.spawnerController = spawnerController;
     }
 
-    public IProducer Create(ProducerPrototypeVariant reference) {
+    public IProducer Create(ProducerVariantPrototype reference) {
         return reference.type switch {
             ProducerType.Spawner => new SpawnerProducer(
                 reference.spawnerPrototype,
-                spawnerController
+                spawnerController,
+                reference.spawnSetup
             ),
             ProducerType.ProductionBuilding => new StructureProducer(
                 productionBuildingController.RegisterUniqueId(reference.producerUniqueId), 
                 productionBuildingController,
-                reference.productionBuildingPrototype
+                reference.productionBuildingPrototype,
+                spawnerController,
+                reference.spawnSetup
             ),
             _ => throw new Exception($"{reference.type}"),
         };

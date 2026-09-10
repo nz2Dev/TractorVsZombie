@@ -97,6 +97,7 @@ public class ProductionBuildingController {
     public ProductionBuildingState ReadState(int buildingId) {
         var model = registry[buildingId];
         return new ProductionBuildingState {
+            spawnerId = model.SpawnerId,
             lastResult = spawnerController.GetLastSpawnResult(model.SpawnerId)
         };
     }

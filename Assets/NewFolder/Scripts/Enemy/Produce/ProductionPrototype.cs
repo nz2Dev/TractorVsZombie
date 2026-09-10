@@ -1,8 +1,8 @@
 public struct ProductionPrototype {
     
-    public ProducerPrototypeVariant[] producerVariants;
+    public ProducerVariantPrototype[] producerVariants;
 
-    public ProductionPrototype(ProducerPrototypeVariant[] producerVariants) {
+    public ProductionPrototype(ProducerVariantPrototype[] producerVariants) {
         this.producerVariants = producerVariants;
     }
 }
