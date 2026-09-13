@@ -284,7 +284,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: uniqueId
-      value: -1240738783
+      value: -477908371
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: spawnVariantSource.infantrySource
@@ -4202,7 +4202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnSpotSource
   variantSource:
-    type: 0
+    type: 1
     infantrySource: {fileID: 0}
     armorSource: {fileID: 377055305}
   shape:
@@ -10310,7 +10310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnerPrototypeSource
   configSource:
-    times: 0
+    times: 1
     interval: 0
   spawnPrototypeSource: {fileID: 155815523}
 --- !u!1 &492483846
@@ -18086,7 +18086,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: uniqueId
-      value: -658888131
+      value: 605306835
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: spawnVariantSource.infantrySource
@@ -39977,17 +39977,29 @@ MonoBehaviour:
   productionSource:
     producerVariantSources:
     - producerType: 1
-      productionBuildingSource: {fileID: 349445394}
-      spawnerPrototypeSource: {fileID: 0}
-    - producerType: 1
       productionBuildingSource: {fileID: 17602908}
       spawnerPrototypeSource: {fileID: 0}
+      activationConfig:
+        delaySec: 0
+        targetTravelCostRange: 0
+    - producerType: 1
+      productionBuildingSource: {fileID: 349445394}
+      spawnerPrototypeSource: {fileID: 0}
+      activationConfig:
+        delaySec: 999999
+        targetTravelCostRange: 10
     - producerType: 1
       productionBuildingSource: {fileID: 1428135631}
       spawnerPrototypeSource: {fileID: 0}
+      activationConfig:
+        delaySec: 999999
+        targetTravelCostRange: 10
     - producerType: 0
       productionBuildingSource: {fileID: 0}
       spawnerPrototypeSource: {fileID: 491856378}
+      activationConfig:
+        delaySec: 0
+        targetTravelCostRange: 0
   goalsSource:
     mainGoal: {fileID: 2026042507}
     alternativeGoal: {fileID: 774786560}
@@ -40004,8 +40016,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1476495969}
   - {fileID: 897389540}
+  - {fileID: 1476495969}
   - {fileID: 1428135632}
   - {fileID: 491856377}
   - {fileID: 774786560}
@@ -44352,7 +44364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: uniqueId
-      value: 211808111
+      value: -1980636246
       objectReference: {fileID: 0}
     - target: {fileID: 5307129724459089617, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
       propertyPath: spawnerPrototype.config

@@ -6,13 +6,15 @@ public struct ProducerVariantSource {
     public ProducerType producerType;
     public ProductionBuildingSource productionBuildingSource;
     public SpawnerPrototypeSource spawnerPrototypeSource;
+    public ProducerActivationConfig activationConfig;
 
     public readonly ProducerVariantPrototype Get() {
         return new ProducerVariantPrototype(
             producerUniqueId: ObtainUniqueId(),
             type: producerType,
             productionBuildingPrototype: productionBuildingSource == null ? default : productionBuildingSource.GetPrototype(),
-            spawnerPrototype: spawnerPrototypeSource == null ? default : spawnerPrototypeSource.Get()
+            spawnerPrototype: spawnerPrototypeSource == null ? default : spawnerPrototypeSource.Get(),
+            activationConfig: activationConfig
         );
     }
 

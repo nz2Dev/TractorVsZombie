@@ -26,6 +26,7 @@ public class EnemyController {
         
         infantryAIController.SetMainGoalFiled(goalsController.MainGoalFlowField);
         infantryAIController.SetTargetField(goalsController.TargetFlowField);
+        productionController.SetTargetFieldId(goalsController.TargetFlowField);
     }
 
     public void Update() {

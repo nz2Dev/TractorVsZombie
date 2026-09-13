@@ -197,7 +197,7 @@ public class GameBootstrapper : MonoBehaviour {
         enemyController = new EnemyController(
             new InfantryAIController(infantryController, pathfindingService, proximityService, entityMapping, formationController),
             new ArmorAIController(combatSystem, pathfindingService, armorController, weaponController, proximityService),
-            new ProductionController(new ProducerFactory(buildingController, spawnerController)),
+            new ProductionController(new ProducerFactory(buildingController, spawnerController), pathfindingService),
             new GoalsController(pathfindingService, platformController),
             new SquadsService(formationController, infantryController)
         );

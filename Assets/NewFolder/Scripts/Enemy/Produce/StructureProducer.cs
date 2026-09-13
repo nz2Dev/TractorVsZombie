@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class StructureProducer : IProducer {
 
     private readonly int productionBuildingId;
@@ -13,6 +15,8 @@ public class StructureProducer : IProducer {
     public bool IsValid() {
         return productionBuildingController.IsExist(productionBuildingId);
     }
+
+    public Vector3 Position => productionBuildingPrototype.position;
 
     public void SpawnEntity() {
         productionBuildingController.Create(productionBuildingPrototype);
