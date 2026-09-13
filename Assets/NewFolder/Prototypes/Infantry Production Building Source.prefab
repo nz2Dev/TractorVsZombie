@@ -55,8 +55,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 694819620630992170}
-  - component: {fileID: 5307129724459089617}
   - component: {fileID: 5992323351636979987}
+  - component: {fileID: 5307129724459089617}
   m_Layer: 0
   m_Name: Infantry Production Building Source
   m_TagString: Untagged
@@ -84,6 +84,22 @@ Transform:
   - {fileID: 7196050754466600572}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &5992323351636979987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585800320623778281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaebd6c7085fd40b0b8c8f534fa972ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::SpawnerPrototypeSource
+  configSource:
+    times: 10
+    interval: 10
+  spawnPrototypeSource: {fileID: 5601172961921829115}
 --- !u!114 &5307129724459089617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,22 +121,6 @@ MonoBehaviour:
   avoidanceObstaclePrefab: {fileID: 377023672943240842}
   collisionObstaclePrefab: {fileID: 2045905622344632889}
   raycastMarkerPrefab: {fileID: 314227725128860358}
---- !u!114 &5992323351636979987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2585800320623778281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaebd6c7085fd40b0b8c8f534fa972ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::SpawnerPrototypeSource
-  configSource:
-    times: 10
-    interval: 10
-  spawnPrototypeSource: {fileID: 5601172961921829115}
 --- !u!1 &3858228865796293992
 GameObject:
   m_ObjectHideFlags: 0
