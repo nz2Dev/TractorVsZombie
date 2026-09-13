@@ -56,6 +56,7 @@ GameObject:
   m_Component:
   - component: {fileID: 694819620630992170}
   - component: {fileID: 5307129724459089617}
+  - component: {fileID: 5992323351636979987}
   m_Layer: 0
   m_Name: Infantry Production Building Source
   m_TagString: Untagged
@@ -96,22 +97,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 1348752557
-  spawnerSource:
-    initConfig:
-      times: 0
-      interval: 10
-    initSpotSource: {fileID: 5601172961921829115}
-    initVariantSource:
-      type: 0
-      infantrySource: {fileID: 0}
-      armorSource: {fileID: 0}
+  uniqueId: -891309557
+  spawnerSource: {fileID: 5992323351636979987}
   visualsPrefab: {fileID: 2588060940734931284}
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
   combatSource: {fileID: 1159228095933072964}
   avoidanceObstaclePrefab: {fileID: 377023672943240842}
   collisionObstaclePrefab: {fileID: 2045905622344632889}
   raycastMarkerPrefab: {fileID: 314227725128860358}
+--- !u!114 &5992323351636979987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585800320623778281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaebd6c7085fd40b0b8c8f534fa972ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::SpawnerPrototypeSource
+  configSource:
+    times: 10
+    interval: 10
+  spawnPrototypeSource: {fileID: 5601172961921829115}
 --- !u!1 &3858228865796293992
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +132,7 @@ GameObject:
   - component: {fileID: 6403658628140185900}
   - component: {fileID: 5601172961921829115}
   m_Layer: 0
-  m_Name: Spawn Spot Source
+  m_Name: Infantry Spawn Source
   m_TagString: Untagged
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -156,6 +165,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af0279d1559d46f099a721bcfa4e510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnPointSource
+  variantSource:
+    type: 0
+    infantrySource: {fileID: 0}
+    armorSource: {fileID: 0}
   shape:
     width: 5
     height: 5

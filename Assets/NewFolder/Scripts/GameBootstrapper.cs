@@ -158,9 +158,10 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleService
         );
 
+        var spawnService = new SpawnService(infantryController, armorController);
+
         spawnerController = new SpawnerController(
-            infantryController,
-            armorController
+            spawnService
         );
 
         buildingController = new ProductionBuildingController(

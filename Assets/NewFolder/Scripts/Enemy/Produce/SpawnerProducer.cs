@@ -3,12 +3,10 @@ public class SpawnerProducer : IProducer {
     private SpawnerId spawnerId;
     private readonly SpawnerPrototype spawnerPrototype;
     private readonly SpawnerController spawnerController;
-    private readonly SpawnSetup initSetup;
 
-    public SpawnerProducer(SpawnerPrototype spawnerPrototype, SpawnerController spawnerController, SpawnSetup initSetup) {
+    public SpawnerProducer(SpawnerPrototype spawnerPrototype, SpawnerController spawnerController) {
         this.spawnerPrototype = spawnerPrototype;
         this.spawnerController = spawnerController;
-        this.initSetup = initSetup;
     }
 
     public bool IsValid() {
@@ -17,7 +15,6 @@ public class SpawnerProducer : IProducer {
 
     public void SpawnEntity() {
         spawnerId = spawnerController.Create(spawnerPrototype);
-        spawnerController.Configure(spawnerId, initSetup);
     }
 
     public bool TryGetSpawnResult(out SpawnResult spawnResult) {

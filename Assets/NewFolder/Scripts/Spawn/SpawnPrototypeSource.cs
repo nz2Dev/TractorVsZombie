@@ -2,8 +2,9 @@ using UnityEditor;
 
 using UnityEngine;
 
-public class SpawnSpotSource : MonoBehaviour {
+public class SpawnPrototypeSource : MonoBehaviour {
     
+    [SerializeField] private SpawnVariantSource variantSource;
     [SerializeField] private SpawnShape shape = new SpawnShape {
         height = 1,
         width = 1,
@@ -12,11 +13,12 @@ public class SpawnSpotSource : MonoBehaviour {
         randomScale = 1,
     };
 
-    public SpawnSpot Get() {
-        return new SpawnSpot {
+    public SpawnPrototype Get() {
+        return new SpawnPrototype {
             position = transform.position,
             rotation = transform.rotation,
             shape = shape,
+            variant = variantSource.Get(),
         };
     }
 

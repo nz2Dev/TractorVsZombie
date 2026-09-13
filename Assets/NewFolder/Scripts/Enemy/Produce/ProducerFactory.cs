@@ -14,15 +14,12 @@ public class ProducerFactory {
         return reference.type switch {
             ProducerType.Spawner => new SpawnerProducer(
                 reference.spawnerPrototype,
-                spawnerController,
-                reference.spawnSetup
+                spawnerController
             ),
             ProducerType.ProductionBuilding => new StructureProducer(
                 productionBuildingController.RegisterUniqueId(reference.producerUniqueId), 
                 productionBuildingController,
-                reference.productionBuildingPrototype,
-                spawnerController,
-                reference.spawnSetup
+                reference.productionBuildingPrototype
             ),
             _ => throw new Exception($"{reference.type}"),
         };

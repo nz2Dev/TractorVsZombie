@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public class SpawnConfig {
+public struct SpawnerConfig {
     public int times;
     public int interval;
 }

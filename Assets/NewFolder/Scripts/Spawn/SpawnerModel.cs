@@ -8,13 +8,12 @@ public class SpawnerModel {
 
     public SpawnerId Id { get; }
 
-    public SpawnSetup Setup { get; set; }
+    public SpawnerConfig Config { get; set; }
+    public SpawnPrototype SpawnPrototype { get; set; }
 
     public int SpawnCount { get; set; }
     public float SpawnInterval { get; set; }
     public float NextSpawnTime { get; set; }
     public SpawnResult LastSpawnEvent { get; set; }
-    
-    public List<int> IdsBuffer { get; } = new(32);
     
 }

@@ -4,23 +4,15 @@ using System;
 public struct ProducerVariantSource {
     
     public ProducerType producerType;
-    public SpawnerSource spawnerSource;
     public ProductionBuildingSource productionBuildingSource;
-    public SpawnConfig spawnConfig;
-    [Inline] public SpawnSpotSource spawnSpotSource;
-    public SpawnVariantSource spawnVariant;
+    public SpawnerPrototypeSource spawnerPrototypeSource;
 
     public readonly ProducerVariantPrototype Get() {
         return new ProducerVariantPrototype(
             producerUniqueId: ObtainUniqueId(),
             type: producerType,
             productionBuildingPrototype: productionBuildingSource == null ? default : productionBuildingSource.GetPrototype(),
-            spawnerPrototype: spawnerSource.Get(),
-            spawnSetup: new SpawnSetup(
-                config: spawnConfig,
-                spot: spawnSpotSource == null ? default : spawnSpotSource.Get(),
-                variant: spawnVariant.Get()
-            )
+            spawnerPrototype: spawnerPrototypeSource == null ? default : spawnerPrototypeSource.Get()
         );
     }
 

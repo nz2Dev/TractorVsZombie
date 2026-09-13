@@ -1,11 +1,9 @@
-
-using System;
-
 public struct SpawnerPrototype {
-    
-    public SpawnSetup initSetup;
+    public SpawnerConfig config;
+    public SpawnPrototype spawnPrototype;
 
-    public SpawnerPrototype(SpawnSetup initSetup) {
-        this.initSetup = initSetup;
+    public SpawnerPrototype(SpawnerConfig config, SpawnPrototype spawnPrototype) {
+        this.config = config;
+        this.spawnPrototype = spawnPrototype;
     }
 }

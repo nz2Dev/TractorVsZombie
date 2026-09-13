@@ -7,13 +7,11 @@ public struct ProducerVariantPrototype {
     public int producerUniqueId;
     public ProductionBuildingPrototype productionBuildingPrototype;
     public SpawnerPrototype spawnerPrototype;
-    public SpawnSetup spawnSetup;
 
-    public ProducerVariantPrototype(int producerUniqueId, ProducerType type, ProductionBuildingPrototype productionBuildingPrototype, SpawnerPrototype spawnerPrototype, SpawnSetup spawnSetup) {
-        this.producerUniqueId = producerUniqueId;
+    public ProducerVariantPrototype(ProducerType type, int producerUniqueId, ProductionBuildingPrototype productionBuildingPrototype, SpawnerPrototype spawnerPrototype) {
         this.type = type;
+        this.producerUniqueId = producerUniqueId;
         this.productionBuildingPrototype = productionBuildingPrototype;
         this.spawnerPrototype = spawnerPrototype;
-        this.spawnSetup = spawnSetup;
     }
 }
