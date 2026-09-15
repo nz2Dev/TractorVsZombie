@@ -39501,13 +39501,13 @@ MonoBehaviour:
       productionBuildingSource: {fileID: 349445394}
       spawnerPrototypeSource: {fileID: 0}
       activationConfig:
-        delaySec: 999999
+        delaySec: 30
         targetTravelCostRange: 20
     - producerType: 1
       productionBuildingSource: {fileID: 1428135631}
       spawnerPrototypeSource: {fileID: 0}
       activationConfig:
-        delaySec: 999999
+        delaySec: 30
         targetTravelCostRange: 20
     - producerType: 0
       productionBuildingSource: {fileID: 0}

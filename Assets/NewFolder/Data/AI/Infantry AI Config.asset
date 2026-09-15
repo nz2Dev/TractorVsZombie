@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Infantry AI Config
   m_EditorClassIdentifier: NewFolder::SquadAIConfig
   formationBlendFactor: 0
-  targetAgroCostRange: 10
+  targetAgroCostRange: 7
