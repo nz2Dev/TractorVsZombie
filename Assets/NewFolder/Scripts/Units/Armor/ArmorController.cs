@@ -65,7 +65,7 @@ public class ArmorController {
             combatId = model.CombatId
         });
 
-        view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.engineLoopSFX);
+        view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.combatPrototype.alie, prototype.engineLoopSFX);
         return model.Id;
     }
 
@@ -159,6 +159,11 @@ public class ArmorController {
         foreach (var model in registry.Values) {
             view.UpdatePose(model.Id, model.VehiclePhysicsState);
             view.UpdateSound(model.Id, model.Gas);
+            
+            var combatState = combatSystem.ReadState(model.CombatId);
+            if (combatState.damageResult.HasValue) {
+                view.ShowTakeHit(model.Id);
+            }
         }
     }
 

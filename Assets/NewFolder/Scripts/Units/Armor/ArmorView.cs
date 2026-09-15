@@ -14,14 +14,16 @@ public class ArmorView {
         this.soundManager = soundManager;
     }
 
-    public void Show(int armorId, Vector3 position, ArmorVisuals prefab, AudioClip engineSFX) {
-        visualsRegistry[armorId] = GameObject.Instantiate(prefab, position, Quaternion.identity);
+    public void Show(int armorId, Vector3 position, ArmorVisuals prefab, bool alie, AudioClip engineSFX) {
+        var visuals = GameObject.Instantiate(prefab, position, Quaternion.identity);
+        visuals.SetFactionProperties(alie);
+        visualsRegistry[armorId] = visuals;
         sfxLoopRegistry[armorId] = soundManager.StartLoop(position, engineSFX);
     }
 
     public void Hide(int armorId) {
         visualsRegistry.Remove(armorId, out var visuals);
-        visuals.DestroySelf();
+        GameObject.Destroy(visuals.gameObject);
         sfxLoopRegistry.Remove(armorId, out var sfxLoopId);
         soundManager.StopLoop(sfxLoopId);
     }
@@ -31,6 +33,11 @@ public class ArmorView {
         visuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         visuals.SetFrontAxis(vehicleState.frontAxis);
         visuals.SetRearAxis(vehicleState.rearAxis);
+    }
+
+    public void ShowTakeHit(int armorId) {
+        var visuals = visualsRegistry[armorId];
+        visuals.TriggerHitFlash();
     }
 
     public void UpdateSound(int armorId, float gasThrottle) {
