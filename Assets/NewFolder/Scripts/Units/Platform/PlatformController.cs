@@ -31,6 +31,7 @@ public class PlatformController {
 
     public void Update() {
         SyncPositions();
+        UpdateView();
     }
 
     public virtual int Create(PlatformPrototype prototype, Vector3 position = default) {
@@ -52,7 +53,7 @@ public class PlatformController {
             combatId = model.CombatId
         });
         
-        view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab);
+        view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab, prototype.combatPrototype.alie);
         return model.Id;
     }
 
@@ -125,6 +126,20 @@ public class PlatformController {
             proximityService.UpdatePoint(host.ProximityId, host.Position);
             raycastService.UpdateMarker(host.RaycastId, host.Position);
             ramEffect.Forward(host.RamId, host.Position);
+        }
+    }
+
+    private void UpdateView() {
+        foreach (var host in registry.Values) {
+            var combatState = combatSystem.ReadState(host.CombatId);
+            if (combatState.damageResult.HasValue) {
+                // interesting case occure, conceptually platform is only a carrier
+                // loadout and weapons are handled separately
+                // but ideally when hit occures, all three has to show take hit effect.
+                // so either all of them separatly check for provided ownerCombatId state and trigger visual feedback separatly
+                // or should the visual component of entier platform entity handle all of the visuals for loadout and weapon? (first option I like more)
+                view.ShowTakeHit(host.Id);
+            }
         }
     }
 

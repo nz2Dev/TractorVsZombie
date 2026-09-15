@@ -466,7 +466,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2556518759398282306, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
       propertyPath: m_VersionIndex
-      value: 401
+      value: 413
       objectReference: {fileID: 0}
     - target: {fileID: 2556518759398282306, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
       propertyPath: 'm_SelectedFaces.Array.data[0]'
@@ -618,19 +618,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7212341491471748435, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
       propertyPath: m_VersionIndex
-      value: 4211
+      value: 4223
       objectReference: {fileID: 0}
     - target: {fileID: 7412602509093565098, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
       propertyPath: m_VersionIndex
-      value: 4211
+      value: 4223
       objectReference: {fileID: 0}
     - target: {fileID: 7518126389855577569, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
       propertyPath: m_VersionIndex
-      value: 4211
+      value: 4223
       objectReference: {fileID: 0}
     - target: {fileID: 7833885939613987549, guid: cffaacb8b3485418cbbf7f21347776c1, type: 3}
       propertyPath: m_VersionIndex
-      value: 4211
+      value: 4223
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

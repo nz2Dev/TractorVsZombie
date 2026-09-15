@@ -5,13 +5,10 @@ using UnityEngine;
 public class PlatformView {
     private readonly Dictionary<int, PlatformVisuals> visualsRegistry = new ();
 
-    public void AddPlatform(int id, Vector3 position, PlatformVisuals visualsPrefab) {
+    public void AddPlatform(int id, Vector3 position, PlatformVisuals visualsPrefab, bool alie) {
         var vehicleVisuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);        
+        vehicleVisuals.SetFactionProperties(alie);
         visualsRegistry[id] = vehicleVisuals;
-    }
-
-    public Transform GetTransform(int id) {
-        return visualsRegistry[id].transform;
     }
 
     public void UpdatePlatformPose(int id, VehicleState vehicleState) {
@@ -19,6 +16,11 @@ public class PlatformView {
         vehicleVisuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         vehicleVisuals.SetFrontAxis(vehicleState.frontAxis);
         vehicleVisuals.SetRearAxis(vehicleState.rearAxis);
+    }
+
+    public void ShowTakeHit(int id) {
+        var visuals = visualsRegistry[id];
+        visuals.TriggerHitFlash();
     }
 
     public void RemovePlatform(int id) {

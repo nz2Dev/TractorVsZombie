@@ -12,10 +12,24 @@ public class PlatformVisuals : MonoBehaviour {
 
     [SerializeField] private WheelAxis frontAxis;
     [SerializeField] private WheelAxis rearAxis;
-    [SerializeField] private GameObject shaftGeometry;
 
-    public void DestroySelf() {
-        GameObject.Destroy(gameObject);
+    [SerializeField] private Material alieUnitMaterial;
+    [SerializeField] private Material foeUnitMaterial;
+    [SerializeField] private MeshRenderer[] meshRendererers = new MeshRenderer[0];
+    [SerializeField] private float newFlashThreashold = 0.5f;
+    private MaterialPropertyBlock propertyBlock;
+    private int flashPropertyId;
+    private float flash;
+
+    private void Awake() {
+        propertyBlock = new MaterialPropertyBlock();
+        flashPropertyId = Shader.PropertyToID("_Flash");
+    }
+
+    public void SetFactionProperties(bool alie) {
+        foreach (var renderer in meshRendererers) {
+            renderer.sharedMaterial = alie ? alieUnitMaterial : foeUnitMaterial;
+        }
     }
 
     public void SetPositionAndRotation(Vector3 pos, Quaternion rot) {
@@ -32,7 +46,17 @@ public class PlatformVisuals : MonoBehaviour {
         rearAxis.rightWheel.transform.SetPositionAndRotation(axisPose.positionR, axisPose.rotationR);
     }
 
-    public void SetShaftRotation(Quaternion shaftRotation) {
-        shaftGeometry.transform.rotation = shaftRotation;
+    public void TriggerHitFlash() {
+        if (flash < newFlashThreashold)
+            flash = 1;
+    }
+
+    private void Update() {
+        flash = Mathf.MoveTowards(flash, 0, Time.deltaTime);
+        propertyBlock.SetFloat(flashPropertyId, flash);
+
+        foreach (var renderer in meshRendererers) {
+            renderer.SetPropertyBlock(propertyBlock);
+        }
     }
 }
