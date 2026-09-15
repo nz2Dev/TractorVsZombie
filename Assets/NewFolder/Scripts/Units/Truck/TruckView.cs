@@ -13,15 +13,20 @@ public class TruckView {
         this.soundManager = soundManager;
     }
 
-    public void Show(Vector3 position, TruckVisuals prefab, AudioClip engineSFX) {
+    public void Show(Vector3 position, TruckVisuals prefab, bool alie, AudioClip engineSFX) {
         visuals = GameObject.Instantiate(prefab, position, Quaternion.identity);
         sfxLoopId = soundManager.StartLoop(position, engineSFX);
+        visuals.SetFactionProperties(alie);
     }
 
     public void UpdatePose(VehicleState vehicleState) {
         visuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         visuals.SetFrontAxis(vehicleState.frontAxis);
         visuals.SetRearAxis(vehicleState.rearAxis);
+    }
+
+    public void ShowTakeHit() {
+        visuals.TriggerHitFlash();
     }
 
     internal void UpdateSound(float gasThrottle) {

@@ -50,7 +50,7 @@ public class TruckController {
             combatId = model.CombatId,
         });
 
-        view.Show(model.Position, prototype.visualsPrefab, prototype.engineLoopSFX);
+        view.Show(model.Position, prototype.visualsPrefab, prototype.combatPrototype.alie, prototype.engineLoopSFX);
     }
 
     public virtual void Drive(float driveInput, bool boostInput) {
@@ -82,6 +82,11 @@ public class TruckController {
     private void UpdateView() {
         view.UpdatePose(model.VehiclePhysicsState);
         view.UpdateSound(model.Gas);
+
+        var combatState = combatSystem.ReadState(model.CombatId);
+        if (combatState.damageResult.HasValue) {
+            view.ShowTakeHit();
+        }
     }
 
 }
