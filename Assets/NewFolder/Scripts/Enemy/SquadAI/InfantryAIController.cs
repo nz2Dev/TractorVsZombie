@@ -11,6 +11,7 @@ public class InfantryAIController {
     private readonly InfantryController infantryController;
     private readonly PathfindingService pathfindingService;
     private readonly ProximityService proximityService;
+    private readonly RaycastService raycastService;
     private readonly EntityMapping entityMapping;
 
     private readonly List<InfantryAIModel> models = new();
@@ -18,12 +19,13 @@ public class InfantryAIController {
     private int targetFlowFieldId;
 
     public InfantryAIController(InfantryController infantryController, PathfindingService pathfindingService,
-        ProximityService proximityService, EntityMapping entityMapping, FormationController formationController) {
+        ProximityService proximityService, EntityMapping entityMapping, FormationController formationController, RaycastService raycastService) {
         this.infantryController = infantryController;
         this.pathfindingService = pathfindingService;
         this.proximityService = proximityService;
         this.entityMapping = entityMapping;
         this.formationController = formationController;
+        this.raycastService = raycastService;
     }
 
     public void Update() {
@@ -77,10 +79,14 @@ public class InfantryAIController {
     private bool HasFoeInRange(InfantryState infantryState, out EntityComponents foeComponents, out Vector3 foePositon) {
         var foeProximityLayer = CombatSystem.GetProximityLayerForFaction(!infantryState.combatIsAlie);
         if (proximityService.QueryNearestPoint(infantryState.position, foeProximityLayer, out var proximityId)) {
-            var point = proximityService.GetPoint(proximityId);
-            if (Vector3.Distance(point, infantryState.position) < 5f && entityMapping.TryFindByProximityId(proximityId, out foeComponents)) {
-                foePositon = point;
-                return true;
+            if (entityMapping.TryFindByProximityId(proximityId, out foeComponents)) {
+                var raycastState = raycastService.ReadState(foeComponents.raycastId.Value);
+                var point = proximityService.GetPoint(proximityId);
+                var attackRadius = 3;
+                if (Vector3.Distance(point, infantryState.position) < attackRadius + raycastState.radius) {
+                    foePositon = point;
+                    return true;
+                }
             }
         }
         foeComponents = default;
