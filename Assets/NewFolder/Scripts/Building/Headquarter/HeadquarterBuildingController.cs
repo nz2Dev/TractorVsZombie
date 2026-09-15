@@ -1,9 +1,12 @@
+using System;
+
 using Combat;
 
 using UnityEngine;
 
 public class HeadquarterBuildingController {
 
+    private readonly HeadquarterBuildingView view;
     private readonly CombatSystem combatSystem;
     private readonly PathfindingService pathfindingService;
     private readonly AvoidanceService localAvoidanceService;
@@ -12,10 +15,9 @@ public class HeadquarterBuildingController {
     private readonly ProximityService proximityService;
     private readonly EntityMapping entityMapping;
 
-    private GameObject visuals;
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, CollisionService collisionService, AvoidanceService localAvoidanceService, RaycastService raycastService, EntityMapping entityMapping, ProximityService proximityService) {
+    public HeadquarterBuildingController(CombatSystem combatSystem, PathfindingService pathfindingService, CollisionService collisionService, AvoidanceService localAvoidanceService, RaycastService raycastService, EntityMapping entityMapping, ProximityService proximityService, HeadquarterBuildingView view) {
         this.combatSystem = combatSystem;
         this.pathfindingService = pathfindingService;
         this.collisionService = collisionService;
@@ -23,11 +25,13 @@ public class HeadquarterBuildingController {
         this.raycastService = raycastService;
         this.entityMapping = entityMapping;
         this.proximityService = proximityService;
+        this.view = view;
     }
 
     public void Update() {
         ReadCombatOutput();
         CheckLooseCondition();
+        UpdateView();
     }
 
     public void Create(HeadquarterBuildingPrototype prototype) {
@@ -46,7 +50,7 @@ public class HeadquarterBuildingController {
             combatId = headquarter.CombatId
         });
 
-        visuals = GameObject.Instantiate(prototype.visualsPrefab, prototype.position, prototype.rotation);
+        view.ShowHeadquarter(prototype.position, prototype.rotation, prototype.visualsPrefab, prototype.worldSpaceUIPrefab);
     }
 
     private void ReadCombatOutput() {
@@ -62,7 +66,7 @@ public class HeadquarterBuildingController {
 
             entityMapping.DeleteMappings(headquarter.ProximityId, headquarter.RaycastId);
 
-            GameObject.Destroy(visuals);
+            view.ShowHeadquarterDestoryed();
         }
     }
 
@@ -70,6 +74,11 @@ public class HeadquarterBuildingController {
         if (headquarter.Destroyed) {
             Debug.Log("Game over");
         }
+    }
+
+    private void UpdateView() {
+        var combatState = combatSystem.ReadState(headquarter.CombatId);
+        view.UpdateHealth(combatState.health, combatState.maxHealth);
     }
 
 }

@@ -33,12 +33,13 @@ namespace Combat  {
 
         public CombatState ReadState(CombatId id) {
             var model = models[id];
-            return new CombatState {
-                alie = model.Alie,
-                health = model.Health,
-                damageResult = model.DamageResult,
-                surface = model.Config.surface,
-            };
+            return new CombatState (
+                alie: model.Alie,
+                health: model.Health,
+                maxHealth: model.Config.maxHelath,
+                damageResult: model.DamageResult,
+                surface: model.Config.surface
+            );
         }
 
         public void Update() {

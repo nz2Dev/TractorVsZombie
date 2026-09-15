@@ -13,10 +13,11 @@ public struct HeadquarterBuildingPrototype {
     public ORCAObstacleVertices avoidanceObstaclePrefab;
     public Collider pathfindingObstaclePrefab;
     public GameObject visualsPrefab;
+    public WorldSpaceUI worldSpaceUIPrefab;
 
     public HeadquarterBuildingPrototype(Vector3 position, Quaternion rotation, HeadquarterBuildingConfig config,
         CombatPrototype combatPrototype, RaycastMarker raycastMarkerPrefab, CollisionObstacle collisionObstaclePrefab,
-        ORCAObstacleVertices avoidanceObstaclePrefab, GameObject visualsPrefab, Collider pathfindingObstaclePrefab) {
+        ORCAObstacleVertices avoidanceObstaclePrefab, GameObject visualsPrefab, Collider pathfindingObstaclePrefab, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.rotation = rotation;
         this.config = config;
@@ -26,5 +27,6 @@ public struct HeadquarterBuildingPrototype {
         this.avoidanceObstaclePrefab = avoidanceObstaclePrefab;
         this.visualsPrefab = visualsPrefab;
         this.pathfindingObstaclePrefab = pathfindingObstaclePrefab;
+        this.worldSpaceUIPrefab = worldSpaceUIPrefab;
     }
 }

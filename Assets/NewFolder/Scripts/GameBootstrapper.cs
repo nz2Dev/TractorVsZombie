@@ -182,7 +182,8 @@ public class GameBootstrapper : MonoBehaviour {
             localAvoidanceService,
             raycastService,
             entityMapping,
-            proximityService
+            proximityService,
+            new HeadquarterBuildingView(cameraManager)
         );
 
         playerController = new PlayerController(

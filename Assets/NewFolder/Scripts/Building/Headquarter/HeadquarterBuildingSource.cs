@@ -9,6 +9,11 @@ public class HeadquarterBuildingSource : MonoBehaviour {
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
     [NonNull, Local, SerializeField] private Collider pathfindingObstaclePrefab;
     [NonNull, Local, SerializeField] private GameObject visualsPrefab;
+    [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
+
+    private void Awake() {
+        gameObject.SetActive(false);
+    }
 
     public HeadquarterBuildingPrototype GetPrototype() {
         return new HeadquarterBuildingPrototype (
@@ -20,7 +25,9 @@ public class HeadquarterBuildingSource : MonoBehaviour {
             collisionObstaclePrefab: collisionObstaclePrefab,
             avoidanceObstaclePrefab: avoidanceObstaclePrefab,
             visualsPrefab: visualsPrefab,
-            pathfindingObstaclePrefab: pathfindingObstaclePrefab
+            pathfindingObstaclePrefab: pathfindingObstaclePrefab,
+            worldSpaceUIPrefab: worldSpaceUIPrefab
         );
     }
+
 }
