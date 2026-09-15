@@ -25,7 +25,7 @@ public class HeadquarterBuildingView {
     }
 
     internal void ShowHeadquarterDestoryed() {
-        GameObject.Destroy(visuals);
+        GameObject.Destroy(visuals.gameObject);
         GameObject.Destroy(healthBarVisuals.GetComponentInParent<WorldSpaceUI>().gameObject);
     }
 
