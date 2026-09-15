@@ -55,6 +55,10 @@ public class HeadquarterBuildingController {
 
     private void ReadCombatOutput() {
         var combatState = combatSystem.ReadState(headquarter.CombatId);
+        if (combatState.damageResult.HasValue) {
+            view.ShowTakeHit();
+        }
+        
         if (combatState.damageResult?.damageWasFatal == true) {
             headquarter.Destroyed = true;
             

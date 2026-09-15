@@ -8,7 +8,7 @@ public class HeadquarterBuildingSource : MonoBehaviour {
     [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
     [NonNull, Local, SerializeField] private Collider pathfindingObstaclePrefab;
-    [NonNull, Local, SerializeField] private GameObject visualsPrefab;
+    [NonNull, Local, SerializeField] private HeadquarterBuildingVisuals visualsPrefab;
     [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
     private void Awake() {
