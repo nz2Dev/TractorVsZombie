@@ -9,7 +9,7 @@ public enum ReservedLayerCode {
 
 public class RaycastService {
     
-    private readonly Dictionary<RaycastId, GameObject> markersRegistry = new();
+    private readonly Dictionary<RaycastId, RaycastMarker> markersRegistry = new();
     private readonly Dictionary<GameObject, RaycastId> markerToId = new();
 
     private readonly Collider[] overlapBuffer;
@@ -28,21 +28,27 @@ public class RaycastService {
         var nextId = new RaycastId(++idCounter);
         var marker = GameObject.Instantiate(markerPrefab, position, Quaternion.identity);
         marker.gameObject.layer = config.LayerCodeToIndex(layerCode);
-        markersRegistry[nextId] = marker.gameObject;
+        markersRegistry[nextId] = marker;
         markerToId[marker.gameObject] = nextId;
         return nextId;
     }
 
     public void UnregisterMarker(RaycastId id) {
         var marker = markersRegistry[id];
-        markerToId.Remove(marker);
+        markerToId.Remove(marker.gameObject);
         markersRegistry.Remove(id);
-        UnityEngine.Object.Destroy(marker);
+        UnityEngine.Object.Destroy(marker.gameObject);
     }
 
     public void UpdateMarker(RaycastId id, Vector3 position) {
         var marker = markersRegistry[id];
         marker.transform.position = position;
+    }
+
+    public RaycastState ReadState(RaycastId raycastId) {
+        return new RaycastState {
+            radius = markersRegistry[raycastId].Radius
+        };
     }
 
     // todo: can also be configured to register static collision obstacles in one raycast?
