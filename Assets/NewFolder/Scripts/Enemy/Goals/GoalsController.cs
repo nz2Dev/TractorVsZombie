@@ -6,6 +6,7 @@ public class GoalsController {
     
     private readonly PathfindingService pathfindingService;
     private readonly PlatformController platformController;
+    private readonly TruckController truckController;
 
     private GoalsModel model;
     private readonly List<PlatformState> platformStatesBuffer = new();
@@ -13,9 +14,10 @@ public class GoalsController {
     public int MainGoalFlowField => model.MainGoalFlowField;
     public int TargetFlowField => model.TargetFlowField;
 
-    public GoalsController(PathfindingService pathfindingService, PlatformController platformController) {
+    public GoalsController(PathfindingService pathfindingService, PlatformController platformController, TruckController truckController) {
         this.pathfindingService = pathfindingService;
         this.platformController = platformController;
+        this.truckController = truckController;
     }
 
     public void Init(GoalsPrototype prototype) {
@@ -43,11 +45,11 @@ public class GoalsController {
 
     private void TrackPlatforms() {
         platformController.ReadAllPlatforms(platformStatesBuffer);
-        var center = Vector3.zero;
+        var center = truckController.ReadVehiclePosition();
         foreach (var platform in platformStatesBuffer) {
             center += platform.position;
         }
-        center /= platformStatesBuffer.Count;
+        center /= platformStatesBuffer.Count + 1;
         pathfindingService.UpdateGoal(model.TargetFlowField, center);
     }
 }
