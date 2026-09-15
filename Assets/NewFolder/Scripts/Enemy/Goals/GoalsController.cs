@@ -20,7 +20,7 @@ public class GoalsController {
 
     public void Init(GoalsPrototype prototype) {
         model = new ();
-        model.MainGoalFlowField = pathfindingService.CreateFlowField(Vector3.zero);
+        model.MainGoalFlowField = pathfindingService.CreateFlowField(prototype.mainRoute);
         model.TargetFlowField = pathfindingService.CreateFlowField(Vector3.zero);
         model.AlternativeGoal = prototype.alternativeRoute;
         model.MainGoal = prototype.mainRoute;
