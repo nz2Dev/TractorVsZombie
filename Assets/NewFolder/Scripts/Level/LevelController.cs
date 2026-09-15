@@ -24,12 +24,17 @@ public class LevelController {
         
         view.ShowEnteringCutscene(levelPrototype.entranceCutscene, levelPrototype.startPosition);
         model.InCutscene = true;
+        view.ShowPlayerUI();
     }
 
     public void Update() {
         if (model.InCutscene && view.CutsceneFinished) {
             model.InCutscene = false;
-            OnLevelLoaded();    
+            OnLevelLoaded();
+        }
+
+        if (headquarterBuildingController.IsDestroyed()) {
+            view.ShowGameOverUI();
         }
     }
 

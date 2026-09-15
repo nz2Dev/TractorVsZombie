@@ -1,7 +1,7 @@
 :root {
 }
 
-Label {
+.list-text {
     font-size: 44px;
     margin-top: 32px;
     margin-right: 32px;

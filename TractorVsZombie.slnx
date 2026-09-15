@@ -1,24 +1,24 @@
 ﻿<Solution>
   <Project Path="NewFolder.csproj" />
+  <Project Path="Prototype.csproj" />
+  <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="UnityTools.csproj" />
   <Project Path="KNNRuntime.csproj" />
-  <Project Path="Prototype.csproj" />
+  <Project Path="FlowField.csproj" />
+  <Project Path="Playground.Example.csproj" />
   <Project Path="PhysicsCollisionsTests.csproj" />
   <Project Path="Playground.Exmample.EditorTests.csproj" />
-  <Project Path="FlowField.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="UnityVehicle.csproj" />
-  <Project Path="FlowField.EditorTests.csproj" />
-  <Project Path="GenerationPlaygroundEditor.csproj" />
-  <Project Path="NewFolder.PlayTests.csproj" />
-  <Project Path="PrototypeEditor.csproj" />
-  <Project Path="NewFolder.EditorTests.csproj" />
-  <Project Path="ORCARuntime.csproj" />
-  <Project Path="Profiling.csproj" />
   <Project Path="Playground.Example.PlayTests.csproj" />
-  <Project Path="CreaturesPlaygroundEditor.csproj" />
-  <Project Path="Playground.Example.csproj" />
+  <Project Path="UnityVehicle.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="NewFolder.PlayTests.csproj" />
+  <Project Path="ORCARuntime.csproj" />
   <Project Path="KNNRuntime.EditorTests.csproj" />
+  <Project Path="FlowField.EditorTests.csproj" />
   <Project Path="CaravanPlaygroundEditor.csproj" />
+  <Project Path="GenerationPlaygroundEditor.csproj" />
+  <Project Path="PrototypeEditor.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
+  <Project Path="NewFolder.EditorTests.csproj" />
+  <Project Path="Profiling.csproj" />
 </Solution>

@@ -44,6 +44,7 @@ public class SelectingView {
 
     private void MakeLabel(out Label created) {
         created = new Label();
+        created.AddToClassList("list-text");
         container.Add(created);
     }
 

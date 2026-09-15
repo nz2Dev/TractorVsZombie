@@ -30,7 +30,6 @@ public class HeadquarterBuildingController {
 
     public void Update() {
         ReadCombatOutput();
-        CheckLooseCondition();
         UpdateView();
     }
 
@@ -53,12 +52,16 @@ public class HeadquarterBuildingController {
         view.ShowHeadquarter(prototype.position, prototype.rotation, prototype.visualsPrefab, prototype.worldSpaceUIPrefab);
     }
 
+    public bool IsDestroyed() {
+        return headquarter.Destroyed;
+    }
+
     private void ReadCombatOutput() {
         var combatState = combatSystem.ReadState(headquarter.CombatId);
         if (combatState.damageResult.HasValue) {
             view.ShowTakeHit();
         }
-        
+
         if (combatState.damageResult?.damageWasFatal == true) {
             headquarter.Destroyed = true;
             
@@ -71,12 +74,6 @@ public class HeadquarterBuildingController {
             entityMapping.DeleteMappings(headquarter.ProximityId, headquarter.RaycastId);
 
             view.ShowHeadquarterDestoryed();
-        }
-    }
-
-    private void CheckLooseCondition() {
-        if (headquarter.Destroyed) {
-            Debug.Log("Game over");
         }
     }
 
