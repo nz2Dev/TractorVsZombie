@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -124,7 +123,7 @@ public class Turel : MonoBehaviour {
             var lookRotation = Quaternion.LookRotation(turelToAimPoint, Vector3.up);
             fireGunBase.rotation = Quaternion.Lerp(fireGunBase.rotation, lookRotation, Time.deltaTime * turelAlignmentMultiplier);
 
-            yield return new WaitForNextFrameUnit(); // works in editor as well
+            yield return new WaitForEndOfFrame(); // works in editor as well
         }
     }
 }

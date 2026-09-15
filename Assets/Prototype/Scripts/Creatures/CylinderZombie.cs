@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [SelectionBase]
@@ -48,7 +47,7 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
                 // with polimorfism through interface it will be much clearer
                 break;
             }
-            yield return new WaitForNextFrameUnit();
+            yield return new WaitForEndOfFrame();
         }
     }
 
@@ -71,7 +70,7 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
 
         while(true) {
             _driver.SetStop(!_physicMember.IsStable);
-            yield return new WaitForNextFrameUnit();
+            yield return new WaitForEndOfFrame();
         }
     }
 
@@ -123,7 +122,7 @@ public class CylinderZombie : MonoBehaviour, IStabilityListener {
                 onResume?.Invoke();
             }
 
-            yield return new WaitForNextFrameUnit();
+            yield return new WaitForEndOfFrame();
         }
     }
 

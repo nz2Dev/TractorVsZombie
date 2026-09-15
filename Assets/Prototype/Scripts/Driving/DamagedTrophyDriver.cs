@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamagedTrophyDriver : MonoBehaviour {
@@ -31,7 +30,7 @@ public class DamagedTrophyDriver : MonoBehaviour {
         while(true) {
             var steering = _vehicle.FollowDirection(_vehicle.Position, awayDirection, 3f);
             _vehicle.ApplyForce(steering, "DamageDriver");
-            yield return new WaitForNextFrameUnit();
+            yield return new WaitForEndOfFrame();
         }
     }
     

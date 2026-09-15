@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IConnectorBody {
@@ -94,7 +93,7 @@ public class FollowingConnector : MonoBehaviour, IConnectionMovement {
             var followPointProgress = followPoint.Point + reverceFollowDirection * (followDistance + shrinkedDistance);
 
             _body.MoveTo(followPointProgress);
-            yield return new WaitForEndOfFrameUnit();
+            yield return new WaitForEndOfFrame();
         }
 
         _followPointDistanceConnected = true;

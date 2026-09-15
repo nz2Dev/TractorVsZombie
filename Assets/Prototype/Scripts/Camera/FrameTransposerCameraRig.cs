@@ -1,10 +1,6 @@
 using System;
-using System.ComponentModel.Design;
 using Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 public class FrameTransposerCameraRig : MonoBehaviour, ICameraStateListener, ICameraRig {
 
