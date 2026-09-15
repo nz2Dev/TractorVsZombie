@@ -11,4 +11,5 @@ public struct TruckPrototype {
     public TruckVisuals visualsPrefab;
     public AudioClip engineLoopSFX;
     public CombatPrototype combatPrototype;
+    public RaycastMarker raycastMarkerPrefab;
 }

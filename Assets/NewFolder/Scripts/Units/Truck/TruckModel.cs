@@ -14,6 +14,8 @@ public class TruckModel {
     public CombatId CombatId { get; set; }
     public int VehiclePhysicsId { get; set; }
     public int RamId { get; set; }
+    public ProximityId ProximityId { get; set; }
+    public RaycastId RaycastId { get; set; }
     
     public Vector3 Position { get; set; }
     public float Gas { get; set; }

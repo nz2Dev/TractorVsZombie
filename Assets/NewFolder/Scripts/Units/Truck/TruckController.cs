@@ -8,14 +8,20 @@ public class TruckController {
     private readonly CombatSystem combatSystem;
     private readonly VehicleService vehicleService;
     private readonly RamEffectController ramEffect;
+    private readonly ProximityService proximityService;
+    private readonly RaycastService raycastService;
+    private readonly EntityMapping entityMapping;
 
     private TruckModel model;
 
-    public TruckController(CombatSystem combatSystem, RamEffectController ramEffect, TruckView view, VehicleService vehicleService) {
+    public TruckController(CombatSystem combatSystem, RamEffectController ramEffect, TruckView view, VehicleService vehicleService, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.ramEffect = ramEffect;
         this.view = view;
         this.vehicleService = vehicleService;
+        this.proximityService = proximityService;
+        this.raycastService = raycastService;
+        this.entityMapping = entityMapping;
     }
 
     public virtual int ReadVehiclePhysicsId() => model.VehiclePhysicsId;
@@ -35,6 +41,15 @@ public class TruckController {
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab, prototype.rotation);
         model.RamId = ramEffect.StartNew(model.CombatId, model.VehiclePhysicsId, prototype.combatPrototype.alie, prototype.ramPrototype);
+        model.ProximityId = proximityService.AddPoint(model.Position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
+        model.RaycastId = raycastService.RegisterMarker(model.Position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
+        
+        entityMapping.CreateMappings(new EntityComponents {
+            proximityId = model.ProximityId,
+            raycastId = model.RaycastId,
+            combatId = model.CombatId,
+        });
+
         view.Show(model.Position, prototype.visualsPrefab, prototype.engineLoopSFX);
     }
 
@@ -60,6 +75,8 @@ public class TruckController {
         ramEffect.Forward(model.RamId, model.Position);
         // todo: register proxmity and raycast components
         vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, model.Brakes, model.Steer);
+        proximityService.UpdatePoint(model.ProximityId, model.Position);
+        raycastService.UpdateMarker(model.RaycastId, model.Position);
     }
 
     private void UpdateView() {

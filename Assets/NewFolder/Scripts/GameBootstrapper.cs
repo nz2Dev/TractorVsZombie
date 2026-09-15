@@ -155,7 +155,10 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             ramEffect,
             truckView,
-            vehicleService
+            vehicleService,
+            proximityService,
+            raycastService,
+            entityMapping
         );
 
         var spawnService = new SpawnService(infantryController, armorController);
