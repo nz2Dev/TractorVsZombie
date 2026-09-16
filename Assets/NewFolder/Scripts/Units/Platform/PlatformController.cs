@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Combat;
@@ -30,8 +31,10 @@ public class PlatformController {
     }
 
     public void Update() {
+        ReadCombat();
         SyncPositions();
         UpdateView();
+        RemoveDestroyed();
     }
 
     public virtual int Create(PlatformPrototype prototype, Vector3 position = default) {
@@ -111,6 +114,45 @@ public class PlatformController {
             weaponState: loadoutState.weaponState,
             platformId: platform.Id
         );
+    }
+
+    private void ReadCombat() {
+        foreach (var platform in registry.Values) {
+            var combatState = combatSystem.ReadState(platform.CombatId);
+            if (combatState.health <= 0) {
+                platform.Destroyed = true;
+                if (platform.LoadoutId != 0) {
+                    loadoutController.DeleteLoadout(platform.LoadoutId);
+                    platform.LoadoutId = 0;
+                }
+            }
+        }
+    }
+
+    private List<int> removalBuffer = new();
+
+    private void RemoveDestroyed() {
+        removalBuffer.Clear();
+        foreach (var platform in registry.Values) {
+            if (platform.Destroyed)
+                removalBuffer.Add(platform.Id);
+        }
+
+        foreach (var destroyed in removalBuffer) {
+            Remove(destroyed);
+        }
+    }
+
+    private void Remove(int platformId) {
+        registry.Remove(platformId, out var model);
+        combatSystem.Remove(model.CombatId);
+        vehicleService.DeleteVehicle(model.VehiclePhysicsId);
+        proximityService.RemovePoint(model.ProximityId);
+        raycastService.UnregisterMarker(model.RaycastId);
+        ramEffect.Remove(model.RamId);
+        entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+        
+        view.RemovePlatform(platformId);
     }
 
     private void SyncPositions() {
