@@ -22,7 +22,7 @@ public class AssemblingController {
         model = new AssemblingModel();
     }
 
-    public Vector3 HeadPosition => truckController.ReadVehiclePosition();
+    public Vector3 HeadPosition { get; private set; }
 
     public void Init(AssemblingPrototype prototype) {
         view.SetPlatformPreviewPrefab(prototype.platformPreviewPrefab);
@@ -42,6 +42,13 @@ public class AssemblingController {
     public void Update() {
         ValidateChain();
         ProcessChain();
+        UpdateHeadPosition();
+    }
+
+    private void UpdateHeadPosition() {
+        if (truckController.UnitExist) {
+            HeadPosition = truckController.ReadVehiclePosition();
+        }
     }
 
     private void GenerateChainRow(Quaternion initRotation, Vector3 initPosition, IEnumerable<LoadoutPrototype> loadoutPrototypes) {
@@ -109,9 +116,9 @@ public class AssemblingController {
 
         if (tail.IsPlatformCreated) {
             int headPhysicsId = -1;
-            if (head.isTruck) {
+            if (head.isTruck && truckController.UnitExist) {
                 headPhysicsId = truckController.ReadVehiclePhysicsId();
-            } else if (head.IsPlatformCreated) {
+            } else if (!head.isTruck && head.IsPlatformCreated) {
                 headPhysicsId = platformController.GetVehiclePhysicsId(head.platformId);
             }
 

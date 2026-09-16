@@ -46,4 +46,11 @@ public class TruckView {
         var engineVolume = 0.1f + gasThrottle;
         soundManager.UpdateLoop(sfxLoopId, visuals.transform.position, enginePitch, engineVolume);
     }
+
+    internal void Remove() {
+        GameObject.Destroy(visuals.gameObject);
+        soundManager.StopLoop(sfxLoopId);
+        GameObject.Destroy(ui.gameObject);
+    }
+
 }

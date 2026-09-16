@@ -11,7 +11,7 @@ public class DrivingController {
 
     private readonly List<int> controlledPlatformIds = new ();
     private DrivingInput input;
-    private VehicleState vehicleState;
+    private VehicleState truckVehicleState;
 
     public DrivingController(TruckController truckController, VehicleService vehicleService, PlatformController platformController) {
         this.truckController = truckController;
@@ -20,6 +20,9 @@ public class DrivingController {
     }
 
     public void Update() {
+        if (!truckController.UnitExist) {
+            return;
+        }
         ReadDrivingInput();
         ReadVehicleState();
         ApplyDrivingInput();
@@ -34,7 +37,7 @@ public class DrivingController {
     }
 
     private void ReadVehicleState() {
-        vehicleState = vehicleService.GetVehicleState(truckController.ReadVehiclePhysicsId());
+        truckVehicleState = vehicleService.GetVehicleState(truckController.ReadVehiclePhysicsId());
     }
 
     private void ReadDrivingInput() {
@@ -52,8 +55,8 @@ public class DrivingController {
             gasThrottle = Mathf.Clamp01(input.direction);
             brakesThrottle = 0;
         } else {
-            var forward = vehicleState.rotation * Vector3.forward;
-            var velocityTowardFront = Vector3.Dot(forward, vehicleState.velocity) > 0.1;
+            var forward = truckVehicleState.rotation * Vector3.forward;
+            var velocityTowardFront = Vector3.Dot(forward, truckVehicleState.velocity) > 0.1;
             if (velocityTowardFront) {
                 gasThrottle = 0;
                 brakesThrottle = Mathf.Abs(input.direction);

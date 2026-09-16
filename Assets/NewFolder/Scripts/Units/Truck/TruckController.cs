@@ -1,3 +1,5 @@
+using System;
+
 using Combat;
 
 using UnityEngine;
@@ -26,14 +28,17 @@ public class TruckController {
 
     public virtual int ReadVehiclePhysicsId() => model.VehiclePhysicsId;
     public virtual Vector3 ReadVehiclePosition() => model.Position;
+    public bool UnitExist => model != null;
 
     public void Update() {
         if (model == null)
             return;
 
         ReadExternalState();
+        ReadCombatState();
         WriteExternalInput();
         UpdateView();
+        CheckDestruction();
     }
 
     public virtual void Create(TruckPrototype prototype, Vector3 position = default) {
@@ -69,6 +74,32 @@ public class TruckController {
     private void ReadExternalState() {
         model.VehiclePhysicsState = vehicleService.GetVehicleState(model.VehiclePhysicsId);
         model.Position = model.VehiclePhysicsState.position;
+    }
+
+    private void ReadCombatState() {
+        var combatState = combatSystem.ReadState(model.CombatId);
+        if (combatState.health <= 0) {
+            model.Destroyed = true;
+        }
+    }
+
+    private void CheckDestruction() {
+        if (model.Destroyed) {
+            Clear();
+            model = null;
+        }
+    }
+
+    private void Clear() {
+        combatSystem.Remove(model.CombatId);
+        vehicleService.DeleteVehicle(model.VehiclePhysicsId);
+        ramEffect.Remove(model.RamId);
+        proximityService.RemovePoint(model.ProximityId);
+        raycastService.UnregisterMarker(model.RaycastId);
+        
+        entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+
+        view.Remove();
     }
 
     private void WriteExternalInput() {

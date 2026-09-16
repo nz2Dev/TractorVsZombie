@@ -31,7 +31,7 @@ public class GoalsController {
     public void Update() {
         ReadGoalToggle();
         if (Time.frameCount % 2 == 0)
-            TrackPlatforms();
+            TrackTargets();
     }
 
     private void ReadGoalToggle() {
@@ -43,13 +43,22 @@ public class GoalsController {
         }
     }
 
-    private void TrackPlatforms() {
+    private void TrackTargets() {
+        var count = 0;
+        var center = Vector3.zero;
+        
+        if (truckController.UnitExist) {
+            center += truckController.ReadVehiclePosition();
+            count++;
+        }
+        
         platformController.ReadAllPlatforms(platformStatesBuffer);
-        var center = truckController.ReadVehiclePosition();
         foreach (var platform in platformStatesBuffer) {
             center += platform.position;
+            count++;
         }
-        center /= platformStatesBuffer.Count + 1;
+        
+        center = count > 0 ? center / count : center;
         pathfindingService.UpdateGoal(model.TargetFlowField, center);
     }
 }
