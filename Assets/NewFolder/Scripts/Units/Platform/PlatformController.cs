@@ -60,6 +60,10 @@ public class PlatformController {
         return model.Id;
     }
 
+    internal bool Exist(int platformId) {
+        return registry.ContainsKey(platformId);
+    }
+
     public virtual void Connect(int tailPlatformId, int headVehiclePhysicsId) {
         var tailPlatform = registry[tailPlatformId];
         var headState = vehicleService.GetVehicleState(headVehiclePhysicsId);

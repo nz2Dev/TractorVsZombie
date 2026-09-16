@@ -29,6 +29,10 @@ public class DrivingController {
         controlledPlatformIds.Add(platformId);
     }
 
+    internal void RemoveControlledPlatform(int platformId) {
+        controlledPlatformIds.Remove(platformId);
+    }
+
     private void ReadVehicleState() {
         vehicleState = vehicleService.GetVehicleState(truckController.ReadVehiclePhysicsId());
     }
@@ -68,4 +72,5 @@ public class DrivingController {
             vehicleService.SetVehiclePowertrain(vehicleId, gasThrottle, brakesThrottle);
         }
     }
+
 }

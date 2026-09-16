@@ -13,6 +13,7 @@ public class AssemblingController {
     private readonly AssemblingView view;
 
     public event Action<int> OnPlatformAdded;
+    public event Action<int> OnPlatformRemoved;
 
     public AssemblingController(AssemblingView view, PlatformController platformController, TruckController truckController) {
         this.view = view;
@@ -39,6 +40,7 @@ public class AssemblingController {
     }
 
     public void Update() {
+        ValidateChain();
         ProcessChain();
     }
 
@@ -57,6 +59,16 @@ public class AssemblingController {
             activationPosition = position,
             activationLoadout = prototype
         });
+    }
+
+    private void ValidateChain() {
+        for (int i = model.Chain.Count - 1; i >= 0; i--) {
+            var state = model.Chain[i];
+            if (!state.isTruck && state.IsPlatformCreated && !platformController.Exist(state.platformId)) {
+                model.Chain.RemoveAt(i);
+                OnPlatformRemoved?.Invoke(state.platformId);
+            }
+        }
     }
 
     private void ProcessChain() {

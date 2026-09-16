@@ -30,6 +30,11 @@ public class SelectingController {
         model.OptionsPlatformIds.Add(platformId);
         view.AddPlatform(platformController.ReadPlatformState(platformId));
     }
+    
+    internal void RemoveOption(int platformId) {
+        model.OptionsPlatformIds.Remove(platformId);
+        view.RemovePlatform(platformId);
+    }
 
     private void ReadPlatformSelectionInput() {
         var toggledIds = Enumerable.Empty<int>();

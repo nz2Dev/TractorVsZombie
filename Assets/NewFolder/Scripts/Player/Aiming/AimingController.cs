@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Combat;
@@ -39,6 +40,10 @@ public class AimingController {
 
     internal void AddControlledPlatformId(int platformId) {
         model.ControlledPlatformIds.Add(platformId);
+    }
+
+    internal void RemoveControlledPlatformId(int platformId) {
+        model.ControlledPlatformIds.Remove(platformId);
     }
 
     private void OnManualPlatformListChanged() {

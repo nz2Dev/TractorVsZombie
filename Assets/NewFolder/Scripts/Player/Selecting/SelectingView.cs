@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine.UIElements;
@@ -19,6 +20,11 @@ public class SelectingView {
         MakeLabel(out var label);
         binding[state.platformId] = label;
         UpdateLabel(label, state);
+    }
+
+    internal void RemovePlatform(int platformId) {
+        var label = binding[platformId];
+        container.Remove(label);
     }
 
     internal void UpdatePlatform(PlatformState state) {
@@ -51,4 +57,5 @@ public class SelectingView {
     private void UpdateLabel(Label label, PlatformState state) {
         label.text = $"weapon {state.weaponId}";
     }
+
 }

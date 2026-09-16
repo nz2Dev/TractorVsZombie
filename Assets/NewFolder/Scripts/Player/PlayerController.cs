@@ -29,6 +29,11 @@ public class PlayerController {
             aimingController.AddControlledPlatformId(platformId);
             drivingController.AddControlledPlatform(platformId);
         };
+        assemblingController.OnPlatformRemoved += (platformId) => {
+            selectingController.RemoveOption(platformId);
+            aimingController.RemoveControlledPlatformId(platformId);
+            drivingController.RemoveControlledPlatform(platformId);
+        };
 
         collectingController.OnLoadoutCollected += (position, loadoutPrototype) =>
             assemblingController.AddLoadout(position, loadoutPrototype, model.Config.startOrEndCouplingOfRewards);
@@ -46,9 +51,9 @@ public class PlayerController {
             return;
         
         var headPosition = assemblingController.HeadPosition;
+        assemblingController.Update();
         drivingController.Update();
         selectingController.Update();
-        assemblingController.Update();
         aimingController.SetAimSourcePosition(headPosition);
         aimingController.Update();
         collectingController.SetPosition(headPosition);
