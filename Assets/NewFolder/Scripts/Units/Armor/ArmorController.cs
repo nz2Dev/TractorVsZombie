@@ -65,7 +65,7 @@ public class ArmorController {
             combatId = model.CombatId
         });
 
-        view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.combatPrototype.alie, prototype.engineLoopSFX);
+        view.Show(nextId, prototype.position, prototype.visualsPrefab, prototype.combatPrototype.alie, prototype.engineLoopSFX, prototype.worldSpaceUIPrefab);
         return model.Id;
     }
 
@@ -161,6 +161,7 @@ public class ArmorController {
             view.UpdateSound(model.Id, model.Gas);
             
             var combatState = combatSystem.ReadState(model.CombatId);
+            view.UpdateHealthBar(model.Id, model.Position, combatState.health, combatState.maxHealth);
             if (combatState.damageResult.HasValue) {
                 view.ShowTakeHit(model.Id);
             }

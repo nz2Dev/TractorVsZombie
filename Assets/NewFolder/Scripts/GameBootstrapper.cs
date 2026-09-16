@@ -55,7 +55,7 @@ public class GameBootstrapper : MonoBehaviour {
         var collisionService = new CollisionService(collisionServiceConfig);
 
         var weaponView = new WeaponView();
-        var armorView = new ArmorView(soundManager);
+        var armorView = new ArmorView(soundManager, cameraManager);
         var platformView = new PlatformView(cameraManager);
         var rewardView = new RewardView();
         var infantryView = new InfantryView(footstepSoundSystem);

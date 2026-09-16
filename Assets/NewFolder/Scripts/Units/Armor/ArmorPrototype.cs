@@ -15,8 +15,9 @@ public struct ArmorPrototype {
     public RewardPrototype rewardPrototype;
     public CombatPrototype combatPrototype;
     public RaycastMarker raycastMarkerPrefab;
+    public WorldSpaceUI worldSpaceUIPrefab;
 
-    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, RewardPrototype rewardPrototype, CombatPrototype combatPrototype, RaycastMarker raycastMarkerPrefab) {
+    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, RewardPrototype rewardPrototype, CombatPrototype combatPrototype, RaycastMarker raycastMarkerPrefab, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.config = config;
         this.visualsPrefab = visualsPrefab;
@@ -27,5 +28,6 @@ public struct ArmorPrototype {
         this.rewardPrototype = rewardPrototype;
         this.combatPrototype = combatPrototype;
         this.raycastMarkerPrefab = raycastMarkerPrefab;
+        this.worldSpaceUIPrefab = worldSpaceUIPrefab;
     }
 }

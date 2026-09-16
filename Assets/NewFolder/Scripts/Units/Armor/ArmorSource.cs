@@ -13,6 +13,7 @@ public class ArmorSource : MonoBehaviour {
     [Local] [SerializeField] private RamEffectSource ramSource;
     [Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
     [SerializeField] private RewardSource loadoutRewardSource;
+    [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -29,7 +30,8 @@ public class ArmorSource : MonoBehaviour {
             localWeaponPrototype: weaponSource != null ? weaponSource.GetPrototype(localTransform: true) : default,
             rewardPrototype: loadoutRewardSource.GetPrototype(),
             combatPrototype: combatSource.Get(),
-            raycastMarkerPrefab: raycastMarkerPrefab
+            raycastMarkerPrefab: raycastMarkerPrefab,
+            worldSpaceUIPrefab: worldSpaceUIPrefab
         );
     }
 }
