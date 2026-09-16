@@ -53,7 +53,7 @@ public class PlatformController {
             combatId = model.CombatId
         });
         
-        view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab, prototype.combatPrototype.alie);
+        view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab, prototype.combatPrototype.alie, prototype.worldSpaceUIPrefab);
         return model.Id;
     }
 
@@ -132,6 +132,8 @@ public class PlatformController {
     private void UpdateView() {
         foreach (var host in registry.Values) {
             var combatState = combatSystem.ReadState(host.CombatId);
+            view.UpdateHealthBar(host.Id, host.Position, combatState.health, combatState.maxHealth);
+            
             if (combatState.damageResult.HasValue) {
                 // interesting case occure, conceptually platform is only a carrier
                 // loadout and weapons are handled separately

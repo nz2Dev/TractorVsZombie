@@ -9,6 +9,7 @@ public class PlatformSource : MonoBehaviour {
     [SerializeField] private Vector3 loadoutOffset; // TODO: consider making it visuals, by adding util TransformSource, that returns struct that contain Position/Rotation
     [Local] [SerializeField] private RamEffectSource ramSource;
     [Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
+    [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -23,7 +24,8 @@ public class PlatformSource : MonoBehaviour {
             ramPrototype: ramSource != null ? ramSource.GetPrototype() : default,
             loadoutOffset: loadoutOffset,
             combatPrototype: combatSource.Get(),
-            raycastMarkerPrefab: raycastMarkerPrefab
+            raycastMarkerPrefab: raycastMarkerPrefab,
+            worldSpaceUIPrefab: worldSpaceUIPrefab
         );
     }
 }
