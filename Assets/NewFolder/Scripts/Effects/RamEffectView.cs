@@ -23,10 +23,15 @@ public class RamEffectView {
         for (int i = 0; i < maxImpacts; i++) {
             audioSource.PlayOneShot(SelectRandom(audioClips));
         }
-    }   
+    }
 
     private static AudioClip SelectRandom(AudioClip[] clips) {
         return clips[Random.Range(0, clips.Length)];
+    }
+
+    public void RemoveEffeect(int entityId) {
+        audioSourceRegistry.Remove(entityId, out var audioSource);
+        GameObject.Destroy(audioSource.gameObject);
     }
 
 }

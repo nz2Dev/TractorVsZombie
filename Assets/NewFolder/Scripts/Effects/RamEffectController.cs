@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Combat;
@@ -38,6 +39,11 @@ public class RamEffectController {
         registry[nextId] = model;
         view.AddEffect(nextId, prototype.audioSourcePrefab);
         return nextId;
+    }
+
+    public void Remove(int ramId) {
+        registry.Remove(ramId, out var model);
+        view.RemoveEffeect(ramId);
     }
 
     public void Forward(int id, Vector3 position) {
@@ -100,4 +106,5 @@ public class RamEffectController {
             }
         }
     }
+
 }
