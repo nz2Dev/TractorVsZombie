@@ -33,12 +33,13 @@ public class LevelController {
             OnLevelLoaded();
         }
 
-        if (headquarterBuildingController.IsDestroyed()) {
+        if (model.LevelStarted && (headquarterBuildingController.IsDestroyed() || !playerController.HasUnits)) {
             view.ShowGameOverUI();
         }
     }
 
     private void OnLevelLoaded() {
+        model.LevelStarted = true;
         playerController.Setup(model.PlayerPrototype);
         enemyController.Setup(model.EnemyPrototype);
     }

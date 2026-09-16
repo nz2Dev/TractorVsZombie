@@ -39,6 +39,8 @@ public class PlayerController {
             assemblingController.AddLoadout(position, loadoutPrototype, model.Config.startOrEndCouplingOfRewards);
     }
 
+    public bool HasUnits => assemblingController.ControlledUnitsCount > 0;
+
     public void Setup(PlayerPrototype prototype) {     
         model = new PlayerModel(prototype.config);
         aimingController.Init(prototype.aimingPrototype);
