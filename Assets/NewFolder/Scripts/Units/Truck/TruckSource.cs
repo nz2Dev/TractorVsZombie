@@ -9,6 +9,7 @@ public class TruckSource : MonoBehaviour {
     [Local] [SerializeField] private RamEffectSource ramSource;
     [SerializeField] private AudioClip engineLoopSFX;
     [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
+    [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -24,7 +25,8 @@ public class TruckSource : MonoBehaviour {
             visualsPrefab = visualsPrefab,
             engineLoopSFX = engineLoopSFX,
             combatPrototype = combatSource.Get(),
-            raycastMarkerPrefab = raycastMarkerPrefab
+            raycastMarkerPrefab = raycastMarkerPrefab,
+            worldSpaceUIPrefab = worldSpaceUIPrefab
         };
     }
 }

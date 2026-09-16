@@ -12,4 +12,5 @@ public struct TruckPrototype {
     public AudioClip engineLoopSFX;
     public CombatPrototype combatPrototype;
     public RaycastMarker raycastMarkerPrefab;
+    public WorldSpaceUI worldSpaceUIPrefab;
 }
