@@ -23,7 +23,7 @@ public class AssemblingController {
     }
 
     public Vector3 HeadPosition { get; private set; }
-    public int ControlledUnitsCount => model.Chain.Count;
+    public int ControlledUnitsCount => model.Chain.Count + (truckController.UnitExist ? 1 : 0);
 
     public void Init(AssemblingPrototype prototype) {
         view.SetPlatformPreviewPrefab(prototype.platformPreviewPrefab);
