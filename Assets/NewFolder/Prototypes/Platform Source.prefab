@@ -614,6 +614,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2119333286541025500}
     m_Modifications:
+    - target: {fileID: 296123987818187350, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: mass
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1283283747750132100, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2880090461204819423, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.45
@@ -637,6 +645,14 @@ PrefabInstance:
     - target: {fileID: 2938794648065758583, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
       propertyPath: m_AutoConfigureConnectedAnchor
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3178156590119114254, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3839733415428299441, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4404521342175460705, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -685,6 +701,14 @@ PrefabInstance:
     - target: {fileID: 5980005089452948097, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006158005595033464, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_Mass
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7670700374184298500, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8102125379990674598, guid: 2b08da610e7224e3f83b7bc018ead03f, type: 3}
       propertyPath: m_Name

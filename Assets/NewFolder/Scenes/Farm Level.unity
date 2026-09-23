@@ -42942,7 +42942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::CombatPrototypeSource
   alie: 1
-  configSource: {fileID: 11400000, guid: e77ee70402f1a4d498b35107339c66e0, type: 2}
+  configSource: {fileID: 11400000, guid: 4a7abc6701f2d4fe08abac11d0846e6d, type: 2}
 --- !u!43 &2139781604
 Mesh:
   m_ObjectHideFlags: 0
@@ -43191,15 +43191,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5593154855076482630, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: speedKFactor
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5593154855076482630, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: minSteerAmount
-      value: 0.3
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5593154855076482630, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: maxSteerDegrees
-      value: 50
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5593154855076482630, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
+      propertyPath: speedCeilingForSteering
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8090169952234316199, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: m_ForwardFriction.m_Stiffness
@@ -44254,7 +44258,7 @@ PrefabInstance:
       objectReference: {fileID: 937460628}
     - target: {fileID: 3715936134110833867, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4565
+      value: 4568
       objectReference: {fileID: 0}
     - target: {fileID: 3902048635732431051, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Name
@@ -44270,7 +44274,7 @@ PrefabInstance:
       objectReference: {fileID: 2001128779}
     - target: {fileID: 3995790071150967799, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4565
+      value: 4568
       objectReference: {fileID: 0}
     - target: {fileID: 4231372914453914694, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
@@ -44282,7 +44286,7 @@ PrefabInstance:
       objectReference: {fileID: 1606120417}
     - target: {fileID: 4403027929564642176, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4565
+      value: 4568
       objectReference: {fileID: 0}
     - target: {fileID: 4474605614288331626, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Mesh
@@ -44294,7 +44298,7 @@ PrefabInstance:
       objectReference: {fileID: 25681712}
     - target: {fileID: 4599031156055082105, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4565
+      value: 4568
       objectReference: {fileID: 0}
     - target: {fileID: 5377620666268941220, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_fontSizeBase
@@ -44334,7 +44338,7 @@ PrefabInstance:
       objectReference: {fileID: 517396965}
     - target: {fileID: 8700669035646066024, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 463
+      value: 466
       objectReference: {fileID: 0}
     - target: {fileID: 8749679749334469805, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
