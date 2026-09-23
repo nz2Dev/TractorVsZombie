@@ -46,21 +46,13 @@ public class RamEffectController {
 
     public void Remove(int ramId) {
         registry.Remove(ramId, out var model); 
-        if (vehicleService.Exist(model.HolderVehicleId)) {
-            RestoreBaseLinearDrag(model);
-        }
+        RestoreBaseLinearDrag(model);
         view.RemoveEffeect(ramId);
     }
 
     public void Forward(int id, Vector3 position) {
         var model = registry[id];
         model.Position = position;
-    }
-
-    public void Stop(int id) {
-        if (registry.Remove(id, out var model) && vehicleService.Exist(model.HolderVehicleId)) {
-            RestoreBaseLinearDrag(model);
-        }
     }
 
     private void ComputeDamage() {
@@ -140,7 +132,9 @@ public class RamEffectController {
     }
 
     private void RestoreBaseLinearDrag(RamEffectModel model) {
-        vehicleService.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag);
+        if (vehicleService.Exist(model.HolderVehicleId)) {
+            vehicleService.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag);
+        }
     }
 
 }

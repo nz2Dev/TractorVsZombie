@@ -91,7 +91,7 @@ public class ArmorController {
         combatSystem.Remove(model.CombatId);
         vehicleService.DeleteVehicle(model.VehiclePhysicsId);
         weaponController.DeleteWeapon(model.WeaponId);
-        ramEffect.Stop(model.RamId);
+        ramEffect.Remove(model.RamId);
 
         proximityService.RemovePoint(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
