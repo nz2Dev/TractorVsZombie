@@ -29371,7 +29371,7 @@ GameObject:
   - component: {fileID: 1128309738}
   - component: {fileID: 1128309739}
   - component: {fileID: 1128309740}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Raycast Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38596,7 +38596,7 @@ Transform:
   m_GameObject: {fileID: 1845013685}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 0, z: -36.2}
+  m_LocalPosition: {x: -0.7, y: 0, z: -49.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -43174,6 +43174,10 @@ PrefabInstance:
       value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 3174082325308362371, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174082325308362371, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: m_ForwardFriction.m_Stiffness
       value: 2
       objectReference: {fileID: 0}
@@ -43184,6 +43188,10 @@ PrefabInstance:
     - target: {fileID: 4441451520058313787, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: m_Name
       value: Tractor Unity Vehicle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495872882688886938, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4495872882688886938, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: m_SidewaysFriction.m_Stiffness
