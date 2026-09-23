@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::RamEffectConfig
   damage: 1
   triggerRadius: 2
-  temporalLinearDragPerContact: 0.25
-  maxTemporalLinearDrag: 5
+  temporalLinearDragPerContact: 0.2
+  maxTemporalLinearDrag: 3
   temporalLinearDragRecoverySpeed: 3
   impactSFX:
   - {fileID: 8300000, guid: 846273779798d48abb5ca63fe4a42bec, type: 3}

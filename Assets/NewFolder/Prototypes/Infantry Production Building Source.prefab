@@ -72,7 +72,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2585800320623778281}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.70710576, z: -0, w: 0.70710784}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 34.8, y: 0, z: -20.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -891309557
+  uniqueId: -890139048
   spawnerSource: {fileID: 5992323351636979987}
   visualsPrefab: {fileID: 2588060940734931284}
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
@@ -171,9 +171,9 @@ MonoBehaviour:
     armorSource: {fileID: 0}
   shape:
     width: 5
-    height: 5
+    height: 3
     spaceScale: 1
-    randomOffset: 0
+    randomOffset: 1
     randomScale: 1
 --- !u!1 &6613415224752745726
 GameObject:
@@ -338,15 +338,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 690965884833191343, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4175
+      value: 4370
       objectReference: {fileID: 0}
     - target: {fileID: 5862685832795428601, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4175
+      value: 4370
       objectReference: {fileID: 0}
     - target: {fileID: 6765311743526321559, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4175
+      value: 4370
       objectReference: {fileID: 0}
     - target: {fileID: 7567918266966525968, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -390,11 +390,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7616817913435156990, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 3977
+      value: 4172
       objectReference: {fileID: 0}
     - target: {fileID: 7931382907696681560, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_VersionIndex
-      value: 4175
+      value: 4370
       objectReference: {fileID: 0}
     - target: {fileID: 8731804934214662812, guid: 91d641490faa1492db746e8368a0fe3f, type: 3}
       propertyPath: m_Name
