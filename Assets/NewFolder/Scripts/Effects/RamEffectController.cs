@@ -29,12 +29,15 @@ public class RamEffectController {
     private readonly Dictionary<int, RamEffectModel> registry = new ();
 
     public void Update() {
+        DecayTemporalLinearDrag();
         ComputeDamage();
+        ApplyTemporalLinearDrag();
     }
 
     public int StartNew(CombatId holderCombatId, int holderVehicleId, bool holderIsAlie, RamEffectPrototype prototype) {
         var nextId = idCounter++;
-        var model = new RamEffectModel(nextId, prototype.config, holderCombatId, holderVehicleId, holderIsAlie);
+        var baseLinearDrag = vehicleService.GetLinearDamping(holderVehicleId);
+        var model = new RamEffectModel(nextId, prototype.config, holderCombatId, holderVehicleId, holderIsAlie, baseLinearDrag);
         model.Position = prototype.position;
         registry[nextId] = model;
         view.AddEffect(nextId, prototype.audioSourcePrefab);
@@ -42,7 +45,10 @@ public class RamEffectController {
     }
 
     public void Remove(int ramId) {
-        registry.Remove(ramId, out var model);
+        registry.Remove(ramId, out var model); 
+        if (vehicleService.Exist(model.HolderVehicleId)) {
+            RestoreBaseLinearDrag(model);
+        }
         view.RemoveEffeect(ramId);
     }
 
@@ -52,7 +58,9 @@ public class RamEffectController {
     }
 
     public void Stop(int id) {
-        registry.Remove(id);
+        if (registry.Remove(id, out var model) && vehicleService.Exist(model.HolderVehicleId)) {
+            RestoreBaseLinearDrag(model);
+        }
     }
 
     private void ComputeDamage() {
@@ -98,13 +106,41 @@ public class RamEffectController {
                 }
             }
 
-            var dragAmount = Mathf.Min(model.ReceiveContactBuffer.Count, model.Config.maxDragInteraction) / (float) model.Config.maxDragInteraction;
-            vehicleService.ApplyDragForce(model.HolderVehicleId, dragAmount * model.Config.maxDragForce, model.Config.dragForceMode);
+            if (model.ReceiveContactBuffer.Count > 0) {
+                AddTemporalLinearDrag(model, model.ReceiveContactBuffer.Count);
+            }
 
             if (model.ReceiveContactBuffer.Count > 0) {
                 view.ShowImpact(model.Id, model.Position, model.ReceiveContactBuffer.Count, model.Config.impactSFX);
             }
         }
+    }
+
+    private void AddTemporalLinearDrag(RamEffectModel model, int contactCount) {
+        var config = model.Config;
+        var dragToAdd = contactCount * config.temporalLinearDragPerContact;
+        model.TemporalLinearDrag = Mathf.Min(model.TemporalLinearDrag + dragToAdd, config.maxTemporalLinearDrag);
+    }
+
+    private void DecayTemporalLinearDrag() {
+        foreach (var model in registry.Values) {
+            var config = model.Config;
+            model.TemporalLinearDrag = Mathf.MoveTowards(
+                model.TemporalLinearDrag,
+                0,
+                config.temporalLinearDragRecoverySpeed * Time.deltaTime
+            );
+        }
+    }
+
+    private void ApplyTemporalLinearDrag() {
+        foreach (var model in registry.Values) {
+            vehicleService.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag + model.TemporalLinearDrag);
+        }
+    }
+
+    private void RestoreBaseLinearDrag(RamEffectModel model) {
+        vehicleService.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag);
     }
 
 }

@@ -4,9 +4,9 @@ using UnityEngine;
 public class RamEffectConfig : ScriptableObject {
     public int damage;
     public float triggerRadius;
-    public int maxDragInteraction = 5;
-    public float maxDragForce = 3000;
-    public ForceMode dragForceMode = ForceMode.Impulse;
+    public float temporalLinearDragPerContact;
+    public float maxTemporalLinearDrag;
+    public float temporalLinearDragRecoverySpeed;
     public AudioClip[] impactSFX;
     public ExplosionConfig explosionData;
     public float maxImpactSpeed = 2;

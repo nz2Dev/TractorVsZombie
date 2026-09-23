@@ -33,6 +33,10 @@ public class VehicleService {
         return nextId;
     }
 
+    public bool Exist(int vehicleId) {
+        return vehiclesRegistry.ContainsKey(vehicleId);
+    }
+
     public void DeleteVehicle(int vehicleId) {
         var vehiclePhysics = vehiclesRegistry[vehicleId];
         vehiclePhysics.DestroySelf();
@@ -59,9 +63,14 @@ public class VehicleService {
         steeringWheel.SetSteer(steer);
     }
 
-    public void ApplyDragForce(int vehicleIndex, float force, ForceMode forceMode) {
+    public float GetLinearDamping(int vehicleIndex) {
         var vehicle = vehiclesRegistry[vehicleIndex];
-        vehicle.Physics.AddRelativeForce(Vector3.back * force, forceMode);
+        return vehicle.Physics.linearDamping;
+    }
+
+    public void SetLinearDamping(int vehicleIndex, float linearDamping) {
+        var vehicle = vehiclesRegistry[vehicleIndex];
+        vehicle.Physics.linearDamping = linearDamping;
     }
 
     public void UpdateVehiclePose(int vehicleIndex, Vector3 position, Quaternion rotation) {
