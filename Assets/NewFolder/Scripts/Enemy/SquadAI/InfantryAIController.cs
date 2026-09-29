@@ -62,8 +62,8 @@ public class InfantryAIController {
             if (!infantryState.isAlive || !infantryState.isGrounded)
                 continue;
 
-            if (HasFoeInRange(infantryState, out var foeComponents, out var foePosition)) {
-                Attack(infantryId, foeComponents, foePosition);
+            if (HasFoeInRange(infantryState, out var foeProximityId)) {
+                infantryController.Attack(infantryId, foeProximityId);
             } else if (IsPathGoalInCostRange(targetFlowFieldId, behaviorModel.Config.targetAgroCostRange, infantryState.position)) {
                 FollowPath(infantryId, behaviorModel, infantryState, targetFlowFieldId);
             } else {
@@ -76,34 +76,28 @@ public class InfantryAIController {
         return pathfindingService.GetFlowCost(flowFieldId, position) < costRange;
     }
 
-    private bool HasFoeInRange(InfantryState infantryState, out EntityComponents foeComponents, out Vector3 foePositon) {
+    private bool HasFoeInRange(InfantryState infantryState, out ProximityId foeProximityId) {
         var foeProximityLayer = CombatSystem.GetProximityLayerForFaction(!infantryState.combatIsAlie);
         if (proximityService.QueryNearestPoint(infantryState.position, foeProximityLayer, out var proximityId)) {
-            if (entityMapping.TryFindByProximityId(proximityId, out foeComponents)) {
+            if (entityMapping.TryFindByProximityId(proximityId, out var foeComponents) && foeComponents.raycastId.HasValue) {
                 var raycastState = raycastService.ReadState(foeComponents.raycastId.Value);
                 var point = proximityService.GetPoint(proximityId);
-                var attackRadius = 3;
-                if (Vector3.Distance(point, infantryState.position) < attackRadius + raycastState.radius) {
-                    foePositon = point;
+                if (Vector3.Distance(point, infantryState.position) < infantryState.activationRadius + raycastState.radius) {
+                    foeProximityId = proximityId;
                     return true;
                 }
             }
         }
-        foeComponents = default;
-        foePositon = default;
+        foeProximityId = default;
         return false;
     }
 
-    private void Attack(int infantryId, EntityComponents foeComponents, Vector3 foePosition) {
-        infantryController.Attack(infantryId, foeComponents.combatId.Value, foePosition);
-    }
-
     private void FollowPath(int infantryId, InfantryAIModel behaviorModel, InfantryState infantryState, int flowFieldId) {
-        var flowGoal = pathfindingService.GetGoal(flowFieldId);
+        infantryController.ClearAttackTarget(infantryId);
         var flowVector = pathfindingService.GetFlowVector(flowFieldId, infantryState.position) * infantryState.maxSpeed;
         var formationForce = formationController.GetFormationForce(behaviorModel.FormationId, infantryState.position);
         var movementVector = Vector3.ClampMagnitude(flowVector + formationForce * behaviorModel.Config.formationBlendFactor, infantryState.maxSpeed);
-        infantryController.MoveTo(infantryId, flowGoal, movementVector);
+        infantryController.MoveTo(infantryId, infantryState.position + movementVector);
     }
 
 }

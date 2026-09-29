@@ -29,6 +29,8 @@ public class InfantryModel {
     
     public bool IsDead { get; set; }
     public float LastAttackTime { get; set; }
+    public ProximityId? TargetProximityId { get; set; }
+    public Vector3? MoveDestination { get; set; }
     public bool IsPhysicsOnlyMovement { get; set; }
 
     public bool Grounded { get; set; }

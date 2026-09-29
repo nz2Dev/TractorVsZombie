@@ -37,7 +37,8 @@ public class InfantryController {
     public bool IsExist(int infantryId) => registry.ContainsKey(infantryId);
 
     public void Update() {
-        UpdateMovements();
+        UpdateMovement();
+        UpdateAttacks();
         ClearDeadInfantry();
         ReadCombatState();
         SyncPositions();
@@ -68,29 +69,16 @@ public class InfantryController {
         return model.Id;
     }
 
-    public void Move(int infantryId, Vector3 velocity) {
-        var model = registry[infantryId];
-        avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
+    public void MoveTo(int infantryId, Vector3 destination) {
+        registry[infantryId].MoveDestination = destination;
     }
 
-    public void MoveTo(int infantryId, Vector3 destination, Vector3 velocity) {
-        var model = registry[infantryId];
-        var distance = Vector3.Distance(model.Position, destination);
-        var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
-        avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity * speedFactor);
+    public void Attack(int infantryId, ProximityId targetProximityId) {
+        registry[infantryId].TargetProximityId = targetProximityId;
     }
 
-    public void Attack(int infantryId, CombatId targetCombatId, Vector3 targetPosition) {
-        var model = registry[infantryId];
-        if (model.LastAttackTime + model.Config.attackCooldown < Time.time) {
-            model.LastAttackTime = Time.time;
-            view.ShowDirectFrontAttack(model.Id, targetPosition);
-            combatSystem.DealDamage(targetCombatId, new DamageInput {
-                damageSource = model.Position,
-                damageType = DamageType.Punch,
-                damage = model.Config.damage
-            });
-        }
+    public void ClearAttackTarget(int infantryId) {
+        registry[infantryId].TargetProximityId = null;
     }
 
     public InfantryState GetInfantryState(int infantryId) {
@@ -99,6 +87,7 @@ public class InfantryController {
             position: model.Position,
             movementVelocity: model.Velocity,
             maxSpeed: model.MaxSpeed,
+            activationRadius: model.Config.activationRadius,
             isAlive: !model.IsDead,
             isGrounded: model.Grounded,
             combatId: model.CombatId,
@@ -134,8 +123,16 @@ public class InfantryController {
         view.RemoveVisuals(model.Id);
     }
 
-    private void UpdateMovements() {
+    private void UpdateMovement() {
         foreach (var model in registry.Values) {
+            if (model.MoveDestination.HasValue) {
+                var toDestination = model.MoveDestination.Value - model.Position;
+                var distance = toDestination.magnitude;
+                var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
+                var velocity = distance > 0 ? toDestination / distance * model.MaxSpeed * speedFactor : Vector3.zero;
+                avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
+            }
+
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
             var physicsPose = ragdollService.GetEntityPose(model.BodyPhysicsId);
 
@@ -186,6 +183,35 @@ public class InfantryController {
                 ragdollService.AddExplosionForce(model.BodyPhysicsId, explosion.config.force, explosion.epicentr, 
                     explosion.config.radius, explosion.config.upwardModifier, explosion.config.forceMode);
             }
+        }
+    }
+
+    private void UpdateAttacks() {
+        foreach (var model in registry.Values) {
+            if (!model.TargetProximityId.HasValue || model.IsDead || !model.Grounded)
+                continue;
+
+            var targetProximityId = model.TargetProximityId.Value;
+            if (!entityMapping.TryFindByProximityId(targetProximityId, out var targetComponents) || !targetComponents.combatId.HasValue) {
+                model.TargetProximityId = null;
+                continue;
+            }
+
+            var targetPosition = proximityService.GetPoint(targetProximityId);
+            var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
+            if (Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius * 1.5f + targetRaycastState.radius)
+                continue;
+
+            if (model.LastAttackTime + model.Config.attackCooldown >= Time.time)
+                continue;
+
+            model.LastAttackTime = Time.time;
+            view.ShowDirectFrontAttack(model.Id, targetPosition);
+            combatSystem.DealDamage(targetComponents.combatId.Value, new DamageInput {
+                damageSource = model.Position,
+                damageType = DamageType.Punch,
+                damage = model.Config.damage
+            });
         }
     }
 
