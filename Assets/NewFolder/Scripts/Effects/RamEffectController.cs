@@ -78,6 +78,9 @@ public class RamEffectController {
 
             entityMapping.FindByRaycastIds(model.ReceiveContactBuffer, out var receiveContactComponents);
             var vehicleSpeed = vehicleService.GetVehicleState(model.HolderVehicleId).velocity.magnitude;
+            if (vehicleSpeed < model.Config.minImpactSpeed)
+                continue;
+                
             foreach (var nextComponents in receiveContactComponents) {
                 if (nextComponents.interactionId.HasValue) {
                     var explosionData = model.Config.explosionData;

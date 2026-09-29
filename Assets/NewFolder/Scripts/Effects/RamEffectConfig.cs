@@ -10,4 +10,5 @@ public class RamEffectConfig : ScriptableObject {
     public AudioClip[] impactSFX;
     public ExplosionConfig explosionData;
     public float maxImpactSpeed = 2;
+    public float minImpactSpeed = 0.5f;
 }
