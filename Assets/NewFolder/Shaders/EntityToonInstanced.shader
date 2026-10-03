@@ -9,6 +9,7 @@ Shader "Custom/EntityToonInstanced"
         _ToonSmoothness ("Toon Smoothness", Range(0.001,0.5)) = 0.05
 
         _HitEmissionColor ("Hit Emission Color", Color) = (1,0.2,0.2,1)
+        _HitFlash ("Hit Flash", Range(0, 1)) = 1
         _Power ("Power", Range(0, 1)) = 1
     }
 
@@ -55,12 +56,11 @@ Shader "Custom/EntityToonInstanced"
             float _ToonThreshold;
             float _ToonSmoothness;
 
-            float4 _HitEmissionColor;
-
             UNITY_INSTANCING_BUFFER_START(Props)
 
                 UNITY_DEFINE_INSTANCED_PROP(float, _HitFlash)
                 UNITY_DEFINE_INSTANCED_PROP(float, _Power)
+                UNITY_DEFINE_INSTANCED_PROP(float3, _HitEmissionColor)
 
             UNITY_INSTANCING_BUFFER_END(Props)
 
@@ -118,10 +118,15 @@ Shader "Custom/EntityToonInstanced"
 
                 // directional light color
                 litColor *= _LightColor0.rgb;
-
+                
+                float3 hitEmissionColor = 
+                    UNITY_ACCESS_INSTANCED_PROP(
+                        Props,
+                        _HitEmissionColor);
+                        
                 // hit flash emission
                 float3 emission =
-                    _HitEmissionColor.rgb * hitFlash;
+                    hitEmissionColor.rgb * hitFlash;
 
                 float3 finalColor =
                     litColor + emission;

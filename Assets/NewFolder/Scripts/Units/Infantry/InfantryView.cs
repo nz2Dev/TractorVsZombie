@@ -27,6 +27,11 @@ public class InfantryView {
         visualsRegistry[infantryId].PlayTakeHit();
     }
 
+    internal void ShowCharge(int infantryId) {
+        var visuals = visualsRegistry[infantryId];
+        visuals.PlayCharge();
+    }
+
     public void ShowDirectFrontAttack(int infantryId, Vector3 targetPosition) {
         var visuals = visualsRegistry[infantryId];
         visuals.PlayDirectAttackAnimation();

@@ -212,6 +212,7 @@ public class InfantryController {
             if (preparing) {
                 model.Position = model.AttackPosition;
                 model.MoveDestination = model.AttackPosition;
+                view.ShowCharge(model.Id);
             }
 
             var canExecute = model.AttackActivationTime > model.LastAttackTime;
