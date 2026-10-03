@@ -50,6 +50,7 @@ public class InfantryController {
         registry[model.Id] = model;
 
         model.Position = prototype.position;
+        model.MoveDestination = prototype.position;
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.CombatIsAlie = prototype.combatPrototype.alie;
         model.InteractionId = interactionRegistry.Add();
@@ -125,14 +126,6 @@ public class InfantryController {
 
     private void UpdateMovement() {
         foreach (var model in registry.Values) {
-            if (model.MoveDestination.HasValue) {
-                var toDestination = model.MoveDestination.Value - model.Position;
-                var distance = toDestination.magnitude;
-                var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
-                var velocity = distance > 0 ? toDestination / distance * model.MaxSpeed * speedFactor : Vector3.zero;
-                avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
-            }
-
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
             var physicsPose = ragdollService.GetEntityPose(model.BodyPhysicsId);
 
@@ -182,6 +175,15 @@ public class InfantryController {
                 ragdollService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, model.Position);
                 ragdollService.AddExplosionForce(model.BodyPhysicsId, explosion.config.force, explosion.epicentr, 
                     explosion.config.radius, explosion.config.upwardModifier, explosion.config.forceMode);
+            }
+
+            if (model.Grounded) {
+                avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
+                var moveVelocity = model.MoveDestination - model.Position;
+                var distance = moveVelocity.magnitude;
+                var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
+                var velocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
+                avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
             }
         }
     }
@@ -245,7 +247,6 @@ public class InfantryController {
     private void SyncPositions() {
         foreach (var model in registry.Values) {
             view.UpdateTransform(model.Id, model.Position, model.Rotation, model.Velocity.magnitude / model.MaxSpeed);
-            avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
             proximityService.UpdatePoint(model.ProximityId, model.Position);
             raycastService.UpdateMarker(model.RaycastId, model.Position);
             // if (!model.IsDead) {
