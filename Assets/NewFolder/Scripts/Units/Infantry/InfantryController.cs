@@ -204,8 +204,11 @@ public class InfantryController {
             if (Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius * 1.5f + targetRaycastState.radius)
                 continue;
 
-            if (model.LastAttackTime + model.Config.attackCooldown >= Time.time)
+            if (model.LastAttackTime + model.Config.attackCooldown >= Time.time) {
+                var targetDirection = (targetPosition - model.Position).normalized;
+                model.Rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
                 continue;
+            }
 
             model.LastAttackTime = Time.time;
             view.ShowDirectFrontAttack(model.Id, targetPosition);
