@@ -3,6 +3,7 @@ using Combat;
 using UnityEngine;
 
 public class InfantryModel {
+
     public InfantryModel(int id, InfantryConfig config, float maxSpeed, RewardPrototype rewardPrototype) {
         Id = id;
         Config = config;
@@ -32,6 +33,8 @@ public class InfantryModel {
     public Vector3 MoveDestination { get; set; }
     
     public float LastAttackTime { get; set; }
+    public float AttackActivationTime { get; set; }
+    public Vector3 AttackPosition { get; set; }
     public ProximityId? TargetProximityId { get; set; }
 
     public bool Grounded { get; set; }

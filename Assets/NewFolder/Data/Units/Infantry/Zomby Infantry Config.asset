@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::InfantryConfig
   damage: 1
   attackCooldown: 1
+  attackDuration: 0.3
+  activationRadius: 3
   settleSpeedSquaredThreashold: 4
   minUnsettleTimeSec: 1
   maxTimeOnTheFloor: 1

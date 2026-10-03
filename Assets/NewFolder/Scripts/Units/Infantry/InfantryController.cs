@@ -177,14 +177,7 @@ public class InfantryController {
                     explosion.config.radius, explosion.config.upwardModifier, explosion.config.forceMode);
             }
 
-            if (model.Grounded) {
-                avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
-                var moveVelocity = model.MoveDestination - model.Position;
-                var distance = moveVelocity.magnitude;
-                var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
-                var velocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
-                avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
-            }
+            
         }
     }
 
@@ -201,22 +194,36 @@ public class InfantryController {
 
             var targetPosition = proximityService.GetPoint(targetProximityId);
             var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
-            if (Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius * 1.5f + targetRaycastState.radius)
-                continue;
-
-            if (model.LastAttackTime + model.Config.attackCooldown >= Time.time) {
-                var targetDirection = (targetPosition - model.Position).normalized;
-                model.Rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+            if (Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius * 1.2f + targetRaycastState.radius) {
+                model.AttackActivationTime = model.LastAttackTime - 1;
                 continue;
             }
 
-            model.LastAttackTime = Time.time;
-            view.ShowDirectFrontAttack(model.Id, targetPosition);
-            combatSystem.DealDamage(targetComponents.combatId.Value, new DamageInput {
-                damageSource = model.Position,
-                damageType = DamageType.Punch,
-                damage = model.Config.damage
-            });
+            var canActivate = model.AttackActivationTime <= model.LastAttackTime;
+            if (canActivate && model.LastAttackTime + model.Config.attackCooldown < Time.time) {
+                model.AttackActivationTime = Time.time;
+                model.AttackPosition = model.Position;
+            }
+
+            var targetDirection = (targetPosition - model.Position).normalized;
+            model.Rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+            
+            var preparing = Time.time >= model.AttackActivationTime && Time.time < model.AttackActivationTime + model.Config.attackDuration;
+            if (preparing) {
+                model.Position = model.AttackPosition;
+                model.MoveDestination = model.AttackPosition;
+            }
+
+            var canExecute = model.AttackActivationTime > model.LastAttackTime;
+            if (canExecute && Time.time > model.AttackActivationTime + model.Config.attackDuration) {
+                model.LastAttackTime = Time.time;
+                view.ShowDirectFrontAttack(model.Id, targetPosition);
+                combatSystem.DealDamage(targetComponents.combatId.Value, new DamageInput {
+                    damageSource = model.Position,
+                    damageType = DamageType.Punch,
+                    damage = model.Config.damage
+                });
+            }
         }
     }
 
@@ -255,6 +262,15 @@ public class InfantryController {
             // if (!model.IsDead) {
             //     combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
             // }
+
+            if (model.Grounded) {
+                avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
+                var moveVelocity = model.MoveDestination - model.Position;
+                var distance = moveVelocity.magnitude;
+                var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
+                var velocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
+                avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
+            }
         }
     }
 

@@ -11142,17 +11142,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!114 &514021889 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2894644294875906351, guid: 00a793380f6cc4bb98036a4d3a025f7f, type: 3}
-  m_PrefabInstance: {fileID: 6252191640500887066}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!1 &515629116
 GameObject:
   m_ObjectHideFlags: 0
@@ -22057,9 +22046,7 @@ MonoBehaviour:
   platformPreviewPrefab: {fileID: 3371121685155722078, guid: 6321345344532445fbf7ea0e39b1b4d0, type: 3}
   initTruckSource: {fileID: 1117709943}
   initPlatformSource: {fileID: 269684097}
-  initLoadoutSources:
-  - {fileID: 514021889}
-  - {fileID: 514021889}
+  initLoadoutSources: []
 --- !u!43 &937460628
 Mesh:
   m_ObjectHideFlags: 0
@@ -43129,8 +43116,8 @@ MonoBehaviour:
     infantrySource: {fileID: 1909830770}
     armorSource: {fileID: 0}
   shape:
-    width: 3
-    height: 7
+    width: 1
+    height: 1
     spaceScale: 2
     randomOffset: 0
     randomScale: 1
