@@ -81,6 +81,7 @@ public class InfantryVisuals : MonoBehaviour {
             }
             if (takeHitPlaying) {
                 emission = hitFlash;
+                fill = 1;
             }
             dynamicProps.SetFloat(hitFlashPropertyID, emission);
             dynamicProps.SetFloat(powerPropertyID, Mathf.Clamp01(power));
