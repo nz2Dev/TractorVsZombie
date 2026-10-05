@@ -190,6 +190,7 @@ public class InfantryController {
             var attackCanceled = !model.TargetProximityId.HasValue || !model.Grounded;
             if (attackCanceled) {
                 model.AttackActivationTime = model.LastAttackTime - 1;
+                view.ShowDischarge(model.Id);
                 continue;
             }
 
@@ -199,6 +200,7 @@ public class InfantryController {
             if (lostAbilityForCombat) {
                 model.TargetProximityId = null;
                 model.AttackActivationTime = model.LastAttackTime - 1;
+                view.ShowDischarge(model.Id);
                 continue;
             }
 
@@ -210,13 +212,13 @@ public class InfantryController {
             if (canActivate && model.LastAttackTime + model.Config.attackCooldown < Time.time) {
                 model.AttackActivationTime = Time.time;
                 model.AttackPosition = model.Position;
+                view.ShowCharge(model.Id, model.Config.attackDuration);
             }
 
             var charging = Time.time >= model.AttackActivationTime && Time.time < model.AttackActivationTime + model.Config.attackDuration;
             if (charging) {
                 model.Position = model.AttackPosition;
                 model.MoveDestination = model.AttackPosition;
-                view.ShowCharge(model.Id);
             }
 
             var notActivated = model.AttackActivationTime < model.LastAttackTime;
@@ -226,6 +228,8 @@ public class InfantryController {
             }
             
             model.LastAttackTime = Time.time;
+            view.ResetCharge(model.Id);
+            
             var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
             var outOfReach = Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
             if (outOfReach) {

@@ -9,7 +9,6 @@ public class InfantryVisuals : MonoBehaviour {
     [SerializeField] private float powerBottom = .3f;
     [SerializeField] private Color takeHitColor = Color.red;
     [SerializeField] private Color chargeColor = Color.yellow;
-    [SerializeField] private float chargeFillSpeed = 1f;
     [SerializeField] private float chargeDecaySpeed = 2f;
 
     private Animator animator;
@@ -63,9 +62,7 @@ public class InfantryVisuals : MonoBehaviour {
         }
 
         chargeFill = Mathf.MoveTowards(chargeFill, 1, Time.deltaTime * chargeSpeed);
-        chargeSpeed = 0;
         chargeFill = Mathf.MoveTowards(chargeFill, 0, Time.deltaTime * decaySpeed);
-        decaySpeed = chargeDecaySpeed;
         if (chargeFill < float.Epsilon) {
             chargePlaying = false;
         }
@@ -121,18 +118,23 @@ public class InfantryVisuals : MonoBehaviour {
         emissionColor = takeHitColor;
     }
 
-    internal void PlayCharge() {
-        if (!chargePlaying) {
-            chargeFill = 0;
-        }
+    internal void PlayCharge(float duration) {
+        chargeFill = 0;
         chargePlaying = true;
-        chargeSpeed = chargeFillSpeed;
+        chargeSpeed = duration > 0f ? 1f / duration : 0f;
         decaySpeed = 0;
         emissionColor = chargeColor;
     }
 
+    internal void PlayDischarge() {
+        chargeSpeed = 0f;
+        decaySpeed = chargeDecaySpeed;
+    }
+
     internal void ResetCharge() {
         chargeFill = 0;
+        decaySpeed = 0;
+        chargeSpeed = 0;
     }
 
     internal void PlayDirectAttackAnimation() {

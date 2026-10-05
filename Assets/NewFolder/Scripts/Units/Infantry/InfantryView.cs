@@ -28,9 +28,14 @@ public class InfantryView {
         visualsRegistry[infantryId].PlayTakeHit();
     }
 
-    internal void ShowCharge(int infantryId) {
+    internal void ShowCharge(int infantryId, float duration) {
         var visuals = visualsRegistry[infantryId];
-        visuals.PlayCharge();
+        visuals.PlayCharge(duration);
+    }
+
+    internal void ShowDischarge(int infantryId) {
+        var visuals = visualsRegistry[infantryId];
+        visuals.PlayDischarge();
     }
 
     internal void ResetCharge(int infantryId) {
