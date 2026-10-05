@@ -28,7 +28,7 @@ public class ORCARunner : MonoBehaviour {
         foreach (var vertices in obstacleVertices) {
             if (vertices.gameObject.isStatic) {
                 vertices.ReadWorldVertices(verticesBuffer);
-                system.AddObstacle(isStatic: true, vertices.InverseORCAOrder, verticesBuffer);
+                system.AddStaticObstacle(vertices.InverseORCAOrder, verticesBuffer);
             }
         }
     }

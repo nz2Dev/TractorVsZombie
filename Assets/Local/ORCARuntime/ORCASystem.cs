@@ -31,10 +31,9 @@ public class ORCASystem {
         Recreate();
     }
 
-    public Obstacle AddObstacle(bool isStatic, bool inverseOrder, IList<float3> vertices) {
-        var targetGroup = isStatic ? StaticObstacles : DynamicObstacles;
-        if (isStatic) staticIsDirty = true;
-        return targetGroup.Add(vertices, inverseOrder);
+    public Obstacle AddStaticObstacle(bool inverseOrder, IList<float3> vertices) {
+        staticIsDirty = true;
+        return StaticObstacles.Add(vertices, inverseOrder);
     }
 
     public Obstacle AddDynamicObstacle(IList<float3> vertices, bool inverseOrder, Vector3 centerPosition) {
@@ -60,10 +59,13 @@ public class ORCASystem {
         obstacle.Release();
     }
 
-    public void RemoveObstacle(Obstacle obstacle) {
-        // might be in one of those lists
+    public void RemoveStaticObstacle(Obstacle obstacle) {
+        if (obstacle == null)
+            return;
+
         StaticObstacles.Remove(obstacle);
-        DynamicObstacles.Remove(obstacle);
+        obstacle.Release();
+        staticIsDirty = true;
     }
 
     public Agent AddAgent(float3 position) {

@@ -36,14 +36,17 @@ public class AvoidanceService {
         var nextObstacleId = new AvoidanceObstacleId(++obstacleIdCounter);
         
         verticesPrefab.ReadWorldVertices(verticesReadBuffer);
-        var obstacle = ORCASystem.Instance.AddObstacle(isStatic: false, verticesPrefab.InverseORCAOrder, verticesReadBuffer);
+        var obstacle = ORCASystem.Instance.AddDynamicObstacle(
+            verticesReadBuffer,
+            verticesPrefab.InverseORCAOrder,
+            verticesPrefab.transform.position);
         obstacleRegistry[nextObstacleId] = obstacle;
         return nextObstacleId;
     }
 
     public void RemoveObstacle(AvoidanceObstacleId obstacleId) {
         obstacleRegistry.Remove(obstacleId, out var orcaObstacle);
-        ORCASystem.Instance.RemoveObstacle(orcaObstacle);
+        ORCASystem.Instance.RemoveDynamicObstacle(orcaObstacle);
     }
 
     public virtual int AddAgent(Vector3 initPosition) {
