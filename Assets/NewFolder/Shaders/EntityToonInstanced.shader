@@ -61,13 +61,13 @@ Shader "Custom/EntityToonInstanced"
             float _ToonSmoothness;
             float _MinHeight;
             float _MaxHeight;
-            float _VerticalFillAmount;
 
             UNITY_INSTANCING_BUFFER_START(Props)
 
                 UNITY_DEFINE_INSTANCED_PROP(float, _HitFlash)
                 UNITY_DEFINE_INSTANCED_PROP(float, _Power)
                 UNITY_DEFINE_INSTANCED_PROP(float3, _HitEmissionColor)
+                UNITY_DEFINE_INSTANCED_PROP(float, _VerticalFillAmount)
 
             UNITY_INSTANCING_BUFFER_END(Props)
 
@@ -100,9 +100,11 @@ Shader "Custom/EntityToonInstanced"
                 float pixelHeightLocal = heightRange > 0.0
                     ? saturate((objectY - _MinHeight) / heightRange)
                     : 0.0;
+                float verticalFillAmount =
+                    UNITY_ACCESS_INSTANCED_PROP(Props, _VerticalFillAmount);
                 float verticalFillMask = 1.0 - smoothstep(
-                    _VerticalFillAmount,
-                    _VerticalFillAmount + 0.01,
+                    verticalFillAmount,
+                    verticalFillAmount + 0.01,
                     pixelHeightLocal);
 
                 float hitFlash =

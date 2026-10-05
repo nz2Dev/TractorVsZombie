@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -32,6 +33,11 @@ public class InfantryView {
         visuals.PlayCharge();
     }
 
+    internal void ResetCharge(int infantryId) {
+        var visuals = visualsRegistry[infantryId];
+        visuals.ResetCharge();
+    }
+
     public void ShowDirectFrontAttack(int infantryId, Vector3 targetPosition) {
         var visuals = visualsRegistry[infantryId];
         visuals.PlayDirectAttackAnimation();
@@ -54,4 +60,5 @@ public class InfantryView {
         visuals.DestroySelfOnIdle();
         visualsRegistry.Remove(infantryId);
     }
+
 }

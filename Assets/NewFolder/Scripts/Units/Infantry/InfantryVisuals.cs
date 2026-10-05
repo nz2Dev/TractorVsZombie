@@ -9,7 +9,7 @@ public class InfantryVisuals : MonoBehaviour {
     [SerializeField] private float powerBottom = .3f;
     [SerializeField] private Color takeHitColor = Color.red;
     [SerializeField] private Color chargeColor = Color.yellow;
-    [SerializeField] private float chargeSinScale = 2f;
+    [SerializeField] private float chargeFillSpeed = 1f;
     [SerializeField] private float chargeDecaySpeed = 2f;
 
     private Animator animator;
@@ -17,9 +17,9 @@ public class InfantryVisuals : MonoBehaviour {
 
     private float hitFlash;
     private bool takeHitPlaying;
-    private float chargeFlash;
-    private float chargeTime;
-    private float chargeDecay;
+    private float chargeFill;
+    private float chargeSpeed;
+    private float decaySpeed;
     private bool chargePlaying;
     private int hitFlashPropertyID;
     private float power = 1;
@@ -27,6 +27,7 @@ public class InfantryVisuals : MonoBehaviour {
     private int powerPropertyID;
     private MaterialPropertyBlock dynamicProps;
     private int emissionPropertyID;
+    private int verticalFillAmountPropertyID;
     private Color emissionColor;
 
     private bool sheduledForDestruction;
@@ -42,6 +43,7 @@ public class InfantryVisuals : MonoBehaviour {
         emissionPropertyID = Shader.PropertyToID("_HitEmissionColor");
         hitFlashPropertyID = Shader.PropertyToID("_HitFlash");
         powerPropertyID = Shader.PropertyToID("_Power");
+        verticalFillAmountPropertyID = Shader.PropertyToID("_VerticalFillAmount");
 
         currentRotation = transform.rotation;
         targetRotation = currentRotation;
@@ -57,10 +59,11 @@ public class InfantryVisuals : MonoBehaviour {
             takeHitPlaying = false;
         }
 
-        chargeTime += Time.deltaTime;
-        chargeFlash = (Mathf.Cos(chargeTime * chargeSinScale) + 1) / 2f;
-        chargeDecay = Mathf.MoveTowards(chargeDecay, 0, Time.deltaTime * chargeDecaySpeed);
-        if (chargeDecay < float.Epsilon) {
+        chargeFill = Mathf.MoveTowards(chargeFill, 1, Time.deltaTime * chargeSpeed);
+        chargeSpeed = 0;
+        chargeFill = Mathf.MoveTowards(chargeFill, 0, Time.deltaTime * decaySpeed);
+        decaySpeed = chargeDecaySpeed;
+        if (chargeFill < float.Epsilon) {
             chargePlaying = false;
         }
 
@@ -71,14 +74,17 @@ public class InfantryVisuals : MonoBehaviour {
     void LateUpdate() {
         if (dynamicProps != null) {
             var emission = 0f;
+            var fill = 1f;
             if (chargePlaying) {
-                emission = chargeFlash;
+                emission = 1f;
+                fill = chargeFill;
             }
             if (takeHitPlaying) {
                 emission = hitFlash;
             }
             dynamicProps.SetFloat(hitFlashPropertyID, emission);
             dynamicProps.SetFloat(powerPropertyID, Mathf.Clamp01(power));
+            dynamicProps.SetFloat(verticalFillAmountPropertyID, fill);
             dynamicProps.SetColor(emissionPropertyID, emissionColor);
             visualsRenderer.SetPropertyBlock(dynamicProps);
         }
@@ -114,11 +120,16 @@ public class InfantryVisuals : MonoBehaviour {
 
     internal void PlayCharge() {
         if (!chargePlaying) {
-            chargeTime = 0;
+            chargeFill = 0;
         }
-        chargeDecay = 1;
         chargePlaying = true;
+        chargeSpeed = chargeFillSpeed;
+        decaySpeed = 0;
         emissionColor = chargeColor;
+    }
+
+    internal void ResetCharge() {
+        chargeFill = 0;
     }
 
     internal void PlayDirectAttackAnimation() {
