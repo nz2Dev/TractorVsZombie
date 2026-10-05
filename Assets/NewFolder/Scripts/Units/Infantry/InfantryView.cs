@@ -38,14 +38,9 @@ public class InfantryView {
         visuals.PlayDischarge();
     }
 
-    internal void ResetCharge(int infantryId) {
+    public void PlayChargeAttack(int infantryId) {
         var visuals = visualsRegistry[infantryId];
-        visuals.ResetCharge();
-    }
-
-    public void ShowDirectFrontAttack(int infantryId, Vector3 targetPosition) {
-        var visuals = visualsRegistry[infantryId];
-        visuals.PlayDirectAttackAnimation();
+        visuals.PlayChargeAttack();
     }
 
     public void ShowThrownAway(int infantryId, Vector3 sourcePosition) {

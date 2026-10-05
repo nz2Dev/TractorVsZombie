@@ -131,13 +131,19 @@ public class InfantryVisuals : MonoBehaviour {
         decaySpeed = chargeDecaySpeed;
     }
 
-    internal void ResetCharge() {
-        chargeFill = 0;
-        decaySpeed = 0;
-        chargeSpeed = 0;
+    public void OnAttackFinished() {
+        chargeFill = 0f;
+        chargeSpeed = 0f;
+        decaySpeed = 0f;
+        chargePlaying = false;
     }
 
-    internal void PlayDirectAttackAnimation() {
+    internal void PlayChargeAttack() {
+        chargeFill = 1f;
+        chargePlaying = true;
+        chargeSpeed = 0f;
+        decaySpeed = 0f;
+        emissionColor = chargeColor;
         animator.SetTrigger("Attack");
     }
 

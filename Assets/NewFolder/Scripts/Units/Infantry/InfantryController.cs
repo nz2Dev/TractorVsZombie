@@ -228,8 +228,7 @@ public class InfantryController {
             }
             
             model.LastAttackTime = Time.time;
-            view.ResetCharge(model.Id);
-            view.ShowDirectFrontAttack(model.Id, targetPosition);
+            view.PlayChargeAttack(model.Id);
             
             var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
             var outOfReach = Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
