@@ -94,7 +94,8 @@ public class InfantryController {
             combatId: model.CombatId,
             combatIsAlie: model.CombatIsAlie,
             bodyId: model.BodyPhysicsId,
-            interactionId: model.InteractionId
+            interactionId: model.InteractionId,
+            attackActivated: model.AttackActivationTime > model.LastAttackTime
         );
     }
 

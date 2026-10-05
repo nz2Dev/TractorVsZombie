@@ -62,11 +62,20 @@ public class InfantryAIController {
             if (!infantryState.isAlive || !infantryState.isGrounded)
                 continue;
 
-            if (HasFoeInRange(infantryState, out var foeProximityId)) {
+            if (!TryGetClosestFoe(infantryState, out var foeProximityId, out var foePosition, out var foeRaycastState))
+                continue;
+
+            var distanceToAttack = Vector3.Distance(infantryState.position, foePosition);
+            var maxAttackDistance = infantryState.activationRadius + foeRaycastState.radius;
+            if (infantryState.attackActivated && distanceToAttack > maxAttackDistance) {
+                infantryController.ClearAttackTarget(infantryId);
+            }
+
+            if (!infantryState.attackActivated && distanceToAttack < maxAttackDistance * 0.7f) {
                 infantryController.Attack(infantryId, foeProximityId);
             } else if (IsPathGoalInCostRange(targetFlowFieldId, behaviorModel.Config.targetAgroCostRange, infantryState.position)) {
                 FollowPath(infantryId, behaviorModel, infantryState, targetFlowFieldId);
-            } else {
+            }  else {
                 FollowPath(infantryId, behaviorModel, infantryState, mainGoalFlowFieldId);
             }
         }
@@ -76,24 +85,22 @@ public class InfantryAIController {
         return pathfindingService.GetFlowCost(flowFieldId, position) < costRange;
     }
 
-    private bool HasFoeInRange(InfantryState infantryState, out ProximityId foeProximityId) {
+    private bool TryGetClosestFoe(InfantryState infantryState, out ProximityId foeProximityId, out Vector3 foePosition, out RaycastState foeRaycastState) {
         var foeProximityLayer = CombatSystem.GetProximityLayerForFaction(!infantryState.combatIsAlie);
-        if (proximityService.QueryNearestPoint(infantryState.position, foeProximityLayer, out var proximityId)) {
-            if (entityMapping.TryFindByProximityId(proximityId, out var foeComponents) && foeComponents.raycastId.HasValue) {
-                var raycastState = raycastService.ReadState(foeComponents.raycastId.Value);
-                var point = proximityService.GetPoint(proximityId);
-                if (Vector3.Distance(point, infantryState.position) < infantryState.activationRadius + raycastState.radius) {
-                    foeProximityId = proximityId;
-                    return true;
-                }
+        if (proximityService.QueryNearestPoint(infantryState.position, foeProximityLayer, out foeProximityId)) {
+            if (entityMapping.TryFindByProximityId(foeProximityId, out var foeComponents)) {
+                foeRaycastState = raycastService.ReadState(foeComponents.raycastId.Value);
+                foePosition = proximityService.GetPoint(foeProximityId);
+                return true;
             }
         }
         foeProximityId = default;
+        foePosition = default;
+        foeRaycastState = default;
         return false;
     }
 
     private void FollowPath(int infantryId, InfantryAIModel behaviorModel, InfantryState infantryState, int flowFieldId) {
-        infantryController.ClearAttackTarget(infantryId);
         var flowVector = pathfindingService.GetFlowVector(flowFieldId, infantryState.position) * infantryState.maxSpeed;
         var formationForce = formationController.GetFormationForce(behaviorModel.FormationId, infantryState.position);
         var movementVector = Vector3.ClampMagnitude(flowVector + formationForce * behaviorModel.Config.formationBlendFactor, infantryState.maxSpeed);

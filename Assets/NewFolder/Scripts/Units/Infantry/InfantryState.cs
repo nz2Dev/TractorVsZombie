@@ -9,12 +9,13 @@ public struct InfantryState {
     public Vector3 movementVelocity;
     public float maxSpeed;
     public float activationRadius;
+    public bool attackActivated;
     public CombatId combatId;
     public bool combatIsAlie;
     public RagdollId bodyId;
     public InteractionId interactionId;
 
-    public InfantryState(bool isAlive, bool isGrounded, Vector3 position, Vector3 movementVelocity, float maxSpeed, float activationRadius, CombatId combatId, bool combatIsAlie, RagdollId bodyId, InteractionId interactionId) {
+    public InfantryState(bool isAlive, bool isGrounded, Vector3 position, Vector3 movementVelocity, float maxSpeed, float activationRadius, CombatId combatId, bool combatIsAlie, RagdollId bodyId, InteractionId interactionId, bool attackActivated) {
         this.isAlive = isAlive;
         this.isGrounded = isGrounded;
         this.position = position;
@@ -25,5 +26,6 @@ public struct InfantryState {
         this.combatIsAlie = combatIsAlie;
         this.bodyId = bodyId;
         this.interactionId = interactionId;
+        this.attackActivated = attackActivated;
     }
 }
