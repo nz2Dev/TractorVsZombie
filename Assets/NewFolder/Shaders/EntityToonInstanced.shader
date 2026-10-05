@@ -11,6 +11,9 @@ Shader "Custom/EntityToonInstanced"
         _HitEmissionColor ("Hit Emission Color", Color) = (1,0.2,0.2,1)
         _HitFlash ("Hit Flash", Range(0, 1)) = 1
         _Power ("Power", Range(0, 1)) = 1
+        _MinHeight ("Min Height", Range(-1, 0)) = -1
+        _MaxHeight ("Max Height", Range(0, 1)) = 1
+        _VerticalFillAmount ("Vertical Fill Amount", Range(0, 1)) = 1
     }
 
     SubShader
@@ -46,6 +49,7 @@ Shader "Custom/EntityToonInstanced"
 
                 float3 worldNormal : TEXCOORD0;
                 float3 worldPos : TEXCOORD1;
+                float objectY : TEXCOORD2;
 
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -55,6 +59,9 @@ Shader "Custom/EntityToonInstanced"
 
             float _ToonThreshold;
             float _ToonSmoothness;
+            float _MinHeight;
+            float _MaxHeight;
+            float _VerticalFillAmount;
 
             UNITY_INSTANCING_BUFFER_START(Props)
 
@@ -79,12 +86,24 @@ Shader "Custom/EntityToonInstanced"
                 o.worldPos =
                     mul(unity_ObjectToWorld, v.vertex).xyz;
 
+                o.objectY = v.vertex.y;
+
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(i);
+
+                float objectY = i.objectY;
+                float heightRange = _MaxHeight - _MinHeight;
+                float pixelHeightLocal = heightRange > 0.0
+                    ? saturate((objectY - _MinHeight) / heightRange)
+                    : 0.0;
+                float verticalFillMask = 1.0 - smoothstep(
+                    _VerticalFillAmount,
+                    _VerticalFillAmount + 0.01,
+                    pixelHeightLocal);
 
                 float hitFlash =
                     UNITY_ACCESS_INSTANCED_PROP(
@@ -126,7 +145,7 @@ Shader "Custom/EntityToonInstanced"
                         
                 // hit flash emission
                 float3 emission =
-                    hitEmissionColor.rgb * hitFlash;
+                    hitEmissionColor.rgb * hitFlash * verticalFillMask;
 
                 float3 finalColor =
                     litColor + emission;

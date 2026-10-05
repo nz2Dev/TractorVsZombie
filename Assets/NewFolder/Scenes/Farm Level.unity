@@ -28817,6 +28817,7 @@ Transform:
   - {fileID: 1808282540}
   - {fileID: 4350355989104226068}
   - {fileID: 1947877291}
+  - {fileID: 1953109532270494391}
   - {fileID: 1890271679}
   - {fileID: 2126898963}
   - {fileID: 1600251741}
@@ -28841,6 +28842,7 @@ MonoBehaviour:
   ramSource: {fileID: 1600251742}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   raycastMarkerPrefab: {fileID: 1890271680}
+  avoidanceObstaclePrefab: {fileID: 1723413113448061743}
   worldSpaceUIPrefab: {fileID: 1808282541}
 --- !u!1773428102 &1117709944
 ParentConstraint:
@@ -42535,6 +42537,10 @@ PrefabInstance:
       propertyPath: speedCeilingForSteering
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 8078102304843618046, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8090169952234316199, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: m_ForwardFriction.m_Stiffness
       value: 2
@@ -42542,6 +42548,10 @@ PrefabInstance:
     - target: {fileID: 8090169952234316199, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: m_SidewaysFriction.m_Stiffness
       value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093452787165827929, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -42783,6 +42793,34 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6c92b1126f5340398d6706a351457ce, type: 3}
+--- !u!114 &1723413113448061743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440257298906826188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ORCARuntime::ORCABoxObstacleVertices
+  boxCollider: {fileID: 4842346454280439642}
+--- !u!4 &1953109532270494391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440257298906826188}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1117709942}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3397656657031015457
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43030,6 +43068,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea372402f6f459ba5d9c030c15ecf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ORCARuntime::ORCABoxObstacleVertices
+--- !u!65 &4842346454280439642
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440257298906826188}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.5265856, y: 3.7085948, z: 4.8241453}
+  m_Center: {x: -0, y: 0.8219869, z: -0}
 --- !u!1001 &4866990494399731254
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43464,6 +43523,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8189230488376577178, guid: 8e02430f9fa7a407892487146ec809b1, type: 3}
   m_PrefabInstance: {fileID: 1186953978083855591}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7440257298906826188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1953109532270494391}
+  - component: {fileID: 4842346454280439642}
+  - component: {fileID: 1723413113448061743}
+  m_Layer: 8
+  m_Name: Truck Avoidance Obstacle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1001 &7625605575023938725
 PrefabInstance:
   m_ObjectHideFlags: 0
