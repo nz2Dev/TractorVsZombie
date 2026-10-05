@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Zomby Infantry Config
   m_EditorClassIdentifier: NewFolder::InfantryConfig
   damage: 1
-  attackCooldown: 1
-  attackDuration: 0.3
+  attackCooldown: 2
+  attackDuration: 1
   activationRadius: 3
   settleSpeedSquaredThreashold: 4
   minUnsettleTimeSec: 1

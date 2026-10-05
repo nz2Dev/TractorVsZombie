@@ -183,21 +183,27 @@ public class InfantryController {
 
     private void UpdateAttacks() {
         foreach (var model in registry.Values) {
-            if (!model.TargetProximityId.HasValue || model.IsDead || !model.Grounded)
+            if (model.IsDead)
                 continue;
 
+            var attackCanceled = !model.TargetProximityId.HasValue || !model.Grounded;
+            if (attackCanceled) {
+                model.AttackActivationTime = model.LastAttackTime - 1;
+                continue;
+            }
+
             var targetProximityId = model.TargetProximityId.Value;
-            if (!entityMapping.TryFindByProximityId(targetProximityId, out var targetComponents) || !targetComponents.combatId.HasValue) {
+            var lostAbilityForCombat = !entityMapping.TryFindByProximityId(targetProximityId, out var targetComponents) 
+                || !targetComponents.combatId.HasValue;
+            if (lostAbilityForCombat) {
                 model.TargetProximityId = null;
+                model.AttackActivationTime = model.LastAttackTime - 1;
                 continue;
             }
 
             var targetPosition = proximityService.GetPoint(targetProximityId);
-            var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
-            if (Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius * 1.2f + targetRaycastState.radius) {
-                model.AttackActivationTime = model.LastAttackTime - 1;
-                continue;
-            }
+            var targetDirection = (targetPosition - model.Position).normalized;
+            model.Rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
 
             var canActivate = model.AttackActivationTime <= model.LastAttackTime;
             if (canActivate && model.LastAttackTime + model.Config.attackCooldown < Time.time) {
@@ -205,26 +211,32 @@ public class InfantryController {
                 model.AttackPosition = model.Position;
             }
 
-            var targetDirection = (targetPosition - model.Position).normalized;
-            model.Rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
-            
-            var preparing = Time.time >= model.AttackActivationTime && Time.time < model.AttackActivationTime + model.Config.attackDuration;
-            if (preparing) {
+            var charging = Time.time >= model.AttackActivationTime && Time.time < model.AttackActivationTime + model.Config.attackDuration;
+            if (charging) {
                 model.Position = model.AttackPosition;
                 model.MoveDestination = model.AttackPosition;
                 view.ShowCharge(model.Id);
             }
 
-            var canExecute = model.AttackActivationTime > model.LastAttackTime;
-            if (canExecute && Time.time > model.AttackActivationTime + model.Config.attackDuration) {
-                model.LastAttackTime = Time.time;
-                view.ShowDirectFrontAttack(model.Id, targetPosition);
-                combatSystem.DealDamage(targetComponents.combatId.Value, new DamageInput {
-                    damageSource = model.Position,
-                    damageType = DamageType.Punch,
-                    damage = model.Config.damage
-                });
+            var notActivated = model.AttackActivationTime < model.LastAttackTime;
+            var notChargedYet = Time.time < model.AttackActivationTime + model.Config.attackDuration;
+            if (notActivated || notChargedYet) {
+                continue;
             }
+            
+            model.LastAttackTime = Time.time;
+            var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
+            var outOfReach = Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
+            if (outOfReach) {
+                continue;
+            }
+            
+            view.ShowDirectFrontAttack(model.Id, targetPosition);
+            combatSystem.DealDamage(targetComponents.combatId.Value, new DamageInput {
+                damageSource = model.Position,
+                damageType = DamageType.Punch,
+                damage = model.Config.damage
+            });
         }
     }
 

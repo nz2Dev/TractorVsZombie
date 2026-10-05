@@ -164,7 +164,7 @@ MonoBehaviour:
   takeHitColor: {r: 1, g: 0, b: 0, a: 1}
   chargeColor: {r: 0.7264151, g: 0.6775433, b: 0.11307406, a: 1}
   chargeSinScale: 10
-  chargeDecaySpeed: 2
+  chargeDecaySpeed: 5
 --- !u!1 &7759045767458773609
 GameObject:
   m_ObjectHideFlags: 0
