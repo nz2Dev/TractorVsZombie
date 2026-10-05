@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 
+using Nebukam.Common;
 using Nebukam.ORCA;
 
 using Unity.Mathematics;
-
-using UnityEditor;
+using UnityEngine;
 
 /*
     ORCA - optimal reciprocal collision avoidance runtime for algorithm implemented by https://github.com/Nebukam/com.nebukam.orca.git
@@ -19,6 +18,8 @@ public class ORCASystem {
     internal AgentGroup<Agent> Agents { get; }
     internal ObstacleGroup StaticObstacles { get; }
     internal ObstacleGroup DynamicObstacles { get; }
+
+    private readonly Dictionary<Obstacle, Vector3> dynamicObstaclePositions = new();
 
     private bool staticIsDirty;
     private bool firstTick;
@@ -34,6 +35,29 @@ public class ORCASystem {
         var targetGroup = isStatic ? StaticObstacles : DynamicObstacles;
         if (isStatic) staticIsDirty = true;
         return targetGroup.Add(vertices, inverseOrder);
+    }
+
+    public Obstacle AddDynamicObstacle(IList<float3> vertices, bool inverseOrder, Vector3 centerPosition) {
+        var obstacle = DynamicObstacles.Add(vertices, inverseOrder);
+        dynamicObstaclePositions.Add(obstacle, centerPosition);
+        return obstacle;
+    }
+
+    public void MoveDynamicObstacle(Obstacle obstacle, Vector3 newPosition) {
+        if (!dynamicObstaclePositions.TryGetValue(obstacle, out var lastPosition))
+            return;
+
+        var offset = (float3)(newPosition - lastPosition);
+        obstacle.Offset(offset);
+        dynamicObstaclePositions[obstacle] = newPosition;
+    }
+
+    public void RemoveDynamicObstacle(Obstacle obstacle) {
+        if (!dynamicObstaclePositions.Remove(obstacle))
+            return;
+
+        DynamicObstacles.Remove(obstacle);
+        obstacle.Release();
     }
 
     public void RemoveObstacle(Obstacle obstacle) {
