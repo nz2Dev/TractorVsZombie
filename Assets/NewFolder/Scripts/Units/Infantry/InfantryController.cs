@@ -229,6 +229,7 @@ public class InfantryController {
             
             model.LastAttackTime = Time.time;
             view.ResetCharge(model.Id);
+            view.ShowDirectFrontAttack(model.Id, targetPosition);
             
             var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
             var outOfReach = Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
@@ -236,7 +237,6 @@ public class InfantryController {
                 continue;
             }
             
-            view.ShowDirectFrontAttack(model.Id, targetPosition);
             combatSystem.DealDamage(targetComponents.combatId.Value, new DamageInput {
                 damageSource = model.Position,
                 damageType = DamageType.Punch,
