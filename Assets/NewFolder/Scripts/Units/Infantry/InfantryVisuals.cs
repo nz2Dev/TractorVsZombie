@@ -17,18 +17,21 @@ public class InfantryVisuals : MonoBehaviour {
 
     private float hitFlash;
     private bool takeHitPlaying;
+
     private float chargeFill;
     private float chargeSpeed;
     private float decaySpeed;
     private bool chargePlaying;
-    private int hitFlashPropertyID;
+    private Color emissionColor;
+    
     private float power = 1;
     private float powerSubtractor = 0;
-    private int powerPropertyID;
+
     private MaterialPropertyBlock dynamicProps;
+    private int powerPropertyID;
+    private int hitFlashPropertyID;
     private int emissionPropertyID;
     private int verticalFillAmountPropertyID;
-    private Color emissionColor;
 
     private bool sheduledForDestruction;
     private Quaternion currentRotation;
