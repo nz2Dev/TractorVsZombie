@@ -35,6 +35,12 @@ public class ORCASystem {
         staticIsDirty = true;
         return StaticObstacles.Add(vertices, inverseOrder);
     }
+    
+    public void RemoveStaticObstacle(Obstacle obstacle) {
+        StaticObstacles.Remove(obstacle);
+        obstacle.Release();
+        staticIsDirty = true;
+    }
 
     public Obstacle AddDynamicObstacle(IList<float3> vertices, bool inverseOrder, Vector3 centerPosition) {
         var obstacle = DynamicObstacles.Add(vertices, inverseOrder);
@@ -57,15 +63,6 @@ public class ORCASystem {
 
         DynamicObstacles.Remove(obstacle);
         obstacle.Release();
-    }
-
-    public void RemoveStaticObstacle(Obstacle obstacle) {
-        if (obstacle == null)
-            return;
-
-        StaticObstacles.Remove(obstacle);
-        obstacle.Release();
-        staticIsDirty = true;
     }
 
     public Agent AddAgent(float3 position) {
