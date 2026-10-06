@@ -22046,7 +22046,8 @@ MonoBehaviour:
   platformPreviewPrefab: {fileID: 3371121685155722078, guid: 6321345344532445fbf7ea0e39b1b4d0, type: 3}
   initTruckSource: {fileID: 1117709943}
   initPlatformSource: {fileID: 269684097}
-  initLoadoutSources: []
+  initLoadoutSources:
+  - {fileID: 2034379599}
 --- !u!43 &937460628
 Mesh:
   m_ObjectHideFlags: 0
@@ -28842,7 +28843,6 @@ MonoBehaviour:
   ramSource: {fileID: 1600251742}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   raycastMarkerPrefab: {fileID: 1890271680}
-  avoidanceObstaclePrefab: {fileID: 1723413113448061743}
   worldSpaceUIPrefab: {fileID: 1808282541}
 --- !u!1773428102 &1117709944
 ParentConstraint:
@@ -40428,6 +40428,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1953986831}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2034379599 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2248895191762497786, guid: 697de765863b048a7a82e00beb0eb422, type: 3}
+  m_PrefabInstance: {fileID: 5781962541767908237}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!1 &2034667229
 GameObject:
   m_ObjectHideFlags: 0

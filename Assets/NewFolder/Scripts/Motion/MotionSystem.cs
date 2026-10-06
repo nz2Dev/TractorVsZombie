@@ -29,6 +29,10 @@ public class MotionSystem {
         }
     }
 
+    public void KeepAwake(MotionId id) {
+        registry[id].KeepAwake = true;
+    }
+
     public void SetPose(MotionId id, Vector3 position, Quaternion rotation) {
         var model = registry[id];
         model.Position = position;
@@ -80,7 +84,9 @@ public class MotionSystem {
                 model.BecameGrounded = true;
                 model.Position = collisionService.GetClosestVerticalGroundPoint(physicsPose.Position);
                 model.Rotation = physicsPose.Rotation;
-                ragdollService.SetPhysicsActive(model.BodyId, false);
+                if (!model.KeepAwake) {
+                    ragdollService.SetPhysicsActive(model.BodyId, false);
+                }
             } else if (keepsGrounded && physicsPose.IsInteractive) {
                 model.Position = physicsPose.Position;
                 model.Rotation = physicsPose.Rotation;

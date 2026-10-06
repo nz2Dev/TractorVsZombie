@@ -222,6 +222,7 @@ public class InfantryController {
                 if (damageResult.damageWasFatal) {
                     model.IsDead = true;
                     model.IsMotionOnlyMovement = true;
+                    motionSystem.KeepAwake(model.MotionId);
                     rewardController.Create(model.RewardPrototype, model.Position);
                     
                     if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {

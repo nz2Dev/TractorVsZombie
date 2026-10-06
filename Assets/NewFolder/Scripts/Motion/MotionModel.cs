@@ -11,6 +11,7 @@ internal sealed class MotionModel {
     public Quaternion Rotation { get; set; } = Quaternion.identity;
     public bool Grounded { get; set; }
     public bool BecameGrounded { get; set; }
+    public bool KeepAwake { get; set; }
     public bool OnTheFloor { get; set; } = true;
     public float UnsettleStartTime { get; set; } = float.NegativeInfinity;
     public float ContactWithGroundStartTime { get; set; } = float.PositiveInfinity;
