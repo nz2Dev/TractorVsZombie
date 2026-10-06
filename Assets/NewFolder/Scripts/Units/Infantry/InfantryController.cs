@@ -222,6 +222,8 @@ public class InfantryController {
                 if (damageResult.damageWasFatal) {
                     model.IsDead = true;
                     model.IsMotionOnlyMovement = true;
+                    // keep awake not enough, need aditional state for "settled", or option to prolongue unsettled state
+                    // as motion state fethcing and removal depend on grounded state, and keeping rigidbody always awake has no effect yet.
                     motionSystem.KeepAwake(model.MotionId);
                     rewardController.Create(model.RewardPrototype, model.Position);
                     
