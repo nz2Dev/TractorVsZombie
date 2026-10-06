@@ -70,6 +70,7 @@ public class MotionSystem {
             var inMotion = physicsPose.Velocity.sqrMagnitude > model.Config.settleSpeedSquaredThreashold;
             var minUnsettleTimeReached = Time.time - model.UnsettleStartTime > model.Config.minUnsettleTimeSec;
             var maxTimeOnTheFloorReached = Time.time - model.ContactWithGroundStartTime > model.Config.maxTimeOnTheFloor;
+            // FIXME: !inMotion can oocure mid-fly, so should be combined with onTheFloor part.
             var settled = !inMotion && minUnsettleTimeReached || model.OnTheFloor && maxTimeOnTheFloorReached;
 
             var keepFlying = !model.Grounded && !settled;
