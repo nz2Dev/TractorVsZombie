@@ -13,14 +13,14 @@ public class RamEffectController {
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
     private readonly VehicleService vehicleService;
-    private readonly InteractionRegistry interactionRegistry;
+    private readonly MotionSystem motionSystem;
     private readonly EntityMapping entityMapping;
 
-    public RamEffectController(RamEffectView view, CombatSystem combatSystem, RaycastService raycastService, InteractionRegistry interactionRegistry, EntityMapping entityMapping, VehicleService vehicleService) {
+    public RamEffectController(RamEffectView view, CombatSystem combatSystem, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping, VehicleService vehicleService) {
         this.view = view;
         this.combatSystem = combatSystem;
         this.raycastService = raycastService;
-        this.interactionRegistry = interactionRegistry;
+        this.motionSystem = motionSystem;
         this.entityMapping = entityMapping;
         this.vehicleService = vehicleService;
     }
@@ -82,11 +82,11 @@ public class RamEffectController {
                 continue;
                 
             foreach (var nextComponents in receiveContactComponents) {
-                if (nextComponents.interactionId.HasValue) {
+                if (nextComponents.motionId.HasValue) {
                     var explosionData = model.Config.explosionData;
                     explosionData.force *= Mathf.Clamp01(vehicleSpeed / model.Config.maxImpactSpeed);
 
-                    interactionRegistry.AddExplosionEffect(nextComponents.interactionId.Value, new Explosion {
+                    motionSystem.AddExplosionEffect(nextComponents.motionId.Value, new Explosion {
                         epicentr = model.Position, 
                         config = explosionData
                     });

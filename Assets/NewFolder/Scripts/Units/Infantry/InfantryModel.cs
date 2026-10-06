@@ -18,8 +18,7 @@ public class InfantryModel {
 
     public CombatId CombatId { get; set; }
     public bool CombatIsAlie { get; set; }
-    public InteractionId InteractionId { get; set; }
-    public RagdollId BodyPhysicsId { get; set; }
+    public MotionId MotionId { get; set; }
     public ProximityId ProximityId { get; set; }
     public RaycastId RaycastId { get; set; }
     public int AvoidanceId { get; set; }
@@ -27,6 +26,7 @@ public class InfantryModel {
     public Vector3 Position { get; set; }
     public Vector3 Velocity { get; set; }
     public Quaternion Rotation { get; set; }
+    public MotionState MotionState { get; set; }
     
     public bool IsDead { get; set; }
     
@@ -37,10 +37,6 @@ public class InfantryModel {
     public Vector3 AttackPosition { get; set; }
     public ProximityId? TargetProximityId { get; set; }
 
-    public bool Grounded { get; set; }
-    public bool IsPhysicsOnlyMovement { get; set; }
-    public float UnsettleStartTime { get; set; } = float.NegativeInfinity;
-    public bool OnTheFloor { get; set; } = true;
-    public float ContactWithGroundStartTime { get; set; } = float.PositiveInfinity;
+    public bool IsMotionOnlyMovement { get; set; }
 
 }

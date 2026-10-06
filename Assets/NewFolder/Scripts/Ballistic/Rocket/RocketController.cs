@@ -12,17 +12,17 @@ public class RocketController {
     private readonly RocketView view;
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
-    private readonly InteractionRegistry interactionRegistry;
+    private readonly MotionSystem motionSystem;
     private readonly EntityMapping entityMapping;
 
     private int idCounter = 0;
     private readonly Dictionary<int, RocketModel> registry = new ();
 
-    public RocketController(RocketView view, CombatSystem combatSystem, RaycastService raycastService, InteractionRegistry interactionRegistry, EntityMapping entityMapping) {
+    public RocketController(RocketView view, CombatSystem combatSystem, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping) {
         this.view = view;
         this.combatSystem = combatSystem;
         this.raycastService = raycastService;
-        this.interactionRegistry = interactionRegistry;
+        this.motionSystem = motionSystem;
         this.entityMapping = entityMapping;
     }
 
@@ -59,13 +59,13 @@ public class RocketController {
                     entityMapping.FindByRaycastIds(overlappedRaycastIds, out var overlappedComponents);
                     
                     foreach (var nextComponents in overlappedComponents) {   
-                        if (nextComponents.interactionId.HasValue) {
+                        if (nextComponents.motionId.HasValue) {
                             var explosionConfig = rocket.Config.explosionData;
 
                             var forceVariation = explosionConfig.force * rocket.Config.forceRangeVariation;
                             explosionConfig.force += Random.Range(-1, 1) * forceVariation;
 
-                            interactionRegistry.AddExplosionEffect(nextComponents.interactionId.Value, new Explosion {
+                            motionSystem.AddExplosionEffect(nextComponents.motionId.Value, new Explosion {
                                 epicentr = rocket.Trajectory.landPoint,
                                 config = explosionConfig
                             });

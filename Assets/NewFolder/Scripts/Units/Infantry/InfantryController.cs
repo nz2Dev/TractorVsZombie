@@ -9,34 +9,31 @@ public class InfantryController {
     private readonly InfantryView view;
     private readonly CombatSystem combatSystem;
     private readonly AvoidanceService avoidanceService;
-    private readonly RagdollService ragdollService;
+    private readonly MotionSystem motionSystem;
     private readonly RaycastService raycastService;
-    private readonly CollisionService collisionService;
     private readonly ProximityService proximityService;
     private readonly RewardController rewardController;
-    private readonly InteractionRegistry interactionRegistry;
     private readonly EntityMapping entityMapping;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, RagdollService physicsService, RaycastService raycastService, AvoidanceService avoidanceService, ProximityService proximityService, InteractionRegistry interactionRegistry, EntityMapping entityMapping, CollisionService collisionService) {
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, MotionSystem motionSystem, RaycastService raycastService, AvoidanceService avoidanceService, ProximityService proximityService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
-        this.ragdollService = physicsService;
+        this.motionSystem = motionSystem;
         this.raycastService = raycastService;
         this.avoidanceService = avoidanceService;
         this.proximityService = proximityService;
-        this.interactionRegistry = interactionRegistry;
         this.entityMapping = entityMapping;
-        this.collisionService = collisionService;
     }
 
     public int InfantryCount => registry.Count;
     public bool IsExist(int infantryId) => registry.ContainsKey(infantryId);
 
     public void Update() {
+        ReadComponents();
         UpdateMovement();
         UpdateAttacks();
         ClearDeadInfantry();
@@ -53,8 +50,7 @@ public class InfantryController {
         model.MoveDestination = prototype.position;
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.CombatIsAlie = prototype.combatPrototype.alie;
-        model.InteractionId = interactionRegistry.Add();
-        model.BodyPhysicsId = ragdollService.RegisterPhysicsEntity(prototype.position, prototype.physicsBodyPrefab);
+        model.MotionId = motionSystem.Add(prototype.position, prototype.config, prototype.physicsBodyPrefab);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
@@ -63,7 +59,7 @@ public class InfantryController {
             proximityId = model.ProximityId,
             raycastId = model.RaycastId,
             combatId = model.CombatId,
-            interactionId = model.InteractionId
+            motionId = model.MotionId
         });
 
         view.AddVisuals(model.Id, prototype.position, prototype.visualsPrefab);
@@ -90,11 +86,9 @@ public class InfantryController {
             maxSpeed: model.MaxSpeed,
             activationRadius: model.Config.activationRadius,
             isAlive: !model.IsDead,
-            isGrounded: model.Grounded,
+            isGrounded: model.MotionState.isGrounded,
             combatId: model.CombatId,
             combatIsAlie: model.CombatIsAlie,
-            bodyId: model.BodyPhysicsId,
-            interactionId: model.InteractionId,
             attackActivated: model.AttackActivationTime > model.LastAttackTime
         );
     }
@@ -103,7 +97,7 @@ public class InfantryController {
         List<InfantryModel> infantryToRemove = new();
 
         foreach (var model in registry.Values)
-            if (model.IsDead && model.Grounded)
+            if (model.IsDead && model.MotionState.isGrounded)
                 infantryToRemove.Add(model);
 
         foreach (var model in infantryToRemove)
@@ -114,8 +108,7 @@ public class InfantryController {
         registry.Remove(model.Id);
         
         combatSystem.Remove(model.CombatId);
-        interactionRegistry.Remove(model.InteractionId);
-        ragdollService.UnregisterPhysicsEntity(model.BodyPhysicsId);
+        motionSystem.Remove(model.MotionId);
         avoidanceService.RemoveAgent(model.AvoidanceId);
         proximityService.RemovePoint(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
@@ -127,55 +120,25 @@ public class InfantryController {
 
     private void UpdateMovement() {
         foreach (var model in registry.Values) {
+            var motionState = model.MotionState;
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
-            var physicsPose = ragdollService.GetEntityPose(model.BodyPhysicsId);
 
-            if (model.OnTheFloor && !physicsPose.ContactWithGround) {
-                model.OnTheFloor = false;
-            } else if (!model.OnTheFloor && physicsPose.ContactWithGround) {
-                model.OnTheFloor = true;
-                model.ContactWithGroundStartTime = Time.time;
+            if (motionState.becameGrounded) {
+                model.Position = motionState.position;
+                model.Rotation = motionState.rotation;
             }
 
-            var inMotion = physicsPose.Velocity.sqrMagnitude > model.Config.settleSpeedSquaredThreashold;
-            var minUnsettleTimeReached = Time.time - model.UnsettleStartTime > model.Config.minUnsettleTimeSec;
-            var maxTimeOnTheFloorReached = Time.time - model.ContactWithGroundStartTime > model.Config.maxTimeOnTheFloor;
-            var settled = !inMotion && minUnsettleTimeReached || model.OnTheFloor && maxTimeOnTheFloorReached;
-            
-            var keepFlying = !model.Grounded && !settled;
-            var becomeGrounded = !model.Grounded && settled;
-            var keepsGrouned = model.Grounded && settled;
-
-            if (keepFlying) {
-                model.Position = physicsPose.Position;
-                model.Rotation = physicsPose.Rotation;
-            } else if (becomeGrounded) {
-                model.Grounded = true; // todo: "Grounded", doesn't really reflect the state it represent. It's currently more like "Stable on the ground/ Stays on feet"
-                model.Position = !model.IsPhysicsOnlyMovement ? collisionService.GetClosestVerticalGroundPoint(model.Position) : model.Position;
-                model.Rotation = !model.IsPhysicsOnlyMovement ? Quaternion.identity : model.Rotation;
-                if (!model.IsPhysicsOnlyMovement) {
-                    ragdollService.SetPhysicsActive(model.BodyPhysicsId, false);
-                }
-            } else if (keepsGrouned && !model.IsPhysicsOnlyMovement) {
+            if (!motionState.isGrounded || model.IsMotionOnlyMovement) {
+                model.Position = motionState.position;
+                model.Rotation = motionState.rotation;
+            } else {
                 model.Velocity = rvoVelocity;
-                model.Position = model.Position += rvoVelocity * Time.deltaTime;
-                if (rvoVelocity.sqrMagnitude > 0) {
+                model.Position += rvoVelocity * Time.deltaTime;
+                if (rvoVelocity.sqrMagnitude < float.Epsilon) {
+                    model.Rotation = Quaternion.identity;
+                } else {
                     model.Rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
                 }
-            } else if (keepsGrouned && model.IsPhysicsOnlyMovement) {
-                model.Position = physicsPose.Position;
-                model.Rotation = physicsPose.Rotation;
-            }
-
-            var interactions = interactionRegistry.Read(model.InteractionId);
-            if (interactions.activeEffect == EffectType.Explosion) {
-                model.Grounded = false;
-                model.UnsettleStartTime = Time.time;
-                var explosion = interactions.explosionData;
-                ragdollService.SetPhysicsActive(model.BodyPhysicsId, true);
-                ragdollService.UpdatePhysicsEntityPosition(model.BodyPhysicsId, model.Position);
-                ragdollService.AddExplosionForce(model.BodyPhysicsId, explosion.config.force, explosion.epicentr, 
-                    explosion.config.radius, explosion.config.upwardModifier, explosion.config.forceMode);
             }
 
             
@@ -187,7 +150,7 @@ public class InfantryController {
             if (model.IsDead)
                 continue;
 
-            var attackCanceled = !model.TargetProximityId.HasValue || !model.Grounded;
+            var attackCanceled = !model.TargetProximityId.HasValue || !model.MotionState.isGrounded;
             if (attackCanceled) {
                 model.AttackActivationTime = model.LastAttackTime - 1;
                 view.ShowDischarge(model.Id);
@@ -258,10 +221,10 @@ public class InfantryController {
                 var damageResult = combatState.damageResult.Value;
                 if (damageResult.damageWasFatal) {
                     model.IsDead = true;
-                    model.IsPhysicsOnlyMovement = true;
+                    model.IsMotionOnlyMovement = true;
                     rewardController.Create(model.RewardPrototype, model.Position);
                     
-                    if (damageResult.damageType == DamageType.Projectile && model.Grounded) {
+                    if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
                         view.ShowThrownAway(model.Id, damageResult.damageSource);
                     } else {
                         view.ShowDisolveDeath(model.Id);
@@ -273,6 +236,7 @@ public class InfantryController {
 
     private void SyncPositions() {
         foreach (var model in registry.Values) {
+            motionSystem.SetPose(model.MotionId, model.Position, model.Rotation);
             view.UpdateTransform(model.Id, model.Position, model.Rotation, model.Velocity.magnitude / model.MaxSpeed);
             proximityService.UpdatePoint(model.ProximityId, model.Position);
             raycastService.UpdateMarker(model.RaycastId, model.Position);
@@ -280,7 +244,7 @@ public class InfantryController {
             //     combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
             // }
 
-            if (model.Grounded) {
+            if (model.MotionState.isGrounded) {
                 avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
                 var moveVelocity = model.MoveDestination - model.Position;
                 var distance = moveVelocity.magnitude;
@@ -288,6 +252,12 @@ public class InfantryController {
                 var velocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
                 avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
             }
+        }
+    }
+
+    private void ReadComponents() {
+        foreach (var model in registry.Values) {
+            model.MotionState = motionSystem.ReadState(model.MotionId);
         }
     }
 

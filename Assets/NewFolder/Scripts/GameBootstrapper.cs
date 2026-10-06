@@ -14,7 +14,7 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private FootstepSoundSystem footstepSoundSystem;
     
     private CombatSystem combatSystem;
-    private InteractionRegistry interactionRegistry;
+    private MotionSystem motionSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
     private LevelController levelController;
@@ -67,7 +67,7 @@ public class GameBootstrapper : MonoBehaviour {
         var entityMapping = new EntityMapping();
 
         combatSystem = new CombatSystem();
-        interactionRegistry = new InteractionRegistry();
+        motionSystem = new MotionSystem(physicsService, collisionService);
 
         rewardController = new RewardController(
             rewardView
@@ -77,20 +77,18 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             infantryView,
             rewardController,
-            physicsService,
+            motionSystem,
             raycastService,
             localAvoidanceService,
             proximityService,
-            interactionRegistry,
-            entityMapping,
-            collisionService
+            entityMapping
         );
 
         rocketController = new RocketController(
             rocketView,
             combatSystem,
             raycastService,
-            interactionRegistry,
+            motionSystem,
             entityMapping
         );
 
@@ -118,7 +116,7 @@ public class GameBootstrapper : MonoBehaviour {
             new RamEffectView(soundManager),
             combatSystem,
             raycastService,
-            interactionRegistry,
+            motionSystem,
             entityMapping,
             vehicleService
         );
@@ -220,7 +218,7 @@ public class GameBootstrapper : MonoBehaviour {
 
     private void Update() {
         combatSystem.Update();
-        interactionRegistry.Update();
+        motionSystem.Update();
 
         ramEffect.Update();
         rewardController.Update();
