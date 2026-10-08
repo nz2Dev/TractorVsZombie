@@ -38,17 +38,25 @@ namespace Combat  {
                 health: model.Health,
                 maxHealth: model.Config.maxHelath,
                 damageResult: model.DamageResult,
-                surface: model.Config.surface
+                surface: model.Config.surface,
+                isDead: model.Dead
             );
         }
 
         public void Update() {
             foreach (var model in models.Values) {
                 model.DamageResult = null;
+                if (model.Dead) 
+                    continue;
+
                 if (model.DamageInput.HasValue) {
                     var input = model.DamageInput.Value;
                     model.DamageInput = null;
                     model.Health -= input.damage;
+                    if (model.Health <= 0) {
+                        model.Dead = true;
+                    }
+                    
                     model.DamageResult = new DamageResult {
                         damageType = input.damageType,
                         damageWasFatal = model.Health <= 0,

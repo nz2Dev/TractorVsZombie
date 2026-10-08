@@ -85,7 +85,7 @@ public class InfantryController {
             movementVelocity: model.Velocity,
             maxSpeed: model.MaxSpeed,
             activationRadius: model.Config.activationRadius,
-            isAlive: !model.IsDead,
+            isAlive: !model.CombatState.isDead,
             isGrounded: model.MotionState.isGrounded,
             combatId: model.CombatId,
             combatIsAlie: model.CombatIsAlie,
@@ -97,7 +97,7 @@ public class InfantryController {
         List<InfantryModel> infantryToRemove = new();
 
         foreach (var model in registry.Values)
-            if (model.IsDead && model.MotionState.isGrounded)
+            if (model.CombatState.isDead && model.MotionState.isGrounded)
                 infantryToRemove.Add(model);
 
         foreach (var model in infantryToRemove)
@@ -147,7 +147,7 @@ public class InfantryController {
 
     private void UpdateAttacks() {
         foreach (var model in registry.Values) {
-            if (model.IsDead)
+            if (model.CombatState.isDead)
                 continue;
 
             var attackCanceled = !model.TargetProximityId.HasValue || !model.MotionState.isGrounded;
@@ -209,29 +209,22 @@ public class InfantryController {
 
     private void ReadCombatState() {
         foreach (var model in registry.Values) {
-            if (model.IsDead)
+            model.CombatState = combatSystem.ReadState(model.CombatId);
+            
+            var combatState = model.CombatState;
+            if (!combatState.damageResult.HasValue)
                 continue;
 
-            var combatState = combatSystem.ReadState(model.CombatId);
-            if (combatState.damageResult.HasValue) {
-                view.ShowTakeHit(model.Id);
-            }
-
-            if (combatState.damageResult.HasValue) {
-                var damageResult = combatState.damageResult.Value;
-                if (damageResult.damageWasFatal) {
-                    model.IsDead = true;
-                    model.IsMotionOnlyMovement = true;
-                    // keep awake not enough, need aditional state for "settled", or option to prolongue unsettled state
-                    // as motion state fethcing and removal depend on grounded state, and keeping rigidbody always awake has no effect yet.
-                    motionSystem.KeepAwake(model.MotionId);
-                    rewardController.Create(model.RewardPrototype, model.Position);
-                    
-                    if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
-                        view.ShowThrownAway(model.Id, damageResult.damageSource);
-                    } else {
-                        view.ShowDisolveDeath(model.Id);
-                    }
+            view.ShowTakeHit(model.Id);
+            
+            var damageResult = combatState.damageResult.Value;
+            if (damageResult.damageWasFatal) {
+                rewardController.Create(model.RewardPrototype, model.Position);    
+                
+                if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
+                    view.ShowThrownAway(model.Id, damageResult.damageSource);
+                } else {
+                    view.ShowDisolveDeath(model.Id);
                 }
             }
         }

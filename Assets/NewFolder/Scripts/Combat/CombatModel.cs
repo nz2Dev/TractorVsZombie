@@ -12,6 +12,7 @@ namespace Combat {
         public bool Alie { get; }
 
         public int Health { get; set; }
+        public bool Dead { get; set; }
         public DamageInput? DamageInput { get; set; }
         public DamageResult? DamageResult { get; set; }
 

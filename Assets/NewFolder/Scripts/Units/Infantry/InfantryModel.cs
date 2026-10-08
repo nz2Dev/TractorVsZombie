@@ -26,9 +26,9 @@ public class InfantryModel {
     public Vector3 Position { get; set; }
     public Vector3 Velocity { get; set; }
     public Quaternion Rotation { get; set; }
+
     public MotionState MotionState { get; set; }
-    
-    public bool IsDead { get; set; }
+    public CombatState CombatState { get; set; }
     
     public Vector3 MoveDestination { get; set; }
     

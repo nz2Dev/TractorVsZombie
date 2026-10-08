@@ -122,10 +122,8 @@ public class PlatformController {
 
     private void ReadCombat() {
         foreach (var platform in registry.Values) {
-            var combatState = combatSystem.ReadState(platform.CombatId);
-            if (combatState.health <= 0) {
-                platform.Destroyed = true;
-
+            platform.CombatState = combatSystem.ReadState(platform.CombatId);
+            if (platform.CombatState.damageResult?.damageWasFatal == true) {
                 // should vehicle library handle disconnection itself?
                 // we do this, so that we don't have to do this in caller sites
                 // it's naturall to assume that if platform is destroyed, it removes its connections
@@ -147,7 +145,7 @@ public class PlatformController {
     private void RemoveDestroyed() {
         removalBuffer.Clear();
         foreach (var platform in registry.Values) {
-            if (platform.Destroyed)
+            if (platform.CombatState.isDead)
                 removalBuffer.Add(platform.Id);
         }
 
@@ -186,7 +184,7 @@ public class PlatformController {
 
     private void UpdateView() {
         foreach (var host in registry.Values) {
-            var combatState = combatSystem.ReadState(host.CombatId);
+            var combatState = host.CombatState;
             view.UpdateHealthBar(host.Id, host.Position, combatState.health, combatState.maxHealth);
             
             if (combatState.damageResult.HasValue) {

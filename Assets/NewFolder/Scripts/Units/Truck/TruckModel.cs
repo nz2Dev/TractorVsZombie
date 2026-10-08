@@ -21,7 +21,8 @@ public class TruckModel {
     public float Gas { get; set; }
     public float Brakes { get; set; }
     public float Steer { get; set; }
+    
     public VehicleState VehiclePhysicsState { get; set; }
-    public bool Destroyed { get; set; }
+    public CombatState CombatState { get; set; }
 
 }

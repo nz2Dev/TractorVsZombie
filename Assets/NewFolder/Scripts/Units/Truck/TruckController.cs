@@ -77,14 +77,11 @@ public class TruckController {
     }
 
     private void ReadCombatState() {
-        var combatState = combatSystem.ReadState(model.CombatId);
-        if (combatState.health <= 0) {
-            model.Destroyed = true;
-        }
+        model.CombatState = combatSystem.ReadState(model.CombatId);
     }
 
     private void CheckDestruction() {
-        if (model.Destroyed) {
+        if (model.CombatState.isDead) {
             Clear();
             model = null;
         }
@@ -114,7 +111,7 @@ public class TruckController {
         view.UpdatePose(model.VehiclePhysicsState);
         view.UpdateSound(model.Gas);
 
-        var combatState = combatSystem.ReadState(model.CombatId);
+        var combatState = model.CombatState;
         view.UpdateHealthBar(model.Position, combatState.health, combatState.maxHealth);
         if (combatState.damageResult.HasValue) {
             view.ShowTakeHit();

@@ -114,9 +114,9 @@ public class ArmorController {
     private void ReadCombatOutput() {
         foreach (var model in registry.Values) {
             var combatState = combatSystem.ReadState(model.CombatId);
+            model.CombatState = combatState;
             if (combatState.damageResult?.damageWasFatal == true) {
                 rewardController.Create(model.RewardPrototype, model.Position, model.VehiclePhysicsState.rotation);
-                model.Destroyed = true;
             }
         }
     }
@@ -124,7 +124,7 @@ public class ArmorController {
     private void RemoveDeadArmor() {
         List<ArmorModel> removeBuffer = new();
         foreach (var model in registry.Values) {
-            if (model.Destroyed) {
+            if (model.CombatState.isDead) {
                 removeBuffer.Add(model);
             }
         }
@@ -160,7 +160,7 @@ public class ArmorController {
             view.UpdatePose(model.Id, model.VehiclePhysicsState);
             view.UpdateSound(model.Id, model.Gas);
             
-            var combatState = combatSystem.ReadState(model.CombatId);
+            var combatState = model.CombatState;
             view.UpdateHealthBar(model.Id, model.Position, combatState.health, combatState.maxHealth);
             if (combatState.damageResult.HasValue) {
                 view.ShowTakeHit(model.Id);

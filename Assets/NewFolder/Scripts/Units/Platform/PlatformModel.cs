@@ -25,6 +25,6 @@ public class PlatformModel {
 
     public Vector3 Position { get; set; }
     public VehicleState VehiclePhysicsState { get; set; }
-    public bool Destroyed { get; set ;}
+    public CombatState CombatState { get; set; }
 
 }

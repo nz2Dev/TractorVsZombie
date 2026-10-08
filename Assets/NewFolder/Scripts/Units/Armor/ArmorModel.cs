@@ -28,10 +28,10 @@ public class ArmorModel {
 
     public Vector3 Position { get; set; }
     public VehicleState VehiclePhysicsState { get; set; }
+    public CombatState CombatState { get; set; }
     
     public float Gas { get; set; }
     public Vector3 SteerDirection { get; set; }
     public float Brakes { get; set; }
-    public bool Destroyed { get; set; }
 
 }
