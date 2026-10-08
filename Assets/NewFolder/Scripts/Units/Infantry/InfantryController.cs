@@ -33,7 +33,7 @@ public class InfantryController {
     public bool IsExist(int infantryId) => registry.ContainsKey(infantryId);
 
     public void Update() {
-        ReadComponents();
+        ReadMotion();
         UpdateMovement();
         UpdateAttacks();
         ClearDeadInfantry();
@@ -50,7 +50,7 @@ public class InfantryController {
         model.MoveDestination = prototype.position;
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.CombatIsAlie = prototype.combatPrototype.alie;
-        model.MotionId = motionSystem.Add(prototype.position, prototype.config, prototype.physicsBodyPrefab);
+        model.MotionId = motionSystem.Add(prototype.position, prototype.config, prototype.physicsBodyPrefab, model.CombatId);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
@@ -118,30 +118,31 @@ public class InfantryController {
         view.RemoveVisuals(model.Id);
     }
 
+    private void ReadMotion() {
+        foreach (var model in registry.Values) {
+            var motionState = motionSystem.ReadState(model.MotionId);
+            
+            model.MotionState = motionState;
+            if (!motionState.isGrounded || motionState.becameGrounded) {
+                model.Position = motionState.position;
+                model.Rotation = motionState.rotation;
+            }
+        }
+    }
+
     private void UpdateMovement() {
         foreach (var model in registry.Values) {
             var motionState = model.MotionState;
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
 
-            if (motionState.becameGrounded) {
-                model.Position = motionState.position;
-                model.Rotation = motionState.rotation;
-            }
-
-            if (!motionState.isGrounded || model.IsMotionOnlyMovement) {
-                model.Position = motionState.position;
-                model.Rotation = motionState.rotation;
-            } else {
+            if (motionState.isGrounded) {
                 model.Velocity = rvoVelocity;
                 model.Position += rvoVelocity * Time.deltaTime;
-                if (rvoVelocity.sqrMagnitude < float.Epsilon) {
-                    model.Rotation = Quaternion.identity;
-                } else {
+                
+                if (rvoVelocity.sqrMagnitude > float.Epsilon) {
                     model.Rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
                 }
             }
-
-            
         }
     }
 
@@ -241,6 +242,7 @@ public class InfantryController {
             // }
 
             if (model.MotionState.isGrounded) {
+                // will go to update movement once .HoldPosition/Stop() will be introduced
                 avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
                 var moveVelocity = model.MoveDestination - model.Position;
                 var distance = moveVelocity.magnitude;
@@ -248,12 +250,6 @@ public class InfantryController {
                 var velocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
                 avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
             }
-        }
-    }
-
-    private void ReadComponents() {
-        foreach (var model in registry.Values) {
-            model.MotionState = motionSystem.ReadState(model.MotionId);
         }
     }
 

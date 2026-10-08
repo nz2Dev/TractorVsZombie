@@ -1,9 +1,13 @@
+using Combat;
+
 using Interactions;
 
 using UnityEngine;
 
 internal sealed class MotionModel {
+    
     public MotionId Id { get; }
+    public CombatId HostCombatId { get; }
     public RagdollId BodyId { get; }
     public InfantryConfig Config { get; }
 
@@ -19,10 +23,11 @@ internal sealed class MotionModel {
     public EffectType ActiveEffectType { get; set; }
     public Explosion ExplosionData { get; set; }
 
-    public MotionModel(MotionId id, RagdollId bodyId, InfantryConfig config, Vector3 position) {
+    public MotionModel(MotionId id, RagdollId bodyId, InfantryConfig config, Vector3 position, CombatId hostCombatId) {
         Id = id;
         BodyId = bodyId;
         Config = config;
         Position = position;
+        HostCombatId = hostCombatId;
     }
 }

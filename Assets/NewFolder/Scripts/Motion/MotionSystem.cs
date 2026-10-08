@@ -1,25 +1,29 @@
 using System.Collections.Generic;
 
+using Combat;
+
 using Interactions;
 
 using UnityEngine;
 
 public class MotionSystem {
 
+    private readonly CombatSystem combatSystem;
     private readonly RagdollService ragdollService;
     private readonly CollisionService collisionService;
     private readonly Dictionary<MotionId, MotionModel> registry = new();
     private int idCounter;
 
-    public MotionSystem(RagdollService ragdollService, CollisionService collisionService) {
+    public MotionSystem(RagdollService ragdollService, CollisionService collisionService, CombatSystem combatSystem) {
         this.ragdollService = ragdollService;
         this.collisionService = collisionService;
+        this.combatSystem = combatSystem;
     }
 
-    public MotionId Add(Vector3 position, InfantryConfig config, RagdollBody bodyPrefab) {
+    public MotionId Add(Vector3 position, InfantryConfig config, RagdollBody bodyPrefab, CombatId hostCombatId) {
         var id = new MotionId(++idCounter);
         var bodyId = ragdollService.RegisterPhysicsEntity(position, bodyPrefab);
-        registry[id] = new MotionModel(id, bodyId, config, position);
+        registry[id] = new MotionModel(id, bodyId, config, position, hostCombatId);
         return id;
     }
 
@@ -27,10 +31,6 @@ public class MotionSystem {
         if (registry.Remove(id, out var model)) {
             ragdollService.UnregisterPhysicsEntity(model.BodyId);
         }
-    }
-
-    public void KeepAwake(MotionId id) {
-        registry[id].KeepAwake = true;
     }
 
     public void SetPose(MotionId id, Vector3 position, Quaternion rotation) {
@@ -57,6 +57,7 @@ public class MotionSystem {
 
     public void Update() {
         foreach (var model in registry.Values) {
+            var combatState = combatSystem.ReadState(model.HostCombatId);
             var physicsPose = ragdollService.GetEntityPose(model.BodyId);
             model.BecameGrounded = false;
 
@@ -83,14 +84,12 @@ public class MotionSystem {
             } else if (becomeGrounded) {
                 model.Grounded = true;
                 model.BecameGrounded = true;
-                model.Position = collisionService.GetClosestVerticalGroundPoint(physicsPose.Position);
-                model.Rotation = physicsPose.Rotation;
-                if (!model.KeepAwake) {
+                
+                if (!combatState.isDead) {
                     ragdollService.SetPhysicsActive(model.BodyId, false);
+                    model.Position = collisionService.GetClosestVerticalGroundPoint(physicsPose.Position);
+                    model.Rotation = Quaternion.identity;
                 }
-            } else if (keepsGrounded && physicsPose.IsInteractive) {
-                model.Position = physicsPose.Position;
-                model.Rotation = physicsPose.Rotation;
             }
 
             model.ActiveEffectType = model.OccurredEffectType;

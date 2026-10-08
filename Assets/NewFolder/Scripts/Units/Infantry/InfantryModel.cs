@@ -37,6 +37,4 @@ public class InfantryModel {
     public Vector3 AttackPosition { get; set; }
     public ProximityId? TargetProximityId { get; set; }
 
-    public bool IsMotionOnlyMovement { get; set; }
-
 }
