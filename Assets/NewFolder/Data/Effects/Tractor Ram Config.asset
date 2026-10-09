@@ -27,4 +27,4 @@ MonoBehaviour:
     upwardModifier: 0.7
     forceMode: 1
   maxImpactSpeed: 10
-  minImpactSpeed: 4
+  minImpactSpeed: 8

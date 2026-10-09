@@ -15,7 +15,7 @@ MonoBehaviour:
   damage: 1
   attackCooldown: 2
   attackDuration: 1
-  activationRadius: 6
+  activationRadius: 4
   settleSpeedSquaredThreashold: 4
   minUnsettleTimeSec: 1
   maxTimeOnTheFloor: 1

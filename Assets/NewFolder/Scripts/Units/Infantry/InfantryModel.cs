@@ -30,11 +30,11 @@ public class InfantryModel {
     public MotionState MotionState { get; set; }
     public CombatState CombatState { get; set; }
     
-    public Vector3 MoveDestination { get; set; }
+    public Vector3? MoveDestination { get; set; }
+    public bool HoldMovement { get; set; }
     
     public float LastAttackTime { get; set; }
     public float AttackActivationTime { get; set; }
-    public Vector3 AttackPosition { get; set; }
     public ProximityId? TargetProximityId { get; set; }
 
 }

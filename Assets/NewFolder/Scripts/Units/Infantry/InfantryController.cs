@@ -70,11 +70,15 @@ public class InfantryController {
         registry[infantryId].MoveDestination = destination;
     }
 
+    public void StopMovement(int infantryId) {
+        registry[infantryId].MoveDestination = null;
+    }
+
     public void Attack(int infantryId, ProximityId targetProximityId) {
         registry[infantryId].TargetProximityId = targetProximityId;
     }
 
-    public void ClearAttackTarget(int infantryId) {
+    public void StopAttack(int infantryId) {
         registry[infantryId].TargetProximityId = null;
     }
 
@@ -143,6 +147,19 @@ public class InfantryController {
                     model.Rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
                 }
             }
+
+            var canMove = motionState.isGrounded && model.MoveDestination.HasValue && !model.HoldMovement;
+            model.HoldMovement = false;
+            
+            var preferedVelocity = Vector3.zero;
+            if (canMove) {
+                var moveVelocity = model.MoveDestination.Value - model.Position;
+                var distance = moveVelocity.magnitude;
+                var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
+                preferedVelocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
+            }
+
+            avoidanceService.SetPreferedVelocity(model.AvoidanceId, preferedVelocity);
         }
     }
 
@@ -175,14 +192,12 @@ public class InfantryController {
             var canActivate = model.AttackActivationTime <= model.LastAttackTime;
             if (canActivate && model.LastAttackTime + model.Config.attackCooldown < Time.time) {
                 model.AttackActivationTime = Time.time;
-                model.AttackPosition = model.Position;
                 view.ShowCharge(model.Id, model.Config.attackDuration);
             }
 
             var charging = Time.time >= model.AttackActivationTime && Time.time < model.AttackActivationTime + model.Config.attackDuration;
             if (charging) {
-                model.Position = model.AttackPosition;
-                model.MoveDestination = model.AttackPosition;
+                model.HoldMovement = true;
             }
 
             var notActivated = model.AttackActivationTime < model.LastAttackTime;
@@ -234,22 +249,10 @@ public class InfantryController {
     private void SyncPositions() {
         foreach (var model in registry.Values) {
             motionSystem.SetPose(model.MotionId, model.Position, model.Rotation);
-            view.UpdateTransform(model.Id, model.Position, model.Rotation, model.Velocity.magnitude / model.MaxSpeed);
+            avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
             proximityService.UpdatePoint(model.ProximityId, model.Position);
             raycastService.UpdateMarker(model.RaycastId, model.Position);
-            // if (!model.IsDead) {
-            //     combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
-            // }
-
-            if (model.MotionState.isGrounded) {
-                // will go to update movement once .HoldPosition/Stop() will be introduced
-                avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
-                var moveVelocity = model.MoveDestination - model.Position;
-                var distance = moveVelocity.magnitude;
-                var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
-                var velocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
-                avoidanceService.SetPreferedVelocity(model.AvoidanceId, velocity);
-            }
+            view.UpdateTransform(model.Id, model.Position, model.Rotation, model.Velocity.magnitude / model.MaxSpeed);
         }
     }
 

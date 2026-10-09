@@ -68,7 +68,7 @@ public class InfantryAIController {
             var distanceToAttack = Vector3.Distance(infantryState.position, foePosition);
             var maxAttackDistance = infantryState.activationRadius + foeRaycastState.radius;
             if (infantryState.attackActivated && distanceToAttack > maxAttackDistance) {
-                infantryController.ClearAttackTarget(infantryId);
+                infantryController.StopAttack(infantryId);
             }
 
             if (!infantryState.attackActivated && distanceToAttack < maxAttackDistance * 0.7f) {
