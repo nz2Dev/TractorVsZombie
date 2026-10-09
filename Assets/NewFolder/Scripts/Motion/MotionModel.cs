@@ -7,15 +7,12 @@ using UnityEngine;
 internal sealed class MotionModel {
     
     public MotionId Id { get; }
+    public PoseId HostPoseId { get; }
     public CombatId HostCombatId { get; }
     public RagdollId BodyId { get; }
     public InfantryConfig Config { get; }
 
-    public Vector3 Position { get; set; }
-    public Quaternion Rotation { get; set; } = Quaternion.identity;
     public bool Grounded { get; set; }
-    public bool BecameGrounded { get; set; }
-    public bool KeepAwake { get; set; }
     public bool OnTheFloor { get; set; } = true;
     public float UnsettleStartTime { get; set; } = float.NegativeInfinity;
     public float ContactWithGroundStartTime { get; set; } = float.PositiveInfinity;
@@ -23,11 +20,11 @@ internal sealed class MotionModel {
     public EffectType ActiveEffectType { get; set; }
     public Explosion ExplosionData { get; set; }
 
-    public MotionModel(MotionId id, RagdollId bodyId, InfantryConfig config, Vector3 position, CombatId hostCombatId) {
+    public MotionModel(MotionId id, PoseId poseId, RagdollId bodyId, InfantryConfig config, CombatId hostCombatId) {
         Id = id;
+        HostPoseId = poseId;
         BodyId = bodyId;
         Config = config;
-        Position = position;
         HostCombatId = hostCombatId;
     }
 }

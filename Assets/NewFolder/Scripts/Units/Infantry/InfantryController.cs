@@ -53,7 +53,7 @@ public class InfantryController {
         model.MoveDestination = prototype.position;
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.CombatIsAlie = prototype.combatPrototype.alie;
-        model.MotionId = motionSystem.Add(prototype.position, prototype.config, prototype.physicsBodyPrefab, model.CombatId);
+        model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.config, prototype.physicsBodyPrefab, model.CombatId);
         model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
@@ -134,12 +134,7 @@ public class InfantryController {
 
     private void ReadMotion() {
         foreach (var model in registry.Values) {
-            var motionState = motionSystem.ReadState(model.MotionId);
-            
-            model.MotionState = motionState;
-            if (!motionState.isGrounded || motionState.becameGrounded) {
-                poseRegistry.Write(model.PoseId, motionState.position, motionState.rotation);
-            }
+            model.MotionState = motionSystem.ReadState(model.MotionId);
         }
     }
 
@@ -264,7 +259,6 @@ public class InfantryController {
     private void SyncPositions() {
         foreach (var model in registry.Values) {
             var pose = poseRegistry.Read(model.PoseId);
-            motionSystem.SetPose(model.MotionId, pose.position, pose.rotation);
             avoidanceService.SetAgentPosition(model.AvoidanceId, pose.position);
             proximityService.UpdatePoint(model.ProximityId, pose.position);
             raycastService.UpdateMarker(model.RaycastId, pose.position);

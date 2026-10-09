@@ -68,7 +68,7 @@ public class GameBootstrapper : MonoBehaviour {
         var poseRegistry = new PoseRegistry();
 
         combatSystem = new CombatSystem();
-        motionSystem = new MotionSystem(physicsService, collisionService, combatSystem);
+        motionSystem = new MotionSystem(physicsService, collisionService, combatSystem, poseRegistry);
 
         rewardController = new RewardController(
             rewardView
