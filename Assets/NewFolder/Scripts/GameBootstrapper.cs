@@ -65,6 +65,7 @@ public class GameBootstrapper : MonoBehaviour {
         var productionBuildingView = new ProductionBuildingView();
 
         var entityMapping = new EntityMapping();
+        var poseRegistry = new PoseRegistry();
 
         combatSystem = new CombatSystem();
         motionSystem = new MotionSystem(physicsService, collisionService, combatSystem);
@@ -81,7 +82,8 @@ public class GameBootstrapper : MonoBehaviour {
             raycastService,
             localAvoidanceService,
             proximityService,
-            entityMapping
+            entityMapping,
+            poseRegistry
         );
 
         rocketController = new RocketController(

@@ -19,16 +19,16 @@ public class InfantryModel {
     public CombatId CombatId { get; set; }
     public bool CombatIsAlie { get; set; }
     public MotionId MotionId { get; set; }
+    public PoseId PoseId { get; set; }
     public ProximityId ProximityId { get; set; }
     public RaycastId RaycastId { get; set; }
     public int AvoidanceId { get; set; }
 
-    public Vector3 Position { get; set; }
     public Vector3 Velocity { get; set; }
-    public Quaternion Rotation { get; set; }
 
     public MotionState MotionState { get; set; }
     public CombatState CombatState { get; set; }
+    public PoseState PoseState { get; set; }
     
     public Vector3? MoveDestination { get; set; }
     public bool HoldMovement { get; set; }

@@ -14,11 +14,12 @@ public class InfantryController {
     private readonly ProximityService proximityService;
     private readonly RewardController rewardController;
     private readonly EntityMapping entityMapping;
+    private readonly PoseRegistry poseRegistry;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, MotionSystem motionSystem, RaycastService raycastService, AvoidanceService avoidanceService, ProximityService proximityService, EntityMapping entityMapping) {
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, MotionSystem motionSystem, RaycastService raycastService, AvoidanceService avoidanceService, ProximityService proximityService, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
@@ -27,12 +28,14 @@ public class InfantryController {
         this.avoidanceService = avoidanceService;
         this.proximityService = proximityService;
         this.entityMapping = entityMapping;
+        this.poseRegistry = poseRegistry;
     }
 
     public int InfantryCount => registry.Count;
     public bool IsExist(int infantryId) => registry.ContainsKey(infantryId);
 
     public void Update() {
+        ReadPose();
         ReadMotion();
         UpdateMovement();
         UpdateAttacks();
@@ -46,7 +49,7 @@ public class InfantryController {
         var model = new InfantryModel(nextId, prototype.config, prototype.agentAvoidanceConfig.maxSpeed, prototype.rewardPrototype);
         registry[model.Id] = model;
 
-        model.Position = prototype.position;
+        model.PoseId = poseRegistry.Add(prototype.position, default);
         model.MoveDestination = prototype.position;
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.CombatIsAlie = prototype.combatPrototype.alie;
@@ -85,7 +88,7 @@ public class InfantryController {
     public InfantryState GetInfantryState(int infantryId) {
         var model = registry[infantryId];
         return new InfantryState (
-            position: model.Position,
+            position: model.PoseState.position,
             movementVelocity: model.Velocity,
             maxSpeed: model.MaxSpeed,
             activationRadius: model.Config.activationRadius,
@@ -113,6 +116,7 @@ public class InfantryController {
         
         combatSystem.Remove(model.CombatId);
         motionSystem.Remove(model.MotionId);
+        poseRegistry.Remove(model.PoseId);
         avoidanceService.RemoveAgent(model.AvoidanceId);
         proximityService.RemovePoint(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
@@ -122,30 +126,38 @@ public class InfantryController {
         view.RemoveVisuals(model.Id);
     }
 
+    private void ReadPose() {
+        foreach (var model in registry.Values) {
+            model.PoseState = poseRegistry.Read(model.PoseId);
+        }
+    }
+
     private void ReadMotion() {
         foreach (var model in registry.Values) {
             var motionState = motionSystem.ReadState(model.MotionId);
             
             model.MotionState = motionState;
             if (!motionState.isGrounded || motionState.becameGrounded) {
-                model.Position = motionState.position;
-                model.Rotation = motionState.rotation;
+                poseRegistry.Write(model.PoseId, motionState.position, motionState.rotation);
             }
         }
     }
 
     private void UpdateMovement() {
         foreach (var model in registry.Values) {
+            var pose = poseRegistry.Read(model.PoseId);
             var motionState = model.MotionState;
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
 
             if (motionState.isGrounded) {
                 model.Velocity = rvoVelocity;
-                model.Position += rvoVelocity * Time.deltaTime;
+                pose.position += rvoVelocity * Time.deltaTime;
                 
                 if (rvoVelocity.sqrMagnitude > float.Epsilon) {
-                    model.Rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
+                    pose.rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
                 }
+                
+                poseRegistry.Write(model.PoseId, pose.position, pose.rotation);
             }
 
             var canMove = motionState.isGrounded && model.MoveDestination.HasValue && !model.HoldMovement;
@@ -153,7 +165,7 @@ public class InfantryController {
             
             var preferedVelocity = Vector3.zero;
             if (canMove) {
-                var moveVelocity = model.MoveDestination.Value - model.Position;
+                var moveVelocity = model.MoveDestination.Value - pose.position;
                 var distance = moveVelocity.magnitude;
                 var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
                 preferedVelocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
@@ -185,9 +197,11 @@ public class InfantryController {
                 continue;
             }
 
+            var pose = poseRegistry.Read(model.PoseId);
             var targetPosition = proximityService.GetPoint(targetProximityId);
-            var targetDirection = (targetPosition - model.Position).normalized;
-            model.Rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+            var targetDirection = (targetPosition - pose.position).normalized;
+            pose.rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+            poseRegistry.WriteRotation(model.PoseId, pose.rotation);
 
             var canActivate = model.AttackActivationTime <= model.LastAttackTime;
             if (canActivate && model.LastAttackTime + model.Config.attackCooldown < Time.time) {
@@ -210,13 +224,13 @@ public class InfantryController {
             view.PlayChargeAttack(model.Id);
             
             var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
-            var outOfReach = Vector3.Distance(model.Position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
+            var outOfReach = Vector3.Distance(pose.position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
             if (outOfReach) {
                 continue;
             }
             
             combatSystem.DealDamage(targetComponents.combatId.Value, new DamageInput {
-                damageSource = model.Position,
+                damageSource = pose.position,
                 damageType = DamageType.Punch,
                 damage = model.Config.damage
             });
@@ -235,7 +249,8 @@ public class InfantryController {
             
             var damageResult = combatState.damageResult.Value;
             if (damageResult.damageWasFatal) {
-                rewardController.Create(model.RewardPrototype, model.Position);    
+                var pose = poseRegistry.Read(model.PoseId);
+                rewardController.Create(model.RewardPrototype, pose.position);
                 
                 if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
                     view.ShowThrownAway(model.Id, damageResult.damageSource);
@@ -248,11 +263,12 @@ public class InfantryController {
 
     private void SyncPositions() {
         foreach (var model in registry.Values) {
-            motionSystem.SetPose(model.MotionId, model.Position, model.Rotation);
-            avoidanceService.SetAgentPosition(model.AvoidanceId, model.Position);
-            proximityService.UpdatePoint(model.ProximityId, model.Position);
-            raycastService.UpdateMarker(model.RaycastId, model.Position);
-            view.UpdateTransform(model.Id, model.Position, model.Rotation, model.Velocity.magnitude / model.MaxSpeed);
+            var pose = poseRegistry.Read(model.PoseId);
+            motionSystem.SetPose(model.MotionId, pose.position, pose.rotation);
+            avoidanceService.SetAgentPosition(model.AvoidanceId, pose.position);
+            proximityService.UpdatePoint(model.ProximityId, pose.position);
+            raycastService.UpdateMarker(model.RaycastId, pose.position);
+            view.UpdateTransform(model.Id, pose.position, pose.rotation, model.Velocity.magnitude / model.MaxSpeed);
         }
     }
 
