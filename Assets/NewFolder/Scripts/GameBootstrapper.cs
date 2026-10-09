@@ -15,6 +15,7 @@ public class GameBootstrapper : MonoBehaviour {
     
     private CombatSystem combatSystem;
     private MotionSystem motionSystem;
+    private MovementSystem movementSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
     private LevelController levelController;
@@ -69,6 +70,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         combatSystem = new CombatSystem();
         motionSystem = new MotionSystem(physicsService, collisionService, combatSystem, poseRegistry);
+        movementSystem = new MovementSystem(motionSystem, poseRegistry, localAvoidanceService);
 
         rewardController = new RewardController(
             rewardView
@@ -79,8 +81,8 @@ public class GameBootstrapper : MonoBehaviour {
             infantryView,
             rewardController,
             motionSystem,
+            movementSystem,
             raycastService,
-            localAvoidanceService,
             proximityService,
             entityMapping,
             poseRegistry
@@ -221,6 +223,7 @@ public class GameBootstrapper : MonoBehaviour {
     private void Update() {
         combatSystem.Update();
         motionSystem.Update();
+        movementSystem.Update();
 
         ramEffect.Update();
         rewardController.Update();

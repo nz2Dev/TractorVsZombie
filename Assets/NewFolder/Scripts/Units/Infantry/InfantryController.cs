@@ -8,8 +8,8 @@ public class InfantryController {
 
     private readonly InfantryView view;
     private readonly CombatSystem combatSystem;
-    private readonly AvoidanceService avoidanceService;
     private readonly MotionSystem motionSystem;
+    private readonly MovementSystem movementSystem;
     private readonly RaycastService raycastService;
     private readonly ProximityService proximityService;
     private readonly RewardController rewardController;
@@ -19,13 +19,13 @@ public class InfantryController {
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, MotionSystem motionSystem, RaycastService raycastService, AvoidanceService avoidanceService, ProximityService proximityService, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, MotionSystem motionSystem, MovementSystem movementSystem, RaycastService raycastService, ProximityService proximityService, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.combatSystem = combatSystem;
         this.view = view;
         this.rewardController = rewardController;
         this.motionSystem = motionSystem;
+        this.movementSystem = movementSystem;
         this.raycastService = raycastService;
-        this.avoidanceService = avoidanceService;
         this.proximityService = proximityService;
         this.entityMapping = entityMapping;
         this.poseRegistry = poseRegistry;
@@ -37,7 +37,7 @@ public class InfantryController {
     public void Update() {
         ReadPose();
         ReadMotion();
-        UpdateMovement();
+        ReadMovement();
         UpdateAttacks();
         ClearDeadInfantry();
         ReadCombatState();
@@ -46,15 +46,14 @@ public class InfantryController {
 
     public int SpawnInfantry(InfantryPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new InfantryModel(nextId, prototype.config, prototype.agentAvoidanceConfig.maxSpeed, prototype.rewardPrototype);
+        var model = new InfantryModel(nextId, prototype.config, prototype.rewardPrototype);
         registry[model.Id] = model;
 
         model.PoseId = poseRegistry.Add(prototype.position, default);
-        model.MoveDestination = prototype.position;
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
         model.CombatIsAlie = prototype.combatPrototype.alie;
         model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.config, prototype.physicsBodyPrefab, model.CombatId);
-        model.AvoidanceId = avoidanceService.AddAgent(prototype.position, prototype.agentAvoidanceConfig);
+        model.MovementId = movementSystem.Add(prototype.position, prototype.agentAvoidanceConfig, model.MotionId, model.PoseId, prototype.config);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
 
@@ -70,11 +69,11 @@ public class InfantryController {
     }
 
     public void MoveTo(int infantryId, Vector3 destination) {
-        registry[infantryId].MoveDestination = destination;
+        movementSystem.MoveTo(registry[infantryId].MovementId, destination);
     }
 
     public void StopMovement(int infantryId) {
-        registry[infantryId].MoveDestination = null;
+        movementSystem.StopMovement(registry[infantryId].MovementId);
     }
 
     public void Attack(int infantryId, ProximityId targetProximityId) {
@@ -89,8 +88,7 @@ public class InfantryController {
         var model = registry[infantryId];
         return new InfantryState (
             position: model.PoseState.position,
-            movementVelocity: model.Velocity,
-            maxSpeed: model.MaxSpeed,
+            maxSpeed: model.MovementState.maxSpeed,
             activationRadius: model.Config.activationRadius,
             isAlive: !model.CombatState.isDead,
             isGrounded: model.MotionState.isGrounded,
@@ -115,9 +113,9 @@ public class InfantryController {
         registry.Remove(model.Id);
         
         combatSystem.Remove(model.CombatId);
+        movementSystem.Remove(model.MovementId);
         motionSystem.Remove(model.MotionId);
         poseRegistry.Remove(model.PoseId);
-        avoidanceService.RemoveAgent(model.AvoidanceId);
         proximityService.RemovePoint(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
 
@@ -138,35 +136,9 @@ public class InfantryController {
         }
     }
 
-    private void UpdateMovement() {
+    private void ReadMovement() {
         foreach (var model in registry.Values) {
-            var pose = poseRegistry.Read(model.PoseId);
-            var motionState = model.MotionState;
-            var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
-
-            if (motionState.isGrounded) {
-                model.Velocity = rvoVelocity;
-                pose.position += rvoVelocity * Time.deltaTime;
-                
-                if (rvoVelocity.sqrMagnitude > float.Epsilon) {
-                    pose.rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
-                }
-                
-                poseRegistry.Write(model.PoseId, pose.position, pose.rotation);
-            }
-
-            var canMove = motionState.isGrounded && model.MoveDestination.HasValue && !model.HoldMovement;
-            model.HoldMovement = false;
-            
-            var preferedVelocity = Vector3.zero;
-            if (canMove) {
-                var moveVelocity = model.MoveDestination.Value - pose.position;
-                var distance = moveVelocity.magnitude;
-                var speedFactor = Mathf.Clamp01(distance / model.Config.stoppingDistance);
-                preferedVelocity = distance > float.Epsilon ? moveVelocity / distance * model.MaxSpeed * speedFactor : Vector3.zero;
-            }
-
-            avoidanceService.SetPreferedVelocity(model.AvoidanceId, preferedVelocity);
+            model.MovementState = movementSystem.ReadState(model.MovementId);
         }
     }
 
@@ -206,7 +178,7 @@ public class InfantryController {
 
             var charging = Time.time >= model.AttackActivationTime && Time.time < model.AttackActivationTime + model.Config.attackDuration;
             if (charging) {
-                model.HoldMovement = true;
+                movementSystem.HoldMovement(model.MovementId);
             }
 
             var notActivated = model.AttackActivationTime < model.LastAttackTime;
@@ -259,10 +231,9 @@ public class InfantryController {
     private void SyncPositions() {
         foreach (var model in registry.Values) {
             var pose = poseRegistry.Read(model.PoseId);
-            avoidanceService.SetAgentPosition(model.AvoidanceId, pose.position);
             proximityService.UpdatePoint(model.ProximityId, pose.position);
             raycastService.UpdateMarker(model.RaycastId, pose.position);
-            view.UpdateTransform(model.Id, pose.position, pose.rotation, model.Velocity.magnitude / model.MaxSpeed);
+            view.UpdateTransform(model.Id, pose.position, pose.rotation, model.MovementState.velocity.magnitude / model.MovementState.maxSpeed);
         }
     }
 
