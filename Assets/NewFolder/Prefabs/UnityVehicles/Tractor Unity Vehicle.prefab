@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2427144403644551073}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
-  m_LocalPosition: {x: 0, y: 1.079, z: 1.11}
+  m_LocalPosition: {x: 0, y: 1.079, z: 1.423}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -51,8 +51,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.88228226
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.7954192
+  m_Center: {x: 5.0908496e-14, y: -0.21819198, z: 0.21222448}
 --- !u!1 &3084284244005088762
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9093452787165827929}
   - component: {fileID: 4495872882688886938}
-  m_Layer: 13
+  m_Layer: 17
   m_Name: Rear Left Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 1.2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -209,7 +209,7 @@ MonoBehaviour:
   baseCollider: {fileID: 5155696973189278775}
   frontAxis:
     depth: 1
-    width: 2
+    width: 1.8
     leftWheel: {fileID: 3042798051353856625}
     rightWheel: {fileID: 8090169952234316199}
   rearAxis:
@@ -245,10 +245,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fa80baa73334d3a9ce36ad05cb3f47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityVehicle::VehicleSteeringWheel
-  maxSteerDegrees: 60
-  speedCeilingForSteering: 15
+  maxSteerDegrees: 45
+  speedCeilingForSteering: 20
   minSteerAmount: 0.1
-  speedKFactor: 2
+  speedKFactor: 3
   physics: {fileID: 5235435775488318499}
 --- !u!114 &568629578806078278
 MonoBehaviour:
@@ -279,7 +279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6096959774496526162}
   - component: {fileID: 3042798051353856625}
-  m_Layer: 13
+  m_Layer: 17
   m_Name: Front Left Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -295,7 +295,7 @@ Transform:
   m_GameObject: {fileID: 5487853700845329361}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0.5, z: 1}
+  m_LocalPosition: {x: -0.9, y: 0.5, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -330,7 +330,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 1.2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -350,7 +350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8078102304843618046}
   - component: {fileID: 3174082325308362371}
-  m_Layer: 13
+  m_Layer: 17
   m_Name: Rear Right Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +401,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 1.2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -462,8 +462,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3566217, y: 0.9999999, z: 2.8969061}
-  m_Center: {x: -0, y: 0.84, z: -0.12654698}
+  m_Size: {x: 1.6542442, y: 0.9999999, z: 3.0995893}
+  m_Center: {x: -0, y: 0.84, z: -0.0011162758}
 --- !u!1 &8625780285804463067
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,7 +527,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1693447991278118010}
   - component: {fileID: 8090169952234316199}
-  m_Layer: 13
+  m_Layer: 17
   m_Name: Front Right Wheel (Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -543,7 +543,7 @@ Transform:
   m_GameObject: {fileID: 8941944388213569349}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0.9, y: 0.5, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -578,7 +578,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 1.2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

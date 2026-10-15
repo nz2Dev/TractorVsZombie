@@ -42510,65 +42510,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3042798051353856625, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_SidewaysFriction.m_Stiffness
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3174082325308362371, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_Radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3174082325308362371, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_ForwardFriction.m_Stiffness
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3174082325308362371, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_SidewaysFriction.m_Stiffness
-      value: 1.2
-      objectReference: {fileID: 0}
     - target: {fileID: 4441451520058313787, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
       propertyPath: m_Name
       value: Tractor Unity Vehicle
-      objectReference: {fileID: 0}
-    - target: {fileID: 4495872882688886938, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_Radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4495872882688886938, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_SidewaysFriction.m_Stiffness
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5593154855076482630, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: speedKFactor
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5593154855076482630, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: minSteerAmount
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5593154855076482630, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: maxSteerDegrees
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 5593154855076482630, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: speedCeilingForSteering
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 8078102304843618046, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8090169952234316199, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_ForwardFriction.m_Stiffness
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8090169952234316199, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_SidewaysFriction.m_Stiffness
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9093452787165827929, guid: 72dce61b254904768ac53f7c24b25a93, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -43796,7 +43740,7 @@ PrefabInstance:
       objectReference: {fileID: 202735913}
     - target: {fileID: 3715936134110833867, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4619
+      value: 4655
       objectReference: {fileID: 0}
     - target: {fileID: 3902048635732431051, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Name
@@ -43812,7 +43756,7 @@ PrefabInstance:
       objectReference: {fileID: 899146622}
     - target: {fileID: 3995790071150967799, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4619
+      value: 4655
       objectReference: {fileID: 0}
     - target: {fileID: 4231372914453914694, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
@@ -43824,7 +43768,7 @@ PrefabInstance:
       objectReference: {fileID: 1524667736}
     - target: {fileID: 4403027929564642176, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4619
+      value: 4655
       objectReference: {fileID: 0}
     - target: {fileID: 4474605614288331626, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Mesh
@@ -43836,7 +43780,7 @@ PrefabInstance:
       objectReference: {fileID: 636064418}
     - target: {fileID: 4599031156055082105, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4619
+      value: 4655
       objectReference: {fileID: 0}
     - target: {fileID: 5377620666268941220, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_fontSizeBase
@@ -43860,11 +43804,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7719446693388582701, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Size.z
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7719446693388582701, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Center.z
-      value: 1.5
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 8434337651748813428, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Name
@@ -43876,7 +43820,7 @@ PrefabInstance:
       objectReference: {fileID: 1357250921}
     - target: {fileID: 8700669035646066024, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 517
+      value: 553
       objectReference: {fileID: 0}
     - target: {fileID: 8749679749334469805, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
