@@ -76,6 +76,10 @@ public class RamEffectController {
                 model.InContact.Remove(lostId);
             }
 
+            if (model.ReceiveContactBuffer.Count > 0) {
+                AddTemporalLinearDrag(model, model.ReceiveContactBuffer.Count);
+            }
+
             entityMapping.FindByRaycastIds(model.ReceiveContactBuffer, out var receiveContactComponents);
             var vehicleSpeed = vehicleService.GetVehicleState(model.HolderVehicleId).velocity.magnitude;
             if (vehicleSpeed < model.Config.minImpactSpeed)
@@ -99,10 +103,6 @@ public class RamEffectController {
                         damage = model.Config.damage,
                     });
                 }
-            }
-
-            if (model.ReceiveContactBuffer.Count > 0) {
-                AddTemporalLinearDrag(model, model.ReceiveContactBuffer.Count);
             }
 
             if (model.ReceiveContactBuffer.Count > 0) {
