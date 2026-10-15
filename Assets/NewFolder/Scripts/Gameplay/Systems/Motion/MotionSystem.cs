@@ -82,6 +82,7 @@ public class MotionSystem {
                     var defaulRotation = Quaternion.identity;
                     poseRegistry.Write(model.HostPoseId, 
                         groundPosition, defaulRotation);
+                    ragdollService.UpdateEntityPose(model.BodyId, groundPosition, defaulRotation);
                 }
             } else if (keepsGrounded) {
                 var pose = poseRegistry.Read(model.HostPoseId);
