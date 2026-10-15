@@ -205,7 +205,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3, y: 0.3, z: 2.5}
+  m_Size: {x: 1.77, y: 0.1, z: 2.5}
   m_Center: {x: 0, y: 0, z: 1.25}
 --- !u!153 &7158297638791994403
 ConfigurableJoint:
@@ -730,7 +730,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ec59b7ad59e5499ea1f9c5160e6ab33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Local::VehicleSteeringAxle
-  axleSize: 0.3
+  axleWidth: 1.77
+  axleHeight: 0.1
   axleLength: 2.5
   axleRigidbody: {fileID: 8939905539661027224}
   axleBoxCollider: {fileID: 3275998511737942848}
