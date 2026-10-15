@@ -83,6 +83,12 @@ public class MotionSystem {
                     poseRegistry.Write(model.HostPoseId, 
                         groundPosition, defaulRotation);
                 }
+            } else if (keepsGrounded) {
+                var pose = poseRegistry.Read(model.HostPoseId);
+                var depenetrationVector = ragdollService.GetDepenetrationVector(model.BodyId);
+                var correctedPosition = pose.position + depenetrationVector;
+                poseRegistry.Write(model.HostPoseId, correctedPosition, pose.rotation);
+                ragdollService.UpdatePhysicsEntityPosition(model.BodyId, correctedPosition);
             }
 
             model.ActiveEffectType = model.OccurredEffectType;

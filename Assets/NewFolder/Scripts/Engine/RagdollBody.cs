@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -9,12 +10,17 @@ public class RagdollBody : MonoBehaviour {
     [SerializeField] private Rigidbody thisRigidbody;
     [SerializeField] private CapsuleCollider thisCollider;
     [SerializeField] private int groundLayer;
+    [SerializeField] private LayerMask depenetrationLayers;
+
+    private readonly List<Collider> depenetrationColliders = new();
     
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
     public Vector3 LinearVelocity => thisRigidbody.linearVelocity;
     public bool IsDynamic => !thisRigidbody.isKinematic;
     public bool ContactWithGround { get; private set; }
+    public Collider BodyCollider => thisCollider;
+    public IReadOnlyList<Collider> DepenetrationColliders => depenetrationColliders;
 
     private void Awake() {
         SetDynamics(false);
@@ -51,6 +57,17 @@ public class RagdollBody : MonoBehaviour {
         if (collision.gameObject.layer == groundLayer) {
             ContactWithGround = false;
         }
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other != null && (depenetrationLayers.value & (1 << other.gameObject.layer)) != 0 &&
+            !depenetrationColliders.Contains(other)) {
+            depenetrationColliders.Add(other);
+        }
+    }
+
+    void OnTriggerExit(Collider other) {
+        depenetrationColliders.Remove(other);
     }
 
 }

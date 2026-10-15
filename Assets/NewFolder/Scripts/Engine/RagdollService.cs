@@ -80,4 +80,26 @@ public class RagdollService {
         return default;
     }
 
+    public virtual Vector3 GetDepenetrationVector(RagdollId id) {
+        if (!bodyRegistry.TryGetValue(id, out var entity)) {
+            return Vector3.zero;
+        }
+
+        var depenetrationVector = Vector3.zero;
+        foreach (var otherCollider in entity.DepenetrationColliders) {
+            if (otherCollider == null) {
+                continue;
+            }
+
+            if (Physics.ComputePenetration(
+                    entity.BodyCollider, entity.transform.position, entity.transform.rotation,
+                    otherCollider, otherCollider.transform.position, otherCollider.transform.rotation,
+                    out var direction, out var distance)) {
+                depenetrationVector += direction * distance;
+            }
+        }
+
+        return depenetrationVector;
+    }
+
 }
