@@ -145,7 +145,6 @@ public class GameBootstrapper : MonoBehaviour {
         platformController = new PlatformController(
             combatSystem,
             loadoutController,
-            ramEffect,
             vehicleService,
             platformView,
             proximityService,

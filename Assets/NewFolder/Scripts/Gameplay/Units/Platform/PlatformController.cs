@@ -9,7 +9,6 @@ public class PlatformController {
 
     private readonly CombatSystem combatSystem;
     private readonly LoadoutController loadoutController;
-    private readonly RamEffectController ramEffect;
     private readonly VehicleService vehicleService;
     private readonly ProximityService proximityService;
     private readonly RaycastService raycastService;
@@ -19,10 +18,9 @@ public class PlatformController {
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatSystem combatSystem, LoadoutController loadoutController, RamEffectController ramEffect, VehicleService vehicleService, PlatformView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
+    public PlatformController(CombatSystem combatSystem, LoadoutController loadoutController, VehicleService vehicleService, PlatformView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.loadoutController = loadoutController;
-        this.ramEffect = ramEffect;
         this.vehicleService = vehicleService;
         this.view = view;
         this.proximityService = proximityService;
@@ -47,8 +45,6 @@ public class PlatformController {
         model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab);
         model.ProximityId = proximityService.AddPoint(initPosition, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(initPosition, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
-
-        model.RamId = ramEffect.StartNew(model.CombatId, model.VehiclePhysicsId, prototype.combatPrototype.alie, prototype.ramPrototype);
 
         entityMapping.CreateMappings(new EntityComponents {
             proximityId = model.ProximityId,
@@ -160,7 +156,6 @@ public class PlatformController {
         vehicleService.DeleteVehicle(model.VehiclePhysicsId);
         proximityService.RemovePoint(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
-        ramEffect.Remove(model.RamId);
         entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
         
         view.RemovePlatform(platformId);
@@ -178,7 +173,6 @@ public class PlatformController {
 
             proximityService.UpdatePoint(host.ProximityId, host.Position);
             raycastService.UpdateMarker(host.RaycastId, host.Position);
-            ramEffect.Forward(host.RamId, host.Position);
         }
     }
 
