@@ -34,6 +34,10 @@ public class RagdollBody : MonoBehaviour {
         thisRigidbody.isKinematic = !active;
         thisRigidbody.useGravity = active;
         thisCollider.isTrigger = !active;
+        var excludedLayers = thisCollider.excludeLayers.value;
+        thisCollider.excludeLayers = active
+            ? excludedLayers | depenetrationLayers.value
+            : excludedLayers & ~depenetrationLayers.value;
     }
 
     internal void Teleport(Vector3 position) {
@@ -60,14 +64,17 @@ public class RagdollBody : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other != null && (depenetrationLayers.value & (1 << other.gameObject.layer)) != 0 &&
-            !depenetrationColliders.Contains(other)) {
+        if (IsDepenetrationLayer(other) && !depenetrationColliders.Contains(other)) {
             depenetrationColliders.Add(other);
         }
     }
 
     void OnTriggerExit(Collider other) {
         depenetrationColliders.Remove(other);
+    }
+
+    private bool IsDepenetrationLayer(Collider other) {
+        return other != null && (depenetrationLayers.value & (1 << other.gameObject.layer)) != 0;
     }
 
 }
