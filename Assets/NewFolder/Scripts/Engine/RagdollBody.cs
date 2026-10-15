@@ -11,6 +11,7 @@ public class RagdollBody : MonoBehaviour {
     [SerializeField] private CapsuleCollider thisCollider;
     [SerializeField] private int groundLayer;
     [SerializeField] private LayerMask depenetrationLayers;
+    [SerializeField] private LayerMask excludeDynamicsLayer;
 
     private readonly List<Collider> depenetrationColliders = new();
     
@@ -36,8 +37,8 @@ public class RagdollBody : MonoBehaviour {
         thisCollider.isTrigger = !active;
         var excludedLayers = thisCollider.excludeLayers.value;
         thisCollider.excludeLayers = active
-            ? excludedLayers | depenetrationLayers.value
-            : excludedLayers & ~depenetrationLayers.value;
+            ? excludedLayers | excludeDynamicsLayer.value
+            : excludedLayers & ~excludeDynamicsLayer.value;
     }
 
     internal void Teleport(Vector3 position) {

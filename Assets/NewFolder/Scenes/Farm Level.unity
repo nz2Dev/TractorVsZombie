@@ -24850,6 +24850,9 @@ MonoBehaviour:
   depenetrationLayers:
     serializedVersion: 2
     m_Bits: 8192
+  excludeDynamicsLayer:
+    serializedVersion: 2
+    m_Bits: 8192
 --- !u!136 &1032680942
 CapsuleCollider:
   m_ObjectHideFlags: 0
