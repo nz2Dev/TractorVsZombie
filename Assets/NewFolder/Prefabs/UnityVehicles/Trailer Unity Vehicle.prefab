@@ -122,7 +122,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 0.25, z: 4.5}
+  m_Size: {x: 3.1684456, y: 0.24999994, z: 4.873254}
   m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &1615887813691626480
 GameObject:
@@ -205,8 +205,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 2.5}
-  m_Center: {x: 0, y: 0, z: 1.25}
+  m_Size: {x: 0.1, y: 0.1, z: 3}
+  m_Center: {x: 0, y: 0, z: 1.5}
 --- !u!153 &7158297638791994403
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -319,7 +319,7 @@ ConfigurableJoint:
   serializedVersion: 4
   m_ConnectedBody: {fileID: 0}
   m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 2.5}
+  m_Anchor: {x: 0, y: 0, z: 3}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
@@ -731,7 +731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Local::VehicleSteeringAxle
   axleSize: 0.1
-  axleLength: 2.5
+  axleLength: 3
   axleRigidbody: {fileID: 8939905539661027224}
   axleBoxCollider: {fileID: 3275998511737942848}
   axleBodyJoint: {fileID: 7158297638791994403}
@@ -766,7 +766,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Local::VehicleTowing
   towingConnector:
     rigidbody: {fileID: 8939905539661027224}
-    anchorOffsetLocalSpace: {x: 0, y: 0, z: 2.5}
+    anchorOffsetLocalSpace: {x: 0, y: 0, z: 3}
   towingJoint: {fileID: 2938794648065758583}
 --- !u!114 &296123987818187350
 MonoBehaviour:
