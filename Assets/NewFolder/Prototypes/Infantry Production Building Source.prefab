@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -890139048
+  uniqueId: 862615400
   spawnerSource: {fileID: 5992323351636979987}
   visualsPrefab: {fileID: 2588060940734931284}
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
@@ -170,7 +170,7 @@ MonoBehaviour:
     infantrySource: {fileID: 0}
     armorSource: {fileID: 0}
   shape:
-    width: 5
+    width: 8
     height: 3
     spaceScale: 1
     randomOffset: 1

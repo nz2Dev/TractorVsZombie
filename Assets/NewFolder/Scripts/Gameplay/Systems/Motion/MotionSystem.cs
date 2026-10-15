@@ -86,6 +86,7 @@ public class MotionSystem {
             } else if (keepsGrounded) {
                 var pose = poseRegistry.Read(model.HostPoseId);
                 var depenetrationVector = ragdollService.GetDepenetrationVector(model.BodyId);
+                depenetrationVector = Vector3.ProjectOnPlane(depenetrationVector, Vector3.up);
                 var correctedPosition = pose.position + depenetrationVector;
                 poseRegistry.Write(model.HostPoseId, correctedPosition, pose.rotation);
                 ragdollService.UpdatePhysicsEntityPosition(model.BodyId, correctedPosition);
