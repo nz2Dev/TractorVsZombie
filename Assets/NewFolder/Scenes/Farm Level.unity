@@ -22237,6 +22237,7 @@ MonoBehaviour:
   initPlatformSource: {fileID: 269684097}
   initLoadoutSources:
   - {fileID: 339747577}
+  - {fileID: 2100493245}
 --- !u!43 &941018584
 Mesh:
   m_ObjectHideFlags: 0
@@ -28628,6 +28629,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1909830769}
     m_Modifications:
+    - target: {fileID: 414806356285922434, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: powerMax
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 414806356285922434, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
+      propertyPath: powerMin
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 691360027140104949, guid: 93af2d8f0574c4482bc2af5159babace, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
@@ -40938,6 +40947,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23f55b62368d54e5288a61334fd9d972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::WorldSpaceUI
+--- !u!114 &2100493245 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2248895191762497786, guid: 697de765863b048a7a82e00beb0eb422, type: 3}
+  m_PrefabInstance: {fileID: 5781962541767908237}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!1 &2114227373
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,7 +6,9 @@ public class InfantryVisuals : MonoBehaviour {
     public Color AnimatedColor; //temporaly disabled
 
     [SerializeField] private float rotationSpeed = 720f;
-    [SerializeField] private float powerBottom = .3f;
+    [Range(0f, 1f)][SerializeField] private float powerMin;
+    [Range(0f, 2f)][SerializeField] private float powerMax = 1f;
+    [Range(0f, 1f)][SerializeField] private float healthPowerPart = .5f;
     [SerializeField] private Color takeHitColor = Color.red;
     [SerializeField] private Color chargeColor = Color.yellow;
     [SerializeField] private float chargeDecaySpeed = 2f;
@@ -23,8 +25,10 @@ public class InfantryVisuals : MonoBehaviour {
     private bool chargePlaying;
     private Color emissionColor;
     
-    private float power = 1;
-    private float powerSubtractor = 0;
+    private float healthLoad;
+    private float disolve = 1f;
+    private float disolveSubtractor;
+    private float power = 1f;
 
     private MaterialPropertyBlock dynamicProps;
     private int powerPropertyID;
@@ -67,7 +71,10 @@ public class InfantryVisuals : MonoBehaviour {
             chargePlaying = false;
         }
 
-        power = Mathf.MoveTowards(power, powerBottom, Time.deltaTime * powerSubtractor);
+        disolve = Mathf.MoveTowards(disolve, 0f, Time.deltaTime * disolveSubtractor);
+        var healthReserve = 1f - healthLoad;
+        var normalizedPower = healthReserve * healthPowerPart + disolve * (1f - healthPowerPart);
+        power = Mathf.Lerp(powerMin, powerMax, normalizedPower);
         currentRotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
@@ -90,7 +97,7 @@ public class InfantryVisuals : MonoBehaviour {
             visualsRenderer.SetPropertyBlock(dynamicProps);
         }
 
-        if (sheduledForDestruction && !IsAnimatorPlaying() && hitFlash < float.Epsilon && power < powerBottom * 1.1f) {
+        if (sheduledForDestruction && !IsAnimatorPlaying() && hitFlash < float.Epsilon && disolve <= float.Epsilon) {
             Destroy(gameObject);
         }
     }
@@ -150,14 +157,18 @@ public class InfantryVisuals : MonoBehaviour {
 
     internal void PlayPushedAwayDeathAnimation() {
         animator.SetTrigger("Throw Death");
-        power = 1.5f;
-        powerSubtractor = 1;
+        disolve = 1f;
+        disolveSubtractor = 1f;
     }
 
     internal void PlayDisolveAnimation() {
         animator.SetTrigger("Disolve Death");
-        power = 1;
-        powerSubtractor = 1;
+        disolve = 1f;
+        disolveSubtractor = 1f;
+    }
+
+    public void SetHealthLoad(float healthLoadNormalized) {
+        healthLoad = Mathf.Clamp01(healthLoadNormalized);
     }
 
     internal void DestroySelfOnIdle() {

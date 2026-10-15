@@ -209,6 +209,9 @@ public class InfantryController {
             model.CombatState = combatSystem.ReadState(model.CombatId);
             
             var combatState = model.CombatState;
+            var healthNormalized = 1f - (float) combatState.health / Mathf.Max(combatState.maxHealth, 1);
+            view.SetHealthNormalized(model.Id, healthNormalized);
+
             if (!combatState.damageResult.HasValue)
                 continue;
 
