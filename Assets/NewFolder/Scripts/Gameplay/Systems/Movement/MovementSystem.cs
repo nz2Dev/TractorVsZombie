@@ -55,15 +55,17 @@ public sealed class MovementSystem {
             var rvoVelocity = avoidanceService.GetVelocity(model.AvoidanceId);
 
             if (motionState.isGrounded) {
-                model.Velocity = rvoVelocity;
-                pose.position += rvoVelocity * Time.deltaTime;
-                avoidanceService.SetAgentPosition(model.AvoidanceId, pose.position);
-
-                if (rvoVelocity.sqrMagnitude > float.Epsilon) {
-                    pose.rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
+                if (model.HoldMovement) {
+                    model.Velocity = Vector3.zero;
+                } else {
+                    model.Velocity = rvoVelocity;
+                    pose.position += rvoVelocity * Time.deltaTime;
+                    if (rvoVelocity.sqrMagnitude > float.Epsilon) {
+                        pose.rotation = Quaternion.LookRotation(rvoVelocity.normalized, Vector3.up);
+                    }
+                    avoidanceService.SetAgentPosition(model.AvoidanceId, pose.position);
+                    poseRegistry.Write(model.HolderPoseId, pose.position, pose.rotation);
                 }
-
-                poseRegistry.Write(model.HolderPoseId, pose.position, pose.rotation);
             }
 
             var canMove = motionState.isGrounded && model.MoveDestination.HasValue && !model.HoldMovement;
