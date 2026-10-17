@@ -7,15 +7,15 @@ public class DrivingController {
     
     private readonly TruckController truckController;
     private readonly PlatformController platformController;
-    private readonly VehicleService vehicleService;
+    private readonly VehicleSystem vehicleSystem;
 
     private readonly List<int> controlledPlatformIds = new ();
     private DrivingInput input;
     private VehicleState truckVehicleState;
 
-    public DrivingController(TruckController truckController, VehicleService vehicleService, PlatformController platformController) {
+    public DrivingController(TruckController truckController, VehicleSystem vehicleSystem, PlatformController platformController) {
         this.truckController = truckController;
-        this.vehicleService = vehicleService;
+        this.vehicleSystem = vehicleSystem;
         this.platformController = platformController;
     }
 
@@ -37,7 +37,7 @@ public class DrivingController {
     }
 
     private void ReadVehicleState() {
-        truckVehicleState = vehicleService.GetVehicleState(truckController.ReadVehiclePhysicsId());
+        truckVehicleState = vehicleSystem.ReadState(truckController.ReadVehicleId());
     }
 
     private void ReadDrivingInput() {
@@ -66,13 +66,15 @@ public class DrivingController {
             }
         }
 
-        truckController.Drive(gasThrottle, input.boost);
-        truckController.Brake(brakesThrottle);
-        truckController.Steer(input.steering);
+        var truckVehicleId = truckController.ReadVehicleId();
+        var boostMultiplier = input.boost ? 2f : 1f;
+        vehicleSystem.SetGas(truckVehicleId, gasThrottle * boostMultiplier);
+        vehicleSystem.SetBrakes(truckVehicleId, brakesThrottle);
+        vehicleSystem.SetSteer(truckVehicleId, input.steering);
 
         foreach (var platformId in controlledPlatformIds) {
-            var vehicleId = platformController.GetVehiclePhysicsId(platformId);
-            vehicleService.SetVehiclePowertrain(vehicleId, gasThrottle, brakesThrottle);
+            var vehicleId = platformController.ReadVehicleId(platformId);
+            vehicleSystem.SetPowertrain(vehicleId, gasThrottle, brakesThrottle);
         }
     }
 

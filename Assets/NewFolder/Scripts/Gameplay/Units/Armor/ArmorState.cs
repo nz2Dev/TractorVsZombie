@@ -8,5 +8,5 @@ public struct ArmorState {
     public bool combatIsAlie;
     public int weaponId;
     public WeaponState weaponState;
-    public int vehiclePhysicsId;
+    public VehicleId vehicleId;
 }

@@ -8,7 +8,7 @@ public class TruckController {
 
     private readonly TruckView view;
     private readonly CombatSystem combatSystem;
-    private readonly VehicleService vehicleService;
+    private readonly VehicleSystem vehicleSystem;
     private readonly RamEffectController ramEffect;
     private readonly ProximityService proximityService;
     private readonly RaycastService raycastService;
@@ -16,17 +16,17 @@ public class TruckController {
 
     private TruckModel model;
 
-    public TruckController(CombatSystem combatSystem, RamEffectController ramEffect, TruckView view, VehicleService vehicleService, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
+    public TruckController(CombatSystem combatSystem, RamEffectController ramEffect, TruckView view, VehicleSystem vehicleSystem, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.ramEffect = ramEffect;
         this.view = view;
-        this.vehicleService = vehicleService;
+        this.vehicleSystem = vehicleSystem;
         this.proximityService = proximityService;
         this.raycastService = raycastService;
         this.entityMapping = entityMapping;
     }
 
-    public virtual int ReadVehiclePhysicsId() => model.VehiclePhysicsId;
+    public virtual VehicleId ReadVehicleId() => model.VehicleId;
     public virtual Vector3 ReadVehiclePosition() => model.Position;
     public bool UnitExist => model != null;
 
@@ -44,8 +44,8 @@ public class TruckController {
     public virtual void Create(TruckPrototype prototype, Vector3 position = default) {
         model = new TruckModel(prototype.config, position == default ? prototype.position : position);
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
-        model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab, prototype.rotation);
-        model.RamId = ramEffect.StartNew(model.CombatId, model.VehiclePhysicsId, prototype.combatPrototype.alie, prototype.ramPrototype);
+        model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab, prototype.rotation);
+        model.RamId = ramEffect.StartNew(model.CombatId, model.VehicleId, prototype.combatPrototype.alie, prototype.ramPrototype);
         model.ProximityId = proximityService.AddPoint(model.Position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(model.Position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
         
@@ -58,22 +58,8 @@ public class TruckController {
         view.Show(model.Position, prototype.visualsPrefab, prototype.combatPrototype.alie, prototype.engineLoopSFX, prototype.worldSpaceUIPrefab);
     }
 
-    public virtual void Drive(float driveInput, bool boostInput) {
-        var boostMultiplier = boostInput ? 2f : 1f;   // gameplay rule: boost doubles throttle
-        model.Gas = driveInput * boostMultiplier;
-    }
-
-    public virtual void Brake(float brakes) {
-        model.Brakes = brakes;
-    } 
-
-    public virtual void Steer(float steerInput) {
-        model.Steer = steerInput;   // -1..1; traction limiting happens inside VehiclePhysics
-    }
-
     private void ReadExternalState() {
-        model.VehiclePhysicsState = vehicleService.GetVehicleState(model.VehiclePhysicsId);
-        model.Position = model.VehiclePhysicsState.position;
+        model.Position = vehicleSystem.ReadState(model.VehicleId).position;
     }
 
     private void ReadCombatState() {
@@ -89,7 +75,7 @@ public class TruckController {
 
     private void Clear() {
         combatSystem.Remove(model.CombatId);
-        vehicleService.DeleteVehicle(model.VehiclePhysicsId);
+        vehicleSystem.Remove(model.VehicleId);
         ramEffect.Remove(model.RamId);
         proximityService.RemovePoint(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
@@ -102,14 +88,13 @@ public class TruckController {
     private void WriteExternalInput() {
         ramEffect.Forward(model.RamId, model.Position);
         // todo: register proxmity and raycast components
-        vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, model.Brakes, model.Steer);
         proximityService.UpdatePoint(model.ProximityId, model.Position);
         raycastService.UpdateMarker(model.RaycastId, model.Position);
     }
 
     private void UpdateView() {
-        view.UpdatePose(model.VehiclePhysicsState);
-        view.UpdateSound(model.Gas);
+        view.UpdatePose(vehicleSystem.ReadState(model.VehicleId));
+        view.UpdateSound(vehicleSystem.ReadGas(model.VehicleId));
 
         var combatState = model.CombatState;
         view.UpdateHealthBar(model.Position, combatState.health, combatState.maxHealth);

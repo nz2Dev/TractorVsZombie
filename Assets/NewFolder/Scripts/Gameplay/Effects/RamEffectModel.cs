@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class RamEffectModel {
 
-    public RamEffectModel(int id, RamEffectConfig config, CombatId combatId, int vehicleId, bool holderIsAlie, float baseLinearDrag) {
+    public RamEffectModel(int id, RamEffectConfig config, CombatId combatId, VehicleId vehicleId, bool holderIsAlie, float baseLinearDrag) {
         Id = id;
         Config = config;
         HolderCombatId = combatId;
@@ -18,7 +18,7 @@ public class RamEffectModel {
     public int Id { get; }
     public RamEffectConfig Config { get; }
     public CombatId HolderCombatId { get; }
-    public int HolderVehicleId { get; }
+    public VehicleId HolderVehicleId { get; }
     public bool HolderIsAlie { get; }
     public float BaseLinearDrag { get; }
     public float TemporalLinearDrag { get; set; }

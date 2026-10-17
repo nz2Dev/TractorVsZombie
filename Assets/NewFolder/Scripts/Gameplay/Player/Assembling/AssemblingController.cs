@@ -8,6 +8,7 @@ public class AssemblingController {
 
     private readonly PlatformController platformController;
     private readonly TruckController truckController;
+    private readonly VehicleSystem vehicleSystem;
 
     private readonly AssemblingModel model;
     private readonly AssemblingView view;
@@ -15,10 +16,11 @@ public class AssemblingController {
     public event Action<int> OnPlatformAdded;
     public event Action<int> OnPlatformRemoved;
 
-    public AssemblingController(AssemblingView view, PlatformController platformController, TruckController truckController) {
+    public AssemblingController(AssemblingView view, PlatformController platformController, TruckController truckController, VehicleSystem vehicleSystem) {
         this.view = view;
         this.platformController = platformController;
         this.truckController = truckController;
+        this.vehicleSystem = vehicleSystem;
         model = new AssemblingModel();
     }
 
@@ -116,21 +118,21 @@ public class AssemblingController {
         }
 
         if (tail.IsPlatformCreated) {
-            int headPhysicsId = -1;
+            VehicleId? headVehicleId = null;
             if (head.isTruck && truckController.UnitExist) {
-                headPhysicsId = truckController.ReadVehiclePhysicsId();
+                headVehicleId = truckController.ReadVehicleId();
             } else if (!head.isTruck && head.IsPlatformCreated) {
-                headPhysicsId = platformController.GetVehiclePhysicsId(head.platformId);
+                headVehicleId = platformController.ReadVehicleId(head.platformId);
             }
 
-            if (tail.IsPlatformConnected && tail.connectedVehiclePhysicsId != headPhysicsId) {
-                platformController.Disconnect(tail.platformId);
+            if (tail.IsPlatformConnected && tail.connectedVehicleId != headVehicleId) {
+                vehicleSystem.Disconnect(platformController.ReadVehicleId(tail.platformId));
                 tail.ResetConnectedPlatformId();
             }
 
-            if (!tail.IsPlatformConnected && headPhysicsId != -1) {
-                platformController.Connect(tail.platformId, headPhysicsId);
-                tail.connectedVehiclePhysicsId = headPhysicsId;
+            if (!tail.IsPlatformConnected && headVehicleId.HasValue) {
+                vehicleSystem.Connect(headVehicleId.Value, platformController.ReadVehicleId(tail.platformId));
+                tail.connectedVehicleId = headVehicleId;
             }
         }
     }

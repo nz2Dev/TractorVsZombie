@@ -12,17 +12,17 @@ public class RamEffectController {
     private readonly RamEffectView view;
     private readonly CombatSystem combatSystem;
     private readonly RaycastService raycastService;
-    private readonly VehicleService vehicleService;
+    private readonly VehicleSystem vehicleSystem;
     private readonly MotionSystem motionSystem;
     private readonly EntityMapping entityMapping;
 
-    public RamEffectController(RamEffectView view, CombatSystem combatSystem, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping, VehicleService vehicleService) {
+    public RamEffectController(RamEffectView view, CombatSystem combatSystem, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping, VehicleSystem vehicleSystem) {
         this.view = view;
         this.combatSystem = combatSystem;
         this.raycastService = raycastService;
         this.motionSystem = motionSystem;
         this.entityMapping = entityMapping;
-        this.vehicleService = vehicleService;
+        this.vehicleSystem = vehicleSystem;
     }
 
     private int idCounter;
@@ -34,9 +34,9 @@ public class RamEffectController {
         ApplyTemporalLinearDrag();
     }
 
-    public int StartNew(CombatId holderCombatId, int holderVehicleId, bool holderIsAlie, RamEffectPrototype prototype) {
+    public int StartNew(CombatId holderCombatId, VehicleId holderVehicleId, bool holderIsAlie, RamEffectPrototype prototype) {
         var nextId = idCounter++;
-        var baseLinearDrag = vehicleService.GetLinearDamping(holderVehicleId);
+        var baseLinearDrag = vehicleSystem.GetLinearDamping(holderVehicleId);
         var model = new RamEffectModel(nextId, prototype.config, holderCombatId, holderVehicleId, holderIsAlie, baseLinearDrag);
         model.Position = prototype.position;
         registry[nextId] = model;
@@ -81,7 +81,7 @@ public class RamEffectController {
             }
 
             entityMapping.FindByRaycastIds(model.ReceiveContactBuffer, out var receiveContactComponents);
-            var vehicleSpeed = vehicleService.GetVehicleState(model.HolderVehicleId).velocity.magnitude;
+            var vehicleSpeed = vehicleSystem.ReadState(model.HolderVehicleId).velocity.magnitude;
             if (vehicleSpeed < model.Config.minImpactSpeed)
                 continue;
                 
@@ -130,13 +130,13 @@ public class RamEffectController {
 
     private void ApplyTemporalLinearDrag() {
         foreach (var model in registry.Values) {
-            vehicleService.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag + model.TemporalLinearDrag);
+            vehicleSystem.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag + model.TemporalLinearDrag);
         }
     }
 
     private void RestoreBaseLinearDrag(RamEffectModel model) {
-        if (vehicleService.Exist(model.HolderVehicleId)) {
-            vehicleService.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag);
+        if (vehicleSystem.Exists(model.HolderVehicleId)) {
+            vehicleSystem.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag);
         }
     }
 

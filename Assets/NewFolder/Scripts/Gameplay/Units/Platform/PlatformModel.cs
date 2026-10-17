@@ -16,7 +16,7 @@ public class PlatformModel {
     public Vector3 LoadoutOffset { get; }
 
     public CombatId CombatId { get; set; }
-    public int VehiclePhysicsId { get; set; }
+    public VehicleId VehicleId { get; set; }
     public ProximityId ProximityId { get; set; }
     public RaycastId RaycastId { get; set; }
 
@@ -24,7 +24,6 @@ public class PlatformModel {
     public int RamId { get; set; }
 
     public Vector3 Position { get; set; }
-    public VehicleState VehiclePhysicsState { get; set; }
     public CombatState CombatState { get; set; }
 
 }

@@ -60,7 +60,9 @@ public class VehicleService {
         powertrain.SetGas(gas);
         powertrain.SetBrakes(brakes);
         var steeringWheel = vehicle.SteeringWheel;
-        steeringWheel.SetSteer(steer);
+        if (steeringWheel != null) {
+            steeringWheel.SetSteer(steer);
+        }
     }
 
     public float GetLinearDamping(int vehicleIndex) {

@@ -16,6 +16,7 @@ public class AssemblingControllerTests {
     private Mock<AssemblingView> viewMock;
     private Mock<PlatformController> platformMock;
     private Mock<TruckController> truckMock;
+    private Mock<VehicleSystem> vehicleSystemMock;
     private AssemblingController controller;
 
     [SetUp]
@@ -23,8 +24,9 @@ public class AssemblingControllerTests {
         viewMock = new Mock<AssemblingView>();
         platformMock = MockHelper.CreateWithNulls<PlatformController>();
         truckMock = MockHelper.CreateWithNulls<TruckController>();
+        vehicleSystemMock = MockHelper.CreateWithNulls<VehicleSystem>();
         controller = new AssemblingController(
-            viewMock.Object, platformMock.Object, truckMock.Object);
+            viewMock.Object, platformMock.Object, truckMock.Object, vehicleSystemMock.Object);
         
         platformAddedCallbackMock = new Mock<Action<int>>();
         controller.OnPlatformAdded += platformAddedCallbackMock.Object;
@@ -94,8 +96,8 @@ public class AssemblingControllerTests {
 
         platformMock.SetupSequence(m => m.Create(It.IsAny<PlatformPrototype>(), It.IsAny<Vector3>()))
             .Returns(1).Returns(2).Returns(3).Returns(4);
-        platformMock.Setup(m => m.GetVehiclePhysicsId(It.IsAny<int>()))
-            .Returns<int>(val => val);
+        platformMock.Setup(m => m.ReadVehicleId(It.IsAny<int>()))
+            .Returns<int>(val => new VehicleId(val));
 
         controller.Init(assemblingPrototype);
         // init loadout will have platformId = 1
@@ -105,9 +107,9 @@ public class AssemblingControllerTests {
         truckMock.Setup(m => m.ReadVehiclePosition()).Returns(headPosition);
         controller.Update();
 
-        platformMock.Verify(m => m.Disconnect(1), Times.Once);
-        platformMock.Verify(m => m.Connect(1, It.IsAny<int>()), Times.Exactly(2));
-        platformMock.Verify(m => m.Connect(2, It.IsAny<int>()), Times.Once);
+        vehicleSystemMock.Verify(m => m.Disconnect(new VehicleId(1)), Times.Once);
+        vehicleSystemMock.Verify(m => m.Connect(It.IsAny<VehicleId>(), new VehicleId(1)), Times.Exactly(2));
+        vehicleSystemMock.Verify(m => m.Connect(It.IsAny<VehicleId>(), new VehicleId(2)), Times.Once);
     }
 
 }

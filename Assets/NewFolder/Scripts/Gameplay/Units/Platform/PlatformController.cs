@@ -9,7 +9,7 @@ public class PlatformController {
 
     private readonly CombatSystem combatSystem;
     private readonly LoadoutController loadoutController;
-    private readonly VehicleService vehicleService;
+    private readonly VehicleSystem vehicleSystem;
     private readonly ProximityService proximityService;
     private readonly RaycastService raycastService;
     private readonly EntityMapping entityMapping;
@@ -18,10 +18,10 @@ public class PlatformController {
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(CombatSystem combatSystem, LoadoutController loadoutController, VehicleService vehicleService, PlatformView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
+    public PlatformController(CombatSystem combatSystem, LoadoutController loadoutController, VehicleSystem vehicleSystem, PlatformView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.loadoutController = loadoutController;
-        this.vehicleService = vehicleService;
+        this.vehicleSystem = vehicleSystem;
         this.view = view;
         this.proximityService = proximityService;
         this.raycastService = raycastService;
@@ -42,7 +42,7 @@ public class PlatformController {
         registry[model.Id] = model;
 
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
-        model.VehiclePhysicsId = vehicleService.CreateVehicle(model.Position, prototype.vehiclePrefab);
+        model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab);
         model.ProximityId = proximityService.AddPoint(initPosition, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(initPosition, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
 
@@ -60,20 +60,6 @@ public class PlatformController {
         return registry.ContainsKey(platformId);
     }
 
-    public virtual void Connect(int tailPlatformId, int headVehiclePhysicsId) {
-        var tailPlatform = registry[tailPlatformId];
-        var headState = vehicleService.GetVehicleState(headVehiclePhysicsId);
-
-        var towardHeadRotation = Quaternion.LookRotation((headState.position - tailPlatform.Position).normalized, Vector3.up);
-        vehicleService.UpdateVehiclePose(tailPlatform.VehiclePhysicsId, tailPlatform.Position, towardHeadRotation);
-        vehicleService.MakeTowingConnection(headVehiclePhysicsId, tailPlatform.VehiclePhysicsId);
-    }
-
-    public virtual void Disconnect(int platformId) {
-        var platform = registry[platformId];
-        vehicleService.ClearTowingConnection(platform.VehiclePhysicsId);
-    }
-
     public virtual void SetLoadout(int platformId, LoadoutPrototype loadoutPrototype) {
         var platform = registry[platformId];
 
@@ -85,8 +71,8 @@ public class PlatformController {
         platform.LoadoutId = loadoutController.SpawnLoadout(platform.CombatId, loadoutPrototype);
     }
 
-    public virtual int GetVehiclePhysicsId(int platformId) {
-        return registry[platformId].VehiclePhysicsId;
+    public virtual VehicleId ReadVehicleId(int platformId) {
+        return registry[platformId].VehicleId;
     }
 
     public void ReadAllPlatforms(IList<PlatformState> statesBuffer) {
@@ -109,7 +95,7 @@ public class PlatformController {
             position: platform.Position,
             combatId: platform.CombatId,
             combatState: combatSystem.ReadState(platform.CombatId),
-            vehiclePhysicsId: platform.VehiclePhysicsId,
+            vehicleId: platform.VehicleId,
             weaponId: loadoutState.weaponId,
             weaponState: loadoutState.weaponState,
             platformId: platform.Id
@@ -126,7 +112,7 @@ public class PlatformController {
                 // but it also naturall to assume that if we delete the vehicle from service it will remove it
                 // currently vehicle implementation don't destroy game object and its configurable joints, which should effectively remove physics constraints
                 // todo: consider moving this implicit behavior handling to vehicle implementation
-                vehicleService.ClearTowingConnection(platform.VehiclePhysicsId);
+                vehicleSystem.Disconnect(platform.VehicleId);
                 
                 if (platform.LoadoutId != 0) {
                     loadoutController.DeleteLoadout(platform.LoadoutId);
@@ -153,7 +139,7 @@ public class PlatformController {
     private void Remove(int platformId) {
         registry.Remove(platformId, out var model);
         combatSystem.Remove(model.CombatId);
-        vehicleService.DeleteVehicle(model.VehiclePhysicsId);
+        vehicleSystem.Remove(model.VehicleId);
         proximityService.RemovePoint(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
         entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
@@ -163,12 +149,12 @@ public class PlatformController {
 
     private void SyncPositions() {
         foreach (var host in registry.Values) {
-            host.VehiclePhysicsState = vehicleService.GetVehicleState(host.VehiclePhysicsId);
-            host.Position = host.VehiclePhysicsState.position;
-            view.UpdatePlatformPose(host.Id, host.VehiclePhysicsState);
+            var vehicleState = vehicleSystem.ReadState(host.VehicleId);
+            host.Position = vehicleState.position;
+            view.UpdatePlatformPose(host.Id, vehicleState);
 
             if (host.LoadoutId != 0) {
-                loadoutController.MoveLoadout(host.LoadoutId, host.Position + host.LoadoutOffset, host.VehiclePhysicsState.rotation);
+                loadoutController.MoveLoadout(host.LoadoutId, host.Position + host.LoadoutOffset, vehicleState.rotation);
             }
 
             proximityService.UpdatePoint(host.ProximityId, host.Position);

@@ -19,7 +19,7 @@ public class ArmorModel {
     public Vector3 WeaponPlacementOffset { get; }
     
     public CombatId CombatId { get; set; }
-    public int VehiclePhysicsId { get; set; }
+    public VehicleId VehicleId { get; set; }
     public ProximityId ProximityId { get; set; }
     public RaycastId RaycastId { get; set; }
 
@@ -27,11 +27,5 @@ public class ArmorModel {
     public int RamId { get; set; }
 
     public Vector3 Position { get; set; }
-    public VehicleState VehiclePhysicsState { get; set; }
     public CombatState CombatState { get; set; }
-    
-    public float Gas { get; set; }
-    public Vector3 SteerDirection { get; set; }
-    public float Brakes { get; set; }
-
 }

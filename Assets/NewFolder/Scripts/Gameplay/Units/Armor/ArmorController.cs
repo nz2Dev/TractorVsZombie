@@ -10,7 +10,7 @@ public class ArmorController {
     private readonly RamEffectController ramEffect;
     private readonly CombatSystem combatSystem;
     private readonly WeaponController weaponController;
-    private readonly VehicleService vehicleService;
+    private readonly VehicleSystem vehicleSystem;
     private readonly RewardController rewardController;
     private readonly ProximityService proximityService;
     private readonly RaycastService raycastService;
@@ -20,10 +20,10 @@ public class ArmorController {
     private int idCounter;
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
-    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, VehicleService vehicleService, RamEffectController ramEffect, RewardController rewardController, ArmorView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
+    public ArmorController(CombatSystem combatSystem, WeaponController weaponController, VehicleSystem vehicleSystem, RamEffectController ramEffect, RewardController rewardController, ArmorView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
         this.combatSystem = combatSystem;
         this.weaponController = weaponController;
-        this.vehicleService = vehicleService;
+        this.vehicleSystem = vehicleSystem;
         this.ramEffect = ramEffect;
         this.rewardController = rewardController;
         this.view = view;
@@ -42,7 +42,6 @@ public class ArmorController {
         RemoveDeadArmor();
 
         SyncVehiclesPositions();
-        UpdateVehiclePhysics();
         UpdateView();
     }
 
@@ -52,11 +51,11 @@ public class ArmorController {
         registry[model.Id] = model;
 
         model.CombatId = combatSystem.Add(prototype.combatPrototype);
-        model.VehiclePhysicsId = vehicleService.CreateVehicle(prototype.position, prototype.vehiclePrefab);
+        model.VehicleId = vehicleSystem.Create(prototype.position, prototype.vehiclePrefab);
         model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
         model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
 
-        model.RamId = ramEffect.StartNew(model.CombatId, model.VehiclePhysicsId, prototype.combatPrototype.alie, prototype.ramPrototype);
+        model.RamId = ramEffect.StartNew(model.CombatId, model.VehicleId, prototype.combatPrototype.alie, prototype.ramPrototype);
         model.WeaponId = weaponController.SpawnWeapon(model.CombatId, prototype.localWeaponPrototype);
 
         entityMapping.CreateMappings(new EntityComponents {
@@ -69,27 +68,11 @@ public class ArmorController {
         return model.Id;
     }
 
-    public void Drive(int armorId, float gasInput, bool boostInput) {
-        var model = registry[armorId];
-        var boostMultiplier = boostInput ? 2f : 1f;   // gameplay rule
-        model.Gas = gasInput * boostMultiplier;
-    }
-
-    public void Brake(int armorId, float brakeInput) {
-        var model = registry[armorId];
-        model.Brakes = brakeInput;
-    }
-
-    public void SteerToward(int armorId, Vector3 direction) {
-        var model = registry[armorId];
-        model.SteerDirection = direction;
-    }
-
     private void DeleteArmor(ArmorModel model) {
         registry.Remove(model.Id);
         
         combatSystem.Remove(model.CombatId);
-        vehicleService.DeleteVehicle(model.VehiclePhysicsId);
+        vehicleSystem.Remove(model.VehicleId);
         weaponController.DeleteWeapon(model.WeaponId);
         ramEffect.Remove(model.RamId);
 
@@ -105,7 +88,7 @@ public class ArmorController {
         return new ArmorState {
             position = armor.Position,
             combatId = armor.CombatId,
-            vehiclePhysicsId = armor.VehiclePhysicsId, // Kept as 'vehicleId' in state struct for compatibility
+            vehicleId = armor.VehicleId,
             weaponId = armor.WeaponId,
             weaponState = weaponController.ReadWeaponState(armor.WeaponId)
         };
@@ -116,7 +99,7 @@ public class ArmorController {
             var combatState = combatSystem.ReadState(model.CombatId);
             model.CombatState = combatState;
             if (combatState.damageResult?.damageWasFatal == true) {
-                rewardController.Create(model.RewardPrototype, model.Position, model.VehiclePhysicsState.rotation);
+                rewardController.Create(model.RewardPrototype, model.Position, vehicleSystem.ReadState(model.VehicleId).rotation);
             }
         }
     }
@@ -135,8 +118,8 @@ public class ArmorController {
 
     private void SyncVehiclesPositions() {
         foreach (var model in registry.Values) {
-            model.VehiclePhysicsState = vehicleService.GetVehicleState(model.VehiclePhysicsId);
-            model.Position = model.VehiclePhysicsState.position;
+            var vehicleState = vehicleSystem.ReadState(model.VehicleId);
+            model.Position = vehicleState.position;
 
             weaponController.MoveWeapon(model.WeaponId, model.Position + model.WeaponPlacementOffset);
             // combatSystem.UpdateAgentPosition(model.CombatId, model.Position);
@@ -147,18 +130,11 @@ public class ArmorController {
         }
     }
 
-    private void UpdateVehiclePhysics() {
-        foreach (var model in registry.Values) {
-            vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, model.Brakes, 0);
-            var forwardToDirectionDegrees = Vector3.SignedAngle(model.VehiclePhysicsState.velocity.normalized, model.SteerDirection, Vector3.up);
-            vehicleService.SetVehicleSteerAngle(model.VehiclePhysicsId, forwardToDirectionDegrees);
-        }
-    }
-
     private void UpdateView() {
         foreach (var model in registry.Values) {
-            view.UpdatePose(model.Id, model.VehiclePhysicsState);
-            view.UpdateSound(model.Id, model.Gas);
+            var vehicleState = vehicleSystem.ReadState(model.VehicleId);
+            view.UpdatePose(model.Id, vehicleState);
+            view.UpdateSound(model.Id, vehicleSystem.ReadGas(model.VehicleId));
             
             var combatState = model.CombatState;
             view.UpdateHealthBar(model.Id, model.Position, combatState.health, combatState.maxHealth);

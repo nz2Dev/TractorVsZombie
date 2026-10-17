@@ -15,6 +15,7 @@ public class GameBootstrapper : MonoBehaviour {
     
     private CombatSystem combatSystem;
     private MotionSystem motionSystem;
+    private VehicleSystem vehicleSystem;
     private MovementSystem movementSystem;
     private PlayerController playerController;
     private EnemyController enemyController;
@@ -69,6 +70,7 @@ public class GameBootstrapper : MonoBehaviour {
         var poseRegistry = new PoseRegistry();
 
         combatSystem = new CombatSystem();
+        vehicleSystem = new VehicleSystem(vehicleService, poseRegistry);
         motionSystem = new MotionSystem(physicsService, collisionService, combatSystem, poseRegistry);
         movementSystem = new MovementSystem(motionSystem, poseRegistry, localAvoidanceService);
 
@@ -122,7 +124,7 @@ public class GameBootstrapper : MonoBehaviour {
             raycastService,
             motionSystem,
             entityMapping,
-            vehicleService
+            vehicleSystem
         );
 
         loadoutController = new LoadoutController(
@@ -133,7 +135,7 @@ public class GameBootstrapper : MonoBehaviour {
         armorController = new ArmorController(
             combatSystem,
             weaponController,
-            vehicleService,
+            vehicleSystem,
             ramEffect,
             rewardController,
             armorView,
@@ -145,7 +147,7 @@ public class GameBootstrapper : MonoBehaviour {
         platformController = new PlatformController(
             combatSystem,
             loadoutController,
-            vehicleService,
+            vehicleSystem,
             platformView,
             proximityService,
             raycastService,
@@ -156,7 +158,7 @@ public class GameBootstrapper : MonoBehaviour {
             combatSystem,
             ramEffect,
             truckView,
-            vehicleService,
+            vehicleSystem,
             proximityService,
             raycastService,
             entityMapping
@@ -191,8 +193,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         playerController = new PlayerController(
-            new DrivingController(truckController, vehicleService, platformController),
-            new AssemblingController(new AssemblingView(), platformController, truckController),
+            new DrivingController(truckController, vehicleSystem, platformController),
+            new AssemblingController(new AssemblingView(), platformController, truckController, vehicleSystem),
             new SelectingController(new SelectingView(uiDocument), platformController),
             new AimingController(new AimingView(cameraManager), platformController, weaponController, proximityService, collisionService),
             new CollectingController(rewardController),
@@ -201,7 +203,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         enemyController = new EnemyController(
             new InfantryAIController(infantryController, pathfindingService, proximityService, entityMapping, formationController, raycastService),
-            new ArmorAIController(combatSystem, pathfindingService, armorController, weaponController, proximityService),
+            new ArmorAIController(combatSystem, pathfindingService, armorController, vehicleSystem, weaponController, proximityService),
             new ProductionController(new ProducerFactory(buildingController, spawnerController), pathfindingService),
             new GoalsController(pathfindingService, platformController, truckController),
             new SquadsService(formationController, infantryController)
@@ -221,6 +223,7 @@ public class GameBootstrapper : MonoBehaviour {
 
     private void Update() {
         combatSystem.Update();
+        vehicleSystem.Update();
         motionSystem.Update();
         movementSystem.Update();
 
