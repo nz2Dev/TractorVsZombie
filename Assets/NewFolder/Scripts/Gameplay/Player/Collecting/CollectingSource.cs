@@ -1,6 +1,9 @@
+using System;
+
 using UnityEngine;
 
-public class CollectingSource : MonoBehaviour {
+[Serializable]
+public struct CollectingSource {
     
     [Inline, SerializeField] private CollectingConfig config;
 

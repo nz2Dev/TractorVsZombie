@@ -1,8 +1,10 @@
+using System;
 using System.Linq;
 
 using UnityEngine;
 
-public class AssemblingSource : MonoBehaviour {
+[Serializable]
+public struct AssemblingSource {
 
     [SerializeField] private GameObject platformPreviewPrefab;
     [SerializeField] private TruckSource initTruckSource;

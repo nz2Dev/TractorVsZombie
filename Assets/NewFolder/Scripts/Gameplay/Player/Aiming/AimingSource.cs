@@ -1,6 +1,10 @@
+using System;
+
 using UnityEngine;
 
-public class AimingSource : MonoBehaviour {
+[Serializable]
+public struct AimingSource {
+    
     [SerializeField] private AimVisuals aimVisualsPrefab;
     
     public AimingPrototype Get() {
