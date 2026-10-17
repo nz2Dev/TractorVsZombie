@@ -13,7 +13,7 @@ public class ProductionBuildingSource : MonoBehaviour {
     [Inline, SerializeField] private SpawnerPrototypeSource spawnerSource;
     [Local] [SerializeField] private GameObject visualsPrefab;
     [Inline] [SerializeField] private ProductionBuildingConfig config;
-    [Inline, SerializeField] private CombatPrototypeSource combatSource;
+    [SerializeField] private CombatSource combatSource;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
     [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
     [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;

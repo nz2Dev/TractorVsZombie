@@ -1,17 +1,18 @@
+using System;
+
 using Combat;
 
 using UnityEngine;
 
-public class CombatPrototypeSource : MonoBehaviour {
-    
+[Serializable]
+public struct CombatSource {
     [SerializeField] private bool alie;
-    [Inline, SerializeField] private CombatConfig configSource;
+    [Inline, SerializeField] private CombatConfig configSO;
 
     public CombatPrototype Get() {
         return new CombatPrototype {
             alie = alie,
-            config = configSource,
+            config = configSO,
         };
     }
-
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class ArmorSource : MonoBehaviour {
 
     [Inline] [SerializeField] private ArmorConfig config;
-    [Inline, SerializeField] private CombatPrototypeSource combatSource;
+    [SerializeField] private CombatSource combatSource;
     [Local] [SerializeField] private ArmorVisuals visualsPrefab;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [SerializeField] private AudioClip engineLoopSFX;

@@ -3,7 +3,7 @@ using UnityEngine;
 public class HeadquarterBuildingSource : MonoBehaviour {
 
     [Inline, SerializeField] private HeadquarterBuildingConfig config;
-    [Inline, SerializeField] private CombatPrototypeSource combatSource;
+    [SerializeField] private CombatSource combatSource;
     [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
     [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;

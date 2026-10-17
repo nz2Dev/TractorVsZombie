@@ -3,7 +3,7 @@ using UnityEngine;
 public class TruckSource : MonoBehaviour {
 
     [Inline] [SerializeField] private TruckConfig config;
-    [Inline, SerializeField] private CombatPrototypeSource combatSource;
+    [SerializeField] private CombatSource combatSource;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [Local] [SerializeField] private TruckVisuals visualsPrefab;
     [Local] [SerializeField] private RamEffectSource ramSource;
