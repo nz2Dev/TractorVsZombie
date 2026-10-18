@@ -9,7 +9,7 @@ public class ArmorSource : MonoBehaviour {
     [Local] [SerializeField] private ArmorVisuals visualsPrefab;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [SerializeField] private AudioClip engineLoopSFX;
-    [Local] [SerializeField] private WeaponSource weaponSource;
+    [SerializeField] private AttachmentSource attachmentSource;
     [Local] [SerializeField] private RamEffectSource ramSource;
     [SerializeField] private HitboxSource hitboxSource;
     [SerializeField] private DropSource dropSource;
@@ -27,7 +27,7 @@ public class ArmorSource : MonoBehaviour {
             vehiclePrefab: vehiclePrefab,
             engineLoopSFX: engineLoopSFX,
             ramPrototype: ramSource != null ? ramSource.GetPrototype() : default,
-            localWeaponPrototype: weaponSource != null ? weaponSource.GetPrototype(localTransform: true) : default,
+            attachmentPrototype: attachmentSource.Get(),
             dropPrototype: dropSource.Get(),
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),

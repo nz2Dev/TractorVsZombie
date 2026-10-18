@@ -5939,7 +5939,8 @@ MonoBehaviour:
   visualsPrefab: {fileID: 601842209}
   vehiclePrefab: {fileID: 2016185206}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
-  weaponSource: {fileID: 8232432610343428619}
+  attachmentSource:
+    weaponSource: {fileID: 8232432610343428619}
   ramSource: {fileID: 1507988199}
   hitboxSource:
     markerPrefab: {fileID: 1785217254}
@@ -40624,7 +40625,8 @@ MonoBehaviour:
   visualsPrefab: {fileID: 1931922711}
   vehiclePrefab: {fileID: 460880143}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
-  weaponSource: {fileID: 787191737}
+  attachmentSource:
+    weaponSource: {fileID: 787191737}
   ramSource: {fileID: 1882187328}
   hitboxSource:
     markerPrefab: {fileID: 2025953206}

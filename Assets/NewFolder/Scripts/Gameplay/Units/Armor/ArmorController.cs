@@ -9,7 +9,7 @@ public class ArmorController {
     private readonly RamEffectController ramEffect;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
-    private readonly WeaponController weaponController;
+    private readonly AttachmentSystem attachmentSystem;
     private readonly VehicleSystem vehicleSystem;
     private readonly DropSystem dropSystem;
     private readonly PoseRegistry poseRegistry;
@@ -20,10 +20,10 @@ public class ArmorController {
     private int idCounter;
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
-    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, WeaponController weaponController, VehicleSystem vehicleSystem, RamEffectController ramEffect, DropSystem dropSystem, ArmorView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, AttachmentSystem attachmentSystem, VehicleSystem vehicleSystem, RamEffectController ramEffect, DropSystem dropSystem, ArmorView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
-        this.weaponController = weaponController;
+        this.attachmentSystem = attachmentSystem;
         this.vehicleSystem = vehicleSystem;
         this.ramEffect = ramEffect;
         this.dropSystem = dropSystem;
@@ -48,7 +48,7 @@ public class ArmorController {
 
     public int SpawnArmor(ArmorPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new ArmorModel(nextId, prototype.position, prototype.config, prototype.localWeaponPrototype.position);
+        var model = new ArmorModel(nextId, prototype.position, prototype.config);
         registry[model.Id] = model;
 
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
@@ -59,7 +59,7 @@ public class ArmorController {
         model.DropId = dropSystem.Add(prototype.dropPrototype, model.HealthId, model.PoseId);
 
         model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
-        model.WeaponId = weaponController.SpawnWeapon(model.FactionId, prototype.localWeaponPrototype);
+        model.AttachmentId = attachmentSystem.Add(prototype.attachmentPrototype, model.FactionId, model.PoseId);
 
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
@@ -77,7 +77,7 @@ public class ArmorController {
         healthSystem.Remove(model.HealthId);
         vehicleSystem.Remove(model.VehicleId);
         poseRegistry.Remove(model.PoseId);
-        weaponController.DeleteWeapon(model.WeaponId);
+        attachmentSystem.Remove(model.AttachmentId);
         ramEffect.Remove(model.RamId);
 
         hitboxSystem.Remove(model.HitboxId);
@@ -95,8 +95,7 @@ public class ArmorController {
             healthId = armor.HealthId,
             factionIsAlie = factionRegistry.ReadState(armor.FactionId).alie,
             vehicleId = armor.VehicleId,
-            weaponId = armor.WeaponId,
-            weaponState = weaponController.ReadWeaponState(armor.WeaponId)
+            attachmentState = attachmentSystem.ReadState(armor.AttachmentId)
         };
     }
 
@@ -125,7 +124,6 @@ public class ArmorController {
             var vehicleState = vehicleSystem.ReadState(model.VehicleId);
             model.Position = vehicleState.position;
 
-            weaponController.MoveWeapon(model.WeaponId, model.Position + model.WeaponPlacementOffset);
             // healthSystem.UpdateAgentPosition(model.HealthId, model.Position);
             // TODO: register proxmity and raycast components
             ramEffect.Forward(model.RamId, model.Position);

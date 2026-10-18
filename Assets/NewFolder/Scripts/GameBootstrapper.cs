@@ -23,6 +23,7 @@ public class GameBootstrapper : MonoBehaviour {
     private LevelController levelController;
     private RewardController rewardController;
     private DropSystem dropSystem;
+    private AttachmentSystem attachmentSystem;
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
@@ -120,6 +121,8 @@ public class GameBootstrapper : MonoBehaviour {
             projectileController
         );
 
+        attachmentSystem = new AttachmentSystem(poseRegistry, weaponController);
+
         // rocket controller used to be initialized before infantry controller
 
         formationController = new FormationController(
@@ -144,7 +147,7 @@ public class GameBootstrapper : MonoBehaviour {
         armorController = new ArmorController(
             healthSystem,
             factionRegistry,
-            weaponController,
+            attachmentSystem,
             vehicleSystem,
             ramEffect,
             dropSystem,
@@ -234,6 +237,7 @@ public class GameBootstrapper : MonoBehaviour {
     private void Update() {
         healthSystem.Update();
         vehicleSystem.Update();
+        attachmentSystem.Update();
         motionSystem.Update();
         movementSystem.Update();
         hitboxSystem.Update();

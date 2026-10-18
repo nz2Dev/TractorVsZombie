@@ -9,7 +9,7 @@ public struct ArmorPrototype {
     public ArmorVisuals visualsPrefab;
     public UnityVehicle vehiclePrefab;
     public AudioClip engineLoopSFX;
-    public WeaponPrototype localWeaponPrototype;
+    public AttachmentPrototype attachmentPrototype;
     public RamEffectPrototype ramPrototype;
     public DropPrototype dropPrototype;
     public HealthPrototype healthPrototype;
@@ -17,13 +17,13 @@ public struct ArmorPrototype {
     public HitboxPrototype hitboxPrototype;
     public WorldSpaceUI worldSpaceUIPrefab;
 
-    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, WorldSpaceUI worldSpaceUIPrefab) {
+    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, AttachmentPrototype attachmentPrototype, RamEffectPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.config = config;
         this.visualsPrefab = visualsPrefab;
         this.vehiclePrefab = vehiclePrefab;
         this.engineLoopSFX = engineLoopSFX;
-        this.localWeaponPrototype = localWeaponPrototype;
+        this.attachmentPrototype = attachmentPrototype;
         this.ramPrototype = ramPrototype;
         this.dropPrototype = dropPrototype;
         this.healthPrototype = healthPrototype;

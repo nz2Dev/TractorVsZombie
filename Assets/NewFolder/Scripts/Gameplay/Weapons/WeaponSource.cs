@@ -12,10 +12,10 @@ public class WeaponSource : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public WeaponPrototype GetPrototype(bool localTransform) {
+    public WeaponPrototype GetPrototype() {
         return new WeaponPrototype {
             config = config,
-            position = localTransform ? transform.localPosition : transform.position,
+            position = transform.position,
             visualsPrefab = visualsPrefab,
             ballisticPrototype = ballisticPrototypeSource.Get(),
         };

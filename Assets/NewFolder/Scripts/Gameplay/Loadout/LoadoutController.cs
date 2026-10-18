@@ -22,8 +22,8 @@ public class LoadoutController {
         var model = new LoadoutModel(nextId, prototype.config);
         registry[nextId] = model;
 
-        model.WeaponId = weaponController.SpawnWeapon(ownerFactionId, prototype.localWeaponPrototype);
-        model.WeaponLocalOffset = prototype.localWeaponPrototype.position;
+        model.WeaponId = weaponController.SpawnWeapon(ownerFactionId, prototype.weaponPrototype);
+        model.WeaponLocalOffset = prototype.weaponOffset;
 
         view.AddLoadout(model.Id, prototype.position, prototype.shellVisualsPrefab);
         return model.Id;

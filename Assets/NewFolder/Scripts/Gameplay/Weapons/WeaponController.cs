@@ -22,6 +22,9 @@ public class WeaponController {
         UpdateFire();
     }
 
+    // TODO: make consistent Creation
+    // prototypes can have its default postion/rotation
+    // but each call should supplement position/rotation overrides
     public int SpawnWeapon(FactionId ownerFactionId, WeaponPrototype prototype) {
         var nextId = ++idCounter;
         var model = new WeaponModel(nextId, ownerFactionId, prototype.config);

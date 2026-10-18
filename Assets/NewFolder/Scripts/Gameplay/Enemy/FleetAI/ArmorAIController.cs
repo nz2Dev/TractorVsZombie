@@ -68,12 +68,10 @@ public class ArmorAIController {
     }
 
     private void OperateArmor(ArmorState state) {
-        var enemySearchRadius = state.weaponState.aimConfig.range;
-
         if (hitboxSystem.QueryNearest(state.position, !state.factionIsAlie, out var nearestHitboxId)) {
             // todo: either find mapped raycastId and het height from there, or else?
             var pointPosition = hitboxSystem.GetPosition(nearestHitboxId);
-            weaponController.AimWeapon(state.weaponId, pointPosition + 0.5f * Vector3.up);
+            weaponController.AimWeapon(state.attachmentState.weaponId, pointPosition + 0.5f * Vector3.up);
         }
     }
 
