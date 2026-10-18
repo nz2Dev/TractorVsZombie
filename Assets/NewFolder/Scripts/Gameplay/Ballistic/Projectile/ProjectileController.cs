@@ -65,11 +65,7 @@ public class ProjectileController {
             if (hitboxSystem.Raycast(ray, hitCheckDistance, !projectile.ShooterAlie, out var hitboxId, out var hitInfo)) {
                 projectile.IsDead = true;
 
-                var surface = ContactSurface.None;
                 if (entityMapping.TryFindByHitboxId(hitboxId, out var components)) {
-                    var healthState = healthSystem.ReadState(components.healthId.Value);
-                    surface = healthState.surface;
-
                     healthSystem.DealDamage(components.healthId.Value, new DamageInput {
                         damageSource = projectile.Position,
                         damageType = DamageType.Projectile,
@@ -77,6 +73,7 @@ public class ProjectileController {
                     });
                 }
 
+                var surface = hitboxSystem.ReadState(hitboxId).surface;
                 view.ShowBulletCrash(projectile.ShooterFactionId.Value, projectile.Id, projectile.Position,
                     projectile.Config.GetImapctAudioClips(surface), projectile.Config.GetImpactParticlesPrefab(surface), hitInfo.normal);
             }

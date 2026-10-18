@@ -31,7 +31,6 @@ public class HealthSystem {
             health: model.Health,
             maxHealth: model.Config.maxHelath,
             damageResult: model.DamageResult,
-            surface: model.Config.surface,
             isDead: model.Dead
         );
     }

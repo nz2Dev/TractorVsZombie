@@ -1,7 +1,7 @@
 using UnityEngine;
 
 internal sealed class HitboxModel {
-    public HitboxModel(HitboxId id, FactionState factionState, RaycastId raycastId, RaycastState raycastState, ProximityId proximityId, PoseId? poseId, Vector3 position) {
+    public HitboxModel(HitboxId id, FactionState factionState, RaycastId raycastId, RaycastState raycastState, ProximityId proximityId, PoseId? poseId, Vector3 position, ContactSurface surface) {
         Id = id;
         FactionState = factionState;
         RaycastId = raycastId;
@@ -9,6 +9,7 @@ internal sealed class HitboxModel {
         ProximityId = proximityId;
         PoseId = poseId;
         Position = position;
+        Surface = surface;
     }
 
     public HitboxId Id { get; }
@@ -18,4 +19,5 @@ internal sealed class HitboxModel {
     public ProximityId ProximityId { get; }
     public PoseId? PoseId { get; }
     public Vector3 Position { get; set; }
+    public ContactSurface Surface { get; }
 }

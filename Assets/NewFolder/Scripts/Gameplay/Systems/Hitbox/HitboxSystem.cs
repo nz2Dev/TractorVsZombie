@@ -37,7 +37,7 @@ public sealed class HitboxSystem {
         var proximityId = proximityService.AddPoint(position, proximityLayer);
         var raycastId = raycastService.RegisterMarker(position, prototype.markerPrefab, raycastLayer);
         var raycastState = raycastService.ReadState(raycastId);
-        var model = new HitboxModel(id, factionState, raycastId, raycastState, proximityId, poseId, position);
+        var model = new HitboxModel(id, factionState, raycastId, raycastState, proximityId, poseId, position, prototype.surface);
 
         models.Add(id, model);
         raycastToHitbox.Add(raycastId, id);
@@ -114,7 +114,7 @@ public sealed class HitboxSystem {
     }
 
     public HitboxState ReadState(HitboxId id) {
-        var raycastState = models[id].RaycastState;
-        return new HitboxState(raycastState.radius);
+        var model = models[id];
+        return new HitboxState(model.RaycastState.radius, model.Surface);
     }
 }

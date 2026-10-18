@@ -60,6 +60,7 @@ MonoBehaviour:
   ramSource: {fileID: 7335553454362133953}
   hitboxSource:
     markerPrefab: {fileID: 744558205689055514}
+    surface: 1
   worldSpaceUIPrefab: {fileID: 552357836590703132}
 --- !u!1 &1674252641367127333
 GameObject:
