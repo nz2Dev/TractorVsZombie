@@ -11,18 +11,18 @@ public class InfantryController {
     private readonly MotionSystem motionSystem;
     private readonly MovementSystem movementSystem;
     private readonly HitboxSystem hitboxSystem;
-    private readonly RewardController rewardController;
+    private readonly DropSystem dropSystem;
     private readonly EntityMapping entityMapping;
     private readonly PoseRegistry poseRegistry;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(HealthSystem healthSystem, FactionRegistry factionRegistry, InfantryView view, RewardController rewardController, MotionSystem motionSystem, MovementSystem movementSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public InfantryController(HealthSystem healthSystem, FactionRegistry factionRegistry, InfantryView view, DropSystem dropSystem, MotionSystem motionSystem, MovementSystem movementSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.view = view;
-        this.rewardController = rewardController;
+        this.dropSystem = dropSystem;
         this.motionSystem = motionSystem;
         this.movementSystem = movementSystem;
         this.hitboxSystem = hitboxSystem;
@@ -45,7 +45,7 @@ public class InfantryController {
 
     public int SpawnInfantry(InfantryPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new InfantryModel(nextId, prototype.config, prototype.rewardPrototype);
+        var model = new InfantryModel(nextId, prototype.config);
         registry[model.Id] = model;
 
         model.PoseId = poseRegistry.Add(prototype.position, default);
@@ -54,6 +54,7 @@ public class InfantryController {
         model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.config, prototype.physicsBodyPrefab, model.HealthId);
         model.MovementId = movementSystem.Add(prototype.position, prototype.agentAvoidanceConfig, model.MotionId, model.PoseId, prototype.config);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
+        model.DropId = dropSystem.Add(prototype.dropPrototype, model.HealthId, model.PoseId);
 
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
@@ -114,6 +115,7 @@ public class InfantryController {
         motionSystem.Remove(model.MotionId);
         poseRegistry.Remove(model.PoseId);
         hitboxSystem.Remove(model.HitboxId);
+        dropSystem.Remove(model.DropId);
 
         entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
@@ -216,9 +218,6 @@ public class InfantryController {
 
             var damageResult = healthState.damageResult.Value;
             if (damageResult.damageWasFatal) {
-                var pose = poseRegistry.Read(model.PoseId);
-                rewardController.Create(model.RewardPrototype, pose.position);
-
                 if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
                     view.ShowThrownAway(model.Id, damageResult.damageSource);
                 } else {

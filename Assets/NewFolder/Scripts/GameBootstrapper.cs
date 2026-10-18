@@ -22,6 +22,7 @@ public class GameBootstrapper : MonoBehaviour {
     private EnemyController enemyController;
     private LevelController levelController;
     private RewardController rewardController;
+    private DropSystem dropSystem;
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
@@ -81,11 +82,13 @@ public class GameBootstrapper : MonoBehaviour {
             rewardView
         );
 
+        dropSystem = new DropSystem(healthSystem, poseRegistry, rewardController);
+
         infantryController = new InfantryController(
             healthSystem,
             factionRegistry,
             infantryView,
-            rewardController,
+            dropSystem,
             motionSystem,
             movementSystem,
             hitboxSystem,
@@ -144,10 +147,11 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController,
             vehicleSystem,
             ramEffect,
-            rewardController,
+            dropSystem,
             armorView,
             hitboxSystem,
-            entityMapping
+            entityMapping,
+            poseRegistry
         );
 
         platformController = new PlatformController(
@@ -233,6 +237,7 @@ public class GameBootstrapper : MonoBehaviour {
         motionSystem.Update();
         movementSystem.Update();
         hitboxSystem.Update();
+        dropSystem.Update();
 
         ramEffect.Update();
         rewardController.Update();

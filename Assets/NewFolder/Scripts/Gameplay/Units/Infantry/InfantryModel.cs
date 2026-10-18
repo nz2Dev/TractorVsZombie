@@ -3,22 +3,20 @@ using UnityEngine;
 
 public class InfantryModel {
 
-    public InfantryModel(int id, InfantryConfig config, RewardPrototype rewardPrototype) {
+    public InfantryModel(int id, InfantryConfig config) {
         Id = id;
         Config = config;
-        RewardPrototype = rewardPrototype;
     }
 
     public int Id { get; }
     public InfantryConfig Config { get; }
-    public RewardPrototype RewardPrototype { get; }
-
     public HealthId HealthId { get; set; }
     public FactionId FactionId { get; set; }
     public MotionId MotionId { get; set; }
     public MovementId MovementId { get; set; }
     public PoseId PoseId { get; set; }
     public HitboxId HitboxId { get; set; }
+    public DropId DropId { get; set; }
     public MotionState MotionState { get; set; }
     public MovementState MovementState { get; set; }
     public HealthState HealthState { get; set; }

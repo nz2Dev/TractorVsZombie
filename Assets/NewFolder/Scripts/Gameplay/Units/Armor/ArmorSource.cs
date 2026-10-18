@@ -12,7 +12,7 @@ public class ArmorSource : MonoBehaviour {
     [Local] [SerializeField] private WeaponSource weaponSource;
     [Local] [SerializeField] private RamEffectSource ramSource;
     [SerializeField] private HitboxSource hitboxSource;
-    [SerializeField] private RewardSource loadoutRewardSource;
+    [SerializeField] private DropSource dropSource;
     [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
     private void Awake() {
@@ -28,7 +28,7 @@ public class ArmorSource : MonoBehaviour {
             engineLoopSFX: engineLoopSFX,
             ramPrototype: ramSource != null ? ramSource.GetPrototype() : default,
             localWeaponPrototype: weaponSource != null ? weaponSource.GetPrototype(localTransform: true) : default,
-            rewardPrototype: loadoutRewardSource.GetPrototype(),
+            dropPrototype: dropSource.Get(),
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
             hitboxPrototype: hitboxSource.GetHitboxPrototype(),

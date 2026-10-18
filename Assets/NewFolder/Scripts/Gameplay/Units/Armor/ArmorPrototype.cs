@@ -11,13 +11,13 @@ public struct ArmorPrototype {
     public AudioClip engineLoopSFX;
     public WeaponPrototype localWeaponPrototype;
     public RamEffectPrototype ramPrototype;
-    public RewardPrototype rewardPrototype;
+    public DropPrototype dropPrototype;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
     public HitboxPrototype hitboxPrototype;
     public WorldSpaceUI worldSpaceUIPrefab;
 
-    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, RewardPrototype rewardPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, WorldSpaceUI worldSpaceUIPrefab) {
+    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.config = config;
         this.visualsPrefab = visualsPrefab;
@@ -25,7 +25,7 @@ public struct ArmorPrototype {
         this.engineLoopSFX = engineLoopSFX;
         this.localWeaponPrototype = localWeaponPrototype;
         this.ramPrototype = ramPrototype;
-        this.rewardPrototype = rewardPrototype;
+        this.dropPrototype = dropPrototype;
         this.healthPrototype = healthPrototype;
         this.factionPrototype = factionPrototype;
         this.hitboxPrototype = hitboxPrototype;

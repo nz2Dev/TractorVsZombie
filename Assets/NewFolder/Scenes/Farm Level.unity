@@ -5944,7 +5944,9 @@ MonoBehaviour:
   hitboxSource:
     markerPrefab: {fileID: 1785217254}
     surface: 1
-  loadoutRewardSource: {fileID: 1680384370935344, guid: e6c92b1126f5340398d6706a351457ce, type: 3}
+  dropSource:
+    rewardSource: {fileID: 1680384370935344, guid: e6c92b1126f5340398d6706a351457ce, type: 3}
+    inheritHostRotation: 1
   worldSpaceUIPrefab: {fileID: 1480996430}
 --- !u!4 &377055306
 Transform:
@@ -38832,7 +38834,9 @@ MonoBehaviour:
   hitboxSource:
     markerPrefab: {fileID: 1128309740}
     surface: 2
-  rewardSource: {fileID: 1373779128}
+  dropSource:
+    rewardSource: {fileID: 1373779128}
+    inheritHostRotation: 0
 --- !u!1001 &1931922710
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40625,7 +40629,9 @@ MonoBehaviour:
   hitboxSource:
     markerPrefab: {fileID: 2025953206}
     surface: 1
-  loadoutRewardSource: {fileID: 6530768952594991425, guid: 48c638ce2be8649b7ba0f7b7d424bc43, type: 3}
+  dropSource:
+    rewardSource: {fileID: 6530768952594991425, guid: 48c638ce2be8649b7ba0f7b7d424bc43, type: 3}
+    inheritHostRotation: 1
   worldSpaceUIPrefab: {fileID: 2094138771}
 --- !u!4 &2094138770 stripped
 Transform:

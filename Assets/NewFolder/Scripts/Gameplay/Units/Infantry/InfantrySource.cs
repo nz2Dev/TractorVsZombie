@@ -14,7 +14,7 @@ public class InfantrySource : MonoBehaviour {
     // when the body is in "dynamic" state
     [Local] [SerializeField] private RagdollBody physicsBodyPrefab;
     [SerializeField] private HitboxSource hitboxSource;
-    [SerializeField] private RewardSource rewardSource;
+    [SerializeField] private DropSource dropSource;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -25,7 +25,7 @@ public class InfantrySource : MonoBehaviour {
             position = transform.position,
             config = config,
             visualsPrefab = visualsPrefab,
-            rewardPrototype = rewardSource.GetPrototype(),
+            dropPrototype = dropSource.Get(),
             physicsBodyPrefab = physicsBodyPrefab,
             healthPrototype = healthSource.GetHealthPrototype(),
             factionPrototype = factionSource.GetFactionPrototype(),
