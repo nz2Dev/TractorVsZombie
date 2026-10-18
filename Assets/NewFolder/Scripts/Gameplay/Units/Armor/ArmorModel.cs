@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class ArmorModel {
 
-    public ArmorModel(int id, ArmorConfig config) {
+    public ArmorModel(int id) {
         Id = id;
-        Config = config;
     }
 
     public int Id { get; }
-    public ArmorConfig Config { get; }    
     
     public HealthId HealthId { get; set; }
     public FactionId FactionId { get; set; }

@@ -60,7 +60,6 @@ public class GameBootstrapper : MonoBehaviour {
         var collisionService = new CollisionService(collisionServiceConfig);
 
         var weaponView = new WeaponView();
-        var armorView = new ArmorView(soundManager, cameraManager);
         var platformView = new PlatformView(cameraManager);
         var rewardView = new RewardView();
         var infantryView = new InfantryView(footstepSoundSystem);
@@ -151,10 +150,12 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleSystem,
             ramEffect,
             dropSystem,
-            armorView,
+            new ArmorView(),
             hitboxSystem,
             entityMapping,
-            poseRegistry
+            poseRegistry,
+            new ArmorAudio(soundManager),
+            new ArmorUI(cameraManager)
         );
 
         platformController = new PlatformController(

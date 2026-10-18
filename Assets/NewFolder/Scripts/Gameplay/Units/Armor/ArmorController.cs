@@ -15,22 +15,27 @@ public class ArmorController {
     private readonly PoseRegistry poseRegistry;
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
+
     private readonly ArmorView view;
+    private readonly ArmorAudio audio;
+    private readonly ArmorUI ui;
 
     private int idCounter;
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
-    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, AttachmentSystem attachmentSystem, VehicleSystem vehicleSystem, RamEffectController ramEffect, DropSystem dropSystem, ArmorView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, AttachmentSystem attachmentSystem, VehicleSystem vehicleSystem, RamEffectController ramEffect, DropSystem dropSystem, ArmorView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry, ArmorAudio audio, ArmorUI ui) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.attachmentSystem = attachmentSystem;
         this.vehicleSystem = vehicleSystem;
         this.ramEffect = ramEffect;
         this.dropSystem = dropSystem;
-        this.view = view;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
         this.poseRegistry = poseRegistry;
+        this.view = view;
+        this.audio = audio;
+        this.ui = ui;
     }
 
     public int ArmorCount => registry.Count;
@@ -41,14 +46,13 @@ public class ArmorController {
     public void Update() {
         ReadHealthOutput();
         RemoveDeadArmor();
-
         SyncVehiclesPositions();
-        UpdateView();
+        UpdatePresentation();
     }
 
     public int SpawnArmor(ArmorPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new ArmorModel(nextId, prototype.config);
+        var model = new ArmorModel(nextId);
         registry[model.Id] = model;
 
         model.PoseId = poseRegistry.Add(prototype.position, default);
@@ -66,7 +70,9 @@ public class ArmorController {
         });
 
         var alie = prototype.factionPrototype.alie;
-        view.Show(nextId, prototype.position, prototype.visualsPrefab, alie, prototype.engineLoopSFX, prototype.worldSpaceUIPrefab);
+        view.Show(nextId, prototype.position, alie, prototype.armorViewPrototype);
+        audio.Add(nextId, prototype.position, prototype.armorAudioPrototype);
+        ui.Add(nextId, prototype.position, prototype.armorUIPrototype);
         return model.Id;
     }
 
@@ -85,6 +91,8 @@ public class ArmorController {
         factionRegistry.Remove(model.FactionId);
         
         view.Hide(model.Id);
+        audio.Remove(model.Id);
+        ui.Remove(model.Id);
     }
 
     public ArmorState ReadArmorState(int armorId) {
@@ -125,14 +133,14 @@ public class ArmorController {
         }
     }
 
-    private void UpdateView() {
+    private void UpdatePresentation() {
         foreach (var model in registry.Values) {
             var vehicleState = vehicleSystem.ReadState(model.VehicleId);
             view.UpdatePose(model.Id, vehicleState);
-            view.UpdateSound(model.Id, vehicleSystem.ReadGas(model.VehicleId));
+            audio.UpdateSound(model.Id, vehicleState.position, vehicleSystem.ReadGas(model.VehicleId));
             
             var healthState = model.HealthState;
-            view.UpdateHealthBar(model.Id, vehicleState.position, healthState.health, healthState.maxHealth);
+            ui.UpdateHealthBar(model.Id, vehicleState.position, healthState.health, healthState.maxHealth);
             if (healthState.damageResult.HasValue) {
                 view.ShowTakeHit(model.Id);
             }

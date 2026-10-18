@@ -5931,24 +5931,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3c9e23e3d834a278f0097c5b298957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ArmorSource
-  config: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}
+  vehiclePrefab: {fileID: 2016185206}
+  ramSource: {fileID: 1507988199}
   healthSource:
     configSO: {fileID: 11400000, guid: f16fc845dd69040a4a1cd8fb963ebf8f, type: 2}
   factionSource:
     alie: 0
-  visualsPrefab: {fileID: 601842209}
-  vehiclePrefab: {fileID: 2016185206}
-  engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   attachmentSource:
     weaponSource: {fileID: 8232432610343428619}
-  ramSource: {fileID: 1507988199}
   hitboxSource:
     markerPrefab: {fileID: 1785217254}
     surface: 1
   dropSource:
     rewardSource: {fileID: 1680384370935344, guid: e6c92b1126f5340398d6706a351457ce, type: 3}
     inheritHostRotation: 1
-  worldSpaceUIPrefab: {fileID: 1480996430}
+  viewSource:
+    visualsPrefab: {fileID: 601842209}
+  audioSource:
+    engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+  uiSource:
+    worldSpaceUIPrefab: {fileID: 1480996430}
 --- !u!4 &377055306
 Transform:
   m_ObjectHideFlags: 0
@@ -40617,24 +40619,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3c9e23e3d834a278f0097c5b298957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ArmorSource
-  config: {fileID: 11400000, guid: 2ce8dd84e3b5a45ccaa03fb11755a917, type: 2}
+  vehiclePrefab: {fileID: 460880143}
+  ramSource: {fileID: 1882187328}
   healthSource:
     configSO: {fileID: 11400000, guid: f16fc845dd69040a4a1cd8fb963ebf8f, type: 2}
   factionSource:
     alie: 0
-  visualsPrefab: {fileID: 1931922711}
-  vehiclePrefab: {fileID: 460880143}
-  engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   attachmentSource:
     weaponSource: {fileID: 787191737}
-  ramSource: {fileID: 1882187328}
   hitboxSource:
     markerPrefab: {fileID: 2025953206}
     surface: 1
   dropSource:
     rewardSource: {fileID: 6530768952594991425, guid: 48c638ce2be8649b7ba0f7b7d424bc43, type: 3}
     inheritHostRotation: 1
-  worldSpaceUIPrefab: {fileID: 2094138771}
+  viewSource:
+    visualsPrefab: {fileID: 1931922711}
+  audioSource:
+    engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+  uiSource:
+    worldSpaceUIPrefab: {fileID: 2094138771}
 --- !u!4 &2094138770 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5860901324671199906, guid: 40fc0f8f5c3954b978e174e33bd2d250, type: 3}
