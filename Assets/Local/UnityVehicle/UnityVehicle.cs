@@ -87,6 +87,9 @@ public class UnityVehicle : MonoBehaviour {
         physics.isKinematic = true;
         physics.linearVelocity = Vector3.zero;
         physics.angularVelocity = Vector3.zero;
+        if (towing != null) {
+            towing.ClearConnection();
+        }
     }
 
     private void AdjustVehicleMass() {

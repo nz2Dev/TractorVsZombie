@@ -106,14 +106,6 @@ public class PlatformController {
         foreach (var platform in registry.Values) {
             platform.CombatState = combatSystem.ReadState(platform.CombatId);
             if (platform.CombatState.damageResult?.damageWasFatal == true) {
-                // should vehicle library handle disconnection itself?
-                // we do this, so that we don't have to do this in caller sites
-                // it's naturall to assume that if platform is destroyed, it removes its connections
-                // but it also naturall to assume that if we delete the vehicle from service it will remove it
-                // currently vehicle implementation don't destroy game object and its configurable joints, which should effectively remove physics constraints
-                // todo: consider moving this implicit behavior handling to vehicle implementation
-                vehicleSystem.Disconnect(platform.VehicleId);
-                
                 if (platform.LoadoutId != 0) {
                     loadoutController.DeleteLoadout(platform.LoadoutId);
                     platform.LoadoutId = 0;
