@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00c63c439a8784163aeb1ca12631b649, type: 3}
-  m_Name: Building Combat Config
-  m_EditorClassIdentifier: NewFolder::Combat.CombatConfig
-  maxHelath: 300
+  m_Name: Enemy Vehicle Health Config
+  m_EditorClassIdentifier: NewFolder::HealthConfig
+  maxHelath: 50
   surface: 1

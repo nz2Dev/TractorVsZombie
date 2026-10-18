@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::PlatformSource
   config: {fileID: 11400000, guid: dac4c19d2445744d3a7e444a64102c1f, type: 2}
-  combatSource:
+  healthFactionSource:
     alie: 1
     configSO: {fileID: 11400000, guid: e77ee70402f1a4d498b35107339c66e0, type: 2}
   visualsPrefab: {fileID: 788712317402739098}

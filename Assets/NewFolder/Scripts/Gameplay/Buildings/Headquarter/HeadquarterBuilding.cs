@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -10,7 +9,8 @@ public class HeadquarterBuilding {
 
     public HeadquarterBuildingConfig Config { get; }
 
-    public CombatId CombatId { get; set; }
+    public HealthId HealthId { get; set; }
+    public FactionId FactionId { get; set; }
     public PathfindingObstacleId PathfindingObstacleId { get; set; }
     public AvoidanceObstacleId AvoidanceObstacleId { get; set; }
     public CollisionObstacleId CollisionObstacleId { get; set; }

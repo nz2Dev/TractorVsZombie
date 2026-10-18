@@ -12,6 +12,7 @@
   <Project Path="UnityVehicle.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="NewFolder.PlayTests.csproj" />
+  <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="ORCARuntime.csproj" />
   <Project Path="KNNRuntime.EditorTests.csproj" />
   <Project Path="FlowField.EditorTests.csproj" />
@@ -19,6 +20,5 @@
   <Project Path="GenerationPlaygroundEditor.csproj" />
   <Project Path="PrototypeEditor.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
-  <Project Path="NewFolder.EditorTests.csproj" />
   <Project Path="Profiling.csproj" />
 </Solution>

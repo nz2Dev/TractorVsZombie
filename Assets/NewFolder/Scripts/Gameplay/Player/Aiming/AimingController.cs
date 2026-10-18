@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Combat;
 
 using UnityEngine;
 
@@ -90,8 +89,8 @@ public class AimingController {
 
     private void OperateAutomatically(PlatformState platformState) {
         var searchRadius = platformState.weaponState.aimConfig.range; // ?? where does radius filter should happen? here or in proximity service?
-        var searchFaction = !platformState.combatState.alie;
-        var serachProximityLayer = CombatSystem.GetProximityLayerForFaction(searchFaction);
+        var searchFaction = !platformState.factionState.alie;
+        var serachProximityLayer = FactionRegistry.GetProximityLayerForFaction(searchFaction);
         
         if (proximityService.QueryNearestPoint(platformState.position, serachProximityLayer, out var nearestProximityId)) {
             var nearestPosition = proximityService.GetPoint(nearestProximityId);

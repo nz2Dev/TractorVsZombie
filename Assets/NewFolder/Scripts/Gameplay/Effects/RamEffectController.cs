@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Combat;
 
 using Interactions;
 
@@ -10,15 +9,17 @@ using UnityEngine;
 public class RamEffectController {
 
     private readonly RamEffectView view;
-    private readonly CombatSystem combatSystem;
+    private readonly HealthSystem healthSystem;
+    private readonly FactionRegistry factionRegistry;
     private readonly RaycastService raycastService;
     private readonly VehicleSystem vehicleSystem;
     private readonly MotionSystem motionSystem;
     private readonly EntityMapping entityMapping;
 
-    public RamEffectController(RamEffectView view, CombatSystem combatSystem, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping, VehicleSystem vehicleSystem) {
+    public RamEffectController(RamEffectView view, HealthSystem healthSystem, FactionRegistry factionRegistry, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping, VehicleSystem vehicleSystem) {
         this.view = view;
-        this.combatSystem = combatSystem;
+        this.healthSystem = healthSystem;
+        this.factionRegistry = factionRegistry;
         this.raycastService = raycastService;
         this.motionSystem = motionSystem;
         this.entityMapping = entityMapping;
@@ -34,10 +35,10 @@ public class RamEffectController {
         ApplyTemporalLinearDrag();
     }
 
-    public int StartNew(CombatId holderCombatId, VehicleId holderVehicleId, bool holderIsAlie, RamEffectPrototype prototype) {
+    public int StartNew(FactionId holderFactionId, VehicleId holderVehicleId, RamEffectPrototype prototype) {
         var nextId = idCounter++;
         var baseLinearDrag = vehicleSystem.GetLinearDamping(holderVehicleId);
-        var model = new RamEffectModel(nextId, prototype.config, holderCombatId, holderVehicleId, holderIsAlie, baseLinearDrag);
+        var model = new RamEffectModel(nextId, prototype.config, holderFactionId, holderVehicleId, baseLinearDrag);
         model.Position = prototype.position;
         registry[nextId] = model;
         view.AddEffect(nextId, prototype.audioSourcePrefab);
@@ -57,7 +58,8 @@ public class RamEffectController {
 
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
-            var targetRaycastLayer = CombatSystem.GetRaycastLayerForFaction(!model.HolderIsAlie);
+            var holderIsAlie = factionRegistry.ReadState(model.HolderFactionId).alie;
+            var targetRaycastLayer = FactionRegistry.GetRaycastLayerForFaction(!holderIsAlie);
             raycastService.Overlap(model.Position, model.Config.triggerRadius, targetRaycastLayer, out var idsResult);
             
             model.LostContactBuffer.Clear();
@@ -96,8 +98,8 @@ public class RamEffectController {
                     });
                 }
                 
-                if (nextComponents.combatId.HasValue) {
-                    combatSystem.DealDamage(nextComponents.combatId.Value, new DamageInput {
+                if (nextComponents.healthId.HasValue) {
+                    healthSystem.DealDamage(nextComponents.healthId.Value, new DamageInput {
                         damageSource = model.Position,
                         damageType = DamageType.Exposion,
                         damage = model.Config.damage,

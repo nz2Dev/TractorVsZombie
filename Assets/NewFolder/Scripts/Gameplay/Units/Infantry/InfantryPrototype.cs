@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -10,6 +9,7 @@ public struct InfantryPrototype {
 
     public RagdollBody physicsBodyPrefab;
     public RaycastMarker raycastMarkerPrefab;
-    public CombatPrototype combatPrototype;
+    public HealthPrototype healthPrototype;
+    public FactionPrototype factionPrototype;
     public AgentAvoidanceConfig agentAvoidanceConfig;
 }

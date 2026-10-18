@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -14,8 +13,8 @@ public class InfantryModel {
     public InfantryConfig Config { get; }
     public RewardPrototype RewardPrototype { get; }
 
-    public CombatId CombatId { get; set; }
-    public bool CombatIsAlie { get; set; }
+    public HealthId HealthId { get; set; }
+    public FactionId FactionId { get; set; }
     public MotionId MotionId { get; set; }
     public MovementId MovementId { get; set; }
     public PoseId PoseId { get; set; }
@@ -23,7 +22,7 @@ public class InfantryModel {
     public RaycastId RaycastId { get; set; }
     public MotionState MotionState { get; set; }
     public MovementState MovementState { get; set; }
-    public CombatState CombatState { get; set; }
+    public HealthState HealthState { get; set; }
     public PoseState PoseState { get; set; }
     
     public float LastAttackTime { get; set; }

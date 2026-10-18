@@ -1,4 +1,3 @@
-using Combat;
 
 using Interactions;
 
@@ -8,7 +7,7 @@ internal sealed class MotionModel {
     
     public MotionId Id { get; }
     public PoseId HostPoseId { get; }
-    public CombatId HostCombatId { get; }
+    public HealthId HostHealthId { get; }
     public RagdollId BodyId { get; }
     public InfantryConfig Config { get; }
 
@@ -20,11 +19,11 @@ internal sealed class MotionModel {
     public EffectType ActiveEffectType { get; set; }
     public Explosion ExplosionData { get; set; }
 
-    public MotionModel(MotionId id, PoseId poseId, RagdollId bodyId, InfantryConfig config, CombatId hostCombatId) {
+    public MotionModel(MotionId id, PoseId poseId, RagdollId bodyId, InfantryConfig config, HealthId hostHealthId) {
         Id = id;
         HostPoseId = poseId;
         BodyId = bodyId;
         Config = config;
-        HostCombatId = hostCombatId;
+        HostHealthId = hostHealthId;
     }
 }

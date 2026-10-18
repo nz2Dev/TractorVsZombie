@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,7 +12,8 @@ public class GameBootstrapper : MonoBehaviour {
     [SerializeField] private KnnRunner knnRunner;
     [SerializeField] private FootstepSoundSystem footstepSoundSystem;
     
-    private CombatSystem combatSystem;
+    private HealthSystem healthSystem;
+    private FactionRegistry factionRegistry;
     private MotionSystem motionSystem;
     private VehicleSystem vehicleSystem;
     private MovementSystem movementSystem;
@@ -69,9 +69,10 @@ public class GameBootstrapper : MonoBehaviour {
         var entityMapping = new EntityMapping();
         var poseRegistry = new PoseRegistry();
 
-        combatSystem = new CombatSystem();
+        healthSystem = new HealthSystem();
+        factionRegistry = new FactionRegistry();
         vehicleSystem = new VehicleSystem(vehicleService, poseRegistry);
-        motionSystem = new MotionSystem(physicsService, collisionService, combatSystem, poseRegistry);
+        motionSystem = new MotionSystem(physicsService, collisionService, healthSystem, poseRegistry);
         movementSystem = new MovementSystem(motionSystem, poseRegistry, localAvoidanceService);
 
         rewardController = new RewardController(
@@ -79,7 +80,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         infantryController = new InfantryController(
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             infantryView,
             rewardController,
             motionSystem,
@@ -92,14 +94,16 @@ public class GameBootstrapper : MonoBehaviour {
 
         rocketController = new RocketController(
             rocketView,
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             raycastService,
             motionSystem,
             entityMapping
         );
 
         projectileController = new ProjectileController(
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             projectileView,
             raycastService,
             entityMapping,
@@ -120,7 +124,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         ramEffect = new RamEffectController(
             new RamEffectView(soundManager),
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             raycastService,
             motionSystem,
             entityMapping,
@@ -133,7 +138,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         armorController = new ArmorController(
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             weaponController,
             vehicleSystem,
             ramEffect,
@@ -145,7 +151,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         platformController = new PlatformController(
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             loadoutController,
             vehicleSystem,
             platformView,
@@ -155,7 +162,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         truckController = new TruckController(
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             ramEffect,
             truckView,
             vehicleSystem,
@@ -172,7 +180,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         buildingController = new ProductionBuildingController(
             productionBuildingView,
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             collisionService,
             localAvoidanceService,
             spawnerController,
@@ -182,7 +191,8 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         headquarterBuildingController = new HeadquarterBuildingController(
-            combatSystem,
+            healthSystem,
+            factionRegistry,
             pathfindingService,
             collisionService,
             localAvoidanceService,
@@ -203,7 +213,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         enemyController = new EnemyController(
             new InfantryAIController(infantryController, pathfindingService, proximityService, entityMapping, formationController, raycastService),
-            new ArmorAIController(combatSystem, pathfindingService, armorController, vehicleSystem, weaponController, proximityService),
+            new ArmorAIController(healthSystem, pathfindingService, armorController, vehicleSystem, weaponController, proximityService),
             new ProductionController(new ProducerFactory(buildingController, spawnerController), pathfindingService),
             new GoalsController(pathfindingService, platformController, truckController),
             new SquadsService(formationController, infantryController)
@@ -222,7 +232,7 @@ public class GameBootstrapper : MonoBehaviour {
     }
 
     private void Update() {
-        combatSystem.Update();
+        healthSystem.Update();
         vehicleSystem.Update();
         motionSystem.Update();
         movementSystem.Update();

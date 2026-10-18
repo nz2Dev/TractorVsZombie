@@ -3,8 +3,8 @@ using UnityEngine;
 public class ProximityService {
 
     public enum Layer {
-        CombatReservedA,
-        CombatReservedB
+        FactionReservedA,
+        FactionReservedB
     }
 
     private readonly KnnRunner knnRunner;

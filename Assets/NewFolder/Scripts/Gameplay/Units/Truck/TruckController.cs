@@ -1,13 +1,13 @@
 using System;
 
-using Combat;
 
 using UnityEngine;
 
 public class TruckController {
 
     private readonly TruckView view;
-    private readonly CombatSystem combatSystem;
+    private readonly HealthSystem healthSystem;
+    private readonly FactionRegistry factionRegistry;
     private readonly VehicleSystem vehicleSystem;
     private readonly RamEffectController ramEffect;
     private readonly ProximityService proximityService;
@@ -16,8 +16,9 @@ public class TruckController {
 
     private TruckModel model;
 
-    public TruckController(CombatSystem combatSystem, RamEffectController ramEffect, TruckView view, VehicleSystem vehicleSystem, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
-        this.combatSystem = combatSystem;
+    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamEffectController ramEffect, TruckView view, VehicleSystem vehicleSystem, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
+        this.healthSystem = healthSystem;
+        this.factionRegistry = factionRegistry;
         this.ramEffect = ramEffect;
         this.view = view;
         this.vehicleSystem = vehicleSystem;
@@ -35,7 +36,7 @@ public class TruckController {
             return;
 
         ReadExternalState();
-        ReadCombatState();
+        ReadHealthState();
         WriteExternalInput();
         UpdateView();
         CheckDestruction();
@@ -43,44 +44,48 @@ public class TruckController {
 
     public virtual void Create(TruckPrototype prototype, Vector3 position = default) {
         model = new TruckModel(prototype.config, position == default ? prototype.position : position);
-        model.CombatId = combatSystem.Add(prototype.combatPrototype);
+        model.HealthId = healthSystem.Add(prototype.healthPrototype);
+        model.FactionId = factionRegistry.Add(prototype.factionPrototype);
+        var alie = factionRegistry.ReadState(model.FactionId).alie;
         model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab, prototype.rotation);
-        model.RamId = ramEffect.StartNew(model.CombatId, model.VehicleId, prototype.combatPrototype.alie, prototype.ramPrototype);
-        model.ProximityId = proximityService.AddPoint(model.Position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
-        model.RaycastId = raycastService.RegisterMarker(model.Position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
+        model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
+        model.ProximityId = proximityService.AddPoint(model.Position, FactionRegistry.GetProximityLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
+        model.RaycastId = raycastService.RegisterMarker(model.Position, prototype.raycastMarkerPrefab, FactionRegistry.GetRaycastLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
         
         entityMapping.CreateMappings(new EntityComponents {
             proximityId = model.ProximityId,
             raycastId = model.RaycastId,
-            combatId = model.CombatId,
+            healthId = model.HealthId,
+            factionId = model.FactionId,
         });
 
-        view.Show(model.Position, prototype.visualsPrefab, prototype.combatPrototype.alie, prototype.engineLoopSFX, prototype.worldSpaceUIPrefab);
+        view.Show(model.Position, prototype.visualsPrefab, alie, prototype.engineLoopSFX, prototype.worldSpaceUIPrefab);
     }
 
     private void ReadExternalState() {
         model.Position = vehicleSystem.ReadState(model.VehicleId).position;
     }
 
-    private void ReadCombatState() {
-        model.CombatState = combatSystem.ReadState(model.CombatId);
+    private void ReadHealthState() {
+        model.HealthState = healthSystem.ReadState(model.HealthId);
     }
 
     private void CheckDestruction() {
-        if (model.CombatState.isDead) {
+        if (model.HealthState.isDead) {
             Clear();
             model = null;
         }
     }
 
     private void Clear() {
-        combatSystem.Remove(model.CombatId);
+        healthSystem.Remove(model.HealthId);
         vehicleSystem.Remove(model.VehicleId);
         ramEffect.Remove(model.RamId);
         proximityService.RemovePoint(model.ProximityId);
         raycastService.UnregisterMarker(model.RaycastId);
         
         entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+        factionRegistry.Remove(model.FactionId);
 
         view.Remove();
     }
@@ -96,9 +101,9 @@ public class TruckController {
         view.UpdatePose(vehicleSystem.ReadState(model.VehicleId));
         view.UpdateSound(vehicleSystem.ReadGas(model.VehicleId));
 
-        var combatState = model.CombatState;
-        view.UpdateHealthBar(model.Position, combatState.health, combatState.maxHealth);
-        if (combatState.damageResult.HasValue) {
+        var healthState = model.HealthState;
+        view.UpdateHealthBar(model.Position, healthState.health, healthState.maxHealth);
+        if (healthState.damageResult.HasValue) {
             view.ShowTakeHit();
         }
     }

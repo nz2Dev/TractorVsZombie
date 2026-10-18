@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -15,7 +14,8 @@ public class PlatformModel {
     public PlatformConfig Config { get; }
     public Vector3 LoadoutOffset { get; }
 
-    public CombatId CombatId { get; set; }
+    public HealthId HealthId { get; set; }
+    public FactionId FactionId { get; set; }
     public VehicleId VehicleId { get; set; }
     public ProximityId ProximityId { get; set; }
     public RaycastId RaycastId { get; set; }
@@ -24,6 +24,6 @@ public class PlatformModel {
     public int RamId { get; set; }
 
     public Vector3 Position { get; set; }
-    public CombatState CombatState { get; set; }
+    public HealthState HealthState { get; set; }
 
 }

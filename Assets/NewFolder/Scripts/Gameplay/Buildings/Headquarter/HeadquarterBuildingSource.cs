@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class HeadquarterBuildingSource : MonoBehaviour {
 
     [Inline, SerializeField] private HeadquarterBuildingConfig config;
-    [SerializeField] private CombatSource combatSource;
+    [FormerlySerializedAs("combatSource"), SerializeField] private HealthFactionSource healthFactionSource;
     [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
     [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
@@ -20,7 +21,8 @@ public class HeadquarterBuildingSource : MonoBehaviour {
             position: transform.position,
             rotation: transform.rotation,
             config: config,
-            combatPrototype: combatSource.Get(),
+            healthPrototype: healthFactionSource.GetHealthPrototype(),
+            factionPrototype: healthFactionSource.GetFactionPrototype(),
             raycastMarkerPrefab: raycastMarkerPrefab,
             collisionObstaclePrefab: collisionObstaclePrefab,
             avoidanceObstaclePrefab: avoidanceObstaclePrefab,

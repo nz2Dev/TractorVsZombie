@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
-using Combat;
 
 public class InfantryController {
 
     private readonly InfantryView view;
-    private readonly CombatSystem combatSystem;
+    private readonly HealthSystem healthSystem;
+    private readonly FactionRegistry factionRegistry;
     private readonly MotionSystem motionSystem;
     private readonly MovementSystem movementSystem;
     private readonly RaycastService raycastService;
@@ -19,8 +19,9 @@ public class InfantryController {
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(CombatSystem combatSystem, InfantryView view, RewardController rewardController, MotionSystem motionSystem, MovementSystem movementSystem, RaycastService raycastService, ProximityService proximityService, EntityMapping entityMapping, PoseRegistry poseRegistry) {
-        this.combatSystem = combatSystem;
+    public InfantryController(HealthSystem healthSystem, FactionRegistry factionRegistry, InfantryView view, RewardController rewardController, MotionSystem motionSystem, MovementSystem movementSystem, RaycastService raycastService, ProximityService proximityService, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+        this.healthSystem = healthSystem;
+        this.factionRegistry = factionRegistry;
         this.view = view;
         this.rewardController = rewardController;
         this.motionSystem = motionSystem;
@@ -40,7 +41,7 @@ public class InfantryController {
         ReadMovement();
         UpdateAttacks();
         ClearDeadInfantry();
-        ReadCombatState();
+        ReadHealthState();
         SyncPositions();
     }
 
@@ -50,17 +51,18 @@ public class InfantryController {
         registry[model.Id] = model;
 
         model.PoseId = poseRegistry.Add(prototype.position, default);
-        model.CombatId = combatSystem.Add(prototype.combatPrototype);
-        model.CombatIsAlie = prototype.combatPrototype.alie;
-        model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.config, prototype.physicsBodyPrefab, model.CombatId);
+        model.HealthId = healthSystem.Add(prototype.healthPrototype);
+        model.FactionId = factionRegistry.Add(prototype.factionPrototype);
+        model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.config, prototype.physicsBodyPrefab, model.HealthId);
         model.MovementId = movementSystem.Add(prototype.position, prototype.agentAvoidanceConfig, model.MotionId, model.PoseId, prototype.config);
-        model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
-        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
+        model.ProximityId = proximityService.AddPoint(prototype.position, FactionRegistry.GetProximityLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
+        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, FactionRegistry.GetRaycastLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
 
         entityMapping.CreateMappings(new EntityComponents {
             proximityId = model.ProximityId,
             raycastId = model.RaycastId,
-            combatId = model.CombatId,
+            healthId = model.HealthId,
+            factionId = model.FactionId,
             motionId = model.MotionId
         });
 
@@ -90,10 +92,10 @@ public class InfantryController {
             position: model.PoseState.position,
             maxSpeed: model.MovementState.maxSpeed,
             activationRadius: model.Config.activationRadius,
-            isAlive: !model.CombatState.isDead,
+            isAlive: !model.HealthState.isDead,
             isGrounded: model.MotionState.isGrounded,
-            combatId: model.CombatId,
-            combatIsAlie: model.CombatIsAlie,
+            healthId: model.HealthId,
+            factionIsAlie: factionRegistry.ReadState(model.FactionId).alie,
             attackActivated: model.AttackActivationTime > model.LastAttackTime
         );
     }
@@ -102,7 +104,7 @@ public class InfantryController {
         List<InfantryModel> infantryToRemove = new();
 
         foreach (var model in registry.Values)
-            if (model.CombatState.isDead && model.MotionState.isGrounded)
+            if (model.HealthState.isDead && model.MotionState.isGrounded)
                 infantryToRemove.Add(model);
 
         foreach (var model in infantryToRemove)
@@ -111,8 +113,8 @@ public class InfantryController {
 
     private void DeleteInfantry(InfantryModel model) {
         registry.Remove(model.Id);
-        
-        combatSystem.Remove(model.CombatId);
+
+        healthSystem.Remove(model.HealthId);
         movementSystem.Remove(model.MovementId);
         motionSystem.Remove(model.MotionId);
         poseRegistry.Remove(model.PoseId);
@@ -120,6 +122,7 @@ public class InfantryController {
         raycastService.UnregisterMarker(model.RaycastId);
 
         entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+        factionRegistry.Remove(model.FactionId);
 
         view.RemoveVisuals(model.Id);
     }
@@ -144,7 +147,7 @@ public class InfantryController {
 
     private void UpdateAttacks() {
         foreach (var model in registry.Values) {
-            if (model.CombatState.isDead)
+            if (model.HealthState.isDead)
                 continue;
 
             var attackCanceled = !model.TargetProximityId.HasValue || !model.MotionState.isGrounded;
@@ -155,9 +158,9 @@ public class InfantryController {
             }
 
             var targetProximityId = model.TargetProximityId.Value;
-            var lostAbilityForCombat = !entityMapping.TryFindByProximityId(targetProximityId, out var targetComponents) 
-                || !targetComponents.combatId.HasValue;
-            if (lostAbilityForCombat) {
+            var lostAbilityForTarget = !entityMapping.TryFindByProximityId(targetProximityId, out var targetComponents)
+                || !targetComponents.healthId.HasValue;
+            if (lostAbilityForTarget) {
                 model.TargetProximityId = null;
                 model.AttackActivationTime = model.LastAttackTime - 1;
                 view.ShowDischarge(model.Id);
@@ -186,17 +189,17 @@ public class InfantryController {
             if (notActivated || notChargedYet) {
                 continue;
             }
-            
+
             model.LastAttackTime = Time.time;
             view.PlayChargeAttack(model.Id);
-            
+
             var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
             var outOfReach = Vector3.Distance(pose.position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
             if (outOfReach) {
                 continue;
             }
-            
-            combatSystem.DealDamage(targetComponents.combatId.Value, new DamageInput {
+
+            healthSystem.DealDamage(targetComponents.healthId.Value, new DamageInput {
                 damageSource = pose.position,
                 damageType = DamageType.Punch,
                 damage = model.Config.damage
@@ -204,24 +207,24 @@ public class InfantryController {
         }
     }
 
-    private void ReadCombatState() {
+    private void ReadHealthState() {
         foreach (var model in registry.Values) {
-            model.CombatState = combatSystem.ReadState(model.CombatId);
-            
-            var combatState = model.CombatState;
-            var healthNormalized = 1f - (float) combatState.health / Mathf.Max(combatState.maxHealth, 1);
+            model.HealthState = healthSystem.ReadState(model.HealthId);
+
+            var healthState = model.HealthState;
+            var healthNormalized = 1f - (float) healthState.health / Mathf.Max(healthState.maxHealth, 1);
             view.SetHealthNormalized(model.Id, healthNormalized);
 
-            if (!combatState.damageResult.HasValue)
+            if (!healthState.damageResult.HasValue)
                 continue;
 
             view.ShowTakeHit(model.Id);
-            
-            var damageResult = combatState.damageResult.Value;
+
+            var damageResult = healthState.damageResult.Value;
             if (damageResult.damageWasFatal) {
                 var pose = poseRegistry.Read(model.PoseId);
                 rewardController.Create(model.RewardPrototype, pose.position);
-                
+
                 if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
                     view.ShowThrownAway(model.Id, damageResult.damageSource);
                 } else {

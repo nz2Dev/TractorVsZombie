@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 
-using Combat;
 
 using UnityEditor;
 
@@ -10,7 +9,8 @@ using UnityEngine.Assertions;
 public class ProductionBuildingController {
 
     private readonly ProductionBuildingView view;
-    private readonly CombatSystem combatSystem;
+    private readonly HealthSystem healthSystem;
+    private readonly FactionRegistry factionRegistry;
     private readonly CollisionService collisionService;
     private readonly AvoidanceService localAvoidanceService;
     private readonly SpawnerController spawnerController;
@@ -25,7 +25,8 @@ public class ProductionBuildingController {
 
     public ProductionBuildingController(
         ProductionBuildingView view,
-        CombatSystem combatSystem,
+        HealthSystem healthSystem,
+        FactionRegistry factionRegistry,
         CollisionService collisionService,
         AvoidanceService localAvoidanceService,
         SpawnerController spawnService,
@@ -33,7 +34,8 @@ public class ProductionBuildingController {
         RaycastService raycastService,
         EntityMapping entityMapping) {
         this.view = view;
-        this.combatSystem = combatSystem;
+        this.healthSystem = healthSystem;
+        this.factionRegistry = factionRegistry;
         this.collisionService = collisionService;
         this.localAvoidanceService = localAvoidanceService;
         this.spawnerController = spawnService;
@@ -43,7 +45,7 @@ public class ProductionBuildingController {
     }
 
     public void Update() {
-        ReadCombatOutput();
+        ReadHealthOutput();
         ValidateBuildings();
     }
 
@@ -77,17 +79,19 @@ public class ProductionBuildingController {
         var model = new ProductionBuildingModel(nextId, prototype.config);
         registry[nextId] = model;
         
-        model.CombatId = combatSystem.Add(prototype.combatPrototype);
+        model.HealthId = healthSystem.Add(prototype.healthPrototype);
+        model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.avoidanceObstaclePrefab);
         model.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
-        model.ProximityId = proximityService.AddPoint(prototype.position, CombatSystem.GetProximityLayerForFaction(prototype.combatPrototype.alie));
-        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, CombatSystem.GetRaycastLayerForFaction(prototype.combatPrototype.alie));
+        model.ProximityId = proximityService.AddPoint(prototype.position, FactionRegistry.GetProximityLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
+        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, FactionRegistry.GetRaycastLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
         model.SpawnerId = spawnerController.Create(prototype.spawnerPrototype);
 
         entityMapping.CreateMappings(new EntityComponents {
             proximityId = model.ProximityId,
             raycastId = model.RaycastId,
-            combatId = model.CombatId
+            healthId = model.HealthId,
+            factionId = model.FactionId
         });
 
         view.AddVisuals(model.Id, prototype.position, prototype.rotation, prototype.visualsPrefab);
@@ -105,7 +109,7 @@ public class ProductionBuildingController {
     private void DestroyBuilding(int id) {
         registry.Remove(id, out var model);
         
-        combatSystem.Remove(model.CombatId);
+        healthSystem.Remove(model.HealthId);
         localAvoidanceService.RemoveObstacle(model.AvoidanceObstacleId);
         collisionService.UnregisterObstacle(model.CollisionObstacleId);
         raycastService.UnregisterMarker(model.RaycastId);
@@ -113,14 +117,15 @@ public class ProductionBuildingController {
         spawnerController.Destroy(model.SpawnerId);
 
         entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+        factionRegistry.Remove(model.FactionId);
 
         view.RemoveVisuals(model.Id);
     }
 
-    private void ReadCombatOutput() {
+    private void ReadHealthOutput() {
         foreach (var model in registry.Values) {
-            var combatState = combatSystem.ReadState(model.CombatId);
-            if (combatState.damageResult?.damageWasFatal == true) {
+            var healthState = healthSystem.ReadState(model.HealthId);
+            if (healthState.damageResult?.damageWasFatal == true) {
                 model.Destroyed = true;
             }
         }

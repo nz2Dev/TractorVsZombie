@@ -1,19 +1,18 @@
-using Combat;
 
 using UnityEngine;
 
 internal class ProjectileModel {
 
-    internal ProjectileModel(int id, ProjectileConfig config, CombatId shooterCombatId, bool shooterAlie) {
+    internal ProjectileModel(int id, ProjectileConfig config, FactionId shooterFactionId, bool shooterAlie) {
         Id = id;
         Config = config;
-        ShooterCombatId = shooterCombatId;
+        ShooterFactionId = shooterFactionId;
         ShooterAlie = shooterAlie;
     }
 
     internal int Id { get; }
     internal ProjectileConfig Config { get; }
-    internal CombatId ShooterCombatId { get; }
+    internal FactionId ShooterFactionId { get; }
     internal bool ShooterAlie { get; }
 
     internal Vector3 Position { get; set; }

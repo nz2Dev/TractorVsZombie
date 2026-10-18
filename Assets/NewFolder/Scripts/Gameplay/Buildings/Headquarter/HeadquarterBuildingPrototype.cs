@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -7,7 +6,8 @@ public struct HeadquarterBuildingPrototype {
     public Vector3 position;
     public Quaternion rotation;
     public HeadquarterBuildingConfig config;
-    public CombatPrototype combatPrototype;
+    public HealthPrototype healthPrototype;
+    public FactionPrototype factionPrototype;
     public RaycastMarker raycastMarkerPrefab;
     public CollisionObstacle collisionObstaclePrefab;
     public ORCAObstacleVertices avoidanceObstaclePrefab;
@@ -16,12 +16,13 @@ public struct HeadquarterBuildingPrototype {
     public WorldSpaceUI worldSpaceUIPrefab;
 
     public HeadquarterBuildingPrototype(Vector3 position, Quaternion rotation, HeadquarterBuildingConfig config,
-        CombatPrototype combatPrototype, RaycastMarker raycastMarkerPrefab, CollisionObstacle collisionObstaclePrefab,
+        HealthPrototype healthPrototype, FactionPrototype factionPrototype, RaycastMarker raycastMarkerPrefab, CollisionObstacle collisionObstaclePrefab,
         ORCAObstacleVertices avoidanceObstaclePrefab, HeadquarterBuildingVisuals visualsPrefab, Collider pathfindingObstaclePrefab, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.rotation = rotation;
         this.config = config;
-        this.combatPrototype = combatPrototype;
+        this.healthPrototype = healthPrototype;
+        this.factionPrototype = factionPrototype;
         this.raycastMarkerPrefab = raycastMarkerPrefab;
         this.collisionObstaclePrefab = collisionObstaclePrefab;
         this.avoidanceObstaclePrefab = avoidanceObstaclePrefab;

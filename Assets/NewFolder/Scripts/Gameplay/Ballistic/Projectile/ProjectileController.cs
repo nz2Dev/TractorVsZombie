@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 
-using Combat;
 
 using UnityEngine;
 
 public class ProjectileController {
 
     private readonly ProjectileView view;
-    private readonly CombatSystem combatSystem;
+    private readonly HealthSystem healthSystem;
+    private readonly FactionRegistry factionRegistry;
     private readonly RaycastService raycastService;
     private readonly CollisionService collisionService;
     private readonly EntityMapping entityMapping;
@@ -17,27 +17,28 @@ public class ProjectileController {
     private readonly Dictionary<int, ProjectileModel> registry = new ();
     private readonly List<int> removeBuffer = new(16);
 
-    public ProjectileController(CombatSystem combatSystem, ProjectileView view, RaycastService raycastService, EntityMapping entityMapping, CollisionService collisionService) {
-        this.combatSystem = combatSystem;
+    public ProjectileController(HealthSystem healthSystem, FactionRegistry factionRegistry, ProjectileView view, RaycastService raycastService, EntityMapping entityMapping, CollisionService collisionService) {
+        this.healthSystem = healthSystem;
+        this.factionRegistry = factionRegistry;
         this.view = view;
         this.raycastService = raycastService;
         this.entityMapping = entityMapping;
         this.collisionService = collisionService;
     }
 
-    public void Create(CombatId shooterCombatId, ProjectilePrototype prototype, Orientation orientation) {
-        var shootIsAlie = combatSystem.ReadState(shooterCombatId).alie;
+    public void Create(FactionId shooterFactionId, ProjectilePrototype prototype, Orientation orientation) {
+        var shootIsAlie = factionRegistry.ReadState(shooterFactionId).alie;
 
         var nextId = ++idCounter;
-        var model = new ProjectileModel(nextId, prototype.config, shooterCombatId, shootIsAlie);
+        var model = new ProjectileModel(nextId, prototype.config, shooterFactionId, shootIsAlie);
         registry[nextId] = model;
 
         model.Position = orientation.origin;
         model.Velocity = orientation.direction * prototype.config.speed;
         model.SpawnTime = Time.time;
 
-        view.SetupShooter(shooterCombatId.Value, prototype.shootAudioSourcePrefab, prototype.crashAudioSourcePrefab);
-        view.ShowBulletShoot(shooterCombatId.Value, model.Id, orientation.origin, model.Velocity,
+        view.SetupShooter(shooterFactionId.Value, prototype.shootAudioSourcePrefab, prototype.crashAudioSourcePrefab);
+        view.ShowBulletShoot(shooterFactionId.Value, model.Id, orientation.origin, model.Velocity,
             prototype.config.style, prototype.config.shootAudioClips);
     }
 
@@ -61,24 +62,24 @@ public class ProjectileController {
 
             var ray = new Ray(projectile.Position, projectile.Velocity);
             var hitCheckDistance = projectile.Velocity.magnitude * Time.fixedDeltaTime;
-            var targetRaycastLayer = CombatSystem.GetRaycastLayerForFaction(!projectile.ShooterAlie);
-            
+            var targetRaycastLayer = FactionRegistry.GetRaycastLayerForFaction(!projectile.ShooterAlie);
+
             if (raycastService.Raycast(ray, hitCheckDistance, targetRaycastLayer, out var hitRaycastId, out var hitInfo)) {
                 projectile.IsDead = true;
 
                 var surface = ContactSurface.None;
                 if (entityMapping.TryFindByRaycastId(hitRaycastId, out var components)) {
-                    var combatState = combatSystem.ReadState(components.combatId.Value);
-                    surface = combatState.surface;
+                    var healthState = healthSystem.ReadState(components.healthId.Value);
+                    surface = healthState.surface;
 
-                    combatSystem.DealDamage(components.combatId.Value, new DamageInput {
+                    healthSystem.DealDamage(components.healthId.Value, new DamageInput {
                         damageSource = projectile.Position,
                         damageType = DamageType.Projectile,
                         damage = projectile.Config.damage
                     });
                 }
 
-                view.ShowBulletCrash(projectile.ShooterCombatId.Value, projectile.Id, projectile.Position, 
+                view.ShowBulletCrash(projectile.ShooterFactionId.Value, projectile.Id, projectile.Position,
                     projectile.Config.GetImapctAudioClips(surface), projectile.Config.GetImpactParticlesPrefab(surface), hitInfo.normal);
             }
         }
@@ -93,7 +94,7 @@ public class ProjectileController {
             if (!projectile.IsDead) {
                 var projectileRay = new Ray(projectile.Position, projectile.Velocity);
                 if (collisionService.RaycastEnvironment(projectileRay, projectile.Velocity.magnitude * Time.fixedDeltaTime, out var hitInfo)) {
-                    view.ShowBulletCrash(projectile.ShooterCombatId.Value, projectile.Id, hitInfo.point, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitInfo.normal);
+                    view.ShowBulletCrash(projectile.ShooterFactionId.Value, projectile.Id, hitInfo.point, projectile.Config.impactAudioClips, projectile.Config.impactParticlesPrefab, hitInfo.normal);
                     projectile.IsDead = true;
                 }
             }

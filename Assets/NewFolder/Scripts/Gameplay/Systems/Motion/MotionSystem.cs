@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 
-using Combat;
 
 using Interactions;
 
@@ -8,7 +7,7 @@ using UnityEngine;
 
 public class MotionSystem {
 
-    private readonly CombatSystem combatSystem;
+    private readonly HealthSystem healthSystem;
     private readonly RagdollService ragdollService;
     private readonly CollisionService collisionService;
     private readonly PoseRegistry poseRegistry;
@@ -16,17 +15,17 @@ public class MotionSystem {
     private readonly Dictionary<MotionId, MotionModel> registry = new();
     private int idCounter;
 
-    public MotionSystem(RagdollService ragdollService, CollisionService collisionService, CombatSystem combatSystem, PoseRegistry poseRegistry) {
+    public MotionSystem(RagdollService ragdollService, CollisionService collisionService, HealthSystem healthSystem, PoseRegistry poseRegistry) {
         this.ragdollService = ragdollService;
         this.collisionService = collisionService;
-        this.combatSystem = combatSystem;
+        this.healthSystem = healthSystem;
         this.poseRegistry = poseRegistry;
     }
 
-    public MotionId Add(PoseId poseId, Vector3 position, InfantryConfig config, RagdollBody bodyPrefab, CombatId hostCombatId) {
+    public MotionId Add(PoseId poseId, Vector3 position, InfantryConfig config, RagdollBody bodyPrefab, HealthId hostHealthId) {
         var id = new MotionId(++idCounter);
         var bodyId = ragdollService.RegisterPhysicsEntity(position, bodyPrefab);
-        registry[id] = new MotionModel(id, poseId, bodyId, config, hostCombatId);
+        registry[id] = new MotionModel(id, poseId, bodyId, config, hostHealthId);
         return id;
     }
 
@@ -75,8 +74,8 @@ public class MotionSystem {
             } else if (becomeGrounded) {
                 model.Grounded = true;
                 
-                var combatState = combatSystem.ReadState(model.HostCombatId);
-                if (!combatState.isDead) {
+                var healthState = healthSystem.ReadState(model.HostHealthId);
+                if (!healthState.isDead) {
                     ragdollService.SetPhysicsActive(model.BodyId, false);
                     var groundPosition = collisionService.GetClosestVerticalGroundPoint(physicsPose.Position);
                     var defaulRotation = Quaternion.identity;

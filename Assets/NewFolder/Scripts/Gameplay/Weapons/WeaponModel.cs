@@ -1,16 +1,15 @@
-using Combat;
 
 using UnityEngine;
 
 public class WeaponModel {
     
     public int Id { get; }
-    public CombatId CombatId { get; }
+    public FactionId FactionId { get; }
     public WeaponConfig Config { get; }
 
-    public WeaponModel(int id, CombatId combatId, WeaponConfig config) {
+    public WeaponModel(int id, FactionId factionId, WeaponConfig config) {
         Id = id;
-        CombatId = combatId;
+        FactionId = factionId;
         Config = config;
     }
 

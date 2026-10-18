@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Combat;
 
 using UnityEngine;
 
@@ -18,12 +17,12 @@ public class LoadoutController {
         this.weaponController = weaponController;
     }
 
-    public int SpawnLoadout(CombatId ownerCombatId, LoadoutPrototype prototype) {
+    public int SpawnLoadout(FactionId ownerFactionId, LoadoutPrototype prototype) {
         var nextId = ++idCounter;
         var model = new LoadoutModel(nextId, prototype.config);
         registry[nextId] = model;
 
-        model.WeaponId = weaponController.SpawnWeapon(ownerCombatId, prototype.localWeaponPrototype);
+        model.WeaponId = weaponController.SpawnWeapon(ownerFactionId, prototype.localWeaponPrototype);
         model.WeaponLocalOffset = prototype.localWeaponPrototype.position;
 
         view.AddLoadout(model.Id, prototype.position, prototype.shellVisualsPrefab);

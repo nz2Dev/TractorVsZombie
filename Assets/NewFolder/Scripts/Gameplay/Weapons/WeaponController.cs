@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 
-using Combat;
 
 using UnityEngine;
 
@@ -23,9 +22,9 @@ public class WeaponController {
         UpdateFire();
     }
 
-    public int SpawnWeapon(CombatId ownerCombatId, WeaponPrototype prototype) {
+    public int SpawnWeapon(FactionId ownerFactionId, WeaponPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new WeaponModel(nextId, ownerCombatId, prototype.config);
+        var model = new WeaponModel(nextId, ownerFactionId, prototype.config);
         registry[nextId] = model;
 
         model.Position = prototype.position;
@@ -87,7 +86,7 @@ public class WeaponController {
         var launchPoint = weapon.Position + weapon.BallisticLaunchOffset;
         var projectileDirection = (weapon.AimPoint - launchPoint).normalized;
         projectileController.Create(
-            weapon.CombatId,
+            weapon.FactionId,
             weapon.BallisticPrototype.projectilePrototype,
             new Orientation { 
                 origin = launchPoint, 
@@ -98,7 +97,7 @@ public class WeaponController {
 
     private void FireRocket(WeaponModel weapon) {
         rocketController.Create(
-            weapon.CombatId,
+            weapon.FactionId,
             weapon.BallisticPrototype.rocketPrototype,
             new FlyPath {
                 launchPoint = weapon.Position + weapon.BallisticLaunchOffset,

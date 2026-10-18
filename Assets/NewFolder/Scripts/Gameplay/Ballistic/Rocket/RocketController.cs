@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-using Combat;
 
 using Interactions;
 
@@ -10,7 +10,8 @@ using UnityEngine;
 public class RocketController {
 
     private readonly RocketView view;
-    private readonly CombatSystem combatSystem;
+    private readonly HealthSystem healthSystem;
+    private readonly FactionRegistry factionRegistry;
     private readonly RaycastService raycastService;
     private readonly MotionSystem motionSystem;
     private readonly EntityMapping entityMapping;
@@ -18,19 +19,20 @@ public class RocketController {
     private int idCounter = 0;
     private readonly Dictionary<int, RocketModel> registry = new ();
 
-    public RocketController(RocketView view, CombatSystem combatSystem, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping) {
+    public RocketController(RocketView view, HealthSystem healthSystem, FactionRegistry factionRegistry, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping) {
         this.view = view;
-        this.combatSystem = combatSystem;
+        this.healthSystem = healthSystem;
+        this.factionRegistry = factionRegistry;
         this.raycastService = raycastService;
         this.motionSystem = motionSystem;
         this.entityMapping = entityMapping;
     }
 
-    public void Create(CombatId shooterCombatId, RocketPrototype prototype, FlyPath trajectory) {
-        var shooterIsAlie = combatSystem.ReadState(shooterCombatId).alie;
+    public void Create(FactionId shooterFactionId, RocketPrototype prototype, FlyPath trajectory) {
+        var shooterIsAlie = factionRegistry.ReadState(shooterFactionId).alie;
 
         var nextRocketId = ++idCounter;
-        var rocket = new RocketModel(nextRocketId, shooterCombatId, shooterIsAlie, Time.time, trajectory, prototype.config);
+        var rocket = new RocketModel(nextRocketId, shooterFactionId, shooterIsAlie, Time.time, trajectory, prototype.config);
         registry[nextRocketId] = rocket;
 
         view.ShowRocketFly(rocket.Id, prototype.visualsPrefab, rocket.LaunchTime,
@@ -38,11 +40,11 @@ public class RocketController {
     }
 
     public void Update() {
-        UpdateRocketLandingCombat();
+        UpdateRocketLanding();
         FilterElapsedRockets();
     }
 
-    private void UpdateRocketLandingCombat() {
+    private void UpdateRocketLanding() {
         foreach (var rocket in registry.Values) {
             if (rocket.LaunchTime + rocket.Config.flyDuration < Time.time)
                 rocket.Landed = true;
@@ -51,7 +53,7 @@ public class RocketController {
                 view.ShowRocketExplosion(rocket.Id, rocket.Trajectory.landPoint, rocket.Config.explodeEffectClips);
 
                 var targetFaction = !rocket.ShooterIsAlie;
-                var targetRaycastLayer = CombatSystem.GetRaycastLayerForFaction(targetFaction);
+                var targetRaycastLayer = FactionRegistry.GetRaycastLayerForFaction(targetFaction);
                 raycastService.Overlap(rocket.Trajectory.landPoint, rocket.Config.explosionRadius, 
                     targetRaycastLayer, out var overlappedRaycastIds);
 
@@ -63,7 +65,7 @@ public class RocketController {
                             var explosionConfig = rocket.Config.explosionData;
 
                             var forceVariation = explosionConfig.force * rocket.Config.forceRangeVariation;
-                            explosionConfig.force += Random.Range(-1, 1) * forceVariation;
+                            explosionConfig.force += UnityEngine.Random.Range(-1, 1) * forceVariation;
 
                             motionSystem.AddExplosionEffect(nextComponents.motionId.Value, new Explosion {
                                 epicentr = rocket.Trajectory.landPoint,
@@ -71,8 +73,8 @@ public class RocketController {
                             });
                         } 
                         
-                        if (nextComponents.combatId.HasValue) {
-                            combatSystem.DealDamage(nextComponents.combatId.Value, new DamageInput {
+                        if (nextComponents.healthId.HasValue) {
+                            healthSystem.DealDamage(nextComponents.healthId.Value, new DamageInput {
                                 damageSource = rocket.Trajectory.landPoint,
                                 damageType = DamageType.Exposion,
                                 damage = rocket.Config.damage,

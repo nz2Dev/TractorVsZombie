@@ -3,6 +3,7 @@ using UnityEditor;
 #endif
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ProductionBuildingSource : MonoBehaviour {
 
@@ -13,7 +14,7 @@ public class ProductionBuildingSource : MonoBehaviour {
     [Inline, SerializeField] private SpawnerPrototypeSource spawnerSource;
     [Local] [SerializeField] private GameObject visualsPrefab;
     [Inline] [SerializeField] private ProductionBuildingConfig config;
-    [SerializeField] private CombatSource combatSource;
+    [FormerlySerializedAs("combatSource"), SerializeField] private HealthFactionSource healthFactionSource;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
     [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
     [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
@@ -48,7 +49,8 @@ public class ProductionBuildingSource : MonoBehaviour {
             avoidanceObstaclePrefab: avoidanceObstaclePrefab,
             physicsObstaclePrefab: collisionObstaclePrefab,
             visualsPrefab: visualsPrefab,
-            combatPrototype: combatSource.Get(),
+            healthPrototype: healthFactionSource.GetHealthPrototype(),
+            factionPrototype: healthFactionSource.GetFactionPrototype(),
             raycastMarkerPrefab: raycastMarkerPrefab
         );
     }

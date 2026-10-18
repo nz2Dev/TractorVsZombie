@@ -1,5 +1,4 @@
 
-using Combat;
 
 using UnityEngine;
 
@@ -18,7 +17,8 @@ public class ArmorModel {
     public RewardPrototype RewardPrototype { get; }
     public Vector3 WeaponPlacementOffset { get; }
     
-    public CombatId CombatId { get; set; }
+    public HealthId HealthId { get; set; }
+    public FactionId FactionId { get; set; }
     public VehicleId VehicleId { get; set; }
     public ProximityId ProximityId { get; set; }
     public RaycastId RaycastId { get; set; }
@@ -27,5 +27,5 @@ public class ArmorModel {
     public int RamId { get; set; }
 
     public Vector3 Position { get; set; }
-    public CombatState CombatState { get; set; }
+    public HealthState HealthState { get; set; }
 }

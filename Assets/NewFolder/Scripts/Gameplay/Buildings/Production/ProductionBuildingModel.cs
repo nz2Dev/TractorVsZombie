@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -12,7 +11,8 @@ public class ProductionBuildingModel {
     public int Id { get; }
     public ProductionBuildingConfig Config { get; }
 
-    public CombatId CombatId { get; set; }
+    public HealthId HealthId { get; set; }
+    public FactionId FactionId { get; set; }
     public int PathfindingObstacleId { get; set; }
     public AvoidanceObstacleId AvoidanceObstacleId { get; set; }
     public CollisionObstacleId CollisionObstacleId { get; set; }

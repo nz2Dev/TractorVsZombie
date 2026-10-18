@@ -1,11 +1,11 @@
-using Combat;
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ArmorSource : MonoBehaviour {
 
     [Inline] [SerializeField] private ArmorConfig config;
-    [SerializeField] private CombatSource combatSource;
+    [FormerlySerializedAs("combatSource"), SerializeField] private HealthFactionSource healthFactionSource;
     [Local] [SerializeField] private ArmorVisuals visualsPrefab;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [SerializeField] private AudioClip engineLoopSFX;
@@ -29,7 +29,8 @@ public class ArmorSource : MonoBehaviour {
             ramPrototype: ramSource != null ? ramSource.GetPrototype() : default,
             localWeaponPrototype: weaponSource != null ? weaponSource.GetPrototype(localTransform: true) : default,
             rewardPrototype: loadoutRewardSource.GetPrototype(),
-            combatPrototype: combatSource.Get(),
+            healthPrototype: healthFactionSource.GetHealthPrototype(),
+            factionPrototype: healthFactionSource.GetFactionPrototype(),
             raycastMarkerPrefab: raycastMarkerPrefab,
             worldSpaceUIPrefab: worldSpaceUIPrefab
         );

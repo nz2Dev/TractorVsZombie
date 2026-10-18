@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -7,7 +8,7 @@ public class InfantrySource : MonoBehaviour {
 
     [Inline] [SerializeField] private InfantryConfig config;
     [SerializeField] private AgentAvoidanceConfig agentAvoidanceConfigSource;
-    [SerializeField] private CombatSource combatSource;
+    [FormerlySerializedAs("combatSource"), SerializeField] private HealthFactionSource healthFactionSource;
     [Local] [SerializeField] private InfantryVisuals visualsPrefab;
     // setting the layer to the one that vehicle physics can interact with give interesting results
     // when the body is in "dynamic" state
@@ -26,7 +27,8 @@ public class InfantrySource : MonoBehaviour {
             visualsPrefab = visualsPrefab,
             rewardPrototype = rewardSource.GetPrototype(),
             physicsBodyPrefab = physicsBodyPrefab,
-            combatPrototype = combatSource.Get(),
+            healthPrototype = healthFactionSource.GetHealthPrototype(),
+            factionPrototype = healthFactionSource.GetFactionPrototype(),
             agentAvoidanceConfig = agentAvoidanceConfigSource,
             raycastMarkerPrefab = raycastMarkerPrefab,
         };

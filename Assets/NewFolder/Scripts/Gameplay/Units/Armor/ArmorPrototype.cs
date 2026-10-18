@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -13,11 +12,12 @@ public struct ArmorPrototype {
     public WeaponPrototype localWeaponPrototype;
     public RamEffectPrototype ramPrototype;
     public RewardPrototype rewardPrototype;
-    public CombatPrototype combatPrototype;
+    public HealthPrototype healthPrototype;
+    public FactionPrototype factionPrototype;
     public RaycastMarker raycastMarkerPrefab;
     public WorldSpaceUI worldSpaceUIPrefab;
 
-    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, RewardPrototype rewardPrototype, CombatPrototype combatPrototype, RaycastMarker raycastMarkerPrefab, WorldSpaceUI worldSpaceUIPrefab) {
+    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, RewardPrototype rewardPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, RaycastMarker raycastMarkerPrefab, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.config = config;
         this.visualsPrefab = visualsPrefab;
@@ -26,7 +26,8 @@ public struct ArmorPrototype {
         this.localWeaponPrototype = localWeaponPrototype;
         this.ramPrototype = ramPrototype;
         this.rewardPrototype = rewardPrototype;
-        this.combatPrototype = combatPrototype;
+        this.healthPrototype = healthPrototype;
+        this.factionPrototype = factionPrototype;
         this.raycastMarkerPrefab = raycastMarkerPrefab;
         this.worldSpaceUIPrefab = worldSpaceUIPrefab;
     }

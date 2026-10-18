@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Combat;
 
 using UnityEngine;
 
@@ -86,7 +85,7 @@ public class InfantryAIController {
     }
 
     private bool TryGetClosestFoe(InfantryState infantryState, out ProximityId foeProximityId, out Vector3 foePosition, out RaycastState foeRaycastState) {
-        var foeProximityLayer = CombatSystem.GetProximityLayerForFaction(!infantryState.combatIsAlie);
+        var foeProximityLayer = FactionRegistry.GetProximityLayerForFaction(!infantryState.factionIsAlie);
         if (proximityService.QueryNearestPoint(infantryState.position, foeProximityLayer, out foeProximityId)) {
             if (entityMapping.TryFindByProximityId(foeProximityId, out var foeComponents)) {
                 foeRaycastState = raycastService.ReadState(foeComponents.raycastId.Value);

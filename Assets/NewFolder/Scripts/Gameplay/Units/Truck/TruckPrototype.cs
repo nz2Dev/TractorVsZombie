@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -10,7 +9,8 @@ public struct TruckPrototype {
     public UnityVehicle vehiclePrefab;
     public TruckVisuals visualsPrefab;
     public AudioClip engineLoopSFX;
-    public CombatPrototype combatPrototype;
+    public HealthPrototype healthPrototype;
+    public FactionPrototype factionPrototype;
     public RaycastMarker raycastMarkerPrefab;
     public WorldSpaceUI worldSpaceUIPrefab;
 }

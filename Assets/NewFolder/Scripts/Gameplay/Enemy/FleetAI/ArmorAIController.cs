@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-using Combat;
 
 using UnityEngine;
 
 public class ArmorAIController {
 
-    private readonly CombatSystem combatSystem;
+    private readonly HealthSystem healthSystem;
     private readonly PathfindingService pathfindingService;
     private readonly ArmorController armorController;
     private readonly VehicleSystem vehicleSystem;
@@ -17,8 +16,8 @@ public class ArmorAIController {
     private readonly List<int> controlledArmorIds = new();
     private readonly int flowFieldId;
 
-    public ArmorAIController(CombatSystem combatSystem, PathfindingService pathfindingService, ArmorController armorController, VehicleSystem vehicleSystem, WeaponController weaponController, ProximityService proximityService) {
-        this.combatSystem = combatSystem;
+    public ArmorAIController(HealthSystem healthSystem, PathfindingService pathfindingService, ArmorController armorController, VehicleSystem vehicleSystem, WeaponController weaponController, ProximityService proximityService) {
+        this.healthSystem = healthSystem;
         this.pathfindingService = pathfindingService;
         this.armorController = armorController;
         this.vehicleSystem = vehicleSystem;
@@ -45,7 +44,7 @@ public class ArmorAIController {
         foreach (var armorId in controlledArmorIds) {
             var state = armorController.ReadArmorState(armorId);
             OperateArmorNavigation(state);
-            OperateArmorCombat(state);
+            OperateArmor(state);
         }
     }
 
@@ -68,11 +67,11 @@ public class ArmorAIController {
         vehicleSystem.SetSteerAngle(state.vehicleId, forwardToDirectionDegrees);
     }
 
-    private void OperateArmorCombat(ArmorState state) {
+    private void OperateArmor(ArmorState state) {
         var enemySearchRadius = state.weaponState.aimConfig.range;
 
-        var targetFaction = !state.combatIsAlie;
-        var targetProximityLayer = CombatSystem.GetProximityLayerForFaction(targetFaction);
+        var targetFaction = !state.factionIsAlie;
+        var targetProximityLayer = FactionRegistry.GetProximityLayerForFaction(targetFaction);
         if (proximityService.QueryNearestPoint(state.position, targetProximityLayer, out var nearestProximityId)) {
             // todo: either find mapped raycastId and het height from there, or else?
             var pointPosition = proximityService.GetPoint(nearestProximityId);

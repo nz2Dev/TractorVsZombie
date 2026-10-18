@@ -1,4 +1,3 @@
-using Combat;
 
 using UnityEngine;
 
@@ -10,18 +9,20 @@ public struct PlatformPrototype {
     public UnityVehicle vehiclePrefab;
     public RamEffectPrototype ramPrototype;
     public Vector3 loadoutOffset;
-    public CombatPrototype combatPrototype;
+    public HealthPrototype healthPrototype;
+    public FactionPrototype factionPrototype;
     public RaycastMarker raycastMarkerPrefab;
     public WorldSpaceUI worldSpaceUIPrefab;
 
-    public PlatformPrototype(Vector3 position, PlatformConfig config, PlatformVisuals visualsPrefab, UnityVehicle vehiclePrefab, RamEffectPrototype ramPrototype, Vector3 loadoutOffset, CombatPrototype combatPrototype, RaycastMarker raycastMarkerPrefab, WorldSpaceUI worldSpaceUIPrefab) {
+    public PlatformPrototype(Vector3 position, PlatformConfig config, PlatformVisuals visualsPrefab, UnityVehicle vehiclePrefab, RamEffectPrototype ramPrototype, Vector3 loadoutOffset, HealthPrototype healthPrototype, FactionPrototype factionPrototype, RaycastMarker raycastMarkerPrefab, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.config = config;
         this.visualsPrefab = visualsPrefab;
         this.vehiclePrefab = vehiclePrefab;
         this.ramPrototype = ramPrototype;
         this.loadoutOffset = loadoutOffset;
-        this.combatPrototype = combatPrototype;
+        this.healthPrototype = healthPrototype;
+        this.factionPrototype = factionPrototype;
         this.raycastMarkerPrefab = raycastMarkerPrefab;
         this.worldSpaceUIPrefab = worldSpaceUIPrefab;
     }
