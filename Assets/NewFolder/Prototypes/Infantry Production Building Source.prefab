@@ -66,13 +66,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: 2053613384
+  uniqueId: 1947152199
   spawnerSource: {fileID: 5992323351636979987}
   visualsPrefab: {fileID: 2588060940734931284}
   config: {fileID: 11400000, guid: a026c9f326c12485282296971e50eead, type: 2}
-  combatSource:
+  healthSource:
+    configSO: {fileID: 11400000, guid: 02238f37de7d34315aedb0b76eb96075, type: 2}
+  factionSource:
     alie: 0
-    configSO: {fileID: 11400000, guid: 852d9bcbaf69541fab429a326147c708, type: 2}
   avoidanceObstaclePrefab: {fileID: 377023672943240842}
   collisionObstaclePrefab: {fileID: 2045905622344632889}
   raycastMarkerPrefab: {fileID: 314227725128860358}

@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PlatformSource : MonoBehaviour {
 
     [Inline] [SerializeField] private PlatformConfig config;
-    [FormerlySerializedAs("combatSource"), SerializeField] private HealthFactionSource healthFactionSource;
+    [SerializeField] private HealthSource healthSource;
+    [SerializeField] private FactionSource factionSource;
     [Local] [SerializeField] private PlatformVisuals visualsPrefab;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [SerializeField] private Vector3 loadoutOffset; // TODO: consider making it visuals, by adding util TransformSource, that returns struct that contain Position/Rotation
@@ -24,8 +24,8 @@ public class PlatformSource : MonoBehaviour {
             vehiclePrefab: vehiclePrefab,
             ramPrototype: ramSource != null ? ramSource.GetPrototype() : default,
             loadoutOffset: loadoutOffset,
-            healthPrototype: healthFactionSource.GetHealthPrototype(),
-            factionPrototype: healthFactionSource.GetFactionPrototype(),
+            healthPrototype: healthSource.GetHealthPrototype(),
+            factionPrototype: factionSource.GetFactionPrototype(),
             raycastMarkerPrefab: raycastMarkerPrefab,
             worldSpaceUIPrefab: worldSpaceUIPrefab
         );

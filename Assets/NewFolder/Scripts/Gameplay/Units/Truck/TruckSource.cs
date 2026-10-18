@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class TruckSource : MonoBehaviour {
 
     [Inline] [SerializeField] private TruckConfig config;
-    [FormerlySerializedAs("combatSource"), SerializeField] private HealthFactionSource healthFactionSource;
+    [SerializeField] private HealthSource healthSource;
+    [SerializeField] private FactionSource factionSource;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [Local] [SerializeField] private TruckVisuals visualsPrefab;
     [Local] [SerializeField] private RamEffectSource ramSource;
@@ -25,8 +25,8 @@ public class TruckSource : MonoBehaviour {
             vehiclePrefab = vehiclePrefab,
             visualsPrefab = visualsPrefab,
             engineLoopSFX = engineLoopSFX,
-            healthPrototype = healthFactionSource.GetHealthPrototype(),
-            factionPrototype = healthFactionSource.GetFactionPrototype(),
+            healthPrototype = healthSource.GetHealthPrototype(),
+            factionPrototype = factionSource.GetFactionPrototype(),
             raycastMarkerPrefab = raycastMarkerPrefab,
             worldSpaceUIPrefab = worldSpaceUIPrefab
         };
