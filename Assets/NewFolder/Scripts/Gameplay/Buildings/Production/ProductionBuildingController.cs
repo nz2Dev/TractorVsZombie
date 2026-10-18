@@ -80,7 +80,7 @@ public class ProductionBuildingController {
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.avoidanceObstaclePrefab);
         model.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
-        model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.raycastMarkerPrefab);
+        model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.hitboxPrototype);
         model.SpawnerId = spawnerController.Create(prototype.spawnerPrototype);
 
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {

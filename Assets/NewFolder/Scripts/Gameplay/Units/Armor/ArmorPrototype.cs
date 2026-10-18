@@ -14,10 +14,10 @@ public struct ArmorPrototype {
     public RewardPrototype rewardPrototype;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
-    public RaycastMarker raycastMarkerPrefab;
+    public HitboxPrototype hitboxPrototype;
     public WorldSpaceUI worldSpaceUIPrefab;
 
-    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, RewardPrototype rewardPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, RaycastMarker raycastMarkerPrefab, WorldSpaceUI worldSpaceUIPrefab) {
+    public ArmorPrototype(Vector3 position, ArmorConfig config, ArmorVisuals visualsPrefab, UnityVehicle vehiclePrefab, AudioClip engineLoopSFX, WeaponPrototype localWeaponPrototype, RamEffectPrototype ramPrototype, RewardPrototype rewardPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.config = config;
         this.visualsPrefab = visualsPrefab;
@@ -28,7 +28,7 @@ public struct ArmorPrototype {
         this.rewardPrototype = rewardPrototype;
         this.healthPrototype = healthPrototype;
         this.factionPrototype = factionPrototype;
-        this.raycastMarkerPrefab = raycastMarkerPrefab;
+        this.hitboxPrototype = hitboxPrototype;
         this.worldSpaceUIPrefab = worldSpaceUIPrefab;
     }
 }

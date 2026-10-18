@@ -11,6 +11,6 @@ public struct TruckPrototype {
     public AudioClip engineLoopSFX;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
-    public RaycastMarker raycastMarkerPrefab;
+    public HitboxPrototype hitboxPrototype;
     public WorldSpaceUI worldSpaceUIPrefab;
 }

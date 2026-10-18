@@ -47,7 +47,7 @@ public class TruckController {
         var alie = factionRegistry.ReadState(model.FactionId).alie;
         model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab, prototype.rotation);
         model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
-        model.HitboxId = hitboxSystem.Add(model.FactionId, model.Position, prototype.raycastMarkerPrefab);
+        model.HitboxId = hitboxSystem.Add(model.FactionId, model.Position, prototype.hitboxPrototype);
         
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,

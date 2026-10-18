@@ -53,7 +53,7 @@ public class InfantryController {
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.config, prototype.physicsBodyPrefab, model.HealthId);
         model.MovementId = movementSystem.Add(prototype.position, prototype.agentAvoidanceConfig, model.MotionId, model.PoseId, prototype.config);
-        model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.raycastMarkerPrefab);
+        model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
 
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
@@ -187,8 +187,8 @@ public class InfantryController {
             model.LastAttackTime = Time.time;
             view.PlayChargeAttack(model.Id);
 
-            var targetRaycastState = hitboxSystem.ReadState(targetHitboxId);
-            var outOfReach = Vector3.Distance(pose.position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
+            var targetHitboxState = hitboxSystem.ReadState(targetHitboxId);
+            var outOfReach = Vector3.Distance(pose.position, targetPosition) > model.Config.activationRadius + targetHitboxState.radius;
             if (outOfReach) {
                 continue;
             }

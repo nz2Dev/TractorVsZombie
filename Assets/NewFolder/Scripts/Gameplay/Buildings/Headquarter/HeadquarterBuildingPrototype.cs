@@ -8,7 +8,7 @@ public struct HeadquarterBuildingPrototype {
     public HeadquarterBuildingConfig config;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
-    public RaycastMarker raycastMarkerPrefab;
+    public HitboxPrototype hitboxPrototype;
     public CollisionObstacle collisionObstaclePrefab;
     public ORCAObstacleVertices avoidanceObstaclePrefab;
     public Collider pathfindingObstaclePrefab;
@@ -16,14 +16,14 @@ public struct HeadquarterBuildingPrototype {
     public WorldSpaceUI worldSpaceUIPrefab;
 
     public HeadquarterBuildingPrototype(Vector3 position, Quaternion rotation, HeadquarterBuildingConfig config,
-        HealthPrototype healthPrototype, FactionPrototype factionPrototype, RaycastMarker raycastMarkerPrefab, CollisionObstacle collisionObstaclePrefab,
+        HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, CollisionObstacle collisionObstaclePrefab,
         ORCAObstacleVertices avoidanceObstaclePrefab, HeadquarterBuildingVisuals visualsPrefab, Collider pathfindingObstaclePrefab, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.rotation = rotation;
         this.config = config;
         this.healthPrototype = healthPrototype;
         this.factionPrototype = factionPrototype;
-        this.raycastMarkerPrefab = raycastMarkerPrefab;
+        this.hitboxPrototype = hitboxPrototype;
         this.collisionObstaclePrefab = collisionObstaclePrefab;
         this.avoidanceObstaclePrefab = avoidanceObstaclePrefab;
         this.visualsPrefab = visualsPrefab;

@@ -9,7 +9,7 @@ public class PlatformSource : MonoBehaviour {
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
     [SerializeField] private Vector3 loadoutOffset; // TODO: consider making it visuals, by adding util TransformSource, that returns struct that contain Position/Rotation
     [Local] [SerializeField] private RamEffectSource ramSource;
-    [Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
+    [SerializeField] private HitboxSource hitboxSource;
     [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
     private void Awake() {
@@ -26,7 +26,7 @@ public class PlatformSource : MonoBehaviour {
             loadoutOffset: loadoutOffset,
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
-            raycastMarkerPrefab: raycastMarkerPrefab,
+            hitboxPrototype: hitboxSource.GetHitboxPrototype(),
             worldSpaceUIPrefab: worldSpaceUIPrefab
         );
     }

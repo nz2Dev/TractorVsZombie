@@ -5941,7 +5941,8 @@ MonoBehaviour:
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   weaponSource: {fileID: 8232432610343428619}
   ramSource: {fileID: 1507988199}
-  raycastMarkerPrefab: {fileID: 1785217254}
+  hitboxSource:
+    markerPrefab: {fileID: 1785217254}
   loadoutRewardSource: {fileID: 1680384370935344, guid: e6c92b1126f5340398d6706a351457ce, type: 3}
   worldSpaceUIPrefab: {fileID: 1480996430}
 --- !u!4 &377055306
@@ -28511,7 +28512,8 @@ MonoBehaviour:
   visualsPrefab: {fileID: 1947877290}
   ramSource: {fileID: 1600251742}
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
-  raycastMarkerPrefab: {fileID: 1890271680}
+  hitboxSource:
+    markerPrefab: {fileID: 1890271680}
   worldSpaceUIPrefab: {fileID: 1808282541}
 --- !u!1773428102 &1117709944
 ParentConstraint:
@@ -38825,7 +38827,8 @@ MonoBehaviour:
     alie: 0
   visualsPrefab: {fileID: 1060467421}
   physicsBodyPrefab: {fileID: 1032680941}
-  raycastMarkerPrefab: {fileID: 1128309740}
+  hitboxSource:
+    markerPrefab: {fileID: 1128309740}
   rewardSource: {fileID: 1373779128}
 --- !u!1001 &1931922710
 PrefabInstance:
@@ -40616,7 +40619,8 @@ MonoBehaviour:
   engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   weaponSource: {fileID: 787191737}
   ramSource: {fileID: 1882187328}
-  raycastMarkerPrefab: {fileID: 2025953206}
+  hitboxSource:
+    markerPrefab: {fileID: 2025953206}
   loadoutRewardSource: {fileID: 6530768952594991425, guid: 48c638ce2be8649b7ba0f7b7d424bc43, type: 3}
   worldSpaceUIPrefab: {fileID: 2094138771}
 --- !u!4 &2094138770 stripped
@@ -40688,7 +40692,8 @@ MonoBehaviour:
     configSO: {fileID: 11400000, guid: 852d9bcbaf69541fab429a326147c708, type: 2}
   factionSource:
     alie: 1
-  raycastMarkerPrefab: {fileID: 745838713}
+  hitboxSource:
+    markerPrefab: {fileID: 745838713}
   collisionObstaclePrefab: {fileID: 4796720935335220874}
   avoidanceObstaclePrefab: {fileID: 4796720935335220877}
   pathfindingObstaclePrefab: {fileID: 4796720935335220876}

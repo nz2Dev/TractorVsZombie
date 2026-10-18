@@ -17,7 +17,7 @@ public class ProductionBuildingSource : MonoBehaviour {
     [SerializeField] private FactionSource factionSource;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
     [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
-    [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
+    [SerializeField] private HitboxSource hitboxSource;
 
     private bool lastUniqueFlag;
 
@@ -51,7 +51,7 @@ public class ProductionBuildingSource : MonoBehaviour {
             visualsPrefab: visualsPrefab,
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
-            raycastMarkerPrefab: raycastMarkerPrefab
+            hitboxPrototype: hitboxSource.GetHitboxPrototype()
         );
     }
 }

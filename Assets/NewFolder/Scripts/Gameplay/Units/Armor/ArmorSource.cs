@@ -11,7 +11,7 @@ public class ArmorSource : MonoBehaviour {
     [SerializeField] private AudioClip engineLoopSFX;
     [Local] [SerializeField] private WeaponSource weaponSource;
     [Local] [SerializeField] private RamEffectSource ramSource;
-    [Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
+    [SerializeField] private HitboxSource hitboxSource;
     [SerializeField] private RewardSource loadoutRewardSource;
     [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
@@ -31,7 +31,7 @@ public class ArmorSource : MonoBehaviour {
             rewardPrototype: loadoutRewardSource.GetPrototype(),
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
-            raycastMarkerPrefab: raycastMarkerPrefab,
+            hitboxPrototype: hitboxSource.GetHitboxPrototype(),
             worldSpaceUIPrefab: worldSpaceUIPrefab
         );
     }

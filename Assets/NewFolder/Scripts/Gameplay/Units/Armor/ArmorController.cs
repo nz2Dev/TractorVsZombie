@@ -53,7 +53,7 @@ public class ArmorController {
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         var alie = factionRegistry.ReadState(model.FactionId).alie;
         model.VehicleId = vehicleSystem.Create(prototype.position, prototype.vehiclePrefab);
-        model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.raycastMarkerPrefab);
+        model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.hitboxPrototype);
 
         model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
         model.WeaponId = weaponController.SpawnWeapon(model.FactionId, prototype.localWeaponPrototype);

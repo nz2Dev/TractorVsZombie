@@ -76,7 +76,8 @@ MonoBehaviour:
     alie: 0
   avoidanceObstaclePrefab: {fileID: 377023672943240842}
   collisionObstaclePrefab: {fileID: 2045905622344632889}
-  raycastMarkerPrefab: {fileID: 314227725128860358}
+  hitboxSource:
+    markerPrefab: {fileID: 314227725128860358}
 --- !u!1 &3858228865796293992
 GameObject:
   m_ObjectHideFlags: 0

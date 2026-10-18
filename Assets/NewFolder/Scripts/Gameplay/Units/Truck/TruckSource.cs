@@ -9,7 +9,7 @@ public class TruckSource : MonoBehaviour {
     [Local] [SerializeField] private TruckVisuals visualsPrefab;
     [Local] [SerializeField] private RamEffectSource ramSource;
     [SerializeField] private AudioClip engineLoopSFX;
-    [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
+    [SerializeField] private HitboxSource hitboxSource;
     [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
     private void Awake() {
@@ -27,7 +27,7 @@ public class TruckSource : MonoBehaviour {
             engineLoopSFX = engineLoopSFX,
             healthPrototype = healthSource.GetHealthPrototype(),
             factionPrototype = factionSource.GetFactionPrototype(),
-            raycastMarkerPrefab = raycastMarkerPrefab,
+            hitboxPrototype = hitboxSource.GetHitboxPrototype(),
             worldSpaceUIPrefab = worldSpaceUIPrefab
         };
     }

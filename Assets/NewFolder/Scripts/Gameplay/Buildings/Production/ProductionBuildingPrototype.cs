@@ -11,10 +11,10 @@ public struct ProductionBuildingPrototype {
     public ProductionBuildingConfig config;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
-    public RaycastMarker raycastMarkerPrefab;
+    public HitboxPrototype hitboxPrototype;
     public SpawnerPrototype spawnerPrototype;
 
-    public ProductionBuildingPrototype(int uniqueId, Vector3 position, Quaternion rotation, GameObject visualsPrefab, ORCAObstacleVertices avoidanceObstaclePrefab, CollisionObstacle physicsObstaclePrefab, ProductionBuildingConfig config, HealthPrototype healthPrototype, FactionPrototype factionPrototype, RaycastMarker raycastMarkerPrefab, SpawnerPrototype spawnerPrototype) {
+    public ProductionBuildingPrototype(int uniqueId, Vector3 position, Quaternion rotation, GameObject visualsPrefab, ORCAObstacleVertices avoidanceObstaclePrefab, CollisionObstacle physicsObstaclePrefab, ProductionBuildingConfig config, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, SpawnerPrototype spawnerPrototype) {
         this.uniqueId = uniqueId;
         this.position = position;
         this.rotation = rotation;
@@ -24,7 +24,7 @@ public struct ProductionBuildingPrototype {
         this.config = config;
         this.healthPrototype = healthPrototype;
         this.factionPrototype = factionPrototype;
-        this.raycastMarkerPrefab = raycastMarkerPrefab;
+        this.hitboxPrototype = hitboxPrototype;
         this.spawnerPrototype = spawnerPrototype;
     }
 }

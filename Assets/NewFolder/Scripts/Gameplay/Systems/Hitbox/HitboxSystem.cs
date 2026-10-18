@@ -20,23 +20,24 @@ public sealed class HitboxSystem {
         this.proximityService = proximityService;
     }
 
-    public HitboxId Add(FactionId factionId, PoseId poseId, RaycastMarker markerPrefab) {
+    public HitboxId Add(FactionId factionId, PoseId poseId, HitboxPrototype prototype) {
         var position = poseRegistry.Read(poseId).position;
-        return Add(factionId, poseId, position, markerPrefab);
+        return Add(factionId, poseId, position, prototype);
     }
 
-    public HitboxId Add(FactionId factionId, Vector3 position, RaycastMarker markerPrefab) {
-        return Add(factionId, null, position, markerPrefab);
+    public HitboxId Add(FactionId factionId, Vector3 position, HitboxPrototype prototype) {
+        return Add(factionId, null, position, prototype);
     }
 
-    private HitboxId Add(FactionId factionId, PoseId? poseId, Vector3 position, RaycastMarker markerPrefab) {
+    private HitboxId Add(FactionId factionId, PoseId? poseId, Vector3 position, HitboxPrototype prototype) {
         var id = new HitboxId(++idCounter);
         var factionState = factionRegistry.ReadState(factionId);
         var raycastLayer = FactionRegistry.GetRaycastLayerForFaction(factionState.alie);
         var proximityLayer = FactionRegistry.GetProximityLayerForFaction(factionState.alie);
         var proximityId = proximityService.AddPoint(position, proximityLayer);
-        var raycastId = raycastService.RegisterMarker(position, markerPrefab, raycastLayer);
-        var model = new HitboxModel(id, factionState, raycastId, proximityId, poseId, position);
+        var raycastId = raycastService.RegisterMarker(position, prototype.markerPrefab, raycastLayer);
+        var raycastState = raycastService.ReadState(raycastId);
+        var model = new HitboxModel(id, factionState, raycastId, raycastState, proximityId, poseId, position);
 
         models.Add(id, model);
         raycastToHitbox.Add(raycastId, id);
@@ -109,10 +110,11 @@ public sealed class HitboxSystem {
     }
 
     public Vector3 GetPosition(HitboxId id) {
-        return proximityService.GetPoint(models[id].ProximityId);
+        return models[id].Position;
     }
 
-    public RaycastState ReadState(HitboxId id) {
-        return raycastService.ReadState(models[id].RaycastId);
+    public HitboxState ReadState(HitboxId id) {
+        var raycastState = models[id].RaycastState;
+        return new HitboxState(raycastState.radius);
     }
 }

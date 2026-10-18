@@ -8,7 +8,7 @@ public struct InfantryPrototype {
     public RewardPrototype rewardPrototype;
 
     public RagdollBody physicsBodyPrefab;
-    public RaycastMarker raycastMarkerPrefab;
+    public HitboxPrototype hitboxPrototype;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
     public AgentAvoidanceConfig agentAvoidanceConfig;

@@ -40,7 +40,7 @@ public class HeadquarterBuildingController {
         // headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.pathfindingObstaclePrefab);
         headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.avoidanceObstaclePrefab);
         headquarter.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
-        headquarter.HitboxId = hitboxSystem.Add(headquarter.FactionId, prototype.position, prototype.raycastMarkerPrefab);
+        headquarter.HitboxId = hitboxSystem.Add(headquarter.FactionId, prototype.position, prototype.hitboxPrototype);
 
         entityMapping.CreateMapping(headquarter.HitboxId, new EntityComponents {
             healthId = headquarter.HealthId,

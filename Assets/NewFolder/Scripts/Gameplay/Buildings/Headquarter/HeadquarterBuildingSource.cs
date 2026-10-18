@@ -5,7 +5,7 @@ public class HeadquarterBuildingSource : MonoBehaviour {
     [Inline, SerializeField] private HeadquarterBuildingConfig config;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
-    [NonNull, Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
+    [SerializeField] private HitboxSource hitboxSource;
     [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
     [NonNull, Local, SerializeField] private Collider pathfindingObstaclePrefab;
@@ -23,7 +23,7 @@ public class HeadquarterBuildingSource : MonoBehaviour {
             config: config,
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
-            raycastMarkerPrefab: raycastMarkerPrefab,
+            hitboxPrototype: hitboxSource.GetHitboxPrototype(),
             collisionObstaclePrefab: collisionObstaclePrefab,
             avoidanceObstaclePrefab: avoidanceObstaclePrefab,
             visualsPrefab: visualsPrefab,

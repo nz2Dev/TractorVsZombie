@@ -59,11 +59,11 @@ public class InfantryAIController {
             if (!infantryState.isAlive || !infantryState.isGrounded)
                 continue;
 
-            if (!TryGetClosestFoe(infantryState, out var foeHitboxId, out var foePosition, out var foeRaycastState))
+            if (!TryGetClosestFoe(infantryState, out var foeHitboxId, out var foePosition, out var foeHitboxState))
                 continue;
 
             var distanceToAttack = Vector3.Distance(infantryState.position, foePosition);
-            var maxAttackDistance = infantryState.activationRadius + foeRaycastState.radius;
+            var maxAttackDistance = infantryState.activationRadius + foeHitboxState.radius;
             if (infantryState.attackActivated && distanceToAttack > maxAttackDistance) {
                 infantryController.StopAttack(infantryId);
             }
@@ -82,17 +82,17 @@ public class InfantryAIController {
         return pathfindingService.GetFlowCost(flowFieldId, position) < costRange;
     }
 
-    private bool TryGetClosestFoe(InfantryState infantryState, out HitboxId foeHitboxId, out Vector3 foePosition, out RaycastState foeRaycastState) {
+    private bool TryGetClosestFoe(InfantryState infantryState, out HitboxId foeHitboxId, out Vector3 foePosition, out HitboxState foeHitboxState) {
         if (hitboxSystem.QueryNearest(infantryState.position, !infantryState.factionIsAlie, out foeHitboxId)) {
             if (entityMapping.TryFindByHitboxId(foeHitboxId, out _)) {
-                foeRaycastState = hitboxSystem.ReadState(foeHitboxId);
+                foeHitboxState = hitboxSystem.ReadState(foeHitboxId);
                 foePosition = hitboxSystem.GetPosition(foeHitboxId);
                 return true;
             }
         }
         foeHitboxId = default;
         foePosition = default;
-        foeRaycastState = default;
+        foeHitboxState = default;
         return false;
     }
 

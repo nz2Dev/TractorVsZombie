@@ -13,7 +13,7 @@ public class InfantrySource : MonoBehaviour {
     // setting the layer to the one that vehicle physics can interact with give interesting results
     // when the body is in "dynamic" state
     [Local] [SerializeField] private RagdollBody physicsBodyPrefab;
-    [Local, SerializeField] private RaycastMarker raycastMarkerPrefab;
+    [SerializeField] private HitboxSource hitboxSource;
     [SerializeField] private RewardSource rewardSource;
 
     private void Awake() {
@@ -30,7 +30,7 @@ public class InfantrySource : MonoBehaviour {
             healthPrototype = healthSource.GetHealthPrototype(),
             factionPrototype = factionSource.GetFactionPrototype(),
             agentAvoidanceConfig = agentAvoidanceConfigSource,
-            raycastMarkerPrefab = raycastMarkerPrefab,
+            hitboxPrototype = hitboxSource.GetHitboxPrototype(),
         };
     }
 
