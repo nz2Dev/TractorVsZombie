@@ -48,18 +48,17 @@ public class ArmorController {
 
     public int SpawnArmor(ArmorPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new ArmorModel(nextId, prototype.position, prototype.config);
+        var model = new ArmorModel(nextId, prototype.config);
         registry[model.Id] = model;
 
+        model.PoseId = poseRegistry.Add(prototype.position, default);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.PoseId = poseRegistry.Add(prototype.position, default);
         model.VehicleId = vehicleSystem.Create(prototype.position, prototype.vehiclePrefab, poseId: model.PoseId);
-        model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.hitboxPrototype);
-        model.DropId = dropSystem.Add(prototype.dropPrototype, model.HealthId, model.PoseId);
-
-        model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
+        model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
         model.AttachmentId = attachmentSystem.Add(prototype.attachmentPrototype, model.FactionId, model.PoseId);
+        model.DropId = dropSystem.Add(prototype.dropPrototype, model.HealthId, model.PoseId);
+        model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
 
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
@@ -91,7 +90,7 @@ public class ArmorController {
     public ArmorState ReadArmorState(int armorId) {
         var armor = registry[armorId];
         return new ArmorState {
-            position = armor.Position,
+            position = poseRegistry.Read(armor.PoseId).position,
             healthId = armor.HealthId,
             factionIsAlie = factionRegistry.ReadState(armor.FactionId).alie,
             vehicleId = armor.VehicleId,
@@ -120,14 +119,9 @@ public class ArmorController {
 
     private void SyncVehiclesPositions() {
         foreach (var model in registry.Values) {
-            // TODO: finish PoseRegistry integration
-            var vehicleState = vehicleSystem.ReadState(model.VehicleId);
-            model.Position = vehicleState.position;
-
-            // healthSystem.UpdateAgentPosition(model.HealthId, model.Position);
             // TODO: register proxmity and raycast components
-            ramEffect.Forward(model.RamId, model.Position);
-            hitboxSystem.UpdatePosition(model.HitboxId, model.Position);
+            var pose = poseRegistry.Read(model.PoseId);
+            ramEffect.Forward(model.RamId, pose.position);
         }
     }
 
@@ -138,7 +132,7 @@ public class ArmorController {
             view.UpdateSound(model.Id, vehicleSystem.ReadGas(model.VehicleId));
             
             var healthState = model.HealthState;
-            view.UpdateHealthBar(model.Id, model.Position, healthState.health, healthState.maxHealth);
+            view.UpdateHealthBar(model.Id, vehicleState.position, healthState.health, healthState.maxHealth);
             if (healthState.damageResult.HasValue) {
                 view.ShowTakeHit(model.Id);
             }
