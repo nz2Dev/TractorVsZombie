@@ -53,7 +53,6 @@ public class ArmorController {
 
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        var alie = factionRegistry.ReadState(model.FactionId).alie;
         model.PoseId = poseRegistry.Add(prototype.position, default);
         model.VehicleId = vehicleSystem.Create(prototype.position, prototype.vehiclePrefab, poseId: model.PoseId);
         model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.hitboxPrototype);
@@ -67,6 +66,7 @@ public class ArmorController {
             factionId = model.FactionId
         });
 
+        var alie = prototype.factionPrototype.alie;
         view.Show(nextId, prototype.position, prototype.visualsPrefab, alie, prototype.engineLoopSFX, prototype.worldSpaceUIPrefab);
         return model.Id;
     }

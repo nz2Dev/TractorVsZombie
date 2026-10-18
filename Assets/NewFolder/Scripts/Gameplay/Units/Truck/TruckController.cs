@@ -44,7 +44,6 @@ public class TruckController {
         model = new TruckModel(prototype.config, position == default ? prototype.position : position);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        var alie = factionRegistry.ReadState(model.FactionId).alie;
         model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab, prototype.rotation);
         model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.Position, prototype.hitboxPrototype);
@@ -54,6 +53,7 @@ public class TruckController {
             factionId = model.FactionId,
         });
 
+        var alie = prototype.factionPrototype.alie;
         view.Show(model.Position, prototype.visualsPrefab, alie, prototype.engineLoopSFX, prototype.worldSpaceUIPrefab);
     }
 
