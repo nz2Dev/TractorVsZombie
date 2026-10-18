@@ -10,22 +10,20 @@ public class PlatformController {
     private readonly FactionRegistry factionRegistry;
     private readonly LoadoutController loadoutController;
     private readonly VehicleSystem vehicleSystem;
-    private readonly ProximityService proximityService;
-    private readonly RaycastService raycastService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
     private readonly PlatformView view;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, LoadoutController loadoutController, VehicleSystem vehicleSystem, PlatformView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
+    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, LoadoutController loadoutController, VehicleSystem vehicleSystem, PlatformView view, HitboxSystem hitboxSystem, EntityMapping entityMapping) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.loadoutController = loadoutController;
         this.vehicleSystem = vehicleSystem;
         this.view = view;
-        this.proximityService = proximityService;
-        this.raycastService = raycastService;
+        this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
     }
 
@@ -45,12 +43,9 @@ public class PlatformController {
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab);
-        model.ProximityId = proximityService.AddPoint(initPosition, FactionRegistry.GetProximityLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
-        model.RaycastId = raycastService.RegisterMarker(initPosition, prototype.raycastMarkerPrefab, FactionRegistry.GetRaycastLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
+        model.HitboxId = hitboxSystem.Add(model.FactionId, initPosition, prototype.raycastMarkerPrefab);
 
-        entityMapping.CreateMappings(new EntityComponents {
-            proximityId = model.ProximityId,
-            raycastId = model.RaycastId,
+        entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
             factionId = model.FactionId
         });
@@ -136,9 +131,8 @@ public class PlatformController {
         registry.Remove(platformId, out var model);
         healthSystem.Remove(model.HealthId);
         vehicleSystem.Remove(model.VehicleId);
-        proximityService.RemovePoint(model.ProximityId);
-        raycastService.UnregisterMarker(model.RaycastId);
-        entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+        hitboxSystem.Remove(model.HitboxId);
+        entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
         
         view.RemovePlatform(platformId);
@@ -154,8 +148,7 @@ public class PlatformController {
                 loadoutController.MoveLoadout(host.LoadoutId, host.Position + host.LoadoutOffset, vehicleState.rotation);
             }
 
-            proximityService.UpdatePoint(host.ProximityId, host.Position);
-            raycastService.UpdateMarker(host.RaycastId, host.Position);
+            hitboxSystem.UpdatePosition(host.HitboxId, host.Position);
         }
     }
 

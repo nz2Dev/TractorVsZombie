@@ -14,8 +14,7 @@ public class TruckModel {
     public FactionId FactionId { get; set; }
     public VehicleId VehicleId { get; set; }
     public int RamId { get; set; }
-    public ProximityId ProximityId { get; set; }
-    public RaycastId RaycastId { get; set; }
+    public HitboxId HitboxId { get; set; }
     
     public Vector3 Position { get; set; }
     public HealthState HealthState { get; set; }

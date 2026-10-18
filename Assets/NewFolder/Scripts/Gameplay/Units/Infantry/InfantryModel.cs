@@ -18,8 +18,7 @@ public class InfantryModel {
     public MotionId MotionId { get; set; }
     public MovementId MovementId { get; set; }
     public PoseId PoseId { get; set; }
-    public ProximityId ProximityId { get; set; }
-    public RaycastId RaycastId { get; set; }
+    public HitboxId HitboxId { get; set; }
     public MotionState MotionState { get; set; }
     public MovementState MovementState { get; set; }
     public HealthState HealthState { get; set; }
@@ -27,6 +26,6 @@ public class InfantryModel {
     
     public float LastAttackTime { get; set; }
     public float AttackActivationTime { get; set; }
-    public ProximityId? TargetProximityId { get; set; }
+    public HitboxId? TargetHitboxId { get; set; }
 
 }

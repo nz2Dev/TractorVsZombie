@@ -9,8 +9,7 @@ public class InfantryAIController {
     private readonly FormationController formationController;
     private readonly InfantryController infantryController;
     private readonly PathfindingService pathfindingService;
-    private readonly ProximityService proximityService;
-    private readonly RaycastService raycastService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
 
     private readonly List<InfantryAIModel> models = new();
@@ -18,13 +17,12 @@ public class InfantryAIController {
     private int targetFlowFieldId;
 
     public InfantryAIController(InfantryController infantryController, PathfindingService pathfindingService,
-        ProximityService proximityService, EntityMapping entityMapping, FormationController formationController, RaycastService raycastService) {
+        HitboxSystem hitboxSystem, EntityMapping entityMapping, FormationController formationController) {
         this.infantryController = infantryController;
         this.pathfindingService = pathfindingService;
-        this.proximityService = proximityService;
+        this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
         this.formationController = formationController;
-        this.raycastService = raycastService;
     }
 
     public void Update() {
@@ -61,7 +59,7 @@ public class InfantryAIController {
             if (!infantryState.isAlive || !infantryState.isGrounded)
                 continue;
 
-            if (!TryGetClosestFoe(infantryState, out var foeProximityId, out var foePosition, out var foeRaycastState))
+            if (!TryGetClosestFoe(infantryState, out var foeHitboxId, out var foePosition, out var foeRaycastState))
                 continue;
 
             var distanceToAttack = Vector3.Distance(infantryState.position, foePosition);
@@ -71,7 +69,7 @@ public class InfantryAIController {
             }
 
             if (!infantryState.attackActivated && distanceToAttack < maxAttackDistance * 0.7f) {
-                infantryController.Attack(infantryId, foeProximityId);
+                infantryController.Attack(infantryId, foeHitboxId);
             } else if (IsPathGoalInCostRange(targetFlowFieldId, behaviorModel.Config.targetAgroCostRange, infantryState.position)) {
                 FollowPath(infantryId, behaviorModel, infantryState, targetFlowFieldId);
             }  else {
@@ -84,16 +82,15 @@ public class InfantryAIController {
         return pathfindingService.GetFlowCost(flowFieldId, position) < costRange;
     }
 
-    private bool TryGetClosestFoe(InfantryState infantryState, out ProximityId foeProximityId, out Vector3 foePosition, out RaycastState foeRaycastState) {
-        var foeProximityLayer = FactionRegistry.GetProximityLayerForFaction(!infantryState.factionIsAlie);
-        if (proximityService.QueryNearestPoint(infantryState.position, foeProximityLayer, out foeProximityId)) {
-            if (entityMapping.TryFindByProximityId(foeProximityId, out var foeComponents)) {
-                foeRaycastState = raycastService.ReadState(foeComponents.raycastId.Value);
-                foePosition = proximityService.GetPoint(foeProximityId);
+    private bool TryGetClosestFoe(InfantryState infantryState, out HitboxId foeHitboxId, out Vector3 foePosition, out RaycastState foeRaycastState) {
+        if (hitboxSystem.QueryNearest(infantryState.position, !infantryState.factionIsAlie, out foeHitboxId)) {
+            if (entityMapping.TryFindByHitboxId(foeHitboxId, out _)) {
+                foeRaycastState = hitboxSystem.ReadState(foeHitboxId);
+                foePosition = hitboxSystem.GetPosition(foeHitboxId);
                 return true;
             }
         }
-        foeProximityId = default;
+        foeHitboxId = default;
         foePosition = default;
         foeRaycastState = default;
         return false;

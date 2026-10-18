@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class AimingController {
 
-    private readonly ProximityService proximityService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly CollisionService collisionService;
     private readonly PlatformController platformController;
     private readonly WeaponController weaponController;
@@ -14,11 +14,11 @@ public class AimingController {
     private readonly AimingView view;
     private readonly AimingModel model;
 
-    public AimingController(AimingView view, PlatformController platformController, WeaponController weaponController, ProximityService proximityService, CollisionService collisionService) {
+    public AimingController(AimingView view, PlatformController platformController, WeaponController weaponController, HitboxSystem hitboxSystem, CollisionService collisionService) {
         this.view = view;
         this.platformController = platformController;
         this.weaponController = weaponController;
-        this.proximityService = proximityService;
+        this.hitboxSystem = hitboxSystem;
         this.collisionService = collisionService;
         model = new AimingModel();
     }
@@ -90,10 +90,8 @@ public class AimingController {
     private void OperateAutomatically(PlatformState platformState) {
         var searchRadius = platformState.weaponState.aimConfig.range; // ?? where does radius filter should happen? here or in proximity service?
         var searchFaction = !platformState.factionState.alie;
-        var serachProximityLayer = FactionRegistry.GetProximityLayerForFaction(searchFaction);
-        
-        if (proximityService.QueryNearestPoint(platformState.position, serachProximityLayer, out var nearestProximityId)) {
-            var nearestPosition = proximityService.GetPoint(nearestProximityId);
+        if (hitboxSystem.QueryNearest(platformState.position, searchFaction, out var nearestHitboxId)) {
+            var nearestPosition = hitboxSystem.GetPosition(nearestHitboxId);
             weaponController.AimWeapon(platformState.weaponId, nearestPosition + 0.5f * Vector3.up);
         }
     }

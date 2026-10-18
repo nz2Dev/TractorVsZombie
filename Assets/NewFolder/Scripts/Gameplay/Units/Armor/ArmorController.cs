@@ -12,15 +12,14 @@ public class ArmorController {
     private readonly WeaponController weaponController;
     private readonly VehicleSystem vehicleSystem;
     private readonly RewardController rewardController;
-    private readonly ProximityService proximityService;
-    private readonly RaycastService raycastService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
     private readonly ArmorView view;
 
     private int idCounter;
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
-    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, WeaponController weaponController, VehicleSystem vehicleSystem, RamEffectController ramEffect, RewardController rewardController, ArmorView view, ProximityService proximityService, RaycastService raycastService, EntityMapping entityMapping) {
+    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, WeaponController weaponController, VehicleSystem vehicleSystem, RamEffectController ramEffect, RewardController rewardController, ArmorView view, HitboxSystem hitboxSystem, EntityMapping entityMapping) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.weaponController = weaponController;
@@ -28,8 +27,7 @@ public class ArmorController {
         this.ramEffect = ramEffect;
         this.rewardController = rewardController;
         this.view = view;
-        this.proximityService = proximityService;
-        this.raycastService = raycastService;
+        this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
     }
 
@@ -55,15 +53,12 @@ public class ArmorController {
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         var alie = factionRegistry.ReadState(model.FactionId).alie;
         model.VehicleId = vehicleSystem.Create(prototype.position, prototype.vehiclePrefab);
-        model.ProximityId = proximityService.AddPoint(prototype.position, FactionRegistry.GetProximityLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
-        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, FactionRegistry.GetRaycastLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
+        model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.raycastMarkerPrefab);
 
         model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
         model.WeaponId = weaponController.SpawnWeapon(model.FactionId, prototype.localWeaponPrototype);
 
-        entityMapping.CreateMappings(new EntityComponents {
-            proximityId = model.ProximityId,
-            raycastId = model.RaycastId,
+        entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
             factionId = model.FactionId
         });
@@ -80,9 +75,8 @@ public class ArmorController {
         weaponController.DeleteWeapon(model.WeaponId);
         ramEffect.Remove(model.RamId);
 
-        proximityService.RemovePoint(model.ProximityId);
-        raycastService.UnregisterMarker(model.RaycastId);
-        entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+        hitboxSystem.Remove(model.HitboxId);
+        entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
         
         view.Hide(model.Id);
@@ -131,8 +125,7 @@ public class ArmorController {
             // healthSystem.UpdateAgentPosition(model.HealthId, model.Position);
             // TODO: register proxmity and raycast components
             ramEffect.Forward(model.RamId, model.Position);
-            proximityService.UpdatePoint(model.ProximityId, model.Position);
-            raycastService.UpdateMarker(model.RaycastId, model.Position);
+            hitboxSystem.UpdatePosition(model.HitboxId, model.Position);
         }
     }
 

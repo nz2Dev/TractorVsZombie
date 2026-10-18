@@ -14,8 +14,7 @@ public class HeadquarterBuilding {
     public PathfindingObstacleId PathfindingObstacleId { get; set; }
     public AvoidanceObstacleId AvoidanceObstacleId { get; set; }
     public CollisionObstacleId CollisionObstacleId { get; set; }
-    public ProximityId ProximityId { get; set; }
-    public RaycastId RaycastId { get; set; }
+    public HitboxId HitboxId { get; set; }
     
     public Vector3 Position { get; set; }
     public bool Destroyed { get; set; }

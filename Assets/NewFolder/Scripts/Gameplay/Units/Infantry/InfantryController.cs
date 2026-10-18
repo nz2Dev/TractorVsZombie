@@ -10,8 +10,7 @@ public class InfantryController {
     private readonly FactionRegistry factionRegistry;
     private readonly MotionSystem motionSystem;
     private readonly MovementSystem movementSystem;
-    private readonly RaycastService raycastService;
-    private readonly ProximityService proximityService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly RewardController rewardController;
     private readonly EntityMapping entityMapping;
     private readonly PoseRegistry poseRegistry;
@@ -19,15 +18,14 @@ public class InfantryController {
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(HealthSystem healthSystem, FactionRegistry factionRegistry, InfantryView view, RewardController rewardController, MotionSystem motionSystem, MovementSystem movementSystem, RaycastService raycastService, ProximityService proximityService, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public InfantryController(HealthSystem healthSystem, FactionRegistry factionRegistry, InfantryView view, RewardController rewardController, MotionSystem motionSystem, MovementSystem movementSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.view = view;
         this.rewardController = rewardController;
         this.motionSystem = motionSystem;
         this.movementSystem = movementSystem;
-        this.raycastService = raycastService;
-        this.proximityService = proximityService;
+        this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
         this.poseRegistry = poseRegistry;
     }
@@ -55,12 +53,9 @@ public class InfantryController {
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.config, prototype.physicsBodyPrefab, model.HealthId);
         model.MovementId = movementSystem.Add(prototype.position, prototype.agentAvoidanceConfig, model.MotionId, model.PoseId, prototype.config);
-        model.ProximityId = proximityService.AddPoint(prototype.position, FactionRegistry.GetProximityLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
-        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, FactionRegistry.GetRaycastLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
+        model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.raycastMarkerPrefab);
 
-        entityMapping.CreateMappings(new EntityComponents {
-            proximityId = model.ProximityId,
-            raycastId = model.RaycastId,
+        entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
             factionId = model.FactionId,
             motionId = model.MotionId
@@ -78,12 +73,12 @@ public class InfantryController {
         movementSystem.StopMovement(registry[infantryId].MovementId);
     }
 
-    public void Attack(int infantryId, ProximityId targetProximityId) {
-        registry[infantryId].TargetProximityId = targetProximityId;
+    public void Attack(int infantryId, HitboxId targetHitboxId) {
+        registry[infantryId].TargetHitboxId = targetHitboxId;
     }
 
     public void StopAttack(int infantryId) {
-        registry[infantryId].TargetProximityId = null;
+        registry[infantryId].TargetHitboxId = null;
     }
 
     public InfantryState GetInfantryState(int infantryId) {
@@ -118,10 +113,9 @@ public class InfantryController {
         movementSystem.Remove(model.MovementId);
         motionSystem.Remove(model.MotionId);
         poseRegistry.Remove(model.PoseId);
-        proximityService.RemovePoint(model.ProximityId);
-        raycastService.UnregisterMarker(model.RaycastId);
+        hitboxSystem.Remove(model.HitboxId);
 
-        entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+        entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
 
         view.RemoveVisuals(model.Id);
@@ -150,25 +144,25 @@ public class InfantryController {
             if (model.HealthState.isDead)
                 continue;
 
-            var attackCanceled = !model.TargetProximityId.HasValue || !model.MotionState.isGrounded;
+            var attackCanceled = !model.TargetHitboxId.HasValue || !model.MotionState.isGrounded;
             if (attackCanceled) {
                 model.AttackActivationTime = model.LastAttackTime - 1;
                 view.ShowDischarge(model.Id);
                 continue;
             }
 
-            var targetProximityId = model.TargetProximityId.Value;
-            var lostAbilityForTarget = !entityMapping.TryFindByProximityId(targetProximityId, out var targetComponents)
+            var targetHitboxId = model.TargetHitboxId.Value;
+            var lostAbilityForTarget = !entityMapping.TryFindByHitboxId(targetHitboxId, out var targetComponents)
                 || !targetComponents.healthId.HasValue;
             if (lostAbilityForTarget) {
-                model.TargetProximityId = null;
+                model.TargetHitboxId = null;
                 model.AttackActivationTime = model.LastAttackTime - 1;
                 view.ShowDischarge(model.Id);
                 continue;
             }
 
             var pose = poseRegistry.Read(model.PoseId);
-            var targetPosition = proximityService.GetPoint(targetProximityId);
+            var targetPosition = hitboxSystem.GetPosition(targetHitboxId);
             var targetDirection = (targetPosition - pose.position).normalized;
             pose.rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
             poseRegistry.WriteRotation(model.PoseId, pose.rotation);
@@ -193,7 +187,7 @@ public class InfantryController {
             model.LastAttackTime = Time.time;
             view.PlayChargeAttack(model.Id);
 
-            var targetRaycastState = raycastService.ReadState(targetComponents.raycastId.Value);
+            var targetRaycastState = hitboxSystem.ReadState(targetHitboxId);
             var outOfReach = Vector3.Distance(pose.position, targetPosition) > model.Config.activationRadius + targetRaycastState.radius;
             if (outOfReach) {
                 continue;
@@ -237,8 +231,6 @@ public class InfantryController {
     private void SyncPositions() {
         foreach (var model in registry.Values) {
             var pose = poseRegistry.Read(model.PoseId);
-            proximityService.UpdatePoint(model.ProximityId, pose.position);
-            raycastService.UpdateMarker(model.RaycastId, pose.position);
             view.UpdateTransform(model.Id, pose.position, pose.rotation, model.MovementState.velocity.magnitude / model.MovementState.maxSpeed);
         }
     }

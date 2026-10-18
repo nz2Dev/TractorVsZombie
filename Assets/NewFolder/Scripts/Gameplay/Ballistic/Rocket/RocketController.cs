@@ -12,18 +12,18 @@ public class RocketController {
     private readonly RocketView view;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
-    private readonly RaycastService raycastService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly MotionSystem motionSystem;
     private readonly EntityMapping entityMapping;
 
     private int idCounter = 0;
     private readonly Dictionary<int, RocketModel> registry = new ();
 
-    public RocketController(RocketView view, HealthSystem healthSystem, FactionRegistry factionRegistry, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping) {
+    public RocketController(RocketView view, HealthSystem healthSystem, FactionRegistry factionRegistry, HitboxSystem hitboxSystem, MotionSystem motionSystem, EntityMapping entityMapping) {
         this.view = view;
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
-        this.raycastService = raycastService;
+        this.hitboxSystem = hitboxSystem;
         this.motionSystem = motionSystem;
         this.entityMapping = entityMapping;
     }
@@ -52,13 +52,11 @@ public class RocketController {
             if (rocket.Landed) {
                 view.ShowRocketExplosion(rocket.Id, rocket.Trajectory.landPoint, rocket.Config.explodeEffectClips);
 
-                var targetFaction = !rocket.ShooterIsAlie;
-                var targetRaycastLayer = FactionRegistry.GetRaycastLayerForFaction(targetFaction);
-                raycastService.Overlap(rocket.Trajectory.landPoint, rocket.Config.explosionRadius, 
-                    targetRaycastLayer, out var overlappedRaycastIds);
+                hitboxSystem.Overlap(rocket.Trajectory.landPoint, rocket.Config.explosionRadius,
+                    !rocket.ShooterIsAlie, out var overlappedHitboxIds);
 
-                if (overlappedRaycastIds.Count > 0) {
-                    entityMapping.FindByRaycastIds(overlappedRaycastIds, out var overlappedComponents);
+                if (overlappedHitboxIds.Count > 0) {
+                    entityMapping.FindByHitboxIds(overlappedHitboxIds, out var overlappedComponents);
                     
                     foreach (var nextComponents in overlappedComponents) {   
                         if (nextComponents.motionId.HasValue) {

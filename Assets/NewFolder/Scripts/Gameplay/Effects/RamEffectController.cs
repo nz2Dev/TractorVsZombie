@@ -11,16 +11,16 @@ public class RamEffectController {
     private readonly RamEffectView view;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
-    private readonly RaycastService raycastService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly VehicleSystem vehicleSystem;
     private readonly MotionSystem motionSystem;
     private readonly EntityMapping entityMapping;
 
-    public RamEffectController(RamEffectView view, HealthSystem healthSystem, FactionRegistry factionRegistry, RaycastService raycastService, MotionSystem motionSystem, EntityMapping entityMapping, VehicleSystem vehicleSystem) {
+    public RamEffectController(RamEffectView view, HealthSystem healthSystem, FactionRegistry factionRegistry, HitboxSystem hitboxSystem, MotionSystem motionSystem, EntityMapping entityMapping, VehicleSystem vehicleSystem) {
         this.view = view;
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
-        this.raycastService = raycastService;
+        this.hitboxSystem = hitboxSystem;
         this.motionSystem = motionSystem;
         this.entityMapping = entityMapping;
         this.vehicleSystem = vehicleSystem;
@@ -59,8 +59,7 @@ public class RamEffectController {
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
             var holderIsAlie = factionRegistry.ReadState(model.HolderFactionId).alie;
-            var targetRaycastLayer = FactionRegistry.GetRaycastLayerForFaction(!holderIsAlie);
-            raycastService.Overlap(model.Position, model.Config.triggerRadius, targetRaycastLayer, out var idsResult);
+            hitboxSystem.Overlap(model.Position, model.Config.triggerRadius, !holderIsAlie, out var idsResult);
             
             model.LostContactBuffer.Clear();
             model.LostContactBuffer.AddRange(model.InContact);
@@ -82,7 +81,7 @@ public class RamEffectController {
                 AddTemporalLinearDrag(model, model.ReceiveContactBuffer.Count);
             }
 
-            entityMapping.FindByRaycastIds(model.ReceiveContactBuffer, out var receiveContactComponents);
+            entityMapping.FindByHitboxIds(model.ReceiveContactBuffer, out var receiveContactComponents);
             var vehicleSpeed = vehicleSystem.ReadState(model.HolderVehicleId).velocity.magnitude;
             if (vehicleSpeed < model.Config.minImpactSpeed)
                 continue;

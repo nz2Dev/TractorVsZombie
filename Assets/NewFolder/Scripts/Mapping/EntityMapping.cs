@@ -2,54 +2,28 @@ using System;
 using System.Collections.Generic;
 
 public class EntityMapping {
-    
-    private readonly Dictionary<ProximityId, EntityComponents> proximityMappings = new();
-    private readonly Dictionary<RaycastId, EntityComponents> raycastMappings = new();
+    private readonly Dictionary<HitboxId, EntityComponents> mappings = new();
+    private readonly List<EntityComponents> resultBuffer = new(32);
 
-    private readonly List<EntityComponents> findInfantryIdsBuffer = new (32);
-
-    public void CreateMappings(EntityComponents components) {
-        var keyFound = false;
-        if (components.raycastId.HasValue) {
-            raycastMappings[components.raycastId.Value] = components;
-            keyFound = true;
-        }
-        if (components.proximityId.HasValue) {
-            proximityMappings[components.proximityId.Value] = components;
-            keyFound = true;
-        }
-        if (!keyFound) {
-            throw new ArgumentException($"components doesn't contains any key ids");
-        }
+    public void CreateMapping(HitboxId hitboxId, EntityComponents components) {
+        mappings[hitboxId] = components;
     }
 
-    public void DeleteMappings(ProximityId? proximityId, RaycastId? raycastId) {
-        if (proximityId.HasValue) {
-            if (!proximityMappings.Remove(proximityId.Value)) {
-                throw new ArgumentException($"there is no mappings for proximityId key {proximityId.Value} ");
-            }
-        }
-        if (raycastId.HasValue) {
-            if (!raycastMappings.Remove(raycastId.Value)) {
-                throw new ArgumentException($"there is no mappings for raycastId key {raycastId.Value} ");
-            }
-        }
+    public void DeleteMapping(HitboxId hitboxId) {
+        if (!mappings.Remove(hitboxId))
+            throw new ArgumentException($"there is no mapping for hitboxId key {hitboxId}");
     }
 
-    public bool TryFindByRaycastId(RaycastId raycastId, out EntityComponents components) {
-        return raycastMappings.TryGetValue(raycastId, out components);
+    public bool TryFindByHitboxId(HitboxId hitboxId, out EntityComponents components) {
+        return mappings.TryGetValue(hitboxId, out components);
     }
 
-    public void FindByRaycastIds(List<RaycastId> raycastIds, out List<EntityComponents> infantryIdsResult) {
-        findInfantryIdsBuffer.Clear();
-        foreach (var nextRaycastId in raycastIds) {
-            var components = raycastMappings[nextRaycastId];
-            findInfantryIdsBuffer.Add(components);
+    public void FindByHitboxIds(IEnumerable<HitboxId> hitboxIds, out List<EntityComponents> componentsResult) {
+        resultBuffer.Clear();
+        foreach (var hitboxId in hitboxIds) {
+            if (mappings.TryGetValue(hitboxId, out var components))
+                resultBuffer.Add(components);
         }
-        infantryIdsResult = findInfantryIdsBuffer;
-    }
-
-    public bool TryFindByProximityId(ProximityId proximityId, out EntityComponents components) {
-        return proximityMappings.TryGetValue(proximityId, out components);
+        componentsResult = resultBuffer;
     }
 }

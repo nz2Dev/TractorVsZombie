@@ -11,21 +11,19 @@ public class HeadquarterBuildingController {
     private readonly PathfindingService pathfindingService;
     private readonly AvoidanceService localAvoidanceService;
     private readonly CollisionService collisionService;
-    private readonly RaycastService raycastService;
-    private readonly ProximityService proximityService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
 
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(HealthSystem healthSystem, FactionRegistry factionRegistry, PathfindingService pathfindingService, CollisionService collisionService, AvoidanceService localAvoidanceService, RaycastService raycastService, EntityMapping entityMapping, ProximityService proximityService, HeadquarterBuildingView view) {
+    public HeadquarterBuildingController(HealthSystem healthSystem, FactionRegistry factionRegistry, PathfindingService pathfindingService, CollisionService collisionService, AvoidanceService localAvoidanceService, HitboxSystem hitboxSystem, EntityMapping entityMapping, HeadquarterBuildingView view) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.pathfindingService = pathfindingService;
         this.collisionService = collisionService;
         this.localAvoidanceService = localAvoidanceService;
-        this.raycastService = raycastService;
+        this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
-        this.proximityService = proximityService;
         this.view = view;
     }
 
@@ -42,13 +40,9 @@ public class HeadquarterBuildingController {
         // headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.pathfindingObstaclePrefab);
         headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.avoidanceObstaclePrefab);
         headquarter.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
-        var alie = factionRegistry.ReadState(headquarter.FactionId).alie;
-        headquarter.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, FactionRegistry.GetRaycastLayerForFaction(alie));
-        headquarter.ProximityId = proximityService.AddPoint(prototype.position, FactionRegistry.GetProximityLayerForFaction(alie));
+        headquarter.HitboxId = hitboxSystem.Add(headquarter.FactionId, prototype.position, prototype.raycastMarkerPrefab);
 
-        entityMapping.CreateMappings(new EntityComponents {
-            proximityId = headquarter.ProximityId,
-            raycastId = headquarter.RaycastId,
+        entityMapping.CreateMapping(headquarter.HitboxId, new EntityComponents {
             healthId = headquarter.HealthId,
             factionId = headquarter.FactionId
         });
@@ -72,10 +66,9 @@ public class HeadquarterBuildingController {
             pathfindingService.UnregisterObstacle(headquarter.PathfindingObstacleId);
             localAvoidanceService.RemoveObstacle(headquarter.AvoidanceObstacleId);
             collisionService.UnregisterObstacle(headquarter.CollisionObstacleId);
-            proximityService.RemovePoint(headquarter.ProximityId);
-            raycastService.UnregisterMarker(headquarter.RaycastId);
+            hitboxSystem.Remove(headquarter.HitboxId);
 
-            entityMapping.DeleteMappings(headquarter.ProximityId, headquarter.RaycastId);
+            entityMapping.DeleteMapping(headquarter.HitboxId);
             healthSystem.Remove(headquarter.HealthId);
             factionRegistry.Remove(headquarter.FactionId);
 

@@ -11,18 +11,18 @@ public class ArmorAIController {
     private readonly ArmorController armorController;
     private readonly VehicleSystem vehicleSystem;
     private readonly WeaponController weaponController;
-    private readonly ProximityService proximityService;
+    private readonly HitboxSystem hitboxSystem;
 
     private readonly List<int> controlledArmorIds = new();
     private readonly int flowFieldId;
 
-    public ArmorAIController(HealthSystem healthSystem, PathfindingService pathfindingService, ArmorController armorController, VehicleSystem vehicleSystem, WeaponController weaponController, ProximityService proximityService) {
+    public ArmorAIController(HealthSystem healthSystem, PathfindingService pathfindingService, ArmorController armorController, VehicleSystem vehicleSystem, WeaponController weaponController, HitboxSystem hitboxSystem) {
         this.healthSystem = healthSystem;
         this.pathfindingService = pathfindingService;
         this.armorController = armorController;
         this.vehicleSystem = vehicleSystem;
         this.weaponController = weaponController;
-        this.proximityService = proximityService;
+        this.hitboxSystem = hitboxSystem;
 
         flowFieldId = pathfindingService.CreateFlowField(Vector3.zero);
     }
@@ -70,11 +70,9 @@ public class ArmorAIController {
     private void OperateArmor(ArmorState state) {
         var enemySearchRadius = state.weaponState.aimConfig.range;
 
-        var targetFaction = !state.factionIsAlie;
-        var targetProximityLayer = FactionRegistry.GetProximityLayerForFaction(targetFaction);
-        if (proximityService.QueryNearestPoint(state.position, targetProximityLayer, out var nearestProximityId)) {
+        if (hitboxSystem.QueryNearest(state.position, !state.factionIsAlie, out var nearestHitboxId)) {
             // todo: either find mapped raycastId and het height from there, or else?
-            var pointPosition = proximityService.GetPoint(nearestProximityId);
+            var pointPosition = hitboxSystem.GetPosition(nearestHitboxId);
             weaponController.AimWeapon(state.weaponId, pointPosition + 0.5f * Vector3.up);
         }
     }

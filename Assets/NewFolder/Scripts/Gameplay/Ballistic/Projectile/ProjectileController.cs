@@ -9,7 +9,7 @@ public class ProjectileController {
     private readonly ProjectileView view;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
-    private readonly RaycastService raycastService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly CollisionService collisionService;
     private readonly EntityMapping entityMapping;
 
@@ -17,11 +17,11 @@ public class ProjectileController {
     private readonly Dictionary<int, ProjectileModel> registry = new ();
     private readonly List<int> removeBuffer = new(16);
 
-    public ProjectileController(HealthSystem healthSystem, FactionRegistry factionRegistry, ProjectileView view, RaycastService raycastService, EntityMapping entityMapping, CollisionService collisionService) {
+    public ProjectileController(HealthSystem healthSystem, FactionRegistry factionRegistry, ProjectileView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, CollisionService collisionService) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.view = view;
-        this.raycastService = raycastService;
+        this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
         this.collisionService = collisionService;
     }
@@ -62,13 +62,11 @@ public class ProjectileController {
 
             var ray = new Ray(projectile.Position, projectile.Velocity);
             var hitCheckDistance = projectile.Velocity.magnitude * Time.fixedDeltaTime;
-            var targetRaycastLayer = FactionRegistry.GetRaycastLayerForFaction(!projectile.ShooterAlie);
-
-            if (raycastService.Raycast(ray, hitCheckDistance, targetRaycastLayer, out var hitRaycastId, out var hitInfo)) {
+            if (hitboxSystem.Raycast(ray, hitCheckDistance, !projectile.ShooterAlie, out var hitboxId, out var hitInfo)) {
                 projectile.IsDead = true;
 
                 var surface = ContactSurface.None;
-                if (entityMapping.TryFindByRaycastId(hitRaycastId, out var components)) {
+                if (entityMapping.TryFindByHitboxId(hitboxId, out var components)) {
                     var healthState = healthSystem.ReadState(components.healthId.Value);
                     surface = healthState.surface;
 

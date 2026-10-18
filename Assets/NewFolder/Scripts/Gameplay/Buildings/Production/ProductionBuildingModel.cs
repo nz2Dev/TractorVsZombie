@@ -16,8 +16,7 @@ public class ProductionBuildingModel {
     public int PathfindingObstacleId { get; set; }
     public AvoidanceObstacleId AvoidanceObstacleId { get; set; }
     public CollisionObstacleId CollisionObstacleId { get; set; }
-    public ProximityId ProximityId { get; set; }
-    public RaycastId RaycastId { get; set; }
+    public HitboxId HitboxId { get; set; }
     public SpawnerId SpawnerId { get; set; }
 
     public bool Destroyed { get; set; }

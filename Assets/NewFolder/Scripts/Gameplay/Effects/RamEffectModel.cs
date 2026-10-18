@@ -21,8 +21,8 @@ public class RamEffectModel {
     public float TemporalLinearDrag { get; set; }
     
     public Vector3 Position { get; set; }
-    public List<RaycastId> InContact { get; } = new ();
-    public List<RaycastId> ReceiveContactBuffer = new ();
-    public List<RaycastId> LostContactBuffer = new ();
+    public List<HitboxId> InContact { get; } = new ();
+    public List<HitboxId> ReceiveContactBuffer = new ();
+    public List<HitboxId> LostContactBuffer = new ();
 
 }

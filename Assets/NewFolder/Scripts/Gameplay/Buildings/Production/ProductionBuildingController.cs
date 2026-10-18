@@ -14,8 +14,7 @@ public class ProductionBuildingController {
     private readonly CollisionService collisionService;
     private readonly AvoidanceService localAvoidanceService;
     private readonly SpawnerController spawnerController;
-    private readonly ProximityService proximityService;
-    private readonly RaycastService raycastService;
+    private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
 
     private int idCounter;
@@ -30,8 +29,7 @@ public class ProductionBuildingController {
         CollisionService collisionService,
         AvoidanceService localAvoidanceService,
         SpawnerController spawnService,
-        ProximityService proximityService,
-        RaycastService raycastService,
+        HitboxSystem hitboxSystem,
         EntityMapping entityMapping) {
         this.view = view;
         this.healthSystem = healthSystem;
@@ -39,8 +37,7 @@ public class ProductionBuildingController {
         this.collisionService = collisionService;
         this.localAvoidanceService = localAvoidanceService;
         this.spawnerController = spawnService;
-        this.proximityService = proximityService;
-        this.raycastService = raycastService;
+        this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
     }
 
@@ -83,13 +80,10 @@ public class ProductionBuildingController {
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.avoidanceObstaclePrefab);
         model.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
-        model.ProximityId = proximityService.AddPoint(prototype.position, FactionRegistry.GetProximityLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
-        model.RaycastId = raycastService.RegisterMarker(prototype.position, prototype.raycastMarkerPrefab, FactionRegistry.GetRaycastLayerForFaction(factionRegistry.ReadState(model.FactionId).alie));
+        model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.raycastMarkerPrefab);
         model.SpawnerId = spawnerController.Create(prototype.spawnerPrototype);
 
-        entityMapping.CreateMappings(new EntityComponents {
-            proximityId = model.ProximityId,
-            raycastId = model.RaycastId,
+        entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
             factionId = model.FactionId
         });
@@ -112,11 +106,10 @@ public class ProductionBuildingController {
         healthSystem.Remove(model.HealthId);
         localAvoidanceService.RemoveObstacle(model.AvoidanceObstacleId);
         collisionService.UnregisterObstacle(model.CollisionObstacleId);
-        raycastService.UnregisterMarker(model.RaycastId);
-        proximityService.RemovePoint(model.ProximityId);
+        hitboxSystem.Remove(model.HitboxId);
         spawnerController.Destroy(model.SpawnerId);
 
-        entityMapping.DeleteMappings(model.ProximityId, model.RaycastId);
+        entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
 
         view.RemoveVisuals(model.Id);
