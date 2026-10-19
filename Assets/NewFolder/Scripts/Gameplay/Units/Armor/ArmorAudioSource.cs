@@ -4,11 +4,12 @@ using UnityEngine;
 
 [Serializable]
 public struct ArmorAudioSource {
-    public AudioClip engineLoopSFX;
+    
+    [Inline] public ArmorAudioConfig configSO;
 
     public ArmorAudioPrototype Get() {
         return new ArmorAudioPrototype {
-            engineLoopSFX = engineLoopSFX,
+            config = configSO,
         };
     }
 }

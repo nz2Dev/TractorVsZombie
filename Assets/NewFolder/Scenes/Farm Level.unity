@@ -5948,7 +5948,7 @@ MonoBehaviour:
   viewSource:
     visualsPrefab: {fileID: 601842209}
   audioSource:
-    engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+    configSO: {fileID: 0}
   uiSource:
     worldSpaceUIPrefab: {fileID: 1480996430}
 --- !u!4 &377055306
@@ -40636,7 +40636,7 @@ MonoBehaviour:
   viewSource:
     visualsPrefab: {fileID: 1931922711}
   audioSource:
-    engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+    configSO: {fileID: 11400000, guid: 848a545d74ae546cb807ff6dc8792440, type: 2}
   uiSource:
     worldSpaceUIPrefab: {fileID: 2094138771}
 --- !u!4 &2094138770 stripped
