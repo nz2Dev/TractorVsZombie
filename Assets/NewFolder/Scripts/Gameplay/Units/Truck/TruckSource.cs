@@ -2,15 +2,13 @@ using UnityEngine;
 
 public class TruckSource : MonoBehaviour {
 
-    [Inline] [SerializeField] private TruckConfig config;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
-    [Local] [SerializeField] private TruckVisuals visualsPrefab;
     [Local] [SerializeField] private RamEffectSource ramSource;
-    [SerializeField] private AudioClip engineLoopSFX;
     [SerializeField] private HitboxSource hitboxSource;
-    [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
+    [Space]
+    [SerializeField] private TruckPresentationSource presentationSource;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -20,15 +18,12 @@ public class TruckSource : MonoBehaviour {
         return new TruckPrototype {
             position = transform.position,
             rotation = transform.rotation,
-            config = config,
             ramPrototype = ramSource.GetPrototype(),
             vehiclePrefab = vehiclePrefab,
-            visualsPrefab = visualsPrefab,
-            engineLoopSFX = engineLoopSFX,
+            presentationPrototype = presentationSource.Get(),
             healthPrototype = healthSource.GetHealthPrototype(),
             factionPrototype = factionSource.GetFactionPrototype(),
-            hitboxPrototype = hitboxSource.GetHitboxPrototype(),
-            worldSpaceUIPrefab = worldSpaceUIPrefab
+            hitboxPrototype = hitboxSource.GetHitboxPrototype()
         };
     }
 }

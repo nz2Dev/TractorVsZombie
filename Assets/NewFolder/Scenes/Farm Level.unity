@@ -28513,13 +28513,14 @@ MonoBehaviour:
   factionSource:
     alie: 1
   vehiclePrefab: {fileID: 4350355989104226069}
-  visualsPrefab: {fileID: 1947877290}
   ramSource: {fileID: 1600251742}
-  engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
   hitboxSource:
     markerPrefab: {fileID: 1890271680}
     surface: 1
-  worldSpaceUIPrefab: {fileID: 1808282541}
+  presentationSource:
+    visualsPrefab: {fileID: 1947877290}
+    engineLoopSFX: {fileID: 8300000, guid: 806b6bcb1892149c6867755e18a9e03f, type: 3}
+    worldSpaceUIPrefab: {fileID: 1808282541}
 --- !u!1773428102 &1117709944
 ParentConstraint:
   m_ObjectHideFlags: 0

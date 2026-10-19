@@ -1,56 +1,29 @@
-using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
 public class TruckView {
+    private readonly Dictionary<int, TruckVisuals> registry = new();
 
-    private readonly SoundManager soundManager;
-    private readonly CameraManager cameraManager;
-    
-    private WorldSpaceUI ui;
-    private TruckVisuals visuals;
-    private int sfxLoopId;
-
-    public TruckView(SoundManager soundManager, CameraManager cameraManager) {
-        this.soundManager = soundManager;
-        this.cameraManager = cameraManager;
-    }
-
-    public void Show(Vector3 position, TruckVisuals prefab, bool alie, AudioClip engineSFX, WorldSpaceUI worldSpaceUIPrefab) {
-        visuals = GameObject.Instantiate(prefab, position, Quaternion.identity);
-        sfxLoopId = soundManager.StartLoop(position, engineSFX);
+    public void Show(int truckId, Vector3 position, bool alie, TruckVisuals visualsPrefab) {
+        var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
         visuals.SetFactionProperties(alie);
-
-        ui = GameObject.Instantiate(worldSpaceUIPrefab);
-        ui.TargetCamera = cameraManager.GetActiveCamera();
+        registry[truckId] = visuals;
     }
 
-    public void UpdatePose(VehicleState vehicleState) {
+    public void Hide(int truckId) {
+        registry.Remove(truckId, out var visuals);
+        GameObject.Destroy(visuals.gameObject);
+    }
+
+    public void SetPose(int truckId, VehicleState vehicleState) {
+        var visuals = registry[truckId];
         visuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         visuals.SetFrontAxis(vehicleState.frontAxis);
         visuals.SetRearAxis(vehicleState.rearAxis);
     }
 
-    public void UpdateHealthBar(Vector3 position, int health, int maxHealth) {
-        ui.transform.position = position;
-        var healthBar = ui.GetComponentInChildren<HealthBarVisuals>();
-        healthBar.SetBar(health, maxHealth);
+    public void ShowTakeHit(int truckId) {
+        registry[truckId].TriggerHitFlash();
     }
-
-    public void ShowTakeHit() {
-        visuals.TriggerHitFlash();
-    }
-
-    internal void UpdateSound(float gasThrottle) {
-        var enginePitch = 0.5f + gasThrottle;
-        var engineVolume = 0.1f + gasThrottle;
-        soundManager.UpdateLoop(sfxLoopId, visuals.transform.position, enginePitch, engineVolume);
-    }
-
-    internal void Remove() {
-        GameObject.Destroy(visuals.gameObject);
-        soundManager.StopLoop(sfxLoopId);
-        GameObject.Destroy(ui.gameObject);
-    }
-
 }

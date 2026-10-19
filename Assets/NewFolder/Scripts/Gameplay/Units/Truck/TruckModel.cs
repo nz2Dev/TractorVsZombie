@@ -3,12 +3,9 @@ using UnityEngine;
 
 public class TruckModel {
 
-    public TruckModel(TruckConfig config, Vector3 position) {
-        Config = config;
+    public TruckModel(Vector3 position) {
         Position = position;
     }
-
-    public TruckConfig Config { get; }
 
     public HealthId HealthId { get; set; }
     public FactionId FactionId { get; set; }

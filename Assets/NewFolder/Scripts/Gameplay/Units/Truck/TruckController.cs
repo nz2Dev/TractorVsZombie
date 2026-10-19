@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TruckController {
 
-    private readonly TruckView view;
+    private readonly TruckPresenter presenter;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
     private readonly VehicleSystem vehicleSystem;
@@ -15,11 +15,11 @@ public class TruckController {
 
     private TruckModel model;
 
-    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamEffectController ramEffect, TruckView view, VehicleSystem vehicleSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping) {
+    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamEffectController ramEffect, TruckPresenter presenter, VehicleSystem vehicleSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.ramEffect = ramEffect;
-        this.view = view;
+        this.presenter = presenter;
         this.vehicleSystem = vehicleSystem;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
@@ -41,7 +41,7 @@ public class TruckController {
     }
 
     public virtual void Create(TruckPrototype prototype, Vector3 position = default) {
-        model = new TruckModel(prototype.config, position == default ? prototype.position : position);
+        model = new TruckModel(position == default ? prototype.position : position);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab, prototype.rotation);
@@ -54,7 +54,7 @@ public class TruckController {
         });
 
         var alie = prototype.factionPrototype.alie;
-        view.Show(model.Position, prototype.visualsPrefab, alie, prototype.engineLoopSFX, prototype.worldSpaceUIPrefab);
+        presenter.Add(model.VehicleId.Value, model.Position, alie, prototype.presentationPrototype);
     }
 
     private void ReadExternalState() {
@@ -81,7 +81,7 @@ public class TruckController {
         entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
 
-        view.Remove();
+        presenter.Remove(model.VehicleId.Value);
     }
 
     private void WriteExternalInput() {
@@ -90,14 +90,7 @@ public class TruckController {
     }
 
     private void UpdateView() {
-        view.UpdatePose(vehicleSystem.ReadState(model.VehicleId));
-        view.UpdateSound(vehicleSystem.ReadGas(model.VehicleId));
-
-        var healthState = model.HealthState;
-        view.UpdateHealthBar(model.Position, healthState.health, healthState.maxHealth);
-        if (healthState.damageResult.HasValue) {
-            view.ShowTakeHit();
-        }
+        presenter.Update(model.VehicleId.Value, vehicleSystem.ReadState(model.VehicleId), vehicleSystem.ReadGas(model.VehicleId), model.HealthState);
     }
 
 }
