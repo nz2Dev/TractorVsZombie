@@ -12,11 +12,9 @@ public struct ArmorPrototype {
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
     public HitboxPrototype hitboxPrototype;
-    public ArmorAudioPrototype armorAudioPrototype;
-    public ArmorUIPrototype armorUIPrototype;
-    public ArmorViewPrototype armorViewPrototype;
+    public ArmorPresentationPrototype presentationPrototype;
 
-    public ArmorPrototype(Vector3 position, UnityVehicle vehiclePrefab, AttachmentPrototype attachmentPrototype, RamEffectPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, ArmorAudioPrototype armorAudioPrototype, ArmorUIPrototype armorUIPrototype, ArmorViewPrototype armorViewPrototype) {
+    public ArmorPrototype(Vector3 position, UnityVehicle vehiclePrefab, AttachmentPrototype attachmentPrototype, RamEffectPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, ArmorPresentationPrototype presentationPrototype) {
         this.position = position;
         this.vehiclePrefab = vehiclePrefab;
         this.attachmentPrototype = attachmentPrototype;
@@ -25,8 +23,6 @@ public struct ArmorPrototype {
         this.healthPrototype = healthPrototype;
         this.factionPrototype = factionPrototype;
         this.hitboxPrototype = hitboxPrototype;
-        this.armorAudioPrototype = armorAudioPrototype;
-        this.armorUIPrototype = armorUIPrototype;
-        this.armorViewPrototype = armorViewPrototype;
+        this.presentationPrototype = presentationPrototype;
     }
 }

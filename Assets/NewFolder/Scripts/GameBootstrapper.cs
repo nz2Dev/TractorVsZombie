@@ -150,12 +150,14 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleSystem,
             ramEffect,
             dropSystem,
-            new ArmorView(),
+            new ArmorPresenter(
+                new ArmorAudio(soundManager),
+                new ArmorView(),
+                new ArmorUI(cameraManager)
+            ),
             hitboxSystem,
             entityMapping,
-            poseRegistry,
-            new ArmorAudio(soundManager),
-            new ArmorUI(cameraManager)
+            poseRegistry
         );
 
         platformController = new PlatformController(

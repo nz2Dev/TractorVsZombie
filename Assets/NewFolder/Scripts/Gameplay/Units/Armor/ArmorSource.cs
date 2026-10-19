@@ -11,9 +11,7 @@ public class ArmorSource : MonoBehaviour {
     [SerializeField] private HitboxSource hitboxSource;
     [SerializeField] private DropSource dropSource;
     [Space]
-    [SerializeField] private ArmorViewSource viewSource;
-    [SerializeField] private ArmorAudioSource audioSource;
-    [SerializeField] private ArmorUISource uiSource;
+    [SerializeField] private ArmorPresentationSource presentationSource;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -29,9 +27,7 @@ public class ArmorSource : MonoBehaviour {
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
             hitboxPrototype: hitboxSource.GetHitboxPrototype(),
-            armorAudioPrototype: audioSource.Get(),
-            armorUIPrototype: uiSource.Get(),
-            armorViewPrototype: viewSource.Get()
+            presentationPrototype: presentationSource.Get()
         );
     }
 }

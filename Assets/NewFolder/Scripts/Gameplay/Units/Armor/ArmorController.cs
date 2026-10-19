@@ -16,14 +16,12 @@ public class ArmorController {
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
 
-    private readonly ArmorView view;
-    private readonly ArmorAudio audio;
-    private readonly ArmorUI ui;
+    private readonly ArmorPresenter presenter;
 
     private int idCounter;
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
-    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, AttachmentSystem attachmentSystem, VehicleSystem vehicleSystem, RamEffectController ramEffect, DropSystem dropSystem, ArmorView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry, ArmorAudio audio, ArmorUI ui) {
+    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, AttachmentSystem attachmentSystem, VehicleSystem vehicleSystem, RamEffectController ramEffect, DropSystem dropSystem, ArmorPresenter presenter, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.attachmentSystem = attachmentSystem;
@@ -33,9 +31,7 @@ public class ArmorController {
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
         this.poseRegistry = poseRegistry;
-        this.view = view;
-        this.audio = audio;
-        this.ui = ui;
+        this.presenter = presenter;
     }
 
     public int ArmorCount => registry.Count;
@@ -70,9 +66,7 @@ public class ArmorController {
         });
 
         var alie = prototype.factionPrototype.alie;
-        view.Show(nextId, prototype.position, alie, prototype.armorViewPrototype);
-        audio.Add(nextId, prototype.position, prototype.armorAudioPrototype);
-        ui.Add(nextId, prototype.position, prototype.armorUIPrototype);
+        presenter.Add(nextId, prototype.position, alie, prototype.presentationPrototype);
         return model.Id;
     }
 
@@ -90,9 +84,7 @@ public class ArmorController {
         entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
         
-        view.Hide(model.Id);
-        audio.Remove(model.Id);
-        ui.Remove(model.Id);
+        presenter.Remove(model.Id);
     }
 
     public ArmorState ReadArmorState(int armorId) {
@@ -136,14 +128,8 @@ public class ArmorController {
     private void UpdatePresentation() {
         foreach (var model in registry.Values) {
             var vehicleState = vehicleSystem.ReadState(model.VehicleId);
-            view.UpdatePose(model.Id, vehicleState);
-            audio.UpdateSound(model.Id, vehicleState.position, vehicleSystem.ReadGas(model.VehicleId));
-            
-            var healthState = model.HealthState;
-            ui.UpdateHealthBar(model.Id, vehicleState.position, healthState.health, healthState.maxHealth);
-            if (healthState.damageResult.HasValue) {
-                view.ShowTakeHit(model.Id);
-            }
+            presenter.Update(model.Id, 
+                vehicleState, vehicleSystem.ReadGas(model.VehicleId), model.HealthState);
         }
     }
 

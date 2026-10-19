@@ -1,36 +1,31 @@
-using System;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 public class ArmorView {
 
-    private Dictionary<int, ArmorVisuals> visualsRegistry = new();
-    
-    public ArmorView() {
-    }
+    private readonly Dictionary<int, ArmorVisuals> registry = new();
 
-    public void Show(int armorId, Vector3 position, bool alie, ArmorViewPrototype prototype) {
-        var visuals = GameObject.Instantiate(prototype.visualsPrefab, position, Quaternion.identity);
+    public void Show(int armorId, Vector3 position, bool alie, ArmorVisuals visualsPrefab) {
+        var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
         visuals.SetFactionProperties(alie);
-        visualsRegistry[armorId] = visuals;
+        registry[armorId] = visuals;
     }
 
     public void Hide(int armorId) {
-        visualsRegistry.Remove(armorId, out var visuals);
+        registry.Remove(armorId, out var visuals);
         GameObject.Destroy(visuals.gameObject);
     }
 
-    public void UpdatePose(int armorId, VehicleState vehicleState) {
-        var visuals = visualsRegistry[armorId];
+    public void SetPose(int armorId, VehicleState vehicleState) {
+        var visuals = registry[armorId];
         visuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         visuals.SetFrontAxis(vehicleState.frontAxis);
         visuals.SetRearAxis(vehicleState.rearAxis);
     }
 
     public void ShowTakeHit(int armorId) {
-        var visuals = visualsRegistry[armorId];
+        var visuals = registry[armorId];
         visuals.TriggerHitFlash();
     }
-    
 }
