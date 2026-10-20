@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ArmorSource : MonoBehaviour {
 
-    [Local] [SerializeField] private UnityVehicle vehiclePrefab;
-    [Local] [SerializeField] private RamEffectSource ramSource;
+    [Local][SerializeField] private UnityVehicle vehiclePrefab;
+    [SerializeField] private RamSource ramSource;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
     [SerializeField] private AttachmentSource attachmentSource;
@@ -18,11 +18,11 @@ public class ArmorSource : MonoBehaviour {
     }
 
     public ArmorPrototype GetPrototype() {
-        return new ArmorPrototype (
+        return new ArmorPrototype(
             position: transform.position,
             vehiclePrefab: vehiclePrefab,
             attachmentPrototype: attachmentSource.Get(),
-            ramPrototype: ramSource != null ? ramSource.GetPrototype() : default,
+            ramPrototype: ramSource.GetPrototype(),
             dropPrototype: dropSource.Get(),
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
@@ -30,4 +30,12 @@ public class ArmorSource : MonoBehaviour {
             presentationPrototype: presentationSource.Get()
         );
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected() {
+        if (ramSource.config != null)
+            Gizmos.DrawWireSphere(transform.position, ramSource.config.triggerRadius);
+    }
+#endif
+
 }

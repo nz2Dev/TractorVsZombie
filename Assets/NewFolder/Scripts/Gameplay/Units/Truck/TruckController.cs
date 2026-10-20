@@ -9,16 +9,16 @@ public class TruckController {
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
     private readonly VehicleSystem vehicleSystem;
-    private readonly RamEffectController ramEffect;
+    private readonly RamSystem ramSystem;
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
 
     private TruckModel model;
 
-    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamEffectController ramEffect, TruckPresenter presenter, VehicleSystem vehicleSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping) {
+    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamSystem ramEffect, TruckPresenter presenter, VehicleSystem vehicleSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
-        this.ramEffect = ramEffect;
+        this.ramSystem = ramEffect;
         this.presenter = presenter;
         this.vehicleSystem = vehicleSystem;
         this.hitboxSystem = hitboxSystem;
@@ -45,7 +45,7 @@ public class TruckController {
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab, prototype.rotation);
-        model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
+        model.RamId = ramSystem.Add(model.FactionId, model.VehicleId, prototype.ramPrototype);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.Position, prototype.hitboxPrototype);
         
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
@@ -75,7 +75,7 @@ public class TruckController {
     private void Clear() {
         healthSystem.Remove(model.HealthId);
         vehicleSystem.Remove(model.VehicleId);
-        ramEffect.Remove(model.RamId);
+        ramSystem.Remove(model.RamId);
         hitboxSystem.Remove(model.HitboxId);
         
         entityMapping.DeleteMapping(model.HitboxId);
@@ -85,12 +85,16 @@ public class TruckController {
     }
 
     private void WriteExternalInput() {
-        ramEffect.Forward(model.RamId, model.Position);
+        ramSystem.SetPosition(model.RamId, model.Position);
         hitboxSystem.UpdatePosition(model.HitboxId, model.Position);
     }
 
     private void UpdateView() {
-        presenter.Update(model.VehicleId.Value, vehicleSystem.ReadState(model.VehicleId), vehicleSystem.ReadGas(model.VehicleId), model.HealthState);
+        presenter.Update(model.VehicleId.Value, 
+            vehicleSystem.ReadState(model.VehicleId), 
+            vehicleSystem.ReadGas(model.VehicleId), 
+            model.HealthState, 
+            ramSystem.ReadState(model.RamId));
     }
 
 }

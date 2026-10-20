@@ -7,14 +7,14 @@ public struct ArmorPrototype {
     public Vector3 position;
     public UnityVehicle vehiclePrefab;
     public AttachmentPrototype attachmentPrototype;
-    public RamEffectPrototype ramPrototype;
+    public RamPrototype ramPrototype;
     public DropPrototype dropPrototype;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
     public HitboxPrototype hitboxPrototype;
     public ArmorPresentationPrototype presentationPrototype;
 
-    public ArmorPrototype(Vector3 position, UnityVehicle vehiclePrefab, AttachmentPrototype attachmentPrototype, RamEffectPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, ArmorPresentationPrototype presentationPrototype) {
+    public ArmorPrototype(Vector3 position, UnityVehicle vehiclePrefab, AttachmentPrototype attachmentPrototype, RamPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, ArmorPresentationPrototype presentationPrototype) {
         this.position = position;
         this.vehiclePrefab = vehiclePrefab;
         this.attachmentPrototype = attachmentPrototype;

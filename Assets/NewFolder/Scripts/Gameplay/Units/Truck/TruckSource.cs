@@ -5,7 +5,7 @@ public class TruckSource : MonoBehaviour {
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
     [Local] [SerializeField] private UnityVehicle vehiclePrefab;
-    [Local] [SerializeField] private RamEffectSource ramSource;
+    [SerializeField] private RamSource ramSource;
     [SerializeField] private HitboxSource hitboxSource;
     [Space]
     [SerializeField] private TruckPresentationSource presentationSource;

@@ -4,7 +4,7 @@ using UnityEngine;
 public struct TruckPrototype {
     public Vector3 position;
     public Quaternion rotation;
-    public RamEffectPrototype ramPrototype;
+    public RamPrototype ramPrototype;
     public UnityVehicle vehiclePrefab;
     public TruckPresentationPrototype presentationPrototype;
     public HealthPrototype healthPrototype;

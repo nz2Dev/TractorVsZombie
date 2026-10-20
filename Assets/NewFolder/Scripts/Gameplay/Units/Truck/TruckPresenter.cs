@@ -14,7 +14,7 @@ public class TruckPresenter {
     public void Add(int truckId, Vector3 position, bool alie, TruckPresentationPrototype prototype) {
         view.Show(truckId, position, alie, prototype.visualsPrefab);
         ui.Add(truckId, position, prototype.worldSpaceUIPrefab);
-        audio.Add(truckId, position, prototype.engineLoopSFX);
+        audio.Add(truckId, position, prototype);
     }
 
     public void Remove(int truckId) {
@@ -23,12 +23,15 @@ public class TruckPresenter {
         audio.Remove(truckId);
     }
 
-    public void Update(int truckId, VehicleState vehicleState, float gasThrottle, HealthState healthState) {
+    public void Update(int truckId, VehicleState vehicleState, float gasThrottle, HealthState healthState, RamState ramState) {
         view.SetPose(truckId, vehicleState);
         if (healthState.damageResult.HasValue) {
             view.ShowTakeHit(truckId);
         }
         ui.UpdateHealthBar(truckId, vehicleState.position, healthState.health, healthState.maxHealth);
         audio.UpdateEngineSound(truckId, vehicleState.position, gasThrottle);
+        if (ramState.receivedContacts > 0) {
+            audio.PlayRamImpact(truckId, vehicleState.position, ramState.receivedContacts);
+        }
     }
 }

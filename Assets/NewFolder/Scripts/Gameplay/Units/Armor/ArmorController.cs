@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ArmorController {
 
-    private readonly RamEffectController ramEffect;
+    private readonly RamSystem ramSystem;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
     private readonly AttachmentSystem attachmentSystem;
@@ -21,12 +21,12 @@ public class ArmorController {
     private int idCounter;
     private readonly Dictionary<int, ArmorModel> registry = new ();
 
-    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, AttachmentSystem attachmentSystem, VehicleSystem vehicleSystem, RamEffectController ramEffect, DropSystem dropSystem, ArmorPresenter presenter, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public ArmorController(HealthSystem healthSystem, FactionRegistry factionRegistry, AttachmentSystem attachmentSystem, VehicleSystem vehicleSystem, RamSystem ramSystem, DropSystem dropSystem, ArmorPresenter presenter, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.attachmentSystem = attachmentSystem;
         this.vehicleSystem = vehicleSystem;
-        this.ramEffect = ramEffect;
+        this.ramSystem = ramSystem;
         this.dropSystem = dropSystem;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
@@ -58,7 +58,7 @@ public class ArmorController {
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
         model.AttachmentId = attachmentSystem.Add(prototype.attachmentPrototype, model.FactionId, model.PoseId);
         model.DropId = dropSystem.Add(prototype.dropPrototype, model.HealthId, model.PoseId);
-        model.RamId = ramEffect.StartNew(model.FactionId, model.VehicleId, prototype.ramPrototype);
+        model.RamId = ramSystem.Add(model.FactionId, model.VehicleId, prototype.ramPrototype);
 
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
@@ -77,7 +77,7 @@ public class ArmorController {
         vehicleSystem.Remove(model.VehicleId);
         poseRegistry.Remove(model.PoseId);
         attachmentSystem.Remove(model.AttachmentId);
-        ramEffect.Remove(model.RamId);
+        ramSystem.Remove(model.RamId);
 
         hitboxSystem.Remove(model.HitboxId);
         dropSystem.Remove(model.DropId);
@@ -119,9 +119,9 @@ public class ArmorController {
 
     private void SyncVehiclesPositions() {
         foreach (var model in registry.Values) {
-            // TODO: register proxmity and raycast components
+            // TODO: add pose handling to ram system
             var pose = poseRegistry.Read(model.PoseId);
-            ramEffect.Forward(model.RamId, pose.position);
+            ramSystem.SetPosition(model.RamId, pose.position);
         }
     }
 
@@ -129,7 +129,7 @@ public class ArmorController {
         foreach (var model in registry.Values) {
             var vehicleState = vehicleSystem.ReadState(model.VehicleId);
             presenter.Update(model.Id, 
-                vehicleState, vehicleSystem.ReadGas(model.VehicleId), model.HealthState);
+                vehicleState, vehicleSystem.ReadGas(model.VehicleId), model.HealthState, ramSystem.ReadState(model.RamId));
         }
     }
 
