@@ -12,7 +12,6 @@ public class ProductionBuildingSource : MonoBehaviour {
     [Space]
     [Inline, SerializeField] private SpawnerPrototypeSource spawnerSource;
     [Local] [SerializeField] private GameObject visualsPrefab;
-    [Inline] [SerializeField] private ProductionBuildingConfig config;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
     [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
@@ -44,7 +43,6 @@ public class ProductionBuildingSource : MonoBehaviour {
             uniqueId: uniqueId,
             position: transform.position,
             rotation: transform.rotation,
-            config: config,
             spawnerPrototype: spawnerSource.Get(),
             avoidanceObstaclePrefab: avoidanceObstaclePrefab,
             physicsObstaclePrefab: collisionObstaclePrefab,

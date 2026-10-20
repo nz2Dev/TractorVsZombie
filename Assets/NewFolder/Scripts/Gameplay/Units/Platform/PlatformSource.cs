@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlatformSource : MonoBehaviour {
 
-    [Inline] [SerializeField] private PlatformConfig config;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
     [Local] [SerializeField] private PlatformVisuals visualsPrefab;
@@ -18,7 +17,6 @@ public class PlatformSource : MonoBehaviour {
     public PlatformPrototype GetPrototype() {
         return new PlatformPrototype (
             position: transform.position,
-            config: config,
             visualsPrefab: visualsPrefab,
             vehiclePrefab: vehiclePrefab,
             loadoutOffset: loadoutOffset,

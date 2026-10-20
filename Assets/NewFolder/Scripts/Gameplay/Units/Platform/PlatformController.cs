@@ -37,7 +37,7 @@ public class PlatformController {
     public virtual int Create(PlatformPrototype prototype, Vector3 position = default) {
         var nextId = ++idCounter;
         var initPosition = position == default ? prototype.position : position;
-        var model = new PlatformModel(nextId, initPosition, prototype.config, prototype.loadoutOffset);
+        var model = new PlatformModel(nextId, initPosition, prototype.loadoutOffset);
         registry[model.Id] = model;
 
         model.HealthId = healthSystem.Add(prototype.healthPrototype);

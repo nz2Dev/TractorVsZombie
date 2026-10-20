@@ -19,7 +19,7 @@ public class LoadoutController {
 
     public int SpawnLoadout(FactionId ownerFactionId, LoadoutPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new LoadoutModel(nextId, prototype.config);
+        var model = new LoadoutModel(nextId);
         registry[nextId] = model;
 
         model.WeaponId = weaponController.SpawnWeapon(ownerFactionId, prototype.weaponPrototype);

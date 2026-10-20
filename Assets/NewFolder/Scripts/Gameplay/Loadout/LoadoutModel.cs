@@ -3,11 +3,8 @@ using UnityEngine;
 public class LoadoutModel {
     
     public int Id { get; }
-    public LoadoutConfig Config { get; }    
-    
-    public LoadoutModel(int id, LoadoutConfig config) {
+    public LoadoutModel(int id) {
         Id = id;
-        Config = config;
     }
 
     public int WeaponId { get; set; }

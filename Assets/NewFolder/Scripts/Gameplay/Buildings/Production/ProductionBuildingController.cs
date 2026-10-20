@@ -73,7 +73,7 @@ public class ProductionBuildingController {
             nextId = uniqueIdRegistry[prototype.uniqueId];
         }
 
-        var model = new ProductionBuildingModel(nextId, prototype.config);
+        var model = new ProductionBuildingModel(nextId);
         registry[nextId] = model;
         
         model.HealthId = healthSystem.Add(prototype.healthPrototype);

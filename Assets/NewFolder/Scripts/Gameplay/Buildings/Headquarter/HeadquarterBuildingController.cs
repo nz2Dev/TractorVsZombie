@@ -33,7 +33,7 @@ public class HeadquarterBuildingController {
     }
 
     public void Create(HeadquarterBuildingPrototype prototype) {
-        headquarter = new HeadquarterBuilding(prototype.config);
+        headquarter = new HeadquarterBuilding();
         headquarter.Position = prototype.position;
         headquarter.HealthId = healthSystem.Add(prototype.healthPrototype);
         headquarter.FactionId = factionRegistry.Add(prototype.factionPrototype);

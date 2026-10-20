@@ -3,14 +3,11 @@ using UnityEngine;
 
 public class ProductionBuildingModel {
     
-    public ProductionBuildingModel(int id, ProductionBuildingConfig config) {
+    public ProductionBuildingModel(int id) {
         Id = id;
-        Config = config;
     }
 
     public int Id { get; }
-    public ProductionBuildingConfig Config { get; }
-
     public HealthId HealthId { get; set; }
     public FactionId FactionId { get; set; }
     public int PathfindingObstacleId { get; set; }

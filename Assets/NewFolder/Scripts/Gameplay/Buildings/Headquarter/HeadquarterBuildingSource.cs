@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class HeadquarterBuildingSource : MonoBehaviour {
 
-    [Inline, SerializeField] private HeadquarterBuildingConfig config;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
     [SerializeField] private HitboxSource hitboxSource;
@@ -20,7 +19,6 @@ public class HeadquarterBuildingSource : MonoBehaviour {
         return new HeadquarterBuildingPrototype (
             position: transform.position,
             rotation: transform.rotation,
-            config: config,
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
             hitboxPrototype: hitboxSource.GetHitboxPrototype(),

@@ -3,15 +3,13 @@ using UnityEngine;
 
 public class PlatformModel {
 
-    public PlatformModel(int id, Vector3 position, PlatformConfig config, Vector3 loadoutOffset) {
+    public PlatformModel(int id, Vector3 position, Vector3 loadoutOffset) {
         Id = id;
         Position = position;
-        Config = config;
         LoadoutOffset = loadoutOffset;
     }
 
     public int Id { get; }
-    public PlatformConfig Config { get; }
     public Vector3 LoadoutOffset { get; }
 
     public HealthId HealthId { get; set; }

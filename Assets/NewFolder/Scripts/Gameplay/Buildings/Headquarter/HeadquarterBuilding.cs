@@ -3,12 +3,6 @@ using UnityEngine;
 
 public class HeadquarterBuilding {
 
-    public HeadquarterBuilding(HeadquarterBuildingConfig config) {
-        Config = config;
-    }
-
-    public HeadquarterBuildingConfig Config { get; }
-
     public HealthId HealthId { get; set; }
     public FactionId FactionId { get; set; }
     public PathfindingObstacleId PathfindingObstacleId { get; set; }
