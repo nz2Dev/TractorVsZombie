@@ -4,7 +4,7 @@ internal sealed class VehicleModel {
     
     public VehicleId Id { get; }
     
-    public PoseId? HostPoseId { get; }
+    public PoseId HostPoseId { get; }
     public int VehiclePhysicsId { get; }
     
     public VehicleState State { get; set; }
@@ -13,7 +13,7 @@ internal sealed class VehicleModel {
     public float Steer { get; set; }
     public bool SteerIsAngle { get; set; }
 
-    public VehicleModel(VehicleId id, int vehiclePhysicsId, PoseId? poseId, VehicleState state) {
+    public VehicleModel(VehicleId id, int vehiclePhysicsId, PoseId poseId, VehicleState state) {
         Id = id;
         VehiclePhysicsId = vehiclePhysicsId;
         HostPoseId = poseId;

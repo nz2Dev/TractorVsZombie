@@ -51,7 +51,7 @@ public class TruckController {
         model.PoseId = poseRegistry.Add(initPosition, prototype.rotation);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrefab, prototype.rotation, model.PoseId);
+        model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrototype, model.PoseId, prototype.rotation);
         model.RamId = ramSystem.Add(model.FactionId, model.VehicleId, prototype.ramPrototype);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
         

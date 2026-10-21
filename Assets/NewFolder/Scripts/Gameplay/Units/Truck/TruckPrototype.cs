@@ -5,7 +5,7 @@ public struct TruckPrototype {
     public Vector3 position;
     public Quaternion rotation;
     public RamPrototype ramPrototype;
-    public UnityVehicle vehiclePrefab;
+    public VehiclePrototype vehiclePrototype;
     public TruckPresentationPrototype presentationPrototype;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;

@@ -45,7 +45,7 @@ public class PlatformController {
         model.PoseId = poseRegistry.Add(initPosition, default);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrefab, poseId: model.PoseId);
+        model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrototype, poseId: model.PoseId);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
 
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {

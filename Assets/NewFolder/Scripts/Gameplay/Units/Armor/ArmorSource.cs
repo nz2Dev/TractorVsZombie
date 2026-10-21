@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ArmorSource : MonoBehaviour {
 
-    [Local][SerializeField] private UnityVehicle vehiclePrefab;
+    [SerializeField] private VehicleSource vehicleSource;
     [SerializeField] private RamSource ramSource;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
@@ -20,7 +20,7 @@ public class ArmorSource : MonoBehaviour {
     public ArmorPrototype GetPrototype() {
         return new ArmorPrototype(
             position: transform.position,
-            vehiclePrefab: vehiclePrefab,
+            vehiclePrototype: vehicleSource.GetPrototype(),
             attachmentPrototype: attachmentSource.Get(),
             ramPrototype: ramSource.GetPrototype(),
             dropPrototype: dropSource.Get(),

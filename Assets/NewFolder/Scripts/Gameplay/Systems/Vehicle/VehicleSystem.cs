@@ -13,12 +13,11 @@ public class VehicleSystem {
         this.poseRegistry = poseRegistry;
     }
 
-    public VehicleId Create(Vector3 position, UnityVehicle vehiclePrefab, Quaternion rotation = default, PoseId? poseId = null) {
+    public VehicleId Create(Vector3 position, VehiclePrototype prototype, PoseId poseId, Quaternion rotation = default) {
         var id = new VehicleId(++idCounter);
-        var vehiclePhysicsId = vehicleService.CreateVehicle(position, vehiclePrefab, rotation);
+        var vehiclePhysicsId = vehicleService.CreateVehicle(position, prototype.prefab, rotation);
         var model = new VehicleModel(id, vehiclePhysicsId, poseId, vehicleService.GetVehicleState(vehiclePhysicsId));
         registry.Add(id, model);
-        WritePose(model);
         return id;
     }
 
@@ -65,7 +64,7 @@ public class VehicleSystem {
         vehicleService.UpdateVehiclePose(tail.VehiclePhysicsId, tail.State.position, towardHeadRotation);
         vehicleService.MakeTowingConnection(head.VehiclePhysicsId, tail.VehiclePhysicsId);
         tail.State = vehicleService.GetVehicleState(tail.VehiclePhysicsId);
-        WritePose(tail);
+        poseRegistry.Write(tail.HostPoseId, tail.State.position, tail.State.rotation);
     }
 
     public virtual void Disconnect(VehicleId id) {
@@ -83,7 +82,7 @@ public class VehicleSystem {
     public void Update() {
         foreach (var model in registry.Values) {
             model.State = vehicleService.GetVehicleState(model.VehiclePhysicsId);
-            WritePose(model);
+            poseRegistry.Write(model.HostPoseId, model.State.position, model.State.rotation);
 
             vehicleService.SetVehicleInput(model.VehiclePhysicsId, model.Gas, model.Brakes, model.SteerIsAngle ? 0 : model.Steer);
             if (model.SteerIsAngle) {
@@ -92,9 +91,4 @@ public class VehicleSystem {
         }
     }
 
-    private void WritePose(VehicleModel model) {
-        if (model.HostPoseId.HasValue) {
-            poseRegistry.Write(model.HostPoseId.Value, model.State.position, model.State.rotation);
-        }
-    }
 }

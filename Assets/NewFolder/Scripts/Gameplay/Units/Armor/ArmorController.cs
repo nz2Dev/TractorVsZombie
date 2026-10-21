@@ -53,7 +53,7 @@ public class ArmorController {
         model.PoseId = poseRegistry.Add(prototype.position, default);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.VehicleId = vehicleSystem.Create(prototype.position, prototype.vehiclePrefab, poseId: model.PoseId);
+        model.VehicleId = vehicleSystem.Create(prototype.position, prototype.vehiclePrototype, poseId: model.PoseId);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
         model.AttachmentId = attachmentSystem.Add(prototype.attachmentPrototype, model.FactionId, model.PoseId);
         model.DropId = dropSystem.Add(prototype.dropPrototype, model.HealthId, model.PoseId);

@@ -4,7 +4,7 @@ public class TruckSource : MonoBehaviour {
 
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
-    [Local] [SerializeField] private UnityVehicle vehiclePrefab;
+    [SerializeField] private VehicleSource vehicleSource;
     [SerializeField] private RamSource ramSource;
     [SerializeField] private HitboxSource hitboxSource;
     [Space]
@@ -19,7 +19,7 @@ public class TruckSource : MonoBehaviour {
             position = transform.position,
             rotation = transform.rotation,
             ramPrototype = ramSource.GetPrototype(),
-            vehiclePrefab = vehiclePrefab,
+            vehiclePrototype = vehicleSource.GetPrototype(),
             presentationPrototype = presentationSource.Get(),
             healthPrototype = healthSource.GetHealthPrototype(),
             factionPrototype = factionSource.GetFactionPrototype(),

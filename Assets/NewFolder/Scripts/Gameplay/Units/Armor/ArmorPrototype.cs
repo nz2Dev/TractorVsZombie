@@ -5,7 +5,7 @@ using UnityEngine;
 public struct ArmorPrototype {
     
     public Vector3 position;
-    public UnityVehicle vehiclePrefab;
+    public VehiclePrototype vehiclePrototype;
     public AttachmentPrototype attachmentPrototype;
     public RamPrototype ramPrototype;
     public DropPrototype dropPrototype;
@@ -14,9 +14,9 @@ public struct ArmorPrototype {
     public HitboxPrototype hitboxPrototype;
     public ArmorPresentationPrototype presentationPrototype;
 
-    public ArmorPrototype(Vector3 position, UnityVehicle vehiclePrefab, AttachmentPrototype attachmentPrototype, RamPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, ArmorPresentationPrototype presentationPrototype) {
+    public ArmorPrototype(Vector3 position, VehiclePrototype vehiclePrototype, AttachmentPrototype attachmentPrototype, RamPrototype ramPrototype, DropPrototype dropPrototype, HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, ArmorPresentationPrototype presentationPrototype) {
         this.position = position;
-        this.vehiclePrefab = vehiclePrefab;
+        this.vehiclePrototype = vehiclePrototype;
         this.attachmentPrototype = attachmentPrototype;
         this.ramPrototype = ramPrototype;
         this.dropPrototype = dropPrototype;
