@@ -22,7 +22,7 @@ public class PlatformView {
         uiRegistry[id] = ui;
     }
 
-    public void UpdatePlatformPose(int id, VehicleState vehicleState) {
+    public void UpdatePlatformPose(int id, VehiclePose vehicleState) {
         var vehicleVisuals = visualsRegistry[id];
         vehicleVisuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         vehicleVisuals.SetFrontAxis(vehicleState.frontAxis);

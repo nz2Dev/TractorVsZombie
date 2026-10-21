@@ -16,7 +16,7 @@ public class TruckView {
         GameObject.Destroy(visuals.gameObject);
     }
 
-    public void SetPose(int truckId, VehicleState vehicleState) {
+    public void SetPose(int truckId, VehiclePose vehicleState) {
         var visuals = registry[truckId];
         visuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         visuals.SetFrontAxis(vehicleState.frontAxis);

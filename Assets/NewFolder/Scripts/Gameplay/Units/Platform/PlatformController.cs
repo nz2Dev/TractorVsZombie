@@ -155,7 +155,7 @@ public class PlatformController {
 
     private void UpdateView() {
         foreach (var host in registry.Values) {
-            var vehicleState = vehicleSystem.ReadState(host.VehicleId);
+            var vehicleState = vehicleSystem.ReadPhysicsPose(host.VehicleId);
             view.UpdatePlatformPose(host.Id, vehicleState);
             
             var healthState = host.HealthState;

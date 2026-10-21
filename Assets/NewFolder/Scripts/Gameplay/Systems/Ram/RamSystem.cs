@@ -52,7 +52,7 @@ public class RamSystem {
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
             var holderIsAlly = factionRegistry.ReadState(model.HolderFactionId).alie;
-            var vehicleState = vehicleSystem.ReadState(model.HolderVehicleId);
+            var vehicleState = vehicleSystem.ReadPhysicsPose(model.HolderVehicleId);
             hitboxSystem.Overlap(vehicleState.position, model.Config.triggerRadius, !holderIsAlly, out var overlapIds);
             
             model.LostContactBuffer.Clear();

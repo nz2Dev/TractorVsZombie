@@ -26,7 +26,7 @@ public class ArmorPresenter {
         audio.Remove(armorId);
     }
 
-    public void Update(int armorId, VehicleState vehicleState, float gasThrottle, HealthState healthState, RamState ramState) {
+    public void Update(int armorId, VehiclePose vehicleState, float gasThrottle, HealthState healthState, RamState ramState) {
         view.SetPose(armorId, vehicleState);
         if (healthState.damageResult.HasValue) {
             view.ShowTakeHit(armorId);

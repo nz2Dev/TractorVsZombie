@@ -87,7 +87,7 @@ public class TruckController {
 
     private void UpdatePresenter() {
         presenter.Update(model.VehicleId.Value, 
-            vehicleSystem.ReadState(model.VehicleId), 
+            vehicleSystem.ReadPhysicsPose(model.VehicleId), 
             vehicleSystem.ReadGas(model.VehicleId), 
             healthSystem.ReadState(model.HealthId), 
             ramSystem.ReadState(model.RamId));

@@ -10,7 +10,7 @@ public struct WheelAxisPose {
     public Quaternion rotationR;
 }
 
-public struct VehicleState {
+public struct VehiclePose {
     public Vector3 velocity;
     public Vector3 position;
     public Quaternion rotation;
@@ -91,11 +91,11 @@ public class VehicleService {
         vehicle.Towing.ClearConnection();
     }
 
-    public VehicleState GetVehicleState(int vehicleId) {
+    public VehiclePose ReadVehiclePose(int vehicleId) {
         var vehicle = vehiclesRegistry[vehicleId];
         vehicle.Chassie.GetAxisWheels(WheelAxisName.Front, out var fLeftPos, out var fLeftRot, out var fRightPos, out var fRightRot);
         vehicle.Chassie.GetAxisWheels(WheelAxisName.Rear, out var rLeftPos, out var rLeftRot, out var rRightPos, out var rRightRot);
-        return new VehicleState {
+        return new VehiclePose {
             position = vehicle.Position,
             rotation = vehicle.Rotation,
             velocity = vehicle.Velocity,

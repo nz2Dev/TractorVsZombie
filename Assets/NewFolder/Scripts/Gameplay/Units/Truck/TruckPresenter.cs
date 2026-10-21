@@ -23,7 +23,7 @@ public class TruckPresenter {
         audio.Remove(truckId);
     }
 
-    public void Update(int truckId, VehicleState vehicleState, float gasThrottle, HealthState healthState, RamState ramState) {
+    public void Update(int truckId, VehiclePose vehicleState, float gasThrottle, HealthState healthState, RamState ramState) {
         view.SetPose(truckId, vehicleState);
         if (healthState.damageResult.HasValue) {
             view.ShowTakeHit(truckId);

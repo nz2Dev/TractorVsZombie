@@ -17,7 +17,7 @@ public class ArmorView {
         GameObject.Destroy(visuals.gameObject);
     }
 
-    public void SetPose(int armorId, VehicleState vehicleState) {
+    public void SetPose(int armorId, VehiclePose vehicleState) {
         var visuals = registry[armorId];
         visuals.SetPositionAndRotation(vehicleState.position, vehicleState.rotation);
         visuals.SetFrontAxis(vehicleState.frontAxis);

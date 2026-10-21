@@ -11,7 +11,7 @@ public class DrivingController {
 
     private readonly List<int> controlledPlatformIds = new ();
     private DrivingInput input;
-    private VehicleState truckVehicleState;
+    private VehiclePose truckVehicleState;
 
     public DrivingController(TruckController truckController, VehicleSystem vehicleSystem, PlatformController platformController) {
         this.truckController = truckController;
@@ -37,7 +37,7 @@ public class DrivingController {
     }
 
     private void ReadVehicleState() {
-        truckVehicleState = vehicleSystem.ReadState(truckController.ReadVehicleId());
+        truckVehicleState = vehicleSystem.ReadPhysicsPose(truckController.ReadVehicleId());
     }
 
     private void ReadDrivingInput() {
