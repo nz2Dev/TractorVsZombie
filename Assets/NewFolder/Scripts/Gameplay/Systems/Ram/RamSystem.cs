@@ -13,7 +13,7 @@ public class RamSystem {
     private readonly EntityMapping entityMapping;
     
     private int idCounter;
-    private readonly Dictionary<int, RamModel> registry = new();
+    private readonly Dictionary<RamId, RamModel> registry = new();
 
     public RamSystem(HealthSystem healthSystem, FactionRegistry factionRegistry, HitboxSystem hitboxSystem, MotionSystem motionSystem, EntityMapping entityMapping, VehicleSystem vehicleSystem) {
         this.healthSystem = healthSystem;
@@ -30,22 +30,22 @@ public class RamSystem {
         ApplyTemporalLinearDrag();
     }
 
-    public int Add(FactionId holderFactionId, VehicleId holderVehicleId, RamPrototype prototype) {
-        var id = idCounter++;
+    public RamId Add(FactionId holderFactionId, VehicleId holderVehicleId, RamPrototype prototype) {
+        var id = new RamId(idCounter++);
         var baseLinearDumping = vehicleSystem.GetLinearDamping(holderVehicleId);
         var model = new RamModel(id, prototype.config, holderFactionId, holderVehicleId, baseLinearDumping);
         registry[id] = model;
         return id;
     }
 
-    public void Remove(int ramId) {
+    public void Remove(RamId ramId) {
         registry.Remove(ramId, out var model);
         if (vehicleSystem.Exists(model.HolderVehicleId)) {
             vehicleSystem.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag);
         }
     }
 
-    public RamState ReadState(int ramId) => new() { 
+    public RamState ReadState(RamId ramId) => new() { 
         receivedContacts = registry[ramId].ReceivedContacts 
     };
 

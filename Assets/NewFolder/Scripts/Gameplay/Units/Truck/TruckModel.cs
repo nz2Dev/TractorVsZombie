@@ -7,7 +7,7 @@ public class TruckModel {
     public FactionId FactionId { get; set; }
     public PoseId PoseId { get; set; }
     public VehicleId VehicleId { get; set; }
-    public int RamId { get; set; }
+    public RamId RamId { get; set; }
     public HitboxId HitboxId { get; set; }
     
 }

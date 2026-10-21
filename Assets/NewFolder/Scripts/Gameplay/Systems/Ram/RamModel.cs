@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RamModel {
     
-    public RamModel(int id, RamConfig config, FactionId holderFactionId, VehicleId vehicleId, float baseLinearDrag) {
+    public RamModel(RamId id, RamConfig config, FactionId holderFactionId, VehicleId vehicleId, float baseLinearDrag) {
         Id = id; 
         Config = config; 
         HolderFactionId = holderFactionId; 
@@ -11,7 +11,7 @@ public class RamModel {
         BaseLinearDrag = baseLinearDrag;
     }
 
-    public int Id { get; }
+    public RamId Id { get; }
     public RamConfig Config { get; }
     public FactionId HolderFactionId { get; }
     public VehicleId HolderVehicleId { get; }

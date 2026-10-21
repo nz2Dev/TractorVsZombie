@@ -15,7 +15,6 @@ public class PlatformModel {
     public VehicleId VehicleId { get; set; }
     public HitboxId HitboxId { get; set; }
     public int LoadoutId { get; set; }
-    public int RamId { get; set; }
     
     public Vector3 LoadoutOffset { get; }
     public HealthState HealthState { get; set; }

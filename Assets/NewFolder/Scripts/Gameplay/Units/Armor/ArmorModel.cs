@@ -17,7 +17,7 @@ public class ArmorModel {
     public HitboxId HitboxId { get; set; }
     public DropId DropId { get; set; }
     public AttachmentId AttachmentId { get; set; }
-    public int RamId { get; set; }
+    public RamId RamId { get; set; }
 
     public HealthState HealthState { get; set; }
 }
