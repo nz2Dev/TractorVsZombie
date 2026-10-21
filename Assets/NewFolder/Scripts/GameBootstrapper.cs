@@ -165,7 +165,8 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleSystem,
             platformView,
             hitboxSystem,
-            entityMapping
+            entityMapping,
+            poseRegistry
         );
 
         truckController = new TruckController(
@@ -179,7 +180,8 @@ public class GameBootstrapper : MonoBehaviour {
             ),
             vehicleSystem,
             hitboxSystem,
-            entityMapping
+            entityMapping,
+            poseRegistry
         );
 
         var spawnService = new SpawnService(infantryController, armorController);

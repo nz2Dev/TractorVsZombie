@@ -5,17 +5,18 @@ using UnityEngine;
 
 public class TruckController {
 
-    private readonly TruckPresenter presenter;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
     private readonly VehicleSystem vehicleSystem;
     private readonly RamSystem ramSystem;
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
+    private readonly PoseRegistry poseRegistry;
 
     private TruckModel model;
+    private readonly TruckPresenter presenter;
 
-    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamSystem ramEffect, TruckPresenter presenter, VehicleSystem vehicleSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping) {
+    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamSystem ramEffect, TruckPresenter presenter, VehicleSystem vehicleSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.ramSystem = ramEffect;
@@ -23,30 +24,36 @@ public class TruckController {
         this.vehicleSystem = vehicleSystem;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
+        this.poseRegistry = poseRegistry;
     }
 
-    public virtual VehicleId ReadVehicleId() => model.VehicleId;
-    public virtual Vector3 ReadVehiclePosition() => model.Position;
+    public virtual VehicleId ReadVehicleId() {
+        return model.VehicleId;
+    }
+
+    public virtual Vector3 ReadVehiclePosition() {
+        return poseRegistry.Read(model.PoseId).position;
+    }
+
     public bool UnitExist => model != null;
 
     public void Update() {
         if (model == null)
             return;
 
-        ReadExternalState();
-        ReadHealthState();
-        WriteExternalInput();
-        UpdateView();
+        UpdatePresenter();
         CheckDestruction();
     }
 
     public virtual void Create(TruckPrototype prototype, Vector3 position = default) {
-        model = new TruckModel(position == default ? prototype.position : position);
+        var initPosition = position == default ? prototype.position : position;
+        model = new TruckModel();
+        model.PoseId = poseRegistry.Add(initPosition, prototype.rotation);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab, prototype.rotation);
+        model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrefab, prototype.rotation, model.PoseId);
         model.RamId = ramSystem.Add(model.FactionId, model.VehicleId, prototype.ramPrototype);
-        model.HitboxId = hitboxSystem.Add(model.FactionId, model.Position, prototype.hitboxPrototype);
+        model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
         
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
@@ -54,19 +61,12 @@ public class TruckController {
         });
 
         var alie = prototype.factionPrototype.alie;
-        presenter.Add(model.VehicleId.Value, model.Position, alie, prototype.presentationPrototype);
-    }
-
-    private void ReadExternalState() {
-        model.Position = vehicleSystem.ReadState(model.VehicleId).position;
-    }
-
-    private void ReadHealthState() {
-        model.HealthState = healthSystem.ReadState(model.HealthId);
+        presenter.Add(model.VehicleId.Value, initPosition, alie, prototype.presentationPrototype);
     }
 
     private void CheckDestruction() {
-        if (model.HealthState.isDead) {
+        var healthState = healthSystem.ReadState(model.HealthId);
+        if (healthState.isDead) {
             Clear();
             model = null;
         }
@@ -75,25 +75,21 @@ public class TruckController {
     private void Clear() {
         healthSystem.Remove(model.HealthId);
         vehicleSystem.Remove(model.VehicleId);
+        poseRegistry.Remove(model.PoseId);
         ramSystem.Remove(model.RamId);
         hitboxSystem.Remove(model.HitboxId);
+        factionRegistry.Remove(model.FactionId);
         
         entityMapping.DeleteMapping(model.HitboxId);
-        factionRegistry.Remove(model.FactionId);
 
         presenter.Remove(model.VehicleId.Value);
     }
 
-    private void WriteExternalInput() {
-        ramSystem.SetPosition(model.RamId, model.Position);
-        hitboxSystem.UpdatePosition(model.HitboxId, model.Position);
-    }
-
-    private void UpdateView() {
+    private void UpdatePresenter() {
         presenter.Update(model.VehicleId.Value, 
             vehicleSystem.ReadState(model.VehicleId), 
             vehicleSystem.ReadGas(model.VehicleId), 
-            model.HealthState, 
+            healthSystem.ReadState(model.HealthId), 
             ramSystem.ReadState(model.RamId));
     }
 

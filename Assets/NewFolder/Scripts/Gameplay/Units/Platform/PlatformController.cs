@@ -12,12 +12,13 @@ public class PlatformController {
     private readonly VehicleSystem vehicleSystem;
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
+    private readonly PoseRegistry poseRegistry;
     private readonly PlatformView view;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, LoadoutController loadoutController, VehicleSystem vehicleSystem, PlatformView view, HitboxSystem hitboxSystem, EntityMapping entityMapping) {
+    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, LoadoutController loadoutController, VehicleSystem vehicleSystem, PlatformView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.loadoutController = loadoutController;
@@ -25,6 +26,7 @@ public class PlatformController {
         this.view = view;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
+        this.poseRegistry = poseRegistry;
     }
 
     public void Update() {
@@ -37,20 +39,21 @@ public class PlatformController {
     public virtual int Create(PlatformPrototype prototype, Vector3 position = default) {
         var nextId = ++idCounter;
         var initPosition = position == default ? prototype.position : position;
-        var model = new PlatformModel(nextId, initPosition, prototype.loadoutOffset);
+        var model = new PlatformModel(nextId, prototype.loadoutOffset);
         registry[model.Id] = model;
 
+        model.PoseId = poseRegistry.Add(initPosition, default);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.VehicleId = vehicleSystem.Create(model.Position, prototype.vehiclePrefab);
-        model.HitboxId = hitboxSystem.Add(model.FactionId, initPosition, prototype.hitboxPrototype);
+        model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrefab, poseId: model.PoseId);
+        model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
 
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
             factionId = model.FactionId
         });
         
-        view.AddPlatform(model.Id, model.Position, prototype.visualsPrefab, factionRegistry.ReadState(model.FactionId).alie, prototype.worldSpaceUIPrefab);
+        view.AddPlatform(model.Id, initPosition, prototype.visualsPrefab, factionRegistry.ReadState(model.FactionId).alie, prototype.worldSpaceUIPrefab);
         return model.Id;
     }
 
@@ -65,7 +68,8 @@ public class PlatformController {
             loadoutController.DeleteLoadout(platform.LoadoutId);
         }
 
-        loadoutPrototype.position = platform.Position + platform.LoadoutOffset;
+        var pose = poseRegistry.Read(platform.PoseId);
+        loadoutPrototype.position = pose.position + platform.LoadoutOffset;
         platform.LoadoutId = loadoutController.SpawnLoadout(platform.FactionId, loadoutPrototype);
     }
 
@@ -89,8 +93,9 @@ public class PlatformController {
         if (platform.LoadoutId != 0) {
             loadoutState = loadoutController.ReadLoadoutState(platform.LoadoutId);
         }
+        var pose = poseRegistry.Read(platform.PoseId);
         return new PlatformState (
-            position: platform.Position,
+            position: pose.position,
             healthId: platform.HealthId,
             healthState: healthSystem.ReadState(platform.HealthId),
             factionState: factionRegistry.ReadState(platform.FactionId),
@@ -131,6 +136,7 @@ public class PlatformController {
         registry.Remove(platformId, out var model);
         healthSystem.Remove(model.HealthId);
         vehicleSystem.Remove(model.VehicleId);
+        poseRegistry.Remove(model.PoseId);
         hitboxSystem.Remove(model.HitboxId);
         entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
@@ -140,23 +146,20 @@ public class PlatformController {
 
     private void SyncPositions() {
         foreach (var host in registry.Values) {
-            var vehicleState = vehicleSystem.ReadState(host.VehicleId);
-            host.Position = vehicleState.position;
-            view.UpdatePlatformPose(host.Id, vehicleState);
-
             if (host.LoadoutId != 0) {
-                loadoutController.MoveLoadout(host.LoadoutId, host.Position + host.LoadoutOffset, vehicleState.rotation);
+                var pose = poseRegistry.Read(host.PoseId);
+                loadoutController.MoveLoadout(host.LoadoutId, pose.position + host.LoadoutOffset, pose.rotation);
             }
-
-            hitboxSystem.UpdatePosition(host.HitboxId, host.Position);
         }
     }
 
     private void UpdateView() {
         foreach (var host in registry.Values) {
-            var healthState = host.HealthState;
-            view.UpdateHealthBar(host.Id, host.Position, healthState.health, healthState.maxHealth);
+            var vehicleState = vehicleSystem.ReadState(host.VehicleId);
+            view.UpdatePlatformPose(host.Id, vehicleState);
             
+            var healthState = host.HealthState;
+            view.UpdateHealthBar(host.Id, vehicleState.position, healthState.health, healthState.maxHealth);
             if (healthState.damageResult.HasValue) {
                 // interesting case occure, conceptually platform is only a carrier
                 // loadout and weapons are handled separately

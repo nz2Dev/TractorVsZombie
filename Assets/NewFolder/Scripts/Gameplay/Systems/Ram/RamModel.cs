@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RamModel {
+    
     public RamModel(int id, RamConfig config, FactionId holderFactionId, VehicleId vehicleId, float baseLinearDrag) {
         Id = id; 
         Config = config; 
@@ -17,10 +18,10 @@ public class RamModel {
     
     public float BaseLinearDrag { get; }
     public float TemporalLinearDrag { get; set; }
-    public Vector3 Position { get; set; }
     public int ReceivedContacts { get; set; }
 
     public List<HitboxId> InContact { get; } = new();
     public List<HitboxId> ReceiveContactBuffer = new();
     public List<HitboxId> LostContactBuffer = new();
+    
 }

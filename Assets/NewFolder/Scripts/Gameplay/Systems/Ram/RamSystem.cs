@@ -45,10 +45,6 @@ public class RamSystem {
         }
     }
 
-    public void SetPosition(int ramId, Vector3 position) {
-        registry[ramId].Position = position;
-    } 
-
     public RamState ReadState(int ramId) => new() { 
         receivedContacts = registry[ramId].ReceivedContacts 
     };
@@ -56,7 +52,8 @@ public class RamSystem {
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
             var holderIsAlly = factionRegistry.ReadState(model.HolderFactionId).alie;
-            hitboxSystem.Overlap(model.Position, model.Config.triggerRadius, !holderIsAlly, out var overlapIds);
+            var vehicleState = vehicleSystem.ReadState(model.HolderVehicleId);
+            hitboxSystem.Overlap(vehicleState.position, model.Config.triggerRadius, !holderIsAlly, out var overlapIds);
             
             model.LostContactBuffer.Clear();
             model.LostContactBuffer.AddRange(model.InContact);
@@ -83,7 +80,7 @@ public class RamSystem {
             }
 
             entityMapping.FindByHitboxIds(model.ReceiveContactBuffer, out var contactComponents);
-            var speed = vehicleSystem.ReadState(model.HolderVehicleId).velocity.magnitude;
+            var speed = vehicleState.velocity.magnitude;
             if (speed < model.Config.minImpactSpeed) 
                 continue;
 
@@ -92,13 +89,17 @@ public class RamSystem {
                     var explosionData = model.Config.explosionData;
                     explosionData.force *= Mathf.Clamp01(speed / model.Config.maxImpactSpeed);
                     motionSystem.AddExplosionEffect(components.motionId.Value, new Explosion { 
-                        epicentr = model.Position, 
+                        epicentr = vehicleState.position, 
                         config = explosionData 
                     });
                 }
 
                 if (components.healthId.HasValue) {
-                    healthSystem.DealDamage(components.healthId.Value, new DamageInput { damageSource = model.Position, damageType = DamageType.Exposion, damage = model.Config.damage });
+                    healthSystem.DealDamage(components.healthId.Value, new DamageInput { 
+                        damageSource = vehicleState.position, 
+                        damageType = DamageType.Exposion, 
+                        damage = model.Config.damage 
+                    });
                 }
             }
 

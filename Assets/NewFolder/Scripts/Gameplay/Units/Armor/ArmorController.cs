@@ -42,7 +42,6 @@ public class ArmorController {
     public void Update() {
         ReadHealthOutput();
         RemoveDeadArmor();
-        SyncVehiclesPositions();
         UpdatePresentation();
     }
 
@@ -117,19 +116,12 @@ public class ArmorController {
         }
     }
 
-    private void SyncVehiclesPositions() {
-        foreach (var model in registry.Values) {
-            // TODO: add pose handling to ram system
-            var pose = poseRegistry.Read(model.PoseId);
-            ramSystem.SetPosition(model.RamId, pose.position);
-        }
-    }
-
     private void UpdatePresentation() {
         foreach (var model in registry.Values) {
             var vehicleState = vehicleSystem.ReadState(model.VehicleId);
             presenter.Update(model.Id, 
-                vehicleState, vehicleSystem.ReadGas(model.VehicleId), model.HealthState, ramSystem.ReadState(model.RamId));
+                vehicleState, vehicleSystem.ReadGas(model.VehicleId), 
+                model.HealthState, ramSystem.ReadState(model.RamId));
         }
     }
 
