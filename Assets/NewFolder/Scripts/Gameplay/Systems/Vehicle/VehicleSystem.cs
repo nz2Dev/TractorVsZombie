@@ -32,14 +32,12 @@ public class VehicleSystem {
         return registry.ContainsKey(id);
     }
 
-    public VehiclePose ReadPhysicsPose(VehicleId id) {
-        return vehicleService.ReadVehiclePose(registry[id].VehiclePhysicsId);
-    }
-
-    public float ReadGas(VehicleId id) {
-        // add to gameplay VehicleState
-        // and maybe not gas, but the motor Rev, but pull it from the Gas input that is set
-        return registry[id].Gas;
+    public VehicleState ReadState(VehicleId id) {
+        var model = registry[id];
+        return new VehicleState {
+            pose = vehicleService.ReadVehiclePose(model.VehiclePhysicsId),
+            motorRev = model.Gas
+        };
     }
 
     public void SetGas(VehicleId id, float gas) {

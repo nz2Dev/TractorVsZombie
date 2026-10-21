@@ -155,11 +155,11 @@ public class PlatformController {
 
     private void UpdateView() {
         foreach (var host in registry.Values) {
-            var vehicleState = vehicleSystem.ReadPhysicsPose(host.VehicleId);
-            view.UpdatePlatformPose(host.Id, vehicleState);
+            var vehiclePose = vehicleSystem.ReadState(host.VehicleId).pose;
+            view.UpdatePlatformPose(host.Id, vehiclePose);
             
             var healthState = host.HealthState;
-            view.UpdateHealthBar(host.Id, vehicleState.position, healthState.health, healthState.maxHealth);
+            view.UpdateHealthBar(host.Id, vehiclePose.position, healthState.health, healthState.maxHealth);
             if (healthState.damageResult.HasValue) {
                 // interesting case occure, conceptually platform is only a carrier
                 // loadout and weapons are handled separately

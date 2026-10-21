@@ -52,8 +52,8 @@ public class RamSystem {
     private void ComputeDamage() {
         foreach (var model in registry.Values) {
             var holderIsAlly = factionRegistry.ReadState(model.HolderFactionId).alie;
-            var vehicleState = vehicleSystem.ReadPhysicsPose(model.HolderVehicleId);
-            hitboxSystem.Overlap(vehicleState.position, model.Config.triggerRadius, !holderIsAlly, out var overlapIds);
+            var vehicleState = vehicleSystem.ReadState(model.HolderVehicleId);
+            hitboxSystem.Overlap(vehicleState.pose.position, model.Config.triggerRadius, !holderIsAlly, out var overlapIds);
             
             model.LostContactBuffer.Clear();
             model.LostContactBuffer.AddRange(model.InContact);
@@ -80,7 +80,7 @@ public class RamSystem {
             }
 
             entityMapping.FindByHitboxIds(model.ReceiveContactBuffer, out var contactComponents);
-            var speed = vehicleState.velocity.magnitude;
+            var speed = vehicleState.pose.velocity.magnitude;
             if (speed < model.Config.minImpactSpeed) 
                 continue;
 
@@ -89,14 +89,14 @@ public class RamSystem {
                     var explosionData = model.Config.explosionData;
                     explosionData.force *= Mathf.Clamp01(speed / model.Config.maxImpactSpeed);
                     motionSystem.AddExplosionEffect(components.motionId.Value, new Explosion { 
-                        epicentr = vehicleState.position, 
+                        epicentr = vehicleState.pose.position, 
                         config = explosionData 
                     });
                 }
 
                 if (components.healthId.HasValue) {
                     healthSystem.DealDamage(components.healthId.Value, new DamageInput { 
-                        damageSource = vehicleState.position, 
+                        damageSource = vehicleState.pose.position, 
                         damageType = DamageType.Exposion, 
                         damage = model.Config.damage 
                     });

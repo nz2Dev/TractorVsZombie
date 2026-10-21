@@ -61,8 +61,8 @@ public class ArmorAIController {
         vehicleSystem.SetBrakes(state.vehicleId, brakes);
 
         var flowVector = pathfindingService.GetFlowVector(flowFieldId, state.position);
-        var vehicleState = vehicleSystem.ReadPhysicsPose(state.vehicleId);
-        var forward = vehicleState.rotation * Vector3.forward;
+        var vehicleState = vehicleSystem.ReadState(state.vehicleId);
+        var forward = vehicleState.pose.rotation * Vector3.forward;
         var forwardToDirectionDegrees = Vector3.SignedAngle(forward, flowVector, Vector3.up);
         vehicleSystem.SetSteerAngle(state.vehicleId, forwardToDirectionDegrees);
     }

@@ -118,10 +118,10 @@ public class ArmorController {
 
     private void UpdatePresentation() {
         foreach (var model in registry.Values) {
-            var vehicleState = vehicleSystem.ReadPhysicsPose(model.VehicleId);
             presenter.Update(model.Id, 
-                vehicleState, vehicleSystem.ReadGas(model.VehicleId), 
-                model.HealthState, ramSystem.ReadState(model.RamId));
+                vehicleSystem.ReadState(model.VehicleId),
+                model.HealthState, 
+                ramSystem.ReadState(model.RamId));
         }
     }
 

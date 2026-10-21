@@ -26,15 +26,16 @@ public class ArmorPresenter {
         audio.Remove(armorId);
     }
 
-    public void Update(int armorId, VehiclePose vehicleState, float gasThrottle, HealthState healthState, RamState ramState) {
-        view.SetPose(armorId, vehicleState);
+    public void Update(int armorId, VehicleState vehicleState, HealthState healthState, RamState ramState) {
+        var vehiclePose = vehicleState.pose;
+        view.SetPose(armorId, vehiclePose);
         if (healthState.damageResult.HasValue) {
             view.ShowTakeHit(armorId);
         }
-        ui.UpdateHealthBar(armorId, vehicleState.position, healthState.health, healthState.maxHealth);
-        audio.UpdateEngineSound(armorId, vehicleState.position, gasThrottle);
+        ui.UpdateHealthBar(armorId, vehiclePose.position, healthState.health, healthState.maxHealth);
+        audio.UpdateEngineSound(armorId, vehiclePose.position, vehicleState.motorRev);
         if (ramState.receivedContacts > 0) {
-            audio.PlayRamImpact(armorId, vehicleState.position, ramState.receivedContacts);
+            audio.PlayRamImpact(armorId, vehiclePose.position, ramState.receivedContacts);
         }
     }
 }

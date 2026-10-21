@@ -23,15 +23,17 @@ public class TruckPresenter {
         audio.Remove(truckId);
     }
 
-    public void Update(int truckId, VehiclePose vehicleState, float gasThrottle, HealthState healthState, RamState ramState) {
-        view.SetPose(truckId, vehicleState);
+    public void Update(int truckId, VehicleState vehicleState, HealthState healthState, RamState ramState) {
+        var vehiclePose = vehicleState.pose;
+        view.SetPose(truckId, vehiclePose);
         if (healthState.damageResult.HasValue) {
             view.ShowTakeHit(truckId);
         }
-        ui.UpdateHealthBar(truckId, vehicleState.position, healthState.health, healthState.maxHealth);
-        audio.UpdateEngineSound(truckId, vehicleState.position, gasThrottle);
+        
+        ui.UpdateHealthBar(truckId, vehiclePose.position, healthState.health, healthState.maxHealth);
+        audio.UpdateEngineSound(truckId, vehiclePose.position, vehicleState.motorRev);
         if (ramState.receivedContacts > 0) {
-            audio.PlayRamImpact(truckId, vehicleState.position, ramState.receivedContacts);
+            audio.PlayRamImpact(truckId, vehiclePose.position, ramState.receivedContacts);
         }
     }
 }
