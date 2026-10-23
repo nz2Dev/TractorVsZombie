@@ -96,14 +96,6 @@ public class RamSystem {
                     });
                 }
             }
-
-            // evidence that Ram as a System do not fit or violate single responsibility:
-            // - its not a part of entity, its more of a side effect or capability, 
-            //   like weapon wich is separate entity.
-            // - explosion of contacts is one responsibility, 
-            //   but the slow down and vehicle affects is another
-            // evidence for a system
-            // - it affects vehicle and rely on vehicle state
         }
     }
 
