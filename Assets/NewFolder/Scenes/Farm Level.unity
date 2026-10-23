@@ -5675,6 +5675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::ArmorSource
   vehicleSource:
     prefab: {fileID: 2016185206}
+    config: {fileID: 11400000, guid: ecf8687ea270c4bae912037660fc1735, type: 2}
   ramSource:
     config: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
   healthSource:
@@ -9160,7 +9161,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3efe51cf9a084f8b94ada64f1144399, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Local::UnityVehicle
 --- !u!43 &461728994
 Mesh:
@@ -28260,6 +28261,7 @@ MonoBehaviour:
     alie: 1
   vehicleSource:
     prefab: {fileID: 4350355989104226069}
+    config: {fileID: 11400000, guid: ecf8687ea270c4bae912037660fc1735, type: 2}
   ramSource:
     config: {fileID: 11400000, guid: 2e34e050c3f584f7498387770f4facae, type: 2}
   hitboxSource:
@@ -39915,7 +39917,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3efe51cf9a084f8b94ada64f1144399, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Local::UnityVehicle
 --- !u!4 &2016185207 stripped
 Transform:
@@ -40490,6 +40492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::ArmorSource
   vehicleSource:
     prefab: {fileID: 460880143}
+    config: {fileID: 11400000, guid: ecf8687ea270c4bae912037660fc1735, type: 2}
   ramSource:
     config: {fileID: 11400000, guid: c6f06742e07dc40a58fdac2c781798dd, type: 2}
   healthSource:
@@ -42541,7 +42544,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3efe51cf9a084f8b94ada64f1144399, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Local::UnityVehicle
 --- !u!4 &4796720935335220873 stripped
 Transform:
@@ -43280,13 +43283,17 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 334040863}
+    - target: {fileID: 3553383499548591022, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
+      propertyPath: vehicleSource.config
+      value: 
+      objectReference: {fileID: 11400000, guid: ecf8687ea270c4bae912037660fc1735, type: 2}
     - target: {fileID: 3715936134110833867, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 202735913}
     - target: {fileID: 3715936134110833867, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4721
+      value: 4724
       objectReference: {fileID: 0}
     - target: {fileID: 3902048635732431051, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Name
@@ -43302,7 +43309,7 @@ PrefabInstance:
       objectReference: {fileID: 899146622}
     - target: {fileID: 3995790071150967799, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4721
+      value: 4724
       objectReference: {fileID: 0}
     - target: {fileID: 4231372914453914694, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
@@ -43314,7 +43321,7 @@ PrefabInstance:
       objectReference: {fileID: 1524667736}
     - target: {fileID: 4403027929564642176, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4721
+      value: 4724
       objectReference: {fileID: 0}
     - target: {fileID: 4474605614288331626, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Mesh
@@ -43326,7 +43333,7 @@ PrefabInstance:
       objectReference: {fileID: 636064418}
     - target: {fileID: 4599031156055082105, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4721
+      value: 4724
       objectReference: {fileID: 0}
     - target: {fileID: 5377620666268941220, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_fontSizeBase
@@ -43366,7 +43373,7 @@ PrefabInstance:
       objectReference: {fileID: 1357250921}
     - target: {fileID: 8700669035646066024, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 619
+      value: 622
       objectReference: {fileID: 0}
     - target: {fileID: 8749679749334469805, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z

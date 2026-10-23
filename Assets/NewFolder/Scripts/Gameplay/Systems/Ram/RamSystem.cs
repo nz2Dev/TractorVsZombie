@@ -25,24 +25,18 @@ public class RamSystem {
     }
 
     public void Update() {
-        DecayTemporalLinearDrag();
         ComputeDamage();
-        ApplyTemporalLinearDrag();
     }
 
     public RamId Add(FactionId holderFactionId, VehicleId holderVehicleId, RamPrototype prototype) {
         var id = new RamId(idCounter++);
-        var baseLinearDumping = vehicleSystem.GetLinearDamping(holderVehicleId);
-        var model = new RamModel(id, prototype.config, holderFactionId, holderVehicleId, baseLinearDumping);
+        var model = new RamModel(id, prototype.config, holderFactionId, holderVehicleId);
         registry[id] = model;
         return id;
     }
 
     public void Remove(RamId ramId) {
-        registry.Remove(ramId, out var model);
-        if (vehicleSystem.Exists(model.HolderVehicleId)) {
-            vehicleSystem.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag);
-        }
+        registry.Remove(ramId);
     }
 
     public RamState ReadState(RamId ramId) => new() { 
@@ -74,9 +68,9 @@ public class RamSystem {
             model.ReceivedContacts = model.ReceiveContactBuffer.Count;
             if (model.ReceivedContacts > 0) {
                 var config = model.Config;
-                model.TemporalLinearDrag = Mathf.Min(
-                    model.TemporalLinearDrag + model.ReceivedContacts * config.temporalLinearDragPerContact, 
-                    config.maxTemporalLinearDrag);
+                vehicleSystem.AddTemporalLinearDrag(
+                    model.HolderVehicleId,
+                    model.ReceivedContacts * config.temporalLinearDragPerContact);
             }
 
             entityMapping.FindByHitboxIds(model.ReceiveContactBuffer, out var contactComponents);
@@ -113,13 +107,4 @@ public class RamSystem {
         }
     }
 
-    private void DecayTemporalLinearDrag() {
-        foreach (var model in registry.Values)
-            model.TemporalLinearDrag = Mathf.MoveTowards(model.TemporalLinearDrag, 0, model.Config.temporalLinearDragRecoverySpeed * Time.deltaTime);
-    }
-
-    private void ApplyTemporalLinearDrag() {
-        foreach (var model in registry.Values)
-            vehicleSystem.SetLinearDamping(model.HolderVehicleId, model.BaseLinearDrag + model.TemporalLinearDrag);
-    }
 }
