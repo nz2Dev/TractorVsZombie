@@ -65,14 +65,9 @@ public class VehicleService {
         }
     }
 
-    public float GetLinearDamping(int vehicleIndex) {
+    public void AddTemporatlLinearDrag(int vehicleIndex, float amount) {
         var vehicle = vehiclesRegistry[vehicleIndex];
-        return vehicle.Physics.linearDamping;
-    }
-
-    public void SetLinearDamping(int vehicleIndex, float linearDamping) {
-        var vehicle = vehiclesRegistry[vehicleIndex];
-        vehicle.Physics.linearDamping = linearDamping;
+        vehicle.Dynamics.AddTemporalDrag(amount);
     }
 
     public void UpdateVehiclePose(int vehicleIndex, Vector3 position, Quaternion rotation) {

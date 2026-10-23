@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::RamEffectConfig
   damage: 1
   triggerRadius: 2
-  temporalLinearDragPerContact: 0.2
+  dragImpulsePerContact: 0.2
   explosionData:
     radius: 3
     force: 1000

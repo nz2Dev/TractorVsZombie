@@ -16,6 +16,7 @@ public class UnityVehicle : MonoBehaviour {
     [SerializeField, ReadOnly] private VehicleSteeringWheel steeringWheel;
     [SerializeField, ReadOnly] private VehicleSteeringAxle steeringAxle;
     [SerializeField, ReadOnly] private VehicleTowing towing;
+    [SerializeField, ReadOnly] private VehicleDynamics dynamics;
     
     [SerializeField, HideInInspector] private Rigidbody physics;
 
@@ -24,6 +25,7 @@ public class UnityVehicle : MonoBehaviour {
     public VehicleSteeringWheel SteeringWheel => steeringWheel;
     public VehicleChassie Chassie => chassie;
     public VehicleTowing Towing => towing;
+    public VehicleDynamics Dynamics => dynamics;
 
     public Vector3 Position => transform.position;
     public Quaternion Rotation => transform.rotation;
@@ -40,6 +42,7 @@ public class UnityVehicle : MonoBehaviour {
         steeringWheel = GetComponent<VehicleSteeringWheel>();
         steeringAxle = GetComponent<VehicleSteeringAxle>();
         towing = GetComponent<VehicleTowing>();
+        dynamics = GetComponent<VehicleDynamics>();
 
         if (steeringWheel != null && steeringAxle != null)
             Debug.LogWarning($"both {steeringWheel} and {steeringAxle} exist");
@@ -59,6 +62,10 @@ public class UnityVehicle : MonoBehaviour {
     }
 
     private void FixedUpdate() {
+        if (dynamics != null) {
+            physics.linearDamping = dynamics.LinearDamping;
+        }
+
         if (powertrain != null) {
             chassie.SetAxisMotorTorque(WheelAxisName.Front, powertrain.MotorTorque);
             chassie.SetAxisMotorTorque(WheelAxisName.Rear, powertrain.MotorTorque);

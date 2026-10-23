@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 6652199006423643288}
   - component: {fileID: 6378353914802326287}
   - component: {fileID: 5593154855076482630}
+  - component: {fileID: 1093864109982150077}
   - component: {fileID: 568629578806078278}
   m_Layer: 13
   m_Name: Tractor Unity Vehicle
@@ -250,6 +251,20 @@ MonoBehaviour:
   minSteerAmount: 0.1
   speedKFactor: 3
   physics: {fileID: 5235435775488318499}
+--- !u!114 &1093864109982150077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4441451520058313787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd7f1e24b77940ae938529f546ab4966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityVehicle::VehicleDynamics
+  maxTemporalLinearDrag: 3
+  temporalLinearDragRecoverySpeed: 3
 --- !u!114 &568629578806078278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +283,7 @@ MonoBehaviour:
   steeringWheel: {fileID: 5593154855076482630}
   steeringAxle: {fileID: 0}
   towing: {fileID: 0}
+  dynamics: {fileID: 1093864109982150077}
   physics: {fileID: 5235435775488318499}
 --- !u!1 &5487853700845329361
 GameObject:

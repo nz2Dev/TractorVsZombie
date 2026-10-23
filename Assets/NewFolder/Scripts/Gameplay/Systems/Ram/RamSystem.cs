@@ -68,9 +68,9 @@ public class RamSystem {
             model.ReceivedContacts = model.ReceiveContactBuffer.Count;
             if (model.ReceivedContacts > 0) {
                 var config = model.Config;
-                vehicleSystem.AddTemporalLinearDrag(
+                vehicleSystem.AddDragImpulse(
                     model.HolderVehicleId,
-                    model.ReceivedContacts * config.temporalLinearDragPerContact);
+                    model.ReceivedContacts * config.dragImpulsePerContact);
             }
 
             entityMapping.FindByHitboxIds(model.ReceiveContactBuffer, out var contactComponents);

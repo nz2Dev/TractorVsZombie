@@ -48,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ff88970517f74c7c8698dc9cbc4141a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::PlatformSource
-  config: {fileID: 11400000, guid: dac4c19d2445744d3a7e444a64102c1f, type: 2}
   healthSource:
     configSO: {fileID: 11400000, guid: e77ee70402f1a4d498b35107339c66e0, type: 2}
   factionSource:

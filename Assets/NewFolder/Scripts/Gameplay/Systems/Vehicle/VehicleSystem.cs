@@ -18,7 +18,7 @@ public class VehicleSystem {
     public VehicleId Create(Vector3 position, VehiclePrototype prototype, PoseId poseId, Quaternion rotation = default) {
         var id = new VehicleId(++idCounter);
         var vehiclePhysicsId = vehicleService.CreateVehicle(position, prototype.prefab, rotation);
-        var model = new VehicleModel(id, vehiclePhysicsId, poseId, vehicleService.GetLinearDamping(vehiclePhysicsId), prototype.config);
+        var model = new VehicleModel(id, vehiclePhysicsId, poseId);
         registry.Add(id, model);
         return id;
     }
@@ -82,25 +82,12 @@ public class VehicleSystem {
         vehicleService.ClearTowingConnection(registry[id].VehiclePhysicsId);
     }
 
-    public float GetLinearDamping(VehicleId id) {
-        return vehicleService.GetLinearDamping(registry[id].VehiclePhysicsId);
-    }
-
-    public void SetLinearDamping(VehicleId id, float linearDamping) {
-        vehicleService.SetLinearDamping(registry[id].VehiclePhysicsId, linearDamping);
-    }
-
-    public void AddTemporalLinearDrag(VehicleId id, float amount) {
-        var model = registry[id];
-        model.TemporalLinearDrag = Mathf.Min(model.TemporalLinearDrag + amount, model.Config.maxTemporalLinearDrag);
-        vehicleService.SetLinearDamping(model.VehiclePhysicsId, model.BaseLinearDrag + model.TemporalLinearDrag);
+    public void AddDragImpulse(VehicleId id, float amount) {
+        vehicleService.AddTemporatlLinearDrag(registry[id].VehiclePhysicsId, amount);
     }
 
     public void Update() {
         foreach (var model in registry.Values) {
-            model.TemporalLinearDrag = Mathf.MoveTowards(model.TemporalLinearDrag, 0, model.Config.temporalLinearDragRecoverySpeed * Time.deltaTime);
-            vehicleService.SetLinearDamping(model.VehiclePhysicsId, model.BaseLinearDrag + model.TemporalLinearDrag);
-
             var pose = vehicleService.ReadVehiclePose(model.VehiclePhysicsId);
             poseRegistry.Write(model.HostPoseId, pose.position, pose.rotation);
 
