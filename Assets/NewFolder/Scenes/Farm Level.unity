@@ -38580,6 +38580,8 @@ MonoBehaviour:
   dropSource:
     rewardSource: {fileID: 1373779128}
     inheritHostRotation: 0
+  combatSource:
+    config: {fileID: 11400000, guid: 93de486045704ed7afca5a0c58bb80f2, type: 2}
 --- !u!1001 &1931922710
 PrefabInstance:
   m_ObjectHideFlags: 0

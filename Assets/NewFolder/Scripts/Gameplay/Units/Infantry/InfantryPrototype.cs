@@ -12,4 +12,5 @@ public struct InfantryPrototype {
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
     public AgentAvoidanceConfig agentAvoidanceConfig;
+    public CombatPrototype combatPrototype;
 }

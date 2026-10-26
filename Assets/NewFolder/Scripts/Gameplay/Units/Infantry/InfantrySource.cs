@@ -15,6 +15,7 @@ public class InfantrySource : MonoBehaviour {
     [Local] [SerializeField] private RagdollBody physicsBodyPrefab;
     [SerializeField] private HitboxSource hitboxSource;
     [SerializeField] private DropSource dropSource;
+    [SerializeField] private CombatSource combatSource;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -31,6 +32,7 @@ public class InfantrySource : MonoBehaviour {
             factionPrototype = factionSource.GetFactionPrototype(),
             agentAvoidanceConfig = agentAvoidanceConfigSource,
             hitboxPrototype = hitboxSource.GetHitboxPrototype(),
+            combatPrototype = combatSource.GetPrototype(),
         };
     }
 
