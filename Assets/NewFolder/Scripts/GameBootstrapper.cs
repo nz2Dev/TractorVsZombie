@@ -63,7 +63,9 @@ public class GameBootstrapper : MonoBehaviour {
 
         var weaponView = new WeaponView();
         var rewardView = new RewardView();
-        var infantryView = new InfantryView(footstepSoundSystem);
+        var infantryView = new InfantryView();
+        var infantryAudio = new InfantryAudio(footstepSoundSystem);
+        var infantryPresenter = new InfantryPresenter(infantryView, infantryAudio);
         var rocketView = new RocketView(soundManager);
         var projectileView = new ProjectileView(soundManager);
         var productionBuildingView = new ProductionBuildingView();
@@ -88,7 +90,7 @@ public class GameBootstrapper : MonoBehaviour {
         infantryController = new InfantryController(
             healthSystem,
             factionRegistry,
-            infantryView,
+            infantryPresenter,
             dropSystem,
             motionSystem,
             movementSystem,

@@ -5,7 +5,7 @@ public struct InfantryPrototype {
     public Vector3 position;
     public MotionPrototype motionPrototype;
     public MovementPrototype movementPrototype;
-    public InfantryVisuals visualsPrefab;
+    public InfantryPresentationPrototype presentationPrototype;
     public DropPrototype dropPrototype;
 
     public RagdollBody physicsBodyPrefab;

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class InfantryController {
 
-    private readonly InfantryView view;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
     private readonly MotionSystem motionSystem;
@@ -15,14 +14,15 @@ public class InfantryController {
     private readonly DropSystem dropSystem;
     private readonly EntityMapping entityMapping;
     private readonly PoseRegistry poseRegistry;
+    private readonly InfantryPresenter presenter;
 
     private int idCounter;
     private readonly Dictionary<int, InfantryModel> registry = new();
 
-    public InfantryController(HealthSystem healthSystem, FactionRegistry factionRegistry, InfantryView view, DropSystem dropSystem, MotionSystem motionSystem, MovementSystem movementSystem, CombatSystem combatSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public InfantryController(HealthSystem healthSystem, FactionRegistry factionRegistry, InfantryPresenter presenter, DropSystem dropSystem, MotionSystem motionSystem, MovementSystem movementSystem, CombatSystem combatSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
-        this.view = view;
+        this.presenter = presenter;
         this.dropSystem = dropSystem;
         this.motionSystem = motionSystem;
         this.movementSystem = movementSystem;
@@ -36,12 +36,8 @@ public class InfantryController {
     public bool IsExist(int infantryId) => registry.ContainsKey(infantryId);
 
     public void Update() {
-        ReadPose();
-        ReadMotion();
-        ReadMovement();
-        ClearDeadInfantry();
-        ReadHealthState();
         UpdatePresentation();
+        ClearDeadInfantry();
     }
 
     public int SpawnInfantry(InfantryPrototype prototype) {
@@ -64,7 +60,7 @@ public class InfantryController {
             motionId = model.MotionId
         });
 
-        view.AddVisuals(model.Id, prototype.position, prototype.visualsPrefab);
+        presenter.Add(model.Id, prototype.position, prototype.presentationPrototype);
         return model.Id;
     }
 
@@ -86,13 +82,17 @@ public class InfantryController {
 
     public InfantryState GetInfantryState(int infantryId) {
         var model = registry[infantryId];
+        var poseState = poseRegistry.Read(model.PoseId);
+        var movementState = movementSystem.ReadState(model.MovementId);
+        var healthState = healthSystem.ReadState(model.HealthId);
+        var motionState = motionSystem.ReadState(model.MotionId);
         var combatState = combatSystem.ReadState(model.CombatId);
         return new InfantryState (
-            position: model.PoseState.position,
-            maxSpeed: model.MovementState.maxSpeed,
+            position: poseState.position,
+            maxSpeed: movementState.maxSpeed,
             activationRadius: combatState.activationRadius,
-            isAlive: !model.HealthState.isDead,
-            isGrounded: model.MotionState.isGrounded,
+            isAlive: !healthState.isDead,
+            isGrounded: motionState.isGrounded,
             healthId: model.HealthId,
             factionIsAlie: factionRegistry.ReadState(model.FactionId).alie,
             attackActivated: combatState.attackActivated
@@ -102,9 +102,13 @@ public class InfantryController {
     private void ClearDeadInfantry() {
         List<InfantryModel> infantryToRemove = new();
 
-        foreach (var model in registry.Values)
-            if (model.HealthState.isDead && model.MotionState.isGrounded)
+        foreach (var model in registry.Values) {
+            var health = healthSystem.ReadState(model.HealthId);
+            var motion = motionSystem.ReadState(model.MotionId);
+            if (health.isDead && motion.isGrounded) {
                 infantryToRemove.Add(model);
+            }
+        }
 
         foreach (var model in infantryToRemove)
             DeleteInfantry(model);
@@ -124,69 +128,17 @@ public class InfantryController {
         entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
 
-        view.RemoveVisuals(model.Id);
-    }
-
-    private void ReadPose() {
-        foreach (var model in registry.Values) {
-            model.PoseState = poseRegistry.Read(model.PoseId);
-        }
-    }
-
-    private void ReadMotion() {
-        foreach (var model in registry.Values) {
-            model.MotionState = motionSystem.ReadState(model.MotionId);
-        }
-    }
-
-    private void ReadMovement() {
-        foreach (var model in registry.Values) {
-            model.MovementState = movementSystem.ReadState(model.MovementId);
-        }
-    }
-
-    private void ReadHealthState() {
-        foreach (var model in registry.Values) {
-            model.HealthState = healthSystem.ReadState(model.HealthId);
-        }
+        presenter.Remove(model.Id);
     }
 
     private void UpdatePresentation() {
         foreach (var model in registry.Values) {
-            var pose = poseRegistry.Read(model.PoseId);
-            view.UpdateTransform(model.Id, pose.position, pose.rotation, model.MovementState.velocity.magnitude / model.MovementState.maxSpeed);
-
+            var poseState = poseRegistry.Read(model.PoseId);
+            var movementState = movementSystem.ReadState(model.MovementId);
             var combatState = combatSystem.ReadState(model.CombatId);
-            switch (combatState.attackEvent) {
-                case CombatEvent.ChargeActivated:
-                    view.ShowCharge(model.Id, combatState.attackDuration);
-                    break;
-                case CombatEvent.AttackActivated:
-                    view.PlayChargeAttack(model.Id);
-                    break;
-                case CombatEvent.Canceled:
-                    view.ShowDischarge(model.Id);
-                    break;
-                default:
-                    break;
-            }
-
-            var healthState = model.HealthState;
-            var healthNormalized = 1f - (float) healthState.health / Mathf.Max(healthState.maxHealth, 1);
-            view.SetHealthNormalized(model.Id, healthNormalized);
-
-            if (healthState.damageResult.HasValue) {
-                view.ShowTakeHit(model.Id);
-
-                var damageResult = healthState.damageResult.Value;
-                if (damageResult.damageWasFatal) {
-                    if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
-                        view.ShowThrownAway(model.Id, damageResult.damageSource);
-                    } else {
-                        view.ShowDisolveDeath(model.Id);
-                    }
-                }
-            }
+            var healthState = healthSystem.ReadState(model.HealthId);
+            var motionState = motionSystem.ReadState(model.MotionId);
+            presenter.Update(model.Id, poseState, movementState, combatState, healthState, motionState);
         }
     }
 

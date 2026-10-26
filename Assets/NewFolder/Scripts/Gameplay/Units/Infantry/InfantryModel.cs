@@ -1,6 +1,4 @@
 
-using UnityEngine;
-
 public class InfantryModel {
 
     public InfantryModel(int id) {
@@ -16,9 +14,4 @@ public class InfantryModel {
     public PoseId PoseId { get; set; }
     public HitboxId HitboxId { get; set; }
     public DropId DropId { get; set; }
-    public MotionState MotionState { get; set; }
-    public MovementState MovementState { get; set; }
-    public HealthState HealthState { get; set; }
-    public PoseState PoseState { get; set; }
-    
 }

@@ -12501,6 +12501,7 @@ MonoBehaviour:
     initPlatformSource: {fileID: 269684097}
     initLoadoutSources:
     - {fileID: 339747577}
+    - {fileID: 1248990951}
   aimingSource:
     aimVisualsPrefab: {fileID: 7650166389670777688, guid: db77fb008dad74d3ca69afe4d43638bd, type: 3}
   collectingSource:
@@ -31047,6 +31048,17 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &1248990951 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2248895191762497786, guid: 697de765863b048a7a82e00beb0eb422, type: 3}
+  m_PrefabInstance: {fileID: 5781962541767908237}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!43 &1298888550
 Mesh:
   m_ObjectHideFlags: 0
@@ -38575,7 +38587,6 @@ MonoBehaviour:
     configSO: {fileID: 11400000, guid: 02238f37de7d34315aedb0b76eb96075, type: 2}
   factionSource:
     alie: 0
-  visualsPrefab: {fileID: 1060467421}
   physicsBodyPrefab: {fileID: 1032680941}
   hitboxSource:
     markerPrefab: {fileID: 1128309740}
@@ -38585,6 +38596,8 @@ MonoBehaviour:
     inheritHostRotation: 0
   combatSource:
     config: {fileID: 11400000, guid: 93de486045704ed7afca5a0c58bb80f2, type: 2}
+  presentationSource:
+    visualsPrefab: {fileID: 1060467421}
 --- !u!1001 &1931922710
 PrefabInstance:
   m_ObjectHideFlags: 0
