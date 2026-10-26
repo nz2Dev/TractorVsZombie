@@ -12,6 +12,5 @@ public class PlatformModel {
     public VehicleId VehicleId { get; set; }
     public HitboxId HitboxId { get; set; }
     public CarryingId CarryingId { get; set; }
-    public HealthState HealthState { get; set; }
 
 }

@@ -28,14 +28,6 @@ public sealed class CarryingSystem {
         model.LoadoutId = loadoutController.SpawnLoadout(ownerFactionId, prototype);
     }
 
-    public void RemoveLoadout(CarryingId id) {
-        var model = models[id];
-        if (model.LoadoutId == 0)
-            return;
-        loadoutController.DeleteLoadout(model.LoadoutId);
-        model.LoadoutId = 0;
-    }
-
     public void Remove(CarryingId id) {
         models.Remove(id, out var model);
         if (model.LoadoutId != 0)

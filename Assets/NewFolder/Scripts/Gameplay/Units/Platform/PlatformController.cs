@@ -30,7 +30,6 @@ public class PlatformController {
     }
 
     public void Update() {
-        ReadHealth();
         UpdateView();
         RemoveDestroyed();
     }
@@ -63,7 +62,6 @@ public class PlatformController {
 
     public virtual void SetLoadout(int platformId, LoadoutPrototype loadoutPrototype) {
         var platform = registry[platformId];
-
         carryingSystem.SetLoadout(platform.CarryingId, platform.FactionId, loadoutPrototype);
     }
 
@@ -97,21 +95,13 @@ public class PlatformController {
         );
     }
 
-    private void ReadHealth() {
-        foreach (var platform in registry.Values) {
-            platform.HealthState = healthSystem.ReadState(platform.HealthId);
-            if (platform.HealthState.damageResult?.damageWasFatal == true) {
-                carryingSystem.RemoveLoadout(platform.CarryingId);
-            }
-        }
-    }
-
     private List<int> removalBuffer = new();
 
     private void RemoveDestroyed() {
         removalBuffer.Clear();
         foreach (var platform in registry.Values) {
-            if (platform.HealthState.isDead)
+            var healthState = healthSystem.ReadState(platform.HealthId);
+            if (healthState.isDead)
                 removalBuffer.Add(platform.Id);
         }
 
@@ -138,7 +128,7 @@ public class PlatformController {
             var vehiclePose = vehicleSystem.ReadState(host.VehicleId).pose;
             view.UpdatePlatformPose(host.Id, vehiclePose);
             
-            var healthState = host.HealthState;
+            var healthState = healthSystem.ReadState(host.HealthId);
             view.UpdateHealthBar(host.Id, vehiclePose.position, healthState.health, healthState.maxHealth);
             if (healthState.damageResult.HasValue) {
                 // interesting case occure, conceptually platform is only a carrier
