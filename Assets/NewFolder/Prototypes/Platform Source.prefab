@@ -84,7 +84,6 @@ MonoBehaviour:
     configSO: {fileID: 11400000, guid: e77ee70402f1a4d498b35107339c66e0, type: 2}
   factionSource:
     alie: 1
-  visualsPrefab: {fileID: 788712317402739098}
   vehicleSource:
     prefab: {fileID: 4776735525413602875}
   carryingSource:
@@ -92,7 +91,9 @@ MonoBehaviour:
   hitboxSource:
     markerPrefab: {fileID: 744558205689055514}
     surface: 1
-  worldSpaceUIPrefab: {fileID: 552357836590703132}
+  presentationSource:
+    visualsPrefab: {fileID: 788712317402739098}
+    worldSpaceUIPrefab: {fileID: 552357836590703132}
 --- !u!1 &2401984857436801141
 GameObject:
   m_ObjectHideFlags: 0

@@ -61,7 +61,6 @@ public class GameBootstrapper : MonoBehaviour {
         var collisionService = new CollisionService(collisionServiceConfig);
 
         var weaponView = new WeaponView();
-        var platformView = new PlatformView(cameraManager);
         var rewardView = new RewardView();
         var infantryView = new InfantryView(footstepSoundSystem);
         var rocketView = new RocketView(soundManager);
@@ -166,7 +165,10 @@ public class GameBootstrapper : MonoBehaviour {
             factionRegistry,
             carryingSystem,
             vehicleSystem,
-            platformView,
+            new PlatformPresenter(
+                new PlatformView(),
+                new PlatformUI(cameraManager)
+            ),
             hitboxSystem,
             entityMapping,
             poseRegistry

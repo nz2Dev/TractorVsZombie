@@ -4,11 +4,11 @@ public class PlatformSource : MonoBehaviour {
 
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
-    [Local] [SerializeField] private PlatformVisuals visualsPrefab;
     [SerializeField] private VehicleSource vehicleSource;
     [SerializeField] private CarryingSource carryingSource;
     [SerializeField] private HitboxSource hitboxSource;
-    [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
+    [Space]
+    [SerializeField] private PlatformPresentationSource presentationSource;
 
     private void Awake() {
         gameObject.SetActive(false);
@@ -17,13 +17,12 @@ public class PlatformSource : MonoBehaviour {
     public PlatformPrototype GetPrototype() {
         return new PlatformPrototype (
             position: transform.position,
-            visualsPrefab: visualsPrefab,
+            presentationPrototype: presentationSource.Get(),
             vehiclePrototype: vehicleSource.GetPrototype(),
             carryingPrototype: carryingSource.Get(),
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
-            hitboxPrototype: hitboxSource.GetHitboxPrototype(),
-            worldSpaceUIPrefab: worldSpaceUIPrefab
+            hitboxPrototype: hitboxSource.GetHitboxPrototype()
         );
     }
 }

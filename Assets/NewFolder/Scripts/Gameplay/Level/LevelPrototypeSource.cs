@@ -24,7 +24,7 @@ public class LevelPrototypeSource : MonoBehaviour {
             DestroyImmediate(cutscenePlatformContainers.GetChild(0).gameObject);
         
         for (int i = 0; i < playerPrototypeSource.LoadoutsLength; i++) {
-            var platformVisuals = Instantiate(playerPrototypeSource.PlatformPrototype.visualsPrefab, cutscenePlatformContainers);
+            var platformVisuals = Instantiate(playerPrototypeSource.PlatformPrototype.presentationPrototype.visualsPrefab, cutscenePlatformContainers);
             platformVisuals.transform.localPosition = (i + 1) * 6 * -cutscenePlatformContainers.transform.forward;
             var loadoutVisuals = Instantiate(playerPrototypeSource.GetLoadoutPrototype(i).shellVisualsPrefab, platformVisuals.transform);
             loadoutVisuals.transform.localPosition = playerPrototypeSource.PlatformPrototype.carryingPrototype.loadoutOffset;

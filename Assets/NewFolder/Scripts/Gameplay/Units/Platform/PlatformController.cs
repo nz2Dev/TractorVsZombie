@@ -13,24 +13,24 @@ public class PlatformController {
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
     private readonly PoseRegistry poseRegistry;
-    private readonly PlatformView view;
+    private readonly PlatformPresenter presenter;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, CarryingSystem carryingSystem, VehicleSystem vehicleSystem, PlatformView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, CarryingSystem carryingSystem, VehicleSystem vehicleSystem, PlatformPresenter presenter, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.carryingSystem = carryingSystem;
         this.vehicleSystem = vehicleSystem;
-        this.view = view;
+        this.presenter = presenter;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
         this.poseRegistry = poseRegistry;
     }
 
     public void Update() {
-        UpdateView();
+        UpdatePresentation();
         RemoveDestroyed();
     }
 
@@ -52,7 +52,7 @@ public class PlatformController {
             factionId = model.FactionId
         });
         
-        view.AddPlatform(model.Id, initPosition, prototype.visualsPrefab, factionRegistry.ReadState(model.FactionId).alie, prototype.worldSpaceUIPrefab);
+        presenter.Add(model.Id, initPosition, prototype.factionPrototype.alie, prototype.presentationPrototype);
         return model.Id;
     }
 
@@ -120,24 +120,14 @@ public class PlatformController {
         entityMapping.DeleteMapping(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
         
-        view.RemovePlatform(platformId);
+        presenter.Remove(platformId);
     }
 
-    private void UpdateView() {
+    private void UpdatePresentation() {
         foreach (var host in registry.Values) {
-            var vehiclePose = vehicleSystem.ReadState(host.VehicleId).pose;
-            view.UpdatePlatformPose(host.Id, vehiclePose);
-            
+            var vehicleState = vehicleSystem.ReadState(host.VehicleId);
             var healthState = healthSystem.ReadState(host.HealthId);
-            view.UpdateHealthBar(host.Id, vehiclePose.position, healthState.health, healthState.maxHealth);
-            if (healthState.damageResult.HasValue) {
-                // interesting case occure, conceptually platform is only a carrier
-                // loadout and weapons are handled separately
-                // but ideally when hit occures, all three has to show take hit effect.
-                // so either all of them separatly check for provided ownerHealthId state and trigger visual feedback separatly
-                // or should the visual component of entier platform entity handle all of the visuals for loadout and weapon? (first option I like more)
-                view.ShowTakeHit(host.Id);
-            }
+            presenter.Update(host.Id, vehicleState, healthState);
         }
     }
 
