@@ -27,7 +27,7 @@ public class LevelPrototypeSource : MonoBehaviour {
             var platformVisuals = Instantiate(playerPrototypeSource.PlatformPrototype.visualsPrefab, cutscenePlatformContainers);
             platformVisuals.transform.localPosition = (i + 1) * 6 * -cutscenePlatformContainers.transform.forward;
             var loadoutVisuals = Instantiate(playerPrototypeSource.GetLoadoutPrototype(i).shellVisualsPrefab, platformVisuals.transform);
-            loadoutVisuals.transform.localPosition = playerPrototypeSource.PlatformPrototype.loadoutOffset;
+            loadoutVisuals.transform.localPosition = playerPrototypeSource.PlatformPrototype.carryingPrototype.loadoutOffset;
         }
     }
     

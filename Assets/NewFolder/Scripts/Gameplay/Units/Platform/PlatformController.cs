@@ -8,7 +8,7 @@ public class PlatformController {
 
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
-    private readonly LoadoutController loadoutController;
+    private readonly CarryingSystem carryingSystem;
     private readonly VehicleSystem vehicleSystem;
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
@@ -18,10 +18,10 @@ public class PlatformController {
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, LoadoutController loadoutController, VehicleSystem vehicleSystem, PlatformView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, CarryingSystem carryingSystem, VehicleSystem vehicleSystem, PlatformView view, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
-        this.loadoutController = loadoutController;
+        this.carryingSystem = carryingSystem;
         this.vehicleSystem = vehicleSystem;
         this.view = view;
         this.hitboxSystem = hitboxSystem;
@@ -31,7 +31,6 @@ public class PlatformController {
 
     public void Update() {
         ReadHealth();
-        SyncPositions();
         UpdateView();
         RemoveDestroyed();
     }
@@ -39,10 +38,11 @@ public class PlatformController {
     public virtual int Create(PlatformPrototype prototype, Vector3 position = default) {
         var nextId = ++idCounter;
         var initPosition = position == default ? prototype.position : position;
-        var model = new PlatformModel(nextId, prototype.loadoutOffset);
+        var model = new PlatformModel(nextId);
         registry[model.Id] = model;
 
         model.PoseId = poseRegistry.Add(initPosition, default);
+        model.CarryingId = carryingSystem.Add(prototype.carryingPrototype, model.PoseId);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
         model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrototype, poseId: model.PoseId);
@@ -64,13 +64,7 @@ public class PlatformController {
     public virtual void SetLoadout(int platformId, LoadoutPrototype loadoutPrototype) {
         var platform = registry[platformId];
 
-        if (platform.LoadoutId != 0) {
-            loadoutController.DeleteLoadout(platform.LoadoutId);
-        }
-
-        var pose = poseRegistry.Read(platform.PoseId);
-        loadoutPrototype.position = pose.position + platform.LoadoutOffset;
-        platform.LoadoutId = loadoutController.SpawnLoadout(platform.FactionId, loadoutPrototype);
+        carryingSystem.SetLoadout(platform.CarryingId, platform.FactionId, loadoutPrototype);
     }
 
     public virtual VehicleId ReadVehicleId(int platformId) {
@@ -89,10 +83,7 @@ public class PlatformController {
     }
 
     public virtual PlatformState ReadPlatformState(PlatformModel platform) {
-        var loadoutState = default (LoadoutState);
-        if (platform.LoadoutId != 0) {
-            loadoutState = loadoutController.ReadLoadoutState(platform.LoadoutId);
-        }
+        var carryingState = carryingSystem.ReadState(platform.CarryingId);
         var pose = poseRegistry.Read(platform.PoseId);
         return new PlatformState (
             position: pose.position,
@@ -100,8 +91,8 @@ public class PlatformController {
             healthState: healthSystem.ReadState(platform.HealthId),
             factionState: factionRegistry.ReadState(platform.FactionId),
             vehicleId: platform.VehicleId,
-            weaponId: loadoutState.weaponId,
-            weaponState: loadoutState.weaponState,
+            weaponId: carryingState.weaponId,
+            weaponState: carryingState.weaponState,
             platformId: platform.Id
         );
     }
@@ -110,10 +101,7 @@ public class PlatformController {
         foreach (var platform in registry.Values) {
             platform.HealthState = healthSystem.ReadState(platform.HealthId);
             if (platform.HealthState.damageResult?.damageWasFatal == true) {
-                if (platform.LoadoutId != 0) {
-                    loadoutController.DeleteLoadout(platform.LoadoutId);
-                    platform.LoadoutId = 0;
-                }
+                carryingSystem.RemoveLoadout(platform.CarryingId);
             }
         }
     }
@@ -134,6 +122,7 @@ public class PlatformController {
 
     private void Remove(int platformId) {
         registry.Remove(platformId, out var model);
+        carryingSystem.Remove(model.CarryingId);
         healthSystem.Remove(model.HealthId);
         vehicleSystem.Remove(model.VehicleId);
         poseRegistry.Remove(model.PoseId);
@@ -142,15 +131,6 @@ public class PlatformController {
         factionRegistry.Remove(model.FactionId);
         
         view.RemovePlatform(platformId);
-    }
-
-    private void SyncPositions() {
-        foreach (var host in registry.Values) {
-            if (host.LoadoutId != 0) {
-                var pose = poseRegistry.Read(host.PoseId);
-                loadoutController.MoveLoadout(host.LoadoutId, pose.position + host.LoadoutOffset, pose.rotation);
-            }
-        }
     }
 
     private void UpdateView() {

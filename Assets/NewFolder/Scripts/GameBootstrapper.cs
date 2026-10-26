@@ -24,6 +24,7 @@ public class GameBootstrapper : MonoBehaviour {
     private RewardController rewardController;
     private DropSystem dropSystem;
     private AttachmentSystem attachmentSystem;
+    private CarryingSystem carryingSystem;
     private ProjectileController projectileController;
     private RocketController rocketController;
     private WeaponController weaponController;
@@ -141,6 +142,8 @@ public class GameBootstrapper : MonoBehaviour {
             weaponController
         );
 
+        carryingSystem = new CarryingSystem(poseRegistry, loadoutController);
+
         armorController = new ArmorController(
             healthSystem,
             factionRegistry,
@@ -161,7 +164,7 @@ public class GameBootstrapper : MonoBehaviour {
         platformController = new PlatformController(
             healthSystem,
             factionRegistry,
-            loadoutController,
+            carryingSystem,
             vehicleSystem,
             platformView,
             hitboxSystem,
@@ -245,6 +248,7 @@ public class GameBootstrapper : MonoBehaviour {
         healthSystem.Update();
         vehicleSystem.Update();
         attachmentSystem.Update();
+        carryingSystem.Update();
         motionSystem.Update();
         movementSystem.Update();
         hitboxSystem.Update();
