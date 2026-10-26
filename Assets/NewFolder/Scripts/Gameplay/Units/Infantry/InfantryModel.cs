@@ -1,6 +1,13 @@
 
 using UnityEngine;
 
+public enum ChargeAttackEvents {
+    None,
+    ChargeActivated,
+    AttackActivated,
+    Canceled
+}
+
 public class InfantryModel {
 
     public InfantryModel(int id, InfantryConfig config) {
@@ -25,5 +32,7 @@ public class InfantryModel {
     public float LastAttackTime { get; set; }
     public float AttackActivationTime { get; set; }
     public HitboxId? TargetHitboxId { get; set; }
+
+    public ChargeAttackEvents AttackEvents { get; set; } = ChargeAttackEvents.None;
 
 }

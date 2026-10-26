@@ -40,7 +40,7 @@ public class InfantryController {
         UpdateAttacks();
         ClearDeadInfantry();
         ReadHealthState();
-        SyncPositions();
+        UpdatePresentation();
     }
 
     public int SpawnInfantry(InfantryPrototype prototype) {
@@ -141,15 +141,22 @@ public class InfantryController {
         }
     }
 
+    private void ReadHealthState() {
+        foreach (var model in registry.Values) {
+            model.HealthState = healthSystem.ReadState(model.HealthId);
+        }
+    }
+
     private void UpdateAttacks() {
         foreach (var model in registry.Values) {
+            model.AttackEvents = ChargeAttackEvents.None;
             if (model.HealthState.isDead)
                 continue;
 
             var attackCanceled = !model.TargetHitboxId.HasValue || !model.MotionState.isGrounded;
             if (attackCanceled) {
                 model.AttackActivationTime = model.LastAttackTime - 1;
-                view.ShowDischarge(model.Id);
+                model.AttackEvents = ChargeAttackEvents.Canceled;
                 continue;
             }
 
@@ -159,7 +166,7 @@ public class InfantryController {
             if (lostAbilityForTarget) {
                 model.TargetHitboxId = null;
                 model.AttackActivationTime = model.LastAttackTime - 1;
-                view.ShowDischarge(model.Id);
+                model.AttackEvents = ChargeAttackEvents.Canceled;
                 continue;
             }
 
@@ -172,10 +179,10 @@ public class InfantryController {
             var canActivate = model.AttackActivationTime <= model.LastAttackTime;
             if (canActivate && model.LastAttackTime + model.Config.attackCooldown < Time.time) {
                 model.AttackActivationTime = Time.time;
-                view.ShowCharge(model.Id, model.Config.attackDuration);
+                model.AttackEvents = ChargeAttackEvents.ChargeActivated;
             }
 
-            var charging = Time.time >= model.AttackActivationTime && Time.time < model.AttackActivationTime + model.Config.attackDuration;
+            var charging = Time.time > model.AttackActivationTime && Time.time < model.AttackActivationTime + model.Config.attackDuration;
             if (charging) {
                 movementSystem.HoldMovement(model.MovementId);
             }
@@ -187,7 +194,7 @@ public class InfantryController {
             }
 
             model.LastAttackTime = Time.time;
-            view.PlayChargeAttack(model.Id);
+            model.AttackEvents = ChargeAttackEvents.AttackActivated;
 
             var targetHitboxState = hitboxSystem.ReadState(targetHitboxId);
             var outOfReach = Vector3.Distance(pose.position, targetPosition) > model.Config.activationRadius + targetHitboxState.radius;
@@ -203,34 +210,41 @@ public class InfantryController {
         }
     }
 
-    private void ReadHealthState() {
+    private void UpdatePresentation() {
         foreach (var model in registry.Values) {
-            model.HealthState = healthSystem.ReadState(model.HealthId);
+            var pose = poseRegistry.Read(model.PoseId);
+            view.UpdateTransform(model.Id, pose.position, pose.rotation, model.MovementState.velocity.magnitude / model.MovementState.maxSpeed);
+
+            switch (model.AttackEvents) {
+                case ChargeAttackEvents.ChargeActivated:
+                    view.ShowCharge(model.Id, model.Config.attackDuration);
+                    break;
+                case ChargeAttackEvents.AttackActivated:
+                    view.PlayChargeAttack(model.Id);
+                    break;
+                case ChargeAttackEvents.Canceled:
+                    view.ShowDischarge(model.Id);
+                    break;
+                default:
+                    break;
+            }
 
             var healthState = model.HealthState;
             var healthNormalized = 1f - (float) healthState.health / Mathf.Max(healthState.maxHealth, 1);
             view.SetHealthNormalized(model.Id, healthNormalized);
 
-            if (!healthState.damageResult.HasValue)
-                continue;
+            if (healthState.damageResult.HasValue) {
+                view.ShowTakeHit(model.Id);
 
-            view.ShowTakeHit(model.Id);
-
-            var damageResult = healthState.damageResult.Value;
-            if (damageResult.damageWasFatal) {
-                if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
-                    view.ShowThrownAway(model.Id, damageResult.damageSource);
-                } else {
-                    view.ShowDisolveDeath(model.Id);
+                var damageResult = healthState.damageResult.Value;
+                if (damageResult.damageWasFatal) {
+                    if (damageResult.damageType == DamageType.Projectile && model.MotionState.isGrounded) {
+                        view.ShowThrownAway(model.Id, damageResult.damageSource);
+                    } else {
+                        view.ShowDisolveDeath(model.Id);
+                    }
                 }
             }
-        }
-    }
-
-    private void SyncPositions() {
-        foreach (var model in registry.Values) {
-            var pose = poseRegistry.Read(model.PoseId);
-            view.UpdateTransform(model.Id, pose.position, pose.rotation, model.MovementState.velocity.magnitude / model.MovementState.maxSpeed);
         }
     }
 
