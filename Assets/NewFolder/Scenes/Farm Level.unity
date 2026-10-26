@@ -38558,16 +38558,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a10f80900afec410fbd68c8bf1645f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::InfantrySource
-  config: {fileID: 11400000, guid: 434c3c02ad2014cdd843637907fa633b, type: 2}
-  agentAvoidanceConfigSource:
-    height: 2
-    radius: 0.6
-    radiusObst: 0.6
-    maxSpeed: 3
-    maxNeighbors: 16
-    neighborDist: 5
-    timeHorizon: 1.5
-    timeHorizonObst: 1.5
+  motionSource:
+    config: {fileID: 11400000, guid: 434c3c02ad2014cdd843637907fa633b, type: 2}
+  movementSource:
+    config: {fileID: 11400000, guid: 5ae6a761405a44ab9d45d85a57f47d22, type: 2}
+    avoidanceConfig:
+      height: 2
+      radius: 0.6
+      radiusObst: 0.6
+      maxSpeed: 3
+      maxNeighbors: 16
+      neighborDist: 5
+      timeHorizon: 1.5
+      timeHorizonObst: 1.5
   healthSource:
     configSO: {fileID: 11400000, guid: 02238f37de7d34315aedb0b76eb96075, type: 2}
   factionSource:

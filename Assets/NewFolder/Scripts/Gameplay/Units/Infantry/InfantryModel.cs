@@ -3,13 +3,11 @@ using UnityEngine;
 
 public class InfantryModel {
 
-    public InfantryModel(int id, InfantryConfig config) {
+    public InfantryModel(int id) {
         Id = id;
-        Config = config;
     }
 
     public int Id { get; }
-    public InfantryConfig Config { get; }
     public HealthId HealthId { get; set; }
     public FactionId FactionId { get; set; }
     public MotionId MotionId { get; set; }

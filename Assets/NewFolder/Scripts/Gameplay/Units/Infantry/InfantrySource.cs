@@ -5,8 +5,8 @@ using UnityEditor;
 
 public class InfantrySource : MonoBehaviour {
 
-    [Inline] [SerializeField] private InfantryConfig config;
-    [SerializeField] private AgentAvoidanceConfig agentAvoidanceConfigSource;
+    [SerializeField] private MotionSource motionSource;
+    [SerializeField] private MovementSource movementSource;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
     [Local] [SerializeField] private InfantryVisuals visualsPrefab;
@@ -24,13 +24,13 @@ public class InfantrySource : MonoBehaviour {
     public InfantryPrototype GetPrototype() {
         return new InfantryPrototype {
             position = transform.position,
-            config = config,
+            motionPrototype = motionSource.GetPrototype(),
+            movementPrototype = movementSource.GetPrototype(),
             visualsPrefab = visualsPrefab,
             dropPrototype = dropSource.Get(),
             physicsBodyPrefab = physicsBodyPrefab,
             healthPrototype = healthSource.GetHealthPrototype(),
             factionPrototype = factionSource.GetFactionPrototype(),
-            agentAvoidanceConfig = agentAvoidanceConfigSource,
             hitboxPrototype = hitboxSource.GetHitboxPrototype(),
             combatPrototype = combatSource.GetPrototype(),
         };

@@ -9,7 +9,7 @@ internal sealed class MotionModel {
     public PoseId HostPoseId { get; }
     public HealthId HostHealthId { get; }
     public RagdollId BodyId { get; }
-    public InfantryConfig Config { get; }
+    public MotionConfig Config { get; }
 
     public bool Grounded { get; set; }
     public bool OnTheFloor { get; set; } = true;
@@ -19,7 +19,7 @@ internal sealed class MotionModel {
     public EffectType ActiveEffectType { get; set; }
     public Explosion ExplosionData { get; set; }
 
-    public MotionModel(MotionId id, PoseId poseId, RagdollId bodyId, InfantryConfig config, HealthId hostHealthId) {
+    public MotionModel(MotionId id, PoseId poseId, RagdollId bodyId, MotionConfig config, HealthId hostHealthId) {
         Id = id;
         HostPoseId = poseId;
         BodyId = bodyId;

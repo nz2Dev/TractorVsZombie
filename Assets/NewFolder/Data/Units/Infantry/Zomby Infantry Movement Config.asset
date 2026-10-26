@@ -9,10 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c01f54c4dc44e4f5fb2082850f217b1c, type: 3}
-  m_Name: Zomby Infantry Config
-  m_EditorClassIdentifier: NewFolder::InfantryConfig
-  settleSpeedSquaredThreashold: 4
-  minUnsettleTimeSec: 1
-  maxTimeOnTheFloor: 1
+  m_Script: {fileID: 11500000, guid: e70645da319744f58a10a902ae2b8f31, type: 3}
+  m_Name: Zomby Infantry Movement Config
+  m_EditorClassIdentifier: NewFolder::MovementConfig
   stoppingDistance: 2

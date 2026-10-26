@@ -22,10 +22,10 @@ public class MotionSystem {
         this.poseRegistry = poseRegistry;
     }
 
-    public MotionId Add(PoseId poseId, Vector3 position, InfantryConfig config, RagdollBody bodyPrefab, HealthId hostHealthId) {
+    public MotionId Add(PoseId poseId, Vector3 position, MotionPrototype prototype, RagdollBody bodyPrefab, HealthId hostHealthId) {
         var id = new MotionId(++idCounter);
         var bodyId = ragdollService.RegisterPhysicsEntity(position, bodyPrefab);
-        registry[id] = new MotionModel(id, poseId, bodyId, config, hostHealthId);
+        registry[id] = new MotionModel(id, poseId, bodyId, prototype.config, hostHealthId);
         return id;
     }
 

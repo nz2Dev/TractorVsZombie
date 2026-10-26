@@ -3,7 +3,8 @@ using UnityEngine;
 
 public struct InfantryPrototype {
     public Vector3 position;
-    public InfantryConfig config;
+    public MotionPrototype motionPrototype;
+    public MovementPrototype movementPrototype;
     public InfantryVisuals visualsPrefab;
     public DropPrototype dropPrototype;
 
@@ -11,6 +12,5 @@ public struct InfantryPrototype {
     public HitboxPrototype hitboxPrototype;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
-    public AgentAvoidanceConfig agentAvoidanceConfig;
     public CombatPrototype combatPrototype;
 }

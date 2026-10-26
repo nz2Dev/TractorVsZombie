@@ -15,10 +15,10 @@ public sealed class MovementSystem {
         this.avoidanceService = avoidanceService;
     }
 
-    public MovementId Add(Vector3 position, AgentAvoidanceConfig avoidanceConfig, MotionId holderMotionId, PoseId holderPoseId, InfantryConfig config) {
+    public MovementId Add(Vector3 position, MotionId holderMotionId, PoseId holderPoseId, MovementPrototype prototype) {
         var id = new MovementId(++idCounter);
-        var avoidanceId = avoidanceService.AddAgent(position, avoidanceConfig);
-        registry[id] = new MovementModel(id, holderMotionId, holderPoseId, avoidanceId, avoidanceConfig.maxSpeed, config);
+        var avoidanceId = avoidanceService.AddAgent(position, prototype.avoidanceConfig);
+        registry[id] = new MovementModel(id, holderMotionId, holderPoseId, avoidanceId, prototype.avoidanceConfig.maxSpeed, prototype.config);
         return id;
     }
 

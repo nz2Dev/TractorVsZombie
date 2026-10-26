@@ -46,14 +46,14 @@ public class InfantryController {
 
     public int SpawnInfantry(InfantryPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new InfantryModel(nextId, prototype.config);
+        var model = new InfantryModel(nextId);
         registry[model.Id] = model;
 
         model.PoseId = poseRegistry.Add(prototype.position, default);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.config, prototype.physicsBodyPrefab, model.HealthId);
-        model.MovementId = movementSystem.Add(prototype.position, prototype.agentAvoidanceConfig, model.MotionId, model.PoseId, prototype.config);
+        model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.motionPrototype, prototype.physicsBodyPrefab, model.HealthId);
+        model.MovementId = movementSystem.Add(prototype.position, model.MotionId, model.PoseId, prototype.movementPrototype);
         model.CombatId = combatSystem.Add(prototype.combatPrototype, model.HealthId, model.MotionId, model.MovementId, model.PoseId);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
         model.DropId = dropSystem.Add(prototype.dropPrototype, model.HealthId, model.PoseId);
