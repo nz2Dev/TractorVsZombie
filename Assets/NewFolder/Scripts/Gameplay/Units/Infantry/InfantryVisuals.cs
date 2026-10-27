@@ -39,8 +39,6 @@ public class InfantryVisuals : MonoBehaviour {
     private bool sheduledForDestruction;
     private Quaternion currentRotation;
     private Quaternion targetRotation;
-    private Quaternion overridedQuaterion;
-    private bool overrideRotation;
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -75,7 +73,9 @@ public class InfantryVisuals : MonoBehaviour {
         var healthReserve = 1f - healthLoad;
         var normalizedPower = healthReserve * healthPowerPart + disolve * (1f - healthPowerPart);
         power = Mathf.Lerp(powerMin, powerMax, normalizedPower);
+        
         currentRotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
+        transform.rotation = currentRotation;
     }
 
     void LateUpdate() {
@@ -104,19 +104,21 @@ public class InfantryVisuals : MonoBehaviour {
 
     private bool IsAnimatorPlaying() {
         var curentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        return animator.IsInTransition(0) || curentStateInfo.normalizedTime < curentStateInfo.length;
+        return animator.IsInTransition(0) || curentStateInfo.normalizedTime < 0.95f;
     }
 
-    internal void UpdatePositionAndRotation(Vector3 position, Quaternion rotation) {
-        targetRotation = overrideRotation ? overridedQuaterion : rotation;
-        transform.SetPositionAndRotation(position, currentRotation);
+    internal void SetPosition(Vector3 position) {
+        transform.position = position;
     }
 
-    internal void SetOverrideRotation(Quaternion quaternion) {
-        overridedQuaterion = quaternion;
-        overrideRotation = true;
-        currentRotation = quaternion;
-        targetRotation = quaternion;
+    internal void SetRotation(Quaternion rotation) {
+        currentRotation = rotation;
+        targetRotation = rotation;
+        transform.rotation = currentRotation;
+    }
+
+    internal void SetTargetRotation(Quaternion rotation) {
+        targetRotation = rotation;
     }
 
     internal void PlayTakeHit() {
@@ -175,7 +177,7 @@ public class InfantryVisuals : MonoBehaviour {
         sheduledForDestruction = true;
     }
 
-    internal void SetSpeed(float speedNormalized) {
+    internal void SetMovementSpeed(float speedNormalized) {
         animator.SetFloat("Speed", speedNormalized);
     }
 

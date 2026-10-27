@@ -20,8 +20,14 @@ public class InfantryPresenter {
 
     public void Update(int infantryId, PoseState poseState, MovementState movementState, CombatState combatState, HealthState healthState, MotionState motionState) {
         float speedNormalized = movementState.velocity.magnitude / movementState.maxSpeed;
-        view.UpdateTransform(infantryId, poseState.position, poseState.rotation, speedNormalized);
-        audio.RegisterFootstep(poseState.position, speedNormalized);
+        view.ShowMovementSpeed(infantryId, speedNormalized);
+        if (motionState.isGrounded) {
+            audio.RegisterFootstep(poseState.position, speedNormalized);
+        }
+        
+        if (!healthState.isDead || !motionState.isGrounded) {
+            view.SetTargetPose(infantryId, poseState.position, poseState.rotation);
+        }
         
         switch (combatState.attackEvent) {
             case CombatEvent.ChargeActivated:
@@ -44,7 +50,12 @@ public class InfantryPresenter {
             var damageResult = healthState.damageResult.Value;
             if (damageResult.damageWasFatal) {
                 if (damageResult.damageType == DamageType.Projectile && motionState.isGrounded) {
-                    view.ShowThrownAway(infantryId, damageResult.damageSource);
+                    var sourceToPosition = poseState.position - damageResult.damageSource; 
+                    sourceToPosition.y = 0;
+                    var outOfSourceRotation = Quaternion.LookRotation(
+                        -sourceToPosition.normalized, Vector3.up);
+                    view.SetCurrentPose(infantryId, poseState.position, outOfSourceRotation);
+                    view.ShowThrownAway(infantryId);
                 } else {
                     view.ShowDisolveDeath(infantryId);
                 }

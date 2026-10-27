@@ -12,10 +12,21 @@ public class InfantryView {
         visualsRegistry.Add(infantryId, visuals);
     }
 
-    public void UpdateTransform(int infantryId, Vector3 position, Quaternion rotation, float speedNormalized) {
+    public void SetTargetPose(int infantryId, Vector3 position, Quaternion rotation) {
         var visuals = visualsRegistry[infantryId];
-        visuals.UpdatePositionAndRotation(position, rotation);
-        visuals.SetSpeed(speedNormalized);
+        visuals.SetPosition(position);
+        visuals.SetTargetRotation(rotation);
+    }
+
+    public void SetCurrentPose(int infantryId, Vector3 position, Quaternion rotation) {
+        var visuals = visualsRegistry[infantryId];
+        visuals.SetPosition(position);
+        visuals.SetRotation(rotation);
+    }
+
+    public void ShowMovementSpeed(int infantryId, float speedNormalized) {
+        var visuals = visualsRegistry[infantryId];
+        visuals.SetMovementSpeed(speedNormalized);
     }
 
     internal void ShowTakeHit(int infantryId) {
@@ -41,10 +52,8 @@ public class InfantryView {
         visuals.PlayChargeAttack();
     }
 
-    public void ShowThrownAway(int infantryId, Vector3 sourcePosition) {
+    public void ShowThrownAway(int infantryId) {
         var visuals = visualsRegistry[infantryId];
-        var sourceToPosition = visuals.transform.position - sourcePosition; sourceToPosition.y = 0;
-        visuals.SetOverrideRotation(Quaternion.LookRotation(-sourceToPosition.normalized, Vector3.up));
         visuals.PlayPushedAwayDeathAnimation();
     }
 
