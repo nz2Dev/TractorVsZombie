@@ -11,8 +11,7 @@ public class ProductionBuildingController {
     private readonly ProductionBuildingView view;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
-    private readonly CollisionService collisionService;
-    private readonly AvoidanceService localAvoidanceService;
+    private readonly StructureSystem structureSystem;
     private readonly SpawnerController spawnerController;
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
@@ -26,16 +25,14 @@ public class ProductionBuildingController {
         ProductionBuildingView view,
         HealthSystem healthSystem,
         FactionRegistry factionRegistry,
-        CollisionService collisionService,
-        AvoidanceService localAvoidanceService,
+        StructureSystem structureSystem,
         SpawnerController spawnService,
         HitboxSystem hitboxSystem,
         EntityMapping entityMapping) {
         this.view = view;
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
-        this.collisionService = collisionService;
-        this.localAvoidanceService = localAvoidanceService;
+        this.structureSystem = structureSystem;
         this.spawnerController = spawnService;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
@@ -78,8 +75,7 @@ public class ProductionBuildingController {
         
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.avoidanceObstaclePrefab);
-        model.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
+        model.StructureId = structureSystem.Add(prototype.structurePrototype);
         model.HitboxId = hitboxSystem.Add(model.FactionId, prototype.position, prototype.hitboxPrototype);
         model.SpawnerId = spawnerController.Create(prototype.spawnerPrototype);
 
@@ -104,8 +100,7 @@ public class ProductionBuildingController {
         registry.Remove(id, out var model);
         
         healthSystem.Remove(model.HealthId);
-        localAvoidanceService.RemoveObstacle(model.AvoidanceObstacleId);
-        collisionService.UnregisterObstacle(model.CollisionObstacleId);
+        structureSystem.Remove(model.StructureId);
         hitboxSystem.Remove(model.HitboxId);
         spawnerController.Destroy(model.SpawnerId);
 

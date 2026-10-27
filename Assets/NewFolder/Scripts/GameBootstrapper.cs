@@ -60,6 +60,7 @@ public class GameBootstrapper : MonoBehaviour {
         var raycastService = new RaycastService(raycastConfig);
         var proximityService = new ProximityService(knnRunner);
         var collisionService = new CollisionService(collisionServiceConfig);
+        var structureSystem = new StructureSystem(localAvoidanceService, collisionService);
 
         var weaponView = new WeaponView();
         var rewardView = new RewardView();
@@ -204,8 +205,7 @@ public class GameBootstrapper : MonoBehaviour {
             productionBuildingView,
             healthSystem,
             factionRegistry,
-            collisionService,
-            localAvoidanceService,
+            structureSystem,
             spawnerController,
             hitboxSystem,
             entityMapping
@@ -215,8 +215,7 @@ public class GameBootstrapper : MonoBehaviour {
             healthSystem,
             factionRegistry,
             pathfindingService,
-            collisionService,
-            localAvoidanceService,
+            structureSystem,
             hitboxSystem,
             entityMapping,
             new HeadquarterBuildingView(cameraManager)

@@ -9,19 +9,17 @@ public class HeadquarterBuildingController {
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
     private readonly PathfindingService pathfindingService;
-    private readonly AvoidanceService localAvoidanceService;
-    private readonly CollisionService collisionService;
+    private readonly StructureSystem structureSystem;
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
 
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(HealthSystem healthSystem, FactionRegistry factionRegistry, PathfindingService pathfindingService, CollisionService collisionService, AvoidanceService localAvoidanceService, HitboxSystem hitboxSystem, EntityMapping entityMapping, HeadquarterBuildingView view) {
+    public HeadquarterBuildingController(HealthSystem healthSystem, FactionRegistry factionRegistry, PathfindingService pathfindingService, StructureSystem structureSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, HeadquarterBuildingView view) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.pathfindingService = pathfindingService;
-        this.collisionService = collisionService;
-        this.localAvoidanceService = localAvoidanceService;
+        this.structureSystem = structureSystem;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
         this.view = view;
@@ -38,8 +36,7 @@ public class HeadquarterBuildingController {
         headquarter.HealthId = healthSystem.Add(prototype.healthPrototype);
         headquarter.FactionId = factionRegistry.Add(prototype.factionPrototype);
         // headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.pathfindingObstaclePrefab);
-        headquarter.AvoidanceObstacleId = localAvoidanceService.AddObstacle(prototype.avoidanceObstaclePrefab);
-        headquarter.CollisionObstacleId = collisionService.RegisterObstacle(prototype.position, prototype.collisionObstaclePrefab);
+        headquarter.StructureId = structureSystem.Add(prototype.structurePrototype);
         headquarter.HitboxId = hitboxSystem.Add(headquarter.FactionId, prototype.position, prototype.hitboxPrototype);
 
         entityMapping.CreateMapping(headquarter.HitboxId, new EntityComponents {
@@ -63,9 +60,8 @@ public class HeadquarterBuildingController {
         if (healthState.damageResult?.damageWasFatal == true) {
             headquarter.Destroyed = true;
             
-            pathfindingService.UnregisterObstacle(headquarter.PathfindingObstacleId);
-            localAvoidanceService.RemoveObstacle(headquarter.AvoidanceObstacleId);
-            collisionService.UnregisterObstacle(headquarter.CollisionObstacleId);
+            // pathfindingService.UnregisterObstacle(headquarter.PathfindingObstacleId);
+            structureSystem.Remove(headquarter.StructureId);
             hitboxSystem.Remove(headquarter.HitboxId);
 
             entityMapping.DeleteMapping(headquarter.HitboxId);

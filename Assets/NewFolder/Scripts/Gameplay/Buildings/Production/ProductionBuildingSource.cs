@@ -14,8 +14,7 @@ public class ProductionBuildingSource : MonoBehaviour {
     [Local] [SerializeField] private GameObject visualsPrefab;
     [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
-    [NonNull, Local, SerializeField] private ORCAObstacleVertices avoidanceObstaclePrefab;
-    [NonNull, Local, SerializeField] private CollisionObstacle collisionObstaclePrefab;
+    [SerializeField] private StructureSource structureSource;
     [SerializeField] private HitboxSource hitboxSource;
 
     private bool lastUniqueFlag;
@@ -44,8 +43,7 @@ public class ProductionBuildingSource : MonoBehaviour {
             position: transform.position,
             rotation: transform.rotation,
             spawnerPrototype: spawnerSource.Get(),
-            avoidanceObstaclePrefab: avoidanceObstaclePrefab,
-            physicsObstaclePrefab: collisionObstaclePrefab,
+            structurePrototype: structureSource.GetPrototype(transform.position),
             visualsPrefab: visualsPrefab,
             healthPrototype: healthSource.GetHealthPrototype(),
             factionPrototype: factionSource.GetFactionPrototype(),
