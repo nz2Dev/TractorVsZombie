@@ -8,17 +8,15 @@ public class HeadquarterBuildingController {
     private readonly HeadquarterBuildingView view;
     private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
-    private readonly PathfindingService pathfindingService;
     private readonly StructureSystem structureSystem;
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
 
     private HeadquarterBuilding headquarter;
 
-    public HeadquarterBuildingController(HealthSystem healthSystem, FactionRegistry factionRegistry, PathfindingService pathfindingService, StructureSystem structureSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, HeadquarterBuildingView view) {
+    public HeadquarterBuildingController(HealthSystem healthSystem, FactionRegistry factionRegistry, StructureSystem structureSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, HeadquarterBuildingView view) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
-        this.pathfindingService = pathfindingService;
         this.structureSystem = structureSystem;
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
@@ -35,7 +33,6 @@ public class HeadquarterBuildingController {
         headquarter.Position = prototype.position;
         headquarter.HealthId = healthSystem.Add(prototype.healthPrototype);
         headquarter.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        // headquarter.PathfindingObstacleId = pathfindingService.RegisterObstacle(prototype.pathfindingObstaclePrefab);
         headquarter.StructureId = structureSystem.Add(prototype.structurePrototype);
         headquarter.HitboxId = hitboxSystem.Add(headquarter.FactionId, prototype.position, prototype.hitboxPrototype);
 
@@ -60,7 +57,6 @@ public class HeadquarterBuildingController {
         if (healthState.damageResult?.damageWasFatal == true) {
             headquarter.Destroyed = true;
             
-            // pathfindingService.UnregisterObstacle(headquarter.PathfindingObstacleId);
             structureSystem.Remove(headquarter.StructureId);
             hitboxSystem.Remove(headquarter.HitboxId);
 

@@ -214,7 +214,6 @@ public class GameBootstrapper : MonoBehaviour {
         headquarterBuildingController = new HeadquarterBuildingController(
             healthSystem,
             factionRegistry,
-            pathfindingService,
             structureSystem,
             hitboxSystem,
             entityMapping,

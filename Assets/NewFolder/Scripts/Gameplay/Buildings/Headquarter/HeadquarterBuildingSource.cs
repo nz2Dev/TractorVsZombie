@@ -6,7 +6,6 @@ public class HeadquarterBuildingSource : MonoBehaviour {
     [SerializeField] private FactionSource factionSource;
     [SerializeField] private HitboxSource hitboxSource;
     [SerializeField] private StructureSource structureSource;
-    [NonNull, Local, SerializeField] private Collider pathfindingObstaclePrefab;
     [NonNull, Local, SerializeField] private HeadquarterBuildingVisuals visualsPrefab;
     [NonNull, Local, SerializeField] private WorldSpaceUI worldSpaceUIPrefab;
 
@@ -23,7 +22,6 @@ public class HeadquarterBuildingSource : MonoBehaviour {
             hitboxPrototype: hitboxSource.GetHitboxPrototype(),
             structurePrototype: structureSource.GetPrototype(transform.position),
             visualsPrefab: visualsPrefab,
-            pathfindingObstaclePrefab: pathfindingObstaclePrefab,
             worldSpaceUIPrefab: worldSpaceUIPrefab
         );
     }

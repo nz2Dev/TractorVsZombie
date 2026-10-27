@@ -9,12 +9,11 @@ public struct HeadquarterBuildingPrototype {
     public FactionPrototype factionPrototype;
     public HitboxPrototype hitboxPrototype;
     public StructurePrototype structurePrototype;
-    public Collider pathfindingObstaclePrefab;
     public HeadquarterBuildingVisuals visualsPrefab;
     public WorldSpaceUI worldSpaceUIPrefab;
 
     public HeadquarterBuildingPrototype(Vector3 position, Quaternion rotation,
-        HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, StructurePrototype structurePrototype, HeadquarterBuildingVisuals visualsPrefab, Collider pathfindingObstaclePrefab, WorldSpaceUI worldSpaceUIPrefab) {
+        HealthPrototype healthPrototype, FactionPrototype factionPrototype, HitboxPrototype hitboxPrototype, StructurePrototype structurePrototype, HeadquarterBuildingVisuals visualsPrefab, WorldSpaceUI worldSpaceUIPrefab) {
         this.position = position;
         this.rotation = rotation;
         this.healthPrototype = healthPrototype;
@@ -22,7 +21,6 @@ public struct HeadquarterBuildingPrototype {
         this.hitboxPrototype = hitboxPrototype;
         this.structurePrototype = structurePrototype;
         this.visualsPrefab = visualsPrefab;
-        this.pathfindingObstaclePrefab = pathfindingObstaclePrefab;
         this.worldSpaceUIPrefab = worldSpaceUIPrefab;
     }
 }
