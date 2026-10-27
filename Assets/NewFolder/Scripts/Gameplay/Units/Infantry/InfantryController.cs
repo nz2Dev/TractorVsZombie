@@ -48,7 +48,7 @@ public class InfantryController {
         model.PoseId = poseRegistry.Add(prototype.position, default);
         model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
-        model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.motionPrototype, prototype.physicsBodyPrefab, model.HealthId);
+        model.MotionId = motionSystem.Add(model.PoseId, prototype.position, prototype.motionPrototype, model.HealthId);
         model.MovementId = movementSystem.Add(prototype.position, model.MotionId, model.PoseId, prototype.movementPrototype);
         model.CombatId = combatSystem.Add(prototype.combatPrototype, model.HealthId, model.MotionId, model.MovementId, model.PoseId);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);

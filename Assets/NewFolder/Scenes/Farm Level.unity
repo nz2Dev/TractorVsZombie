@@ -38572,6 +38572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::InfantrySource
   motionSource:
     config: {fileID: 11400000, guid: 434c3c02ad2014cdd843637907fa633b, type: 2}
+    physicsBodyPrefab: {fileID: 1032680941}
   movementSource:
     config: {fileID: 11400000, guid: 5ae6a761405a44ab9d45d85a57f47d22, type: 2}
     avoidanceConfig:
@@ -38587,7 +38588,6 @@ MonoBehaviour:
     configSO: {fileID: 11400000, guid: 02238f37de7d34315aedb0b76eb96075, type: 2}
   factionSource:
     alie: 0
-  physicsBodyPrefab: {fileID: 1032680941}
   hitboxSource:
     markerPrefab: {fileID: 1128309740}
     surface: 2

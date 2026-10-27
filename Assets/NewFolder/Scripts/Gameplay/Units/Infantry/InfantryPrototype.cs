@@ -7,8 +7,6 @@ public struct InfantryPrototype {
     public MovementPrototype movementPrototype;
     public InfantryPresentationPrototype presentationPrototype;
     public DropPrototype dropPrototype;
-
-    public RagdollBody physicsBodyPrefab;
     public HitboxPrototype hitboxPrototype;
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
