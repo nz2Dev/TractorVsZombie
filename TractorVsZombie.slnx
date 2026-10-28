@@ -1,6 +1,6 @@
 ﻿<Solution>
-  <Project Path="NewFolder.csproj" />
   <Project Path="Prototype.csproj" />
+  <Project Path="NewFolder.csproj" />
   <Project Path="CreaturesPlaygroundEditor.csproj" />
   <Project Path="UnityTools.csproj" />
   <Project Path="KNNRuntime.csproj" />
