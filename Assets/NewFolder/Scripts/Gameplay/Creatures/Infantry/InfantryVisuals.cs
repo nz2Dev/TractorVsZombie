@@ -22,8 +22,7 @@ public class InfantryVisuals : MonoBehaviour {
     private Color emissionColor;
     
     private float healthLoad;
-    private float disolve = 1f;
-    private float disolveSubtractor;
+    private readonly DissolveEffect dissolveEffect = new DissolveEffect();
     private float power = 1f;
 
     private MaterialPropertyBlock dynamicProps;
@@ -58,9 +57,9 @@ public class InfantryVisuals : MonoBehaviour {
 
         chargeEffect.Tick(Time.deltaTime);
 
-        disolve = Mathf.MoveTowards(disolve, 0f, Time.deltaTime * disolveSubtractor);
+        dissolveEffect.Tick(Time.deltaTime);
         var healthReserve = 1f - healthLoad;
-        var normalizedPower = healthReserve * healthPowerPart + disolve * (1f - healthPowerPart);
+        var normalizedPower = healthReserve * healthPowerPart + dissolveEffect.Value * (1f - healthPowerPart);
         power = Mathf.Lerp(powerMin, powerMax, normalizedPower);
         
         currentRotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
@@ -86,7 +85,7 @@ public class InfantryVisuals : MonoBehaviour {
             visualsRenderer.SetPropertyBlock(dynamicProps);
         }
 
-        if (sheduledForDestruction && !IsAnimatorPlaying() && !hitFlash.IsPlaying && disolve <= float.Epsilon) {
+        if (sheduledForDestruction && !IsAnimatorPlaying() && !hitFlash.IsPlaying && dissolveEffect.IsComplete) {
             Destroy(gameObject);
         }
     }
@@ -137,14 +136,12 @@ public class InfantryVisuals : MonoBehaviour {
 
     internal void PlayPushedAwayDeathAnimation() {
         animator.SetTrigger("Throw Death");
-        disolve = 1f;
-        disolveSubtractor = 1f;
+        dissolveEffect.Play();
     }
 
     internal void PlayDisolveAnimation() {
         animator.SetTrigger("Disolve Death");
-        disolve = 1f;
-        disolveSubtractor = 1f;
+        dissolveEffect.Play();
     }
 
     public void SetHealthLoad(float healthLoadNormalized) {
