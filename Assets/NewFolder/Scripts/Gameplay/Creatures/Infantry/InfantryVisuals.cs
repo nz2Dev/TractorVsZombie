@@ -21,7 +21,7 @@ public class InfantryVisuals : MonoBehaviour {
     private readonly ChargeEffect chargeEffect = new ChargeEffect();
     private Color emissionColor;
     
-    private float healthLoad;
+    private float healthNormalized;
     private readonly DissolveEffect dissolveEffect = new DissolveEffect();
     private float power = 1f;
 
@@ -58,8 +58,8 @@ public class InfantryVisuals : MonoBehaviour {
         chargeEffect.Tick(Time.deltaTime);
 
         dissolveEffect.Tick(Time.deltaTime);
-        var healthReserve = 1f - healthLoad;
-        var normalizedPower = healthReserve * healthPowerPart + dissolveEffect.Value * (1f - healthPowerPart);
+        var disolvePowerPart = (1f - healthPowerPart);
+        var normalizedPower = healthNormalized * healthPowerPart + dissolveEffect.Value * disolvePowerPart;
         power = Mathf.Lerp(powerMin, powerMax, normalizedPower);
         
         currentRotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
@@ -144,8 +144,8 @@ public class InfantryVisuals : MonoBehaviour {
         dissolveEffect.Play();
     }
 
-    public void SetHealthLoad(float healthLoadNormalized) {
-        healthLoad = Mathf.Clamp01(healthLoadNormalized);
+    public void SetHealthNormalized(float healthNormalized) {
+        this.healthNormalized = healthNormalized;
     }
 
     internal void DestroySelfOnIdle() {

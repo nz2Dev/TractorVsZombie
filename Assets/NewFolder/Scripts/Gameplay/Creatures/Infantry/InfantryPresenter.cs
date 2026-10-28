@@ -41,7 +41,7 @@ public class InfantryPresenter {
                 break;
         }
 
-        var healthNormalized = 1f - (float) healthState.health / Mathf.Max(healthState.maxHealth, 1);
+        var healthNormalized = (float) healthState.health / Mathf.Max(healthState.maxHealth, 1);
         view.SetHealthNormalized(infantryId, healthNormalized);
 
         if (healthState.damageResult.HasValue) {

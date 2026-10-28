@@ -33,8 +33,8 @@ public class InfantryView {
         visualsRegistry[infantryId].PlayTakeHit();
     }
 
-    internal void SetHealthNormalized(int infantryId, float healthLoadNormalized) {
-        visualsRegistry[infantryId].SetHealthLoad(healthLoadNormalized);
+    internal void SetHealthNormalized(int infantryId, float healthNormalied) {
+        visualsRegistry[infantryId].SetHealthNormalized(healthNormalied);
     }
 
     internal void ShowCharge(int infantryId, float duration) {
