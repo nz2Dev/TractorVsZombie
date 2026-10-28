@@ -5,7 +5,7 @@ public struct ProducerVariantSource {
     
     public ProducerType producerType;
     public ProductionBuildingSource productionBuildingSource;
-    public SpawnerPrototypeSource spawnerPrototypeSource;
+    public SpawnerSource spawnerPrototypeSource;
     public ProducerActivationConfig activationConfig;
 
     public readonly ProducerVariantPrototype Get() {

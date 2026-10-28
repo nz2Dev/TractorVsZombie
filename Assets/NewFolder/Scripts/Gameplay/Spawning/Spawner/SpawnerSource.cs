@@ -1,6 +1,5 @@
 using UnityEngine;
-
-public class SpawnerPrototypeSource : MonoBehaviour {
+public class SpawnerSource : MonoBehaviour {
     
     [SerializeField] private SpawnerConfig configSource;
     [Inline, SerializeField] private SpawnPrototypeSource spawnPrototypeSource;

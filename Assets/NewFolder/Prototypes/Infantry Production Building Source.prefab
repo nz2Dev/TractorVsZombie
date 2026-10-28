@@ -106,7 +106,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eaebd6c7085fd40b0b8c8f534fa972ca, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: NewFolder::SpawnerPrototypeSource
+  m_EditorClassIdentifier: NewFolder::SpawnerSource
   configSource:
     times: 10
     interval: 10
