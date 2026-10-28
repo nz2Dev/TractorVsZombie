@@ -16,8 +16,7 @@ public class InfantryVisuals : MonoBehaviour {
     private Animator animator;
     private Renderer visualsRenderer;
 
-    private float hitFlash;
-    private bool takeHitPlaying;
+    private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
 
     private float chargeFill;
     private float chargeSpeed;
@@ -58,10 +57,7 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     private void Update() {
-        hitFlash = Mathf.MoveTowards(hitFlash, 0, Time.deltaTime);
-        if (hitFlash < float.Epsilon) {
-            takeHitPlaying = false;
-        }
+        hitFlash.Tick(Time.deltaTime);
 
         chargeFill = Mathf.MoveTowards(chargeFill, 1, Time.deltaTime * chargeSpeed);
         chargeFill = Mathf.MoveTowards(chargeFill, 0, Time.deltaTime * decaySpeed);
@@ -86,8 +82,8 @@ public class InfantryVisuals : MonoBehaviour {
                 emission = 1f;
                 fill = chargeFill;
             }
-            if (takeHitPlaying) {
-                emission = hitFlash;
+            if (hitFlash.IsPlaying) {
+                emission = hitFlash.Value;
                 fill = 1;
             }
             dynamicProps.SetFloat(hitFlashPropertyID, emission);
@@ -97,7 +93,7 @@ public class InfantryVisuals : MonoBehaviour {
             visualsRenderer.SetPropertyBlock(dynamicProps);
         }
 
-        if (sheduledForDestruction && !IsAnimatorPlaying() && hitFlash < float.Epsilon && disolve <= float.Epsilon) {
+        if (sheduledForDestruction && !IsAnimatorPlaying() && !hitFlash.IsPlaying && disolve <= float.Epsilon) {
             Destroy(gameObject);
         }
     }
@@ -123,8 +119,7 @@ public class InfantryVisuals : MonoBehaviour {
 
     internal void PlayTakeHit() {
         // animator.SetTrigger("Take Hit");
-        hitFlash = 1;
-        takeHitPlaying = true;
+        hitFlash.Play();
         emissionColor = takeHitColor;
     }
 

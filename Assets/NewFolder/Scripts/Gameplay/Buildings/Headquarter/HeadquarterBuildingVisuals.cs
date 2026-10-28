@@ -9,7 +9,7 @@ public class HeadquarterBuildingVisuals : MonoBehaviour {
     private MaterialPropertyBlock propertyBlock;
     private int flashPropertyId;
 
-    private float flash;
+    private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
 
     private void Awake() {
         propertyBlock = new MaterialPropertyBlock();
@@ -17,13 +17,12 @@ public class HeadquarterBuildingVisuals : MonoBehaviour {
     }
 
     public void TriggerHitFlash() {
-        if (flash < newFlashThreashold)
-            flash = 1;
+        hitFlash.TryPlayBelow(newFlashThreashold);
     }
 
     private void Update() {
-        flash = Mathf.MoveTowards(flash, 0, Time.deltaTime);
-        propertyBlock.SetFloat(flashPropertyId, flash);
+        hitFlash.Tick(Time.deltaTime);
+        propertyBlock.SetFloat(flashPropertyId, hitFlash.Value);
         meshRenderer.SetPropertyBlock(propertyBlock);
     }
 
