@@ -15,6 +15,4 @@ public class ProductionBuildingModel {
     public HitboxId HitboxId { get; set; }
     public SpawnerId SpawnerId { get; set; }
 
-    public bool Destroyed { get; set; }
-
 }

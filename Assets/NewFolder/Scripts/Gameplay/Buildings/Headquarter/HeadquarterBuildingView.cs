@@ -24,7 +24,7 @@ public class HeadquarterBuildingView {
         visuals.TriggerHitFlash();
     }
 
-    internal void ShowHeadquarterDestoryed() {
+    internal void Remove() {
         GameObject.Destroy(visuals.gameObject);
         GameObject.Destroy(healthBarVisuals.GetComponentInParent<WorldSpaceUI>().gameObject);
     }

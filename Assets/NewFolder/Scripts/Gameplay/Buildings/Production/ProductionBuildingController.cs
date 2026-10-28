@@ -39,7 +39,6 @@ public class ProductionBuildingController {
     }
 
     public void Update() {
-        ReadHealthOutput();
         ValidateBuildings();
     }
 
@@ -96,6 +95,20 @@ public class ProductionBuildingController {
         };
     }
 
+    private void ValidateBuildings() {
+        removalBuffer.Clear();
+
+        foreach (var model in registry.Values) {
+            var healthState = healthSystem.ReadState(model.HealthId);
+            if (healthState.isDead) {
+                removalBuffer.Add(model.Id);
+            }
+        }
+
+        foreach (var id in removalBuffer)
+            DestroyBuilding(id);
+    }
+
     private void DestroyBuilding(int id) {
         registry.Remove(id, out var model);
         
@@ -108,26 +121,6 @@ public class ProductionBuildingController {
         factionRegistry.Remove(model.FactionId);
 
         view.RemoveVisuals(model.Id);
-    }
-
-    private void ReadHealthOutput() {
-        foreach (var model in registry.Values) {
-            var healthState = healthSystem.ReadState(model.HealthId);
-            if (healthState.damageResult?.damageWasFatal == true) {
-                model.Destroyed = true;
-            }
-        }
-    }
-
-    private void ValidateBuildings() {
-        removalBuffer.Clear();
-
-        foreach (var model in registry.Values)
-            if (model.Destroyed)
-                removalBuffer.Add(model.Id);
-
-        foreach (var id in removalBuffer)
-            DestroyBuilding(id);
     }
 
 }

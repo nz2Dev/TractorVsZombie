@@ -24,8 +24,8 @@ public class HeadquarterBuildingController {
     }
 
     public void Update() {
-        ReadHealthOutput();
-        UpdateView();
+        UpdatePresentation();
+        CheckDestruction();
     }
 
     public void Create(HeadquarterBuildingPrototype prototype) {
@@ -45,32 +45,34 @@ public class HeadquarterBuildingController {
     }
 
     public bool IsDestroyed() {
-        return headquarter.Destroyed;
+        return headquarter == null;
     }
 
-    private void ReadHealthOutput() {
+    private void CheckDestruction() {
         var healthState = healthSystem.ReadState(headquarter.HealthId);
+        if (healthState.isDead) {
+            Remove();
+        }
+    }
+
+    private void Remove() {
+        structureSystem.Remove(headquarter.StructureId);
+        hitboxSystem.Remove(headquarter.HitboxId);
+        healthSystem.Remove(headquarter.HealthId);
+        factionRegistry.Remove(headquarter.FactionId);
+
+        entityMapping.DeleteMapping(headquarter.HitboxId);
+        view.Remove();
+        
+        headquarter = null;
+    }
+
+    private void UpdatePresentation() {
+        var healthState = healthSystem.ReadState(headquarter.HealthId);
+        view.UpdateHealth(healthState.health, healthState.maxHealth);
         if (healthState.damageResult.HasValue) {
             view.ShowTakeHit();
         }
-
-        if (healthState.damageResult?.damageWasFatal == true) {
-            headquarter.Destroyed = true;
-            
-            structureSystem.Remove(headquarter.StructureId);
-            hitboxSystem.Remove(headquarter.HitboxId);
-
-            entityMapping.DeleteMapping(headquarter.HitboxId);
-            healthSystem.Remove(headquarter.HealthId);
-            factionRegistry.Remove(headquarter.FactionId);
-
-            view.ShowHeadquarterDestoryed();
-        }
-    }
-
-    private void UpdateView() {
-        var healthState = healthSystem.ReadState(headquarter.HealthId);
-        view.UpdateHealth(healthState.health, healthState.maxHealth);
     }
 
 }
