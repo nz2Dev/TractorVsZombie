@@ -3734,10 +3734,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af0279d1559d46f099a721bcfa4e510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnSpotSource
-  variantSource:
-    type: 1
-    infantrySource: {fileID: 0}
-    armorSource: {fileID: 377055305}
+  type: 1
+  infantrySource: {fileID: 0}
+  armorSource: {fileID: 377055305}
   shape:
     width: 1
     height: 1
@@ -9744,7 +9743,7 @@ MonoBehaviour:
   configSource:
     times: 2
     interval: 30
-  spawnPrototypeSource: {fileID: 155815523}
+  spawnSource: {fileID: 155815523}
 --- !u!1 &492483846
 GameObject:
   m_ObjectHideFlags: 0
@@ -17713,7 +17712,7 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1909830770}
     - target: {fileID: 5601172961921829115, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
-      propertyPath: variantSource.infantrySource
+      propertyPath: infantrySource
       value: 
       objectReference: {fileID: 1909830770}
     - target: {fileID: 6003848239607631463, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
@@ -38011,7 +38010,7 @@ MonoBehaviour:
   configSource:
     times: 2
     interval: 10
-  spawnPrototypeSource: {fileID: 5601172961937789344}
+  spawnSource: {fileID: 5601172961937789344}
 --- !u!1 &1873414831
 GameObject:
   m_ObjectHideFlags: 0
@@ -42690,10 +42689,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af0279d1559d46f099a721bcfa4e510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnPointSource
-  variantSource:
-    type: 0
-    infantrySource: {fileID: 1909830770}
-    armorSource: {fileID: 0}
+  type: 0
+  infantrySource: {fileID: 1909830770}
+  armorSource: {fileID: 0}
   shape:
     width: 4
     height: 8
@@ -43514,7 +43512,7 @@ PrefabInstance:
       value: 1617908512
       objectReference: {fileID: 0}
     - target: {fileID: 5601172961921829115, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}
-      propertyPath: variantSource.infantrySource
+      propertyPath: infantrySource
       value: 
       objectReference: {fileID: 1909830770}
     - target: {fileID: 6003848239607631463, guid: b58f107cb18874a518cdefeb0a49de61, type: 3}

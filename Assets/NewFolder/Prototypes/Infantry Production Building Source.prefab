@@ -110,7 +110,7 @@ MonoBehaviour:
   configSource:
     times: 10
     interval: 10
-  spawnPrototypeSource: {fileID: 5601172961921829115}
+  spawnSource: {fileID: 5601172961921829115}
 --- !u!1 &3858228865796293992
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,10 +155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af0279d1559d46f099a721bcfa4e510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnPointSource
-  variantSource:
-    type: 0
-    infantrySource: {fileID: 0}
-    armorSource: {fileID: 0}
+  type: 0
+  infantrySource: {fileID: 0}
+  armorSource: {fileID: 0}
   shape:
     width: 8
     height: 3

@@ -2,9 +2,11 @@ using UnityEditor;
 
 using UnityEngine;
 
-public class SpawnPrototypeSource : MonoBehaviour {
+public class SpawnSource : MonoBehaviour {
     
-    [SerializeField] private SpawnVariantSource variantSource;
+    [SerializeField] private SpawnVariantType type;
+    [SerializeField] private InfantrySource infantrySource;
+    [SerializeField] private ArmorSource armorSource;
     [SerializeField] private SpawnShape shape = new SpawnShape {
         height = 1,
         width = 1,
@@ -18,7 +20,11 @@ public class SpawnPrototypeSource : MonoBehaviour {
             position = transform.position,
             rotation = transform.rotation,
             shape = shape,
-            variant = variantSource.Get(),
+            variant = new SpawnVariant {
+                type = type,
+                infantryPrototype = infantrySource == null ? default : infantrySource.GetPrototype(),
+                armorPrototype = armorSource == null ? default : armorSource.GetPrototype()
+            },
         };
     }
 
