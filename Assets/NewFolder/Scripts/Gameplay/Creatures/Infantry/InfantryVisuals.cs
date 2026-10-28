@@ -18,10 +18,7 @@ public class InfantryVisuals : MonoBehaviour {
 
     private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
 
-    private float chargeFill;
-    private float chargeSpeed;
-    private float decaySpeed;
-    private bool chargePlaying;
+    private readonly ChargeEffect chargeEffect = new ChargeEffect();
     private Color emissionColor;
     
     private float healthLoad;
@@ -59,11 +56,7 @@ public class InfantryVisuals : MonoBehaviour {
     private void Update() {
         hitFlash.Tick(Time.deltaTime);
 
-        chargeFill = Mathf.MoveTowards(chargeFill, 1, Time.deltaTime * chargeSpeed);
-        chargeFill = Mathf.MoveTowards(chargeFill, 0, Time.deltaTime * decaySpeed);
-        if (chargeFill < float.Epsilon) {
-            chargePlaying = false;
-        }
+        chargeEffect.Tick(Time.deltaTime);
 
         disolve = Mathf.MoveTowards(disolve, 0f, Time.deltaTime * disolveSubtractor);
         var healthReserve = 1f - healthLoad;
@@ -78,9 +71,9 @@ public class InfantryVisuals : MonoBehaviour {
         if (dynamicProps != null) {
             var emission = 0f;
             var fill = 1f;
-            if (chargePlaying) {
+            if (chargeEffect.IsPlaying) {
                 emission = 1f;
-                fill = chargeFill;
+                fill = chargeEffect.Fill;
             }
             if (hitFlash.IsPlaying) {
                 emission = hitFlash.Value;
@@ -124,30 +117,20 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     internal void PlayCharge(float duration) {
-        chargeFill = 0;
-        chargePlaying = true;
-        chargeSpeed = duration > 0f ? 1f / duration : 0f;
-        decaySpeed = 0;
+        chargeEffect.Play(duration);
         emissionColor = chargeColor;
     }
 
     internal void PlayDischarge() {
-        chargeSpeed = 0f;
-        decaySpeed = chargeDecaySpeed;
+        chargeEffect.Discharge(chargeDecaySpeed);
     }
 
     public void OnAttackFinished() {
-        chargeFill = 0f;
-        chargeSpeed = 0f;
-        decaySpeed = 0f;
-        chargePlaying = false;
+        chargeEffect.Finish();
     }
 
     internal void PlayChargeAttack() {
-        chargeFill = 1f;
-        chargePlaying = true;
-        chargeSpeed = 0f;
-        decaySpeed = 0f;
+        chargeEffect.PlayFull();
         emissionColor = chargeColor;
         animator.SetTrigger("Attack");
     }
