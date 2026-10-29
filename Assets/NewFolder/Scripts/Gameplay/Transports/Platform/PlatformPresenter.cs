@@ -25,6 +25,7 @@ public class PlatformPresenter {
         view.SetPose(platformId, vehiclePose);
 
         ui.UpdatePosition(platformId, vehiclePose.position);
+        ui.UpdateDurability(platformId, carryingState);
         if (carryingState.hasLoadout)
             ui.UpdateHealthBar(platformId, carryingState.loadoutState.healthState);
         else

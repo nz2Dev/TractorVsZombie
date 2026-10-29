@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -34,4 +35,7 @@ public class PlatformUI {
         registry[platformId].HideHealthBar();
     }
 
+    internal void UpdateDurability(int platformId, CarryingState carryingState) {
+        registry[platformId].SetDurabilityBar(carryingState.durability, carryingState.maxDurability);
+    }
 }

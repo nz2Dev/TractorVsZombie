@@ -1,9 +1,14 @@
+using System;
+
+using TMPro;
+
 using UnityEngine;
 
 [RequireComponent(typeof(WorldSpaceUI))]
 public class PlatformUIElements : MonoBehaviour {
     
     [SerializeField] private HealthBarVisuals healthBar;
+    [SerializeField] private TextMeshProUGUI durabilityLabel;
 
     private WorldSpaceUI holder;
 
@@ -26,4 +31,7 @@ public class PlatformUIElements : MonoBehaviour {
         healthBar.SetBar(health, maxHealth);
     }
 
+    internal void SetDurabilityBar(int durability, int maxDurability) {
+        durabilityLabel.text = $"[{durability} out of {maxDurability}]";
+    }
 }
