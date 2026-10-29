@@ -15,16 +15,11 @@ public class InfantryVisuals : MonoBehaviour {
 
     private Animator animator;
     private EffectsMaterialProperties effectsMaterialProperties;
-
     private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
-
     private readonly ChargeEffect chargeEffect = new ChargeEffect();
-    private Color emissionColor;
+    private readonly DissolveEffect dissolveEffect = new DissolveEffect();
     
     private float healthNormalized;
-    private readonly DissolveEffect dissolveEffect = new DissolveEffect();
-    private float power = 1f;
-
     private bool sheduledForDestruction;
     private Quaternion currentRotation;
     private Quaternion targetRotation;
@@ -42,30 +37,25 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     private void Update() {
-        hitFlash.Tick(Time.deltaTime);
-
         chargeEffect.Tick(Time.deltaTime);
+        if (chargeEffect.IsPlaying) {
+            effectsMaterialProperties.EmissionIntensity = 1;
+            effectsMaterialProperties.EmissionColor = chargeColor;
+            effectsMaterialProperties.EmissionFillAmount = chargeEffect.Fill;
+        }
+
+        hitFlash.Tick(Time.deltaTime);
+        if (hitFlash.IsPlaying) {
+            effectsMaterialProperties.EmissionIntensity = hitFlash.Value;
+            effectsMaterialProperties.EmissionColor = takeHitColor;
+            effectsMaterialProperties.EmissionFillAmount = 1;
+        }
 
         dissolveEffect.Tick(Time.deltaTime);
         var disolvePowerPart = (1f - healthPowerPart);
         var normalizedPower = healthNormalized * healthPowerPart + dissolveEffect.Value * disolvePowerPart;
-        power = Mathf.Lerp(powerMin, powerMax, normalizedPower);
-
-        var emission = 0f;
-        var fill = 1f;
-        if (chargeEffect.IsPlaying) {
-            emission = 1f;
-            fill = chargeEffect.Fill;
-        }
-        if (hitFlash.IsPlaying) {
-            emission = hitFlash.Value;
-            fill = 1f;
-        }
-
-        effectsMaterialProperties.EmissionIntensity = emission;
-        effectsMaterialProperties.EmissionColor = emissionColor;
+        var power = Mathf.Lerp(powerMin, powerMax, normalizedPower);
         effectsMaterialProperties.Power = Mathf.Clamp01(power);
-        effectsMaterialProperties.EmissionFillAmount = fill;
         
         currentRotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
         transform.rotation = currentRotation;
@@ -99,12 +89,10 @@ public class InfantryVisuals : MonoBehaviour {
     internal void PlayTakeHit() {
         // animator.SetTrigger("Take Hit");
         hitFlash.Play();
-        emissionColor = takeHitColor;
     }
 
     internal void PlayCharge(float duration) {
         chargeEffect.Play(duration);
-        emissionColor = chargeColor;
     }
 
     internal void PlayDischarge() {
@@ -117,7 +105,6 @@ public class InfantryVisuals : MonoBehaviour {
 
     internal void PlayChargeAttack() {
         chargeEffect.PlayFull();
-        emissionColor = chargeColor;
         animator.SetTrigger("Attack");
     }
 
@@ -127,7 +114,7 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     internal void PlayDisolveAnimation() {
-        animator.SetTrigger("Disolve Death");
+        animator.SetTrigger("Disolve Death"); // state and clip is empty
         dissolveEffect.Play();
     }
 
