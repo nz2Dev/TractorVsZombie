@@ -6,7 +6,6 @@ public class SegmentState {
     public bool waitsActivation;
     public VehicleId? connectedVehicleId;
     public Vector3 activationPosition;
-    public LoadoutPrototype activationLoadout;
 
     public bool IsPlatformCreated => !isTruck && platformId != -1;
     public bool IsPlatformConnected => connectedVehicleId.HasValue;

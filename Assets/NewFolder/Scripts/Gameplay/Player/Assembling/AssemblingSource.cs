@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-
 using UnityEngine;
 
 [Serializable]
@@ -9,18 +7,16 @@ public struct AssemblingSource {
     [SerializeField] private GameObject platformPreviewPrefab;
     [SerializeField] private TruckSource initTruckSource;
     [SerializeField] private PlatformSource initPlatformSource;
-    [SerializeField] private LoadoutSource[] initLoadoutSources;
-
-    public int LoadoutsLength => initLoadoutSources.Length;
+    [SerializeField] private int initialPlatformCount;
+    
     public PlatformPrototype PlatformPrototype => initPlatformSource.GetPrototype();
-    public LoadoutPrototype GetLoadoutPrototype(int index) => initLoadoutSources[index].GetPrototype();
 
     public AssemblingPrototype Get() {
         return new AssemblingPrototype {
             platformPreviewPrefab = platformPreviewPrefab,
             initTruckPrototype = initTruckSource.GetPrototype(),
             pickupPlatformPrototype = initPlatformSource.GetPrototype(),
-            initLoadoutPrototypes = initLoadoutSources == null ? new LoadoutPrototype[0] : initLoadoutSources.Select(source => source.GetPrototype()).ToArray()
+            initialPlatformCount = initialPlatformCount
         };
     }
 }

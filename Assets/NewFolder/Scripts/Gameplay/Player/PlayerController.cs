@@ -6,17 +6,19 @@ public class PlayerController {
     private PlayerModel model;
     private readonly DrivingController drivingController;
     private readonly AssemblingController assemblingController;
+    private readonly LoaderController loaderController;
     private readonly SelectingController selectingController;
     private readonly AimingController aimingController;
     private readonly CollectingController collectingController;
     private readonly CameraController cameraController;
 
-    public PlayerController(DrivingController drivingController, AssemblingController assemblingController, 
+    public PlayerController(DrivingController drivingController, AssemblingController assemblingController, LoaderController loaderController,
         SelectingController selectingController, AimingController aimingController, 
         CollectingController collectingController, CameraController cameraController) {
         
         this.drivingController = drivingController;
         this.assemblingController = assemblingController;
+        this.loaderController = loaderController;
         this.selectingController = selectingController;
         this.aimingController = aimingController;
         this.collectingController = collectingController;
@@ -26,18 +28,20 @@ public class PlayerController {
             aimingController.SetManualPlatformIds(selectingController.SelectedPlatformIds);
 
         assemblingController.OnPlatformAdded += (platformId) => {
+            loaderController.RegisterPlatform(platformId);
             selectingController.AddOption(platformId);
             aimingController.AddControlledPlatformId(platformId);
             drivingController.AddControlledPlatform(platformId);
         };
         assemblingController.OnPlatformRemoved += (platformId) => {
+            loaderController.UnregisterPlatform(platformId);
             selectingController.RemoveOption(platformId);
             aimingController.RemoveControlledPlatformId(platformId);
             drivingController.RemoveControlledPlatform(platformId);
         };
 
         collectingController.OnLoadoutCollected += (position, loadoutPrototype) =>
-            assemblingController.AddLoadout(position, loadoutPrototype, model.Config.startOrEndCouplingOfRewards);
+            loaderController.Place(loadoutPrototype);
     }
 
     public bool HasUnits => assemblingController.ControlledUnitsCount > 0;
@@ -47,6 +51,7 @@ public class PlayerController {
     public void Setup(PlayerPrototype prototype) {     
         model = new PlayerModel(prototype.config);
         aimingController.Init(prototype.aimingPrototype);
+        loaderController.Init(prototype.loaderPrototype);
         assemblingController.Init(prototype.assemblingPrototype);
         collectingController.Init(prototype.collectingPrototype);
     }

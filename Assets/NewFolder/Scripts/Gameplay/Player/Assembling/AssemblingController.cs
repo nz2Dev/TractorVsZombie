@@ -35,13 +35,13 @@ public class AssemblingController {
         SpawnDriver();
         
         model.PickupPlatformPrototype = prototype.pickupPlatformPrototype;
-        GenerateChainRow(prototype.initTruckPrototype.rotation, prototype.initTruckPrototype.position, prototype.initLoadoutPrototypes);
+        GenerateChainRow(prototype.initTruckPrototype.rotation, prototype.initTruckPrototype.position, prototype.initialPlatformCount);
         ProcessChain();
         UpdateHeadPosition();
     }
 
-    public void AddLoadout(Vector3 position, LoadoutPrototype loadout, bool trueInFront_falseToTheEnd) {
-        AddSegment(position, loadout, trueInFront_falseToTheEnd);
+    public void AddPlatform(Vector3 position, bool trueInFront_falseToTheEnd) {
+        AddSegment(position, trueInFront_falseToTheEnd);
     }
 
     public void Update() {
@@ -57,20 +57,19 @@ public class AssemblingController {
         }
     }
 
-    private void GenerateChainRow(Quaternion initRotation, Vector3 initPosition, IEnumerable<LoadoutPrototype> loadoutPrototypes) {
+    private void GenerateChainRow(Quaternion initRotation, Vector3 initPosition, int platformCount) {
         Vector3 directionStep = initRotation * Vector3.back * 6;
-        Vector3 loadoutPosition = initPosition + directionStep; 
-        foreach (var loadout in loadoutPrototypes) {    
-            AddSegment(loadoutPosition, loadout, trueInFront_falseToTheEnd: false);
-            loadoutPosition += directionStep;
+        Vector3 platformPosition = initPosition + directionStep;
+        for (int i = 0; i < platformCount; i++) {
+            AddSegment(platformPosition, trueInFront_falseToTheEnd: false);
+            platformPosition += directionStep;
         }
     }
 
-    private void AddSegment(Vector3 position, LoadoutPrototype prototype, bool trueInFront_falseToTheEnd) {
+    private void AddSegment(Vector3 position, bool trueInFront_falseToTheEnd) {
         var insertIndex = trueInFront_falseToTheEnd ? 0 : model.Chain.Count;
         model.Chain.Insert(insertIndex, new SegmentState {
             activationPosition = position,
-            activationLoadout = prototype
         });
     }
 
@@ -111,7 +110,6 @@ public class AssemblingController {
 
             if (headPosition.HasValue && Vector3.Distance(headPosition.Value, tail.activationPosition) > 4) {
                 var platformId = platformController.Create(model.PickupPlatformPrototype, tail.activationPosition);
-                platformController.SetLoadout(platformId, tail.activationLoadout);
                 model.ControlledPlatformIds.Add(platformId);
                 tail.waitsActivation = false;
                 tail.platformId = platformId;

@@ -13306,9 +13306,10 @@ MonoBehaviour:
     platformPreviewPrefab: {fileID: 3371121685155722078, guid: 6321345344532445fbf7ea0e39b1b4d0, type: 3}
     initTruckSource: {fileID: 1117709943}
     initPlatformSource: {fileID: 269684097}
-    initLoadoutSources:
+    initialPlatformCount: 2
+  loaderSource:
+    initialLoadoutSources:
     - {fileID: 339747577}
-    - {fileID: 1248990951}
   aimingSource:
     aimVisualsPrefab: {fileID: 7650166389670777688, guid: db77fb008dad74d3ca69afe4d43638bd, type: 3}
   collectingSource:
@@ -34179,17 +34180,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!114 &1248990951 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2248895191762497786, guid: 697de765863b048a7a82e00beb0eb422, type: 3}
-  m_PrefabInstance: {fileID: 5781962541767908237}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6000b6066a314bfb9417c9743de4d18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::LoadoutSource
 --- !u!43 &1298888550
 Mesh:
   m_ObjectHideFlags: 0
