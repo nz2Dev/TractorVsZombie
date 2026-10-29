@@ -42,6 +42,8 @@ public class PlayerController {
 
         collectingController.OnLoadoutCollected += (position, loadoutPrototype) =>
             loaderController.Place(loadoutPrototype);
+        collectingController.OnPlatformCollected += position =>
+            assemblingController.AddPlatform(position, model.Config.startOrEndCouplingOfRewards);
     }
 
     public bool HasUnits => assemblingController.ControlledUnitsCount > 0;

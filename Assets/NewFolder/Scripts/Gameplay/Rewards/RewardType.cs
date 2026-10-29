@@ -4,4 +4,5 @@ using System;
 public enum RewardType {
     Points,
     Loadout,
+    Platform,
 }

@@ -11,6 +11,7 @@ public class CollectingController {
     private CollectingConfig config;
 
     public event Action<Vector3, LoadoutPrototype> OnLoadoutCollected;
+    public event Action<Vector3> OnPlatformCollected;
 
     public CollectingController(RewardController rewardController) {
         this.rewardController = rewardController;
@@ -33,6 +34,8 @@ public class CollectingController {
         foreach (var rewardState in collectedRewardStates) {
             if (rewardState.payload.type == RewardType.Loadout) {
                 OnLoadoutCollected?.Invoke(rewardState.position, rewardState.payload.loadoutPrototype);
+            } else if (rewardState.payload.type == RewardType.Platform) {
+                OnPlatformCollected?.Invoke(rewardState.position);
             }
         }
     }
