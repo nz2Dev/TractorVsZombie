@@ -25,6 +25,7 @@ public class AssemblingController {
     }
 
     public Vector3 HeadPosition { get; private set; }
+    public bool HasPosition { get; private set; }
     public int ControlledUnitsCount => model.Chain.Count + (truckController.UnitExist ? 1 : 0);
 
     public void Init(AssemblingPrototype prototype) {
@@ -36,6 +37,7 @@ public class AssemblingController {
         model.PickupPlatformPrototype = prototype.pickupPlatformPrototype;
         GenerateChainRow(prototype.initTruckPrototype.rotation, prototype.initTruckPrototype.position, prototype.initLoadoutPrototypes);
         ProcessChain();
+        UpdateHeadPosition();
     }
 
     public void AddLoadout(Vector3 position, LoadoutPrototype loadout, bool trueInFront_falseToTheEnd) {
@@ -51,6 +53,7 @@ public class AssemblingController {
     private void UpdateHeadPosition() {
         if (truckController.UnitExist) {
             HeadPosition = truckController.ReadVehiclePosition();
+            HasPosition = true;
         }
     }
 

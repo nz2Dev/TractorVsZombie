@@ -22,6 +22,7 @@ public class GameBootstrapper : MonoBehaviour {
     private PlayerController playerController;
     private EnemyController enemyController;
     private LevelController levelController;
+    private RewardSpawnController rewardSpawnController;
     private RewardController rewardController;
     private DropSystem dropSystem;
     private AttachmentSystem attachmentSystem;
@@ -229,6 +230,8 @@ public class GameBootstrapper : MonoBehaviour {
             new CameraController(new CameraView(cameraManager))
         );
 
+        rewardSpawnController = new RewardSpawnController(rewardController, playerController);
+
         enemyController = new EnemyController(
             new InfantryAIController(infantryController, pathfindingService, hitboxSystem, entityMapping, formationController),
             new ArmorAIController(healthSystem, pathfindingService, armorController, vehicleSystem, weaponController, hitboxSystem),
@@ -241,7 +244,8 @@ public class GameBootstrapper : MonoBehaviour {
             new LevelView(cameraManager, uiDocument),
             playerController,
             enemyController,
-            headquarterBuildingController
+            headquarterBuildingController,
+            rewardSpawnController
         );
     }
 
@@ -280,6 +284,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         enemyController.Update();
         playerController.Update();
+        rewardSpawnController.Update();
 
         levelController.Update();
     }

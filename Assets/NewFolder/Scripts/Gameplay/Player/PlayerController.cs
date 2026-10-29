@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PlayerController {
@@ -40,6 +41,8 @@ public class PlayerController {
     }
 
     public bool HasUnits => assemblingController.ControlledUnitsCount > 0;
+    public bool HasPosition => model != null && assemblingController.HasPosition;
+    public Vector3 Position => assemblingController.HeadPosition;
 
     public void Setup(PlayerPrototype prototype) {     
         model = new PlayerModel(prototype.config);

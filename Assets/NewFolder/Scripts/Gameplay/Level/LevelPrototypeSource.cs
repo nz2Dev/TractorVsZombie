@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -10,6 +12,7 @@ public class LevelPrototypeSource : MonoBehaviour {
     [SerializeField] private EnemyPrototypeSource enemyPrototypeSource;
     [SerializeField] private HeadquarterBuildingSource headquarterBuildingSource;
     [SerializeField] private Transform startTransform;
+    [SerializeField] private RewardSpawnListSource spawnListSource;
 
     [ContextMenu("Find In Scene")]
     public void FindInScene() {
@@ -37,7 +40,8 @@ public class LevelPrototypeSource : MonoBehaviour {
             enemyPrototype: enemyPrototypeSource.Get(),
             playerPrototype: playerPrototypeSource.Get(),
             headquarterBuildingPrototype: headquarterBuildingSource.GetPrototype(),
-            startPosition: startTransform.position
+            startPosition: startTransform.position,
+            rewardSpawns: spawnListSource.GetPrototypes()
         );
     }
 }

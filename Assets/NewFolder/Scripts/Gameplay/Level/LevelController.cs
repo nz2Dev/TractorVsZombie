@@ -6,22 +6,24 @@ public class LevelController {
     private readonly PlayerController playerController;
     private readonly EnemyController enemyController;
     private readonly HeadquarterBuildingController headquarterBuildingController;
+    private readonly RewardSpawnController rewardSpawnController;
 
     private LevelModel model;
+    private LevelPrototype prototype;
 
-    public LevelController(LevelView view, PlayerController playerController, EnemyController enemyController, HeadquarterBuildingController headquarterBuildingController) {
+    public LevelController(LevelView view, PlayerController playerController, EnemyController enemyController, HeadquarterBuildingController headquarterBuildingController, RewardSpawnController rewardSpawnController) {
         this.view = view;
         this.playerController = playerController;
         this.enemyController = enemyController;
         this.headquarterBuildingController = headquarterBuildingController;
+        this.rewardSpawnController = rewardSpawnController;
     }
 
     public void Init(LevelPrototype levelPrototype) {
-        headquarterBuildingController.Create(levelPrototype.headquarterBuildingPrototype); //?
+        this.prototype = levelPrototype;
         model = new LevelModel();
-        model.PlayerPrototype = levelPrototype.playerPrototype;
-        model.EnemyPrototype = levelPrototype.enemyPrototype;
         
+        headquarterBuildingController.Create(levelPrototype.headquarterBuildingPrototype); //?
         view.ShowEnteringCutscene(levelPrototype.entranceCutscene, levelPrototype.startPosition);
         model.InCutscene = true;
         view.ShowPlayerUI();
@@ -40,8 +42,9 @@ public class LevelController {
 
     private void OnLevelLoaded() {
         model.LevelStarted = true;
-        playerController.Setup(model.PlayerPrototype);
-        enemyController.Setup(model.EnemyPrototype);
+        playerController.Setup(prototype.playerPrototype);
+        enemyController.Setup(prototype.enemyPrototype);
+        rewardSpawnController.Setup(prototype.rewardSpawns);
     }
 
 }
