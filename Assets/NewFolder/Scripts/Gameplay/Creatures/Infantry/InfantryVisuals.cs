@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// [ExecuteInEditMode]
+[RequireComponent(typeof(EffectsMaterialProperties))]
 public class InfantryVisuals : MonoBehaviour {
     
     public Color AnimatedColor; //temporaly disabled
@@ -14,7 +14,7 @@ public class InfantryVisuals : MonoBehaviour {
     [SerializeField] private float chargeDecaySpeed = 2f;
 
     private Animator animator;
-    private Renderer visualsRenderer;
+    private EffectsMaterialProperties effectsMaterialProperties;
 
     private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
 
@@ -25,24 +25,13 @@ public class InfantryVisuals : MonoBehaviour {
     private readonly DissolveEffect dissolveEffect = new DissolveEffect();
     private float power = 1f;
 
-    private MaterialPropertyBlock dynamicProps;
-    private int powerPropertyID;
-    private int hitFlashPropertyID;
-    private int emissionPropertyID;
-    private int verticalFillAmountPropertyID;
-
     private bool sheduledForDestruction;
     private Quaternion currentRotation;
     private Quaternion targetRotation;
 
     private void Awake() {
         animator = GetComponent<Animator>();
-        dynamicProps = new MaterialPropertyBlock();
-        visualsRenderer = GetComponentInChildren<Renderer>();
-        emissionPropertyID = Shader.PropertyToID("_HitEmissionColor");
-        hitFlashPropertyID = Shader.PropertyToID("_HitFlash");
-        powerPropertyID = Shader.PropertyToID("_Power");
-        verticalFillAmountPropertyID = Shader.PropertyToID("_VerticalFillAmount");
+        effectsMaterialProperties = GetComponent<EffectsMaterialProperties>();
 
         currentRotation = transform.rotation;
         targetRotation = currentRotation;
@@ -61,30 +50,28 @@ public class InfantryVisuals : MonoBehaviour {
         var disolvePowerPart = (1f - healthPowerPart);
         var normalizedPower = healthNormalized * healthPowerPart + dissolveEffect.Value * disolvePowerPart;
         power = Mathf.Lerp(powerMin, powerMax, normalizedPower);
+
+        var emission = 0f;
+        var fill = 1f;
+        if (chargeEffect.IsPlaying) {
+            emission = 1f;
+            fill = chargeEffect.Fill;
+        }
+        if (hitFlash.IsPlaying) {
+            emission = hitFlash.Value;
+            fill = 1f;
+        }
+
+        effectsMaterialProperties.EmissionIntensity = emission;
+        effectsMaterialProperties.EmissionColor = emissionColor;
+        effectsMaterialProperties.Power = Mathf.Clamp01(power);
+        effectsMaterialProperties.EmissionFillAmount = fill;
         
         currentRotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
         transform.rotation = currentRotation;
     }
 
     void LateUpdate() {
-        if (dynamicProps != null) {
-            var emission = 0f;
-            var fill = 1f;
-            if (chargeEffect.IsPlaying) {
-                emission = 1f;
-                fill = chargeEffect.Fill;
-            }
-            if (hitFlash.IsPlaying) {
-                emission = hitFlash.Value;
-                fill = 1;
-            }
-            dynamicProps.SetFloat(hitFlashPropertyID, emission);
-            dynamicProps.SetFloat(powerPropertyID, Mathf.Clamp01(power));
-            dynamicProps.SetFloat(verticalFillAmountPropertyID, fill);
-            dynamicProps.SetColor(emissionPropertyID, emissionColor);
-            visualsRenderer.SetPropertyBlock(dynamicProps);
-        }
-
         if (sheduledForDestruction && !IsAnimatorPlaying() && !hitFlash.IsPlaying && dissolveEffect.IsComplete) {
             Destroy(gameObject);
         }
