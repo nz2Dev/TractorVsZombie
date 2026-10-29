@@ -1,19 +1,16 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
+[RequireComponent(typeof(EmmisionEffectMaterialProperties))]
 public class HeadquarterBuildingVisuals : MonoBehaviour {
     
-    [SerializeField] private MeshRenderer meshRenderer;
     [SerializeField] private float newFlashThreashold = 0.5f;
 
-    private MaterialPropertyBlock propertyBlock;
-    private int flashPropertyId;
+    private EmmisionEffectMaterialProperties emmisionEffectMaterialProperties;
 
     private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
 
     private void Awake() {
-        propertyBlock = new MaterialPropertyBlock();
-        flashPropertyId = Shader.PropertyToID("_Flash");
+        emmisionEffectMaterialProperties = GetComponent<EmmisionEffectMaterialProperties>();
     }
 
     public void TriggerHitFlash() {
@@ -22,8 +19,7 @@ public class HeadquarterBuildingVisuals : MonoBehaviour {
 
     private void Update() {
         hitFlash.Tick(Time.deltaTime);
-        propertyBlock.SetFloat(flashPropertyId, hitFlash.Value);
-        meshRenderer.SetPropertyBlock(propertyBlock);
+        emmisionEffectMaterialProperties.Flash = hitFlash.Value;
     }
 
 }

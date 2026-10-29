@@ -60,8 +60,7 @@ public class TruckController {
             factionId = model.FactionId,
         });
 
-        var alie = prototype.factionPrototype.alie;
-        presenter.Add(model.VehicleId.Value, initPosition, alie, prototype.presentationPrototype);
+        presenter.Add(model.VehicleId.Value, initPosition, prototype.presentationPrototype);
     }
 
     private void CheckDestruction() {

@@ -10,8 +10,8 @@ public class PlatformPresenter {
         this.ui = ui;
     }
 
-    public void Add(int platformId, Vector3 position, bool alie, PlatformPresentationPrototype prototype) {
-        view.Show(platformId, position, prototype.visualsPrefab, alie);
+    public void Add(int platformId, Vector3 position, PlatformPresentationPrototype prototype) {
+        view.Show(platformId, position, prototype.visualsPrefab);
         ui.Add(platformId, position, prototype.worldSpaceUIPrefab);
     }
 

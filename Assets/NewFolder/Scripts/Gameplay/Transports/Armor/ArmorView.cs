@@ -6,9 +6,8 @@ public class ArmorView {
 
     private readonly Dictionary<int, ArmorVisuals> registry = new();
 
-    public void Show(int armorId, Vector3 position, bool alie, ArmorVisuals visualsPrefab) {
+    public void Show(int armorId, Vector3 position, ArmorVisuals visualsPrefab) {
         var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
-        visuals.SetFactionProperties(alie);
         registry[armorId] = visuals;
     }
 

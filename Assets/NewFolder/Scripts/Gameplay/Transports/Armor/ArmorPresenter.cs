@@ -14,8 +14,8 @@ public class ArmorPresenter {
         this.ui = ui;
     }
 
-    public void Add(int armorId, Vector3 position, bool alie, ArmorPresentationPrototype prototype) {
-        view.Show(armorId, position, alie, prototype.visualsPrefab);
+    public void Add(int armorId, Vector3 position, ArmorPresentationPrototype prototype) {
+        view.Show(armorId, position, prototype.visualsPrefab);
         ui.Add(armorId, position, prototype.worldSpaceUIPrefab);
         audio.Add(armorId, position, prototype);
     }

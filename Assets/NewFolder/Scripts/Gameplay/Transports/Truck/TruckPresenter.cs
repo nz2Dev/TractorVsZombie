@@ -11,8 +11,8 @@ public class TruckPresenter {
         this.ui = ui;
     }
 
-    public void Add(int truckId, Vector3 position, bool alie, TruckPresentationPrototype prototype) {
-        view.Show(truckId, position, alie, prototype.visualsPrefab);
+    public void Add(int truckId, Vector3 position, TruckPresentationPrototype prototype) {
+        view.Show(truckId, position, prototype.visualsPrefab);
         ui.Add(truckId, position, prototype.worldSpaceUIPrefab);
         audio.Add(truckId, position, prototype);
     }

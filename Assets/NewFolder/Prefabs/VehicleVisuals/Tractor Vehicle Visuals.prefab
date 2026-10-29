@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3518426781514934332}
+  - component: {fileID: 4570817269021447995}
   - component: {fileID: 2325663696177151136}
   m_Layer: 0
   m_Name: Tractor Vehicle Visuals
@@ -37,6 +38,25 @@ Transform:
   - {fileID: 8810154948226481884}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4570817269021447995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5110178552309447525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4129fda9ad0274fbea90044662445c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::EmmisionEffectMaterialProperties
+  affectedRenderers:
+  - {fileID: 3740912096407343947}
+  - {fileID: 2565221138543935775}
+  - {fileID: 7383694967095433362}
+  - {fileID: 5515807733741157634}
+  - {fileID: 950845710126525403}
+  flash: 0
 --- !u!114 &2325663696177151136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,14 +75,6 @@ MonoBehaviour:
   rearAxis:
     leftWheel: {fileID: 4733134336438010795}
     rightWheel: {fileID: 310221577142376998}
-  alieUnitMaterial: {fileID: 2100000, guid: f572ff932c827487b8547f38d42ca653, type: 2}
-  foeUnitMaterial: {fileID: 2100000, guid: a1330ad06453e4ca989190c0355d1b28, type: 2}
-  meshRendererers:
-  - {fileID: 3740912096407343947}
-  - {fileID: 2565221138543935775}
-  - {fileID: 7383694967095433362}
-  - {fileID: 5515807733741157634}
-  - {fileID: 950845710126525403}
   newFlashThreashold: 0.5
 --- !u!1001 &1848536939370464888
 PrefabInstance:

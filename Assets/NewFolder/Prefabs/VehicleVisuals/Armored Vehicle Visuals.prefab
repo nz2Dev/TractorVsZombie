@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1032292071767458246}
+  - component: {fileID: 1497368008780427912}
   - component: {fileID: 7397748899174649872}
   m_Layer: 0
   m_Name: Armored Vehicle Visuals
@@ -37,6 +38,25 @@ Transform:
   - {fileID: 9156852195971218376}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1497368008780427912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5858173997722926588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4129fda9ad0274fbea90044662445c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::EmmisionEffectMaterialProperties
+  affectedRenderers:
+  - {fileID: 2613466918474544127}
+  - {fileID: 5185899032394487476}
+  - {fileID: 8071146111850061695}
+  - {fileID: 5759629589849818863}
+  - {fileID: 604129495823511247}
+  flash: 0
 --- !u!114 &7397748899174649872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,14 +75,6 @@ MonoBehaviour:
   rearAxis:
     leftWheel: {fileID: 6329008048125674566}
     rightWheel: {fileID: 6930859884924489101}
-  alieUnitMaterial: {fileID: 2100000, guid: f572ff932c827487b8547f38d42ca653, type: 2}
-  foeUnitMaterial: {fileID: 2100000, guid: a1330ad06453e4ca989190c0355d1b28, type: 2}
-  meshRendererers:
-  - {fileID: 2613466918474544127}
-  - {fileID: 5185899032394487476}
-  - {fileID: 8071146111850061695}
-  - {fileID: 5759629589849818863}
-  - {fileID: 604129495823511247}
   newFlashThreashold: 0.5
 --- !u!1001 &2087149306815677292
 PrefabInstance:
@@ -76,6 +88,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 4169
       objectReference: {fileID: 0}
+    - target: {fileID: 1483170472942562723, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a1330ad06453e4ca989190c0355d1b28, type: 2}
     - target: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_Name
       value: Front L Wheel Geometry
@@ -168,6 +184,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 4169
       objectReference: {fileID: 0}
+    - target: {fileID: 1483170472942562723, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a1330ad06453e4ca989190c0355d1b28, type: 2}
     - target: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_Name
       value: Rear R Wheel Geometry
@@ -260,6 +280,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 4169
       objectReference: {fileID: 0}
+    - target: {fileID: 1483170472942562723, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a1330ad06453e4ca989190c0355d1b28, type: 2}
     - target: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_Name
       value: Front R Wheel Geometry
@@ -352,6 +376,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 4169
       objectReference: {fileID: 0}
+    - target: {fileID: 1483170472942562723, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a1330ad06453e4ca989190c0355d1b28, type: 2}
     - target: {fileID: 3693541335120311962, guid: 65994b56613484122b63db069ebdb8c8, type: 3}
       propertyPath: m_Name
       value: Rear L Wheel Geometry
@@ -504,6 +532,10 @@ PrefabInstance:
       propertyPath: m_SelectedVertices.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5657874856856010587, guid: 6d4ef3bc0657c454c88281fc3cb6de18, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a1330ad06453e4ca989190c0355d1b28, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

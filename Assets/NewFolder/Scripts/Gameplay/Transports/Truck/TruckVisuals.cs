@@ -2,6 +2,7 @@ using System;
 
 using UnityEngine;
 
+[RequireComponent(typeof(EmmisionEffectMaterialProperties))]
 public class TruckVisuals : MonoBehaviour {
     
     [Serializable]
@@ -12,24 +13,13 @@ public class TruckVisuals : MonoBehaviour {
 
     [SerializeField] private WheelAxis frontAxis;
     [SerializeField] private WheelAxis rearAxis;
-
-    [SerializeField] private Material alieUnitMaterial;
-    [SerializeField] private Material foeUnitMaterial;
-    [SerializeField] private MeshRenderer[] meshRendererers;
     [SerializeField] private float newFlashThreashold = 0.5f;
-    private MaterialPropertyBlock propertyBlock;
-    private int flashPropertyId;
+
     private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
+    private EmmisionEffectMaterialProperties emmisionEffectMaterialProperties;
 
     private void Awake() {
-        propertyBlock = new MaterialPropertyBlock();
-        flashPropertyId = Shader.PropertyToID("_Flash");
-    }
-
-    public void SetFactionProperties(bool alie) {
-        foreach (var renderer in meshRendererers) {
-            renderer.sharedMaterial = alie ? alieUnitMaterial : foeUnitMaterial;
-        }
+        emmisionEffectMaterialProperties = GetComponent<EmmisionEffectMaterialProperties>();
     }
 
     public void SetPositionAndRotation(Vector3 pos, Quaternion rot) {
@@ -52,11 +42,7 @@ public class TruckVisuals : MonoBehaviour {
 
     private void Update() {
         hitFlash.Tick(Time.deltaTime);
-        propertyBlock.SetFloat(flashPropertyId, hitFlash.Value);
-
-        foreach (var renderer in meshRendererers) {
-            renderer.SetPropertyBlock(propertyBlock);
-        }
+        emmisionEffectMaterialProperties.Flash = hitFlash.Value;
     }
 
 }

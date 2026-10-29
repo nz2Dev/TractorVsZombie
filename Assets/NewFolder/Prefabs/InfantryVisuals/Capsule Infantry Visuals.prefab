@@ -100,8 +100,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5054745284786525183}
   - component: {fileID: 4365431581508200482}
-  - component: {fileID: 414806356285922434}
   - component: {fileID: 4558910283667598473}
+  - component: {fileID: 414806356285922434}
   m_Layer: 0
   m_Name: Capsule Infantry Visuals
   m_TagString: Untagged
@@ -147,6 +147,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4558910283667598473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7295302377222804672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f51cfad23e694e2db85c13340834160c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::EffectsMaterialProperties
+  affectedRenderers:
+  - {fileID: 7840594462293849337}
+  emissionIntensity: 0
+  emissionColor: {r: 1, g: 0, b: 0, a: 1}
+  power: 1
+  emissionFillAmount: 1
 --- !u!114 &414806356285922434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,29 +179,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::InfantryVisuals
   AnimatedColor: {r: 0.67058825, g: 0.67058825, b: 0.67058825, a: 1}
   rotationSpeed: 720
-  powerBottom: 0.4
+  powerMin: 0
+  powerMax: 1
+  healthPowerPart: 0.5
   takeHitColor: {r: 1, g: 0, b: 0, a: 1}
   chargeColor: {r: 0.7264151, g: 0.6775433, b: 0.11307406, a: 1}
-  chargeSinScale: 10
   chargeDecaySpeed: 5
---- !u!114 &4558910283667598473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7295302377222804672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f51cfad23e694e2db85c13340834160c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: NewFolder::EffectsMaterialProperties
-  affectedRenderers:
-  - {fileID: 7840594462293849337}
-  emissionIntensity: 0
-  emissionColor: {r: 1, g: 0, b: 0, a: 1}
-  power: 1
-  emissionFillAmount: 1
 --- !u!1 &7759045767458773609
 GameObject:
   m_ObjectHideFlags: 0

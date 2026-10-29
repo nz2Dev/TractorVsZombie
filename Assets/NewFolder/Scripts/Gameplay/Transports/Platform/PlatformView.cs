@@ -6,9 +6,8 @@ public class PlatformView {
 
     private readonly Dictionary<int, PlatformVisuals> visualsRegistry = new ();
 
-    public void Show(int id, Vector3 position, PlatformVisuals visualsPrefab, bool alie) {
+    public void Show(int id, Vector3 position, PlatformVisuals visualsPrefab) {
         var vehicleVisuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);        
-        vehicleVisuals.SetFactionProperties(alie);
         visualsRegistry[id] = vehicleVisuals;
     }
 

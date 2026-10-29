@@ -52,7 +52,7 @@ public class PlatformController {
             factionId = model.FactionId
         });
         
-        presenter.Add(model.Id, initPosition, prototype.factionPrototype.alie, prototype.presentationPrototype);
+        presenter.Add(model.Id, initPosition, prototype.presentationPrototype);
         return model.Id;
     }
 

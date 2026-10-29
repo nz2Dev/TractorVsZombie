@@ -5,9 +5,8 @@ using UnityEngine;
 public class TruckView {
     private readonly Dictionary<int, TruckVisuals> registry = new();
 
-    public void Show(int truckId, Vector3 position, bool alie, TruckVisuals visualsPrefab) {
+    public void Show(int truckId, Vector3 position, TruckVisuals visualsPrefab) {
         var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
-        visuals.SetFactionProperties(alie);
         registry[truckId] = visuals;
     }
 

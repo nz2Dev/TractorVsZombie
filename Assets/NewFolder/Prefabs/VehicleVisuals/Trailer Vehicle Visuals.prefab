@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3051780955797677390}
+  - component: {fileID: 4370923895250883724}
   - component: {fileID: 5851998403967449264}
   m_Layer: 0
   m_Name: Trailer Vehicle Visuals
@@ -37,6 +38,25 @@ Transform:
   - {fileID: 410930222039447544}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4370923895250883724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3371121685155722078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4129fda9ad0274fbea90044662445c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::EmmisionEffectMaterialProperties
+  affectedRenderers:
+  - {fileID: 7779077237464866432}
+  - {fileID: 8695146537865929352}
+  - {fileID: 8511881490694632899}
+  - {fileID: 8818863220576722289}
+  - {fileID: 8269183693698491135}
+  flash: 0
 --- !u!114 &5851998403967449264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,14 +75,6 @@ MonoBehaviour:
   rearAxis:
     leftWheel: {fileID: 5906216888023969530}
     rightWheel: {fileID: 6880376927651166641}
-  alieUnitMaterial: {fileID: 2100000, guid: f572ff932c827487b8547f38d42ca653, type: 2}
-  foeUnitMaterial: {fileID: 2100000, guid: a1330ad06453e4ca989190c0355d1b28, type: 2}
-  meshRendererers:
-  - {fileID: 7779077237464866432}
-  - {fileID: 8695146537865929352}
-  - {fileID: 8511881490694632899}
-  - {fileID: 8818863220576722289}
-  - {fileID: 8269183693698491135}
   newFlashThreashold: 0.5
 --- !u!1001 &4975684533694311475
 PrefabInstance:

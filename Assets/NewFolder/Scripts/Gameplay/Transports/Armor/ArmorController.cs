@@ -64,8 +64,7 @@ public class ArmorController {
             factionId = model.FactionId
         });
 
-        var alie = prototype.factionPrototype.alie;
-        presenter.Add(nextId, prototype.position, alie, prototype.presentationPrototype);
+        presenter.Add(nextId, prototype.position, prototype.presentationPrototype);
         return model.Id;
     }
 
