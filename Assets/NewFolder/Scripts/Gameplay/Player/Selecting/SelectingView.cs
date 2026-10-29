@@ -55,7 +55,9 @@ public class SelectingView {
     }
 
     private void UpdateLabel(Label label, PlatformState state) {
-        label.text = $"weapon {state.weaponId}";
+        label.text = state.hasLoadout
+            ? $"weapon {state.loadoutState.weaponId}"
+            : "no weapon";
     }
 
 }

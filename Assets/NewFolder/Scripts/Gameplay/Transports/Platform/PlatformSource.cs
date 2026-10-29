@@ -2,11 +2,9 @@ using UnityEngine;
 
 public class PlatformSource : MonoBehaviour {
 
-    [SerializeField] private HealthSource healthSource;
     [SerializeField] private FactionSource factionSource;
     [SerializeField] private VehicleSource vehicleSource;
     [SerializeField] private CarryingSource carryingSource;
-    [SerializeField] private HitboxSource hitboxSource;
     [Space]
     [SerializeField] private PlatformPresentationSource presentationSource;
 
@@ -20,9 +18,7 @@ public class PlatformSource : MonoBehaviour {
             presentationPrototype: presentationSource.Get(),
             vehiclePrototype: vehicleSource.GetPrototype(),
             carryingPrototype: carryingSource.Get(),
-            healthPrototype: healthSource.GetHealthPrototype(),
-            factionPrototype: factionSource.GetFactionPrototype(),
-            hitboxPrototype: hitboxSource.GetHitboxPrototype()
+            factionPrototype: factionSource.GetFactionPrototype()
         );
     }
 }

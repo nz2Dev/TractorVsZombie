@@ -20,12 +20,12 @@ public class PlatformPresenter {
         ui.Remove(platformId);
     }
 
-    public void Update(int platformId, VehicleState vehicleState, HealthState healthState) {
+    public void Update(int platformId, VehicleState vehicleState, CarryingState carryingState) {
         var vehiclePose = vehicleState.pose;
         view.SetPose(platformId, vehiclePose);
-        if (healthState.damageResult.HasValue) {
-            view.ShowTakeHit(platformId);
-        }
-        ui.UpdateHealthBar(platformId, vehiclePose.position, healthState.health, healthState.maxHealth);
+        if (carryingState.hasLoadout)
+            ui.UpdateHealthBar(platformId, vehiclePose.position, carryingState.loadoutState.healthState);
+        else
+            ui.HideHealthBar(platformId);
     }
 }

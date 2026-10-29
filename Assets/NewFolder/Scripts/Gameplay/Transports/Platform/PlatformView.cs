@@ -18,11 +18,6 @@ public class PlatformView {
         vehicleVisuals.SetRearAxis(vehicleState.rearAxis);
     }
 
-    public void ShowTakeHit(int id) {
-        var visuals = visualsRegistry[id];
-        visuals.TriggerHitFlash();
-    }
-
     public void Hide(int id) {
         visualsRegistry.Remove(id, out var visuals);
         GameObject.Destroy(visuals.gameObject);

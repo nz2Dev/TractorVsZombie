@@ -29,7 +29,7 @@ public class LevelPrototypeSource : MonoBehaviour {
         for (int i = 0; i < playerPrototypeSource.LoadoutsLength; i++) {
             var platformVisuals = Instantiate(playerPrototypeSource.PlatformPrototype.presentationPrototype.visualsPrefab, cutscenePlatformContainers);
             platformVisuals.transform.localPosition = (i + 1) * 6 * -cutscenePlatformContainers.transform.forward;
-            var loadoutVisuals = Instantiate(playerPrototypeSource.GetLoadoutPrototype(i).shellVisualsPrefab, platformVisuals.transform);
+            var loadoutVisuals = Instantiate(playerPrototypeSource.GetLoadoutPrototype(i).visualsPrefab, platformVisuals.transform);
             loadoutVisuals.transform.localPosition = playerPrototypeSource.PlatformPrototype.carryingPrototype.loadoutOffset;
         }
     }

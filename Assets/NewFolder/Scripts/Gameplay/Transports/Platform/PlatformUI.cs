@@ -15,6 +15,7 @@ public class PlatformUI {
         var ui = GameObject.Instantiate(uiPrefab, position, Quaternion.identity);
         ui.TargetCamera = cameraManager.GetActiveCamera();
         registry[platformId] = ui;
+        GetHealthBar(ui).gameObject.SetActive(false);
     }
 
     public void Remove(int platformId) {
@@ -22,10 +23,19 @@ public class PlatformUI {
         GameObject.Destroy(ui.gameObject);
     }
 
-    public void UpdateHealthBar(int platformId, Vector3 position, int health, int maxHealth) {
+    public void UpdateHealthBar(int platformId, Vector3 position, HealthState healthState) {
         var ui = registry[platformId];
         ui.transform.position = position;
-        var healthBar = ui.GetComponentInChildren<HealthBarVisuals>();
-        healthBar.SetBar(health, maxHealth);
+        var healthBar = GetHealthBar(ui);
+        healthBar.gameObject.SetActive(true);
+        healthBar.SetBar(healthState.health, healthState.maxHealth);
     }
+
+    public void HideHealthBar(int platformId) {
+        var ui = registry[platformId];
+        GetHealthBar(ui).gameObject.SetActive(false);    
+    }
+
+    private static HealthBarVisuals GetHealthBar(WorldSpaceUI ui) => 
+        ui.GetComponentInChildren<HealthBarVisuals>(true);
 }

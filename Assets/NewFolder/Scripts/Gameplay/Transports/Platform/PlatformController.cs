@@ -6,26 +6,20 @@ using UnityEngine;
 
 public class PlatformController {
 
-    private readonly HealthSystem healthSystem;
     private readonly FactionRegistry factionRegistry;
     private readonly CarryingSystem carryingSystem;
     private readonly VehicleSystem vehicleSystem;
-    private readonly HitboxSystem hitboxSystem;
-    private readonly EntityMapping entityMapping;
     private readonly PoseRegistry poseRegistry;
     private readonly PlatformPresenter presenter;
 
     private int idCounter;
     private readonly Dictionary<int, PlatformModel> registry = new();
 
-    public PlatformController(HealthSystem healthSystem, FactionRegistry factionRegistry, CarryingSystem carryingSystem, VehicleSystem vehicleSystem, PlatformPresenter presenter, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
-        this.healthSystem = healthSystem;
+    public PlatformController(FactionRegistry factionRegistry, CarryingSystem carryingSystem, VehicleSystem vehicleSystem, PlatformPresenter presenter, PoseRegistry poseRegistry) {
         this.factionRegistry = factionRegistry;
         this.carryingSystem = carryingSystem;
         this.vehicleSystem = vehicleSystem;
         this.presenter = presenter;
-        this.hitboxSystem = hitboxSystem;
-        this.entityMapping = entityMapping;
         this.poseRegistry = poseRegistry;
     }
 
@@ -41,16 +35,9 @@ public class PlatformController {
         registry[model.Id] = model;
 
         model.PoseId = poseRegistry.Add(initPosition, default);
-        model.CarryingId = carryingSystem.Add(prototype.carryingPrototype, model.PoseId);
-        model.HealthId = healthSystem.Add(prototype.healthPrototype);
         model.FactionId = factionRegistry.Add(prototype.factionPrototype);
+        model.CarryingId = carryingSystem.Add(prototype.carryingPrototype, model.PoseId);
         model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrototype, poseId: model.PoseId);
-        model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
-
-        entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
-            healthId = model.HealthId,
-            factionId = model.FactionId
-        });
         
         presenter.Add(model.Id, initPosition, prototype.presentationPrototype);
         return model.Id;
@@ -85,12 +72,9 @@ public class PlatformController {
         var pose = poseRegistry.Read(platform.PoseId);
         return new PlatformState (
             position: pose.position,
-            healthId: platform.HealthId,
-            healthState: healthSystem.ReadState(platform.HealthId),
-            factionState: factionRegistry.ReadState(platform.FactionId),
+            loadoutState: carryingState.loadoutState,
+            hasLoadout: carryingState.hasLoadout,
             vehicleId: platform.VehicleId,
-            weaponId: carryingState.weaponId,
-            weaponState: carryingState.weaponState,
             platformId: platform.Id
         );
     }
@@ -100,8 +84,8 @@ public class PlatformController {
     private void RemoveDestroyed() {
         removalBuffer.Clear();
         foreach (var platform in registry.Values) {
-            var healthState = healthSystem.ReadState(platform.HealthId);
-            if (healthState.isDead)
+            var carryingState = carryingSystem.ReadState(platform.CarryingId);
+            if (carryingState.hasLoadout && carryingState.loadoutState.healthState.isDead)
                 removalBuffer.Add(platform.Id);
         }
 
@@ -113,12 +97,9 @@ public class PlatformController {
     private void Remove(int platformId) {
         registry.Remove(platformId, out var model);
         carryingSystem.Remove(model.CarryingId);
-        healthSystem.Remove(model.HealthId);
+        factionRegistry.Remove(model.FactionId);
         vehicleSystem.Remove(model.VehicleId);
         poseRegistry.Remove(model.PoseId);
-        hitboxSystem.Remove(model.HitboxId);
-        entityMapping.DeleteMapping(model.HitboxId);
-        factionRegistry.Remove(model.FactionId);
         
         presenter.Remove(platformId);
     }
@@ -126,8 +107,8 @@ public class PlatformController {
     private void UpdatePresentation() {
         foreach (var host in registry.Values) {
             var vehicleState = vehicleSystem.ReadState(host.VehicleId);
-            var healthState = healthSystem.ReadState(host.HealthId);
-            presenter.Update(host.Id, vehicleState, healthState);
+            var carryingState = carryingSystem.ReadState(host.CarryingId);
+            presenter.Update(host.Id, vehicleState, carryingState);
         }
     }
 

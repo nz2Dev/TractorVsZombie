@@ -75,24 +75,28 @@ public class AimingController {
 
     private void OperatePlatforms() {
         foreach (var platformId in model.ControlledPlatformIds) {
+            var platformState = platformController.ReadPlatformState(platformId);
+            if (!platformState.hasLoadout)
+                continue;
+
             if (model.ManualPlatformIds.Contains(platformId)) {
-                OperateFromInput(platformController.ReadPlatformState(platformId));
+                OperateFromInput(platformState);
             } else {
-                OperateAutomatically(platformController.ReadPlatformState(platformId));
+                OperateAutomatically(platformState);
             }
         }
     }
 
     private void OperateFromInput(PlatformState platformState) {
-        weaponController.AimWeapon(platformState.weaponId, model.AimInput.position + Vector3.up * model.AimInput.height);
+        weaponController.AimWeapon(platformState.loadoutState.weaponId, model.AimInput.position + Vector3.up * model.AimInput.height);
     }
 
     private void OperateAutomatically(PlatformState platformState) {
-        var searchRadius = platformState.weaponState.aimConfig.range; // ?? where does radius filter should happen? here or in proximity service?
-        var searchFaction = !platformState.factionState.alie;
+        var searchRadius = platformState.loadoutState.weaponState.aimConfig.range; // ?? where does radius filter should happen? here or in proximity service?
+        var searchFaction = !platformState.loadoutState.factionState.alie;
         if (hitboxSystem.QueryNearest(platformState.position, searchFaction, out var nearestHitboxId)) {
             var nearestPosition = hitboxSystem.GetPosition(nearestHitboxId);
-            weaponController.AimWeapon(platformState.weaponId, nearestPosition + 0.5f * Vector3.up);
+            weaponController.AimWeapon(platformState.loadoutState.weaponId, nearestPosition + 0.5f * Vector3.up);
         }
     }
 

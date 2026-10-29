@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public sealed class CarryingSystem {
+    
     private readonly PoseRegistry poseRegistry;
     private readonly LoadoutController loadoutController;
     private readonly Dictionary<CarryingId, CarryingModel> models = new();
@@ -18,14 +19,14 @@ public sealed class CarryingSystem {
         return id;
     }
 
-    public void SetLoadout(CarryingId id, FactionId ownerFactionId, LoadoutPrototype prototype) {
+    public void SetLoadout(CarryingId id, FactionId factionId, LoadoutPrototype prototype) {
         var model = models[id];
         if (model.LoadoutId != 0)
             loadoutController.DeleteLoadout(model.LoadoutId);
 
         var pose = poseRegistry.Read(model.HostPoseId);
         prototype.position = pose.position + model.LoadoutOffset;
-        model.LoadoutId = loadoutController.SpawnLoadout(ownerFactionId, prototype);
+        model.LoadoutId = loadoutController.SpawnLoadout(factionId, prototype);
     }
 
     public void Remove(CarryingId id) {
@@ -36,14 +37,14 @@ public sealed class CarryingSystem {
 
     public CarryingState ReadState(CarryingId id) {
         var model = models[id];
-        var state = new CarryingState { loadoutId = model.LoadoutId };
         if (model.LoadoutId == 0)
-            return state;
-
-        var loadoutState = loadoutController.ReadLoadoutState(model.LoadoutId);
-        state.weaponId = loadoutState.weaponId;
-        state.weaponState = loadoutState.weaponState;
-        return state;
+            return default;
+        
+        return new CarryingState { 
+            hasLoadout = true,
+            loadoutId = model.LoadoutId,
+            loadoutState = loadoutController.ReadLoadoutState(model.LoadoutId),
+        };
     }
 
     public void Update() {

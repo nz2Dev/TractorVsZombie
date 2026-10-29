@@ -1,16 +1,10 @@
 using UnityEngine;
 
-[RequireComponent(typeof(EmmisionEffectMaterialProperties), typeof(VehicleWheelRig))]
+[RequireComponent(typeof(VehicleWheelRig))]
 public class PlatformVisuals : MonoBehaviour {
-    
-    [SerializeField] private float newFlashThreashold = 0.5f;
-
-    private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
-    private EmmisionEffectMaterialProperties emmisionEffectMaterialProperties;
     private VehicleWheelRig wheelRig;
 
     private void Awake() {
-        emmisionEffectMaterialProperties = GetComponent<EmmisionEffectMaterialProperties>();
         wheelRig = GetComponent<VehicleWheelRig>();
     }
 
@@ -26,12 +20,4 @@ public class PlatformVisuals : MonoBehaviour {
         wheelRig.SetRearAxis(axisPose);
     }
 
-    public void TriggerHitFlash() {
-        hitFlash.TryPlayBelow(newFlashThreashold);
-    }
-
-    private void Update() {
-        hitFlash.Tick(Time.deltaTime);
-        emmisionEffectMaterialProperties.Flash = hitFlash.Value;
-    }
 }

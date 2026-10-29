@@ -145,7 +145,11 @@ public class GameBootstrapper : MonoBehaviour {
 
         loadoutController = new LoadoutController(
             new LoadoutView(),
-            weaponController
+            weaponController,
+            healthSystem,
+            factionRegistry,
+            hitboxSystem,
+            entityMapping
         );
 
         carryingSystem = new CarryingSystem(poseRegistry, loadoutController);
@@ -168,7 +172,6 @@ public class GameBootstrapper : MonoBehaviour {
         );
 
         platformController = new PlatformController(
-            healthSystem,
             factionRegistry,
             carryingSystem,
             vehicleSystem,
@@ -176,8 +179,6 @@ public class GameBootstrapper : MonoBehaviour {
                 new PlatformView(),
                 new PlatformUI(cameraManager)
             ),
-            hitboxSystem,
-            entityMapping,
             poseRegistry
         );
 

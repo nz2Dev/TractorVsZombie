@@ -1,5 +1,5 @@
 public struct CarryingState {
     public int loadoutId;
-    public int weaponId;
-    public WeaponState weaponState;
+    public LoadoutState loadoutState;
+    public bool hasLoadout;
 }
