@@ -85,6 +85,7 @@ MonoBehaviour:
     prefab: {fileID: 4776735525413602875}
   carryingSource:
     loadoutOffset: {fileID: 4692022235611467891}
+    config: {fileID: 11400000, guid: dfc73b4e5f6c940e48ba118cc030f30e, type: 2}
   presentationSource:
     visualsPrefab: {fileID: 788712317402739098}
     worldSpaceUIPrefab: {fileID: 552357836590703132}

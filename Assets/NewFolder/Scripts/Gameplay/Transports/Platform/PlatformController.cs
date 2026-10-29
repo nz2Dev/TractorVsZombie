@@ -85,7 +85,7 @@ public class PlatformController {
         removalBuffer.Clear();
         foreach (var platform in registry.Values) {
             var carryingState = carryingSystem.ReadState(platform.CarryingId);
-            if (carryingState.hasLoadout && carryingState.loadoutState.healthState.isDead)
+            if (carryingState.destroyed)
                 removalBuffer.Add(platform.Id);
         }
 

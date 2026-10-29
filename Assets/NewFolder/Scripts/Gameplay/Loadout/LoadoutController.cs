@@ -54,7 +54,11 @@ public class LoadoutController {
         weaponController.MoveWeapon(model.WeaponId, position + model.WeaponLocalOffset);
     }
 
-    public void DeleteLoadout(int loadoutId) {
+    public bool Exists(int loadoutId) {
+        return registry.ContainsKey(loadoutId);
+    }
+
+    public void RemoveLoadout(int loadoutId) {
         registry.Remove(loadoutId, out var model);
         hitboxSystem.Remove(model.HitboxId);
         healthSystem.Remove(model.HealthId);
@@ -75,10 +79,32 @@ public class LoadoutController {
     }
 
     public void Update() {
+        UpdatePresentation();
+        RemoveDeadEntities();
+    }
+
+    private void UpdatePresentation() {
         foreach (var model in registry.Values) {
             var healthState = healthSystem.ReadState(model.HealthId);
-            if (healthState.damageResult.HasValue)
+            if (healthState.damageResult.HasValue) {
                 view.ShowTakeHit(model.Id);
+            }
         }
+    }
+
+    private readonly List<int> removalBuffer = new();
+
+    private void RemoveDeadEntities() {
+        removalBuffer.Clear();
+        
+        foreach (var model in registry.Values) {
+            var healthState = healthSystem.ReadState(model.HealthId);
+            if (healthState.isDead) {
+                removalBuffer.Add(model.Id);
+            }
+        }
+
+        foreach (var loadoutId in removalBuffer)
+            RemoveLoadout(loadoutId);
     }
 }
