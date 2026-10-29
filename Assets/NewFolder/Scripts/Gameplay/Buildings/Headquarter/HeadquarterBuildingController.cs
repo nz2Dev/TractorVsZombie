@@ -24,6 +24,9 @@ public class HeadquarterBuildingController {
     }
 
     public void Update() {
+        if (headquarter == null)
+            return;
+            
         UpdatePresentation();
         CheckDestruction();
     }
