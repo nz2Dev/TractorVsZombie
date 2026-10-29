@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1032292071767458246}
   - component: {fileID: 1497368008780427912}
   - component: {fileID: 7397748899174649872}
+  - component: {fileID: 2864509182376451093}
   m_Layer: 0
   m_Name: Armored Vehicle Visuals
   m_TagString: Untagged
@@ -48,7 +49,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4129fda9ad0274fbea90044662445c44, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: NewFolder::EmmisionEffectMaterialProperties
   affectedRenderers:
   - {fileID: 2613466918474544127}
@@ -69,13 +70,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60a0b2d03812e422c9e497da3063d8be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ArmorVisuals
+  newFlashThreashold: 0.5
+--- !u!114 &2864509182376451093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5858173997722926588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a3ef4c825a8437eafa715766eb76c3d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: NewFolder::VehicleWheelRig
   frontAxis:
     leftWheel: {fileID: 3437675309214922230}
     rightWheel: {fileID: 7510050832341294550}
   rearAxis:
     leftWheel: {fileID: 6329008048125674566}
     rightWheel: {fileID: 6930859884924489101}
-  newFlashThreashold: 0.5
+
 --- !u!1001 &2087149306815677292
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3518426781514934332}
   - component: {fileID: 4570817269021447995}
+  - component: {fileID: 7641938476210039211}
   - component: {fileID: 2325663696177151136}
   m_Layer: 0
   m_Name: Tractor Vehicle Visuals
@@ -57,6 +58,24 @@ MonoBehaviour:
   - {fileID: 5515807733741157634}
   - {fileID: 950845710126525403}
   flash: 0
+--- !u!114 &7641938476210039211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5110178552309447525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a3ef4c825a8437eafa715766eb76c3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::VehicleWheelRig
+  frontAxis:
+    leftWheel: {fileID: 3090958955037077730}
+    rightWheel: {fileID: 7735858154654262843}
+  rearAxis:
+    leftWheel: {fileID: 4733134336438010795}
+    rightWheel: {fileID: 310221577142376998}
 --- !u!114 &2325663696177151136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,12 +88,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ea4de4e671d4e5886d06e5b55a4884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::TruckVisuals
-  frontAxis:
-    leftWheel: {fileID: 3090958955037077730}
-    rightWheel: {fileID: 7735858154654262843}
-  rearAxis:
-    leftWheel: {fileID: 4733134336438010795}
-    rightWheel: {fileID: 310221577142376998}
   newFlashThreashold: 0.5
 --- !u!1001 &1848536939370464888
 PrefabInstance:

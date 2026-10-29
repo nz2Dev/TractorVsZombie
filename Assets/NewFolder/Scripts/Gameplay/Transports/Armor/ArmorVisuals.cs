@@ -1,25 +1,16 @@
-using System;
-
 using UnityEngine;
 
-[RequireComponent(typeof(EmmisionEffectMaterialProperties))]
+[RequireComponent(typeof(EmmisionEffectMaterialProperties), typeof(VehicleWheelRig))]
 public class ArmorVisuals : MonoBehaviour {
-    
-    [Serializable]
-    public struct WheelAxis {
-        public GameObject leftWheel;
-        public GameObject rightWheel;
-    }
-
-    [SerializeField] private WheelAxis frontAxis;
-    [SerializeField] private WheelAxis rearAxis;
     [SerializeField] private float newFlashThreashold = 0.5f;
     
     private readonly FloatFadeEffect hitFlash = new FloatFadeEffect();
     private EmmisionEffectMaterialProperties emmisionEffectMaterialProperties;
+    private VehicleWheelRig wheelRig;
 
     private void Awake() {
         emmisionEffectMaterialProperties = GetComponent<EmmisionEffectMaterialProperties>();
+        wheelRig = GetComponent<VehicleWheelRig>();
     }
 
     public void SetPositionAndRotation(Vector3 pos, Quaternion rot) {
@@ -27,13 +18,11 @@ public class ArmorVisuals : MonoBehaviour {
     }
 
     public void SetFrontAxis(WheelAxisPose axisPose) {
-        frontAxis.leftWheel.transform.SetPositionAndRotation(axisPose.positionL, axisPose.rotationL);
-        frontAxis.rightWheel.transform.SetPositionAndRotation(axisPose.positionR, axisPose.rotationR);
+        wheelRig.SetFrontAxis(axisPose);
     }
     
     public void SetRearAxis(WheelAxisPose axisPose) {
-        rearAxis.leftWheel.transform.SetPositionAndRotation(axisPose.positionL, axisPose.rotationL);
-        rearAxis.rightWheel.transform.SetPositionAndRotation(axisPose.positionR, axisPose.rotationR);
+        wheelRig.SetRearAxis(axisPose);
     }
 
     public void TriggerHitFlash() {
