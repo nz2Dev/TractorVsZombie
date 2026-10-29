@@ -37,6 +37,7 @@ public class InfantryVisuals : MonoBehaviour {
     }
 
     private void Update() {
+        effectsMaterialProperties.EmissionIntensity = 0;
         chargeEffect.Tick(Time.deltaTime);
         if (chargeEffect.IsPlaying) {
             effectsMaterialProperties.EmissionIntensity = 1;
