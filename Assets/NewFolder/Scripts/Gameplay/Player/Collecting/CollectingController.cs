@@ -27,12 +27,17 @@ public class CollectingController {
         var rewardsInRadius = rewardController.CheckRewards(position, config.radius);
         foreach (var rewardId in rewardsInRadius) {
             var rewardState = rewardController.ReadState(rewardId);
-            rewardController.CollectReward(rewardId);            
             if (rewardState.payload.type == RewardType.Loadout) {
-                loaderController.Place(rewardState.payload.loadoutPrototype);
+                if (loaderController.TryPlace(rewardState.payload.loadoutPrototype)) {
+                    rewardController.CollectReward(rewardId);
+                }
             } else if (rewardState.payload.type == RewardType.Platform) {
                 assemblingController.AddPlatform(rewardState.position, config.startOrEndCouplingOfRewards);
+                rewardController.CollectReward(rewardId);
+            } else {
+                rewardController.CollectReward(rewardId);
             }
         }
     }
+
 }

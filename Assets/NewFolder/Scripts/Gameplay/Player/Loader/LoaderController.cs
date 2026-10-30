@@ -11,7 +11,7 @@ public class LoaderController {
         this.assemblingController = assemblingController;
     }
 
-    public void Place(LoadoutPrototype loadout) {
+    public bool TryPlace(LoadoutPrototype loadout) {
         var platformIds = assemblingController.ControlledPlatformIds;
         var platformStates = new List<PlatformState>(platformIds.Count);
         foreach (var platformId in platformIds) {
@@ -22,12 +22,17 @@ public class LoaderController {
 
         if (platformStates.Count == 0) {
             Debug.LogWarning("Cannot place loadout because no active platforms are available.");
-            return;
+            return false;
         }
 
         var freeSlotIndex = platformStates.FindIndex(state => !state.hasLoadout);
-        var target = platformStates[freeSlotIndex >= 0 ? freeSlotIndex : 0];
+        if (freeSlotIndex < 0) {
+            return false;
+        }
+
+        var target = platformStates[freeSlotIndex];
         platformController.SetLoadout(target.platformId, loadout);
+        return true;
     }
     
 }

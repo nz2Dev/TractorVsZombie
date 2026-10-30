@@ -40,7 +40,7 @@ public class PlayerController {
         }
         
         foreach (var loadout in prototype.initialLoadouts ?? new LoadoutPrototype[0]) {
-            loaderController.Place(loadout);
+            loaderController.TryPlace(loadout);
         }       
     }
 

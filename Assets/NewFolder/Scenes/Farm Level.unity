@@ -13468,7 +13468,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a674e687b2b9b4c458d23e60c485db02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::PlayerPrototypeSource
-  configSource: {fileID: 11400000, guid: eb5c353f75400495b95e597ea2c3b5b5, type: 2}
   assemblingSource:
     platformPreviewPrefab: {fileID: 3371121685155722078, guid: 6321345344532445fbf7ea0e39b1b4d0, type: 3}
     initPlatformSource: {fileID: 269684097}
@@ -13478,7 +13477,7 @@ MonoBehaviour:
     config: {fileID: 11400000, guid: 76193696b3051417a884b42c2a210830, type: 2}
   initialLoadoutSources: []
   initTruckSource: {fileID: 1117709943}
-  initialPlatformCount: 2
+  initialPlatformCount: 1
 --- !u!4 &538936286
 Transform:
   m_ObjectHideFlags: 0

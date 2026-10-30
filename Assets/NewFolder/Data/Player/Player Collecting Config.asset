@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Player Collecting Config
   m_EditorClassIdentifier: NewFolder::CollectingConfig
   radius: 3
+  startOrEndCouplingOfRewards: 1
