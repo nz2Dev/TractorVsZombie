@@ -32,8 +32,8 @@ public class CollectingController {
     private void CollectRewards() {
         var rewardsInRadius = rewardController.CheckRewards(position, config.radius);
         foreach (var rewardId in rewardsInRadius) {
-            rewardController.CollectReward(rewardId);            
             var rewardState = rewardController.ReadState(rewardId);
+            rewardController.CollectReward(rewardId);            
             if (rewardState.payload.type == RewardType.Loadout) {
                 OnLoadoutCollected?.Invoke(rewardState.position, rewardState.payload.loadoutPrototype);
             } else if (rewardState.payload.type == RewardType.Platform) {
