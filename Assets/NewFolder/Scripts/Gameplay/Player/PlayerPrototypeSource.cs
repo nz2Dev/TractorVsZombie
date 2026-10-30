@@ -9,19 +9,30 @@ public class PlayerPrototypeSource : MonoBehaviour {
     [SerializeField] private LoaderSource loaderSource;
     [SerializeField] private AimingSource aimingSource;
     [SerializeField] private CollectingSource collectingSource;
+    [Space]
+    [SerializeField] private LoadoutSource[] initialLoadoutSources;
+    [SerializeField] private TruckSource initTruckSource;
+    [SerializeField] private int initialPlatformCount;
 
-    public int LoadoutsLength => loaderSource.InitialLoadoutsLength;
-    public PlatformPrototype PlatformPrototype => assemblingSource.PlatformPrototype;
-    public LoadoutPrototype GetLoadoutPrototype(int index) => loaderSource.GetInitialLoadoutPrototype(index);
+    public int LoadoutsLength => initialLoadoutSources.Length;
+    public PlatformPrototype PlatformPrototype => assemblingSource.InitPlatformSource.GetPrototype();
+    public LoadoutPrototype GetLoadoutPrototype(int index) => initialLoadoutSources[index].GetPrototype();
 
     public PlayerPrototype Get() {
         return new PlayerPrototype {
             config = configSource,
+            initialLoadouts = GetLoadoutPrototypes(),
+            initialPlatformCount = initialPlatformCount,
+            initialTruckPrototype = initTruckSource.GetPrototype(),
             aimingPrototype = aimingSource.Get(),
             assemblingPrototype = assemblingSource.Get(),
-            loaderPrototype = loaderSource.Get(),
             collectingPrototype = collectingSource.Get(),
         };
     }
+
+    public LoadoutPrototype[] GetLoadoutPrototypes() => 
+        initialLoadoutSources == null
+            ? new LoadoutPrototype[0]
+            : initialLoadoutSources.Select(source => source.GetPrototype()).ToArray();
 
 }

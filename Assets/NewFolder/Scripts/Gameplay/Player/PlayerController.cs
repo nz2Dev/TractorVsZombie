@@ -52,10 +52,22 @@ public class PlayerController {
 
     public void Setup(PlayerPrototype prototype) {     
         model = new PlayerModel(prototype.config);
+        loaderController.Init();
         aimingController.Init(prototype.aimingPrototype);
-        loaderController.Init(prototype.loaderPrototype);
-        assemblingController.Init(prototype.assemblingPrototype);
         collectingController.Init(prototype.collectingPrototype);
+        assemblingController.Init(prototype.assemblingPrototype);
+        
+        assemblingController.SpawnDriver(prototype.initialTruckPrototype);
+        Vector3 directionStep = prototype.initialTruckPrototype.rotation * Vector3.back * 6;
+        Vector3 platformPosition = prototype.initialTruckPrototype.position + directionStep;
+        for (int i = 0; i < prototype.initialPlatformCount; i++) {
+            assemblingController.AddPlatform(platformPosition, trueInFront_falseToTheEnd: false);
+            platformPosition += directionStep;
+        }
+        
+        foreach (var loadout in prototype.initialLoadouts ?? new LoadoutPrototype[0]) {
+            loaderController.Place(loadout);
+        }       
     }
 
     public void Update() {

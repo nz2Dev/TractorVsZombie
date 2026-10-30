@@ -1,19 +1,16 @@
 using System.Collections.Generic;
 
 public class LoaderController {
+    
     private readonly PlatformController platformController;
-    private readonly LoaderModel model = new();
-    private LoadoutPrototype[] initialLoadouts;
-    private int nextInitialLoadout;
+    private LoaderModel model = new();
 
     public LoaderController(PlatformController platformController) {
         this.platformController = platformController;
     }
 
-    public void Init(LoaderPrototype prototype) {
-        initialLoadouts = prototype.initialLoadouts ?? new LoadoutPrototype[0];
-        nextInitialLoadout = 0;
-        PlacePendingLoadouts();
+    public void Init() {
+        model = new LoaderModel();
     }
 
     public void Place(LoadoutPrototype loadout) {
@@ -44,10 +41,6 @@ public class LoaderController {
             model.PlatformIds.Add(platformId);
         }
 
-        if (nextInitialLoadout < initialLoadouts.Length) {
-            Place(initialLoadouts[nextInitialLoadout]);
-            nextInitialLoadout++;
-        }
         PlacePendingLoadouts();
     }
 

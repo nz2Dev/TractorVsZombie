@@ -33,50 +33,35 @@ public class AssemblingControllerTests {
     }
     
     [Test]
-    public void Init_WithOneLoadout_FiresOneEvent() {
-        var assemblingPrototype = new AssemblingPrototype { 
-            initialPlatformCount = 1
-        };
+    public void Init_DoesNotCreateInitialPlatforms() {
+        controller.Init(new AssemblingPrototype());
 
-        controller.Init(assemblingPrototype);
-
-        platformAddedCallbackMock.Verify((m) => m(It.IsAny<int>()), Times.Once);
+        platformAddedCallbackMock.Verify((m) => m(It.IsAny<int>()), Times.Never);
     }
 
     [Test]
     public void AddLoadout_AfterInitAtHeadPosition_DontSpawnImmediatelly() {
         var headPosition = new Vector3(2, 0, 0);
         truckMock.Setup(m => m.ReadVehiclePosition()).Returns(headPosition);
-        var assemblingPrototype = new AssemblingPrototype { 
-            initialPlatformCount = 1
-        };
-
-        controller.Init(assemblingPrototype);
+        controller.Init(new AssemblingPrototype());
         controller.AddPlatform(headPosition, true);
         controller.Update();
 
-        platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Once);
+        platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Never);
     }
 
     [Test]
     public void AddLoadout_AfterInitAndOutsideHeadPosition_SpawnAfterUpdate() {
         var nearHeadPosition = new Vector3(2, 0, 0);
         var outsideHeadPosition = new Vector3(8, 0, 0);
-        var assemblingPrototype = new AssemblingPrototype { 
-            initialPlatformCount = 1
-        };
-
-        controller.Init(assemblingPrototype);
+        controller.Init(new AssemblingPrototype());
+        controller.AddPlatform(outsideHeadPosition, true);
         truckMock.Setup(m => m.ReadVehiclePosition()).Returns(nearHeadPosition);
-        controller.AddPlatform(nearHeadPosition, true);
         controller.Update();
 
         platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Once);
 
-        truckMock.Setup(m => m.ReadVehiclePosition()).Returns(outsideHeadPosition);
-        controller.Update();
-        
-        platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Exactly(2));
+        platformAddedCallbackMock.Verify(m => m(It.IsAny<int>()), Times.Once);
     }
 
     [Test]
@@ -84,16 +69,13 @@ public class AssemblingControllerTests {
         var headPosition = new Vector3(10, 0, 0);
         var addedLoadoutPosition = new Vector3(5, 0, 0);
         var addedLoadout = new LoadoutPrototype {};
-        var assemblingPrototype = new AssemblingPrototype { 
-            initialPlatformCount = 1
-        };
-
         platformMock.SetupSequence(m => m.Create(It.IsAny<PlatformPrototype>(), It.IsAny<Vector3>()))
             .Returns(1).Returns(2).Returns(3).Returns(4);
         platformMock.Setup(m => m.ReadVehicleId(It.IsAny<int>()))
             .Returns<int>(val => new VehicleId(val));
 
-        controller.Init(assemblingPrototype);
+        controller.Init(new AssemblingPrototype());
+        controller.AddPlatform(new Vector3(0, 0, 0), trueInFront_falseToTheEnd: false);
         // init loadout will have platformId = 1
         controller.AddPlatform(addedLoadoutPosition, trueInFront_falseToTheEnd: true);
         // second loadout will have platformId = 2

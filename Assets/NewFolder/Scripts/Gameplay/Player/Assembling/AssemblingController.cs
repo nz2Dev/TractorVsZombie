@@ -30,13 +30,11 @@ public class AssemblingController {
 
     public void Init(AssemblingPrototype prototype) {
         view.SetPlatformPreviewPrefab(prototype.platformPreviewPrefab);
-
-        model.TruckPrototype = prototype.initTruckPrototype;
-        SpawnDriver();
-        
         model.PickupPlatformPrototype = prototype.pickupPlatformPrototype;
-        GenerateChainRow(prototype.initTruckPrototype.rotation, prototype.initTruckPrototype.position, prototype.initialPlatformCount);
-        ProcessChain();
+    }
+
+    public void SpawnDriver(TruckPrototype prototype) {
+        truckController.Create(prototype);
         UpdateHeadPosition();
     }
 
@@ -136,10 +134,6 @@ public class AssemblingController {
                 tail.connectedVehicleId = headVehicleId;
             }
         }
-    }
-
-    private void SpawnDriver() {
-        truckController.Create(model.TruckPrototype);
     }
 
 }
