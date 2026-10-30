@@ -10,7 +10,7 @@ public class RewardController {
     private int idCounter;
     private readonly Dictionary<int, RewardModel> registry = new ();
     private SpatialLookup<RewardModel> spatialLookup = new(2048);
-    private List<RewardState> rewardStateBuffer = new (128);
+    private List<int> rewardIdBuffer = new (128);
 
     public RewardController(RewardView view) {
         this.view = view;
@@ -24,17 +24,21 @@ public class RewardController {
         spatialLookup.Dispose();
     }
 
-    public IReadOnlyList<RewardState> CollectRewards(Vector3 position, float radius) {
+    public IReadOnlyList<int> CheckRewards(Vector3 position, float radius) {
         var rewardsInRange = spatialLookup.QueryRange(position, radius);
-        rewardStateBuffer.Clear();
+        rewardIdBuffer.Clear();
         foreach (var reward in rewardsInRange) {
-            rewardStateBuffer.Add(GetRewardState(reward));
-            DeleteReward(reward);
+            rewardIdBuffer.Add(reward.Id);
         }
-        return rewardStateBuffer;
+        return rewardIdBuffer;
     }
 
-    private RewardState GetRewardState(RewardModel model) {
+    public void CollectReward(int rewardId) {
+        DeleteReward(registry[rewardId]);
+    }
+
+    public RewardState ReadState(int rewardId) {
+        var model = registry[rewardId];
         return new RewardState {
             position = model.Position,
             payload = model.Payload

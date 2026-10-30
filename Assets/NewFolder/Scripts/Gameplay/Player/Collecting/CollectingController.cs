@@ -30,11 +30,15 @@ public class CollectingController {
     }
 
     private void CollectRewards() {
-        var collectedRewardStates = rewardController.CollectRewards(position, config.radius);
-        foreach (var rewardState in collectedRewardStates) {
+        var rewardsInRadius = rewardController.CheckRewards(position, config.radius);
+        foreach (var rewardId in rewardsInRadius) {
+            var rewardState = rewardController.ReadState(rewardId);
+
             if (rewardState.payload.type == RewardType.Loadout) {
+                rewardController.CollectReward(rewardId);
                 OnLoadoutCollected?.Invoke(rewardState.position, rewardState.payload.loadoutPrototype);
             } else if (rewardState.payload.type == RewardType.Platform) {
+                rewardController.CollectReward(rewardId);
                 OnPlatformCollected?.Invoke(rewardState.position);
             }
         }
