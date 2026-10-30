@@ -3,19 +3,15 @@ using UnityEngine;
 public class CameraController {
     
     private readonly CameraView view;
-    
-    private Vector3 vehiclePosition;
+    private readonly AssemblingController assemblingController;
 
-    public CameraController(CameraView view) {
+    public CameraController(CameraView view, AssemblingController assemblingController) {
         this.view = view;
-    }
-
-    public void SetVehiclePosition(Vector3 position) {
-        vehiclePosition = position;
+        this.assemblingController = assemblingController;
     }
 
     public void Update() {
-        view.UpdateFollowCamera(vehiclePosition);
+        view.UpdateFollowCamera(assemblingController.HeadPosition);
     }
 
 }

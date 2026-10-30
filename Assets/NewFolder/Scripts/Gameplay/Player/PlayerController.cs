@@ -1,9 +1,6 @@
 using UnityEngine;
-using UnityEngine.UIElements;
-
 public class PlayerController {
 
-    private PlayerModel model;
     private readonly DrivingController drivingController;
     private readonly AssemblingController assemblingController;
     private readonly LoaderController loaderController;
@@ -23,36 +20,13 @@ public class PlayerController {
         this.aimingController = aimingController;
         this.collectingController = collectingController;
         this.cameraController = cameraController;
-
-        selectingController.OnSelectedPlatformChanged += () =>
-            aimingController.SetManualPlatformIds(selectingController.SelectedPlatformIds);
-
-        assemblingController.OnPlatformAdded += (platformId) => {
-            loaderController.RegisterPlatform(platformId);
-            selectingController.AddOption(platformId);
-            aimingController.AddControlledPlatformId(platformId);
-            drivingController.AddControlledPlatform(platformId);
-        };
-        assemblingController.OnPlatformRemoved += (platformId) => {
-            loaderController.UnregisterPlatform(platformId);
-            selectingController.RemoveOption(platformId);
-            aimingController.RemoveControlledPlatformId(platformId);
-            drivingController.RemoveControlledPlatform(platformId);
-        };
-
-        collectingController.OnLoadoutCollected += (position, loadoutPrototype) =>
-            loaderController.Place(loadoutPrototype);
-        collectingController.OnPlatformCollected += position =>
-            assemblingController.AddPlatform(position, model.Config.startOrEndCouplingOfRewards);
     }
 
     public bool HasUnits => assemblingController.ControlledUnitsCount > 0;
-    public bool HasPosition => model != null && assemblingController.HasPosition;
+    public bool HasPosition => assemblingController.HasPosition;
     public Vector3 Position => assemblingController.HeadPosition;
 
     public void Setup(PlayerPrototype prototype) {     
-        model = new PlayerModel(prototype.config);
-        loaderController.Init();
         aimingController.Init(prototype.aimingPrototype);
         collectingController.Init(prototype.collectingPrototype);
         assemblingController.Init(prototype.assemblingPrototype);
@@ -71,18 +45,14 @@ public class PlayerController {
     }
 
     public void Update() {
-        if (model == null)
+        if (!HasUnits)
             return;
         
-        var headPosition = assemblingController.HeadPosition;
         assemblingController.Update();
         drivingController.Update();
         selectingController.Update();
-        aimingController.SetAimSourcePosition(headPosition);
         aimingController.Update();
-        collectingController.SetPosition(headPosition);
         collectingController.Update();
-        cameraController.SetVehiclePosition(headPosition);
         cameraController.Update();
     }
 

@@ -222,14 +222,18 @@ public class GameBootstrapper : MonoBehaviour {
             new HeadquarterBuildingView(cameraManager)
         );
 
+        var assemblingController = new AssemblingController(new AssemblingView(), platformController, truckController, vehicleSystem);
+        var loaderController = new LoaderController(platformController, assemblingController);
+        var selectingController = new SelectingController(new SelectingView(uiDocument), platformController, assemblingController);
         playerController = new PlayerController(
-            new DrivingController(truckController, vehicleSystem, platformController),
-            new AssemblingController(new AssemblingView(), platformController, truckController, vehicleSystem),
-            new LoaderController(platformController),
-            new SelectingController(new SelectingView(uiDocument), platformController),
-            new AimingController(new AimingView(cameraManager), platformController, weaponController, hitboxSystem, collisionService),
-            new CollectingController(rewardController),
-            new CameraController(new CameraView(cameraManager))
+            new DrivingController(truckController, vehicleSystem, platformController, assemblingController),
+            assemblingController,
+            loaderController,
+            selectingController,
+            new AimingController(new AimingView(cameraManager), platformController, weaponController, hitboxSystem, collisionService,
+                assemblingController, selectingController),
+            new CollectingController(rewardController, assemblingController, loaderController),
+            new CameraController(new CameraView(cameraManager), assemblingController)
         );
 
         rewardSpawnController = new RewardSpawnController(rewardController, playerController);

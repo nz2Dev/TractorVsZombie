@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerPrototypeSource : MonoBehaviour {
     
-    [Inline] [SerializeField] private PlayerConfig configSource;
     [SerializeField] private AssemblingSource assemblingSource;
     [SerializeField] private LoaderSource loaderSource;
     [SerializeField] private AimingSource aimingSource;
@@ -20,7 +19,6 @@ public class PlayerPrototypeSource : MonoBehaviour {
 
     public PlayerPrototype Get() {
         return new PlayerPrototype {
-            config = configSource,
             initialLoadouts = GetLoadoutPrototypes(),
             initialPlatformCount = initialPlatformCount,
             initialTruckPrototype = initTruckSource.GetPrototype(),

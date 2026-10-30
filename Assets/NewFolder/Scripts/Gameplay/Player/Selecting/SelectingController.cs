@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,15 +6,15 @@ using UnityEngine;
 public class SelectingController {
     
     private readonly PlatformController platformController;
+    private readonly AssemblingController assemblingController;
 
     private readonly SelectingView view;
     private readonly SelectingModel model;
 
-    public event Action OnSelectedPlatformChanged;
-
-    public SelectingController(SelectingView view, PlatformController platformController) {
+    public SelectingController(SelectingView view, PlatformController platformController, AssemblingController assemblingController) {
         this.view = view;
         this.platformController = platformController;
+        this.assemblingController = assemblingController;
         model = new();
     }
 
@@ -23,17 +22,24 @@ public class SelectingController {
     public IReadOnlyList<int> SelectedPlatformIds => model.SelectedPlatformIds;
 
     public void Update() {
+        SynchronizeOptions();
         ReadPlatformSelectionInput();
     }
 
-    public void AddOption(int platformId) {
-        model.OptionsPlatformIds.Add(platformId);
-        view.AddPlatform(platformController.ReadPlatformState(platformId));
-    }
-    
-    internal void RemoveOption(int platformId) {
-        model.OptionsPlatformIds.Remove(platformId);
-        view.RemovePlatform(platformId);
+    private void SynchronizeOptions() {
+        AssemblingController.ComputeIdDiff(model.OptionsPlatformIds, assemblingController.ControlledPlatformIds,
+            out var addedIds, out var removedIds);
+        foreach (var platformId in removedIds) {
+            model.OptionsPlatformIds.Remove(platformId);
+            model.SelectedPlatformIds.Remove(platformId);
+            view.RemovePlatform(platformId);
+        }
+        foreach (var platformId in addedIds) {
+            model.OptionsPlatformIds.Add(platformId);
+            view.AddPlatform(platformController.ReadPlatformState(platformId));
+        }
+        if (addedIds.Count > 0 || removedIds.Count > 0) 
+            OnSelectionChanged();
     }
 
     private void ReadPlatformSelectionInput() {
@@ -59,7 +65,6 @@ public class SelectingController {
         
         if (hasEffect) {
             OnSelectionChanged();
-            OnSelectedPlatformChanged?.Invoke();
         }
     }
 

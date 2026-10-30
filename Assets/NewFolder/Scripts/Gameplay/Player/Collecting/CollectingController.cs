@@ -1,43 +1,37 @@
 
-using System;
-
 using UnityEngine;
 
 public class CollectingController {
 
     private readonly RewardController rewardController;
-
-    private Vector3 position;
+    private readonly AssemblingController assemblingController;
+    private readonly LoaderController loaderController;
     private CollectingConfig config;
 
-    public event Action<Vector3, LoadoutPrototype> OnLoadoutCollected;
-    public event Action<Vector3> OnPlatformCollected;
-
-    public CollectingController(RewardController rewardController) {
+    public CollectingController(RewardController rewardController, AssemblingController assemblingController, LoaderController loaderController) {
         this.rewardController = rewardController;
+        this.assemblingController = assemblingController;
+        this.loaderController = loaderController;
     }
 
     public void Init(CollectingPrototype prototype) {
         this.config = prototype.config;
     }
     
-    public void SetPosition(Vector3 collectPosition) {
-        this.position = collectPosition;
-    }
-
     public void Update() {
         CollectRewards();
     }
 
     private void CollectRewards() {
+        var position = assemblingController.HeadPosition;
         var rewardsInRadius = rewardController.CheckRewards(position, config.radius);
         foreach (var rewardId in rewardsInRadius) {
             var rewardState = rewardController.ReadState(rewardId);
             rewardController.CollectReward(rewardId);            
             if (rewardState.payload.type == RewardType.Loadout) {
-                OnLoadoutCollected?.Invoke(rewardState.position, rewardState.payload.loadoutPrototype);
+                loaderController.Place(rewardState.payload.loadoutPrototype);
             } else if (rewardState.payload.type == RewardType.Platform) {
-                OnPlatformCollected?.Invoke(rewardState.position);
+                assemblingController.AddPlatform(rewardState.position, config.startOrEndCouplingOfRewards);
             }
         }
     }

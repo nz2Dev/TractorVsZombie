@@ -29,7 +29,7 @@ public class AssemblingControllerTests {
             viewMock.Object, platformMock.Object, truckMock.Object, vehicleSystemMock.Object);
         
         platformAddedCallbackMock = new Mock<Action<int>>();
-        controller.OnPlatformAdded += platformAddedCallbackMock.Object;
+        // controller.OnPlatformAdded += platformAddedCallbackMock.Object;
     }
     
     [Test]

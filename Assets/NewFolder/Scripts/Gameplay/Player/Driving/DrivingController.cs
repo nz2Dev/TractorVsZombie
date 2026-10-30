@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 public class DrivingController {
@@ -9,14 +6,16 @@ public class DrivingController {
     private readonly PlatformController platformController;
     private readonly VehicleSystem vehicleSystem;
 
-    private readonly List<int> controlledPlatformIds = new ();
+    private readonly AssemblingController assemblingController;
     private DrivingInput input;
     private VehicleState truckVehicleState;
 
-    public DrivingController(TruckController truckController, VehicleSystem vehicleSystem, PlatformController platformController) {
+    public DrivingController(TruckController truckController, VehicleSystem vehicleSystem, PlatformController platformController,
+        AssemblingController assemblingController) {
         this.truckController = truckController;
         this.vehicleSystem = vehicleSystem;
         this.platformController = platformController;
+        this.assemblingController = assemblingController;
     }
 
     public void Update() {
@@ -26,14 +25,6 @@ public class DrivingController {
         ReadDrivingInput();
         ReadVehicleState();
         ApplyDrivingInput();
-    }
-
-    internal void AddControlledPlatform(int platformId) {
-        controlledPlatformIds.Add(platformId);
-    }
-
-    internal void RemoveControlledPlatform(int platformId) {
-        controlledPlatformIds.Remove(platformId);
     }
 
     private void ReadVehicleState() {
@@ -72,7 +63,7 @@ public class DrivingController {
         vehicleSystem.SetBrakes(truckVehicleId, brakesThrottle);
         vehicleSystem.SetSteer(truckVehicleId, input.steering);
 
-        foreach (var platformId in controlledPlatformIds) {
+        foreach (var platformId in assemblingController.ControlledPlatformIds) {
             var vehicleId = platformController.ReadVehicleId(platformId);
             vehicleSystem.SetPowertrain(vehicleId, gasThrottle, brakesThrottle);
         }

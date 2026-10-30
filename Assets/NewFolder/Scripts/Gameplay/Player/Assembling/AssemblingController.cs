@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -13,9 +12,6 @@ public class AssemblingController {
     private readonly AssemblingModel model;
     private readonly AssemblingView view;
 
-    public event Action<int> OnPlatformAdded;
-    public event Action<int> OnPlatformRemoved;
-
     public AssemblingController(AssemblingView view, PlatformController platformController, TruckController truckController, VehicleSystem vehicleSystem) {
         this.view = view;
         this.platformController = platformController;
@@ -27,6 +23,21 @@ public class AssemblingController {
     public Vector3 HeadPosition { get; private set; }
     public bool HasPosition { get; private set; }
     public int ControlledUnitsCount => model.Chain.Count + (truckController.UnitExist ? 1 : 0);
+    public IReadOnlyList<int> ControlledPlatformIds => model.ControlledPlatformIds;
+
+    public static void ComputeIdDiff(IReadOnlyList<int> currentIds, IReadOnlyList<int> receivedIds,
+        out List<int> addedIds, out List<int> removedIds) {
+        var current = new HashSet<int>(currentIds);
+        var received = new HashSet<int>(receivedIds);
+        addedIds = new List<int>();
+        removedIds = new List<int>();
+        foreach (var id in receivedIds) {
+            if (!current.Contains(id) && !addedIds.Contains(id)) addedIds.Add(id);
+        }
+        foreach (var id in currentIds) {
+            if (!received.Contains(id) && !removedIds.Contains(id)) removedIds.Add(id);
+        }
+    }
 
     public void Init(AssemblingPrototype prototype) {
         view.SetPlatformPreviewPrefab(prototype.platformPreviewPrefab);
@@ -76,7 +87,7 @@ public class AssemblingController {
             var state = model.Chain[i];
             if (!state.isTruck && state.IsPlatformCreated && !platformController.Exist(state.platformId)) {
                 model.Chain.RemoveAt(i);
-                OnPlatformRemoved?.Invoke(state.platformId);
+                model.ControlledPlatformIds.Remove(state.platformId);
             }
         }
     }
@@ -112,7 +123,6 @@ public class AssemblingController {
                 tail.waitsActivation = false;
                 tail.platformId = platformId;
                 view.HidePlatformPreview();
-                OnPlatformAdded?.Invoke(platformId);
             }
         }
 

@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-
+using System.Linq;
 
 using UnityEngine;
 
@@ -9,17 +7,22 @@ public class AimingController {
     private readonly HitboxSystem hitboxSystem;
     private readonly CollisionService collisionService;
     private readonly PlatformController platformController;
+    private readonly AssemblingController assemblingController;
+    private readonly SelectingController selectingController;
     private readonly WeaponController weaponController;
 
     private readonly AimingView view;
     private readonly AimingModel model;
 
-    public AimingController(AimingView view, PlatformController platformController, WeaponController weaponController, HitboxSystem hitboxSystem, CollisionService collisionService) {
+    public AimingController(AimingView view, PlatformController platformController, WeaponController weaponController, HitboxSystem hitboxSystem,
+        CollisionService collisionService, AssemblingController assemblingController, SelectingController selectingController) {
         this.view = view;
         this.platformController = platformController;
         this.weaponController = weaponController;
         this.hitboxSystem = hitboxSystem;
         this.collisionService = collisionService;
+        this.assemblingController = assemblingController;
+        this.selectingController = selectingController;
         model = new AimingModel();
     }
 
@@ -27,38 +30,27 @@ public class AimingController {
         view.SetAimVisuals(prototype.aimVisualsPrefab);
     }
 
-    public void SetAimSourcePosition(Vector3 position) {
-        model.AimSourcePosition = position;
-    }
-
-    internal void SetManualPlatformIds(IEnumerable<int> manualPlatformIds) {
-        model.ManualPlatformIds.Clear();
-        model.ManualPlatformIds.AddRange(manualPlatformIds);
-        OnManualPlatformListChanged();
-    }
-
-    internal void AddControlledPlatformId(int platformId) {
-        model.ControlledPlatformIds.Add(platformId);
-    }
-
-    internal void RemoveControlledPlatformId(int platformId) {
-        model.ControlledPlatformIds.Remove(platformId);
-    }
-
     private void OnManualPlatformListChanged() {
         view.HideAim();
-        if (model.ManualPlatformIds.Count != 0) {
+        if (selectingController.SelectedPlatformCount != 0) {
             view.ShowAim(model.AimInput);
         }
     }
 
     public void Update() {
+        AssemblingController.ComputeIdDiff(model.ManualPlatformIds, selectingController.SelectedPlatformIds,
+            out var addedIds, out var removedIds);
+        if (addedIds.Count > 0 || removedIds.Count > 0) {
+            model.ManualPlatformIds.Clear();
+            model.ManualPlatformIds.AddRange(selectingController.SelectedPlatformIds);
+            OnManualPlatformListChanged();
+        }
         ComputeAimInput();
         OperatePlatforms();
     }
 
     private void ComputeAimInput() {
-        if (model.ManualPlatformIds.Count == 0) {
+        if (selectingController.SelectedPlatformCount == 0) {
             return;
         }
 
@@ -67,19 +59,19 @@ public class AimingController {
         var mouseHitPoint = collisionService.GetGroundHitPosition(mouseRay);
         model.AimInput = new TopDownAimInput {
             position = mouseHitPoint,
-            direction = (mouseHitPoint - model.AimSourcePosition).normalized,
+            direction = (mouseHitPoint - assemblingController.HeadPosition).normalized,
             height = 1
         };
         view.UpdateAim(model.AimInput);
     }
 
     private void OperatePlatforms() {
-        foreach (var platformId in model.ControlledPlatformIds) {
+        foreach (var platformId in assemblingController.ControlledPlatformIds) {
             var platformState = platformController.ReadPlatformState(platformId);
             if (!platformState.hasLoadout)
                 continue;
 
-            if (model.ManualPlatformIds.Contains(platformId)) {
+            if (selectingController.SelectedPlatformIds.Contains(platformId)) {
                 OperateFromInput(platformState);
             } else {
                 OperateAutomatically(platformState);
