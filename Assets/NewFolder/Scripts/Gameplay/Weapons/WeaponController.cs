@@ -42,7 +42,8 @@ public class WeaponController {
     public WeaponState ReadWeaponState(int weaponId) {
         var weapon = registry[weaponId];
         return new WeaponState {
-            aimConfig = weapon.Config.aimConfig
+            position = weapon.Position,
+            aimConfig = weapon.Config.aimConfig,
         };
     }
 

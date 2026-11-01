@@ -10,4 +10,5 @@ public struct TruckPrototype {
     public HealthPrototype healthPrototype;
     public FactionPrototype factionPrototype;
     public HitboxPrototype hitboxPrototype;
+    public AttachmentPrototype attachmentPrototype;
 }

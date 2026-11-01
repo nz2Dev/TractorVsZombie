@@ -1,12 +1,14 @@
 using System.Linq;
 
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class AimingController {
 
     private readonly HitboxSystem hitboxSystem;
     private readonly CollisionService collisionService;
     private readonly PlatformController platformController;
+    private readonly TruckController truckController;
     private readonly AssemblingController assemblingController;
     private readonly SelectingController selectingController;
     private readonly WeaponController weaponController;
@@ -15,7 +17,7 @@ public class AimingController {
     private readonly AimingModel model;
 
     public AimingController(AimingView view, PlatformController platformController, WeaponController weaponController, HitboxSystem hitboxSystem,
-        CollisionService collisionService, AssemblingController assemblingController, SelectingController selectingController) {
+        CollisionService collisionService, AssemblingController assemblingController, SelectingController selectingController, TruckController truckController) {
         this.view = view;
         this.platformController = platformController;
         this.weaponController = weaponController;
@@ -23,6 +25,7 @@ public class AimingController {
         this.collisionService = collisionService;
         this.assemblingController = assemblingController;
         this.selectingController = selectingController;
+        this.truckController = truckController;
         model = new AimingModel();
     }
 
@@ -47,6 +50,7 @@ public class AimingController {
         }
         ComputeAimInput();
         OperatePlatforms();
+        OperateTruck();
     }
 
     private void ComputeAimInput() {
@@ -72,23 +76,28 @@ public class AimingController {
                 continue;
 
             if (selectingController.SelectedPlatformIds.Contains(platformId)) {
-                OperateFromInput(platformState);
+                OperateFromInput(platformState.loadoutState.weaponId);
             } else {
-                OperateAutomatically(platformState);
+                OperateAutomatically(platformState.loadoutState.weaponId, platformState.loadoutState.weaponState, platformState.loadoutState.factionState);
             }
         }
     }
 
-    private void OperateFromInput(PlatformState platformState) {
-        weaponController.AimWeapon(platformState.loadoutState.weaponId, model.AimInput.position + Vector3.up * model.AimInput.height);
+    private void OperateTruck() {
+        var truckState = truckController.ReadState();
+        OperateAutomatically(truckState.attachmentState.weaponId, truckState.attachmentState.weaponState, truckState.factionState);
     }
 
-    private void OperateAutomatically(PlatformState platformState) {
-        var searchRadius = platformState.loadoutState.weaponState.aimConfig.range; // ?? where does radius filter should happen? here or in proximity service?
-        var searchFaction = !platformState.loadoutState.factionState.alie;
-        if (hitboxSystem.QueryNearest(platformState.position, searchFaction, out var nearestHitboxId)) {
+    private void OperateFromInput(int weaponId) {
+        weaponController.AimWeapon(weaponId, model.AimInput.position + Vector3.up * model.AimInput.height);
+    }
+
+    private void OperateAutomatically(int weaponId, WeaponState weaponState, FactionState factionState) {
+        var searchRadius = weaponState.aimConfig.range; // ?? where does radius filter should happen? here or in proximity service?
+        var searchFaction = !factionState.alie;
+        if (hitboxSystem.QueryNearest(weaponState.position, searchFaction, out var nearestHitboxId)) {
             var nearestPosition = hitboxSystem.GetPosition(nearestHitboxId);
-            weaponController.AimWeapon(platformState.loadoutState.weaponId, nearestPosition + 0.5f * Vector3.up);
+            weaponController.AimWeapon(weaponId, nearestPosition + 0.5f * Vector3.up);
         }
     }
 

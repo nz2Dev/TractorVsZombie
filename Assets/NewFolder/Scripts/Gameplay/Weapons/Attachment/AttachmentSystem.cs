@@ -27,10 +27,10 @@ public sealed class AttachmentSystem {
 
     public AttachmentState ReadState(AttachmentId id) {
         var model = models[id];
-        return new AttachmentState {
-            weaponId = model.WeaponId,
-            weaponState = weaponController.ReadWeaponState(model.WeaponId),
-        };
+        return new AttachmentState (
+            weaponId: model.WeaponId,
+            weaponState: weaponController.ReadWeaponState(model.WeaponId)
+        );
     }
 
     public void Update() {

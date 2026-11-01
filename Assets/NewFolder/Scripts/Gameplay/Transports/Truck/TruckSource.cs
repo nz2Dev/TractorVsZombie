@@ -7,6 +7,7 @@ public class TruckSource : MonoBehaviour {
     [SerializeField] private VehicleSource vehicleSource;
     [SerializeField] private RamSource ramSource;
     [SerializeField] private HitboxSource hitboxSource;
+    [SerializeField] private AttachmentSource attachmentSource;
     [Space]
     [SerializeField] private TruckPresentationSource presentationSource;
 
@@ -23,7 +24,8 @@ public class TruckSource : MonoBehaviour {
             presentationPrototype = presentationSource.Get(),
             healthPrototype = healthSource.GetHealthPrototype(),
             factionPrototype = factionSource.GetFactionPrototype(),
-            hitboxPrototype = hitboxSource.GetHitboxPrototype()
+            hitboxPrototype = hitboxSource.GetHitboxPrototype(),
+            attachmentPrototype = attachmentSource.Get()
         };
     }
 }

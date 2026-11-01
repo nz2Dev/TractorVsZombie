@@ -9,5 +9,6 @@ public class TruckModel {
     public VehicleId VehicleId { get; set; }
     public RamId RamId { get; set; }
     public HitboxId HitboxId { get; set; }
+    public AttachmentId AttachmentId { get; set; }
     
 }

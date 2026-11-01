@@ -12,11 +12,12 @@ public class TruckController {
     private readonly HitboxSystem hitboxSystem;
     private readonly EntityMapping entityMapping;
     private readonly PoseRegistry poseRegistry;
+    private readonly AttachmentSystem attachmentSystem;
 
     private TruckModel model;
     private readonly TruckPresenter presenter;
 
-    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamSystem ramEffect, TruckPresenter presenter, VehicleSystem vehicleSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry) {
+    public TruckController(HealthSystem healthSystem, FactionRegistry factionRegistry, RamSystem ramEffect, TruckPresenter presenter, VehicleSystem vehicleSystem, HitboxSystem hitboxSystem, EntityMapping entityMapping, PoseRegistry poseRegistry, AttachmentSystem attachmentSystem) {
         this.healthSystem = healthSystem;
         this.factionRegistry = factionRegistry;
         this.ramSystem = ramEffect;
@@ -25,6 +26,7 @@ public class TruckController {
         this.hitboxSystem = hitboxSystem;
         this.entityMapping = entityMapping;
         this.poseRegistry = poseRegistry;
+        this.attachmentSystem = attachmentSystem;
     }
 
     public virtual VehicleId ReadVehicleId() {
@@ -33,6 +35,14 @@ public class TruckController {
 
     public virtual Vector3 ReadVehiclePosition() {
         return poseRegistry.Read(model.PoseId).position;
+    }
+
+    public TruckState ReadState() {
+        return new TruckState(
+            attachmentState: attachmentSystem.ReadState(model.AttachmentId),
+            factionState: factionRegistry.ReadState(model.FactionId),
+            factionId: model.FactionId
+        );
     }
 
     public bool UnitExist => model != null;
@@ -54,6 +64,7 @@ public class TruckController {
         model.VehicleId = vehicleSystem.Create(initPosition, prototype.vehiclePrototype, model.PoseId, prototype.rotation);
         model.RamId = ramSystem.Add(model.FactionId, model.VehicleId, prototype.ramPrototype);
         model.HitboxId = hitboxSystem.Add(model.FactionId, model.PoseId, prototype.hitboxPrototype);
+        model.AttachmentId = attachmentSystem.Add(prototype.attachmentPrototype, model.FactionId, model.PoseId);
         
         entityMapping.CreateMapping(model.HitboxId, new EntityComponents {
             healthId = model.HealthId,
@@ -78,6 +89,7 @@ public class TruckController {
         ramSystem.Remove(model.RamId);
         hitboxSystem.Remove(model.HitboxId);
         factionRegistry.Remove(model.FactionId);
+        attachmentSystem.Remove(model.AttachmentId);
         
         entityMapping.DeleteMapping(model.HitboxId);
 

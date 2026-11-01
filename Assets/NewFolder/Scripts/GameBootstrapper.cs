@@ -194,7 +194,8 @@ public class GameBootstrapper : MonoBehaviour {
             vehicleSystem,
             hitboxSystem,
             entityMapping,
-            poseRegistry
+            poseRegistry,
+            attachmentSystem
         );
 
         var spawnService = new SpawnService(infantryController, armorController);
@@ -231,7 +232,7 @@ public class GameBootstrapper : MonoBehaviour {
             loaderController,
             selectingController,
             new AimingController(new AimingView(cameraManager), platformController, weaponController, hitboxSystem, collisionService,
-                assemblingController, selectingController),
+                assemblingController, selectingController, truckController),
             new CollectingController(rewardController, assemblingController, loaderController),
             new CameraController(new CameraView(cameraManager), assemblingController)
         );
