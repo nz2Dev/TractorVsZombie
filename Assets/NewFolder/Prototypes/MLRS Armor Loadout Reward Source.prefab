@@ -63,30 +63,30 @@ PrefabInstance:
     - target: {fileID: 3077848778301863022, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3855a85c9507543a9a0b9767303b166e, type: 2}
+      objectReference: {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
     - target: {fileID: 4088045857837344926, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3855a85c9507543a9a0b9767303b166e, type: 2}
+      objectReference: {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
     - target: {fileID: 4301943138354802582, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3855a85c9507543a9a0b9767303b166e, type: 2}
+      objectReference: {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
     - target: {fileID: 5416555203722511163, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3855a85c9507543a9a0b9767303b166e, type: 2}
+      objectReference: {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
     - target: {fileID: 6121613688532571804, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3855a85c9507543a9a0b9767303b166e, type: 2}
+      objectReference: {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
     - target: {fileID: 6561461717761399719, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6561461717761399719, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.75
+      value: 1.41
       objectReference: {fileID: 0}
     - target: {fileID: 6561461717761399719, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: m_LocalPosition.z
@@ -123,7 +123,7 @@ PrefabInstance:
     - target: {fileID: 7392121619752950506, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3855a85c9507543a9a0b9767303b166e, type: 2}
+      objectReference: {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
     - target: {fileID: 7810165690695881823, guid: 7b906e6370c6d4d848eaf4374d73d082, type: 3}
       propertyPath: m_Name
       value: MLRS Weapon Visuals
