@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::ProductionBuildingSource
   unique: 1
-  uniqueId: -1475476472
+  uniqueId: 725732334
   spawnerSource: {fileID: 1761592514706622407}
   visualsPrefab: {fileID: 2588060940734931284}
   healthSource:
@@ -108,8 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: NewFolder::SpawnerSource
   configSource:
-    times: 10
-    interval: 10
+    times: 6
+    interval: 8
   spawnSource: {fileID: 5601172961921829115}
 --- !u!1 &3858228865796293992
 GameObject:
@@ -159,8 +159,8 @@ MonoBehaviour:
   infantrySource: {fileID: 0}
   armorSource: {fileID: 0}
   shape:
-    width: 8
-    height: 3
+    width: 4
+    height: 4
     spaceScale: 1
     randomOffset: 1
     randomScale: 1
