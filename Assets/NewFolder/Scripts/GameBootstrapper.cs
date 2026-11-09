@@ -123,7 +123,8 @@ public class GameBootstrapper : MonoBehaviour {
         weaponController = new WeaponController(
             weaponView,
             rocketController,
-            projectileController
+            projectileController,
+            factionRegistry
         );
 
         attachmentSystem = new AttachmentSystem(poseRegistry, weaponController);

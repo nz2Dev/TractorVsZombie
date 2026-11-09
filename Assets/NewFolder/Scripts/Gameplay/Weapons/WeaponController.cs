@@ -8,14 +8,16 @@ public class WeaponController {
     private readonly WeaponView view;
     private readonly RocketController rocketController;
     private readonly ProjectileController projectileController;
+    private readonly FactionRegistry factionRegistry;
 
     private int idCounter;
     private readonly Dictionary<int, WeaponModel> registry = new ();
 
-    public WeaponController(WeaponView view, RocketController rocketController, ProjectileController projectileController) {
+    public WeaponController(WeaponView view, RocketController rocketController, ProjectileController projectileController, FactionRegistry factionRegistry) {
         this.view = view;
         this.rocketController = rocketController;
         this.projectileController = projectileController;
+        this.factionRegistry = factionRegistry;
     }
 
     public void Update() {
@@ -35,7 +37,8 @@ public class WeaponController {
         model.BallisticLaunchOffset = prototype.ballisticLaunchOffset;
         model.LastShootTime = Time.time;
 
-        view.AddWeapon(model.Id, prototype.position, prototype.visualsPrefab);
+        var faction = factionRegistry.ReadState(ownerFactionId);
+        view.AddWeapon(model.Id, prototype.position, prototype.visualsPrefab, faction.alie);
         return model.Id;
     }
 

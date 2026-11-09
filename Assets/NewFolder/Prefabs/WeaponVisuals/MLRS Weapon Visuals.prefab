@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -88,6 +88,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1049812585423700325
 GameObject:
@@ -192,7 +193,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -214,6 +215,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2242678100622243123
 GameObject:
@@ -281,7 +283,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -303,6 +305,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2813271243172733842
 GameObject:
@@ -370,7 +373,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -392,6 +395,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6445742325656630310
 GameObject:
@@ -459,7 +463,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -481,6 +485,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6655939468466057749
 GameObject:
@@ -570,6 +575,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6883649836704471951
 GameObject:
@@ -659,6 +665,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7076625641942590789
 GameObject:
@@ -748,6 +755,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7810165690695881823
 GameObject:
@@ -758,6 +766,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6561461717761399719}
+  - component: {fileID: 8225327820837904743}
   - component: {fileID: 8694748771204103510}
   m_Layer: 0
   m_Name: MLRS Weapon Visuals
@@ -785,6 +794,27 @@ Transform:
   - {fileID: 3882918777644927704}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -148.858, z: 0}
+--- !u!114 &8225327820837904743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7810165690695881823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 206550f34f5704f20b6fb5e2159e0014, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::MaterialStylizer
+  targets:
+  - {fileID: 6121613688532571804}
+  - {fileID: 7392121619752950506}
+  - {fileID: 5416555203722511163}
+  - {fileID: 4088045857837344926}
+  - {fileID: 4301943138354802582}
+  - {fileID: 3077848778301863022}
+  data: {fileID: 11400000, guid: 66859b5ca8c144059b9375964971306e, type: 2}
+  style: 0
 --- !u!114 &8694748771204103510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -799,6 +829,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::WeaponVisuals
   cannoParticlesSystem: {fileID: 0}
   rotationBase: {fileID: 3302657143632947121}
+  accentStylizer: {fileID: 8225327820837904743}
 --- !u!1 &8901635241405797055
 GameObject:
   m_ObjectHideFlags: 0
@@ -865,7 +896,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -887,4 +918,5 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}

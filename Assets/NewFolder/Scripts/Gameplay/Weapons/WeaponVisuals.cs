@@ -6,11 +6,16 @@ public class WeaponVisuals : MonoBehaviour {
     
     [SerializeField] private ParticleSystem cannoParticlesSystem;
     [SerializeField] private Transform rotationBase;
-
+    [SerializeField] private MaterialStylizer accentStylizer;
+    
     private Animator animator;
 
     private void Awake() {
         animator = GetComponent<Animator>();
+    }
+
+    public void SetFactionAccent(MaterialStyle materialStyle) {
+        accentStylizer.Style = materialStyle;
     }
 
     internal void UpdatePosition(Vector3 position) {

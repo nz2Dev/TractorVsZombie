@@ -224,10 +224,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4824348905545849230}
     m_Modifications:
+    - target: {fileID: 1540827805735154162, guid: 4618e4a441e8941a194523ceb93d1c29, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+    - target: {fileID: 3249855700905066485, guid: 4618e4a441e8941a194523ceb93d1c29, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+    - target: {fileID: 4147734563744330345, guid: 4618e4a441e8941a194523ceb93d1c29, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
     - target: {fileID: 5619433139348794399, guid: 4618e4a441e8941a194523ceb93d1c29, type: 3}
       propertyPath: m_Name
       value: Turel Weapon Source
       objectReference: {fileID: 0}
+    - target: {fileID: 5934462320833789196, guid: 4618e4a441e8941a194523ceb93d1c29, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
     - target: {fileID: 6576760841398642602, guid: 4618e4a441e8941a194523ceb93d1c29, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -267,6 +283,10 @@ PrefabInstance:
     - target: {fileID: 6576760841398642602, guid: 4618e4a441e8941a194523ceb93d1c29, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8216322309259085815, guid: 4618e4a441e8941a194523ceb93d1c29, type: 3}
+      propertyPath: style
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

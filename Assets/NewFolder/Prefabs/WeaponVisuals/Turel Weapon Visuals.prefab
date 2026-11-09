@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -88,6 +88,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &750408298118521425
 GameObject:
@@ -155,7 +156,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -177,6 +178,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1490440477311615795
 GameObject:
@@ -266,6 +268,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1888403384344063452
 GameObject:
@@ -366,7 +369,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -388,6 +391,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2308150063693699996
 GameObject:
@@ -455,7 +459,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71768036513eef246a1b800c7754f6e0, type: 2}
+  - {fileID: 2100000, guid: 7acc50e10c96f475d8d40b4e663f1888, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -477,6 +481,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4198000615420922662
 GameObject:
@@ -5269,7 +5274,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &9090542292849845953
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5315,6 +5320,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5346,7 +5352,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &5758890933898690948
 GameObject:
   m_ObjectHideFlags: 0
@@ -5357,6 +5362,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7869517714690128730}
   - component: {fileID: 5998845588053096010}
+  - component: {fileID: 909509663725806241}
   - component: {fileID: 3359016675382166588}
   m_Layer: 0
   m_Name: Turel Weapon Visuals
@@ -5404,6 +5410,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &909509663725806241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5758890933898690948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 206550f34f5704f20b6fb5e2159e0014, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::MaterialStylizer
+  targets:
+  - {fileID: 3225269657088088154}
+  - {fileID: 5122476514603898687}
+  - {fileID: 7780840381029766308}
+  - {fileID: 6017030281407584931}
+  data: {fileID: 11400000, guid: 66859b5ca8c144059b9375964971306e, type: 2}
+  style: 0
 --- !u!114 &3359016675382166588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5418,6 +5443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::WeaponVisuals
   cannoParticlesSystem: {fileID: 3747940973002234300}
   rotationBase: {fileID: 7869517714690128730}
+  accentStylizer: {fileID: 909509663725806241}
 --- !u!1 &9196930712784014782
 GameObject:
   m_ObjectHideFlags: 0

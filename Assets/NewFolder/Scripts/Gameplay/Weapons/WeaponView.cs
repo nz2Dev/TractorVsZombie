@@ -7,8 +7,9 @@ public class WeaponView {
 
     private Dictionary<int, WeaponVisuals> visualsRegistry = new ();
 
-    internal void AddWeapon(int weaponId, Vector3 position, WeaponVisuals visualsPrefab) {
+    internal void AddWeapon(int weaponId, Vector3 position, WeaponVisuals visualsPrefab, bool factionIsAlie) {
         var visuals = GameObject.Instantiate(visualsPrefab, position, Quaternion.identity);
+        visuals.SetFactionAccent(factionIsAlie ? MaterialStyle.FactionAlie : MaterialStyle.FactionFoe);
         visualsRegistry[weaponId] = visuals;
     }
 
