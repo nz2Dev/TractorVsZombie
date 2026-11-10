@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CircleShape : MonoBehaviour {
+public class CircleLineShape : MonoBehaviour {
 
     [SerializeField] private LineRenderer lineRenderer;
     [Space]
