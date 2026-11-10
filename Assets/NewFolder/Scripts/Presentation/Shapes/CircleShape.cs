@@ -43,8 +43,8 @@ public class CircleShape : MonoBehaviour {
             float angle = (startAngle * Mathf.Deg2Rad) + sweepRadians * t;
             lineRenderer.SetPosition(i, new Vector3(
                 Mathf.Cos(angle) * radius,
-                0f,
-                Mathf.Sin(angle) * radius));
+                Mathf.Sin(angle) * radius,
+                0f));
         }
     }
 
