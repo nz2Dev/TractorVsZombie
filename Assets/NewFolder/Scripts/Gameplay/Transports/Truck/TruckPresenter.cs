@@ -13,7 +13,7 @@ public class TruckPresenter {
 
     public void Add(int truckId, Vector3 position, TruckPresentationPrototype prototype) {
         view.Show(truckId, position, prototype.visualsPrefab);
-        ui.Add(truckId, position, prototype.worldSpaceUIPrefab);
+        ui.Add(truckId, position, prototype.uiPrefab);
         audio.Add(truckId, position, prototype);
     }
 
@@ -30,7 +30,8 @@ public class TruckPresenter {
             view.ShowTakeHit(truckId);
         }
         
-        ui.UpdateHealthBar(truckId, vehiclePose.position, healthState.health, healthState.maxHealth);
+        ui.UpdatePose(truckId, vehiclePose.position, vehiclePose.rotation * Vector3.forward);
+        ui.UpdateHealthBar(truckId, healthState.health, healthState.maxHealth);
         audio.UpdateEngineSound(truckId, vehiclePose.position, vehicleState.motorRev);
         if (ramState.receivedContacts > 0) {
             audio.PlayRamImpact(truckId, vehiclePose.position, ramState.receivedContacts);
