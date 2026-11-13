@@ -38,7 +38,7 @@ public class WeaponController {
         model.LastShootTime = Time.time;
 
         var faction = factionRegistry.ReadState(ownerFactionId);
-        view.AddWeapon(model.Id, prototype.position, prototype.visualsPrefab, faction.alie);
+        view.AddWeapon(model.Id, prototype.position, prototype.visualsPrefab, prototype.outlinePrefab, faction.alie);
         return model.Id;
     }
 

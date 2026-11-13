@@ -6,6 +6,8 @@ public class WeaponSource : MonoBehaviour {
     [Local] [SerializeField] private WeaponVisuals visualsPrefab;
     [SerializeField] private BallisticPrototypeSource ballisticPrototypeSource;
     [SerializeField] private Transform ballisticLaunchOffsetSource;
+    [Space]
+    [SerializeField] private WeaponOutline outlinePrefab;
 
 
     private void Awake() {
@@ -18,6 +20,7 @@ public class WeaponSource : MonoBehaviour {
             position = transform.position,
             visualsPrefab = visualsPrefab,
             ballisticPrototype = ballisticPrototypeSource.Get(),
+            outlinePrefab = outlinePrefab,
         };
     }
 }

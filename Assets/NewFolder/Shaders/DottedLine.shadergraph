@@ -524,8 +524,8 @@
     "m_ObjectId": "2a22d714f312441ba7f70cac92906707",
     "m_Title": "portion",
     "m_Position": {
-        "x": -513.9999389648438,
-        "y": 377.4999084472656
+        "x": -514.0,
+        "y": 377.5
     }
 }
 
@@ -1128,7 +1128,7 @@
     "m_AllowMaterialOverride": false,
     "m_SurfaceType": 1,
     "m_ZWriteControl": 0,
-    "m_ZTestMode": 4,
+    "m_ZTestMode": 8,
     "m_AlphaMode": 0,
     "m_RenderFace": 2,
     "m_AlphaClip": false,
@@ -1286,7 +1286,7 @@
     "m_Title": "spacing",
     "m_Position": {
         "x": -627.5,
-        "y": 187.49990844726563
+        "y": 187.50003051757813
     }
 }
 
