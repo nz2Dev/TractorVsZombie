@@ -3,8 +3,7 @@ using UnityEngine.Animations;
 
 public class TruckStatsDisplay : MonoBehaviour {
     
-    [SerializeField] private FlatRotation displayRotator;
-    [SerializeField] private RollConstraint canvasConstraint;
+    [SerializeField] private CanvasRig canvasRig;
     [SerializeField] private HealthWidget healthWidget;
     
     public Vector3 WorldPosition {
@@ -13,17 +12,7 @@ public class TruckStatsDisplay : MonoBehaviour {
         }
     }
 
-    public Camera LookCamera {
-        set {
-            canvasConstraint.Target = value.transform;
-        }
-    }
-
-    public Vector3 UnitForward {
-        set {
-            displayRotator.ForwardInput = value;
-        }
-    }
+    public CanvasRig CanvasRig => canvasRig;
 
     public void SetHealthStat(int health, int maxHealth) {
         healthWidget.SetBar(health, maxHealth);

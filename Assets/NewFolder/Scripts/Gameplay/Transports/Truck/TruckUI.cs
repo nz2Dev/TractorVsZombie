@@ -12,7 +12,7 @@ public class TruckUI {
 
     public void Add(int truckId, Vector3 position, TruckStatsDisplay displayPrefab) {
         var display = GameObject.Instantiate(displayPrefab, position, Quaternion.identity);
-        display.LookCamera = cameraManager.GetActiveCamera();
+        display.CanvasRig.AimTransform = cameraManager.GetActiveCamera().transform;
         registry[truckId] = display;
     }
 
@@ -24,7 +24,7 @@ public class TruckUI {
     public void UpdatePose(int truckId, Vector3 position, Vector3 forward) {
         var display = registry[truckId];
         display.WorldPosition = position;
-        display.UnitForward = forward;
+        display.CanvasRig.ForwardInput = forward;
     }
 
     public void UpdateHealthBar(int truckId, int health, int maxHealth) {

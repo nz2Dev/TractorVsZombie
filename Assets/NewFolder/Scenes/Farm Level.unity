@@ -37275,8 +37275,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409186672}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.48929274, y: -0.386561, z: 0.25596783, w: -0.73867697}
-  m_LocalPosition: {x: -9.156124, y: 18.365059, z: -11.673684}
+  m_LocalRotation: {x: -0.32100394, y: -0.6299308, z: 0.32073736, w: -0.6302946}
+  m_LocalPosition: {x: -14.675434, y: 17.35835, z: -5.840854}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44748,6 +44748,22 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!4 &1890764656 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+  m_PrefabInstance: {fileID: 3800099649172968044}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1890764657 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8937825359792909156, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+  m_PrefabInstance: {fileID: 3800099649172968044}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ac2f425269846f1bb09235a6efcebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewFolder::CanvasRig
 --- !u!1001 &1900948014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50150,6 +50166,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1890764656}
   - {fileID: 3808845886386262384}
   m_Father: {fileID: 1117709942}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50847,6 +50864,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0158fa9f8e64e8683370fcf39ef804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::HealthBarVisuals
+--- !u!1001 &3800099649172968044
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 193274139076440982}
+    m_Modifications:
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1325466938837334266, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4974053799751296126, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: m_Name
+      value: CanvasRig
+      objectReference: {fileID: 0}
+    - target: {fileID: 8937825359792909156, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 1327781721293113631}
+    - target: {fileID: 8937825359792909156, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
+      propertyPath: aimTransform
+      value: 
+      objectReference: {fileID: 1409186673}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
 --- !u!224 &3808845886386262384
 RectTransform:
   m_ObjectHideFlags: 0
@@ -50854,8 +50936,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7369762703031326321}
-  m_LocalRotation: {x: 0.15448806, y: -0.6900243, z: 0.69002426, w: 0.15448804}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalRotation: {x: 0.35333726, y: -0.6124972, z: 0.6124972, w: 0.35333726}
+  m_LocalPosition: {x: 0, y: 0, z: -0.00000001072749}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -50864,7 +50946,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: -154.761}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 3.12, y: 0.2}
+  m_AnchoredPosition: {x: 3.060001, y: 0.05}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3858228865780341811
@@ -51609,7 +51691,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 193274139076440982}
-  - component: {fileID: 7069095977765171519}
   - component: {fileID: 7069095977765171518}
   m_Layer: 5
   m_Name: Truck Stats Display
@@ -51630,21 +51711,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6362bfb4aa4ca4e0cb85b6bb551e9236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::UnitStatsUI
-  displayRotator: {fileID: 7069095977765171519}
-  canvasConstraint: {fileID: 7369762703031326322}
+  canvasRig: {fileID: 1890764657}
   healthWidget: {fileID: 3665394789341143650}
---- !u!114 &7069095977765171519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7069095977765171517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 577931b68e3814c8c9602e44b861c3db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::FlatRotation
 --- !u!1 &7369762703031326321
 GameObject:
   m_ObjectHideFlags: 0
@@ -51655,7 +51723,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3808845886386262384}
   - component: {fileID: 1327781721293113631}
-  - component: {fileID: 7369762703031326322}
   m_Layer: 5
   m_Name: WS Canvas
   m_TagString: Untagged
@@ -51663,19 +51730,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &7369762703031326322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7369762703031326321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1154720c0f30402b96c7771ea3fbf53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NewFolder::RollConstraint
-  target: {fileID: 1409186673}
 --- !u!1 &7440257298906826188
 GameObject:
   m_ObjectHideFlags: 0
