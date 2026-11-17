@@ -8,7 +8,7 @@ public struct TruckPresentationSource {
     public AudioClip engineLoopSFX;
     [Local] public AudioSource ramImpactAudioSourcePrefab;
     public AudioClip[] ramImpactSFX;
-    [NonNull, Local] public TruckStatsDisplay uiPrefab;
+    [NonNull, Local] public TruckStatsDisplay displayPrefab;
 
     public TruckPresentationPrototype Get() {
         return new TruckPresentationPrototype {
@@ -16,7 +16,7 @@ public struct TruckPresentationSource {
             engineLoopSFX = engineLoopSFX,
             ramImpactAudioSourcePrefab = ramImpactAudioSourcePrefab,
             ramImpactSFX = ramImpactSFX,
-            uiPrefab = uiPrefab
+            displayPrefab = displayPrefab
         };
     }
 }

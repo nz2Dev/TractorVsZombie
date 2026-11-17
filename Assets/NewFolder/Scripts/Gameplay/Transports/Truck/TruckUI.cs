@@ -10,10 +10,10 @@ public class TruckUI {
         this.cameraManager = cameraManager;
     }
 
-    public void Add(int truckId, Vector3 position, TruckStatsDisplay uiPrefab) {
-        var ui = GameObject.Instantiate(uiPrefab, position, Quaternion.identity);
-        ui.TargetCamera = cameraManager.GetActiveCamera();
-        registry[truckId] = ui;
+    public void Add(int truckId, Vector3 position, TruckStatsDisplay displayPrefab) {
+        var display = GameObject.Instantiate(displayPrefab, position, Quaternion.identity);
+        display.LookCamera = cameraManager.GetActiveCamera();
+        registry[truckId] = display;
     }
 
     public void Remove(int truckId) {
@@ -22,13 +22,13 @@ public class TruckUI {
     }
 
     public void UpdatePose(int truckId, Vector3 position, Vector3 forward) {
-        var ui = registry[truckId];
-        ui.WorldPosition = position;
-        ui.UnitForward = forward;
+        var display = registry[truckId];
+        display.WorldPosition = position;
+        display.UnitForward = forward;
     }
 
     public void UpdateHealthBar(int truckId, int health, int maxHealth) {
-        var ui = registry[truckId];
-        ui.SetHealthStat(health, maxHealth);
+        var display = registry[truckId];
+        display.SetHealthStat(health, maxHealth);
     }
 }

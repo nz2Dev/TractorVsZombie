@@ -13,7 +13,7 @@ public class TruckPresenter {
 
     public void Add(int truckId, Vector3 position, TruckPresentationPrototype prototype) {
         view.Show(truckId, position, prototype.visualsPrefab);
-        ui.Add(truckId, position, prototype.uiPrefab);
+        ui.Add(truckId, position, prototype.displayPrefab);
         audio.Add(truckId, position, prototype);
     }
 
