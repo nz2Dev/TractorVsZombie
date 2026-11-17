@@ -5,11 +5,13 @@ public class CanvasRig : MonoBehaviour {
     [SerializeField] private Transform aimTransform;
     [NonNull, SerializeField] private Canvas canvas;
     [Space]
-    [SerializeField] private bool localSideOffset;
+    [SerializeField] private bool localSideOffset = false;
     [SerializeField] private Vector3 sideOffsetDir = Vector3.left;
     [Range(0f, 5f), SerializeField] private float sideOffset;
     [Space]
-    [SerializeField] private float upOffset;
+    [SerializeField] private float upOffset = 1.0f;
+    [Space]
+    [SerializeField] private bool billboardRotation = false;
 
     public Transform AimTransform {
         set {
@@ -28,12 +30,12 @@ public class CanvasRig : MonoBehaviour {
     private void OnValidate() {
         if (canvas != null && aimTransform != null) {
             ApplyOffset();
-            ApplyAimRoll();
+            ApplyRotation();
         }
     }
 
     private void Update() {
-        ApplyAimRoll();
+        ApplyRotation();
     }
 
     private void ApplyOffset() {
@@ -42,9 +44,21 @@ public class CanvasRig : MonoBehaviour {
         canvas.transform.position = transform.position + offset;
     }
 
+    private void ApplyRotation() {
+        if (billboardRotation) {
+            ApplyBillboardRotation();
+        } else {
+            ApplyAimRoll();
+        }
+    }
+
     private void ApplyAimRoll() {
         var rollUp = Vector3.ProjectOnPlane(aimTransform.up, Vector3.up);
         canvas.transform.rotation = Quaternion.LookRotation(Vector3.down, rollUp);
+    }
+
+    private void ApplyBillboardRotation() {
+        canvas.transform.rotation = aimTransform.rotation;
     }
 
 }

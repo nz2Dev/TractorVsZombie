@@ -48,5 +48,6 @@ MonoBehaviour:
   canvas: {fileID: 0}
   localSideOffset: 0
   sideOffsetDir: {x: 1, y: 0, z: 0}
-  sideOffset: 1
-  upOffset: 3.73
+  sideOffset: 1.54
+  upOffset: 5
+  billboardRotation: 1
