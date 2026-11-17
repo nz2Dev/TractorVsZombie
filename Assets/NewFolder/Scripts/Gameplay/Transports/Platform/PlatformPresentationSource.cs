@@ -4,13 +4,13 @@ using UnityEngine;
 
 [Serializable]
 public struct PlatformPresentationSource {
-    [Local] public PlatformVisuals visualsPrefab;
-    [NonNull, Local] public PlatformUIElements platformElementsPrefab;
+    [NonNull, Local] public PlatformVisuals visualsPrefab;
+    [NonNull, Local] public PlatformStatsDisplay displayPrefab;
 
     public PlatformPresentationPrototype Get() {
         return new PlatformPresentationPrototype {
             visualsPrefab = visualsPrefab,
-            platformElementsPrefab = platformElementsPrefab,
+            displayPrefab = displayPrefab,
         };
     }
 }

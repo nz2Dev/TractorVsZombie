@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1325466938837334266}
   - component: {fileID: 8937825359792909156}
   m_Layer: 5
-  m_Name: CanvasRig
+  m_Name: Adaptive Canvas Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

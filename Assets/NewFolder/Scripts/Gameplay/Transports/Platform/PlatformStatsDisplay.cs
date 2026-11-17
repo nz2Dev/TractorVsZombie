@@ -4,23 +4,19 @@ using TMPro;
 
 using UnityEngine;
 
-[RequireComponent(typeof(WorldSpaceUI))]
-public class PlatformUIElements : MonoBehaviour {
-    
+public class PlatformStatsDisplay : MonoBehaviour {
+
+    [SerializeField] private CanvasRig canvasRig;    
     [SerializeField] private HealthWidget healthWidget;
     [SerializeField] private TextMeshProUGUI durabilityLabel;
 
-    private WorldSpaceUI holder;
-
-    public WorldSpaceUI Holder => holder;
-
-    private void Awake() {
-        holder = GetComponent<WorldSpaceUI>();
+    public Vector3 WorldPosition {
+        set {
+            transform.position = value;
+        }
     }
 
-    public void UpdatePosition(Vector3 position) {
-        transform.position = position;
-    }
+    public CanvasRig CanvasRig => canvasRig;
 
     public void HideHealthBar() {
         healthWidget.gameObject.SetActive(false);

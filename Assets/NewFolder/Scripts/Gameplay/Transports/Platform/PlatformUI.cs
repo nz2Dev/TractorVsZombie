@@ -6,25 +6,27 @@ using UnityEngine;
 public class PlatformUI {
 
     private readonly CameraManager cameraManager;
-    private readonly Dictionary<int, PlatformUIElements> registry = new();
+    private readonly Dictionary<int, PlatformStatsDisplay> registry = new();
 
     public PlatformUI(CameraManager cameraManager) {
         this.cameraManager = cameraManager;
     }
 
-    public void Add(int platformId, Vector3 position, PlatformUIElements uiPrefab) {
-        var ui = GameObject.Instantiate(uiPrefab, position, Quaternion.identity);
-        ui.Holder.TargetCamera = cameraManager.GetActiveCamera();
-        registry[platformId] = ui;
+    public void Add(int platformId, Vector3 position, PlatformStatsDisplay uiPrefab) {
+        var display = GameObject.Instantiate(uiPrefab, position, Quaternion.identity);
+        display.CanvasRig.AimTransform = cameraManager.GetActiveCamera().transform;
+        registry[platformId] = display;
     }
 
     public void Remove(int platformId) {
-        registry.Remove(platformId, out var ui);
-        GameObject.Destroy(ui.gameObject);
+        registry.Remove(platformId, out var display);
+        GameObject.Destroy(display.gameObject);
     }
 
-    public void UpdatePosition(int platformId, Vector3 position) {
-        registry[platformId].UpdatePosition(position);
+    public void UpdatePose(int platformId, Vector3 position, Vector3 forward) {
+        var display = registry[platformId];
+        display.WorldPosition = position;
+        display.CanvasRig.ForwardInput = forward;
     }
 
     public void UpdateHealthBar(int platformId, HealthState healthState) {

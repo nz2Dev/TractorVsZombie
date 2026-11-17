@@ -12,7 +12,7 @@ public class PlatformPresenter {
 
     public void Add(int platformId, Vector3 position, PlatformPresentationPrototype prototype) {
         view.Show(platformId, position, prototype.visualsPrefab);
-        ui.Add(platformId, position, prototype.platformElementsPrefab);
+        ui.Add(platformId, position, prototype.displayPrefab);
     }
 
     public void Remove(int platformId) {
@@ -24,7 +24,7 @@ public class PlatformPresenter {
         var vehiclePose = vehicleState.pose;
         view.SetPose(platformId, vehiclePose);
 
-        ui.UpdatePosition(platformId, vehiclePose.position);
+        ui.UpdatePose(platformId, vehiclePose.position, vehiclePose.rotation * Vector3.forward);
         ui.UpdateDurability(platformId, carryingState);
         if (carryingState.hasLoadout)
             ui.UpdateHealthBar(platformId, carryingState.loadoutState.healthState);
