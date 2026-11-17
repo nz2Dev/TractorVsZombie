@@ -16,7 +16,7 @@ public class ArmorPresenter {
 
     public void Add(int armorId, Vector3 position, ArmorPresentationPrototype prototype) {
         view.Show(armorId, position, prototype.visualsPrefab);
-        ui.Add(armorId, position, prototype.worldSpaceUIPrefab);
+        ui.Add(armorId, position, prototype.displayPrefab);
         audio.Add(armorId, position, prototype);
     }
 
@@ -32,7 +32,10 @@ public class ArmorPresenter {
         if (healthState.damageResult.HasValue) {
             view.ShowTakeHit(armorId);
         }
-        ui.UpdateHealthBar(armorId, vehiclePose.position, healthState.health, healthState.maxHealth);
+        
+        ui.UpdatePose(armorId, vehiclePose.position, vehiclePose.rotation * Vector3.forward);
+        ui.UpdateHealthState(armorId, healthState.health, healthState.maxHealth);
+
         audio.UpdateEngineSound(armorId, vehiclePose.position, vehicleState.motorRev);
         if (ramState.receivedContacts > 0) {
             audio.PlayRamImpact(armorId, vehiclePose.position, ramState.receivedContacts);

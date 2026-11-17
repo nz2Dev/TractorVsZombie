@@ -5,27 +5,31 @@ using UnityEngine;
 public class ArmorUI {
 
     private readonly CameraManager cameraManager;
-    private readonly Dictionary<int, WorldSpaceUI> registry = new(); 
+    private readonly Dictionary<int, ArmorStatsDisplay> registry = new(); 
 
     public ArmorUI(CameraManager cameraManager) {
         this.cameraManager = cameraManager;
     }
 
-    public void Add(int armorId, Vector3 position, WorldSpaceUI uiPrefab) {
-        var ui = GameObject.Instantiate(uiPrefab, position, Quaternion.identity);
-        ui.TargetCamera = cameraManager.GetActiveCamera();
-        registry[armorId] = ui;
+    public void Add(int armorId, Vector3 position, ArmorStatsDisplay displayPrefab) {
+        var display = GameObject.Instantiate(displayPrefab, position, Quaternion.identity);
+        display.CanvasRig.AimTransform = cameraManager.GetActiveCamera().transform;
+        registry[armorId] = display;
     }
 
     public void Remove(int armorId) {
-        registry.Remove(armorId, out var ui);
-        GameObject.Destroy(ui.gameObject);
+        registry.Remove(armorId, out var display);
+        GameObject.Destroy(display.gameObject);
     }
 
-    public void UpdateHealthBar(int armorId, Vector3 position, int health, int maxHealth) {
-        var ui = registry[armorId];
-        ui.transform.position = position;
-        var healthWidget = ui.GetComponentInChildren<HealthWidget>();
-        healthWidget.SetBar(health, maxHealth);
+    public void UpdatePose(int armorId, Vector3 position, Vector3 forward) {
+        var display = registry[armorId];
+        display.WorldPosition = position;
+        display.CanvasRig.ForwardInput = forward;
+    }
+
+    public void UpdateHealthState(int armorId, int health, int maxHealth) {
+        var display = registry[armorId];
+        display.SetHealthState(health, maxHealth);
     }
 }

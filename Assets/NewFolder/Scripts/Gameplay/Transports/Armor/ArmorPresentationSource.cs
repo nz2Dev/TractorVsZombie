@@ -9,7 +9,7 @@ public struct ArmorPresentationSource {
     [Local] public AudioSource ramImpactAudioSourcePrefab;
     public AudioClip[] ramImpactSFX;
     public ArmorVisuals visualsPrefab;
-    [NonNull, Local] public WorldSpaceUI worldSpaceUIPrefab;
+    [NonNull, Local] public ArmorStatsDisplay displayPrefab;
 
     public ArmorPresentationPrototype Get() {
         return new ArmorPresentationPrototype {
@@ -17,7 +17,7 @@ public struct ArmorPresentationSource {
             ramImpactAudioSourcePrefab = ramImpactAudioSourcePrefab,
             ramImpactSFX = ramImpactSFX,
             visualsPrefab = visualsPrefab,
-            worldSpaceUIPrefab = worldSpaceUIPrefab
+            displayPrefab = displayPrefab
         };
     }
 }

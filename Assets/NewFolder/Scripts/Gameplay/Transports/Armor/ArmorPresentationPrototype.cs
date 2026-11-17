@@ -5,5 +5,5 @@ public struct ArmorPresentationPrototype {
     public AudioSource ramImpactAudioSourcePrefab;
     public AudioClip[] ramImpactSFX;
     public ArmorVisuals visualsPrefab;
-    public WorldSpaceUI worldSpaceUIPrefab;
+    public ArmorStatsDisplay displayPrefab;
 }
