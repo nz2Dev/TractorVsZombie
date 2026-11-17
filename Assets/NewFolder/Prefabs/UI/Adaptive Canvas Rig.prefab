@@ -46,4 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::CanvasRig
   aimTransform: {fileID: 0}
   canvas: {fileID: 0}
-  canvasOffset: 3.06
+  localSideOffset: 0
+  sideOffsetDir: {x: 1, y: 0, z: 0}
+  sideOffset: 1
+  upOffset: 3.73

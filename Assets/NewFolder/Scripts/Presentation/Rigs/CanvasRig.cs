@@ -4,7 +4,12 @@ public class CanvasRig : MonoBehaviour {
     
     [SerializeField] private Transform aimTransform;
     [NonNull, SerializeField] private Canvas canvas;
-    [Range(0f, 5f), SerializeField] private float canvasOffset;
+    [Space]
+    [SerializeField] private bool localSideOffset;
+    [SerializeField] private Vector3 sideOffsetDir = Vector3.left;
+    [Range(0f, 5f), SerializeField] private float sideOffset;
+    [Space]
+    [SerializeField] private float upOffset;
 
     public Transform AimTransform {
         set {
@@ -32,7 +37,9 @@ public class CanvasRig : MonoBehaviour {
     }
 
     private void ApplyOffset() {
-        canvas.transform.position = transform.position + Vector3.up * 0.05f + transform.right * canvasOffset;
+        var resolvedSideOffsetDir = localSideOffset ? transform.rotation * sideOffsetDir : sideOffsetDir;
+        var offset = resolvedSideOffsetDir * sideOffset + Vector3.up * upOffset;
+        canvas.transform.position = transform.position + offset;
     }
 
     private void ApplyAimRoll() {
