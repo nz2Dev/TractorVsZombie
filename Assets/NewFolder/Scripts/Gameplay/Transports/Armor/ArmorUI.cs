@@ -25,7 +25,7 @@ public class ArmorUI {
     public void UpdateHealthBar(int armorId, Vector3 position, int health, int maxHealth) {
         var ui = registry[armorId];
         ui.transform.position = position;
-        var healthBar = ui.GetComponentInChildren<HealthBarVisuals>();
-        healthBar.SetBar(health, maxHealth);
+        var healthWidget = ui.GetComponentInChildren<HealthWidget>();
+        healthWidget.SetBar(health, maxHealth);
     }
 }

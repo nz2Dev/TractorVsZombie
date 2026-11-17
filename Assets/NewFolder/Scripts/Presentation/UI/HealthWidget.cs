@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBarVisuals : MonoBehaviour {
+public class HealthWidget : MonoBehaviour {
     
     [SerializeField] private RadialSlider radialSlider;
     [SerializeField] TextMeshProUGUI text;

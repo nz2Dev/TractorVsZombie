@@ -339,7 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 793e9851403384d568efab6b19109549, type: 3}
   m_Name: 
   m_EditorClassIdentifier: NewFolder::PlatformUIElements
-  healthBar: {fileID: 4036824639141440452}
+  healthWidget: {fileID: 4036824639141440452}
   durabilityLabel: {fileID: 3283682544141314874}
 --- !u!1001 &5068331426846624877
 PrefabInstance:

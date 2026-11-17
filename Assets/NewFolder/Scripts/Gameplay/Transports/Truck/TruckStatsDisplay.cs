@@ -5,7 +5,7 @@ public class TruckStatsDisplay : MonoBehaviour {
     
     [SerializeField] private FlatRotation displayRotator;
     [SerializeField] private RollConstraint canvasConstraint;
-    [SerializeField] private HealthBarVisuals healthBar;
+    [SerializeField] private HealthWidget healthWidget;
     
     public Vector3 WorldPosition {
         set {
@@ -26,7 +26,7 @@ public class TruckStatsDisplay : MonoBehaviour {
     }
 
     public void SetHealthStat(int health, int maxHealth) {
-        healthBar.SetBar(health, maxHealth);
+        healthWidget.SetBar(health, maxHealth);
     }
 
 }

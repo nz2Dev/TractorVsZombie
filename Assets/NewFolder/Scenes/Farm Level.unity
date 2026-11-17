@@ -31962,7 +31962,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 846273779798d48abb5ca63fe4a42bec, type: 3}
     - {fileID: 8300000, guid: 5f642b9534cee4c7ca8bfaa6351f3e24, type: 3}
     - {fileID: 8300000, guid: d6838b77e07ab4fcba81e71337ba8ce3, type: 3}
-    uiPrefab: {fileID: 7069095977765171518}
+    displayPrefab: {fileID: 7069095977765171518}
 --- !u!1773428102 &1117709944
 ParentConstraint:
   m_ObjectHideFlags: 0
@@ -50472,7 +50472,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6684662726652369929, guid: 43a93ab1dc9c7425c9b5766d1be96843, type: 3}
       propertyPath: m_Name
-      value: Health Bar
+      value: Health Widget
       objectReference: {fileID: 0}
     - target: {fileID: 8030905324453105633, guid: 43a93ab1dc9c7425c9b5766d1be96843, type: 3}
       propertyPath: m_Pivot.x
@@ -51632,7 +51632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: NewFolder::UnitStatsUI
   displayRotator: {fileID: 7069095977765171519}
   canvasConstraint: {fileID: 7369762703031326322}
-  healthBar: {fileID: 3665394789341143650}
+  healthWidget: {fileID: 3665394789341143650}
 --- !u!114 &7069095977765171519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51657,7 +51657,7 @@ GameObject:
   - component: {fileID: 1327781721293113631}
   - component: {fileID: 7369762703031326322}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: WS Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51932,7 +51932,7 @@ PrefabInstance:
       objectReference: {fileID: 756933291}
     - target: {fileID: 3715936134110833867, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4901
+      value: 4910
       objectReference: {fileID: 0}
     - target: {fileID: 3902048635732431051, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Name
@@ -51948,7 +51948,7 @@ PrefabInstance:
       objectReference: {fileID: 485295074}
     - target: {fileID: 3995790071150967799, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4901
+      value: 4910
       objectReference: {fileID: 0}
     - target: {fileID: 4231372914453914694, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
@@ -51960,7 +51960,7 @@ PrefabInstance:
       objectReference: {fileID: 758118775}
     - target: {fileID: 4403027929564642176, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4901
+      value: 4910
       objectReference: {fileID: 0}
     - target: {fileID: 4474605614288331626, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Mesh
@@ -51972,7 +51972,7 @@ PrefabInstance:
       objectReference: {fileID: 248423368}
     - target: {fileID: 4599031156055082105, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 4901
+      value: 4910
       objectReference: {fileID: 0}
     - target: {fileID: 5377620666268941220, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_fontSizeBase
@@ -52012,7 +52012,7 @@ PrefabInstance:
       objectReference: {fileID: 1504251171}
     - target: {fileID: 8700669035646066024, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 799
+      value: 808
       objectReference: {fileID: 0}
     - target: {fileID: 8749679749334469805, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z

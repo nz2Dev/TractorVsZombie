@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(WorldSpaceUI))]
 public class PlatformUIElements : MonoBehaviour {
     
-    [SerializeField] private HealthBarVisuals healthBar;
+    [SerializeField] private HealthWidget healthWidget;
     [SerializeField] private TextMeshProUGUI durabilityLabel;
 
     private WorldSpaceUI holder;
@@ -23,12 +23,12 @@ public class PlatformUIElements : MonoBehaviour {
     }
 
     public void HideHealthBar() {
-        healthBar.gameObject.SetActive(false);
+        healthWidget.gameObject.SetActive(false);
     }
 
     public void SetHealthBar(int health, int maxHealth) {
-        healthBar.gameObject.SetActive(true);
-        healthBar.SetBar(health, maxHealth);
+        healthWidget.gameObject.SetActive(true);
+        healthWidget.SetBar(health, maxHealth);
     }
 
     internal void SetDurabilityBar(int durability, int maxDurability) {
