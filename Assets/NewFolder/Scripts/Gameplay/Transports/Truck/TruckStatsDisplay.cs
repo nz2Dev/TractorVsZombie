@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Animations;
 
-public class TransportStatsUI : MonoBehaviour {
+public class TruckStatsDisplay : MonoBehaviour {
     
     [SerializeField] private RollConstraint canvasConstraint;
     [SerializeField] private HealthBarVisuals healthBar;

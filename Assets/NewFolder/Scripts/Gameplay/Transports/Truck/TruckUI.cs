@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class TruckUI {
     private readonly CameraManager cameraManager;
-    private readonly Dictionary<int, TransportStatsUI> registry = new();
+    private readonly Dictionary<int, TruckStatsDisplay> registry = new();
 
     public TruckUI(CameraManager cameraManager) {
         this.cameraManager = cameraManager;
     }
 
-    public void Add(int truckId, Vector3 position, TransportStatsUI uiPrefab) {
+    public void Add(int truckId, Vector3 position, TruckStatsDisplay uiPrefab) {
         var ui = GameObject.Instantiate(uiPrefab, position, Quaternion.identity);
         ui.TargetCamera = cameraManager.GetActiveCamera();
         registry[truckId] = ui;

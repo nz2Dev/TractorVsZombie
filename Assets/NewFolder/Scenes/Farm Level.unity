@@ -50854,7 +50854,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7369762703031326321}
-  m_LocalRotation: {x: -0.69002426, y: 0.15448804, z: 0.15448806, w: 0.6900243}
+  m_LocalRotation: {x: 0.15448806, y: -0.6900243, z: 0.69002426, w: 0.15448804}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -51611,7 +51611,7 @@ GameObject:
   - component: {fileID: 193274139076440982}
   - component: {fileID: 7069095977765171518}
   m_Layer: 5
-  m_Name: Transport Stats UI
+  m_Name: Truck Stats Display
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

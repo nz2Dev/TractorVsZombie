@@ -8,7 +8,7 @@ public struct TruckPresentationSource {
     public AudioClip engineLoopSFX;
     [Local] public AudioSource ramImpactAudioSourcePrefab;
     public AudioClip[] ramImpactSFX;
-    [NonNull, Local] public TransportStatsUI uiPrefab;
+    [NonNull, Local] public TruckStatsDisplay uiPrefab;
 
     public TruckPresentationPrototype Get() {
         return new TruckPresentationPrototype {
