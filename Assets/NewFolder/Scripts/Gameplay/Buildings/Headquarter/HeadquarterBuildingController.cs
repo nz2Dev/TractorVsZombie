@@ -44,7 +44,8 @@ public class HeadquarterBuildingController {
             factionId = headquarter.FactionId
         });
 
-        view.ShowHeadquarter(prototype.position, prototype.rotation, prototype.visualsPrefab, prototype.worldSpaceUIPrefab);
+        view.ShowHeadquarter(prototype.position, prototype.rotation, 
+            prototype.visualsPrefab, prototype.displayPrefab);
     }
 
     public bool IsDestroyed() {

@@ -7,17 +7,16 @@ public class HeadquarterBuildingView {
     private readonly CameraManager cameraManager;
 
     private HeadquarterBuildingVisuals visuals;
-    private HealthWidget healthWidget;
+    private HeadquarterStatsDisplay display;
 
     public HeadquarterBuildingView(CameraManager cameraManager) {
         this.cameraManager = cameraManager;
     }
 
-    public void ShowHeadquarter(Vector3 position, Quaternion rotation, HeadquarterBuildingVisuals visualsPrefab, WorldSpaceUI worldSpaceUIPrefab) {
+    public void ShowHeadquarter(Vector3 position, Quaternion rotation, HeadquarterBuildingVisuals visualsPrefab, HeadquarterStatsDisplay displayPrefab) {
         visuals = GameObject.Instantiate(visualsPrefab, position, rotation);
-        var worldSpaceUI = GameObject.Instantiate(worldSpaceUIPrefab, position, Quaternion.identity);
-        worldSpaceUI.TargetCamera = cameraManager.GetActiveCamera();
-        healthWidget = worldSpaceUI.GetComponentInChildren<HealthWidget>();
+        display = GameObject.Instantiate(displayPrefab, position, Quaternion.identity);
+        display.CanvasRig.AimTransform = cameraManager.GetActiveCamera().transform;
     }
 
     public void ShowTakeHit() {
@@ -26,10 +25,10 @@ public class HeadquarterBuildingView {
 
     internal void Remove() {
         GameObject.Destroy(visuals.gameObject);
-        GameObject.Destroy(healthWidget.GetComponentInParent<WorldSpaceUI>().gameObject);
+        GameObject.Destroy(display.gameObject);
     }
 
     internal void UpdateHealth(int health, int maxHealth) {
-        healthWidget.SetBar(health, maxHealth);
+        display.SetHealthState(health, maxHealth);
     }
 }
