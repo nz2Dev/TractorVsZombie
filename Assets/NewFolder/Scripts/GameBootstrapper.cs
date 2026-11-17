@@ -172,17 +172,19 @@ public class GameBootstrapper : MonoBehaviour {
             poseRegistry
         );
 
+        var platformUI = new PlatformUI(cameraManager);
         platformController = new PlatformController(
             factionRegistry,
             carryingSystem,
             vehicleSystem,
             new PlatformPresenter(
                 new PlatformView(),
-                new PlatformUI(cameraManager)
+                platformUI
             ),
             poseRegistry
         );
 
+        var truckUI = new TruckUI(cameraManager);
         truckController = new TruckController(
             healthSystem,
             factionRegistry,
@@ -190,7 +192,7 @@ public class GameBootstrapper : MonoBehaviour {
             new TruckPresenter(
                 new TruckAudio(soundManager),
                 new TruckView(),
-                new TruckUI(cameraManager)
+                truckUI
             ),
             vehicleSystem,
             hitboxSystem,
@@ -226,7 +228,8 @@ public class GameBootstrapper : MonoBehaviour {
 
         var assemblingController = new AssemblingController(new AssemblingView(), platformController, truckController, vehicleSystem);
         var loaderController = new LoaderController(platformController, assemblingController);
-        var selectingController = new SelectingController(new SelectingView(uiDocument), platformController, assemblingController);
+        var selectingController = new SelectingController(new SelectingView(uiDocument), platformController, truckController,
+            platformUI, truckUI, assemblingController);
         playerController = new PlayerController(
             new DrivingController(truckController, vehicleSystem, platformController, assemblingController),
             assemblingController,

@@ -37,6 +37,11 @@ public class PlatformUI {
         registry[platformId].HideHealthBar();
     }
 
+    public void SetSelected(int platformId, bool selected) {
+        if (registry.TryGetValue(platformId, out var display))
+            display.SetSelected(selected);
+    }
+
     internal void UpdateDurability(int platformId, CarryingState carryingState) {
         registry[platformId].SetDurabilityBar(carryingState.durability, carryingState.maxDurability);
     }

@@ -35,7 +35,7 @@ public class AimingController {
 
     private void OnManualPlatformListChanged() {
         view.HideAim();
-        if (selectingController.SelectedPlatformCount != 0) {
+        if (selectingController.HasSelection) {
             view.ShowAim(model.AimInput);
         }
     }
@@ -43,9 +43,11 @@ public class AimingController {
     public void Update() {
         AssemblingController.ComputeIdDiff(model.ManualPlatformIds, selectingController.SelectedPlatformIds,
             out var addedIds, out var removedIds);
-        if (addedIds.Count > 0 || removedIds.Count > 0) {
+        bool truckSelectionChanged = model.ManualTruckSelected != selectingController.IsTruckSelected;
+        if (addedIds.Count > 0 || removedIds.Count > 0 || truckSelectionChanged) {
             model.ManualPlatformIds.Clear();
             model.ManualPlatformIds.AddRange(selectingController.SelectedPlatformIds);
+            model.ManualTruckSelected = selectingController.IsTruckSelected;
             OnManualPlatformListChanged();
         }
         ComputeAimInput();
@@ -54,7 +56,7 @@ public class AimingController {
     }
 
     private void ComputeAimInput() {
-        if (selectingController.SelectedPlatformCount == 0) {
+        if (!selectingController.HasSelection) {
             return;
         }
 
@@ -84,8 +86,14 @@ public class AimingController {
     }
 
     private void OperateTruck() {
+        if (!truckController.UnitExist)
+            return;
+
         var truckState = truckController.ReadState();
-        OperateAutomatically(truckState.attachmentState.weaponId, truckState.attachmentState.weaponState, truckState.factionState);
+        if (selectingController.IsTruckSelected)
+            OperateFromInput(truckState.attachmentState.weaponId);
+        else
+            OperateAutomatically(truckState.attachmentState.weaponId, truckState.attachmentState.weaponState, truckState.factionState);
     }
 
     private void OperateFromInput(int weaponId) {

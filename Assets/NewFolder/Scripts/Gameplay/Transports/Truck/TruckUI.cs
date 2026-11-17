@@ -31,4 +31,9 @@ public class TruckUI {
         var display = registry[truckId];
         display.SetHealthStat(health, maxHealth);
     }
+
+    public void SetSelected(int truckId, bool selected) {
+        if (registry.TryGetValue(truckId, out var display))
+            display.SetSelected(selected);
+    }
 }

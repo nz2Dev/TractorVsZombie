@@ -23,7 +23,8 @@ public class SelectingView {
     }
 
     internal void RemovePlatform(int platformId) {
-        var label = binding[platformId];
+        if (!binding.Remove(platformId, out var label))
+            return;
         container.Remove(label);
     }
 
