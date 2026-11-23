@@ -20,5 +20,6 @@
   <Project Path="GenerationPlaygroundEditor.csproj" />
   <Project Path="PrototypeEditor.csproj" />
   <Project Path="Playground.PhysicsForce.PlayTests.csproj" />
+  <Project Path="Utils.csproj" />
   <Project Path="Profiling.csproj" />
 </Solution>

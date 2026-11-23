@@ -37,7 +37,7 @@ public class SelectingController {
         if (assemblingController.HasTruckControlled)
             availableOptions.Add(SelectionOption.TruckOption);
 
-        AssemblingController.ComputeDiff(model.Options, availableOptions, out var addedOptions, out var removedOptions);
+        Diff.ComputeDiff(model.Options, availableOptions, out var addedOptions, out var removedOptions);
         foreach (var option in removedOptions) {
             model.Options.Remove(option);
             view.RemoveOption(option);
