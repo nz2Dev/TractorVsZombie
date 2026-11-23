@@ -12,14 +12,15 @@ public class TruckPresenter {
     }
 
     public void Add(int truckId, Vector3 position, TruckPresentationPrototype prototype) {
+        // todo remove truckId key from view and audio
         view.Show(truckId, position, prototype.visualsPrefab);
-        ui.Add(truckId, position, prototype.displayPrefab);
+        ui.Add(position, prototype.displayPrefab);
         audio.Add(truckId, position, prototype);
     }
 
     public void Remove(int truckId) {
         view.Hide(truckId);
-        ui.Remove(truckId);
+        ui.Remove();
         audio.Remove(truckId);
     }
 
@@ -30,8 +31,9 @@ public class TruckPresenter {
             view.ShowTakeHit(truckId);
         }
         
-        ui.UpdatePose(truckId, vehiclePose.position, vehiclePose.rotation * Vector3.forward);
-        ui.UpdateHealthBar(truckId, healthState.health, healthState.maxHealth);
+        ui.UpdatePose(vehiclePose.position, vehiclePose.rotation * Vector3.forward);
+        ui.UpdateHealthBar(healthState.health, healthState.maxHealth);
+
         audio.UpdateEngineSound(truckId, vehiclePose.position, vehicleState.motorRev);
         if (ramState.receivedContacts > 0) {
             audio.PlayRamImpact(truckId, vehiclePose.position, ramState.receivedContacts);

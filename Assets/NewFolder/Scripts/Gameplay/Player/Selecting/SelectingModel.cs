@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
 public class SelectingModel {
-    public List<int> OptionsPlatformIds { get; } = new ();
-    public List<int> SelectedPlatformIds { get; } = new ();
-    public bool IsTruckSelected { get; set; }
+    public List<SelectionOption> Options { get; } = new();
+    public List<SelectionOption> SelectedOptions { get; } = new();
 }

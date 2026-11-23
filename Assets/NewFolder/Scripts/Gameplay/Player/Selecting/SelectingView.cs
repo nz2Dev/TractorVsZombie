@@ -1,49 +1,35 @@
-using System;
 using System.Collections.Generic;
 
 using UnityEngine.UIElements;
 
 public class SelectingView {
 
-    private readonly UIDocument uiDocument;
-
-    private VisualElement container;
-    private Dictionary<int, Label> binding = new();
+    private readonly VisualElement container;
+    private readonly Dictionary<SelectionOption, Label> binding = new();
 
     public SelectingView(UIDocument uiDocument) {
-        this.uiDocument = uiDocument;
         container = uiDocument.rootVisualElement.Q<VisualElement>("platformList");
         container.Clear();
     }
 
-    internal void AddPlatform(PlatformState state) {
+    internal void AddOption(SelectionOption option) {
         MakeLabel(out var label);
-        binding[state.platformId] = label;
-        UpdateLabel(label, state);
+        binding[option] = label;
+        label.text = "Option";
     }
 
-    internal void RemovePlatform(int platformId) {
-        if (!binding.Remove(platformId, out var label))
+    internal void RemoveOption(SelectionOption key) {
+        if (!binding.Remove(key, out var label))
             return;
         container.Remove(label);
     }
 
-    internal void UpdatePlatform(PlatformState state) {
-        var stateLabel = binding[state.platformId];
-        UpdateLabel(stateLabel, state);
+    internal void ShowOptionSelected(SelectionOption key) {
+        if (binding.TryGetValue(key, out var label))
+            label.AddToClassList("selected-label");
     }
 
-    internal void ShowPlatformSelected(PlatformState selectedPlatformState) {
-        foreach (var platformId in binding.Keys) {
-            var isSelectedKey = selectedPlatformState.platformId == platformId;
-            if (isSelectedKey) {
-                var label = binding[platformId];
-                label.AddToClassList("selected-label");
-            }
-        }
-    }
-
-    internal void ShowNoPlatformSelected() {
+    internal void ShowNoOptionSelected() {
         foreach (var label in binding.Values) {
             label.RemoveFromClassList("selected-label");
         }
@@ -53,12 +39,6 @@ public class SelectingView {
         created = new Label();
         created.AddToClassList("list-text");
         container.Add(created);
-    }
-
-    private void UpdateLabel(Label label, PlatformState state) {
-        label.text = state.hasLoadout
-            ? $"weapon {state.loadoutState.weaponId}"
-            : "no weapon";
     }
 
 }

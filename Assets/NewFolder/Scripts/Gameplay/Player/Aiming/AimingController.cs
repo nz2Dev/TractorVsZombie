@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class AimingController {
 
@@ -33,26 +33,10 @@ public class AimingController {
         view.SetAimVisuals(prototype.aimVisualsPrefab);
     }
 
-    private void OnManualPlatformListChanged() {
-        view.HideAim();
-        if (selectingController.HasSelection) {
-            view.ShowAim(model.AimInput);
-        }
-    }
-
     public void Update() {
-        AssemblingController.ComputeIdDiff(model.ManualPlatformIds, selectingController.SelectedPlatformIds,
-            out var addedIds, out var removedIds);
-        bool truckSelectionChanged = model.ManualTruckSelected != selectingController.IsTruckSelected;
-        if (addedIds.Count > 0 || removedIds.Count > 0 || truckSelectionChanged) {
-            model.ManualPlatformIds.Clear();
-            model.ManualPlatformIds.AddRange(selectingController.SelectedPlatformIds);
-            model.ManualTruckSelected = selectingController.IsTruckSelected;
-            OnManualPlatformListChanged();
-        }
         ComputeAimInput();
-        OperatePlatforms();
-        OperateTruck();
+        view.SetAimVisible(selectingController.HasSelection);
+        OperateUnits();
     }
 
     private void ComputeAimInput() {
@@ -71,29 +55,34 @@ public class AimingController {
         view.UpdateAim(model.AimInput);
     }
 
-    private void OperatePlatforms() {
-        foreach (var platformId in assemblingController.ControlledPlatformIds) {
-            var platformState = platformController.ReadPlatformState(platformId);
-            if (!platformState.hasLoadout)
-                continue;
-
-            if (selectingController.SelectedPlatformIds.Contains(platformId)) {
-                OperateFromInput(platformState.loadoutState.weaponId);
-            } else {
-                OperateAutomatically(platformState.loadoutState.weaponId, platformState.loadoutState.weaponState, platformState.loadoutState.factionState);
-            }
-        }
+    private void OperateUnits() {
+        foreach (var option in selectingController.Options)
+            Operate(option);
     }
 
-    private void OperateTruck() {
-        if (!truckController.UnitExist)
-            return;
+    private void Operate(SelectionOption option) {
+        int weaponId;
+        WeaponState weaponState;
+        FactionState factionState;
 
-        var truckState = truckController.ReadState();
-        if (selectingController.IsTruckSelected)
-            OperateFromInput(truckState.attachmentState.weaponId);
+        if (option.entityType == SelectionEntityType.Platform) {
+            var platformState = platformController.ReadPlatformState(option.entityId);
+            if (!platformState.hasLoadout)
+                return;
+            weaponId = platformState.loadoutState.weaponId;
+            weaponState = platformState.loadoutState.weaponState;
+            factionState = platformState.loadoutState.factionState;
+        } else {
+            var truckState = truckController.ReadState();
+            weaponId = truckState.attachmentState.weaponId;
+            weaponState = truckState.attachmentState.weaponState;
+            factionState = truckState.factionState;
+        }
+
+        if (selectingController.SelectedOptions.Contains(option))
+            OperateFromInput(weaponId);
         else
-            OperateAutomatically(truckState.attachmentState.weaponId, truckState.attachmentState.weaponState, truckState.factionState);
+            OperateAutomatically(weaponId, weaponState, factionState);
     }
 
     private void OperateFromInput(int weaponId) {

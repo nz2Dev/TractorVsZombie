@@ -3,6 +3,7 @@ using UnityEngine;
 public class AimingView {
     
     private AimVisuals aimVisuals;
+    private bool isAimVisible;
 
     private readonly CameraManager cameraManager;
 
@@ -13,11 +14,17 @@ public class AimingView {
     internal void SetAimVisuals(AimVisuals aimVisualsPrefab) {
         aimVisuals = GameObject.Instantiate(aimVisualsPrefab);
         aimVisuals.HideSelf();
+        isAimVisible = false;
     }
 
-    internal void ShowAim(TopDownAimInput aimInput) {
-        aimVisuals.ShowSelf();
-        aimVisuals.Transform(aimInput);
+    internal void SetAimVisible(bool visible) {
+        if (isAimVisible == visible)
+            return;
+        isAimVisible = visible;
+        if (visible)
+            aimVisuals.ShowSelf();
+        else
+            aimVisuals.HideSelf();
     }
 
     internal Ray GetCameraRay(Vector2 screenPoint) {
@@ -27,9 +34,5 @@ public class AimingView {
     internal void UpdateAim(TopDownAimInput aimInput) {
         aimVisuals.Transform(aimInput);
     }
-
-    internal void HideAim() {
-        aimVisuals.HideSelf();
-    }    
 
 }

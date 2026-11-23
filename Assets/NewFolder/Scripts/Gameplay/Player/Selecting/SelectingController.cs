@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class SelectingController {
     
-    private readonly PlatformController platformController;
-    private readonly TruckController truckController;
     private readonly PlatformUI platformUI;
     private readonly TruckUI truckUI;
     private readonly AssemblingController assemblingController;
@@ -14,80 +12,58 @@ public class SelectingController {
     private readonly SelectingView view;
     private readonly SelectingModel model;
 
-    public SelectingController(SelectingView view, PlatformController platformController, TruckController truckController,
-        PlatformUI platformUI, TruckUI truckUI, AssemblingController assemblingController) {
+    public SelectingController(SelectingView view, PlatformUI platformUI, 
+        TruckUI truckUI, AssemblingController assemblingController) {
         this.view = view;
-        this.platformController = platformController;
-        this.truckController = truckController;
         this.platformUI = platformUI;
         this.truckUI = truckUI;
         this.assemblingController = assemblingController;
         model = new();
     }
 
-    public int SelectedPlatformCount => model.SelectedPlatformIds.Count;
-    public IReadOnlyList<int> SelectedPlatformIds => model.SelectedPlatformIds;
-    public bool IsTruckSelected => model.IsTruckSelected;
-    public bool HasSelection => SelectedPlatformCount > 0 || model.IsTruckSelected;
+    public IReadOnlyList<SelectionOption> Options => model.Options;
+    public IReadOnlyList<SelectionOption> SelectedOptions => model.SelectedOptions;
+    public bool HasSelection => model.SelectedOptions.Count > 0;
 
     public void Update() {
         SynchronizeOptions();
-        ReadPlatformSelectionInput();
+        ReadSelectionInput();
     }
 
     private void SynchronizeOptions() {
-        AssemblingController.ComputeIdDiff(model.OptionsPlatformIds, assemblingController.ControlledPlatformIds,
-            out var addedIds, out var removedIds);
-        bool selectionChanged = addedIds.Count > 0 || removedIds.Count > 0;
-        foreach (var platformId in removedIds) {
-            model.OptionsPlatformIds.Remove(platformId);
-            selectionChanged |= model.SelectedPlatformIds.Remove(platformId);
-            view.RemovePlatform(platformId);
+        var availableOptions = new List<SelectionOption>();
+        foreach (var platformId in assemblingController.ControlledPlatformIds)
+            availableOptions.Add(new SelectionOption(platformId, SelectionEntityType.Platform));
+        if (assemblingController.HasTruckControlled)
+            availableOptions.Add(SelectionOption.TruckOption);
+
+        AssemblingController.ComputeDiff(model.Options, availableOptions, out var addedOptions, out var removedOptions);
+        foreach (var option in removedOptions) {
+            model.Options.Remove(option);
+            view.RemoveOption(option);
         }
-        foreach (var platformId in addedIds) {
-            model.OptionsPlatformIds.Add(platformId);
-            view.AddPlatform(platformController.ReadPlatformState(platformId));
+        foreach (var option in addedOptions) {
+            model.Options.Add(option);
+            view.AddOption(option);
         }
-        if (!truckController.UnitExist && model.IsTruckSelected) {
-            model.IsTruckSelected = false;
-            selectionChanged = true;
-        }
+        
+        bool selectionChanged = addedOptions.Count > 0 || removedOptions.Count > 0;
         if (selectionChanged)
             OnSelectionChanged();
     }
 
-    private void ReadPlatformSelectionInput() {
-        var toggledIds = Enumerable.Empty<int>();
+    private void ReadSelectionInput() {
+        var toggledOptions = Enumerable.Empty<SelectionOption>();
 
         bool hasEffect = false;
-        if (ReadSelectAllPressed()) {
-            bool partiallySelected = model.SelectedPlatformIds.Count != model.OptionsPlatformIds.Count
-                || (truckController.UnitExist && !model.IsTruckSelected);
-            
-            var selectedIds = partiallySelected
-                ? model.OptionsPlatformIds.Except(model.SelectedPlatformIds).ToList()
-                : model.OptionsPlatformIds.ToList();
-            foreach (var id in selectedIds) {
-                hasEffect = true;
-                if (!model.SelectedPlatformIds.Remove(id))
-                    model.SelectedPlatformIds.Add(id);
-            }
-            if (truckController.UnitExist) {
-                model.IsTruckSelected = partiallySelected;
-                hasEffect = true;
-            }
-        } else if (ReadSelectionIndexPressed(out var pressedIndex)) {
-            if (pressedIndex < model.OptionsPlatformIds.Count)
-                toggledIds = new[] { model.OptionsPlatformIds[pressedIndex] };
-        } else if (ReadTruckSelectionPressed() && truckController.UnitExist) {
-            model.IsTruckSelected = !model.IsTruckSelected;
-            hasEffect = true;
+        if (ReadSelectionIndexPressed(out var pressedIndex)) {
+            if (pressedIndex < model.Options.Count)
+                toggledOptions = new[] { model.Options[pressedIndex] };
         }
 
-        foreach (var id in toggledIds) {
+        foreach (var option in toggledOptions) {
             hasEffect = true;
-            if (!model.SelectedPlatformIds.Remove(id))
-                model.SelectedPlatformIds.Add(id);
+            ToggleSelected(option);
         }
         
         if (hasEffect) {
@@ -96,25 +72,24 @@ public class SelectingController {
     }
 
     private void OnSelectionChanged() {
-        foreach (var platformId in model.OptionsPlatformIds)
-            platformUI.SetSelected(platformId, model.SelectedPlatformIds.Contains(platformId));
-        if (truckController.UnitExist)
-            truckUI.SetSelected(truckController.ReadVehicleId().Value, model.IsTruckSelected);
-
-        view.ShowNoPlatformSelected();
-        if (SelectedPlatformCount != 0) {
-            foreach (var selectedPlatformId in model.SelectedPlatformIds) {
-                view.ShowPlatformSelected(platformController.ReadPlatformState(selectedPlatformId));
+        foreach (var option in model.Options) {
+            if (option.entityType == SelectionEntityType.Platform) {
+                platformUI.SetSelected(option.entityId, IsSelected(option));
+            } else {
+                truckUI.SetSelected(IsSelected(option));
             }
-        }
+        }    
+
+        view.ShowNoOptionSelected();
+        foreach (var selectedOption in model.SelectedOptions)
+            view.ShowOptionSelected(selectedOption);
     }
 
-    internal bool ReadSelectAllPressed() {
-        return Input.GetKeyDown(KeyCode.Alpha0);
-    }
+    private bool IsSelected(SelectionOption option) => model.SelectedOptions.Contains(option);
 
-    internal bool ReadTruckSelectionPressed() {
-        return Input.GetKeyDown(KeyCode.T);
+    private void ToggleSelected(SelectionOption option) {
+        if (!model.SelectedOptions.Remove(option))
+            model.SelectedOptions.Add(option);
     }
 
     internal bool ReadSelectionIndexPressed(out int index) {

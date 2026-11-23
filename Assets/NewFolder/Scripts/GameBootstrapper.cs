@@ -228,8 +228,7 @@ public class GameBootstrapper : MonoBehaviour {
 
         var assemblingController = new AssemblingController(new AssemblingView(), platformController, truckController, vehicleSystem);
         var loaderController = new LoaderController(platformController, assemblingController);
-        var selectingController = new SelectingController(new SelectingView(uiDocument), platformController, truckController,
-            platformUI, truckUI, assemblingController);
+        var selectingController = new SelectingController(new SelectingView(uiDocument), platformUI, truckUI, assemblingController);
         playerController = new PlayerController(
             new DrivingController(truckController, vehicleSystem, platformController, assemblingController),
             assemblingController,

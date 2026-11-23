@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -24,18 +25,19 @@ public class AssemblingController {
     public bool HasPosition { get; private set; }
     public int ControlledUnitsCount => model.Chain.Count + (truckController.UnitExist ? 1 : 0);
     public IReadOnlyList<int> ControlledPlatformIds => model.ControlledPlatformIds;
+    public bool HasTruckControlled => truckController.UnitExist;
 
-    public static void ComputeIdDiff(IReadOnlyList<int> currentIds, IReadOnlyList<int> receivedIds,
-        out List<int> addedIds, out List<int> removedIds) {
-        var current = new HashSet<int>(currentIds);
-        var received = new HashSet<int>(receivedIds);
-        addedIds = new List<int>();
-        removedIds = new List<int>();
-        foreach (var id in receivedIds) {
-            if (!current.Contains(id) && !addedIds.Contains(id)) addedIds.Add(id);
+    public static void ComputeDiff<T>(IReadOnlyList<T> currentItems, IReadOnlyList<T> receivedItems,
+        out List<T> addedItems, out List<T> removedItems) where T : IEquatable<T> {
+        var current = new HashSet<T>(currentItems);
+        var received = new HashSet<T>(receivedItems);
+        addedItems = new List<T>();
+        removedItems = new List<T>();
+        foreach (var item in receivedItems) {
+            if (!current.Contains(item) && !addedItems.Contains(item)) addedItems.Add(item);
         }
-        foreach (var id in currentIds) {
-            if (!received.Contains(id) && !removedIds.Contains(id)) removedIds.Add(id);
+        foreach (var item in currentItems) {
+            if (!received.Contains(item) && !removedItems.Contains(item)) removedItems.Add(item);
         }
     }
 
