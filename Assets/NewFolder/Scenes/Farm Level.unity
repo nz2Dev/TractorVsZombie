@@ -52048,7 +52048,7 @@ PrefabInstance:
       objectReference: {fileID: 1812976282}
     - target: {fileID: 3715936134110833867, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 5030
+      value: 5060
       objectReference: {fileID: 0}
     - target: {fileID: 3902048635732431051, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Name
@@ -52064,7 +52064,7 @@ PrefabInstance:
       objectReference: {fileID: 458961349}
     - target: {fileID: 3995790071150967799, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 5030
+      value: 5060
       objectReference: {fileID: 0}
     - target: {fileID: 4231372914453914694, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
@@ -52076,7 +52076,7 @@ PrefabInstance:
       objectReference: {fileID: 650170809}
     - target: {fileID: 4403027929564642176, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 5030
+      value: 5060
       objectReference: {fileID: 0}
     - target: {fileID: 4467582496806803670, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z
@@ -52116,7 +52116,7 @@ PrefabInstance:
       objectReference: {fileID: 2049497984}
     - target: {fileID: 4599031156055082105, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 5030
+      value: 5060
       objectReference: {fileID: 0}
     - target: {fileID: 5377620666268941220, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_fontSizeBase
@@ -52150,13 +52150,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trailer Vehicle Visuals
       objectReference: {fileID: 0}
+    - target: {fileID: 8500339148233676816, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.000001095818
+      objectReference: {fileID: 0}
+    - target: {fileID: 8500339148233676816, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.000001095818
+      objectReference: {fileID: 0}
+    - target: {fileID: 8500339148233676816, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8500339148233676816, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
     - target: {fileID: 8700669035646066024, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 993424910}
     - target: {fileID: 8700669035646066024, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_VersionIndex
-      value: 928
+      value: 958
       objectReference: {fileID: 0}
     - target: {fileID: 8749679749334469805, guid: e3a0c6097a24949a7829d478c8875736, type: 3}
       propertyPath: m_LocalPosition.z

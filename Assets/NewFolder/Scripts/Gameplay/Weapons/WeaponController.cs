@@ -47,6 +47,7 @@ public class WeaponController {
         return new WeaponState {
             position = weapon.Position,
             aimConfig = weapon.Config.aimConfig,
+            aimPoint = weapon.AimPoint,
         };
     }
 

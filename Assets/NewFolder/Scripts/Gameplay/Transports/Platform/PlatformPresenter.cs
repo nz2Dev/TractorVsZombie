@@ -12,7 +12,7 @@ public class PlatformPresenter {
 
     public void Add(int platformId, Vector3 position, PlatformPresentationPrototype prototype) {
         view.Show(platformId, position, prototype.visualsPrefab);
-        ui.Add(platformId, position, prototype.displayPrefab);
+        ui.Add(platformId, position, prototype.statsDisplayPrefab, prototype.outlineDisplayPrefab);
     }
 
     public void Remove(int platformId) {
@@ -26,9 +26,13 @@ public class PlatformPresenter {
 
         ui.UpdatePose(platformId, vehiclePose.position, vehiclePose.rotation * Vector3.forward);
         ui.UpdateDurability(platformId, carryingState);
-        if (carryingState.hasLoadout)
+
+        if (carryingState.hasLoadout) {
             ui.UpdateHealthBar(platformId, carryingState.loadoutState.healthState);
-        else
+            ui.UpdateWeaponState(platformId, carryingState.loadoutState.weaponState);
+        } else {
             ui.HideHealthBar(platformId);
+            ui.HideWeaponState(platformId);
+        }
     }
 }
