@@ -14,7 +14,7 @@ public class TruckPresenter {
     public void Add(int truckId, Vector3 position, TruckPresentationPrototype prototype) {
         // todo remove truckId key from view and audio
         view.Show(truckId, position, prototype.visualsPrefab);
-        ui.Add(position, prototype.displayPrefab);
+        ui.Add(position, prototype.statsDisplayPrefab, prototype.outlineDisplayPrefab);
         audio.Add(truckId, position, prototype);
     }
 
@@ -24,7 +24,7 @@ public class TruckPresenter {
         audio.Remove(truckId);
     }
 
-    public void Update(int truckId, VehicleState vehicleState, HealthState healthState, RamState ramState) {
+    public void Update(int truckId, VehicleState vehicleState, HealthState healthState, RamState ramState, AttachmentState attachmentState) {
         var vehiclePose = vehicleState.pose;
         view.SetPose(truckId, vehiclePose);
         if (healthState.damageResult.HasValue) {
@@ -33,6 +33,8 @@ public class TruckPresenter {
         
         ui.UpdatePose(vehiclePose.position, vehiclePose.rotation * Vector3.forward);
         ui.UpdateHealthBar(healthState.health, healthState.maxHealth);
+        ui.UpdateAimPoint(attachmentState.weaponState.aimPoint);
+        ui.ShowAim(true);
 
         audio.UpdateEngineSound(truckId, vehiclePose.position, vehicleState.motorRev);
         if (ramState.receivedContacts > 0) {

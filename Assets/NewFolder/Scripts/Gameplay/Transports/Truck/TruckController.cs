@@ -100,7 +100,8 @@ public class TruckController {
         presenter.Update(model.VehicleId.Value, 
             vehicleSystem.ReadState(model.VehicleId),
             healthSystem.ReadState(model.HealthId), 
-            ramSystem.ReadState(model.RamId));
+            ramSystem.ReadState(model.RamId),
+            attachmentSystem.ReadState(model.AttachmentId));
     }
 
 }

@@ -5,5 +5,6 @@ public struct TruckPresentationPrototype {
     public AudioClip engineLoopSFX;
     public AudioSource ramImpactAudioSourcePrefab;
     public AudioClip[] ramImpactSFX;
-    public TruckStatsDisplay displayPrefab;
+    public TruckStatsDisplay statsDisplayPrefab;
+    public TruckOutlineDisplay outlineDisplayPrefab;
 }
