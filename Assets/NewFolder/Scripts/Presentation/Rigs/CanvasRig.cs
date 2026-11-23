@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//BillboardCanvasRig
 public class CanvasRig : MonoBehaviour {
     
     [SerializeField] private Transform aimTransform;

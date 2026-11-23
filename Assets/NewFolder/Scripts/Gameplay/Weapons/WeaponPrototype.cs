@@ -7,5 +7,4 @@ public struct WeaponPrototype {
     public WeaponVisuals visualsPrefab;
     public BallisticPrototype ballisticPrototype;
     public Vector3 ballisticLaunchOffset;
-    public WeaponOutline outlinePrefab;
 }

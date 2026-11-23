@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ff88970517f74c7c8698dc9cbc4141a, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: NewFolder::PlatformSource
   factionSource:
     alie: 1
@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 793e9851403384d568efab6b19109549, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: NewFolder::PlatformUIElements
   canvasRig: {fileID: 2607727805187537249}
   healthWidget: {fileID: 3674458966185452955}
@@ -581,7 +581,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf0158fa9f8e64e8683370fcf39ef804, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: NewFolder::HealthBarVisuals
 --- !u!224 &8388112181752865068 stripped
 RectTransform:
@@ -654,7 +654,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3efe51cf9a084f8b94ada64f1144399, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Local::UnityVehicle
 --- !u!4 &8896390779058712844 stripped
 Transform:
@@ -715,7 +715,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8937825359792909156, guid: 137e3e482d8fe4d99b87e3c09c835eb7, type: 3}
       propertyPath: canvas
-      value:
+      value: 
       objectReference: {fileID: 1780766609116233913}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -731,7 +731,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36ac2f425269846f1bb09235a6efcebb, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: NewFolder::CanvasRig
 --- !u!4 &5358170269827459839 stripped
 Transform:
@@ -932,7 +932,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9741c8a7e2984f24b9c706f19ca0ef0, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: NewFolder::TowableVehicleVisuals
 --- !u!4 &8187107323059989604 stripped
 Transform:
