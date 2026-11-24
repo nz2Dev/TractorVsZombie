@@ -104,20 +104,20 @@ public class SelectingController {
             if (!model.SelectedCategories.Remove(pressedCategory)) {
                 model.SelectedCategories.Add(pressedCategory);
             }
-
-            model.SelectedOptions.Clear();
-            foreach (var option in model.Options) {
-                var optionCategory = GetOptionCategory(option);
-                if (model.SelectedCategories.Contains(optionCategory)) {
-                    model.SelectedOptions.Add(option);
-                }
-            }
             
             OnSelectionChanged();
         }
     }
 
     private void OnSelectionChanged() {
+        model.SelectedOptions.Clear();
+        foreach (var option in model.Options) {
+            var optionCategory = GetOptionCategory(option);
+            if (model.SelectedCategories.Contains(optionCategory)) {
+                model.SelectedOptions.Add(option);
+            }
+        }
+
         foreach (var option in model.Options) {
             if (option.entityType == SelectionEntityType.Platform) {
                 if (IsSelected(option)) {
