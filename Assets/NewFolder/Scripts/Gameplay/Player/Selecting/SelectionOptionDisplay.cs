@@ -4,8 +4,15 @@ using UnityEngine.UIElements;
 
 public sealed class SelectionOptionDisplay {
 
-    private const string SelectedClass = "selected-border";
+    public enum AccentState {
+        None,
+        Selected,
+        Active
+    }
+
+    private const string SelectedBorderClass = "selected-border";
     private const string ActiveBorderClass = "active-border";
+    private const string DottedBorderClass = "dotted-border";
     private const string ActiveImageClass = "active-image";
 
     public VisualElement Root { get; }
@@ -19,7 +26,7 @@ public sealed class SelectionOptionDisplay {
             throw new ArgumentNullException(nameof(template));
 
         Root = template.Instantiate();
-        border = Root.Q<VisualElement>(className: "border");
+        border = Root.Q<VisualElement>("border");
         image = Root.Q<Image>("image");
         label = Root.Q<Label>("label");
 
@@ -28,10 +35,7 @@ public sealed class SelectionOptionDisplay {
         if (image == null)
             throw new InvalidOperationException("The selection item template needs an Image named 'image'.");
 
-        // These classes are present in the template for its default preview,
-        // but represent runtime state for a displayed option.
-        SetSelected(false);
-        SetActive(false);
+        SetAccentState(AccentState.None);
     }
 
     internal void SetAmount(int amount) {
@@ -42,13 +46,24 @@ public sealed class SelectionOptionDisplay {
         image.image = texture;
     }
 
-    public void SetSelected(bool selected) {
-        border.EnableInClassList(SelectedClass, selected);
-    }
-
-    public void SetActive(bool active) {
-        border.EnableInClassList(ActiveBorderClass, active);
-        image.EnableInClassList(ActiveImageClass, active);
+    public void SetAccentState(AccentState state) {
+        border.RemoveFromClassList(DottedBorderClass);
+        border.RemoveFromClassList(ActiveBorderClass);
+        border.RemoveFromClassList(SelectedBorderClass);
+        image.RemoveFromClassList(ActiveImageClass);
+        switch (state) {
+            case AccentState.None:
+                border.AddToClassList(DottedBorderClass);
+                break;
+            case AccentState.Selected:
+                border.AddToClassList(SelectedBorderClass);
+                break;
+            case AccentState.Active:
+                border.AddToClassList(SelectedBorderClass);
+                border.AddToClassList(ActiveBorderClass);
+                image.AddToClassList(ActiveImageClass);
+                break;
+        }
     }
 
 }

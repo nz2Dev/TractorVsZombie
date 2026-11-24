@@ -26,12 +26,12 @@ public class SelectingView {
 
     internal void ShowCategorySelected(WeaponCategory key) {
         var display = binding[key];
-        display.SetSelected(true);
+        display.SetAccentState(SelectionOptionDisplay.AccentState.Selected);
     }
 
     internal void ShowNoOptionSelected() {
         foreach (var display in binding.Values) {
-            display.SetSelected(false);
+            display.SetAccentState(SelectionOptionDisplay.AccentState.None);
         }
     }
 
