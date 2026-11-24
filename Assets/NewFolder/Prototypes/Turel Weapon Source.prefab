@@ -360,6 +360,7 @@ MonoBehaviour:
     projectileSource: {fileID: 7818100592006410936}
     rocketPrototypeSource: {fileID: 0}
   ballisticLaunchOffsetSource: {fileID: 3137662200259168651}
+  category: {fileID: 11400000, guid: c6a123dafb9064f1ca26e313d3f8e388, type: 2}
 --- !u!1001 &9122330920394171734
 PrefabInstance:
   m_ObjectHideFlags: 0

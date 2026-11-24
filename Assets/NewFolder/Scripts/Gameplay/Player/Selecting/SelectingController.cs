@@ -8,16 +8,20 @@ public class SelectingController {
     private readonly PlatformUI platformUI;
     private readonly TruckUI truckUI;
     private readonly AssemblingController assemblingController;
+    private readonly PlatformController platformController;
+    private readonly TruckController truckController;
 
     private readonly SelectingView view;
     private readonly SelectingModel model;
 
-    public SelectingController(SelectingView view, PlatformUI platformUI, 
-        TruckUI truckUI, AssemblingController assemblingController) {
+    public SelectingController(SelectingView view, PlatformUI platformUI,
+        TruckUI truckUI, AssemblingController assemblingController, PlatformController platformController, TruckController truckController) {
         this.view = view;
         this.platformUI = platformUI;
         this.truckUI = truckUI;
         this.assemblingController = assemblingController;
+        this.platformController = platformController;
+        this.truckController = truckController;
         model = new();
     }
 
@@ -44,12 +48,25 @@ public class SelectingController {
         }
         foreach (var option in addedOptions) {
             model.Options.Add(option);
-            view.AddOption(option);
+            view.AddOption(option, GetOptionResource(option));
         }
         
         bool selectionChanged = addedOptions.Count > 0 || removedOptions.Count > 0;
         if (selectionChanged)
             OnSelectionChanged();
+    }
+
+    private string GetOptionResource(SelectionOption option) {
+        if (option.entityType == SelectionEntityType.Platform) {
+            var platformState = platformController.ReadPlatformState(option.entityId);
+            if (!platformState.hasLoadout) {
+                return "Empty";
+            }
+            return platformState.loadoutState.weaponState.category.name;
+        } else {
+            var truckState = truckController.ReadState();
+            return truckState.attachmentState.weaponState.category.name;
+        }
     }
 
     private void ReadSelectionInput() {

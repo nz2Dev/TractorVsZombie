@@ -6,11 +6,13 @@ public class WeaponModel {
     public int Id { get; }
     public FactionId FactionId { get; }
     public WeaponConfig Config { get; }
+    public WeaponCategory Category { get; }
 
-    public WeaponModel(int id, FactionId factionId, WeaponConfig config) {
+    public WeaponModel(int id, FactionId factionId, WeaponConfig config, WeaponCategory category) {
         Id = id;
         FactionId = factionId;
         Config = config;
+        Category = category;
     }
 
     public Vector3 Position { get; set; }

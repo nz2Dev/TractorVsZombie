@@ -29,7 +29,7 @@ public class WeaponController {
     // but each call should supplement position/rotation overrides
     public int SpawnWeapon(FactionId ownerFactionId, WeaponPrototype prototype) {
         var nextId = ++idCounter;
-        var model = new WeaponModel(nextId, ownerFactionId, prototype.config);
+        var model = new WeaponModel(nextId, ownerFactionId, prototype.config, prototype.category);
         registry[nextId] = model;
 
         model.Position = prototype.position;
@@ -48,6 +48,7 @@ public class WeaponController {
             position = weapon.Position,
             aimConfig = weapon.Config.aimConfig,
             aimPoint = weapon.AimPoint,
+            category = weapon.Category
         };
     }
 

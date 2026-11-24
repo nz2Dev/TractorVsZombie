@@ -12,10 +12,10 @@ public class SelectingView {
         container.Clear();
     }
 
-    internal void AddOption(SelectionOption option) {
+    internal void AddOption(SelectionOption option, string categoryName) {
         MakeLabel(out var label);
         binding[option] = label;
-        label.text = "Option";
+        label.text = categoryName;
     }
 
     internal void RemoveOption(SelectionOption key) {
