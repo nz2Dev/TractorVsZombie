@@ -42,30 +42,47 @@ public class SelectingController {
             availableOptions.Add(SelectionOption.TruckOption);
 
         Diff.ComputeDiff(model.Options, availableOptions, out var addedOptions, out var removedOptions);
-        foreach (var option in removedOptions) {
-            model.Options.Remove(option);
-            view.RemoveOption(option);
+        model.Options.Clear();
+        model.Options.AddRange(availableOptions);
+
+        var availableCategories = new HashSet<WeaponCategory>();
+        foreach (var item in availableOptions) {
+            var category = GetOptionCategory(item);
+            if (category != null) {
+                availableCategories.Add(category);
+            }
         }
-        foreach (var option in addedOptions) {
-            model.Options.Add(option);
-            view.AddOption(option, GetOptionResource(option));
+
+        Diff.ComputeDiff(model.Categories, availableCategories, out var addedCategories, out var removedCategories);
+        foreach (var category in removedCategories) {
+            model.Categories.Remove(category);
+            view.RemoveCategory(category);
+        }
+        foreach (var category in addedCategories) {
+            model.Categories.Add(category);
+            view.AddCategory(category, category.name);
         }
         
-        bool selectionChanged = addedOptions.Count > 0 || removedOptions.Count > 0;
-        if (selectionChanged)
+        foreach (var category in model.Categories) {
+            view.UpdateCategoryOptionsCount(category, CountCategoryOptions(category));
+        }
+        
+        if (addedCategories.Count > 0 || removedCategories.Count > 0 || 
+            addedOptions.Count > 0 || removedOptions.Count > 0) {
             OnSelectionChanged();
+        }
     }
 
-    private string GetOptionResource(SelectionOption option) {
+    private WeaponCategory GetOptionCategory(SelectionOption option) {
         if (option.entityType == SelectionEntityType.Platform) {
             var platformState = platformController.ReadPlatformState(option.entityId);
             if (!platformState.hasLoadout) {
-                return "Empty";
+                return null;
             }
-            return platformState.loadoutState.weaponState.category.name;
+            return platformState.loadoutState.weaponState.category;
         } else {
             var truckState = truckController.ReadState();
-            return truckState.attachmentState.weaponState.category.name;
+            return truckState.attachmentState.weaponState.category;
         }
     }
 
@@ -98,8 +115,13 @@ public class SelectingController {
         }    
 
         view.ShowNoOptionSelected();
-        foreach (var selectedOption in model.SelectedOptions)
-            view.ShowOptionSelected(selectedOption);
+        foreach (var category in model.SelectedCategories) {
+            view.ShowCategorySelected(category);
+        }
+    }
+
+    private int CountCategoryOptions(WeaponCategory category) {
+        return model.Options.Count(option => GetOptionCategory(option) == category);
     }
 
     private bool IsSelected(SelectionOption option) => model.SelectedOptions.Contains(option);

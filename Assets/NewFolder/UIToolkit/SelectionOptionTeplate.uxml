@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement>
+        <ui:VisualElement style="width: 140px; height: 140px; border-top-left-radius: 20px; border-top-width: 8px; border-right-width: 8px; border-bottom-width: 8px; border-left-width: 8px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px;">
+            <ui:Image source="project://database/Assets/NewFolder/Textures/turret.png?fileID=2800000&amp;guid=000b9719cd8df4ecfa94f8495ccfab15&amp;type=3#turret" name="image" style="flex-grow: 1; flex-shrink: 0;"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

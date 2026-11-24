@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine.UIElements;
@@ -5,26 +6,26 @@ using UnityEngine.UIElements;
 public class SelectingView {
 
     private readonly VisualElement container;
-    private readonly Dictionary<SelectionOption, Label> binding = new();
+    private readonly Dictionary<WeaponCategory, Label> binding = new();
 
     public SelectingView(UIDocument uiDocument) {
         container = uiDocument.rootVisualElement.Q<VisualElement>("platformList");
         container.Clear();
     }
 
-    internal void AddOption(SelectionOption option, string categoryName) {
+    internal void AddCategory(WeaponCategory key, string categoryName) {
         MakeLabel(out var label);
-        binding[option] = label;
+        binding[key] = label;
         label.text = categoryName;
     }
 
-    internal void RemoveOption(SelectionOption key) {
+    internal void RemoveCategory(WeaponCategory key) {
         if (!binding.Remove(key, out var label))
             return;
         container.Remove(label);
     }
 
-    internal void ShowOptionSelected(SelectionOption key) {
+    internal void ShowCategorySelected(WeaponCategory key) {
         if (binding.TryGetValue(key, out var label))
             label.AddToClassList("selected-label");
     }
@@ -32,6 +33,12 @@ public class SelectingView {
     internal void ShowNoOptionSelected() {
         foreach (var label in binding.Values) {
             label.RemoveFromClassList("selected-label");
+        }
+    }
+
+    internal void UpdateCategoryOptionsCount(WeaponCategory key, int count) {
+        if (binding.TryGetValue(key, out var label)) {
+            label.text = key.name + " " + count;
         }
     }
 
