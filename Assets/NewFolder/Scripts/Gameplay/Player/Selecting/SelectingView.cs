@@ -6,46 +6,38 @@ using UnityEngine.UIElements;
 public class SelectingView {
 
     private readonly VisualElement container;
-    private readonly Dictionary<WeaponCategory, Label> binding = new();
+    private readonly Dictionary<WeaponCategory, SelectionOptionDisplay> binding = new();
 
     public SelectingView(UIDocument uiDocument) {
         container = uiDocument.rootVisualElement.Q<VisualElement>("platformList");
         container.Clear();
     }
 
-    internal void AddCategory(WeaponCategory key, string categoryName) {
-        MakeLabel(out var label);
-        binding[key] = label;
-        label.text = categoryName;
+    internal void AddCategory(WeaponCategory key, VisualTreeAsset itemTemplate) {
+        var display = new SelectionOptionDisplay(itemTemplate);
+        container.Add(display.Root);
+        binding[key] = display;
     }
 
     internal void RemoveCategory(WeaponCategory key) {
-        if (!binding.Remove(key, out var label))
-            return;
-        container.Remove(label);
+        binding.Remove(key, out var display);
+        container.Remove(display.Root);
     }
 
     internal void ShowCategorySelected(WeaponCategory key) {
-        if (binding.TryGetValue(key, out var label))
-            label.AddToClassList("selected-label");
+        var display = binding[key];
+        display.SetSelected(true);
     }
 
     internal void ShowNoOptionSelected() {
-        foreach (var label in binding.Values) {
-            label.RemoveFromClassList("selected-label");
+        foreach (var display in binding.Values) {
+            display.SetSelected(false);
         }
     }
 
     internal void UpdateCategoryOptionsCount(WeaponCategory key, int count) {
-        if (binding.TryGetValue(key, out var label)) {
-            label.text = key.name + " " + count;
-        }
-    }
-
-    private void MakeLabel(out Label created) {
-        created = new Label();
-        created.AddToClassList("list-text");
-        container.Add(created);
+        var display = binding[key];
+        display.SetAmount(count);
     }
 
 }

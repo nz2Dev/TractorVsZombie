@@ -30,6 +30,7 @@ public class PlayerController {
         aimingController.Init(prototype.aimingPrototype);
         collectingController.Init(prototype.collectingPrototype);
         assemblingController.Init(prototype.assemblingPrototype);
+        selectingController.Init(prototype.selectingPrototype);
         
         assemblingController.SpawnDriver(prototype.initialTruckPrototype);
         Vector3 directionStep = prototype.initialTruckPrototype.rotation * Vector3.back * 6;

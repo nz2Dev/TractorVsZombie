@@ -13,6 +13,7 @@ public class SelectingController {
 
     private readonly SelectingView view;
     private readonly SelectingModel model;
+    private SelectionPrototype prototype;
 
     public SelectingController(SelectingView view, PlatformUI platformUI,
         TruckUI truckUI, AssemblingController assemblingController, PlatformController platformController, TruckController truckController) {
@@ -28,6 +29,10 @@ public class SelectingController {
     public IReadOnlyList<SelectionOption> Options => model.Options;
     public IReadOnlyList<SelectionOption> SelectedOptions => model.SelectedOptions;
     public bool HasSelection => model.SelectedOptions.Count > 0;
+
+    public void Init(SelectionPrototype prototype) {
+        this.prototype = prototype;
+    }
 
     public void Update() {
         SynchronizeOptions();
@@ -60,7 +65,7 @@ public class SelectingController {
         }
         foreach (var category in addedCategories) {
             model.Categories.Add(category);
-            view.AddCategory(category, category.name);
+            view.AddCategory(category, prototype.listItemTreeAsset);
         }
         
         foreach (var category in model.Categories) {

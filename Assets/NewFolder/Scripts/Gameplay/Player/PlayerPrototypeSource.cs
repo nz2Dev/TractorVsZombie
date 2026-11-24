@@ -8,6 +8,7 @@ public class PlayerPrototypeSource : MonoBehaviour {
     [SerializeField] private LoaderSource loaderSource;
     [SerializeField] private AimingSource aimingSource;
     [SerializeField] private CollectingSource collectingSource;
+    [SerializeField] private SelectingSource selectingSource;
     [Space]
     [SerializeField] private LoadoutSource[] initialLoadoutSources;
     [SerializeField] private TruckSource initTruckSource;
@@ -25,6 +26,7 @@ public class PlayerPrototypeSource : MonoBehaviour {
             aimingPrototype = aimingSource.Get(),
             assemblingPrototype = assemblingSource.Get(),
             collectingPrototype = collectingSource.Get(),
+            selectingPrototype = selectingSource.Get(),
         };
     }
 

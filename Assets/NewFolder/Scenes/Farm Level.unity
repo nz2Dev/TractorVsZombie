@@ -13972,6 +13972,8 @@ MonoBehaviour:
     aimVisualsPrefab: {fileID: 7650166389670777688, guid: db77fb008dad74d3ca69afe4d43638bd, type: 3}
   collectingSource:
     config: {fileID: 11400000, guid: 76193696b3051417a884b42c2a210830, type: 2}
+  selectingSource:
+    optionTemplate: {fileID: 9197481963319205126, guid: e507624c53d42497a912cade90ecf1eb, type: 3}
   initialLoadoutSources: []
   initTruckSource: {fileID: 1117709943}
   initialPlatformCount: 1

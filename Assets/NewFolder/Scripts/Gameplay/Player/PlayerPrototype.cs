@@ -7,4 +7,5 @@ public struct PlayerPrototype {
     public AimingPrototype aimingPrototype;
     public AssemblingPrototype assemblingPrototype;
     public CollectingPrototype collectingPrototype;
+    public SelectionPrototype selectingPrototype;
 }

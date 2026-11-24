@@ -2,10 +2,9 @@
     <ui:Template name="SelectionOptionTeplate" src="project://database/Assets/NewFolder/UIToolkit/SelectionOptionTeplate.uxml?fileID=9197481963319205126&amp;guid=e507624c53d42497a912cade90ecf1eb&amp;type=3#SelectionOptionTeplate"/>
     <Style src="project://database/Assets/NewFolder/UIToolkit/PlayerScreen.uss?fileID=7433441132597879392&amp;guid=6be5141b9f02d48418f4d8adfbf8f06d&amp;type=3#PlayerScreen"/>
     <ui:VisualElement style="flex-grow: 1; justify-content: flex-end;">
-        <ui:VisualElement name="platformList" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
-            <ui:Label text="Turel Weapon Visuals" class="selected-label list-text"/>
-            <ui:Label text="Label" class="list-text"/>
-            <ui:Instance template="SelectionOptionTeplate" name="SelectionOptionTeplate" style="display: none;"/>
+        <ui:VisualElement name="platformList" style="flex-direction: row; flex-wrap: wrap; justify-content: center; padding-top: 37px; padding-right: 37px; padding-bottom: 37px; padding-left: 37px;">
+            <ui:Instance template="SelectionOptionTeplate" name="SelectionOptionTeplate"/>
+            <ui:Instance template="SelectionOptionTeplate" name="SelectionOptionTeplate"/>
         </ui:VisualElement>
         <ui:VisualElement name="gameover-container" style="flex-direction: row; flex-wrap: wrap; justify-content: center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; background-color: rgba(0, 0, 0, 0.14); padding-top: 84px; padding-right: 84px; padding-bottom: 84px; padding-left: 84px; display: flex;">
             <ui:Label text="Game Over" style="-unity-text-align: upper-center; font-size: 76px; color: rgb(255, 255, 255); -unity-font-style: bold;"/>
