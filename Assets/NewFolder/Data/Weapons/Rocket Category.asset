@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 297e384d636ac41cd90bdce78cb1e599, type: 3}
   m_Name: Rocket Category
   m_EditorClassIdentifier: NewFolder::WeaponCategory
-  categoryImage: {fileID: -1460670616, guid: 27abc2679e89a41218ce82d944321750, type: 3}
+  weaponImage: {fileID: -1460670616, guid: 27abc2679e89a41218ce82d944321750, type: 3}
+  bulletImage: {fileID: 77947928, guid: 29de686890b8f44a9902f170ac6f52dc, type: 3}

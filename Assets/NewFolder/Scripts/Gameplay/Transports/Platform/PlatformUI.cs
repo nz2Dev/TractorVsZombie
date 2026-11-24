@@ -46,6 +46,11 @@ public class PlatformUI {
         outlineDisplay.AimPoint = aimPoint;
     }
 
+    public void SetAimIcon(int platfomrId, Sprite icon) {
+        var outlineDisplay = outlineRegistry[platfomrId];
+        outlineDisplay.AimIcon = icon;
+    }
+
     public void ShowNoOutline(int platformId) {
         var outlineDisplay = outlineRegistry[platformId];
         outlineDisplay.ShowNoOutline();
@@ -78,7 +83,7 @@ public class PlatformUI {
         statsDisplay.BulletIconDisplayed = show;
     }
 
-    public void ShowBulletTexture(int platformId, Sprite sprite) {
+    public void SetBulletIcon(int platformId, Sprite sprite) {
         var statsDisplay = statsRegistry[platformId];
         statsDisplay.BulletIcon = sprite;
     }

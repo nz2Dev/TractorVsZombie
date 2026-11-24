@@ -69,7 +69,7 @@ public class SelectingController {
         }
         foreach (var category in addedCategories) {
             model.Categories.Add(category);
-            view.AddCategory(category, prototype.listItemTreeAsset);
+            view.AddCategory(category, prototype.listItemTreeAsset, category.weaponImage);
         }
         
         foreach (var category in model.Categories) {

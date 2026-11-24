@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public class SelectingView {
@@ -13,8 +14,9 @@ public class SelectingView {
         container.Clear();
     }
 
-    internal void AddCategory(WeaponCategory key, VisualTreeAsset itemTemplate) {
+    internal void AddCategory(WeaponCategory key, VisualTreeAsset itemTemplate, Sprite weaponIcon) {
         var display = new SelectionOptionDisplay(itemTemplate);
+        display.SetImage(weaponIcon);
         container.Add(display.Root);
         binding[key] = display;
     }

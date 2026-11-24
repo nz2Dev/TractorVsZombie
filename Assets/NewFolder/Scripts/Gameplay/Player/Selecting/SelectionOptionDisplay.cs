@@ -42,8 +42,8 @@ public sealed class SelectionOptionDisplay {
         label.text = $"{amount}";
     }
 
-    public void SetImage(Texture texture) {
-        image.image = texture;
+    public void SetImage(Sprite sprite) {
+        image.sprite = sprite;
     }
 
     public void SetAccentState(AccentState state) {
