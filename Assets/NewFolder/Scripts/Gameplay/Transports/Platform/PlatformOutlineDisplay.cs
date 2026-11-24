@@ -6,9 +6,11 @@ public class PlatformOutlineDisplay : MonoBehaviour {
     
     [SerializeField] private FlatSurfaceRig outlineRig;
     [SerializeField] private LineRenderer ringRenderer;
-
-    private bool visibility;
-    private bool selected;
+    [SerializeField] private Gradient defaultRingGradient;
+    [SerializeField] private Gradient activeRingGradient;
+    [SerializeField] private SpriteRenderer bulletRenderer;
+    [SerializeField] private Color defaultBulletTint;
+    [SerializeField] private Color activeBulletTint;
 
     public Vector3 Position {
         set {
@@ -16,19 +18,29 @@ public class PlatformOutlineDisplay : MonoBehaviour {
         }
     }
 
-    public FlatSurfaceRig Rig => outlineRig;
-
-    public void SetOutlineVisibility(bool visibility) {
-        this.visibility = visibility;
-        ApplyRingIsActiveState();
+    public Vector3 AimPoint {
+        set {
+            outlineRig.AimPoint = value;
+        }
     }
 
-    internal void SetSelected(bool selected) {
-        this.selected = selected;
-        ApplyRingIsActiveState();
+    public void ShowNoOutline() {
+        ringRenderer.gameObject.SetActive(false);
+        bulletRenderer.gameObject.SetActive(false);
     }
 
-    private void ApplyRingIsActiveState() {
-        ringRenderer.gameObject.SetActive(visibility && selected);
+    public void ShowSelectedOutline() {
+        ringRenderer.gameObject.SetActive(true);
+        ringRenderer.colorGradient = defaultRingGradient;
+        bulletRenderer.gameObject.SetActive(true);
+        bulletRenderer.color = defaultBulletTint;
     }
+
+    public void ShowActiveOutline() {
+        ringRenderer.gameObject.SetActive(true);
+        ringRenderer.colorGradient = activeRingGradient;
+        bulletRenderer.gameObject.SetActive(true);
+        bulletRenderer.color = activeBulletTint;
+    }
+
 }

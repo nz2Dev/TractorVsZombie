@@ -113,9 +113,21 @@ public class SelectingController {
     private void OnSelectionChanged() {
         foreach (var option in model.Options) {
             if (option.entityType == SelectionEntityType.Platform) {
-                platformUI.SetSelected(option.entityId, IsSelected(option));
+                if (IsSelected(option)) {
+                    platformUI.ShowSelectedOutline(option.entityId);
+                    platformUI.ShowBulletIcon(option.entityId, false);
+                } else {
+                    platformUI.ShowNoOutline(option.entityId);
+                    platformUI.ShowBulletIcon(option.entityId, true);
+                }
             } else {
-                truckUI.SetSelected(IsSelected(option));
+                if (IsSelected(option)) {
+                    truckUI.ShowSelectedOutline();
+                    truckUI.ShowBulletIcon(false);
+                } else {
+                    truckUI.ShowNoOutline();
+                    truckUI.ShowBulletIcon(true);
+                }
             }
         }    
 

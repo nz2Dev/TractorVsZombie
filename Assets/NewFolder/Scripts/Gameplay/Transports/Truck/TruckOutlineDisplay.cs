@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class TruckOutlineDisplay : MonoBehaviour {
     
-    [SerializeField] private FlatSurfaceRig surfaceRig;
+    [SerializeField] private FlatSurfaceRig outlineRig;
     [SerializeField] private LineRenderer ringRenderer;
-
-    private bool hasAim;
-    private bool hasSelection;
+    [SerializeField] private Gradient defaultRingGradient;
+    [SerializeField] private Gradient activeRingGradient;
+    [SerializeField] private SpriteRenderer bulletRenderer;
+    [SerializeField] private Color defaultBulletTint;
+    [SerializeField] private Color activeBulletTint;
 
     public Vector3 Position {
         set {
@@ -18,25 +20,26 @@ public class TruckOutlineDisplay : MonoBehaviour {
 
     public Vector3 AimPoint {
         set {
-            surfaceRig.AimPoint = value;
+            outlineRig.AimPoint = value;
         }
     }
 
-    public bool AimVisibility {
-        set {
-            hasAim = value;
-            ApplyRingIsActive();
-        }
+    public void ShowNoOutline() {
+        ringRenderer.gameObject.SetActive(false);
+        bulletRenderer.gameObject.SetActive(false);
     }
 
-    public bool Selection {
-        set {
-            hasSelection = value;
-            ApplyRingIsActive();
-        }
+    public void ShowSelectedOutline() {
+        ringRenderer.gameObject.SetActive(true);
+        ringRenderer.colorGradient = defaultRingGradient;
+        bulletRenderer.gameObject.SetActive(true);
+        bulletRenderer.color = defaultBulletTint;
     }
 
-    private void ApplyRingIsActive() {
-        ringRenderer.gameObject.SetActive(hasAim && hasSelection);
+    public void ShowActiveOutline() {
+        ringRenderer.gameObject.SetActive(true);
+        ringRenderer.colorGradient = activeRingGradient;
+        bulletRenderer.gameObject.SetActive(true);
+        bulletRenderer.color = activeBulletTint;
     }
 }

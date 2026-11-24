@@ -16,7 +16,7 @@ public class PlatformUI {
     public void Add(int platformId, Vector3 position, 
         PlatformStatsDisplay statsDisplayPrefab, PlatformOutlineDisplay outlineDisplayPrefab) {
         var statsDisplay = GameObject.Instantiate(statsDisplayPrefab, position, Quaternion.identity);
-        statsDisplay.CanvasRig.AimTransform = cameraManager.GetActiveCamera().transform;
+        statsDisplay.AimTransform = cameraManager.GetActiveCamera().transform;
         statsRegistry[platformId] = statsDisplay;
 
         var outlineDisplay = GameObject.Instantiate(outlineDisplayPrefab, position, Quaternion.identity);
@@ -33,26 +33,39 @@ public class PlatformUI {
     public void UpdatePose(int platformId, Vector3 position, Vector3 forward) {
         var statsDisplay = statsRegistry[platformId];
         statsDisplay.WorldPosition = position;
-        statsDisplay.CanvasRig.ForwardInput = forward;
+        statsDisplay.ForwardInput = forward;
 
         var outlineDisplay = outlineRegistry[platformId];
         outlineDisplay.Position = position;
     }
 
-    public void UpdateWeaponState(int platformId, WeaponState weaponState) {
+    // Outline
+
+    public void UpdateAimPoint(int platformId, Vector3 aimPoint) {
         var outlineDisplay = outlineRegistry[platformId];
-        outlineDisplay.Rig.AimPoint = weaponState.aimPoint;
-        outlineDisplay.SetOutlineVisibility(true);
+        outlineDisplay.AimPoint = aimPoint;
     }
 
-    internal void HideWeaponState(int platformId) {
+    public void ShowNoOutline(int platformId) {
         var outlineDisplay = outlineRegistry[platformId];
-        outlineDisplay.SetOutlineVisibility(false);
+        outlineDisplay.ShowNoOutline();
     }
+
+    public void ShowSelectedOutline(int platformId) {
+        var outlineDisplay = outlineRegistry[platformId];
+        outlineDisplay.ShowSelectedOutline();
+    }
+
+    public void ShowActiveOutline(int platformId) {
+        var outlineDisplay = outlineRegistry[platformId];
+        outlineDisplay.ShowActiveOutline();
+    }
+
+    // HUD
 
     public void UpdateHealthBar(int platformId, HealthState healthState) {
         var statsDisplay = statsRegistry[platformId];
-        statsDisplay.SetHealthBar(healthState.health, healthState.maxHealth);
+        statsDisplay.ShowHealthBar(healthState.health, healthState.maxHealth);
     }
 
     public void HideHealthBar(int platformId) {
@@ -60,12 +73,14 @@ public class PlatformUI {
         statsDisplay.HideHealthBar();
     }
 
-    public void SetSelected(int platformId, bool selected) {
+    public void ShowBulletIcon(int platformId, bool show) {
         var statsDisplay = statsRegistry[platformId];
-        statsDisplay.SetSelected(selected);
+        statsDisplay.BulletIconDisplayed = show;
+    }
 
-        var outlineDisplay = outlineRegistry[platformId];
-        outlineDisplay.SetSelected(selected);
+    public void ShowBulletTexture(int platformId, Sprite sprite) {
+        var statsDisplay = statsRegistry[platformId];
+        statsDisplay.BulletIcon = sprite;
     }
 
     internal void UpdateDurability(int platformId, CarryingState carryingState) {

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using PlasticPipe.PlasticProtocol.Messages;
+
 using UnityEngine;
 
 public class TruckUI {
@@ -14,7 +16,7 @@ public class TruckUI {
 
     public void Add(Vector3 position, TruckStatsDisplay displayPrefab, TruckOutlineDisplay outlineDisplayPrefab) {
         statsDisplay = GameObject.Instantiate(displayPrefab, position, Quaternion.identity);
-        statsDisplay.CanvasRig.AimTransform = cameraManager.GetActiveCamera().transform;
+        statsDisplay.AimTransform = cameraManager.GetActiveCamera().transform;
         outlineDisplay = GameObject.Instantiate(outlineDisplayPrefab, position, Quaternion.identity);
     }
 
@@ -28,26 +30,44 @@ public class TruckUI {
     // TruckHUD.UpdatePose(position, forward) makes more sense
     public void UpdatePose(Vector3 position, Vector3 forward) {
         statsDisplay.WorldPosition = position;
-        statsDisplay.CanvasRig.ForwardInput = forward;
+        statsDisplay.ForwardInput = forward;
 
         outlineDisplay.Position = position;
     }
+
+    // Outline
 
     public void UpdateAimPoint(Vector3 aimPoint) {
         outlineDisplay.AimPoint = aimPoint;
     }
 
-    public void ShowAim(bool show) {
-        outlineDisplay.AimVisibility = show;
+    public void ShowNoOutline() {
+        outlineDisplay.ShowNoOutline();
     }
+
+    public void ShowSelectedOutline() {
+        outlineDisplay.ShowSelectedOutline();
+    }
+
+    public void ShowActiveOutline() {
+        outlineDisplay.ShowActiveOutline();
+    }
+
+    // HUD
 
     public void UpdateHealthBar(int health, int maxHealth) {
-        statsDisplay.SetHealthStat(health, maxHealth);
+        statsDisplay.ShowHealthBar(health, maxHealth);
     }
 
-    public void SetSelected(bool selected) {
-        statsDisplay.SetSelected(selected);
-        outlineDisplay.Selection = selected;
+    public void HideHealthBar() {
+        statsDisplay.HideHealthBar();
     }
 
+    public void ShowBulletIcon(bool show) {
+        statsDisplay.BulletIconDisplayed = show;
+    }
+
+    public void ShowBulletTexture(Sprite sprite) {
+        statsDisplay.BulletIcon = sprite;
+    }
 }

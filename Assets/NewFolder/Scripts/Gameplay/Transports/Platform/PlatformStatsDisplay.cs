@@ -3,13 +3,14 @@ using System;
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlatformStatsDisplay : MonoBehaviour {
 
     [SerializeField] private CanvasRig canvasRig;    
     [SerializeField] private HealthWidget healthWidget;
     [SerializeField] private TextMeshProUGUI durabilityLabel;
-    [SerializeField] private GameObject selectionBadge;
+    [SerializeField] private Image bulletImage;
 
     public Vector3 WorldPosition {
         set {
@@ -17,20 +18,37 @@ public class PlatformStatsDisplay : MonoBehaviour {
         }
     }
 
-    public CanvasRig CanvasRig => canvasRig;
-
-    public void HideHealthBar() {
-        healthWidget.gameObject.SetActive(false);
+    public Transform AimTransform {
+        set {
+            canvasRig.AimTransform = value;
+        }
     }
 
-    public void SetHealthBar(int health, int maxHealth) {
+    public Vector3 ForwardInput {
+        set {
+            canvasRig.ForwardInput = value;
+        }
+    }
+
+    public bool BulletIconDisplayed {
+        set {
+            bulletImage.gameObject.SetActive(value);
+        }
+    }
+
+    public Sprite BulletIcon {
+        set {
+            bulletImage.sprite = value;
+        }
+    }
+
+    public void ShowHealthBar(int health, int maxHealth) {
         healthWidget.gameObject.SetActive(true);
         healthWidget.SetBar(health, maxHealth);
     }
 
-    public void SetSelected(bool selected) {
-        if (selectionBadge != null)
-            selectionBadge.SetActive(selected);
+    public void HideHealthBar() {
+        healthWidget.gameObject.SetActive(false);
     }
 
     internal void SetDurabilityBar(int durability, int maxDurability) {

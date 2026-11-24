@@ -33,8 +33,8 @@ public class TruckPresenter {
         
         ui.UpdatePose(vehiclePose.position, vehiclePose.rotation * Vector3.forward);
         ui.UpdateHealthBar(healthState.health, healthState.maxHealth);
+        
         ui.UpdateAimPoint(attachmentState.weaponState.aimPoint);
-        ui.ShowAim(true);
 
         audio.UpdateEngineSound(truckId, vehiclePose.position, vehicleState.motorRev);
         if (ramState.receivedContacts > 0) {

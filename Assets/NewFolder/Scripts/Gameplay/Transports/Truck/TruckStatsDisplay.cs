@@ -6,8 +6,7 @@ public class TruckStatsDisplay : MonoBehaviour {
     
     [SerializeField] private CanvasRig canvasRig;
     [SerializeField] private HealthWidget healthWidget;
-    [SerializeField] private GameObject selectionBadge;
-    [SerializeField] private Image projectileIcon;
+    [SerializeField] private Image bulletImage;
     
     public Vector3 WorldPosition {
         set {
@@ -15,15 +14,37 @@ public class TruckStatsDisplay : MonoBehaviour {
         }
     }
 
-    public CanvasRig CanvasRig => canvasRig;
+    public Transform AimTransform {
+        set {
+            canvasRig.AimTransform = value;
+        }
+    }
 
-    public void SetHealthStat(int health, int maxHealth) {
+    public Vector3 ForwardInput {
+        set {
+            canvasRig.ForwardInput = value;
+        }
+    }
+
+    public bool BulletIconDisplayed {
+        set {
+            bulletImage.gameObject.SetActive(value);
+        }
+    }
+
+    public Sprite BulletIcon {
+        set {
+            bulletImage.sprite = value;
+        }
+    }
+
+    public void ShowHealthBar(int health, int maxHealth) {
+        healthWidget.gameObject.SetActive(true);
         healthWidget.SetBar(health, maxHealth);
     }
 
-    public void SetSelected(bool selected) {
-        if (selectionBadge != null)
-            selectionBadge.SetActive(selected);
+    public void HideHealthBar() {
+        healthWidget.gameObject.SetActive(false);
     }
 
 }

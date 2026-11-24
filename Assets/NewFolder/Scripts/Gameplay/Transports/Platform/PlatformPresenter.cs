@@ -29,10 +29,9 @@ public class PlatformPresenter {
 
         if (carryingState.hasLoadout) {
             ui.UpdateHealthBar(platformId, carryingState.loadoutState.healthState);
-            ui.UpdateWeaponState(platformId, carryingState.loadoutState.weaponState);
+            ui.UpdateAimPoint(platformId, carryingState.loadoutState.weaponState.aimPoint);
         } else {
             ui.HideHealthBar(platformId);
-            ui.HideWeaponState(platformId);
         }
     }
 }
