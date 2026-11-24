@@ -51,13 +51,17 @@ public class SelectingController {
         model.Options.AddRange(availableOptions);
 
         var availableCategories = new HashSet<WeaponCategory>();
+        var optionCategoriesCount = 0;
         foreach (var item in availableOptions) {
             var category = GetOptionCategory(item);
             if (category != null) {
                 availableCategories.Add(category);
+                optionCategoriesCount++;
             }
         }
 
+        bool optionCategoriesChanged = optionCategoriesCount != model.OptionsWithCategoryCount;
+        model.OptionsWithCategoryCount = optionCategoriesCount;
         Diff.ComputeDiff(model.Categories, availableCategories, out var addedCategories, out var removedCategories);
         foreach (var category in removedCategories) {
             model.Categories.Remove(category);
@@ -73,7 +77,7 @@ public class SelectingController {
         }
         
         if (addedCategories.Count > 0 || removedCategories.Count > 0 || 
-            addedOptions.Count > 0 || removedOptions.Count > 0) {
+            addedOptions.Count > 0 || removedOptions.Count > 0 || optionCategoriesChanged) {
             OnSelectionChanged();
         }
     }
@@ -121,7 +125,8 @@ public class SelectingController {
                     platformUI.ShowBulletIcon(option.entityId, false);
                 } else {
                     platformUI.ShowNoOutline(option.entityId);
-                    platformUI.ShowBulletIcon(option.entityId, true);
+                    var optionCategory = GetOptionCategory(option);
+                    platformUI.ShowBulletIcon(option.entityId, optionCategory != null);
                 }
             } else {
                 if (IsSelected(option)) {
