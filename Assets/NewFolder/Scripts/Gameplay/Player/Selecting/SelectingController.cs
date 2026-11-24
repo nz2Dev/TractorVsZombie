@@ -92,20 +92,23 @@ public class SelectingController {
     }
 
     private void ReadSelectionInput() {
-        var toggledOptions = Enumerable.Empty<SelectionOption>();
-
-        bool hasEffect = false;
         if (ReadSelectionIndexPressed(out var pressedIndex)) {
-            if (pressedIndex < model.Options.Count)
-                toggledOptions = new[] { model.Options[pressedIndex] };
-        }
+            if (pressedIndex >= model.Categories.Count)
+                return;
 
-        foreach (var option in toggledOptions) {
-            hasEffect = true;
-            ToggleSelected(option);
-        }
-        
-        if (hasEffect) {
+            var pressedCategory = model.Categories[pressedIndex];
+            if (!model.SelectedCategories.Remove(pressedCategory)) {
+                model.SelectedCategories.Add(pressedCategory);
+            }
+
+            model.SelectedOptions.Clear();
+            foreach (var option in model.Options) {
+                var optionCategory = GetOptionCategory(option);
+                if (model.SelectedCategories.Contains(optionCategory)) {
+                    model.SelectedOptions.Add(option);
+                }
+            }
+            
             OnSelectionChanged();
         }
     }
@@ -141,12 +144,8 @@ public class SelectingController {
         return model.Options.Count(option => GetOptionCategory(option) == category);
     }
 
-    private bool IsSelected(SelectionOption option) => model.SelectedOptions.Contains(option);
-
-    private void ToggleSelected(SelectionOption option) {
-        if (!model.SelectedOptions.Remove(option))
-            model.SelectedOptions.Add(option);
-    }
+    private bool IsSelected(SelectionOption option) 
+        => model.SelectedOptions.Contains(option);
 
     internal bool ReadSelectionIndexPressed(out int index) {
         var zeroIndexPressed = Input.GetKeyDown(KeyCode.Alpha1);
