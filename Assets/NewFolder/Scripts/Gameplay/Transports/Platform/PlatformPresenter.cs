@@ -26,6 +26,8 @@ public class PlatformPresenter {
 
         ui.UpdatePose(platformId, vehiclePose.position, vehiclePose.rotation * Vector3.forward);
         ui.UpdateDurability(platformId, carryingState);
+
+        ui.ShowBulletIcon(platformId, carryingState.hasLoadout);
         if (carryingState.hasLoadout) {
             ui.SetAimIcon(platformId, carryingState.loadoutState.weaponState.category.bulletImage);
             ui.SetBulletIcon(platformId, carryingState.loadoutState.weaponState.category.bulletImage);

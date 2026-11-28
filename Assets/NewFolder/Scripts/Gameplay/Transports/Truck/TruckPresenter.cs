@@ -13,9 +13,9 @@ public class TruckPresenter {
 
     public void Add(int truckId, Vector3 position, TruckPresentationPrototype prototype) {
         // todo remove truckId key from view and audio
+        audio.Add(truckId, position, prototype);
         view.Show(truckId, position, prototype.visualsPrefab);
         ui.Add(position, prototype.statsDisplayPrefab, prototype.outlineDisplayPrefab);
-        audio.Add(truckId, position, prototype);
     }
 
     public void Remove(int truckId) {
@@ -35,6 +35,9 @@ public class TruckPresenter {
         ui.UpdateHealthBar(healthState.health, healthState.maxHealth);
         
         ui.UpdateAimPoint(attachmentState.weaponState.aimPoint);
+        ui.SetBulletIcon(attachmentState.weaponState.category.bulletImage);
+        ui.SetAimIcon(attachmentState.weaponState.category.bulletImage);
+        ui.ShowBulletIcon(true);
 
         audio.UpdateEngineSound(truckId, vehiclePose.position, vehicleState.motorRev);
         if (ramState.receivedContacts > 0) {

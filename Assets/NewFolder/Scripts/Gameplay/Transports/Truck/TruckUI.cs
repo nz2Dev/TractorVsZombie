@@ -41,6 +41,10 @@ public class TruckUI {
         outlineDisplay.AimPoint = aimPoint;
     }
 
+    public void SetAimIcon(Sprite icon) {
+        outlineDisplay.AimIcon = icon;
+    }
+
     public void ShowNoOutline() {
         outlineDisplay.ShowNoOutline();
     }
@@ -67,7 +71,7 @@ public class TruckUI {
         statsDisplay.BulletIconDisplayed = show;
     }
 
-    public void ShowBulletTexture(Sprite sprite) {
+    public void SetBulletIcon(Sprite sprite) {
         statsDisplay.BulletIcon = sprite;
     }
 }

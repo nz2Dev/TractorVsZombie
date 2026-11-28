@@ -134,19 +134,15 @@ public class SelectingController {
             if (option.entityType == SelectionEntityType.Platform) {
                 if (IsSelected(option)) {
                     platformUI.ShowSelectedOutline(option.entityId);
-                    platformUI.ShowBulletIcon(option.entityId, false);
                 } else {
                     platformUI.ShowNoOutline(option.entityId);
                     var optionCategory = GetOptionCategory(option);
-                    platformUI.ShowBulletIcon(option.entityId, optionCategory != null);
                 }
             } else {
                 if (IsSelected(option)) {
                     truckUI.ShowSelectedOutline();
-                    truckUI.ShowBulletIcon(false);
                 } else {
                     truckUI.ShowNoOutline();
-                    truckUI.ShowBulletIcon(true);
                 }
             }
         }    

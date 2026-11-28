@@ -24,6 +24,12 @@ public class TruckOutlineDisplay : MonoBehaviour {
         }
     }
 
+    public Sprite AimIcon {
+        set {
+            bulletRenderer.sprite = value;
+        }
+    }
+
     public void ShowNoOutline() {
         ringRenderer.gameObject.SetActive(false);
         bulletRenderer.gameObject.SetActive(false);
