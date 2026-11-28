@@ -62,6 +62,7 @@ public class SelectingController {
 
         bool optionCategoriesChanged = optionCategoriesCount != model.OptionsWithCategoryCount;
         model.OptionsWithCategoryCount = optionCategoriesCount;
+        
         Diff.ComputeDiff(model.Categories, availableCategories, out var addedCategories, out var removedCategories);
         foreach (var category in removedCategories) {
             model.Categories.Remove(category);
@@ -72,8 +73,15 @@ public class SelectingController {
             view.AddCategory(category, prototype.listItemTreeAsset, category.weaponImage);
         }
         
+        model.SelectedCategories.RemoveAll(category => !model.Categories.Contains(category));
         foreach (var category in model.Categories) {
             view.UpdateCategoryOptionsCount(category, CountCategoryOptions(category));
+        }
+
+        if (model.Categories.Count == 0) {
+            model.SelectedCategoryState = 0;
+        } else if (model.SelectedCategoryState > model.Categories.Count) {
+            model.SelectedCategoryState = model.Categories.Count;
         }
         
         if (addedCategories.Count > 0 || removedCategories.Count > 0 || 
@@ -96,6 +104,21 @@ public class SelectingController {
     }
 
     private void ReadSelectionInput() {
+        if (ReadMouseWheelDelta(out var wheelDelta)) {
+            var direction = wheelDelta > 0 ? 1 : -1;
+            var statesCount = model.Categories.Count + 1;
+            model.SelectedCategoryState =
+                (model.SelectedCategoryState + direction + statesCount)
+                % statesCount;
+
+            model.SelectedCategories.Clear();
+            if (model.SelectedCategoryState > 0) {
+                var selectedIndex = model.SelectedCategoryState - 1;
+                model.SelectedCategories.Add(model.Categories[selectedIndex]);
+            }
+            OnSelectionChanged();
+        }
+
         if (ReadSelectionIndexPressed(out var pressedIndex)) {
             if (pressedIndex >= model.Categories.Count)
                 return;
@@ -103,6 +126,7 @@ public class SelectingController {
             var pressedCategory = model.Categories[pressedIndex];
             if (!model.SelectedCategories.Remove(pressedCategory)) {
                 model.SelectedCategories.Add(pressedCategory);
+                model.SelectedCategoryState = pressedIndex;
             }
             
             OnSelectionChanged();
@@ -161,6 +185,11 @@ public class SelectingController {
         else if (firstIndexPressed) index = 1;
         else if (secondIndexPressed) index = 2;
         return index >= 0;
+    }
+
+    private bool ReadMouseWheelDelta(out float delta) {
+        delta = Input.mouseScrollDelta.y;
+        return delta != 0;
     }
 
 }
