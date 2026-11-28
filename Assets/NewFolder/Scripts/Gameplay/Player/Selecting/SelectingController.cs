@@ -90,19 +90,6 @@ public class SelectingController {
         }
     }
 
-    private WeaponCategory GetOptionCategory(SelectionOption option) {
-        if (option.entityType == SelectionEntityType.Platform) {
-            var platformState = platformController.ReadPlatformState(option.entityId);
-            if (!platformState.hasLoadout) {
-                return null;
-            }
-            return platformState.loadoutState.weaponState.category;
-        } else {
-            var truckState = truckController.ReadState();
-            return truckState.attachmentState.weaponState.category;
-        }
-    }
-
     private void ReadSelectionInput() {
         if (ReadMouseWheelDelta(out var wheelDelta)) {
             var direction = wheelDelta > 0 ? 1 : -1;
@@ -116,6 +103,7 @@ public class SelectingController {
                 var selectedIndex = model.SelectedCategoryState - 1;
                 model.SelectedCategories.Add(model.Categories[selectedIndex]);
             }
+
             OnSelectionChanged();
         }
 
@@ -175,6 +163,19 @@ public class SelectingController {
 
     private bool IsSelected(SelectionOption option) 
         => model.SelectedOptions.Contains(option);
+
+    private WeaponCategory GetOptionCategory(SelectionOption option) {
+        if (option.entityType == SelectionEntityType.Platform) {
+            var platformState = platformController.ReadPlatformState(option.entityId);
+            if (!platformState.hasLoadout) {
+                return null;
+            }
+            return platformState.loadoutState.weaponState.category;
+        } else {
+            var truckState = truckController.ReadState();
+            return truckState.attachmentState.weaponState.category;
+        }
+    }
 
     internal bool ReadSelectionIndexPressed(out int index) {
         var zeroIndexPressed = Input.GetKeyDown(KeyCode.Alpha1);
